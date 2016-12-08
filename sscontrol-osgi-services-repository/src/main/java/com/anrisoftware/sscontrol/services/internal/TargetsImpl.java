@@ -25,9 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
@@ -189,68 +186,6 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     @Override
     public int hashCode() {
         return hosts.hashCode();
-    }
-
-    @Override
-    public List<SshHost> getOrDefault(Object key, List<SshHost> defaultValue) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void forEach(
-            BiConsumer<? super String, ? super List<SshHost>> action) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void replaceAll(
-            BiFunction<? super String, ? super List<SshHost>, ? extends List<SshHost>> function) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> putIfAbsent(String key, List<SshHost> value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object key, Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean replace(String key, List<SshHost> oldValue,
-            List<SshHost> newValue) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> replace(String key, List<SshHost> value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> computeIfAbsent(String key,
-            Function<? super String, ? extends List<SshHost>> mappingFunction) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> computeIfPresent(String key,
-            BiFunction<? super String, ? super List<SshHost>, ? extends List<SshHost>> remappingFunction) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> compute(String key,
-            BiFunction<? super String, ? super List<SshHost>, ? extends List<SshHost>> remappingFunction) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<SshHost> merge(String key, List<SshHost> value,
-            BiFunction<? super List<SshHost>, ? super List<SshHost>, ? extends List<SshHost>> remappingFunction) {
-        throw new UnsupportedOperationException();
     }
 
     private Map<String, Object> parseArgs(Map<String, Object> args) {
