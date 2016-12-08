@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -117,6 +118,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
         testCases.eachWithIndex { Map test, int k ->
             log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
+            services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
             services.putAvailableService 'hosts', hostnameFactory
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
