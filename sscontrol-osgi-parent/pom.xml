@@ -54,6 +54,8 @@
         <module>../sscontrol-osgi-shell-openssh</module>
         <module>../sscontrol-osgi-shell-test</module>
         <module>../sscontrol-osgi-ssh</module>
+        <module>../sscontrol-osgi-sshd</module>
+        <module>../sscontrol-osgi-sshd-6</module>
         <module>../sscontrol-osgi-types</module>
     </modules>
 
