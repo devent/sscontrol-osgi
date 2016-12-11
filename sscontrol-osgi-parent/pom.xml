@@ -35,6 +35,7 @@
         <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
+        <module>../sscontrol-osgi-fail2ban</module>
         <module>../sscontrol-osgi-features</module>
         <module>../sscontrol-osgi-fetch</module>
         <module>../sscontrol-osgi-groovy-parser</module>
@@ -106,6 +107,12 @@
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-threads</artifactId>
+                <version>${project.custom.bundles.globalpomutils.version}</version>
+                <type>bundle</type>
+            </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.globalpom</groupId>
+                <artifactId>globalpomutils-initfileparser</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
                 <type>bundle</type>
             </dependency>

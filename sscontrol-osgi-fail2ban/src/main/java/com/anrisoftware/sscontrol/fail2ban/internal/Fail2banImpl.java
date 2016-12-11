@@ -15,21 +15,19 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import static com.anrisoftware.sscontrol.fail2ban.internal.HostsServiceImpl.HOSTS_NAME;
+import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banServiceImpl.HOSTS_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.arrays.ToList;
-import com.anrisoftware.sscontrol.fail2ban.external.Host;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
-import com.anrisoftware.sscontrol.fail2ban.external.HostsService;
-import com.anrisoftware.sscontrol.fail2ban.internal.HostImpl.HostImplFactory;
+import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
+import com.anrisoftware.sscontrol.fail2ban.external.Jail;
+import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -43,7 +41,7 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostsImpl implements Fail2ban {
+public class Fail2banImpl implements Fail2ban {
 
     /**
      * 
@@ -51,54 +49,32 @@ public class HostsImpl implements Fail2ban {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface HostsImplFactory extends HostsService {
+    public interface Fail2banImplFactory extends Fail2banService {
 
     }
 
-    private final HostsImplLogger log;
+    private final Fail2banImplLogger log;
 
-    private final List<Host> hosts;
+    private final List<Jail> jails;
 
     private final HostServiceProperties serviceProperties;
 
     private final List<SshHost> targets;
 
-    private final HostImplFactory hostFactory;
+    private final JailImplFactory hostFactory;
+
+    private Jail defaultJail;
 
     @AssistedInject
-    HostsImpl(HostsImplLogger log, HostImplFactory hostFactory,
+    Fail2banImpl(Fail2banImplLogger log, JailImplFactory hostFactory,
             HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.hostFactory = hostFactory;
-        this.targets = new ArrayList<SshHost>();
-        this.hosts = new ArrayList<Host>();
+        this.targets = new ArrayList<>();
+        this.jails = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
-    }
-
-    public void ip(Map<String, Object> args, String address) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
-        a.put("ip", address);
-        ip(a);
-    }
-
-    public void ip(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
-        List<String> aliases = new ArrayList<String>();
-        a.put("address", a.get("ip"));
-        a.put("aliases", aliases);
-        if (a.get("alias") != null) {
-            aliases = ToList.toList(args.get("alias"));
-            a.put("aliases", aliases);
-        }
-        a.put("identifier", a.get("on"));
-        if (a.get("on") == null) {
-            a.put("identifier", "host");
-        }
-        Host h = hostFactory.create(a);
-        log.hostAdded(this, h);
-        hosts.add(h);
     }
 
     @Override
@@ -107,8 +83,8 @@ public class HostsImpl implements Fail2ban {
     }
 
     @Override
-    public List<Host> getHosts() {
-        return hosts;
+    public List<Jail> getJails() {
+        return jails;
     }
 
     @Override
@@ -139,7 +115,7 @@ public class HostsImpl implements Fail2ban {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("hosts", hosts).append("targets", targets).toString();
+                .append("hosts", jails).append("targets", targets).toString();
     }
 
     @SuppressWarnings("unchecked")

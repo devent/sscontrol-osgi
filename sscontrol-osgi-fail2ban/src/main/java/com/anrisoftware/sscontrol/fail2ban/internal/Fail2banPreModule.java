@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import com.anrisoftware.sscontrol.fail2ban.internal.HostsPreScriptImpl.HostnamePreScriptImplFactory;
+import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banPreScriptImpl.HostnamePreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -25,12 +25,12 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostsPreModule extends AbstractModule {
+public class Fail2banPreModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(PreHost.class, HostsPreScriptImpl.class)
+                .implement(PreHost.class, Fail2banPreScriptImpl.class)
                 .build(HostnamePreScriptImplFactory.class));
     }
 

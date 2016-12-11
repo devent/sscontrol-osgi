@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-security-fail2ban. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.security.fail2ban;
+package com.anrisoftware.sscontrol.fail2ban.external;
 
 /**
  * Banning type.

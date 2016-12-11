@@ -15,34 +15,14 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.external;
 
-import java.util.List;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * Host with address and aliases.
- * 
+ * Hostname pre-script service.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface Host {
-
-    /**
-     * Returns the host IP address.
-     */
-    String getAddress();
-
-    /**
-     * Returns the name of the host.
-     */
-    String getHost();
-
-    /**
-     * Returns the aliases of the host.
-     */
-    List<String> getAliases();
-
-    /**
-     * Returns on what the host should be identified.
-     */
-    String getIdentifier();
+public interface Fail2banPreService extends PreHostService {
 
 }

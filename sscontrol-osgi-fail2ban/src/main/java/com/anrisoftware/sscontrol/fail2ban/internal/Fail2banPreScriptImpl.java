@@ -15,20 +15,24 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
+import static java.lang.String.format;
+
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
+import com.anrisoftware.sscontrol.fail2ban.external.Backend;
+import com.anrisoftware.sscontrol.fail2ban.external.Type;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * Hostname service pre-script.
+ * <i>Fail2ban</i> service pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostsPreScriptImpl implements PreHost {
+public class Fail2banPreScriptImpl implements PreHost {
 
     /**
      * 
@@ -43,6 +47,12 @@ public class HostsPreScriptImpl implements PreHost {
     public void configureCompiler(Object compiler) throws AppException {
         CompilerConfiguration cc = (CompilerConfiguration) compiler;
         ImportCustomizer imports = new ImportCustomizer();
+        imports.addImports(
+                format("com.anrisoftware.sscontrol.fail2ban.external.%s",
+                        Backend.class.getSimpleName()));
+        imports.addImports(
+                format("com.anrisoftware.sscontrol.fail2ban.external.%s",
+                        Type.class.getSimpleName()));
         cc.addCompilationCustomizers(imports);
     }
 

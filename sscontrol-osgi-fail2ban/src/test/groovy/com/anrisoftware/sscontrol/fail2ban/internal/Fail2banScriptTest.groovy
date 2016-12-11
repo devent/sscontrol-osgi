@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.internal
+package com.anrisoftware.sscontrol.fail2ban.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -49,7 +49,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @CompileStatic
-class HostsScriptTest {
+class Fail2banScriptTest {
 
     @Inject
     HostServicesImplFactory servicesFactory

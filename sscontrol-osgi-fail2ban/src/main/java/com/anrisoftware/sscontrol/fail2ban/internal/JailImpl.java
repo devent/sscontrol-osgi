@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +23,20 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
-import com.anrisoftware.sscontrol.fail2ban.external.Host;
+import com.anrisoftware.sscontrol.fail2ban.external.Backend;
+import com.anrisoftware.sscontrol.fail2ban.external.Jail;
+import com.anrisoftware.sscontrol.fail2ban.external.Type;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Host with address and aliases.
- * 
+ * <i>Fail2ban</i> jail.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class HostImpl implements Host {
+public class JailImpl implements Jail {
 
     /**
      * 
@@ -40,55 +44,69 @@ public class HostImpl implements Host {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface HostImplFactory {
+    public interface JailImplFactory {
 
-        Host create(Map<String, Object> args);
+        Jail create(Map<String, Object> args);
 
     }
 
-    private final String address;
-
-    private final List<String> aliases;
-
-    private final String host;
-
-    private final String identifier;
-
     @SuppressWarnings("unchecked")
     @Inject
-    HostImpl(@Assisted Map<String, Object> args) {
+    JailImpl(@Assisted Map<String, Object> args) {
         this.address = args.get("address").toString();
         this.host = args.get("host").toString();
-        this.aliases = new ArrayList<String>(
+        this.aliases = new ArrayList<>(
                 (List<String>) args.get("aliases"));
         this.identifier = args.get("identifier").toString();
     }
 
     @Override
-    public String getAddress() {
-        return address;
+    public String getService() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    public String getHost() {
-        return host;
+    public String getNotify() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    public List<String> getAliases() {
-        return aliases;
+    public List<String> getIgnoreAddresses() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    public String getIdentifier() {
-        return identifier;
+    public Integer getBanningRetries() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    private static final String ALIASES = "aliases";
+    @Override
+    public Duration getBanningTime() throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-    private static final String HOST = "host";
+    @Override
+    public Backend getBanningBackend() throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-    private static final String IDENTIFIER = "identifier";
+    @Override
+    public Type getBanningType() throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getBanningApp() throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
     public String toString() {

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import static com.anrisoftware.sscontrol.fail2ban.internal.HostsImplLogger._.hostAdded;
+import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImplLogger._.hostAdded;
 
 import javax.inject.Singleton;
 
@@ -24,13 +24,13 @@ import com.anrisoftware.sscontrol.fail2ban.external.Host;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 
 /**
- * Logging for {@link HostsImpl}.
+ * Logging for {@link Fail2banImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class HostsImplLogger extends AbstractLogger {
+final class Fail2banImplLogger extends AbstractLogger {
 
     enum _ {
 
@@ -49,10 +49,10 @@ final class HostsImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link HostsImpl}.
+     * Sets the context of the logger to {@link Fail2banImpl}.
      */
-    public HostsImplLogger() {
-        super(HostsImpl.class);
+    public Fail2banImplLogger() {
+        super(Fail2banImpl.class);
     }
 
     public void hostAdded(Fail2ban hosts, Host h) {
