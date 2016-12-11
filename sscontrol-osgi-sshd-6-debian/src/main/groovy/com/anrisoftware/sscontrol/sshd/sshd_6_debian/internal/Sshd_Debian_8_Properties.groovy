@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.sshd_6
+package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal;
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.hostname.external.Hostname
-
-import groovy.util.logging.Slf4j
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Configures the <i>Sshd</i> 6.0 service.
+ * <i>Sshd Debian 8</i> properties provider from
+ * {@code "/sshd_debian_8.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-abstract class Sshd_6 extends ScriptBase {
+class Sshd_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    def restartService() {
-        log.info 'Restarting hostname service.'
-        shell privileged: true, "hostnamectl set-hostname $service.hostname" call()
-    }
+    private static final URL RESOURCE = Sshd_Debian_8_Properties.class.getResource("/sshd_debian_8.properties");
 
-    @Override
-    Hostname getService() {
-        super.getService();
-    }
-
-    @Override
-    def getLog() {
-        log
+    Sshd_Debian_8_Properties() {
+        super(Sshd_Debian_8_Properties.class, RESOURCE);
     }
 }

@@ -56,6 +56,7 @@
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-sshd</module>
         <module>../sscontrol-osgi-sshd-6</module>
+        <module>../sscontrol-osgi-sshd-6-debian</module>
         <module>../sscontrol-osgi-types</module>
     </modules>
 
