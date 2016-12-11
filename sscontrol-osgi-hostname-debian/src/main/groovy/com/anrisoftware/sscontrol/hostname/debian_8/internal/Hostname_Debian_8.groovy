@@ -43,14 +43,14 @@ class Hostname_Debian_8 extends Hostname_Debian {
     @Inject
     Hostname_Debian_8_Properties debianPropertiesProvider
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
-    }
-
     @Activate
     void start() {
         createInjector().injectMembers(this)
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        debianPropertiesProvider.get()
     }
 
     @Override
