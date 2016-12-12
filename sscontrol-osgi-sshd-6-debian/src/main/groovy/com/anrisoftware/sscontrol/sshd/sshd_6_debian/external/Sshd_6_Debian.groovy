@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.systemd.external
+package com.anrisoftware.sscontrol.sshd.sshd_6_debian.external
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.hostname.external.Hostname
+import com.anrisoftware.sscontrol.sshd.external.Sshd
+import com.anrisoftware.sscontrol.sshd.sshd_6.external.Sshd_6
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>hostname</i> service systems that use systemd.
+ * Configures the <i>Sshd</i> 6.0 service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class Hostname_Systemd extends ScriptBase {
+abstract class Sshd_6_Debian extends Sshd_6 {
 
-    def restartService() {
-        log.info 'Set hostname to {}.', service.hostname
-        shell privileged: true, "hostnamectl set-hostname $service.hostname" call()
+    void installPackages() {
+        log.info "Installing packages {}.", packages
+        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
+            env "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override
-    Hostname getService() {
+    Sshd getService() {
         super.getService();
     }
 

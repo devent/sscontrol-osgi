@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.internal
+package com.anrisoftware.sscontrol.sshd.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -22,16 +22,17 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
-import com.anrisoftware.sscontrol.hosts.external.Host
-import com.anrisoftware.sscontrol.hosts.external.Hosts
-import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.sshd.external.Sshd
+import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -50,68 +51,48 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @CompileStatic
-class HostsScriptTest {
+class SshdScriptTest {
 
     @Inject
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostsImplFactory hostnameFactory
+    SshdImplFactory sshdFactory
 
     @Test
-    void "hosts service"() {
+    void "sshd service"() {
         def testCases = [
             [
                 input: """
-service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
+service "sshd"
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('sshd').size() == 1
+                    Sshd hosts = services.getServices('sshd')[0] as Sshd
+                },
+            ],
+            [
+                input: """
+service "sshd" with {
+    user << 'devent'
 }
 """,
                 expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 2
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.size() == 0
-                    assert h.identifier == "host"
-                    h = hosts.hosts[1]
-                    assert h.address == "192.168.0.49"
-                    assert h.host == "srv1.ubuntutest.de"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "host"
+                    assert services.getServices('sshd').size() == 1
+                    Sshd hosts = services.getServices('sshd')[0] as Sshd
+                    assert hosts.users.size() == 1
+                    assert hosts.users.containsAll(["devent"])
                 },
             ],
             [
                 input: """
-service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1"
+service "sshd" with {
+    debug level: 1
+}
 """,
                 expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 1
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "host"
-                },
-            ],
-            [
-                input: """
-service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1", on: "address"
-""",
-                expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 1
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "address"
+                    assert services.getServices('sshd').size() == 1
+                    Sshd hosts = services.getServices('sshd')[0] as Sshd
                 },
             ],
         ]
@@ -119,7 +100,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
             log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
             services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-            services.putAvailableService 'hosts', hostnameFactory
+            services.putAvailableService 'sshd', sshdFactory
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
             expected services
@@ -130,11 +111,13 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
     void setupTest() {
         toStringStyle
         Guice.createInjector(
-                new HostsModule(),
+                new SshdModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesModule(),
                 new PropertiesUtilsModule(),
+                new DebugLoggingModule(),
+                new StringsModule(),
                 new AbstractModule() {
 
                     @Override

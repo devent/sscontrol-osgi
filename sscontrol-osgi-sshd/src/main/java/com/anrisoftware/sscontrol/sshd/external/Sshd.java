@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.systemd.external
+package com.anrisoftware.sscontrol.sshd.external;
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.hostname.external.Hostname
+import java.util.List;
 
-import groovy.util.logging.Slf4j
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
- * Configures the <i>hostname</i> service systems that use systemd.
+ * Sshd service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-abstract class Hostname_Systemd extends ScriptBase {
+public interface Sshd extends HostService {
 
-    def restartService() {
-        log.info 'Set hostname to {}.', service.hostname
-        shell privileged: true, "hostnamectl set-hostname $service.hostname" call()
-    }
+    DebugLogging getDebugLogging();
 
-    @Override
-    Hostname getService() {
-        super.getService();
-    }
-
-    @Override
-    def getLog() {
-        log
-    }
+    List<String> getUsers();
 }

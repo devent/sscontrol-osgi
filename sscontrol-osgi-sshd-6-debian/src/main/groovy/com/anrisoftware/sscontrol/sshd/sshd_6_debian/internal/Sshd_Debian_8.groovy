@@ -13,44 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.internal
+package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal
 
-import static com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8_Service.*
-import static com.google.inject.Guice.createInjector
+import static com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8_Service.*
 
 import javax.inject.Inject
 
-import org.apache.felix.scr.annotations.Activate
-import org.apache.felix.scr.annotations.Component
-import org.apache.felix.scr.annotations.Service
-
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian
+import com.anrisoftware.sscontrol.sshd.external.Sshd
+import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_6_Debian
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>hostname</i> on Debian 8 systems.
+ * Configures the <i>Sshd</i> 6 service for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-@Component
-@Service(Hostname_Debian_8.class)
-class Hostname_Debian_8 extends Hostname_Debian {
+class Sshd_Debian_8 extends Sshd_6_Debian {
 
     @Inject
-    Hostname_Debian_8_Properties debianPropertiesProvider
+    Sshd_Debian_8_Properties debianPropertiesProvider
 
-    @Activate
-    void start() {
-        createInjector().injectMembers(this)
+    @Override
+    def run() {
+        setupDefaults()
+        installPackages()
+        configureService()
+        restartService()
+    }
+
+    def setupDefaults() {
+        Sshd service = service
+        if (!service.debugLogging.modules['debug']) {
+            service.debug level: defaultLogLevel
+        }
+    }
+
+    def getDefaultLogLevel() {
+        defaultProperties.getNumberProperty('default_log_level').intValue()
     }
 
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
+    }
+
+    @Override
+    Sshd getService() {
+        super.getService();
     }
 
     @Override

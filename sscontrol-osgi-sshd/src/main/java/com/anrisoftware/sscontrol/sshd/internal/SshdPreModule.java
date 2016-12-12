@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.systemd.external
+package com.anrisoftware.sscontrol.sshd.internal;
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.hostname.external.Hostname
-
-import groovy.util.logging.Slf4j
+import com.anrisoftware.sscontrol.sshd.internal.SshdPreScriptImpl.SshdPreScriptImplFactory;
+import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Configures the <i>hostname</i> service systems that use systemd.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-abstract class Hostname_Systemd extends ScriptBase {
-
-    def restartService() {
-        log.info 'Set hostname to {}.', service.hostname
-        shell privileged: true, "hostnamectl set-hostname $service.hostname" call()
-    }
+public class SshdPreModule extends AbstractModule {
 
     @Override
-    Hostname getService() {
-        super.getService();
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(PreHost.class, SshdPreScriptImpl.class)
+                .build(SshdPreScriptImplFactory.class));
     }
 
-    @Override
-    def getLog() {
-        log
-    }
 }

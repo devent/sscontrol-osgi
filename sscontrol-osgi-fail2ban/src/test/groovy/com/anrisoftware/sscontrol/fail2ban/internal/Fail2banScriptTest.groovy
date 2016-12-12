@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.internal
+package com.anrisoftware.sscontrol.fail2ban.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -34,7 +34,6 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -50,7 +49,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @CompileStatic
-class HostsScriptTest {
+class Fail2banScriptTest {
 
     @Inject
     HostServicesImplFactory servicesFactory
@@ -118,7 +117,6 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
         testCases.eachWithIndex { Map test, int k ->
             log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
-            services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
             services.putAvailableService 'hosts', hostnameFactory
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected

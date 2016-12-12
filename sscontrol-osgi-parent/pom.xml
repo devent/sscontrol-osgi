@@ -55,6 +55,9 @@
         <module>../sscontrol-osgi-shell-openssh</module>
         <module>../sscontrol-osgi-shell-test</module>
         <module>../sscontrol-osgi-ssh</module>
+        <module>../sscontrol-osgi-sshd</module>
+        <module>../sscontrol-osgi-sshd-6</module>
+        <module>../sscontrol-osgi-sshd-6-debian</module>
         <module>../sscontrol-osgi-types</module>
     </modules>
 
@@ -104,6 +107,12 @@
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-threads</artifactId>
+                <version>${project.custom.bundles.globalpomutils.version}</version>
+                <type>bundle</type>
+            </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.globalpom</groupId>
+                <artifactId>globalpomutils-initfileparser</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
                 <type>bundle</type>
             </dependency>
