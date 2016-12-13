@@ -45,10 +45,12 @@ public interface Fail2ban extends HostService {
      * <p>
      *
      * <pre>
-     * service "fail2ban", notify: "admin@${target.host.address}", retries: 3 with { }
+     * service "fail2ban", notify: "admin@${target.host.address}" with { }
      * // or
      * service "fail2ban" with {
      *     notify address: "admin@${target.host.address}"
+     *     ignore address: "192.0.0.1" // or
+     *     ignore << "192.0.0.1, 192.0.0.2"
      *     banning retries: 3, time: "PT10M", backend: Backend.polling, type: Type.deny
      * }
      * </pre>

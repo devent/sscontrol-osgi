@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
@@ -29,6 +27,7 @@ import com.anrisoftware.sscontrol.fail2ban.external.Backend;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.external.Type;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * <i>Fail2ban</i> jail.
@@ -39,7 +38,7 @@ import com.google.inject.assistedinject.Assisted;
 public class JailImpl implements Jail {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -48,71 +47,98 @@ public class JailImpl implements Jail {
 
         Jail create(Map<String, Object> args);
 
+        Jail create(String string);
+
+    }
+
+    private final String service;
+
+    private final String notify;
+
+    private final List<String> ignore;
+
+    private final Integer retries;
+
+    private final Duration time;
+
+    private final Backend backend;
+
+    private final Type type;
+
+    private final String app;
+
+    @AssistedInject
+    JailImpl(@Assisted String service) {
+        this.service = service;
+        this.notify = null;
+        this.ignore = null;
+        this.retries = null;
+        this.time = null;
+        this.backend = null;
+        this.type = null;
+        this.app = null;
     }
 
     @SuppressWarnings("unchecked")
-    @Inject
+    @AssistedInject
     JailImpl(@Assisted Map<String, Object> args) {
-        this.address = args.get("address").toString();
-        this.host = args.get("host").toString();
-        this.aliases = new ArrayList<>(
-                (List<String>) args.get("aliases"));
-        this.identifier = args.get("identifier").toString();
+        this.service = args.get("service").toString();
+        this.notify = args.get("notify").toString();
+        this.ignore = new ArrayList<>((List<String>) args.get("ignore"));
+        this.retries = ((Number) args.get("retries")).intValue();
+        this.time = (Duration) args.get("time");
+        this.backend = (Backend) args.get("backend");
+        this.type = (Type) args.get("type");
+        this.app = args.get("notify").toString();
     }
 
     @Override
     public String getService() {
-        // TODO Auto-generated method stub
-        return null;
+        return service;
     }
 
     @Override
     public String getNotify() {
-        // TODO Auto-generated method stub
-        return null;
+        return notify;
     }
 
     @Override
     public List<String> getIgnoreAddresses() {
-        // TODO Auto-generated method stub
-        return null;
+        return ignore;
     }
 
     @Override
     public Integer getBanningRetries() {
-        // TODO Auto-generated method stub
-        return null;
+        return retries;
     }
 
     @Override
     public Duration getBanningTime() throws ParseException {
-        // TODO Auto-generated method stub
-        return null;
+        return time;
     }
 
     @Override
     public Backend getBanningBackend() throws ParseException {
-        // TODO Auto-generated method stub
-        return null;
+        return backend;
     }
 
     @Override
     public Type getBanningType() throws ParseException {
-        // TODO Auto-generated method stub
-        return null;
+        return type;
     }
 
     @Override
     public String getBanningApp() throws ParseException {
-        // TODO Auto-generated method stub
-        return null;
+        return app;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(address).append(HOST, host)
-                .append(ALIASES, aliases).append(IDENTIFIER, identifier)
-                .toString();
+        return new ToStringBuilder(this).append(service)
+                .append("notify", notify).append("ignore", ignore)
+                .append("retries", retries).append("time", time)
+                .append("backend", backend).append("type", type)
+                .append("app", app).toString();
     }
 
 }

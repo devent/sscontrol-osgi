@@ -60,7 +60,7 @@ public interface Jail {
      * <pre>
      * jail "apache" with {
      *     ignore address: "192.0.0.1" // or
-     *     ignore addresses: ["192.0.0.1", "192.0.0.2"]
+     *     ignore << "192.0.0.1, 192.0.0.2"
      * }
      * </pre>
      */
@@ -115,7 +115,7 @@ public interface Jail {
     Type getBanningType() throws ParseException;
 
     /**
-     * Returns the banning app.
+     * Returns the banning application name.
      * <p>
      *
      * <pre>

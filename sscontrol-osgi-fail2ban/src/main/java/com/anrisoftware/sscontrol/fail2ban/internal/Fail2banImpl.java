@@ -44,7 +44,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class Fail2banImpl implements Fail2ban {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -61,19 +61,20 @@ public class Fail2banImpl implements Fail2ban {
 
     private final List<SshHost> targets;
 
-    private final JailImplFactory hostFactory;
+    private final JailImplFactory jailFactory;
 
-    private Jail defaultJail;
+    private final Jail defaultJail;
 
     @AssistedInject
-    Fail2banImpl(Fail2banImplLogger log, JailImplFactory hostFactory,
+    Fail2banImpl(Fail2banImplLogger log, JailImplFactory jailFactory,
             HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
-        this.hostFactory = hostFactory;
+        this.jailFactory = jailFactory;
         this.targets = new ArrayList<>();
         this.jails = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
+        this.defaultJail = jailFactory.create("default");
         parseArgs(args);
     }
 
@@ -124,8 +125,8 @@ public class Fail2banImpl implements Fail2ban {
         if (v != null) {
             targets.addAll((List<SshHost>) v);
         }
-        if (args.get("ip") != null) {
-            ip(args);
+        if (args.get("notify") != null) {
+
         }
     }
 
