@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.external;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.joda.time.Duration;
@@ -88,7 +87,7 @@ public interface Jail {
      * }
      * </pre>
      */
-    Duration getBanningTime() throws ParseException;
+    Duration getBanningTime();
 
     /**
      * Returns the banning backend.
@@ -100,7 +99,7 @@ public interface Jail {
      * }
      * </pre>
      */
-    Backend getBanningBackend() throws ParseException;
+    Backend getBanningBackend();
 
     /**
      * Returns the banning type.
@@ -112,7 +111,7 @@ public interface Jail {
      * }
      * </pre>
      */
-    Type getBanningType() throws ParseException;
+    Type getBanningType();
 
     /**
      * Returns the banning application name.
@@ -124,5 +123,5 @@ public interface Jail {
      * }
      * </pre>
      */
-    String getBanningApp() throws ParseException;
+    String getBanningApp();
 }

@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import com.anrisoftware.sscontrol.fail2ban.external.Host;
-import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
+import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory;
+import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -35,7 +35,7 @@ public class Fail2banModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, Fail2banImpl.class)
                 .build(Fail2banImplFactory.class));
-        install(new FactoryModuleBuilder().implement(Host.class, JailImpl.class)
+        install(new FactoryModuleBuilder().implement(Jail.class, JailImpl.class)
                 .build(JailImplFactory.class));
     }
 

@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,22 +112,22 @@ public class JailImpl implements Jail {
     }
 
     @Override
-    public Duration getBanningTime() throws ParseException {
+    public Duration getBanningTime() {
         return time;
     }
 
     @Override
-    public Backend getBanningBackend() throws ParseException {
+    public Backend getBanningBackend() {
         return backend;
     }
 
     @Override
-    public Type getBanningType() throws ParseException {
+    public Type getBanningType() {
         return type;
     }
 
     @Override
-    public String getBanningApp() throws ParseException {
+    public String getBanningApp() {
         return app;
     }
 

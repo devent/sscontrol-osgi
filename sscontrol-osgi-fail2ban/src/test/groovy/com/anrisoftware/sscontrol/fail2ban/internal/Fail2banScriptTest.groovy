@@ -21,11 +21,14 @@ import javax.inject.Inject
 
 import org.junit.Before
 import org.junit.Test
+import org.slf4j.Logger
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
-import com.anrisoftware.sscontrol.hosts.external.Host
-import com.anrisoftware.sscontrol.hosts.external.Hosts
-import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban
+import com.anrisoftware.sscontrol.fail2ban.external.Jail
+import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
@@ -34,7 +37,9 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.TargetsService
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -42,7 +47,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -55,69 +60,31 @@ class Fail2banScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostsImplFactory hostnameFactory
+    Fail2banImplFactory hostnameFactory
 
     @Test
-    void "hosts service"() {
+    void "fail2ban service"() {
         def testCases = [
             [
                 input: """
-service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
+service "fail2ban" with {
+    jail "apache"
 }
 """,
                 expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 2
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.size() == 0
-                    assert h.identifier == "host"
-                    h = hosts.hosts[1]
-                    assert h.address == "192.168.0.49"
-                    assert h.host == "srv1.ubuntutest.de"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "host"
-                },
-            ],
-            [
-                input: """
-service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1"
-""",
-                expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 1
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "host"
-                },
-            ],
-            [
-                input: """
-service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1", on: "address"
-""",
-                expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    Hosts hosts = services.getServices('hosts')[0] as Hosts
-                    assert hosts.hosts.size() == 1
-                    Host h = hosts.hosts[0]
-                    assert h.address == "192.168.0.52"
-                    assert h.host == "srv1.ubuntutest.com"
-                    assert h.aliases.containsAll(["srv1"])
-                    assert h.identifier == "address"
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban hosts = services.getServices('fail2ban')[0] as Fail2ban
+                    assert hosts.jails.size() == 2
+                    Jail h = hosts.jails[0]
+                    assert h.service == "apache"
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
-            services.putAvailableService 'hosts', hostnameFactory
+            services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+            services.putAvailableService 'fail2ban', hostnameFactory
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
             expected services
@@ -128,7 +95,10 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
     void setupTest() {
         toStringStyle
         Guice.createInjector(
-                new HostsModule(),
+                new Fail2banModule(),
+                new DebugLoggingModule(),
+                new TypesModule(),
+                new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesModule(),

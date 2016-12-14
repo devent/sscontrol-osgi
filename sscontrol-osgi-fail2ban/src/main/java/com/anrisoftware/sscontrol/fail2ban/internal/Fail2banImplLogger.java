@@ -15,13 +15,12 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImplLogger._.hostAdded;
+import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImplLogger._.setDefaultJail;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.fail2ban.external.Host;
-import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
+import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 
 /**
  * Logging for {@link Fail2banImpl}.
@@ -34,7 +33,7 @@ final class Fail2banImplLogger extends AbstractLogger {
 
     enum _ {
 
-        hostAdded("Host {} added to {}");
+        setDefaultJail("Sets default jail {} for {}");
 
         private String name;
 
@@ -55,8 +54,8 @@ final class Fail2banImplLogger extends AbstractLogger {
         super(Fail2banImpl.class);
     }
 
-    public void hostAdded(Fail2ban hosts, Host h) {
-        debug(hostAdded, h, hosts);
+    void setDefaultJail(Fail2banImpl fail2ban, Jail jail) {
+        debug(setDefaultJail, jail, fail2ban);
     }
 
 }

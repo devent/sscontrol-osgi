@@ -17,17 +17,23 @@ package com.anrisoftware.sscontrol.fail2ban.internal;
 
 import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banServiceImpl.HOSTS_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -63,7 +69,9 @@ public class Fail2banImpl implements Fail2ban {
 
     private final JailImplFactory jailFactory;
 
-    private final Jail defaultJail;
+    private Jail defaultJail;
+
+    private DebugLogging debug;
 
     @AssistedInject
     Fail2banImpl(Fail2banImplLogger log, JailImplFactory jailFactory,
@@ -78,9 +86,30 @@ public class Fail2banImpl implements Fail2ban {
         parseArgs(args);
     }
 
+    @Inject
+    public void setDebugService(DebugService debugService) {
+        this.debug = debugService.create();
+    }
+
+    public void debug(Map<String, Object> args, String name) {
+        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        arguments.put("name", name);
+        invokeMethod(debug, "debug", arguments);
+    }
+
+    public void debug(Map<String, Object> args) {
+        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        invokeMethod(debug, "debug", arguments);
+    }
+
     @Override
     public String getName() {
         return HOSTS_NAME;
+    }
+
+    @Override
+    public Jail getDefaultJail() {
+        return defaultJail;
     }
 
     @Override
@@ -114,9 +143,15 @@ public class Fail2banImpl implements Fail2ban {
     }
 
     @Override
+    public DebugLogging getDebugLogging() {
+        return debug;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("hosts", jails).append("targets", targets).toString();
+                .append("targets", targets).append("default", defaultJail)
+                .append("jails", jails).toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -126,7 +161,10 @@ public class Fail2banImpl implements Fail2ban {
             targets.addAll((List<SshHost>) v);
         }
         if (args.get("notify") != null) {
-
+            Map<String, Object> a = new HashMap<>(args);
+            a.put("service", "default");
+            this.defaultJail = jailFactory.create(a);
+            log.setDefaultJail(this, defaultJail);
         }
     }
 
