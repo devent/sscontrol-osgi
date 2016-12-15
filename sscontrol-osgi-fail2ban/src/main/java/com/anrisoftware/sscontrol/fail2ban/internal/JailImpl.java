@@ -15,16 +15,25 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
+import com.anrisoftware.globalpom.arrays.ToList;
+import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
 import com.anrisoftware.sscontrol.fail2ban.external.Backend;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.external.Type;
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -35,6 +44,22 @@ import com.google.inject.assistedinject.AssistedInject;
  * @since 1.0
  */
 public class JailImpl implements Jail {
+
+    private static final String APP_ARG = "app";
+
+    private static final String TYPE_ARG = "type";
+
+    private static final String BACKEND_ARG = "backend";
+
+    private static final String TIME_ARG = "time";
+
+    private static final String RETRIES_ARG = "retries";
+
+    private static final String IGNORE_ARG = "ignore";
+
+    private static final String NOTIFY_ARG = "notify";
+
+    private static final String SERVICE_ARG = "service";
 
     /**
      *
@@ -54,23 +79,26 @@ public class JailImpl implements Jail {
 
     private final String notify;
 
-    private final List<String> ignore;
+    private final List<String> ignoreAddresses;
 
-    private final Integer retries;
+    private String app;
 
-    private final Duration time;
+    private Integer retries;
 
-    private final Backend backend;
+    private Duration time;
 
-    private final Type type;
+    private Backend backend;
 
-    private final String app;
+    private Type type;
+
+    @Inject
+    private DurationFormatFactory durationFormat;
 
     @AssistedInject
     JailImpl(@Assisted String service) {
         this.service = service;
         this.notify = null;
-        this.ignore = null;
+        this.ignoreAddresses = new ArrayList<String>();
         this.retries = null;
         this.time = null;
         this.backend = null;
@@ -81,14 +109,66 @@ public class JailImpl implements Jail {
     @SuppressWarnings("unchecked")
     @AssistedInject
     JailImpl(@Assisted Map<String, Object> args) {
-        this.service = args.get("service").toString();
-        this.notify = args.get("notify").toString();
-        this.ignore = new ArrayList<>((List<String>) args.get("ignore"));
-        this.retries = ((Number) args.get("retries")).intValue();
-        this.time = (Duration) args.get("time");
-        this.backend = (Backend) args.get("backend");
-        this.type = (Type) args.get("type");
-        this.app = args.get("notify").toString();
+        this.service = args.get(SERVICE_ARG).toString();
+        this.notify = args.get(NOTIFY_ARG) == null ? null
+                : args.get(NOTIFY_ARG).toString();
+        this.ignoreAddresses = args.get(IGNORE_ARG) == null
+                ? new ArrayList<String>()
+                : new ArrayList<>((List<String>) args.get(IGNORE_ARG));
+        this.retries = (Integer) args.get(RETRIES_ARG);
+        this.time = (Duration) args.get(TIME_ARG);
+        this.backend = (Backend) args.get(BACKEND_ARG);
+        this.type = (Type) args.get(TYPE_ARG);
+        this.app = args.get(APP_ARG) == null ? null
+                : args.get(APP_ARG).toString();
+    }
+
+    public void banning(Map<String, Object> args) throws ParseException {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        Object v;
+        v = a.get(RETRIES_ARG);
+        if (v != null) {
+            this.retries = (Integer) v;
+        }
+        v = a.get(TIME_ARG);
+        if (v != null) {
+            if (v instanceof Duration) {
+                this.time = (Duration) v;
+            } else {
+                this.time = durationFormat.create().parse(v.toString());
+            }
+        }
+        v = a.get(BACKEND_ARG);
+        if (v != null) {
+            this.backend = (Backend) v;
+        }
+        v = a.get(TYPE_ARG);
+        if (v != null) {
+            this.type = (Type) v;
+        }
+        v = a.get(APP_ARG);
+        if (v != null) {
+            this.app = v.toString();
+        }
+    }
+
+    public void ignore(Map<String, Object> args) {
+        Object v;
+        v = args.get("address");
+        if (v != null) {
+            List<String> list = ToList.toList(v);
+            this.ignoreAddresses.addAll(list);
+        }
+    }
+
+    public List<String> getIgnore() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                ignoreAddresses.add(property);
+            }
+        });
     }
 
     @Override
@@ -103,7 +183,7 @@ public class JailImpl implements Jail {
 
     @Override
     public List<String> getIgnoreAddresses() {
-        return ignore;
+        return ignoreAddresses;
     }
 
     @Override
@@ -134,10 +214,10 @@ public class JailImpl implements Jail {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(service)
-                .append("notify", notify).append("ignore", ignore)
-                .append("retries", retries).append("time", time)
-                .append("backend", backend).append("type", type)
-                .append("app", app).toString();
+                .append(NOTIFY_ARG, notify).append(IGNORE_ARG, ignoreAddresses)
+                .append(RETRIES_ARG, retries).append(TIME_ARG, time)
+                .append(BACKEND_ARG, backend).append(TYPE_ARG, type)
+                .append(APP_ARG, app).toString();
     }
 
 }

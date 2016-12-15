@@ -19,15 +19,19 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
 import org.junit.Before
 import org.junit.Test
 import org.slf4j.Logger
 
+import com.anrisoftware.globalpom.durationformat.DurationFormatModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.fail2ban.external.Backend
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban
 import com.anrisoftware.sscontrol.fail2ban.external.Jail
+import com.anrisoftware.sscontrol.fail2ban.external.Type
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
@@ -73,10 +77,164 @@ service "fail2ban" with {
 """,
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
-                    Fail2ban hosts = services.getServices('fail2ban')[0] as Fail2ban
-                    assert hosts.jails.size() == 2
-                    Jail h = hosts.jails[0]
-                    assert h.service == "apache"
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban", notify: "admin@localhost" with {
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.notify == "admin@localhost"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache", notify: "admin@localhost"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.notify == "admin@localhost"
+                },
+            ],
+            [
+                input: """
+import com.anrisoftware.sscontrol.fail2ban.external.Backend
+import com.anrisoftware.sscontrol.fail2ban.external.Type
+
+service "fail2ban" with {
+    banning retries: 3, time: "PT10M", backend: Backend.polling, type: Type.deny
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.notify == null
+                    assert fail.defaultJail.banningRetries == 3
+                    assert fail.defaultJail.banningTime == Duration.standardMinutes(10)
+                    assert fail.defaultJail.banningBackend == Backend.polling
+                    assert fail.defaultJail.banningType == Type.deny
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    ignore << "128.0.0.1"
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.notify == null
+                    assert fail.defaultJail.ignoreAddresses.size() == 1
+                    assert fail.defaultJail.ignoreAddresses.containsAll(['128.0.0.1'])
+                    assert fail.defaultJail.banningRetries == null
+                    assert fail.defaultJail.banningTime == null
+                    assert fail.defaultJail.banningBackend == null
+                    assert fail.defaultJail.banningType == null
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    ignore address: "128.0.0.1"
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.ignoreAddresses.size() == 1
+                    assert fail.defaultJail.ignoreAddresses.containsAll(['128.0.0.1'])
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        ignore << "128.0.0.1"
+    }
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.ignoreAddresses.size() == 1
+                    assert j.ignoreAddresses.containsAll(['128.0.0.1'])
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        ignore address: "128.0.0.1"
+    }
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.ignoreAddresses.size() == 1
+                    assert j.ignoreAddresses.containsAll(['128.0.0.1'])
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        banning app: "Apache"
+    }
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.banningApp == "Apache"
                 },
             ],
         ]
@@ -99,6 +257,7 @@ service "fail2ban" with {
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),
+                new DurationFormatModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesModule(),

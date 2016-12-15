@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
@@ -102,6 +103,34 @@ public class Fail2banImpl implements Fail2ban {
         invokeMethod(debug, "debug", arguments);
     }
 
+    public void banning(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        invokeMethod(defaultJail, "banning", a);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getIgnore() {
+        return (List<String>) InvokerHelper.getProperty(defaultJail, "ignore");
+    }
+
+    public void ignore(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        invokeMethod(defaultJail, "ignore", a);
+    }
+
+    public Jail jail(String service) {
+        return jail(new HashMap<String, Object>(), service);
+    }
+
+    public Jail jail(Map<String, Object> args, String service) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("service", service);
+        Jail jail = jailFactory.create(a);
+        jails.add(jail);
+        log.jailAdded(this, jail);
+        return jail;
+    }
+
     @Override
     public String getName() {
         return HOSTS_NAME;
@@ -164,7 +193,7 @@ public class Fail2banImpl implements Fail2ban {
             Map<String, Object> a = new HashMap<>(args);
             a.put("service", "default");
             this.defaultJail = jailFactory.create(a);
-            log.setDefaultJail(this, defaultJail);
+            log.defaultJailSet(this, defaultJail);
         }
     }
 

@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
+import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImplLogger._.jailAdded;
 import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImplLogger._.setDefaultJail;
 
 import javax.inject.Singleton;
@@ -33,7 +34,9 @@ final class Fail2banImplLogger extends AbstractLogger {
 
     enum _ {
 
-        setDefaultJail("Sets default jail {} for {}");
+        setDefaultJail("Sets default jail {} for {}"),
+
+        jailAdded("Jail {} added to {}");
 
         private String name;
 
@@ -54,8 +57,12 @@ final class Fail2banImplLogger extends AbstractLogger {
         super(Fail2banImpl.class);
     }
 
-    void setDefaultJail(Fail2banImpl fail2ban, Jail jail) {
+    void defaultJailSet(Fail2banImpl fail2ban, Jail jail) {
         debug(setDefaultJail, jail, fail2ban);
+    }
+
+    void jailAdded(Fail2banImpl fail2ban, Jail jail) {
+        debug(jailAdded, jail, fail2ban);
     }
 
 }
