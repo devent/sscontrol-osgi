@@ -36,6 +36,8 @@
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
         <module>../sscontrol-osgi-fail2ban</module>
+        <module>../sscontrol-osgi-fail2ban-0-8</module>
+        <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
         <module>../sscontrol-osgi-features</module>
         <module>../sscontrol-osgi-fetch</module>
         <module>../sscontrol-osgi-groovy-parser</module>
