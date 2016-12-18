@@ -26,7 +26,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
  */
 class Fail2ban_0_8_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Fail2ban_0_8_Debian_8_Properties.class.getResource("/sshd_debian_8.properties");
+    private static final URL RESOURCE = Fail2ban_0_8_Debian_8_Properties.class.getResource("/fail2ban_0_8_debian_8.properties");
 
     Fail2ban_0_8_Debian_8_Properties() {
         super(Fail2ban_0_8_Debian_8_Properties.class, RESOURCE);

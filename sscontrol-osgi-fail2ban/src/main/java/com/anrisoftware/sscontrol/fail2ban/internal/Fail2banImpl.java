@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
-import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banServiceImpl.HOSTS_NAME;
+import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banServiceImpl.FAIL2BAN_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
@@ -93,18 +93,29 @@ public class Fail2banImpl implements Fail2ban {
     }
 
     public void debug(Map<String, Object> args, String name) {
-        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        Map<String, Object> arguments = new HashMap<>(args);
         arguments.put("name", name);
         invokeMethod(debug, "debug", arguments);
     }
 
     public void debug(Map<String, Object> args) {
-        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        Map<String, Object> arguments = new HashMap<>(args);
         invokeMethod(debug, "debug", arguments);
     }
 
+    public void notify(String address) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        notify(a);
+    }
+
+    public void notify(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        invokeMethod(defaultJail, "notify", a);
+    }
+
     public void banning(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
         invokeMethod(defaultJail, "banning", a);
     }
 
@@ -114,7 +125,7 @@ public class Fail2banImpl implements Fail2ban {
     }
 
     public void ignore(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
         invokeMethod(defaultJail, "ignore", a);
     }
 
@@ -133,7 +144,7 @@ public class Fail2banImpl implements Fail2ban {
 
     @Override
     public String getName() {
-        return HOSTS_NAME;
+        return FAIL2BAN_NAME;
     }
 
     @Override

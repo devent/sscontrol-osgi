@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFac
 @Service(Fail2banService.class)
 public class Fail2banServiceImpl implements Fail2banService {
 
-    static final String HOSTS_NAME = "hosts";
+    static final String FAIL2BAN_NAME = "fail2ban";
 
     @Inject
     private Fail2banImplFactory hostsFactory;

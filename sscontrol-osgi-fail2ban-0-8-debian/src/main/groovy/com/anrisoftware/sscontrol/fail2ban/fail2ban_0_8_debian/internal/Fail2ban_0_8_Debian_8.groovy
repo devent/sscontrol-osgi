@@ -15,13 +15,12 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
+
 import static com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal.Fail2ban_0_8_Debian_8_Service.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Fail2ban_0_8_Debian
-import com.anrisoftware.sscontrol.sshd.external.Sshd
 
 import groovy.util.logging.Slf4j
 
@@ -45,25 +44,9 @@ class Fail2ban_0_8_Debian_8 extends Fail2ban_0_8_Debian {
         restartService()
     }
 
-    def setupDefaults() {
-        Sshd service = service
-        if (!service.debugLogging.modules['debug']) {
-            service.debug level: defaultLogLevel
-        }
-    }
-
-    def getDefaultLogLevel() {
-        defaultProperties.getNumberProperty('default_log_level').intValue()
-    }
-
     @Override
-    ContextProperties getDefaultProperties() {
+    Properties getDefaultProperties() {
         debianPropertiesProvider.get()
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService();
     }
 
     @Override

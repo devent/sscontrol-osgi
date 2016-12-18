@@ -15,9 +15,11 @@
  */
 package com.anrisoftware.sscontrol.debug.internal;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -34,7 +36,7 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class DebugModuleImpl implements DebugModule {
+public class DebugModuleImpl implements DebugModule, Map<String, Object> {
 
     public interface DebugModuleImplFactory {
 
@@ -111,6 +113,76 @@ public class DebugModuleImpl implements DebugModule {
     public String toString() {
         return new ToStringBuilder(this).append("properties", properties)
                 .toString();
+    }
+
+    @Override
+    public int size() {
+        return properties.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return properties.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return properties.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return properties.containsValue(value);
+    }
+
+    @Override
+    public Object get(Object key) {
+        return properties.get(key);
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        return properties.put(key, value);
+    }
+
+    @Override
+    public Object remove(Object key) {
+        return properties.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends Object> m) {
+        properties.putAll(m);
+    }
+
+    @Override
+    public void clear() {
+        properties.clear();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return properties.keySet();
+    }
+
+    @Override
+    public Collection<Object> values() {
+        return properties.values();
+    }
+
+    @Override
+    public Set<java.util.Map.Entry<String, Object>> entrySet() {
+        return properties.entrySet();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return properties.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return properties.hashCode();
     }
 
 }

@@ -77,9 +77,9 @@ public class JailImpl implements Jail {
 
     private final String service;
 
-    private final String notify;
-
     private final List<String> ignoreAddresses;
+
+    private String notify;
 
     private String app;
 
@@ -98,7 +98,7 @@ public class JailImpl implements Jail {
     JailImpl(@Assisted String service) {
         this.service = service;
         this.notify = null;
-        this.ignoreAddresses = new ArrayList<String>();
+        this.ignoreAddresses = new ArrayList<>();
         this.retries = null;
         this.time = null;
         this.backend = null;
@@ -123,8 +123,21 @@ public class JailImpl implements Jail {
                 : args.get(APP_ARG).toString();
     }
 
+    public void notify(String address) throws ParseException {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        notify(a);
+    }
+
+    public void notify(Map<String, Object> args) throws ParseException {
+        Map<String, Object> a = new HashMap<>(args);
+        Object v;
+        v = a.get("address");
+        this.notify = v.toString();
+    }
+
     public void banning(Map<String, Object> args) throws ParseException {
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
         Object v;
         v = a.get(RETRIES_ARG);
         if (v != null) {

@@ -15,13 +15,17 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8.external
 
+import org.joda.time.Duration
+
+import com.anrisoftware.sscontrol.fail2ban.external.Backend
+import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban
+import com.anrisoftware.sscontrol.fail2ban.external.Type
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.sshd.external.Sshd
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> 6.0 service.
+ * Configures the <i>Fail2ban 0.8</i> service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -35,31 +39,106 @@ abstract class Fail2ban_0_8 extends ScriptBase {
         shell privileged: true, "service fail2ban status" call()
     }
 
+    def setupDefaults() {
+        Fail2ban service = service
+        if (!service.debugLogging.modules['debug']) {
+            service.debug "debug", level: debugLogLevel, target: debugLogTarget
+        }
+        if (!service.defaultJail.notify) {
+            service.defaultJail.notify address: notifyAddress
+        }
+        if (!service.defaultJail.ignoreAddresses.size() == 0) {
+            service.defaultJail.ignore address: ignoreAddresses
+        }
+        if (!service.defaultJail.banningRetries) {
+            service.defaultJail.banning retries: banningRetries
+        }
+        if (!service.defaultJail.banningTime) {
+            service.defaultJail.banning time: banningTime
+        }
+        if (!service.defaultJail.banningBackend) {
+            service.defaultJail.banning backend: banningBackend
+        }
+        if (!service.defaultJail.banningType) {
+            service.defaultJail.banning type: banningType
+        }
+    }
+
     def configureService() {
         log.info 'Configuring sshd service.'
-        Sshd service = service
-        int debug = service.debugLogging.modules['debug'].level
-        replace "s/(?m)^#?\\s*LogLevel.*/LogLevel ${logLevelMap[debug]}/", privileged: true, dest: configFile call()
-        replace "s/(?m)^#?\\s*PermitRootLogin.*/PermitRootLogin ${permitRootLogin}/", privileged: true, dest: configFile call()
-        replace "s/(?m)^#?\\s*PasswordAuthentication.*/PasswordAuthentication ${passwordAuthentication}/", privileged: true, dest: configFile call()
+        copyConfFile()
+        configureDebugLog()
     }
 
-    Map getLogLevelMap() {
-        def p = defaultProperties.getProperty('log_level_map')
-        Eval.me p
+    def configureDebugLog() {
+        Fail2ban service = service
+        int debugLevel = service.debugLogging.modules['debug'].level
+        String debugTarget = service.debugLogging.modules['debug'].target
+        replace privileged: true, dest: new File(configDir, fail2banLocalConfFile) with {
+            line "s/(?m)^loglevel\\s*=.*/loglevel = ${debugLevel}/"
+            line "s|(?m)^logtarget\\s*=.*|logtarget = ${debugTarget}|"
+            it
+        }()
     }
 
-    String getPermitRootLogin() {
-        defaultProperties.getProperty('permit_root_login')
+    def copyConfFile() {
+        shell privileged: true, """
+cd '${configDir}'
+if [ ! -f ${fail2banLocalConfFile} ]; then
+cp '${fail2banConfFile}' '${fail2banLocalConfFile}'
+fi
+if [ ! -f ${jailLocalConfFile} ]; then
+cp '${jailConfFile}' '${jailLocalConfFile}'
+fi
+""" call()
     }
 
-    String getPasswordAuthentication() {
-        defaultProperties.getProperty('password_authentication')
+    Integer getDebugLogLevel() {
+        properties.getNumberProperty('debug_log_level', defaultProperties)
     }
 
-    @Override
-    Sshd getService() {
-        super.getService();
+    String getDebugLogTarget() {
+        properties.getProperty('debug_log_target', defaultProperties)
+    }
+
+    String getNotifyAddress() {
+        properties.getProperty('notify_address', defaultProperties)
+    }
+
+    List getIgnoreAddresses() {
+        properties.getListProperty('ignore_addresses', defaultProperties)
+    }
+
+    Integer getBanningRetries() {
+        properties.getNumberProperty('banning_retries', defaultProperties)
+    }
+
+    Duration getBanningTime() {
+        properties.getDurationProperty('banning_time', defaultProperties)
+    }
+
+    Backend getBanningBackend() {
+        Backend.valueOf properties.getProperty('banning_backend', defaultProperties)
+    }
+
+    Type getBanningType() {
+        Type.valueOf properties.getProperty('banning_type', defaultProperties)
+    }
+
+    String getFail2banConfFile() {
+        properties.getProperty "config_file", defaultProperties
+    }
+
+    String getFail2banLocalConfFile() {
+        properties.getProperty "local_config_file", defaultProperties
+    }
+
+    String getJailConfFile() {
+        properties.getProperty "jail_config_file", defaultProperties
+    }
+
+    String getJailLocalConfFile() {
+        properties.getProperty "jail_local_config_file", defaultProperties
     }
 
     @Override

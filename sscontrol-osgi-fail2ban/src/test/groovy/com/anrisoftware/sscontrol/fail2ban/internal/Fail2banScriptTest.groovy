@@ -103,7 +103,77 @@ service "fail2ban", notify: "admin@localhost" with {
             [
                 input: """
 service "fail2ban" with {
+    notify "admin@localhost"
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.notify == "admin@localhost"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    notify address: "admin@localhost"
+    jail "apache"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.notify == "admin@localhost"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
     jail "apache", notify: "admin@localhost"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.notify == "admin@localhost"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        notify "admin@localhost"
+    }
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "default"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.notify == "admin@localhost"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        notify address: "admin@localhost"
+    }
 }
 """,
                 expected: { HostServices services ->
