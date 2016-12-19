@@ -1,1 +1,2 @@
 -y install fail2ban python-pyinotify
+-y install ufw

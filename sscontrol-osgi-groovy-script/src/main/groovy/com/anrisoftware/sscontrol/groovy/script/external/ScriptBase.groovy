@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.groovy.script.external
 
 import static org.apache.commons.lang3.Validate.*
 
+import java.nio.charset.Charset
 import java.util.concurrent.ExecutorService
 
 import javax.inject.Inject
@@ -251,6 +252,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     List getPackages() {
         properties.getListProperty "packages", defaultProperties
+    }
+
+    /**
+     * Returns the character set.
+     *
+     * <ul>
+     * <li>profile property {@code charset}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    Charset getCharset() {
+        properties.getCharsetProperty "charset", defaultProperties
     }
 
     /**

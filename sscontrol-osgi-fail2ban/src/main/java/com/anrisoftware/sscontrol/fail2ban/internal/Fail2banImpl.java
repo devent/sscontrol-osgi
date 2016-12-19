@@ -83,7 +83,7 @@ public class Fail2banImpl implements Fail2ban {
         this.targets = new ArrayList<>();
         this.jails = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
-        this.defaultJail = jailFactory.create("default");
+        this.defaultJail = jailFactory.create("DEFAULT");
         parseArgs(args);
     }
 

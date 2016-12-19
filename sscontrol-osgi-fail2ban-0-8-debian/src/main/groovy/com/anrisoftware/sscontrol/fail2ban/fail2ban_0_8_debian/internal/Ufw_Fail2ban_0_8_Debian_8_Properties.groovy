@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal;
 
-import java.util.Set;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Contains the host service properties.
+ * <i>Ufw</i> properties provider from
+ * {@code "/ufw_fail2ban_0_8_debian_8.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface HostServiceProperties {
+class Ufw_Fail2ban_0_8_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    void setProperty(String name, String value);
+    private static final URL RESOURCE = Ufw_Fail2ban_0_8_Debian_8_Properties.class.getResource("/ufw_fail2ban_0_8_debian_8.properties");
 
-    void addProperty(String property);
-
-    String getProperty(String name);
-
-    String getProperty(String name, String defaultValue);
-
-    Set<String> getPropertyNames();
-
-    boolean haveProperty(String name);
+    Ufw_Fail2ban_0_8_Debian_8_Properties() {
+        super(Ufw_Fail2ban_0_8_Debian_8_Properties.class, RESOURCE);
+    }
 }

@@ -20,9 +20,11 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
@@ -71,6 +73,7 @@ class Fail2ban_0_8_Debian_8_Test extends AbstractScriptTestBase {
         default_target_sudo: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_sudo_expected.txt'),
         default_target_apt_get: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
         default_target_service: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
+        default_target_jail_local: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_jail_local_expected.txt'),
     ]
 
     @Test
@@ -87,6 +90,7 @@ service "fail2ban"
                     assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
                     assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
                     assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+                    assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
                 },
             ],
             [
@@ -112,6 +116,14 @@ service "fail2ban" with {
         }
     }
 
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
+        super.setupScript args, script
+        def configDir = new File(args.dir, "/etc/fail2ban")
+        script.ufwScript.setJailLocalConfigFileTmp new File(configDir, "jail.local")
+        script.ufwScript.setJailLocalConfigFileDest new File(configDir, "jail.local")
+        return script
+    }
+
     String getServiceName() {
         'fail2ban'
     }
@@ -121,6 +133,10 @@ service "fail2ban" with {
     }
 
     void createDummyCommands(File dir) {
+        def configDir = new File(dir, 'etc/fail2ban')
+        configDir.mkdirs()
+        IOUtils.copy(Fail2ban_0_8_Debian_8_Test.class.getResource("fail2ban_conf.txt").openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf")))
+        IOUtils.copy(Fail2ban_0_8_Debian_8_Test.class.getResource("jail_local.txt").openStream(), new FileOutputStream(new File(configDir, "jail.local")))
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -130,7 +146,8 @@ service "fail2ban" with {
             'rm',
             'cp',
             'apt-get',
-            'service'
+            'service',
+            'ufw'
         ]
     }
 
@@ -142,6 +159,7 @@ service "fail2ban" with {
     List getAdditionalModules() {
         [
             new Fail2banModule(),
+            new InitFileParserModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

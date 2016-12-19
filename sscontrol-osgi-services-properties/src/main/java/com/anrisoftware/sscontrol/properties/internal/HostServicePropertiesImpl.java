@@ -137,6 +137,11 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         return set;
     }
 
+    @Override
+    public boolean haveProperty(String name) {
+        return properties.containsKey(name);
+    }
+
     public Period getPeriodProperty(String key, ContextProperties defaults) {
         Period value = typedProperties.getPeriodProperty(key);
         if (value != null) {

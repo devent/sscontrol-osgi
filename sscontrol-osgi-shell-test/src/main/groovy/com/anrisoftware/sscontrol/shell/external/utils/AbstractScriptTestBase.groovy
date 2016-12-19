@@ -98,6 +98,7 @@ abstract class AbstractScriptTestBase {
             List<HostService> service = services.getServices(name)
             service.eachWithIndex { HostService s, int i ->
                 if (s.name == serviceName) {
+                    setupHostService s, dir: dir
                     List<SshHost> targets = s.targets.size() == 0 ? all : s.targets
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
@@ -124,6 +125,9 @@ abstract class AbstractScriptTestBase {
 
     void putSshService(HostServices services) {
         services.addService 'ssh', SshFactory.localhost(injector)
+    }
+
+    def setupHostService(Map args, HostService service) {
     }
 
     HostServiceScript setupScript(Map args, HostServiceScript script) {

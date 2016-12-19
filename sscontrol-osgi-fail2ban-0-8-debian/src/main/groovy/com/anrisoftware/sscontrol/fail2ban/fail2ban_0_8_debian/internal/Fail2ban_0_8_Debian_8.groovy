@@ -15,11 +15,11 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
-
 import static com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal.Fail2ban_0_8_Debian_8_Service.*
 
 import javax.inject.Inject
 
+import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8.external.Ufw_Fail2ban_0_8
 import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Fail2ban_0_8_Debian
 
 import groovy.util.logging.Slf4j
@@ -36,12 +36,26 @@ class Fail2ban_0_8_Debian_8 extends Fail2ban_0_8_Debian {
     @Inject
     Fail2ban_0_8_Debian_8_Properties debianPropertiesProvider
 
+    @Inject
+    Ufw_Fail2ban_0_8_Debian_8 ufwDebian
+
     @Override
     def run() {
         setupDefaults()
         installPackages()
         configureService()
+        ufwDebian.run()
         restartService()
+    }
+
+    @Override
+    Ufw_Fail2ban_0_8 getUfwScript() {
+        ufwDebian.setChdir chdir
+        ufwDebian.setPwd pwd
+        ufwDebian.setSudoEnv sudoEnv
+        ufwDebian.setEnv env
+        ufwDebian.setScript this
+        ufwDebian
     }
 
     @Override
