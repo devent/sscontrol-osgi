@@ -2,7 +2,6 @@
 destemail = root@localhost
 sender = fail2ban@localhost
 ignorecommand = 
-enabled = true
 ignoreip = 127.0.0.1/8
 protocol = tcp
 action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s", sendername="%(sendername)s"]

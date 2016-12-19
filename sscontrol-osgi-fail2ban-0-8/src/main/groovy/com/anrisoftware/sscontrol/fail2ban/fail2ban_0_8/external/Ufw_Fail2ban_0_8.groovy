@@ -108,8 +108,10 @@ abstract class Ufw_Fail2ban_0_8 extends ScriptBase {
             sections << section
         }
         section.with {
-            properties.setProperty "enabled", "true"
             properties.setProperty "banaction", "ufw"
+            if (jail.enabled) {
+                properties.setProperty "enabled", jail.enabled
+            }
             if (jail.notify) {
                 properties.setProperty "destemail", jail.notify
             }

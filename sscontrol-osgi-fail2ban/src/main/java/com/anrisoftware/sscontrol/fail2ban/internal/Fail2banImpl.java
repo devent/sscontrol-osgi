@@ -136,6 +136,9 @@ public class Fail2banImpl implements Fail2ban {
     public Jail jail(Map<String, Object> args, String service) {
         Map<String, Object> a = new HashMap<>(args);
         a.put("service", service);
+        if (a.get("enabled") == null) {
+            a.put("enabled", true);
+        }
         Jail jail = jailFactory.create(a);
         jails.add(jail);
         log.jailAdded(this, jail);

@@ -42,6 +42,17 @@ public interface Jail {
     String getService();
 
     /**
+     * Returns if the jail is enabled.
+     * <p>
+     *
+     * <pre>
+     * jail "apache", enabled: true with {
+     * }
+     * </pre>
+     */
+    Boolean getEnabled();
+
+    /**
      * Returns the email address for notification.
      * <p>
      *

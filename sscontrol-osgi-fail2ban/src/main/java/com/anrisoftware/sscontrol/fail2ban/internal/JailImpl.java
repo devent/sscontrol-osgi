@@ -45,6 +45,8 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class JailImpl implements Jail {
 
+    private static final String ENABLED_ARG = "enabled";
+
     private static final String APP_ARG = "app";
 
     private static final String TYPE_ARG = "type";
@@ -79,6 +81,8 @@ public class JailImpl implements Jail {
 
     private final List<String> ignoreAddresses;
 
+    private Boolean enabled;
+
     private String notify;
 
     private String app;
@@ -104,6 +108,7 @@ public class JailImpl implements Jail {
         this.backend = null;
         this.type = null;
         this.app = null;
+        this.enabled = null;
     }
 
     @SuppressWarnings("unchecked")
@@ -121,6 +126,21 @@ public class JailImpl implements Jail {
         this.type = (Type) args.get(TYPE_ARG);
         this.app = args.get(APP_ARG) == null ? null
                 : args.get(APP_ARG).toString();
+        this.enabled = args.get(ENABLED_ARG) == null ? null
+                : (Boolean) args.get(ENABLED_ARG);
+    }
+
+    public void enabled(Boolean enabled) throws ParseException {
+        Map<String, Object> a = new HashMap<>();
+        a.put("enabled", enabled);
+        enabled(a);
+    }
+
+    public void enabled(Map<String, Object> args) throws ParseException {
+        Map<String, Object> a = new HashMap<>(args);
+        Object v;
+        v = a.get("enabled");
+        this.enabled = (Boolean) v;
     }
 
     public void notify(String address) throws ParseException {
@@ -190,6 +210,11 @@ public class JailImpl implements Jail {
     }
 
     @Override
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    @Override
     public String getNotify() {
         return notify;
     }
@@ -227,7 +252,8 @@ public class JailImpl implements Jail {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(service)
-                .append(NOTIFY_ARG, notify).append(IGNORE_ARG, ignoreAddresses)
+                .append(ENABLED_ARG, enabled).append(NOTIFY_ARG, notify)
+                .append(IGNORE_ARG, ignoreAddresses)
                 .append(RETRIES_ARG, retries).append(TIME_ARG, time)
                 .append(BACKEND_ARG, backend).append(TYPE_ARG, type)
                 .append(APP_ARG, app).toString();
