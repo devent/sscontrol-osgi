@@ -74,13 +74,14 @@ class Fail2ban_0_8_Debian_8_Test extends AbstractScriptTestBase {
         default_target_apt_get: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
         default_target_service: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
         default_target_jail_local: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_jail_local_expected.txt'),
+        apache_jail_jail_local: Fail2ban_0_8_Debian_8_Test.class.getResource('apache_jail_jail_local_expected.txt'),
     ]
 
     @Test
     void "fail2ban script"() {
         def testCases = [
             [
-                enabled: true,
+                enabled: false,
                 name: "default_target",
                 input: """
 service "fail2ban"
@@ -94,7 +95,7 @@ service "fail2ban"
                 },
             ],
             [
-                enabled: false,
+                enabled: true,
                 name: "apache_jail",
                 input: """
 service "fail2ban" with {
@@ -103,9 +104,7 @@ service "fail2ban" with {
 """,
                 expected: { Map args ->
                     File dir = args.dir
-                    //                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    //                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    //                    assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+                    assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
                 },
             ],
         ]
