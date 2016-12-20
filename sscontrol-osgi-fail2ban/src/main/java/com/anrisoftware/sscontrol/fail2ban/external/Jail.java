@@ -20,8 +20,6 @@ package com.anrisoftware.sscontrol.fail2ban.external;
 
 import java.util.List;
 
-import org.joda.time.Duration;
-
 /**
  * <i>Fail2ban</i> jail.
  *
@@ -77,62 +75,14 @@ public interface Jail {
     List<String> getIgnoreAddresses();
 
     /**
-     * Returns the maximum retries.
+     * Returns the jail banning arguments.
      * <p>
      *
      * <pre>
      * jail "apache" with {
-     *     banning retries: 3
+     *     banning retries: 3, ...
      * }
      * </pre>
      */
-    Integer getBanningRetries();
-
-    /**
-     * Returns the banning time.
-     * <p>
-     *
-     * <pre>
-     * jail "apache" with {
-     *     banning time: "PT10M"
-     * }
-     * </pre>
-     */
-    Duration getBanningTime();
-
-    /**
-     * Returns the banning backend.
-     * <p>
-     *
-     * <pre>
-     * jail "apache" with {
-     *     banning backend: Backend.polling
-     * }
-     * </pre>
-     */
-    Backend getBanningBackend();
-
-    /**
-     * Returns the banning type.
-     * <p>
-     *
-     * <pre>
-     * jail "apache" with {
-     *     banning type: Type.deny
-     * }
-     * </pre>
-     */
-    Type getBanningType();
-
-    /**
-     * Returns the banning application name.
-     * <p>
-     *
-     * <pre>
-     * jail "apache" with {
-     *     banning app: "OpenSSH"
-     * }
-     * </pre>
-     */
-    String getBanningApp();
+    Banning getBanning();
 }

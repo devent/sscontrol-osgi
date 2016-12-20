@@ -2,6 +2,7 @@
 destemail = root@localhost
 sender = fail2ban@localhost
 ignorecommand = 
+app =  
 ignoreip = 127.0.0.1/8
 protocol = tcp
 action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s", sendername="%(sendername)s"]
@@ -10,7 +11,7 @@ findtime = 600
 banaction = ufw
 maxretry = 3
 usedns = warn
-action = %(action_)s
+action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
 bantime = 36000
 mta = sendmail
 backend = auto

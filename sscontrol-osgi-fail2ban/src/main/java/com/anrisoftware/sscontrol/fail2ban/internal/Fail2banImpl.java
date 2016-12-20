@@ -205,7 +205,7 @@ public class Fail2banImpl implements Fail2ban {
         }
         if (args.get("notify") != null) {
             Map<String, Object> a = new HashMap<>(args);
-            a.put("service", "default");
+            a.put("service", "DEFAULT");
             this.defaultJail = jailFactory.create(a);
             log.defaultJailSet(this, defaultJail);
         }

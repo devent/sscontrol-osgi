@@ -70,9 +70,11 @@ ufw -f enable
     def configureService() {
         Fail2ban service = service
         def tmpJailLocal = fetchJailLocalConfigFile()
+        setupDefaultJail service.defaultJail
         def builder = configureJail service.defaultJail, tmpJailLocal
         storeJailLocalFile builder, tmpJailLocal
         service.jails.each {
+            setupDefaults it
             builder = configureJail it, tmpJailLocal
             storeJailLocalFile builder, tmpJailLocal
         }
@@ -118,6 +120,19 @@ ufw -f enable
         return formatSection(attributes, sections)
     }
 
+    def setupDefaultJail(Jail jail) {
+        def action = properties.getProperty "action", defaultProperties
+        jail.banning app: " ", action: action
+    }
+
+    def setupDefaults(Jail jail) {
+        if (!jail.banning.app) {
+            def app = properties.getProperty "app_${jail.service}", defaultProperties
+            app = app ? app : ""
+            jail.banning app: app
+        }
+    }
+
     private setupsSection(Section section, Jail jail, List sections) {
         if (section == null) {
             section = sectionFactory.create(jail.service, new Properties())
@@ -134,14 +149,20 @@ ufw -f enable
             if (jail.ignoreAddresses && jail.ignoreAddresses.size() > 0) {
                 properties.setProperty "ignoreip", jail.ignoreAddresses.join(" ")
             }
-            if (jail.banningRetries) {
-                properties.setProperty "maxretry", Integer.toString(jail.banningRetries)
+            if (jail.banning.retries) {
+                properties.setProperty "maxretry", Integer.toString(jail.banning.retries)
             }
-            if (jail.banningTime) {
-                properties.setProperty "bantime", Long.toString(jail.banningTime.getStandardSeconds())
+            if (jail.banning.time) {
+                properties.setProperty "bantime", Long.toString(jail.banning.time.getStandardSeconds())
             }
-            if (jail.banningBackend) {
-                properties.setProperty "backend", jail.banningBackend.toString()
+            if (jail.banning.backend) {
+                properties.setProperty "backend", jail.banning.backend.toString()
+            }
+            if (jail.banning.action) {
+                properties.setProperty "action", jail.banning.action
+            }
+            if (jail.banning.app) {
+                properties.setProperty "app", jail.banning.app
             }
         }
         return sections

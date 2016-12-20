@@ -2,6 +2,7 @@
 destemail = root@localhost
 sender = fail2ban@localhost
 ignorecommand = 
+app = 
 ignoreip = 127.0.0.1/8
 protocol = tcp
 action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s", sendername="%(sendername)s"]
@@ -11,7 +12,7 @@ banaction = ufw
 maxretry = 3
 usedns = warn
 bantime = 36000
-action = %(action_)s
+action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
 mta = sendmail
 backend = auto
 sendername = Fail2Ban
@@ -84,6 +85,7 @@ enabled = true
 filter = apache-auth
 banaction = ufw
 maxretry = 6
+app = WWW Full
 logpath = /var/log/apache*/*error.log
 
 [apache-multiport]

@@ -78,7 +78,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -93,7 +93,7 @@ service "fail2ban", notify: "admin@localhost" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.notify == "admin@localhost"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
@@ -110,7 +110,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.notify == "admin@localhost"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
@@ -127,7 +127,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.notify == "admin@localhost"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
@@ -143,7 +143,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -161,7 +161,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -179,7 +179,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -199,12 +199,12 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.notify == null
-                    assert fail.defaultJail.banningRetries == 3
-                    assert fail.defaultJail.banningTime == Duration.standardMinutes(10)
-                    assert fail.defaultJail.banningBackend == Backend.polling
-                    assert fail.defaultJail.banningType == Type.deny
+                    assert fail.defaultJail.banning.retries == 3
+                    assert fail.defaultJail.banning.time == Duration.standardMinutes(10)
+                    assert fail.defaultJail.banning.backend == Backend.polling
+                    assert fail.defaultJail.banning.type == Type.deny
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -220,14 +220,14 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.notify == null
                     assert fail.defaultJail.ignoreAddresses.size() == 1
                     assert fail.defaultJail.ignoreAddresses.containsAll(['128.0.0.1'])
-                    assert fail.defaultJail.banningRetries == null
-                    assert fail.defaultJail.banningTime == null
-                    assert fail.defaultJail.banningBackend == null
-                    assert fail.defaultJail.banningType == null
+                    assert fail.defaultJail.banning.retries == null
+                    assert fail.defaultJail.banning.time == null
+                    assert fail.defaultJail.banning.backend == null
+                    assert fail.defaultJail.banning.type == null
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -243,7 +243,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.defaultJail.ignoreAddresses.size() == 1
                     assert fail.defaultJail.ignoreAddresses.containsAll(['128.0.0.1'])
                     assert fail.jails.size() == 1
@@ -262,7 +262,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -281,7 +281,7 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
@@ -300,11 +300,11 @@ service "fail2ban" with {
                 expected: { HostServices services ->
                     assert services.getServices('fail2ban').size() == 1
                     Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
-                    assert fail.defaultJail.service == "default"
+                    assert fail.defaultJail.service == "DEFAULT"
                     assert fail.jails.size() == 1
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
-                    assert j.banningApp == "Apache"
+                    assert j.banning.app == "Apache"
                 },
             ],
         ]

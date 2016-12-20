@@ -81,7 +81,7 @@ class Fail2ban_0_8_Debian_8_Test extends AbstractScriptTestBase {
     void "fail2ban script"() {
         def testCases = [
             [
-                enabled: false,
+                enabled: true,
                 name: "default_target",
                 input: """
 service "fail2ban"

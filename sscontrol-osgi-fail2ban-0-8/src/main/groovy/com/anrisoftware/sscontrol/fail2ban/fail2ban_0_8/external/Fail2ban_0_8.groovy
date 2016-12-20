@@ -55,16 +55,16 @@ abstract class Fail2ban_0_8 extends ScriptBase {
         if (!service.defaultJail.ignoreAddresses.size() == 0) {
             service.defaultJail.ignore address: ignoreAddresses
         }
-        if (!service.defaultJail.banningRetries) {
+        if (!service.defaultJail.banning.retries) {
             service.defaultJail.banning retries: banningRetries
         }
-        if (!service.defaultJail.banningTime) {
+        if (!service.defaultJail.banning.time) {
             service.defaultJail.banning time: banningTime
         }
-        if (!service.defaultJail.banningBackend) {
+        if (!service.defaultJail.banning.backend) {
             service.defaultJail.banning backend: banningBackend
         }
-        if (!service.defaultJail.banningType) {
+        if (!service.defaultJail.banning.type) {
             service.defaultJail.banning type: banningType
         }
     }

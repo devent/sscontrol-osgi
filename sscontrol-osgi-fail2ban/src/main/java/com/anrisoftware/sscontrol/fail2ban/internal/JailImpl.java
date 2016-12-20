@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,16 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.arrays.ToList;
-import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
-import com.anrisoftware.sscontrol.fail2ban.external.Backend;
+import com.anrisoftware.sscontrol.fail2ban.external.Banning;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
-import com.anrisoftware.sscontrol.fail2ban.external.Type;
+import com.anrisoftware.sscontrol.fail2ban.internal.BanningImpl.BanningImplFactory;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -46,16 +43,6 @@ import com.google.inject.assistedinject.AssistedInject;
 public class JailImpl implements Jail {
 
     private static final String ENABLED_ARG = "enabled";
-
-    private static final String APP_ARG = "app";
-
-    private static final String TYPE_ARG = "type";
-
-    private static final String BACKEND_ARG = "backend";
-
-    private static final String TIME_ARG = "time";
-
-    private static final String RETRIES_ARG = "retries";
 
     private static final String IGNORE_ARG = "ignore";
 
@@ -81,53 +68,34 @@ public class JailImpl implements Jail {
 
     private final List<String> ignoreAddresses;
 
+    private final Banning banning;
+
     private Boolean enabled;
 
     private String notify;
 
-    private String app;
-
-    private Integer retries;
-
-    private Duration time;
-
-    private Backend backend;
-
-    private Type type;
-
-    @Inject
-    private DurationFormatFactory durationFormat;
-
     @AssistedInject
-    JailImpl(@Assisted String service) {
+    JailImpl(BanningImplFactory banningFactory, @Assisted String service) {
         this.service = service;
         this.notify = null;
         this.ignoreAddresses = new ArrayList<>();
-        this.retries = null;
-        this.time = null;
-        this.backend = null;
-        this.type = null;
-        this.app = null;
         this.enabled = null;
+        this.banning = banningFactory.create();
     }
 
     @SuppressWarnings("unchecked")
     @AssistedInject
-    JailImpl(@Assisted Map<String, Object> args) {
+    JailImpl(BanningImplFactory banningFactory,
+            @Assisted Map<String, Object> args) {
         this.service = args.get(SERVICE_ARG).toString();
         this.notify = args.get(NOTIFY_ARG) == null ? null
                 : args.get(NOTIFY_ARG).toString();
         this.ignoreAddresses = args.get(IGNORE_ARG) == null
                 ? new ArrayList<String>()
                 : new ArrayList<>((List<String>) args.get(IGNORE_ARG));
-        this.retries = (Integer) args.get(RETRIES_ARG);
-        this.time = (Duration) args.get(TIME_ARG);
-        this.backend = (Backend) args.get(BACKEND_ARG);
-        this.type = (Type) args.get(TYPE_ARG);
-        this.app = args.get(APP_ARG) == null ? null
-                : args.get(APP_ARG).toString();
         this.enabled = args.get(ENABLED_ARG) == null ? null
                 : (Boolean) args.get(ENABLED_ARG);
+        this.banning = banningFactory.create(args);
     }
 
     public void enabled(Boolean enabled) throws ParseException {
@@ -158,31 +126,7 @@ public class JailImpl implements Jail {
 
     public void banning(Map<String, Object> args) throws ParseException {
         Map<String, Object> a = new HashMap<>(args);
-        Object v;
-        v = a.get(RETRIES_ARG);
-        if (v != null) {
-            this.retries = (Integer) v;
-        }
-        v = a.get(TIME_ARG);
-        if (v != null) {
-            if (v instanceof Duration) {
-                this.time = (Duration) v;
-            } else {
-                this.time = durationFormat.create().parse(v.toString());
-            }
-        }
-        v = a.get(BACKEND_ARG);
-        if (v != null) {
-            this.backend = (Backend) v;
-        }
-        v = a.get(TYPE_ARG);
-        if (v != null) {
-            this.type = (Type) v;
-        }
-        v = a.get(APP_ARG);
-        if (v != null) {
-            this.app = v.toString();
-        }
+        invokeMethod(banning, "banning", a);
     }
 
     public void ignore(Map<String, Object> args) {
@@ -225,38 +169,16 @@ public class JailImpl implements Jail {
     }
 
     @Override
-    public Integer getBanningRetries() {
-        return retries;
-    }
-
-    @Override
-    public Duration getBanningTime() {
-        return time;
-    }
-
-    @Override
-    public Backend getBanningBackend() {
-        return backend;
-    }
-
-    @Override
-    public Type getBanningType() {
-        return type;
-    }
-
-    @Override
-    public String getBanningApp() {
-        return app;
+    public Banning getBanning() {
+        return banning;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(service)
                 .append(ENABLED_ARG, enabled).append(NOTIFY_ARG, notify)
-                .append(IGNORE_ARG, ignoreAddresses)
-                .append(RETRIES_ARG, retries).append(TIME_ARG, time)
-                .append(BACKEND_ARG, backend).append(TYPE_ARG, type)
-                .append(APP_ARG, app).toString();
+                .append(IGNORE_ARG, ignoreAddresses).append("banning", banning)
+                .toString();
     }
 
 }
