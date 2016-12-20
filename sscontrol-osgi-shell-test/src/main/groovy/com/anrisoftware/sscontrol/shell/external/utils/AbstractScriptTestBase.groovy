@@ -85,7 +85,8 @@ abstract class AbstractScriptTestBase {
 
     void doTest(Map test, int k) {
         log.info '{}. case: {}', k, test
-        File scriptFile = folder.newFile('Script.groovy')
+        File parent = folder.newFolder()
+        File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
         def services = servicesFactory.create()
         putServices services

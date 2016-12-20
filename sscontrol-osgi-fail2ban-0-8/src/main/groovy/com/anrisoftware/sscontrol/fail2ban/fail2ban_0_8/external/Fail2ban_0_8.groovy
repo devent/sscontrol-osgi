@@ -45,6 +45,10 @@ abstract class Fail2ban_0_8 extends ScriptBase {
         if (!service.debugLogging.modules['debug']) {
             service.debug "debug", level: debugLogLevel, target: debugLogTarget
         }
+        if (!service.debugLogging.modules['debug'].target) {
+            def level = service.debugLogging.modules['debug'].level
+            service.debug "debug", level: level, target: debugLogTarget
+        }
         if (!service.defaultJail.notify) {
             service.defaultJail.notify address: notifyAddress
         }

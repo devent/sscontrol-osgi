@@ -61,20 +61,36 @@ abstract class Ufw_Fail2ban_0_8 extends ScriptBase {
 
     def enableService() {
         log.info 'Enable Ufw.'
-        shell privileged: true, "ufw -f enable" call()
+        shell privileged: true, """
+ufw allow ssh
+ufw -f enable
+""" call()
     }
 
     def configureService() {
         Fail2ban service = service
         def tmpJailLocal = fetchJailLocalConfigFile()
         def builder = configureJail service.defaultJail, tmpJailLocal
+        storeJailLocalFile builder, tmpJailLocal
+        service.jails.each {
+            builder = configureJail it, tmpJailLocal
+            storeJailLocalFile builder, tmpJailLocal
+        }
         copyJailLocalConfigFile builder, tmpJailLocal
+    }
+
+    def storeJailLocalFile(StringBuilder builder, File jailLocalFile) {
+        if (!jailLocalConfigFileDest) {
+            FileUtils.write jailLocalFile, builder.toString(), charset
+        } else {
+            FileUtils.write jailLocalConfigFileDest, builder.toString(), charset
+        }
     }
 
     def fetchJailLocalConfigFile() {
         if (!jailLocalConfigFileTmp) {
             def tmp = File.createTempFile("jail", ".local")
-            fetch src: new File(configDir, jailLocalConfigFile), dest: tmp call()
+            fetch privileged: true, src: new File(configDir, jailLocalConfigFile), dest: tmp call()
             return tmp
         } else {
             jailLocalConfigFileTmp
@@ -84,8 +100,8 @@ abstract class Ufw_Fail2ban_0_8 extends ScriptBase {
     def copyJailLocalConfigFile(StringBuilder builder, File jailLocalFile) {
         if (!jailLocalConfigFileDest) {
             FileUtils.write jailLocalFile, builder.toString(), charset
-            copy src: jailLocalFile, dest: new File(configDir, jailLocalConfigFile) call()
-            return tmp
+            copy privileged: true, src: jailLocalFile, dest: new File(configDir, jailLocalConfigFile) call()
+            jailLocalFile.delete()
         } else {
             FileUtils.write jailLocalConfigFileDest, builder.toString(), charset
             jailLocalConfigFileDest
@@ -110,7 +126,7 @@ abstract class Ufw_Fail2ban_0_8 extends ScriptBase {
         section.with {
             properties.setProperty "banaction", "ufw"
             if (jail.enabled) {
-                properties.setProperty "enabled", jail.enabled
+                properties.setProperty "enabled", jail.enabled.toString()
             }
             if (jail.notify) {
                 properties.setProperty "destemail", jail.notify

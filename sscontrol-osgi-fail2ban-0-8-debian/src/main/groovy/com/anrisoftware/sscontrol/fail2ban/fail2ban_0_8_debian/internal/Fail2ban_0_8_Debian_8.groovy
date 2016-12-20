@@ -44,7 +44,7 @@ class Fail2ban_0_8_Debian_8 extends Fail2ban_0_8_Debian {
         setupDefaults()
         installPackages()
         configureService()
-        ufwDebian.run()
+        ufwScript.run()
         restartService()
     }
 

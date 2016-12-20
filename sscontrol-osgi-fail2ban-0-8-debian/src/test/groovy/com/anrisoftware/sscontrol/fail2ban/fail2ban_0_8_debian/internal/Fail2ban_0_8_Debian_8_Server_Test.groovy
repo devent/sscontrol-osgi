@@ -23,6 +23,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
@@ -76,7 +77,10 @@ class Fail2ban_0_8_Debian_8_Server_Test extends AbstractScriptTestBase {
             [
                 name: "default_target",
                 input: """
-service "fail2ban"
+service "fail2ban" with {
+    debug "debug", level: 3
+    banning time: "PT1M"
+}
 """,
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -115,6 +119,7 @@ service "fail2ban"
     List getAdditionalModules() {
         [
             new Fail2banModule(),
+            new InitFileParserModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
