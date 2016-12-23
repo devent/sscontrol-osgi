@@ -74,7 +74,7 @@ class Hostname_Debian_8_Server_Test extends AbstractScriptTestBase {
                 input: """
 service "hostname" with {
     // Sets the hostname.
-    set fqdn: "blog.muellerpublic.de"
+    set fqdn: "andrea-master.muellerpublic.de"
 }
 """,
                 expected: { Map args ->

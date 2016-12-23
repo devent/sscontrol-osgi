@@ -39,6 +39,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_Debian_8_Factory
@@ -126,6 +127,7 @@ service "sshd"
             new CopyModule(),
             new FetchModule(),
             new ReplaceModule(),
+            new TemplateModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 

@@ -43,6 +43,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
@@ -80,6 +81,7 @@ class Fail2ban_0_8_Debian_8_Server_Test extends AbstractScriptTestBase {
 service "fail2ban" with {
     debug "debug", level: 3
     banning time: "PT1M"
+    jail "ssh"
 }
 """,
                 expected: { Map args ->
@@ -131,6 +133,7 @@ service "fail2ban" with {
             new CopyModule(),
             new FetchModule(),
             new ReplaceModule(),
+            new TemplateModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 

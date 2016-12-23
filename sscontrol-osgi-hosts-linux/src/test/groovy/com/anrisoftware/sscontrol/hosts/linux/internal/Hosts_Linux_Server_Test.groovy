@@ -72,9 +72,7 @@ class Hosts_Linux_Server_Test extends AbstractScriptTestBase {
             [
                 input: """
 service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv2.ubuntutest.de", alias: "srv2", on: "address"
-    ip target.hostAddress, host: "blog.muellerpublic.de", alias: "blog", on: "address"
+    ip target.hostAddress, host: "andrea-master.muellerpublic.de", alias: "andrea-master", on: "address"
 }
 """,
                 expected: { Map args ->

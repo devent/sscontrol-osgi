@@ -4,6 +4,7 @@ import static com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal.F
 
 import javax.inject.Inject
 
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Ufw_Fail2ban_0_8_Debian
 
 /**
@@ -17,11 +18,24 @@ class Ufw_Fail2ban_0_8_Debian_8 extends Ufw_Fail2ban_0_8_Debian {
     @Inject
     Ufw_Fail2ban_0_8_Debian_8_Properties debianPropertiesProvider
 
+    @Inject
+    TemplatesFactory templatesFactory
+
     @Override
     def run() {
         installPackages()
         configureService()
+        configureActions()
         enableService()
+    }
+
+    def configureActions() {
+        def t = templatesFactory.create 'Ufw_Fail2ban_0_8_Debian_8_Templates'
+        template resource: t.getResource('ufw_action'), name: "ufwAction", privileged: true, dest: "$actionsDir/ufw.conf" call()
+    }
+
+    File getActionsDir() {
+        properties.getFileProperty "actions_dir", defaultProperties
     }
 
     @Override

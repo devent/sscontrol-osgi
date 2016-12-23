@@ -32,6 +32,8 @@ import com.anrisoftware.sscontrol.replace.external.Replace
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
 import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.template.external.Template
+import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
 import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
@@ -106,6 +108,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     @Inject
     ReplaceFactory replace
+
+    /**
+     * Template service.
+     */
+    @Inject
+    TemplateFactory template
 
     /**
      * The current working directory.
@@ -211,7 +219,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Copy command.
+     * Replace command.
      */
     Replace replace(Map args, String search) {
         def a = new HashMap(args)
@@ -225,6 +233,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     Replace replace(Map args) {
         def a = setupArgs(args)
         replace.create(a, a.target, this, threads, log)
+    }
+
+    /**
+     * Template command.
+     */
+    Template template(Map args, String template) {
+        def a = new HashMap(args)
+        a.template = template
+        template(a)
+    }
+
+    /**
+     * Template command.
+     */
+    Template template(Map args) {
+        def a = setupArgs(args)
+        template.create(a, a.target, this, threads, log)
     }
 
     /**
