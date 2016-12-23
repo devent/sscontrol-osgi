@@ -16,9 +16,6 @@
 package com.anrisoftware.sscontrol.hostname.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.google.inject.util.Providers.of
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -39,6 +36,9 @@ import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -84,7 +84,7 @@ service "hostname", fqdn: "blog.muellerpublic.de"
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
+            log.info '\n######### {}. case: {}', k, test
             def services = servicesFactory.create()
             services.putAvailableService 'hostname', hostnameFactory
             Eval.me 'service', services, test.input as String

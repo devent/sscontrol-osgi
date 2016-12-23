@@ -39,6 +39,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
@@ -65,6 +66,9 @@ class Hostname_Debian_8_Test extends AbstractScriptTestBase {
     CmdRunCaller cmdRunCaller
 
     static Map expectedResources = [
+        short_sudo: Hostname_Debian_8_Test.class.getResource('short_sudo_expected.txt'),
+        short_apt_get: Hostname_Debian_8_Test.class.getResource('short_apt_get_expected.txt'),
+        short_hostnamectl: Hostname_Debian_8_Test.class.getResource('short_hostnamectl_expected.txt'),
         fqdn_sudo: Hostname_Debian_8_Test.class.getResource('fqdn_sudo_expected.txt'),
         fqdn_apt_get: Hostname_Debian_8_Test.class.getResource('fqdn_apt_get_expected.txt'),
         fqdn_hostnamectl: Hostname_Debian_8_Test.class.getResource('fqdn_hostnamectl_expected.txt'),
@@ -73,6 +77,18 @@ class Hostname_Debian_8_Test extends AbstractScriptTestBase {
     @Test
     void "hostname script"() {
         def testCases = [
+            [
+                name: "short",
+                input: """
+service "hostname", fqdn: "blog.muellerpublic.de"
+""",
+                expected: { Map args ->
+                    File dir = args.dir
+                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
+                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
+                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
+                },
+            ],
             [
                 name: "fqdn",
                 input: """
@@ -129,6 +145,7 @@ service "hostname" with {
             new CopyModule(),
             new FetchModule(),
             new ReplaceModule(),
+            new TemplateModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 

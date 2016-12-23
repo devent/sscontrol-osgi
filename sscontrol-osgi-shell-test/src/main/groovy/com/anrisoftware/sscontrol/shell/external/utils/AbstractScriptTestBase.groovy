@@ -84,7 +84,7 @@ abstract class AbstractScriptTestBase {
     Threads threads
 
     void doTest(Map test, int k) {
-        log.info '{}. case: {}', k, test
+        log.info '\n######### {}. case: {}', k, test
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
