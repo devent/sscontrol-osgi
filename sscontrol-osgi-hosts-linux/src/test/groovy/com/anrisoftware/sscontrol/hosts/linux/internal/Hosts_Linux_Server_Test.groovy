@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
@@ -120,6 +121,7 @@ service "hosts" with {
             new ScpModule(),
             new CopyModule(),
             new FetchModule(),
+            new TemplateModule(),
             new ReplaceModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
