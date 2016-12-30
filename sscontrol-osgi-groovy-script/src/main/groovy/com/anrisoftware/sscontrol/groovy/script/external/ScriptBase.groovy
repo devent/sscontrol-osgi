@@ -116,6 +116,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     TemplateFactory template
 
     /**
+     * The host services.
+     */
+    HostServices services
+
+    /**
      * The current working directory.
      */
     File pwd
@@ -139,6 +144,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Environment variables for sudo.
      */
     Map sudoEnv = [:]
+
+    /**
+     * Creates a temporary file.
+     */
+    def createTmpFileCallback = null
 
     @Override
     public <T extends ExecutorService> T getThreads() {
@@ -316,6 +326,17 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     File getConfigDir() {
         properties.getFileProperty "config_dir", defaultProperties
+    }
+
+    /**
+     * Creates and returns a temporary file.
+     */
+    File createTmpFile() {
+        if (createTmpFileCallback) {
+            createTmpFileCallback()
+        } else {
+            File.createTempFile('robobee', null)
+        }
     }
 
     private setupArgs(Map args) {
