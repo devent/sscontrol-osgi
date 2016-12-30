@@ -16,29 +16,39 @@
 package com.anrisoftware.sscontrol.parser.groovy.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnamePreScriptImpl
-import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnameStubFactory
-import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
+import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
+import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
 import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserModule
 import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
-import com.anrisoftware.sscontrol.types.external.HostService
-import com.anrisoftware.sscontrol.types.external.PreHost
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.TargetsService
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
-import com.google.inject.assistedinject.FactoryModuleBuilder
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  *
@@ -57,7 +67,13 @@ class ParserImplTest {
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostnameStubFactory hostnameFactory
+    SshImplFactory sshFactory
+
+    @Inject
+    SshPreScriptImplFactory sshPreFactory
+
+    @Inject
+    HostnameImplFactory hostnameFactory
 
     @Inject
     HostnamePreScriptImplFactory hostnamePreFactory
@@ -71,11 +87,13 @@ class ParserImplTest {
         def name = 'HostnameScript.groovy'
         def variables = [:]
         def hostServices = servicesFactory.create()
+        hostServices.putAvailableService 'ssh', sshFactory
+        hostServices.putAvailablePreService 'ssh', sshPreFactory
         hostServices.putAvailableService 'hostname', hostnameFactory
         hostServices.putAvailablePreService 'hostname', hostnamePreFactory
         def parser = scriptsFactory.create(roots, name, variables, hostServices)
         parser.parse()
-        assert hostServices.services.size() == 1
+        assert hostServices.services.size() == 2
     }
 
     @Before
@@ -85,13 +103,21 @@ class ParserImplTest {
                 new ParserModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new PropertiesUtilsModule(),
+                new TypesModule(),
+                new StringsModule(),
+                new DebugLoggingModule(),
+                new SshModule(),
+                new SshPreModule(),
+                new HostnameModule(),
+                new HostnamePreModule(),
+                new PropertiesModule(),
                 new AbstractModule() {
 
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        install(new FactoryModuleBuilder().implement(HostService.class, HostnameStub.class).build(HostnameStubFactory.class));
-                        install(new FactoryModuleBuilder().implement(PreHost.class, HostnamePreScriptImpl.class).build(HostnamePreScriptImplFactory.class));
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

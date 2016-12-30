@@ -103,7 +103,7 @@ public class HostServicesImpl implements HostServices {
     public HostService call(Map<String, Object> args, String name) {
         HostServiceService service = availableServices.get(name);
         checkService(name, service);
-        Map<String, Object> a = parseArgs(args);
+        Map<String, Object> a = parseArgs(args, name);
         HostService hostService = service.create(a);
         addService(name, hostService);
         return hostService;
@@ -228,9 +228,12 @@ public class HostServicesImpl implements HostServices {
         }
     }
 
-    private Map<String, Object> parseArgs(Map<String, Object> args) {
+    private Map<String, Object> parseArgs(Map<String, Object> args,
+            String name) {
         Map<String, Object> result = new HashMap<>(args);
-        result.put("targets", parseTarget(args));
+        if (!name.equals("ssh")) {
+            result.put("targets", parseTarget(args));
+        }
         return unmodifiableMap(result);
     }
 

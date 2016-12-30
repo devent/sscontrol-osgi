@@ -16,8 +16,6 @@
 package com.anrisoftware.sscontrol.ssh.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -42,6 +40,9 @@ import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -192,7 +193,7 @@ ssh
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
+            log.info '\n######### {}. case: {}', k, test
             def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
             log.info '{}. case: ssh: {}', k, ssh
             Closure expected = test.expected
@@ -208,6 +209,19 @@ ssh
         def testCases = [
             [
                 input: """
+service "ssh", host: "192.168.0.2"
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == "default"
+                    assert ssh.hosts.size() == 1
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                },
+            ],
+            [
+                input: """
 service "ssh" with {
     host "192.168.0.2"
 }
@@ -215,6 +229,7 @@ service "ssh" with {
                 expected: { HostServices services ->
                     assert services.getServices('ssh').size() == 1
                     Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == "default"
                     assert ssh.hosts.size() == 1
                     SshHost host = ssh.hosts[0]
                     assert host.host == "192.168.0.2"
@@ -237,7 +252,7 @@ service "ssh", group: "master" with {
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
+            log.info '\n######### {}. case: {}', k, test
             def services = servicesFactory.create()
             services.putAvailableService 'ssh', sshFactory
             Eval.me 'service', services, test.input as String

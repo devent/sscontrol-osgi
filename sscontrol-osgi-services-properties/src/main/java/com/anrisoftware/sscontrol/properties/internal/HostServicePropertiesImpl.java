@@ -61,7 +61,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         implements HostServiceProperties {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

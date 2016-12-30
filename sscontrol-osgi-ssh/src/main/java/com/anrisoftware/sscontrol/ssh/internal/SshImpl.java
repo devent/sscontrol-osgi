@@ -60,8 +60,7 @@ public class SshImpl implements Ssh {
 
     private final SshImplLogger log;
 
-    @Inject
-    private SshHostImplFactory sshHostFactory;
+    private final SshHostImplFactory sshHostFactory;
 
     private DebugLogging debug;
 
@@ -69,11 +68,13 @@ public class SshImpl implements Ssh {
 
     @AssistedInject
     SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
+            SshHostImplFactory sshHostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<SshHost>();
         this.hosts = new ArrayList<SshHost>();
         this.serviceProperties = propertiesService.create();
+        this.sshHostFactory = sshHostFactory;
         parseArgs(args);
     }
 
@@ -193,6 +194,12 @@ public class SshImpl implements Ssh {
         v = args.get("group");
         if (v != null) {
             setGroup(v.toString());
+        } else {
+            setGroup("default");
+        }
+        v = args.get("host");
+        if (v != null) {
+            host(v.toString());
         }
     }
 

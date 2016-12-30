@@ -78,8 +78,8 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     public List<SshHost> getHosts(String name) {
         List<Ssh> targets = hosts.get(name);
         List<SshHost> result = new ArrayList<>();
-        for (Ssh ssh : targets) {
-            result.addAll(ssh.getHosts());
+        for (Ssh target : targets) {
+            result.addAll(target.getHosts());
         }
         return result;
     }
