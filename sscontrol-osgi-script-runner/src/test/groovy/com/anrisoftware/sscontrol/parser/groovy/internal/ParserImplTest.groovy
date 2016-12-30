@@ -29,7 +29,8 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
-import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
+import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserModule
+import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule

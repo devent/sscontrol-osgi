@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
+package com.anrisoftware.sscontrol.parser.groovy.internal
 
-import groovy.lang.Script;
+service "ssh", host: "192.168.0.1"
 
-public abstract class ParsedScript extends Script {
-
-}
+service "hostname", fqdn: "test.muellerpublic.de"

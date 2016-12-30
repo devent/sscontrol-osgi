@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
+package com.anrisoftware.sscontrol.parser.groovy.internal;
 
 import static com.google.inject.util.Providers.of;
 
@@ -30,7 +30,7 @@ import org.osgi.framework.BundleContext;
 
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
-import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory;
+import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
