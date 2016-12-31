@@ -60,8 +60,8 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -459,14 +459,14 @@ class ScriptBaseTest {
     static void setupInjector() {
         toStringStyle
         this.injector = Guice.createInjector(
-                new ShellModule(),
+                new ShellCmdModule(),
                 new CmdModule(),
                 new FetchModule(),
                 new ScpModule(),
                 new CopyModule(),
                 new ReplaceModule(),
                 new TokensTemplateModule(),
-                new SshModule(),
+                new SshShellModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),
                 new PipeOutputsModule(),

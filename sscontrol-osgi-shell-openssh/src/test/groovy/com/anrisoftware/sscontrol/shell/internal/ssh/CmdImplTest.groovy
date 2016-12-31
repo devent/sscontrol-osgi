@@ -169,7 +169,7 @@ chmod +w a.txt
         toStringStyle
         this.injector = Guice.createInjector(
                 new CmdModule(),
-                new SshModule(),
+                new SshShellModule(),
                 new CmdUtilsModules())
         this.threads = CmdUtilsModules.getThreads(injector)
     }

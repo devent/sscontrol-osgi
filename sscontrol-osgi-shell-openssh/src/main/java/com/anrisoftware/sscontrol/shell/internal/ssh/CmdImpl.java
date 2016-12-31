@@ -77,7 +77,7 @@ public class CmdImpl implements Cmd {
 
     @Activate
     protected void start() {
-        createInjector(new SshModule(), new AbstractModule() {
+        createInjector(new SshShellModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

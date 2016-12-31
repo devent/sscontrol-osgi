@@ -37,12 +37,12 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_Debian_8_Factory
+import com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
@@ -104,7 +104,7 @@ service "sshd"
     void createDummyCommands(File dir) {
     }
 
-    void putServices(HostServices services) {
+    HostServices putServices(HostServices services) {
         services.putAvailableService 'sshd', sshdFactory
         services.putAvailableScriptService 'sshd/debian/8', sshdDebianFactory
     }
@@ -120,8 +120,8 @@ service "sshd"
             new TypesModule(),
             new StringsModule(),
             new HostServicesModule(),
-            new ShellModule(),
-            new SshModule(),
+            new ShellCmdModule(),
+            new SshShellModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),

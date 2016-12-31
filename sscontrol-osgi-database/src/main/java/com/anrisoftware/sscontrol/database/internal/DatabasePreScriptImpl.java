@@ -19,6 +19,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
@@ -48,4 +49,8 @@ public class DatabasePreScriptImpl implements PreHost {
         cc.addCompilationCustomizers(imports);
     }
 
+    @Override
+    public void configureServiceScript(HostServiceScript script)
+            throws AppException {
+    }
 }

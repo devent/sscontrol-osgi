@@ -38,8 +38,8 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
@@ -115,8 +115,8 @@ service "hosts" with {
             new HostsModule(),
             new Hosts_Linux_Module(),
             new HostServicesModule(),
-            new ShellModule(),
-            new SshModule(),
+            new ShellCmdModule(),
+            new SshShellModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),

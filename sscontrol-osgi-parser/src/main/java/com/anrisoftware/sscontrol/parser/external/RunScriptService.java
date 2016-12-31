@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
+import java.util.concurrent.ExecutorService;
+
 import com.anrisoftware.sscontrol.types.external.HostServices;
 
 /**
@@ -25,6 +27,6 @@ import com.anrisoftware.sscontrol.types.external.HostServices;
  */
 public interface RunScriptService {
 
-    RunScript create(HostServices repository);
+    RunScript create(ExecutorService threads, HostServices repository);
 
 }

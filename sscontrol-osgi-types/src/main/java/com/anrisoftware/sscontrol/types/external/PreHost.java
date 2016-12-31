@@ -35,4 +35,6 @@ public interface PreHost {
      */
     void configureCompiler(Object compiler) throws AppException;
 
+    void configureServiceScript(HostServiceScript script) throws AppException;
+
 }

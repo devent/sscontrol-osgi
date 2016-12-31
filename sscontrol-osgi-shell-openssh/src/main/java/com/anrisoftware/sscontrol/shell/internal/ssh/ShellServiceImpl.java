@@ -64,7 +64,7 @@ public class ShellServiceImpl implements ShellService, OpenSshShellService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ShellModule(), new AbstractModule() {
+        Guice.createInjector(new ShellCmdModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

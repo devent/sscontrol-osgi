@@ -62,7 +62,7 @@ public class ParserImpl implements Parser {
 
     private final Map<String, Object> variables;
 
-    private final HostServices hostServices;
+    private final HostServices services;
 
     private final URI[] roots;
 
@@ -72,7 +72,7 @@ public class ParserImpl implements Parser {
     ParserImpl(@Assisted URI[] roots, @Assisted String name,
             @Assisted Map<String, Object> variables,
             @Assisted HostServices hostServices) {
-        this.hostServices = hostServices;
+        this.services = hostServices;
         this.roots = roots.clone();
         this.name = name;
         this.variables = new HashMap<String, Object>(variables);
@@ -94,7 +94,7 @@ public class ParserImpl implements Parser {
         GroovyScriptEngine engine = createEngine(cc, binding, roots);
         try {
             engine.run(name, binding);
-            return hostServices;
+            return services;
         } catch (ResourceException e) {
             throw new LoadScriptException(this, e, name);
         } catch (ScriptException e) {
@@ -112,9 +112,9 @@ public class ParserImpl implements Parser {
     private CompilerConfiguration createCompiler() throws AppException {
         CompilerConfiguration cc = new CompilerConfiguration();
         cc.setScriptBaseClass(ParsedScript.class.getName());
-        Set<String> services = hostServices.getAvailableServices();
-        for (String name : services) {
-            PreHost pre = hostServices.getAvailablePreService(name).create();
+        Set<String> names = services.getAvailableServices();
+        for (String name : names) {
+            PreHost pre = services.getAvailablePreService(name).create();
             pre.configureCompiler(cc);
         }
         return cc;
@@ -122,8 +122,8 @@ public class ParserImpl implements Parser {
 
     private Binding createBinding() {
         Binding binding = new Binding();
-        binding.setProperty("service", hostServices);
-        binding.setProperty("targets", hostServices.getTargets());
+        binding.setProperty("service", services);
+        binding.setProperty("targets", services.getTargets());
         for (Map.Entry<String, Object> entry : variables.entrySet()) {
             binding.setProperty(entry.getKey(), entry.getValue());
         }

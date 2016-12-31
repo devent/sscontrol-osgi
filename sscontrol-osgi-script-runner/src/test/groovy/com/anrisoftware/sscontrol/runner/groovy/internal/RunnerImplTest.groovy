@@ -13,93 +13,93 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.internal
+package com.anrisoftware.sscontrol.runner.groovy.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8_Module
 import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8.Hostname_Debian_8_Factory
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
+import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.parser.groovy.internal.ParserModule
+import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
+import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.shell.external.Cmd
+import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
 
 /**
- * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Test extends AbstractScriptTestBase {
+class RunnerImplTest extends AbstractScriptTestBase {
+
+    @Inject
+    ParserImplFactory parserFactory
+
+    @Inject
+    RunScriptImplFactory runnerFactory
+
+    @Inject
+    HostServicesImplFactory servicesFactory
+
+    @Inject
+    SshImplFactory sshFactory
+
+    @Inject
+    SshPreScriptImplFactory sshPreFactory
 
     @Inject
     HostnameImplFactory hostnameFactory
 
     @Inject
-    Hostname_Debian_8_Factory hostnameDebianFactory
+    HostnamePreScriptImplFactory hostnamePreFactory
 
     @Inject
-    CmdRunCaller cmdRunCaller
+    Hostname_Debian_8_Factory hostname_Debian_8_Factory
 
-    static Map expectedResources = [
-        short_sudo: Hostname_Debian_8_Test.class.getResource('short_sudo_expected.txt'),
-        short_apt_get: Hostname_Debian_8_Test.class.getResource('short_apt_get_expected.txt'),
-        short_hostnamectl: Hostname_Debian_8_Test.class.getResource('short_hostnamectl_expected.txt'),
-        fqdn_sudo: Hostname_Debian_8_Test.class.getResource('fqdn_sudo_expected.txt'),
-        fqdn_apt_get: Hostname_Debian_8_Test.class.getResource('fqdn_apt_get_expected.txt'),
-        fqdn_hostnamectl: Hostname_Debian_8_Test.class.getResource('fqdn_hostnamectl_expected.txt'),
-    ]
+    static final URL hostnameScript = RunnerImplTest.class.getResource('HostnameScript.groovy')
 
     @Test
-    void "hostname script"() {
+    void "run scripts"() {
         def testCases = [
             [
-                name: "short",
-                input: """
-service "hostname", fqdn: "blog.muellerpublic.de"
-""",
+                name: "default_target",
                 expected: { Map args ->
                     File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
-                },
-            ],
-            [
-                name: "fqdn",
-                input: """
-service "hostname" with {
-    // Sets the hostname.
-    set fqdn: "blog.muellerpublic.de"
-}
-""",
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
                 },
             ],
         ]
@@ -108,13 +108,36 @@ service "hostname" with {
         }
     }
 
+    void doTest(Map test, int k) {
+        log.info '\n######### {}. case: {}', k, test
+        File parent = folder.newFolder()
+        File scriptFile = new File(parent, "Script.groovy")
+        File dir = folder.newFolder()
+        IOUtils.copy hostnameScript.openStream(), new FileOutputStream(scriptFile)
+        def roots = [parent.toURI()] as URI[]
+        def variables = [:]
+        def services = putServices(servicesFactory.create())
+        def parser = parserFactory.create(roots, "Script.groovy", variables, services)
+        def parsed = parser.parse()
+        assert parsed.services.size() == 2
+        runnerFactory.create(threads, parsed).run variables
+    }
+
     String getServiceName() {
-        'hostname'
     }
 
     String getScriptServiceName() {
-        'hostname/debian/8'
     }
+
+    HostServices putServices(HostServices services) {
+        services.putAvailableService 'ssh', sshFactory
+        services.putAvailablePreService 'ssh', sshPreFactory
+        services.putAvailableService 'hostname', hostnameFactory
+        services.putAvailablePreService 'hostname', hostnamePreFactory
+        services.putAvailableScriptService 'hostname', hostname_Debian_8_Factory
+        return services
+    }
+
 
     void createDummyCommands(File dir) {
         createEchoCommands dir, [
@@ -122,23 +145,30 @@ service "hostname" with {
             'chown',
             'chmod',
             'sudo',
+            'scp',
+            'rm',
+            'cp',
             'apt-get',
-            'hostnamectl'
+            'service'
         ]
-    }
-
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'hostname', hostnameFactory
-        services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
     }
 
     List getAdditionalModules() {
         [
+            new ParserModule(),
+            new RunnerModule(),
             new HostnameModule(),
+            new HostnamePreModule(),
             new Hostname_Debian_8_Module(),
+            new SshModule(),
+            new SshPreModule(),
+            new DebugLoggingModule(),
+            new TypesModule(),
+            new StringsModule(),
             new HostServicesModule(),
-            new ShellCmdModule(),
             new SshShellModule(),
+            new ShellCmdModule(),
+            new CmdImplModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),
@@ -150,11 +180,11 @@ service "hostname" with {
 
                 @Override
                 protected void configure() {
-                    bind Cmd to CmdImpl
                 }
             }
         ]
     }
+
 
     @Before
     void setupTest() {

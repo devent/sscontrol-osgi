@@ -24,7 +24,7 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8.Hostname_Debian_8_Factory
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
@@ -38,8 +38,8 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
@@ -103,7 +103,7 @@ service "hostname" with {
     void createDummyCommands(File dir) {
     }
 
-    void putServices(HostServices services) {
+    HostServices putServices(HostServices services) {
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
     }
@@ -116,8 +116,8 @@ service "hostname" with {
         [
             new HostnameModule(),
             new HostServicesModule(),
-            new ShellModule(),
-            new SshModule(),
+            new ShellCmdModule(),
+            new SshShellModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),

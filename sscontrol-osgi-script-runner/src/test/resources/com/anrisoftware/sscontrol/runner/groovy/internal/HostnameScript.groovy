@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal
+package com.anrisoftware.sscontrol.runner.groovy.internal
 
-service "ssh", host: "192.168.0.1"
+service "ssh", host: "localhost"
 
 service "hostname", fqdn: "test.muellerpublic.de"

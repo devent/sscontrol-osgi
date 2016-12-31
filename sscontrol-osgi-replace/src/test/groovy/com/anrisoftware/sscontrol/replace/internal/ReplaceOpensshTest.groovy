@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -188,7 +188,7 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
     Module[] getAdditionalModules() {
         [
             new TokensTemplateModule(),
-            new SshModule(),
+            new SshShellModule(),
             new CmdModule(),
             new ReplaceModule(),
             new ScpModule(),

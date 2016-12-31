@@ -22,6 +22,7 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.sshd.external.Sshd
 import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_6_Debian
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -33,6 +34,15 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class Sshd_Debian_8 extends Sshd_6_Debian {
+
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    interface Sshd_Debian_8_Factory extends HostServiceScriptService {
+    }
 
     @Inject
     Sshd_Debian_8_Properties debianPropertiesProvider

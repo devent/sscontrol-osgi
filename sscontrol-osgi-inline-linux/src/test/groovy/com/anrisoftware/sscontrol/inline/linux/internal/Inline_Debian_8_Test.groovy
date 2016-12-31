@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
-import com.anrisoftware.sscontrol.inline.linux.internal.Inline_Debian_8_Module
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
@@ -38,8 +37,8 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
@@ -105,7 +104,7 @@ service "hosts" with {
     }
 
     String getScriptServiceName() {
-        'hosts/linux/0'
+        'hosts/debian/8'
     }
 
     void createDummyCommands(File dir) {
@@ -120,7 +119,7 @@ service "hosts" with {
         ]
     }
 
-    void putServices(HostServices services) {
+    HostServices putServices(HostServices services) {
         services.putAvailableService 'hosts', hostsFactory
         services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
     }
@@ -130,8 +129,8 @@ service "hosts" with {
             new HostsModule(),
             new Inline_Debian_8_Module(),
             new HostServicesModule(),
-            new ShellModule(),
-            new SshModule(),
+            new ShellCmdModule(),
+            new SshShellModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),

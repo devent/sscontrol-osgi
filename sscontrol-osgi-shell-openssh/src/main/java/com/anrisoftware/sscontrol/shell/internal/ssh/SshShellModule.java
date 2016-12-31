@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshModule extends AbstractModule {
+public class SshShellModule extends AbstractModule {
 
     @Override
     protected void configure() {

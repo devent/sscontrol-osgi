@@ -25,7 +25,7 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_Debian_8_Factory;
+import com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
@@ -49,7 +49,7 @@ public class Sshd_Debian_8_Service implements HostServiceScriptService {
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Sshd_Debian_8_Factory hostnameFactory;
+    private Sshd_Debian_8_Factory scriptFactory;
 
     @Override
     public String getSystemName() {
@@ -64,7 +64,7 @@ public class Sshd_Debian_8_Service implements HostServiceScriptService {
     @Override
     public HostServiceScript create(HostServices repository,
             HostService service, SshHost target, ExecutorService threads) {
-        return hostnameFactory.create(repository, service, target, threads);
+        return scriptFactory.create(repository, service, target, threads);
     }
 
     @Activate

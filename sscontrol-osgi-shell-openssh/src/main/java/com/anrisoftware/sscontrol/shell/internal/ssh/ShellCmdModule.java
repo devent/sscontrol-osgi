@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class ShellModule extends AbstractModule {
+public class ShellCmdModule extends AbstractModule {
 
     @Override
     protected void configure() {

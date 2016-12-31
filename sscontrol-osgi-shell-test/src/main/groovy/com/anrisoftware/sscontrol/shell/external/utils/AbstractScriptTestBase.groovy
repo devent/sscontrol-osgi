@@ -120,7 +120,7 @@ abstract class AbstractScriptTestBase {
 
     abstract void createDummyCommands(File dir)
 
-    abstract void putServices(HostServices services)
+    abstract HostServices putServices(HostServices services)
 
     abstract List getAdditionalModules()
 

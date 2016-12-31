@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.dhclient.internal;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 
 /**
@@ -36,4 +37,8 @@ public class DhclientPreScriptImpl implements PreHost {
     public void configureCompiler(Object compiler) throws AppException {
     }
 
+    @Override
+    public void configureServiceScript(HostServiceScript script)
+            throws AppException {
+    }
 }

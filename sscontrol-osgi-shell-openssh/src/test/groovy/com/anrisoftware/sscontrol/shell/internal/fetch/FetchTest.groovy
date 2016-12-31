@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -186,7 +186,7 @@ class FetchTest extends AbstractCmdTestBase {
     Module[] getAdditionalModules() {
         [
             new CmdModule(),
-            new SshModule(),
+            new SshShellModule(),
             new FetchModule(),
             new ScpModule(),
             new CmdUtilsModules(),
