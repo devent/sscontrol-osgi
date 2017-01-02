@@ -38,4 +38,6 @@ public interface SshHost {
      * Returns the private SSH key.
      */
     URI getKey();
+
+    HostSystem getSystem();
 }

@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFacto
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.HostSystem
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.anrisoftware.sscontrol.types.external.TargetsService
@@ -248,6 +249,70 @@ service "ssh", group: "master" with {
                     assert ssh.hosts.size() == 1
                     SshHost host = ssh.hosts[0]
                     assert host.host == "192.168.0.2"
+                },
+            ],
+            [
+                input: """
+service "ssh", host: "192.168.0.2", system: "debian-8"
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == 'default'
+                    assert ssh.hosts.size() == 1
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                    HostSystem sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "8"
+                },
+            ],
+            [
+                input: """
+service "ssh", system: "debian-8" with {
+    host "192.168.0.2"
+    host "192.168.0.3"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == 'default'
+                    assert ssh.hosts.size() == 2
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                    HostSystem sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "8"
+                    host = ssh.hosts[1]
+                    assert host.host == "192.168.0.3"
+                    sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "8"
+                },
+            ],
+            [
+                input: """
+service "ssh" with {
+    host host: "192.168.0.2", system: "debian-8"
+    host host: "192.168.0.3", system: "debian-9"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == 'default'
+                    assert ssh.hosts.size() == 2
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                    HostSystem sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "8"
+                    host = ssh.hosts[1]
+                    assert host.host == "192.168.0.3"
+                    sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "9"
                 },
             ],
         ]

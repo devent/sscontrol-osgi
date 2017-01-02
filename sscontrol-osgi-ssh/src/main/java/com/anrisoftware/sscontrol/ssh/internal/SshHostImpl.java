@@ -16,10 +16,12 @@
 package com.anrisoftware.sscontrol.ssh.internal;
 
 import static org.apache.commons.lang3.StringUtils.split;
+import static org.apache.commons.lang3.Validate.notNull;
 
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -27,7 +29,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.resources.StringToURI;
-import com.anrisoftware.globalpom.strings.ToStringService;
+import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostSystem;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 
 /**
@@ -50,8 +53,7 @@ public class SshHostImpl implements SshHost {
 
     }
 
-    @Inject
-    private ToStringService toString;
+    private final SshHostSystemImplFactory systemFactory;
 
     private String host;
 
@@ -60,6 +62,14 @@ public class SshHostImpl implements SshHost {
     private Integer port;
 
     private URI key;
+
+    private HostSystem system;
+
+    @Inject
+    SshHostImpl(SshHostSystemImplFactory systemFactory) {
+        this.systemFactory = systemFactory;
+        this.system = systemFactory.create(new HashMap<String, Object>());
+    }
 
     public void host(String host) {
         String[] userHostPort = split(host, "@");
@@ -76,11 +86,25 @@ public class SshHostImpl implements SshHost {
     }
 
     public void host(Map<String, Object> args) {
-        this.user = toString.toString(args, "user");
-        this.host = toString.toString(args, "host");
-        this.port = (Integer) args.get("port");
-        if (args.containsKey("key")) {
-            this.key = StringToURI.toURI(toString.toString(args, "key"));
+        Object v;
+        v = args.get("host");
+        notNull(v, "host=null");
+        this.host = v.toString();
+        v = args.get("user");
+        if (v != null) {
+            this.user = v.toString();
+        }
+        v = args.get("port");
+        if (v != null) {
+            this.port = (Integer) args.get("port");
+        }
+        v = args.get("key");
+        if (v != null) {
+            this.key = StringToURI.toURI(v.toString());
+        }
+        v = args.get("system");
+        if (v != null) {
+            this.system = systemFactory.create(args);
         }
     }
 
@@ -105,6 +129,11 @@ public class SshHostImpl implements SshHost {
     }
 
     @Override
+    public HostSystem getSystem() {
+        return system;
+    }
+
+    @Override
     public String getHostAddress() throws UnknownHostException {
         return InetAddress.getByName(host).getHostAddress();
     }
@@ -113,7 +142,7 @@ public class SshHostImpl implements SshHost {
     public String toString() {
         return new ToStringBuilder(this).append("user", user)
                 .append("host", host).append("port", port).append("key", key)
-                .toString();
+                .append("system", system).toString();
     }
 
 }

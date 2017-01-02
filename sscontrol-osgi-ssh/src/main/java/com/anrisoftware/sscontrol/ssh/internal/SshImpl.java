@@ -66,6 +66,8 @@ public class SshImpl implements Ssh {
 
     private String group;
 
+    private String system;
+
     @AssistedInject
     SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
             SshHostImplFactory sshHostFactory,
@@ -121,14 +123,18 @@ public class SshImpl implements Ssh {
     public void host(String host) {
         SshHost sshHost = sshHostFactory.create();
         invokeMethod(sshHost, "host", host);
+        Map<String, Object> a = new HashMap<String, Object>();
+        a.put("host", sshHost.getHost());
+        a.put("system", system);
+        invokeMethod(sshHost, "host", a);
         this.hosts.add(sshHost);
         log.hostAdded(this, sshHost);
     }
 
     public void host(Map<String, Object> args) {
-        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<String, Object>(args);
         SshHost sshHost = sshHostFactory.create();
-        invokeMethod(sshHost, "host", arguments);
+        invokeMethod(sshHost, "host", a);
         this.hosts.add(sshHost);
         log.hostAdded(this, sshHost);
     }
@@ -196,6 +202,10 @@ public class SshImpl implements Ssh {
             setGroup(v.toString());
         } else {
             setGroup("default");
+        }
+        v = args.get("system");
+        if (v != null) {
+            this.system = v.toString();
         }
         v = args.get("host");
         if (v != null) {
