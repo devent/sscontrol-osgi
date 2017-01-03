@@ -30,7 +30,7 @@
     </properties>
 
     <modules>
-        <module>../sscontrol-osgi-command-parse</module>
+        <module>../sscontrol-osgi-command-facts</module>
         <module>../sscontrol-osgi-copy</module>
         <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
@@ -51,6 +51,7 @@
         <module>../sscontrol-osgi-inline</module>
         <module>../sscontrol-osgi-inline-linux</module>
         <module>../sscontrol-osgi-itests-karaf</module>
+        <module>../sscontrol-osgi-karaf-command-parse</module>
         <module>../sscontrol-osgi-parser</module>
         <module>../sscontrol-osgi-replace</module>
         <module>../sscontrol-osgi-script-runner</module>

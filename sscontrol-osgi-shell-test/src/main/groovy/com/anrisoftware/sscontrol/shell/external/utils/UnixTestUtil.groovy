@@ -35,9 +35,13 @@ class UnixTestUtil {
     }
 
     static String createEchoCommand(File dir, String name) {
+        return createCommand(echoCommand, dir, name)
+    }
+
+    static String createCommand(URL command, File dir, String name) {
         def file = new File(dir, name)
         def stream = new FileOutputStream(file)
-        IOUtils.copy echoCommand.openStream(), stream
+        IOUtils.copy command.openStream(), stream
         stream.close()
         file.setExecutable true
         return file.absolutePath

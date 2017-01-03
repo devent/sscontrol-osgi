@@ -1,0 +1,13 @@
+factsCmd(args) ::= <<
+<catRelease(args)>
+>>
+
+catRelease(args) ::= <<
+cat /etc/*release
+>>
+
+lsbRelease(args) ::= <<
+if which lsb_release >/dev/null; then
+    lsb_release -a
+fi
+>>

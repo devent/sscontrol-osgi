@@ -1,0 +1,126 @@
+/*
+ * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * This file is part of sscontrol-osgi-shell-openssh.
+ *
+ * sscontrol-osgi-shell-openssh is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * sscontrol-osgi-shell-openssh is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.anrisoftware.sscontrol.shell.internal.facts
+
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+
+import javax.inject.Inject
+
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TemporaryFolder
+
+import com.anrisoftware.globalpom.threads.external.core.Threads
+import com.anrisoftware.sscontrol.facts.external.Facts.FactsFactory
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.google.inject.Module
+
+import groovy.util.logging.Slf4j
+
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
+@Slf4j
+class FactsTest extends AbstractCmdTestBase {
+
+    static Threads threads
+
+    @Inject
+    FactsFactory copyFactory
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder()
+
+    static cat_release_cat_cmd = FactsTest.class.getResource('cat_release_cat_cmd.txt')
+
+    static Map expectedResources = [
+        cat_release_cat: FactsTest.class.getResource('cat_release_cat_expected.txt'),
+    ]
+
+    @Test
+    void "facts cases"() {
+        def testCases = [
+            [
+                enabled: true,
+                name: "cat_release",
+                args: [:],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    def catOut = fileToStringReplace(new File(dir, 'cat.out'))
+                    catOut = catOut.replaceAll("/etc/.*release", '/etc/release')
+                    assertStringContent catOut, resourceToString(expectedResources["${name}_cat"] as URL)
+                },
+            ],
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            if (test.enabled) {
+                log.info '\n######### {}. case: {}', k, test
+                def tmp = folder.newFolder()
+                test.host = SshFactory.localhost(injector).hosts[0]
+                doTest test, tmp, k
+            }
+        }
+    }
+
+    def createCmd(Map test, File tmp, int k) {
+        def fetch = copyFactory.create test.args, test.host, this, threads, log
+        createCommand cat_release_cat_cmd, tmp, 'cat'
+        createEchoCommands tmp, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'cp',
+            'rm',
+            'sudo',
+            'scp',
+        ]
+        return fetch
+    }
+
+    @Before
+    void setupTest() {
+        super.setupTest()
+        this.threads = CmdUtilsModules.getThreads(injector)
+    }
+
+    Module[] getAdditionalModules() {
+        [
+            new SshShellModule(),
+            new ShellCmdModule(),
+            new CmdModule(),
+            new CmdImplModule(),
+            new FactsModule(),
+            new ScpModule(),
+            new CmdUtilsModules(),
+        ] as Module[]
+    }
+}

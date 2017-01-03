@@ -11,10 +11,10 @@
         <relativePath>../sscontrol-osgi-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-command-parse</artifactId>
+    <artifactId>sscontrol-osgi-karaf-command-parse</artifactId>
     <packaging>bundle</packaging>
     <name>sscontrol-osgi - sscontrol:parse</name>
-    <description>Apache Karaf shell sscontrol/parse command.</description>
+    <description>Karaf shell sscontrol/parse command.</description>
 
     <dependencies>
 
