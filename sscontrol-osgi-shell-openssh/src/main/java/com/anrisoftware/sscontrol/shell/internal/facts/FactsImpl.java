@@ -34,7 +34,9 @@ import com.anrisoftware.resources.templates.external.Templates;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.sscontrol.facts.external.Facts;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
+import com.anrisoftware.sscontrol.shell.internal.facts.CatReleaseParse.CatReleaseParseFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.HostSystem;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
@@ -62,11 +64,18 @@ public class FactsImpl implements Facts {
     private ShellFactory shellFactory;
 
     @Inject
+    private CatReleaseParseFactory catReleaseParse;
+
+    private HostSystem system;
+
+    private ProcessTask process;
+
+    @Inject
     FactsImpl(TemplatesFactory templatesFactory,
             @Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log) {
-        this.args = new HashMap<String, Object>(args);
+        this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
@@ -77,15 +86,24 @@ public class FactsImpl implements Facts {
     }
 
     @Override
+    public HostSystem getSystem() {
+        return system;
+    }
+
+    @Override
+    public ProcessTask getProcess() {
+        return process;
+    }
+
+    @Override
     public Facts call() throws AppException {
         String cmd = templates.getResource("facts").getText("factsCmd", "args",
                 args);
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
         a.put("outString", true);
-        ProcessTask p = shellFactory
-                .create(a, host, parent, threads, log, cmd).call();
-        String out = p.getOut();
-        System.out.println(out); // TODO println
+        this.process = shellFactory.create(a, host, parent, threads, log, cmd)
+                .call();
+        this.system = catReleaseParse.create(process.getOut()).call();
         return this;
     }
 

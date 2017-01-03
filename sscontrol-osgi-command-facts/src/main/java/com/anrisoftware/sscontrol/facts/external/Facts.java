@@ -17,8 +17,10 @@ package com.anrisoftware.sscontrol.facts.external;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.HostSystem;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
@@ -45,11 +47,14 @@ public interface Facts {
                 @Assisted("log") Object log);
     }
 
+    HostSystem getSystem();
+
+    ProcessTask getProcess();
+
     /**
      * Executes the facts command.
      * 
      * @throws AppException
      */
     Facts call() throws AppException;
-
 }

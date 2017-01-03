@@ -98,11 +98,6 @@
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>3.8</version>
-        </dependency>
 
         <!-- For maven-scr-plugin -->
         <dependency>

@@ -29,6 +29,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
+import com.anrisoftware.sscontrol.facts.external.Facts
 import com.anrisoftware.sscontrol.facts.external.Facts.FactsFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
@@ -73,6 +74,10 @@ class FactsTest extends AbstractCmdTestBase {
                 name: "cat_release",
                 args: [:],
                 expected: { Map args ->
+                    Facts facts = args.cmd
+                    assert facts.system.name == 'debian'
+                    assert facts.system.version == '8'
+
                     File dir = args.dir as File
                     String name = args.name as String
                     def catOut = fileToStringReplace(new File(dir, 'cat.out'))
