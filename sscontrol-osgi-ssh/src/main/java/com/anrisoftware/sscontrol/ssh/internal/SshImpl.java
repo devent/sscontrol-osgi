@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
@@ -93,6 +94,13 @@ public class SshImpl implements Ssh {
                 serviceProperties.addProperty(property);
             }
         });
+    }
+
+    public void target(Map<String, Object> args) {
+        Object v = args.get("target");
+        @SuppressWarnings("unchecked")
+        List<SshHost> l = InvokerHelper.asList(v);
+        targets.addAll(l);
     }
 
     public void group(String group) {

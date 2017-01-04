@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.linux.internal
+package com.anrisoftware.sscontrol.ssh.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -23,10 +23,9 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.hosts.internal.HostsModule
-import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
-import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
@@ -41,7 +40,11 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
@@ -53,45 +56,32 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Test extends AbstractScriptTestBase {
+class Ssh_Linux_Test extends AbstractScriptTestBase {
 
     @Inject
-    HostsImplFactory hostsFactory
+    SshImplFactory sshFactory
 
     @Inject
-    Hosts_Linux_Factory hostsLinuxFactory
+    Ssh_Linux_Factory sshLinuxFactory
 
     @Inject
     CmdRunCaller cmdRunCaller
 
-    static Map expectedResources = [
-        explicit_list_sudo: Hosts_Linux_Test.class.getResource('explicit_list_sudo_expected.txt'),
-        explicit_list_chown: Hosts_Linux_Test.class.getResource('explicit_list_chown_expected.txt'),
-        explicit_list_cp: Hosts_Linux_Test.class.getResource('explicit_list_cp_expected.txt'),
-        explicit_list_rm: Hosts_Linux_Test.class.getResource('explicit_list_rm_expected.txt'),
-        explicit_list_chown: Hosts_Linux_Test.class.getResource('explicit_list_chown_expected.txt'),
-        explicit_list_chmod: Hosts_Linux_Test.class.getResource('explicit_list_chmod_expected.txt'),
-    ]
+    static Map expectedResources = [:]
 
     @Test
-    void "hosts script"() {
+    void "ssh script"() {
         def testCases = [
             [
-                name: "explicit_list",
+                name: "cat_release",
                 input: """
-service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
-}
+service "ssh", host: "localhost"
 """,
                 expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chown.out')), resourceToString(expectedResources["${args.test.name}_chown"])
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${args.test.name}_cp"])
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${args.test.name}_rm"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chown.out')), resourceToString(expectedResources["${args.test.name}_chown"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chmod.out')), resourceToString(expectedResources["${args.test.name}_chmod"])
+                    HostServices services = args.services
+                    def targets = services.targets.getHosts 'default'
+                    assert targets[0].system.name == 'debian'
+                    assert targets[0].system.version == '8'
                 },
             ],
         ]
@@ -101,14 +91,15 @@ service "hosts" with {
     }
 
     String getServiceName() {
-        'hosts'
+        'ssh'
     }
 
     String getScriptServiceName() {
-        'hosts/debian/8'
+        'ssh/linux/0'
     }
 
     void createDummyCommands(File dir) {
+        createDebianJessieCatCommand dir, 'cat'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -120,15 +111,18 @@ service "hosts" with {
         ]
     }
 
+    void putSshService(HostServices services) {
+    }
+
     HostServices putServices(HostServices services) {
-        services.putAvailableService 'hosts', hostsFactory
-        services.putAvailableScriptService 'hosts/debian/8', hostsLinuxFactory
+        services.putAvailableService 'ssh', sshFactory
+        services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
     }
 
     List getAdditionalModules() {
         [
-            new HostsModule(),
-            new Hosts_Linux_Module(),
+            new SshModule(),
+            new Ssh_Linux_Module(),
             new HostServicesModule(),
             new ShellCmdModule(),
             new SshShellModule(),
@@ -140,6 +134,9 @@ service "hosts" with {
             new TemplateModule(),
             new FactsModule(),
             new TokensTemplateModule(),
+            new DebugLoggingModule(),
+            new TypesModule(),
+            new StringsModule(),
             new AbstractModule() {
 
                 @Override

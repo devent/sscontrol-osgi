@@ -60,8 +60,6 @@ class FactsTest extends AbstractCmdTestBase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    static cat_release_cat_cmd = FactsTest.class.getResource('cat_release_cat_cmd.txt')
-
     static Map expectedResources = [
         cat_release_cat: FactsTest.class.getResource('cat_release_cat_expected.txt'),
     ]
@@ -98,7 +96,7 @@ class FactsTest extends AbstractCmdTestBase {
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = copyFactory.create test.args, test.host, this, threads, log
-        createCommand cat_release_cat_cmd, tmp, 'cat'
+        createDebianJessieCatCommand tmp, 'cat'
         createEchoCommands tmp, [
             'mkdir',
             'chown',

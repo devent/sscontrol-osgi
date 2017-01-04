@@ -38,6 +38,10 @@ class UnixTestUtil {
         return createCommand(echoCommand, dir, name)
     }
 
+    static String createDebianJessieCatCommand(File dir, String name) {
+        return createCommand(debianJessieCatCommand, dir, name)
+    }
+
     static String createCommand(URL command, File dir, String name) {
         def file = new File(dir, name)
         def stream = new FileOutputStream(file)
@@ -68,6 +72,8 @@ class UnixTestUtil {
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
+
+    static final URL debianJessieCatCommand = UnixTestUtil.class.getResource('debian_jessie_cat_cmd.txt')
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 }

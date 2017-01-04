@@ -93,14 +93,13 @@ abstract class AbstractScriptTestBase {
         putSshService services
         FileUtils.write scriptFile, test.input
         services = runScript scriptFile, services
-        def all = services.targets.getHosts('default')
         createDummyCommands dir
         services.getServices().each { String name ->
             List<HostService> service = services.getServices(name)
             service.eachWithIndex { HostService s, int i ->
                 if (s.name == serviceName) {
                     setupHostService s, dir: dir
-                    List<SshHost> targets = s.targets.size() == 0 ? all : s.targets
+                    List<SshHost> targets = getTargets(services, s)
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
                         HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads)
@@ -123,6 +122,11 @@ abstract class AbstractScriptTestBase {
     abstract HostServices putServices(HostServices services)
 
     abstract List getAdditionalModules()
+
+    List getTargets(HostServices services, HostService service) {
+        def all = services.targets.getHosts('default')
+        service.targets.size() == 0 ? all : service.targets
+    }
 
     void putSshService(HostServices services) {
         services.addService 'ssh', SshFactory.localhost(injector)

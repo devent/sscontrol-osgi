@@ -26,6 +26,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.sscontrol.copy.external.Copy
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
+import com.anrisoftware.sscontrol.facts.external.Facts
+import com.anrisoftware.sscontrol.facts.external.Facts.FactsFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.replace.external.Replace
@@ -114,6 +116,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     @Inject
     TemplateFactory template
+
+    /**
+     * Facts service.
+     */
+    @Inject
+    FactsFactory facts
 
     /**
      * The host services.
@@ -260,6 +268,21 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     Template template(Map args) {
         def a = setupArgs(args)
         template.create(a, a.target, this, threads, log)
+    }
+
+    /**
+     * Facts command.
+     */
+    Facts facts() {
+        facts([:])
+    }
+
+    /**
+     * Facts command.
+     */
+    Facts facts(Map args) {
+        def a = setupArgs(args)
+        facts.create(a, a.target, this, threads, log)
     }
 
     /**

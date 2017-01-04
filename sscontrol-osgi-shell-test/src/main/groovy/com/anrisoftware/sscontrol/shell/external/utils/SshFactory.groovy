@@ -24,12 +24,15 @@ import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.Injector
 
+import groovy.transform.ToString
+
 /**
  * 
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
+@ToString
 class SshFactory implements Ssh {
 
     static Ssh localhost(Injector injector) {
@@ -89,6 +92,7 @@ class SshFactory implements Ssh {
 
     @Override
     List<SshHost> getTargets() {
+        targets
     }
 
     @Override

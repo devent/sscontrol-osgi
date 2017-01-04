@@ -30,6 +30,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
@@ -105,10 +106,20 @@ public class HostServicesImpl implements HostServices {
         checkService(name, service);
         Map<String, Object> a = parseArgs(args, name);
         HostService hostService = service.create(a);
+        setupTargets(hostService);
+        injectTargets(hostService, name);
         addService(name, hostService);
         return hostService;
     }
 
+    /**
+     * Returns the target hosts with the specified group name.
+     * 
+     * <pre>
+     * targets "master" each {
+     * }
+     * </pre>
+     */
     public List<SshHost> targets(String name) {
         return targets.getHosts(name);
     }
@@ -193,10 +204,6 @@ public class HostServicesImpl implements HostServices {
         }
         services.add(service);
         log.addService(this, name, service);
-        if (service instanceof Ssh) {
-            Ssh ssh = (Ssh) service;
-            targets.addTarget(ssh);
-        }
     }
 
     @Override
@@ -233,6 +240,8 @@ public class HostServicesImpl implements HostServices {
         Map<String, Object> result = new HashMap<>(args);
         if (!name.equals("ssh")) {
             result.put("targets", parseTarget(args));
+        } else {
+
         }
         return unmodifiableMap(result);
     }
@@ -251,6 +260,22 @@ public class HostServicesImpl implements HostServices {
         if (service == null) {
             throw new NullPointerException(
                     format("Service '%s' not found.", name));
+        }
+    }
+
+    private void setupTargets(HostService service) {
+        if (service instanceof Ssh) {
+            Ssh ssh = (Ssh) service;
+            targets.addTarget(ssh);
+        }
+    }
+
+    private void injectTargets(HostService hostService, String name) {
+        if (name.equals("ssh")) {
+            Ssh ssh = (Ssh) hostService;
+            Map<String, Object> a = new HashMap<>();
+            a.put("target", targets.getHosts(ssh.getGroup()));
+            InvokerHelper.invokeMethodSafe(hostService, "target", a);
         }
     }
 

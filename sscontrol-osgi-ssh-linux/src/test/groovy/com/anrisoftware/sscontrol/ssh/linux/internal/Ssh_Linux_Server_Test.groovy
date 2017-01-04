@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.linux.internal
+package com.anrisoftware.sscontrol.ssh.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -31,9 +31,9 @@ import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
-import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
@@ -41,9 +41,12 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -53,7 +56,8 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Test extends AbstractScriptTestBase {
+@CompileStatic
+class Ssh_Linux_Server_Test extends AbstractScriptTestBase {
 
     @Inject
     HostsImplFactory hostsFactory
@@ -64,34 +68,17 @@ class Hosts_Linux_Test extends AbstractScriptTestBase {
     @Inject
     CmdRunCaller cmdRunCaller
 
-    static Map expectedResources = [
-        explicit_list_sudo: Hosts_Linux_Test.class.getResource('explicit_list_sudo_expected.txt'),
-        explicit_list_chown: Hosts_Linux_Test.class.getResource('explicit_list_chown_expected.txt'),
-        explicit_list_cp: Hosts_Linux_Test.class.getResource('explicit_list_cp_expected.txt'),
-        explicit_list_rm: Hosts_Linux_Test.class.getResource('explicit_list_rm_expected.txt'),
-        explicit_list_chown: Hosts_Linux_Test.class.getResource('explicit_list_chown_expected.txt'),
-        explicit_list_chmod: Hosts_Linux_Test.class.getResource('explicit_list_chmod_expected.txt'),
-    ]
-
     @Test
     void "hosts script"() {
         def testCases = [
             [
-                name: "explicit_list",
                 input: """
 service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
+    ip target.hostAddress, host: "andrea-master.muellerpublic.de", alias: "andrea-master", on: "address"
 }
 """,
                 expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chown.out')), resourceToString(expectedResources["${args.test.name}_chown"])
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${args.test.name}_cp"])
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${args.test.name}_rm"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chown.out')), resourceToString(expectedResources["${args.test.name}_chown"])
-                    assertStringContent fileToStringReplace(new File(dir, 'chmod.out')), resourceToString(expectedResources["${args.test.name}_chmod"])
+                    File dir = args.dir as File
                 },
             ],
         ]
@@ -100,35 +87,34 @@ service "hosts" with {
         }
     }
 
+    void putSshService(HostServices services) {
+        services.addService 'ssh', SshFactory.testServer(injector)
+    }
+
     String getServiceName() {
         'hosts'
     }
 
     String getScriptServiceName() {
-        'hosts/debian/8'
+        'hosts/linux/0'
     }
 
     void createDummyCommands(File dir) {
-        createEchoCommands dir, [
-            'mkdir',
-            'chown',
-            'chmod',
-            'cp',
-            'rm',
-            'sudo',
-            'scp',
-        ]
     }
 
-    HostServices putServices(HostServices services) {
+    void putServices(HostServices services) {
         services.putAvailableService 'hosts', hostsFactory
-        services.putAvailableScriptService 'hosts/debian/8', hostsLinuxFactory
+        services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
+    }
+
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
+        return script
     }
 
     List getAdditionalModules() {
         [
             new HostsModule(),
-            new Hosts_Linux_Module(),
+            new Ssh_Linux_Module(),
             new HostServicesModule(),
             new ShellCmdModule(),
             new SshShellModule(),
@@ -136,9 +122,8 @@ service "hosts" with {
             new ScpModule(),
             new CopyModule(),
             new FetchModule(),
-            new ReplaceModule(),
             new TemplateModule(),
-            new FactsModule(),
+            new ReplaceModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 

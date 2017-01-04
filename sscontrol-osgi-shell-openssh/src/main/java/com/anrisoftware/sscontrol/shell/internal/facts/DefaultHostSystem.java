@@ -29,9 +29,9 @@ public class DefaultHostSystem implements HostSystem {
 
     }
 
-    private final String name;
+    private String name;
 
-    private final String version;
+    private String version;
 
     @Inject
     DefaultHostSystem(@Assisted Map<String, Object> args) {
@@ -39,9 +39,17 @@ public class DefaultHostSystem implements HostSystem {
         this.version = args.get("version").toString();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override

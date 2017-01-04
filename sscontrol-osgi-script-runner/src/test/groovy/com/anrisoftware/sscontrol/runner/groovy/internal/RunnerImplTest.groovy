@@ -42,6 +42,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
@@ -52,6 +53,8 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
+import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -81,6 +84,9 @@ class RunnerImplTest extends AbstractScriptTestBase {
 
     @Inject
     SshPreScriptImplFactory sshPreFactory
+
+    @Inject
+    Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
     HostnameImplFactory hostnameFactory
@@ -113,14 +119,26 @@ class RunnerImplTest extends AbstractScriptTestBase {
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
+        createDummyCommands dir
         IOUtils.copy hostnameScript.openStream(), new FileOutputStream(scriptFile)
         def roots = [parent.toURI()] as URI[]
-        def variables = [:]
+        def variables = createVariables(dir: dir)
         def services = putServices(servicesFactory.create())
         def parser = parserFactory.create(roots, "Script.groovy", variables, services)
         def parsed = parser.parse()
         assert parsed.services.size() == 2
         runnerFactory.create(threads, parsed).run variables
+    }
+
+    Map createVariables(Map args) {
+        def a = [:]
+        a.chdir = args.dir
+        a.pwd = args.dir
+        a.sudoEnv = [:]
+        a.sudoEnv.PATH = args.dir
+        a.env = [:]
+        a.env.PATH = args.dir
+        return a
     }
 
     String getServiceName() {
@@ -132,6 +150,7 @@ class RunnerImplTest extends AbstractScriptTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
+        services.putAvailableScriptService 'ssh', ssh_Linux_Factory
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailablePreService 'hostname', hostnamePreFactory
         services.putAvailableScriptService 'hostname', hostname_Debian_8_Factory
@@ -140,6 +159,7 @@ class RunnerImplTest extends AbstractScriptTestBase {
 
 
     void createDummyCommands(File dir) {
+        createDebianJessieCatCommand dir, 'cat'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -149,7 +169,8 @@ class RunnerImplTest extends AbstractScriptTestBase {
             'rm',
             'cp',
             'apt-get',
-            'service'
+            'service',
+            'hostnamectl',
         ]
     }
 
@@ -162,6 +183,7 @@ class RunnerImplTest extends AbstractScriptTestBase {
             new Hostname_Debian_8_Module(),
             new SshModule(),
             new SshPreModule(),
+            new Ssh_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -175,6 +197,7 @@ class RunnerImplTest extends AbstractScriptTestBase {
             new FetchModule(),
             new ReplaceModule(),
             new TemplateModule(),
+            new FactsModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 
