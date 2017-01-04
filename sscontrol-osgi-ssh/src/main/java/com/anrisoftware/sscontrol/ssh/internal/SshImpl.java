@@ -74,8 +74,8 @@ public class SshImpl implements Ssh {
             SshHostImplFactory sshHostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
-        this.targets = new ArrayList<SshHost>();
-        this.hosts = new ArrayList<SshHost>();
+        this.targets = new ArrayList<>();
+        this.hosts = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.sshHostFactory = sshHostFactory;
         parseArgs(args);
@@ -118,29 +118,38 @@ public class SshImpl implements Ssh {
     }
 
     public void debug(Map<String, Object> args, String name) {
-        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        Map<String, Object> arguments = new HashMap<>(args);
         arguments.put("name", name);
         invokeMethod(debug, "debug", arguments);
     }
 
     public void debug(Map<String, Object> args) {
-        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        Map<String, Object> arguments = new HashMap<>(args);
         invokeMethod(debug, "debug", arguments);
     }
 
     public void host(String host) {
         SshHost sshHost = sshHostFactory.create();
         invokeMethod(sshHost, "host", host);
-        Map<String, Object> a = new HashMap<String, Object>();
+        Map<String, Object> a = new HashMap<>();
         a.put("host", sshHost.getHost());
-        a.put("system", system);
-        invokeMethod(sshHost, "host", a);
-        this.hosts.add(sshHost);
-        log.hostAdded(this, sshHost);
+        host(a);
+    }
+
+    public void host(Map<String, Object> args, String host) {
+        SshHost sshHost = sshHostFactory.create();
+        invokeMethod(sshHost, "host", host);
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("host", sshHost.getHost());
+        host(a);
     }
 
     public void host(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
+        Object v = a.get("system");
+        if (v == null) {
+            a.put("system", system);
+        }
         SshHost sshHost = sshHostFactory.create();
         invokeMethod(sshHost, "host", a);
         this.hosts.add(sshHost);

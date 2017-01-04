@@ -53,7 +53,7 @@ public class SshHostImpl implements SshHost {
 
     }
 
-    private final SshHostSystemImplFactory systemFactory;
+    private transient SshHostSystemImplFactory systemFactory;
 
     private String host;
 
@@ -72,17 +72,28 @@ public class SshHostImpl implements SshHost {
     }
 
     public void host(String host) {
+        Map<String, Object> args = new HashMap<>();
+        host(args, host);
+    }
+
+    public void host(Map<String, Object> args, String host) {
         String[] userHostPort = split(host, "@");
-        if (userHostPort.length == 1) {
-            this.host = userHostPort[0];
-            return;
+        switch (userHostPort.length) {
+        case 1:
+            args.put("host", userHostPort[0]);
+            break;
+        case 2:
+            args.put("user", userHostPort[0]);
+            String[] hostPort = split(userHostPort[1], ":");
+            args.put("host", hostPort[0]);
+            if (hostPort.length > 1) {
+                args.put("port", Integer.valueOf(hostPort[1]));
+            }
+            break;
+        default:
+            break;
         }
-        this.user = userHostPort[0];
-        String[] hostPort = split(userHostPort[1], ":");
-        this.host = hostPort[0];
-        if (hostPort.length > 1) {
-            this.port = Integer.valueOf(hostPort[1]);
-        }
+        host(args);
     }
 
     public void host(Map<String, Object> args) {

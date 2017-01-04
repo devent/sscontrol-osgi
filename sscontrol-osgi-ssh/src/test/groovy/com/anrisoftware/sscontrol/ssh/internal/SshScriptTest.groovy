@@ -315,6 +315,30 @@ service "ssh" with {
                     assert sys.version == "9"
                 },
             ],
+            [
+                input: """
+service "ssh" with {
+    host "192.168.0.2", system: "debian-8"
+    host "192.168.0.3", system: "debian-9"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == 'default'
+                    assert ssh.hosts.size() == 2
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                    HostSystem sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "8"
+                    host = ssh.hosts[1]
+                    assert host.host == "192.168.0.3"
+                    sys = host.system
+                    assert sys.name == "debian"
+                    assert sys.version == "9"
+                },
+            ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '\n######### {}. case: {}', k, test
