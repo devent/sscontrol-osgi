@@ -150,10 +150,10 @@ class RunnerImplTest extends AbstractScriptTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh', ssh_Linux_Factory
+        services.putAvailableScriptService 'ssh-linux-0', ssh_Linux_Factory
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailablePreService 'hostname', hostnamePreFactory
-        services.putAvailableScriptService 'hostname', hostname_Debian_8_Factory
+        services.putAvailableScriptService 'hostname-debian-8', hostname_Debian_8_Factory
         return services
     }
 
