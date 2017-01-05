@@ -18,6 +18,9 @@ package com.anrisoftware.sscontrol.services.internal;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,6 +80,7 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     @Override
     public List<SshHost> getHosts(String name) {
         List<Ssh> targets = hosts.get(name);
+        assertThat("targets=null", targets, is(notNullValue()));
         List<SshHost> result = new ArrayList<>();
         for (Ssh target : targets) {
             result.addAll(target.getHosts());

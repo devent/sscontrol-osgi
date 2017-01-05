@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.runner.groovy.internal;
 
+import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
@@ -20,6 +22,18 @@ public class EmptyServiceScript implements HostServiceScript {
     @Override
     public Object run() {
         return null;
+    }
+
+    public void setChdir(File dir) {
+    }
+
+    public void setPwd(File dir) {
+    }
+
+    public void setSudoEnv(Map<String, Object> env) {
+    }
+
+    public void setEnv(Map<String, Object> env) {
     }
 
     @Override

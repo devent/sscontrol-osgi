@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
@@ -121,7 +122,7 @@ public class HostServicesImpl implements HostServices {
      * </pre>
      */
     public List<SshHost> targets(String name) {
-        return targets.getHosts(name);
+        return getTargets(name);
     }
 
     @SuppressWarnings("unchecked")
@@ -239,7 +240,8 @@ public class HostServicesImpl implements HostServices {
             String name) {
         Map<String, Object> result = new HashMap<>(args);
         if (!name.equals("ssh")) {
-            result.put("targets", parseTarget(args));
+            List<SshHost> targets = parseTarget(args);
+            result.put("targets", targets);
         } else {
 
         }
@@ -250,9 +252,17 @@ public class HostServicesImpl implements HostServices {
         Object object = args.get("target");
         if (object != null) {
             String name = object.toString();
-            return targets.getHosts(name);
+            return getTargets(name);
         } else {
-            return targets.getHosts(DEFAULT_TARGETS_NAME);
+            return getTargets(DEFAULT_TARGETS_NAME);
+        }
+    }
+
+    private List<SshHost> getTargets(String name) {
+        try {
+            return targets.getHosts(name);
+        } catch (AssertionError e) {
+            throw new NoTargetsForServiceException(e, name);
         }
     }
 

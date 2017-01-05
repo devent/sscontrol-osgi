@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.runner.groovy.internal;
 
+import static com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImplLogger._.scriptNotFound;
+
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
@@ -30,7 +32,7 @@ final class RunScriptImplLogger extends AbstractLogger {
 
     enum _ {
 
-        message("message");
+        scriptNotFound("Service '{}' script not found for '{}'");
 
         private String name;
 
@@ -49,5 +51,9 @@ final class RunScriptImplLogger extends AbstractLogger {
      */
     public RunScriptImplLogger() {
         super(RunScriptImpl.class);
+    }
+
+    void scriptNotFound(String name, String scriptName) {
+        debug(scriptNotFound, name, scriptName);
     }
 }

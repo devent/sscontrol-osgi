@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.runner.groovy.internal
 
 service "ssh", group: "master" with {
     //.
-    host "robobee@andrea-master", key: "ubuntu.pub"
+    host "robobee@andrea-master", key: K8sScript.class.getResource("robobee")
 }
 
-service "hostname", fqdn: "test.muellerpublic.de"
+service "hostname", target: "master", fqdn: "andrea-master.muellerpublic.de"

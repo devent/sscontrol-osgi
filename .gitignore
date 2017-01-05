@@ -12,5 +12,4 @@ jspf.cache
 .directory
 .factorypath
 .apt_generated
-runner/
 bin/

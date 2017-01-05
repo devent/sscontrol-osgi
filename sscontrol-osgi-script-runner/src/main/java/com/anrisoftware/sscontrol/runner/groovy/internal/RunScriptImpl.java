@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.runner.groovy.internal;
 import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +64,9 @@ public class RunScriptImpl implements RunScript {
     private final List<SshHost> defaultTarget;
 
     @Inject
+    private RunScriptImplLogger log;
+
+    @Inject
     private EmptyServiceScript emptyServiceScript;
 
     @AssistedInject
@@ -70,7 +74,11 @@ public class RunScriptImpl implements RunScript {
             @Assisted HostServices services) {
         this.threads = threads;
         this.services = services;
-        this.defaultTarget = services.getTargets().getHosts("default");
+        if (services.getTargets().getGroups().contains("default")) {
+            this.defaultTarget = services.getTargets().getHosts("default");
+        } else {
+            this.defaultTarget = new ArrayList<>();
+        }
     }
 
     @Override
@@ -92,9 +100,11 @@ public class RunScriptImpl implements RunScript {
     private HostServiceScript createScript(String name, HostService s,
             SshHost host) throws AppException {
         PreHost pre = services.getAvailablePreService(name).create();
+        String scriptName = getSystemScriptName(host, name);
         HostServiceScriptService service = services
-                .getAvailableScriptService(getSystemScriptName(host, name));
+                .getAvailableScriptService(scriptName);
         if (service == null) {
+            log.scriptNotFound(name, scriptName);
             service = services
                     .getAvailableScriptService(getLinuxScriptName(host, name));
         }

@@ -46,7 +46,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class RunnerImplTest extends AbstractRunnerTestBase {
+class K8sScriptTest extends AbstractRunnerTestBase {
 
     @Inject
     SshImplFactory sshFactory
@@ -66,14 +66,14 @@ class RunnerImplTest extends AbstractRunnerTestBase {
     @Inject
     Hostname_Debian_8_Factory hostname_Debian_8_Factory
 
-    static final URL hostnameScript = RunnerImplTest.class.getResource('HostnameScript.groovy')
+    static final URL k8sScript = K8sScriptTest.class.getResource('K8sScript.groovy')
 
     @Test
     void "run scripts"() {
         def testCases = [
             [
                 name: "default_target",
-                script: hostnameScript,
+                script: k8sScript,
                 expected: { Map args ->
                     File dir = args.dir
                 },
@@ -84,17 +84,6 @@ class RunnerImplTest extends AbstractRunnerTestBase {
         }
     }
 
-    Map createVariables(Map args) {
-        def a = [:]
-        a.chdir = args.dir
-        a.pwd = args.dir
-        a.sudoEnv = [:]
-        a.sudoEnv.PATH = args.dir
-        a.env = [:]
-        a.env.PATH = args.dir
-        return a
-    }
-
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
@@ -103,22 +92,6 @@ class RunnerImplTest extends AbstractRunnerTestBase {
         services.putAvailablePreService 'hostname', hostnamePreFactory
         services.putAvailableScriptService 'hostname-debian-8', hostname_Debian_8_Factory
         return services
-    }
-
-    void createDummyCommands(File dir) {
-        createDebianJessieCatCommand dir, 'cat'
-        createEchoCommands dir, [
-            'mkdir',
-            'chown',
-            'chmod',
-            'sudo',
-            'scp',
-            'rm',
-            'cp',
-            'apt-get',
-            'service',
-            'hostnamectl',
-        ]
     }
 
     List getAdditionalModules() {

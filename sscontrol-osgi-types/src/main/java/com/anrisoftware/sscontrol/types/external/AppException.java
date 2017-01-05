@@ -15,10 +15,16 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import org.apache.commons.lang3.exception.ContextedException;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @SuppressWarnings("serial")
-public class AppException extends ContextedException {
+public class AppException extends ContextedRuntimeException {
 
     protected AppException(String message, Throwable cause) {
         super(message, cause);
