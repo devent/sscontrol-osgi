@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.runner.groovy.external;
+package com.anrisoftware.sscontrol.types.external;
 
-import com.anrisoftware.sscontrol.parser.groovy.external.LoadScriptException;
-import com.anrisoftware.sscontrol.types.external.Parser;
+import java.util.Map;
 
-@SuppressWarnings("serial")
-public class ScriptServiceNotFound extends LoadScriptException {
+/**
+ * Executes the script.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+public interface RunScript {
 
-    public ScriptServiceNotFound(Parser parser, String serviceName) {
-        super("Script service not found");
-        addContextValue("service name", serviceName);
-        addContextValue("parser", parser);
-    }
-
+    void run(Map<String, Object> variables) throws AppException;
 }

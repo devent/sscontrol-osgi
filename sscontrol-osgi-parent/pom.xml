@@ -52,7 +52,6 @@
         <module>../sscontrol-osgi-inline-linux</module>
         <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-karaf-command-parse</module>
-        <module>../sscontrol-osgi-parser</module>
         <module>../sscontrol-osgi-replace</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-services-properties</module>

@@ -28,10 +28,10 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-import com.anrisoftware.sscontrol.parser.external.Parser;
-import com.anrisoftware.sscontrol.parser.external.ParserService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.HostServicesService;
+import com.anrisoftware.sscontrol.types.external.Parser;
+import com.anrisoftware.sscontrol.types.external.ParserService;
 
 /**
  * Karaf {@code robobee:parse} command.

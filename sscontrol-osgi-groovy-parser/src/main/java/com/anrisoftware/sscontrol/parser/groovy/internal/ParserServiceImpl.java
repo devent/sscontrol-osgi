@@ -28,10 +28,10 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.BundleContext;
 
-import com.anrisoftware.sscontrol.parser.external.Parser;
-import com.anrisoftware.sscontrol.parser.external.ParserService;
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.Parser;
+import com.anrisoftware.sscontrol.types.external.ParserService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

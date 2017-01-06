@@ -15,8 +15,7 @@
  */
 package com.anrisoftware.sscontrol.parser.groovy.external;
 
-import com.anrisoftware.sscontrol.parser.external.LoadScriptException;
-import com.anrisoftware.sscontrol.parser.external.Parser;
+import com.anrisoftware.sscontrol.types.external.Parser;
 
 @SuppressWarnings("serial")
 public class ScriptServiceNotFound extends LoadScriptException {

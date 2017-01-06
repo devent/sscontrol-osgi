@@ -26,10 +26,10 @@ import javax.inject.Inject;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 
-import com.anrisoftware.sscontrol.parser.external.LoadScriptException;
-import com.anrisoftware.sscontrol.parser.external.Parser;
+import com.anrisoftware.sscontrol.parser.groovy.external.LoadScriptException;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.Parser;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.assistedinject.Assisted;
 

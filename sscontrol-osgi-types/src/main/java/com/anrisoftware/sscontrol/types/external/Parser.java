@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.external;
-
-import java.net.URI;
-import java.util.Map;
-
-import com.anrisoftware.sscontrol.types.external.HostServices;
+package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Script parser service.
+ * Script parser.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ParserService {
+public interface Parser {
 
-    Parser create(URI[] roots, String name, HostServices hostServices);
-
-    Parser create(URI[] roots, String name, Map<String, Object> variables,
-            HostServices hostServices);
-
+    HostServices parse() throws AppException;
 }
