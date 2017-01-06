@@ -20,4 +20,21 @@ service "ssh", group: "master" with {
     host "robobee@andrea-master", key: K8sScript.class.getResource("robobee")
 }
 
+service "ssh", group: "nodes" with {
+    //.
+    host "robobee@andrea-node-1", key: K8sScript.class.getResource("robobee")
+}
+
 service "hostname", target: "master", fqdn: "andrea-master.muellerpublic.de"
+
+service "hosts", target: "master" with {
+    ip "185.24.220.41", host: "andrea-master.muellerpublic.de", alias: "andrea-master"
+    ip "37.252.124.149", host: "andrea-node-1.muellerpublic.de", alias: "andrea-node-1"
+}
+
+service "hostname", target: "nodes", fqdn: "andrea-node-1.muellerpublic.de"
+
+service "hosts", target: "nodes" with {
+    ip "37.252.124.149", host: "andrea-node-1.muellerpublic.de", alias: "andrea-node-1"
+    ip "185.24.220.41", host: "andrea-master.muellerpublic.de", alias: "andrea-master"
+}

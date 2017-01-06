@@ -74,6 +74,7 @@ class RunnerImplTest extends AbstractRunnerTestBase {
             [
                 name: "default_target",
                 script: hostnameScript,
+                expectedServicesSize: 2,
                 expected: { Map args ->
                     File dir = args.dir
                 },

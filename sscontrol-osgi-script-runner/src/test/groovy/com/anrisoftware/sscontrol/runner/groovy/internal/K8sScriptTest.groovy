@@ -29,6 +29,12 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.hosts.internal.HostsModule
+import com.anrisoftware.sscontrol.hosts.internal.HostsPreModule
+import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
+import com.anrisoftware.sscontrol.hosts.internal.HostsPreScriptImpl.HostsPreScriptImplFactory
+import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
+import com.anrisoftware.sscontrol.hosts.linux.internal.Hosts_Linux_Module
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -66,6 +72,15 @@ class K8sScriptTest extends AbstractRunnerTestBase {
     @Inject
     Hostname_Debian_8_Factory hostname_Debian_8_Factory
 
+    @Inject
+    HostsImplFactory hostsFactory
+
+    @Inject
+    HostsPreScriptImplFactory hostsPreFactory
+
+    @Inject
+    Hosts_Linux_Factory hosts_Debian_8_Factory
+
     static final URL k8sScript = K8sScriptTest.class.getResource('K8sScript.groovy')
 
     @Test
@@ -74,6 +89,7 @@ class K8sScriptTest extends AbstractRunnerTestBase {
             [
                 name: "default_target",
                 script: k8sScript,
+                expectedServicesSize: 3,
                 expected: { Map args ->
                     File dir = args.dir
                 },
@@ -91,19 +107,24 @@ class K8sScriptTest extends AbstractRunnerTestBase {
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailablePreService 'hostname', hostnamePreFactory
         services.putAvailableScriptService 'hostname-debian-8', hostname_Debian_8_Factory
+        services.putAvailableService 'hosts', hostsFactory
+        services.putAvailablePreService 'hosts', hostsPreFactory
+        services.putAvailableScriptService 'hosts-debian-8', hosts_Debian_8_Factory
         return services
     }
 
     List getAdditionalModules() {
         def modules = super.additionalModules
-        modules << new HostnameModule()
-        modules << new HostnamePreModule()
-        modules << new Hostname_Debian_8_Module()
         modules << new SshModule()
         modules << new SshPreModule()
         modules << new Ssh_Linux_Module()
+        modules << new HostnameModule()
+        modules << new HostnamePreModule()
+        modules << new Hostname_Debian_8_Module()
+        modules << new HostsModule()
+        modules << new HostsPreModule()
+        modules << new Hosts_Linux_Module()
     }
-
 
     @Before
     void setupTest() {
