@@ -130,10 +130,22 @@ public class RunScriptImpl implements RunScript {
 
     HostServiceScript setupScript(Map<String, Object> args,
             HostServiceScript script) {
-        invokeMethod(script, "setChdir", args.get("chdir"));
-        invokeMethod(script, "setPwd", args.get("dir"));
-        invokeMethod(script, "setSudoEnv", args.get("sudoEnv"));
-        invokeMethod(script, "setEnv", args.get("env"));
+        Object v = args.get("chdir");
+        if (v != null) {
+            invokeMethod(script, "setChdir", v);
+        }
+        v = args.get("pwd");
+        if (v != null) {
+            invokeMethod(script, "setPwd", v);
+        }
+        v = args.get("sudoEnv");
+        if (v != null) {
+            invokeMethod(script, "setSudoEnv", args.get("sudoEnv"));
+        }
+        v = args.get("env");
+        if (v != null) {
+            invokeMethod(script, "setEnv", args.get("env"));
+        }
         return script;
     }
 

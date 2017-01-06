@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
+import static com.google.inject.Guice.createInjector;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -24,8 +26,6 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.HostServicesService;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
  * Creates the host services repository.
@@ -52,12 +52,6 @@ public class HostServicesServiceImpl implements HostServicesService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new HostServicesModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                    }
-                }).injectMembers(this);
+        createInjector(new HostServicesModule()).injectMembers(this);
     }
 }

@@ -102,7 +102,7 @@
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-core</artifactId>
-                <version>${project.custom.bundles.globalpomutils.version}</version>
+                <version>${project.custom.bundles.globalpomutils.version}.1-SNAPSHOT</version>
                 <type>bundle</type>
             </dependency>
             <dependency>

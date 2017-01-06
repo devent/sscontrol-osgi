@@ -30,7 +30,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
 import com.anrisoftware.sscontrol.types.external.HostService;
@@ -108,7 +107,6 @@ public class HostServicesImpl implements HostServices {
         Map<String, Object> a = parseArgs(args, name);
         HostService hostService = service.create(a);
         setupTargets(hostService);
-        injectTargets(hostService, name);
         addService(name, hostService);
         return hostService;
     }
@@ -277,15 +275,6 @@ public class HostServicesImpl implements HostServices {
         if (service instanceof Ssh) {
             Ssh ssh = (Ssh) service;
             targets.addTarget(ssh);
-        }
-    }
-
-    private void injectTargets(HostService hostService, String name) {
-        if (name.equals("ssh")) {
-            Ssh ssh = (Ssh) hostService;
-            Map<String, Object> a = new HashMap<>();
-            a.put("target", targets.getHosts(ssh.getGroup()));
-            InvokerHelper.invokeMethodSafe(hostService, "target", a);
         }
     }
 

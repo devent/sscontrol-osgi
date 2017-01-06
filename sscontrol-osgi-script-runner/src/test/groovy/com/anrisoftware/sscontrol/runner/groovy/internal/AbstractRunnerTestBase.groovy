@@ -63,7 +63,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
     }
 
     Map createVariables(Map args) {
-        return args
+        [:]
     }
 
     String getServiceName() {
@@ -73,7 +73,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
     }
 
     HostServices putServices(HostServices services) {
-        return services
+        services
     }
 
     void createDummyCommands(File dir) {

@@ -153,6 +153,7 @@ public class SshImpl implements Ssh {
         SshHost sshHost = sshHostFactory.create();
         invokeMethod(sshHost, "host", a);
         this.hosts.add(sshHost);
+        this.targets.add(sshHost);
         log.hostAdded(this, sshHost);
     }
 
