@@ -62,6 +62,7 @@ class SshScriptTest {
     void "ssh script"() {
         def testCases = [
             [
+                enabled: true,
                 input: """
 ssh.with {
     debug "error", facility: 'auth', level: 1
@@ -84,6 +85,7 @@ ssh
                 },
             ],
             [
+                enabled: true,
                 input: """
 debugLogs = []
 debugLogs << [name: "error", level: 1]
@@ -95,6 +97,7 @@ ssh
                 },
             ],
             [
+                enabled: true,
                 input: """
 ssh.with {
     group "nodes"
@@ -106,9 +109,10 @@ ssh
                 },
             ],
             [
+                enabled: true,
                 input: """
 ssh.with {
-    host "user"
+    host "localhost"
     host "user@192.168.0.2"
     host "user@192.168.0.3:22"
 }
@@ -119,7 +123,7 @@ ssh
                     int i = 0
                     SshHost host = ssh.hosts[i++]
                     assert host.user == null
-                    assert host.host == 'user'
+                    assert host.host == 'localhost'
                     assert host.port == null
                     assert host.key == null
                     host = ssh.hosts[i++]
@@ -135,11 +139,12 @@ ssh
                 },
             ],
             [
+                enabled: true,
                 input: """
 ssh.with {
     host << "192.168.0.1"
-    host << "192.168.0.2"
-    host << "192.168.0.3"
+    host << "user@192.168.0.2"
+    host << "user@192.168.0.3:22"
 }
 ssh
 """,
@@ -152,18 +157,19 @@ ssh
                     assert host.port == null
                     assert host.key == null
                     host = ssh.hosts[i++]
-                    assert host.user == null
+                    assert host.user == 'user'
                     assert host.host == '192.168.0.2'
                     assert host.port == null
                     assert host.key == null
                     host = ssh.hosts[i++]
-                    assert host.user == null
+                    assert host.user == 'user'
                     assert host.host == '192.168.0.3'
-                    assert host.port == null
+                    assert host.port == 22
                     assert host.key == null
                 },
             ],
             [
+                enabled: true,
                 input: """
 sshHosts = []
 sshHosts << [host: "192.168.0.1", user: "user", key: "user.pub"]
@@ -194,11 +200,13 @@ ssh
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '\n######### {}. case: {}', k, test
-            def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
-            log.info '{}. case: ssh: {}', k, ssh
-            Closure expected = test.expected
-            expected ssh
+            if (test.enabled) {
+                log.info '\n######### {}. case: {}', k, test
+                def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
+                log.info '{}. case: ssh: {}', k, ssh
+                Closure expected = test.expected
+                expected ssh
+            }
         }
     }
 

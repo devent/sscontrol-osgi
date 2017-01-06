@@ -77,45 +77,32 @@ public class SshHostImpl implements SshHost {
     }
 
     public void host(Map<String, Object> args, String host) {
-        String[] userHostPort = split(host, "@");
-        switch (userHostPort.length) {
-        case 1:
-            args.put("host", userHostPort[0]);
-            break;
-        case 2:
-            args.put("user", userHostPort[0]);
-            String[] hostPort = split(userHostPort[1], ":");
-            args.put("host", hostPort[0]);
-            if (hostPort.length > 1) {
-                args.put("port", Integer.valueOf(hostPort[1]));
-            }
-            break;
-        default:
-            break;
-        }
-        host(args);
+        Map<String, Object> a = parseHostUserPort(args, host);
+        host(a);
     }
 
     public void host(Map<String, Object> args) {
         Object v;
         v = args.get("host");
         notNull(v, "host=null");
+        Map<String, Object> a = parseHostUserPort(args, v.toString());
+        v = a.get("host");
         this.host = v.toString();
-        v = args.get("user");
+        v = a.get("user");
         if (v != null) {
             this.user = v.toString();
         }
-        v = args.get("port");
+        v = a.get("port");
         if (v != null) {
-            this.port = (Integer) args.get("port");
+            this.port = (Integer) a.get("port");
         }
-        v = args.get("key");
+        v = a.get("key");
         if (v != null) {
             this.key = StringToURI.toURI(v.toString());
         }
-        v = args.get("system");
+        v = a.get("system");
         if (v != null) {
-            this.system = systemFactory.create(args);
+            this.system = systemFactory.create(a);
         }
     }
 
@@ -154,6 +141,28 @@ public class SshHostImpl implements SshHost {
         return new ToStringBuilder(this).append("user", user)
                 .append("host", host).append("port", port).append("key", key)
                 .append("system", system).toString();
+    }
+
+    private Map<String, Object> parseHostUserPort(Map<String, Object> args,
+            String host) {
+        Map<String, Object> a = new HashMap<>(args);
+        String[] userHostPort = split(host, "@");
+        switch (userHostPort.length) {
+        case 1:
+            a.put("host", userHostPort[0]);
+            break;
+        case 2:
+            a.put("user", userHostPort[0]);
+            String[] hostPort = split(userHostPort[1], ":");
+            a.put("host", hostPort[0]);
+            if (hostPort.length > 1) {
+                a.put("port", Integer.valueOf(hostPort[1]));
+            }
+            break;
+        default:
+            break;
+        }
+        return a;
     }
 
 }

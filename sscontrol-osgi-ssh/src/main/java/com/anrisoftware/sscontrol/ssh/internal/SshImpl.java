@@ -129,32 +129,20 @@ public class SshImpl implements Ssh {
     }
 
     public void host(String host) {
-        SshHost sshHost = sshHostFactory.create();
-        invokeMethod(sshHost, "host", host);
         Map<String, Object> a = new HashMap<>();
-        a.put("host", sshHost.getHost());
-        host(a);
+        a.put("host", host);
+        addHost(a);
     }
 
     public void host(Map<String, Object> args, String host) {
-        SshHost sshHost = sshHostFactory.create();
-        invokeMethod(sshHost, "host", host);
         Map<String, Object> a = new HashMap<>(args);
-        a.put("host", sshHost.getHost());
-        host(a);
+        a.put("host", host);
+        addHost(a);
     }
 
     public void host(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
-        Object v = a.get("system");
-        if (v == null) {
-            a.put("system", system);
-        }
-        SshHost sshHost = sshHostFactory.create();
-        invokeMethod(sshHost, "host", a);
-        this.hosts.add(sshHost);
-        this.targets.add(sshHost);
-        log.hostAdded(this, sshHost);
+        addHost(a);
     }
 
     public List<String> getHost() {
@@ -229,6 +217,18 @@ public class SshImpl implements Ssh {
         if (v != null) {
             host(v.toString());
         }
+    }
+
+    private void addHost(Map<String, Object> a) {
+        Object v = a.get("system");
+        if (v == null) {
+            a.put("system", system);
+        }
+        SshHost host = sshHostFactory.create();
+        invokeMethod(host, "host", a);
+        this.hosts.add(host);
+        this.targets.add(host);
+        log.hostAdded(this, host);
     }
 
 }
