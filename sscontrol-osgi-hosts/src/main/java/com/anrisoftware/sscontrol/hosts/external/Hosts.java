@@ -20,7 +20,7 @@ import java.util.List;
 import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
- * Hosts service.
+ * <i>Hosts</i> service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

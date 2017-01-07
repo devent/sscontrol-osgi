@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.hosts.external;
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * Hostname pre-script service.
+ * <i>Hosts</i> pre-script service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0

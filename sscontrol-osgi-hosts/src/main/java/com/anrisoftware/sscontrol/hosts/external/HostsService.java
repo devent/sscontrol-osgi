@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.hosts.external;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
- * Hostname service.
+ * <i>Hosts</i> service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

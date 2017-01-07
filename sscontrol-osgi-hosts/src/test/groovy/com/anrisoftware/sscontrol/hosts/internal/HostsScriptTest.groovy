@@ -56,7 +56,7 @@ class HostsScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostsImplFactory hostnameFactory
+    HostsImplFactory serviceFactory
 
     @Test
     void "hosts service"() {
@@ -119,7 +119,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
             log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
             services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-            services.putAvailableService 'hosts', hostnameFactory
+            services.putAvailableService 'hosts', serviceFactory
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
             expected services
@@ -131,6 +131,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
         toStringStyle
         Guice.createInjector(
                 new HostsModule(),
+                new HostsPreModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesModule(),
