@@ -69,18 +69,33 @@ public class DebugLoggingImpl implements DebugLogging {
         this.modules = new HashMap<String, DebugModule>(debug.getModules());
     }
 
+    /**
+     * <pre>
+     * debug "error", level: 1
+     * </pre>
+     */
     public void debug(Map<String, Object> args, String name) {
         DebugModuleImpl module = moduleFactory.create();
         module.debug(args, name);
         modules.put(name, module);
     }
 
+    /**
+     * <pre>
+     * debug name: "error", level: 1
+     * </pre>
+     */
     public void debug(Map<String, Object> args) throws AppException {
         DebugModuleImpl module = moduleFactory.create();
         module.debug(args);
         modules.put(module.getName(), module);
     }
 
+    /**
+     * <pre>
+     * debug << [name: "error", level: 1]
+     * </pre>
+     */
     @SuppressWarnings("serial")
     public List<Object> getDebug() {
         return new ArrayList<Object>() {
