@@ -86,7 +86,10 @@ service "k8s-master" with {
                     assert services.getServices('k8s-master').size() == 1
                     K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                     assert s.targets.size() == 0
-                    assert s.cluster.range == '10.254.0.0/16'
+                    assert s.cluster.range == null
+                    assert s.plugins.size() == 1
+                    assert s.plugins[0].name == 'etcd'
+                    assert s.plugins[0].target == 'infra0'
                 },
             ],
         ]

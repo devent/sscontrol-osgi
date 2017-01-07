@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
+import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
@@ -68,14 +69,17 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final ClusterImplFactory clusterFactory;
 
+    private final Map<String, PluginFactory> pluginFactories;
+
+    private final List<Plugin> plugins;
+
     private DebugLogging debug;
 
     private Cluster cluster;
 
-    private List<Plugin> plugins;
-
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
+            Map<String, PluginFactory> pluginFactories,
             HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
@@ -83,6 +87,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.targets = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.cluster = clusterFactory.create();
+        this.pluginFactories = pluginFactories;
+        this.plugins = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -157,6 +163,21 @@ public class K8sMasterImpl implements K8sMaster {
     public void cluster(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
         this.cluster = clusterFactory.create(a);
+        log.clusterSet(this, cluster);
+    }
+
+    /**
+     * <pre>
+     * plugin "etcd", target: "infra0"
+     * </pre>
+     */
+    public Plugin plugin(Map<String, Object> args, String name) {
+        PluginFactory factory = pluginFactories.get(name);
+        Map<String, Object> a = new HashMap<>(args);
+        Plugin plugin = factory.create(a);
+        plugins.add(plugin);
+        log.pluginAdded(this, plugin);
+        return plugin;
     }
 
     @Override

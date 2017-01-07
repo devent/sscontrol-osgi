@@ -38,3 +38,5 @@ service "hosts", target: "nodes" with {
     ip "37.252.124.149", host: "andrea-node-1.muellerpublic.de", alias: "andrea-node-1"
     ip "185.24.220.41", host: "andrea-master.muellerpublic.de", alias: "andrea-master"
 }
+
+service "k8s-master:1.5", target: "master"

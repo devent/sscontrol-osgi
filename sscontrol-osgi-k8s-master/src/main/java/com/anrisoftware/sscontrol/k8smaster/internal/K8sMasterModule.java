@@ -15,12 +15,18 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
+import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
+import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.EtcdPluginImpl.EtcdPluginImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * <i>K8s-Master</i> script module.
@@ -38,6 +44,16 @@ public class K8sMasterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Cluster.class, ClusterImpl.class)
                 .build(ClusterImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Plugin.class, EtcdPluginImpl.class)
+                .build(EtcdPluginImplFactory.class));
+        bindPlugins();
+    }
+
+    private void bindPlugins() {
+        MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
+                String.class, PluginFactory.class);
+        mapbinder.addBinding("etcd").to(EtcdPluginImplFactory.class);
     }
 
 }

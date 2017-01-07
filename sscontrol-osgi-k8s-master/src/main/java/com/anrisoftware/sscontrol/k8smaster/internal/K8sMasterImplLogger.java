@@ -15,13 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.groupSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.hostAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.clusterSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.pluginAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
+import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 
 /**
  * Logging for {@link K8sMasterImpl}.
@@ -34,9 +35,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     enum _ {
 
-        hostAdded("Host added {} to {}"),
+        pluginAdded("Plugin {} added to {}"),
 
-        groupSet("Group '{}' set for {}");
+        clusterSet("Cluster {} set for {}");
 
         private String name;
 
@@ -57,11 +58,11 @@ final class K8sMasterImplLogger extends AbstractLogger {
         super(K8sMasterImpl.class);
     }
 
-    void hostAdded(K8sMasterImpl ssh, SshHost host) {
-        debug(hostAdded, host, ssh);
+    void pluginAdded(K8sMasterImpl k8s, Plugin plugin) {
+        debug(pluginAdded, plugin, k8s);
     }
 
-    void groupSet(K8sMasterImpl ssh, String group) {
-        debug(groupSet, group, ssh);
+    void clusterSet(K8sMasterImpl k8s, Cluster cluster) {
+        debug(clusterSet, cluster, k8s);
     }
 }
