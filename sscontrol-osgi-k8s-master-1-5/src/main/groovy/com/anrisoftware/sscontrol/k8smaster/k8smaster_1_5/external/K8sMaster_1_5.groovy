@@ -29,8 +29,11 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class K8sMaster_1_5 extends ScriptBase {
 
-    def restartService() {
-        log.info 'Restarting sshd service.'
+    def installKubernetes() {
+    }
+
+    def restartServiceSystemd() {
+        log.info 'Restarting k8s services.'
         shell privileged: true, "service sshd restart" call()
         shell privileged: true, "service sshd status" call()
     }
