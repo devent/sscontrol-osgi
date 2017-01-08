@@ -52,8 +52,9 @@
         <module>../sscontrol-osgi-inline-linux</module>
         <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-k8s-master</module>
-        <module>../sscontrol-osgi-k8s-master-1-5</module>
-        <module>../sscontrol-osgi-k8s-master-1-5-debian</module>
+        <module>../sscontrol-osgi-k8s-master-debian</module>
+        <module>../sscontrol-osgi-k8s-master-systemd</module>
+        <module>../sscontrol-osgi-k8s-master-upstream</module>
         <module>../sscontrol-osgi-karaf-command-parse</module>
         <module>../sscontrol-osgi-replace</module>
         <module>../sscontrol-osgi-script-runner</module>
