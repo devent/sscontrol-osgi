@@ -155,7 +155,7 @@ class FetchTest extends AbstractCmdTestBase {
         ]
         testCases.eachWithIndex { Map test, int k ->
             if (test.enabled) {
-                log.info '\n######### {}. case: {}', k, test
+                log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
                 def tmp = folder.newFolder()
                 test.host = SshFactory.localhost(injector).hosts[0]
                 doTest test, tmp, k

@@ -36,6 +36,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class SshRun extends AbstractSshRun {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface SshRunFactory {
 
         SshRun create(@Assisted Map<String, Object> args,
