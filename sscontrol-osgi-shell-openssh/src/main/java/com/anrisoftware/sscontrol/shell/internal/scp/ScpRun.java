@@ -85,7 +85,7 @@ public class ScpRun extends AbstractSshRun {
         ProcessTask task;
         String template = "ssh_wrap_bash";
         TemplateResource res = templates.get().getResource(template);
-        Map<String, Object> a = new HashMap<String, Object>();
+        Map<String, Object> a = new HashMap<>();
         a.putAll(args);
         a.put("privileged", true);
         a.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
@@ -103,12 +103,21 @@ public class ScpRun extends AbstractSshRun {
     protected ProcessTask runCommand(TemplateResource res,
             Map<String, Object> args) throws CommandExecException {
         ProcessTask task = null;
-        if (!isPrivileged(args)) {
-            task = runUnprivileged(res, args);
+        Map<String, Object> a = new HashMap<>(args);
+        setupDefaults(a);
+        if (!isPrivileged(a)) {
+            task = runUnprivileged(res, a);
         } else {
-            task = runPrivileged(res, args);
+            task = runPrivileged(res, a);
         }
         return task;
+    }
+
+    private void setupDefaults(Map<String, Object> args) {
+        Object v = args.get("override");
+        if (v == null) {
+            args.put("override", true);
+        }
     }
 
     private ProcessTask runPrivileged(TemplateResource res,

@@ -94,6 +94,7 @@
             <artifactId>resources-st</artifactId>
             <type>bundle</type>
         </dependency>
+        <!-- For DurationSimpleFormat -->
         <dependency>
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>

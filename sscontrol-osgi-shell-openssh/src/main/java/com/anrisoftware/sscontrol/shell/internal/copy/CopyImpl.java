@@ -69,6 +69,7 @@ public class CopyImpl implements Copy {
 
     @Override
     public ProcessTask call() throws AppException {
+        args.put("destOriginal", args.get("dest"));
         Boolean direct = (Boolean) args.get("direct");
         Copy copy = null;
         if (direct != null && direct) {

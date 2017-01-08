@@ -68,6 +68,7 @@ class CopyTest extends AbstractCmdTestBase {
         privileged_recursive_src_sudo: CopyTest.class.getResource('privileged_recursive_src_sudo_expected.txt'),
         privileged_recursive_src_cp: CopyTest.class.getResource('privileged_recursive_src_cp_expected.txt'),
         privileged_recursive_src_rm: CopyTest.class.getResource('privileged_recursive_src_rm_expected.txt'),
+        privileged_override_exists_src_sudo: CopyTest.class.getResource('privileged_override_exists_src_sudo_expected.txt'),
         direct_dest_src_wget: DownloadCopyWorkerTest.class.getResource('direct_dest_src_wget_expected.txt'),
         direct_dest_src_mv: DownloadCopyWorkerTest.class.getResource('direct_dest_src_mv_expected.txt'),
         direct_dest_src_sudo: DownloadCopyWorkerTest.class.getResource('direct_dest_src_sudo_expected.txt'),
@@ -80,7 +81,7 @@ class CopyTest extends AbstractCmdTestBase {
     void "copy cases"() {
         def testCases = [
             [
-                enabled: false,
+                enabled: true,
                 name: "dest_src",
                 args: [
                     src: "aaa.txt",
@@ -96,7 +97,7 @@ class CopyTest extends AbstractCmdTestBase {
                 },
             ],
             [
-                enabled: false,
+                enabled: true,
                 name: "recursive_dest_src",
                 args: [
                     src: "/home/devent",
@@ -113,7 +114,24 @@ class CopyTest extends AbstractCmdTestBase {
                 },
             ],
             [
-                enabled: false,
+                enabled: true,
+                name: "override_exists_dest_src",
+                args: [
+                    src: "/home/devent",
+                    dest: "/tmp",
+                    override: false,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assert new File(dir, 'scp.out').isFile() == false
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
+                },
+            ],
+            [
+                enabled: true,
                 name: "privileged_src",
                 args: [
                     src: "aaa.txt",
@@ -130,7 +148,7 @@ class CopyTest extends AbstractCmdTestBase {
                 },
             ],
             [
-                enabled: false,
+                enabled: true,
                 name: "privileged_recursive_src",
                 args: [
                     src: "/home/devent",
@@ -145,6 +163,24 @@ class CopyTest extends AbstractCmdTestBase {
                     assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
                     assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
                     assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+                },
+            ],
+            [
+                enabled: true,
+                name: "privileged_override_exists_src",
+                args: [
+                    src: "aaa.txt",
+                    dest: "/tmp",
+                    privileged: true,
+                    override: false,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assert new File(dir, 'scp.out').isFile() == false
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assert new File(dir, 'cp.out').isFile() == true
+                    assert new File(dir, 'rm.out').isFile() == true
                 },
             ],
             [
