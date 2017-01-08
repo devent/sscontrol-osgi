@@ -1,0 +1,4 @@
+mkdir -p /var/lib/robobee/tmp
+chown ./id -u /var/lib/robobee/tmp
+chmod o-rwx /var/lib/robobee/tmp
+mv ./basename http://server.com/aaa.txt /tmp

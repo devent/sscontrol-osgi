@@ -1,0 +1,32 @@
+downloadCmd(args) ::= <<
+
+<setupRemoteTmp(args)>
+
+SRC_NAME=$(basename <args.src>)
+
+cd '<args.tmp>'
+if which wget >/dev/null; then
+    <wgetCmd(args)>
+elif which curl >/dev/null; then
+    <curlCmd(args)>
+fi
+<if(args.withSudo)>
+sudo mv "$SRC_NAME" "<args.dest>"
+<else>
+mv "$SRC_NAME" "<args.dest>"
+<endif>
+>>
+
+wgetCmd(args) ::= <<
+wget -O "$SRC_NAME" "<args.src>"
+>>
+
+curlCmd(args) ::= <<
+curl "<args.src>"
+>>
+
+setupRemoteTmp(args) ::= <<
+sudo mkdir -p '<args.tmp>'
+sudo chown `id -u` '<args.tmp>'
+sudo chmod o-rwx '<args.tmp>'
+>>

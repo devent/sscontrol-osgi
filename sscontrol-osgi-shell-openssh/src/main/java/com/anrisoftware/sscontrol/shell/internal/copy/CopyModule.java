@@ -20,6 +20,8 @@ package com.anrisoftware.sscontrol.shell.internal.copy;
 
 import com.anrisoftware.sscontrol.copy.external.Copy;
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory;
+import com.anrisoftware.sscontrol.shell.internal.copy.DownloadCopyWorker.DownloadCopyWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.copy.ScpCopyWorker.ScpCopyWorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -35,6 +37,12 @@ public class CopyModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(Copy.class, CopyImpl.class)
                 .build(CopyFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Copy.class, ScpCopyWorker.class)
+                .build(ScpCopyWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Copy.class, DownloadCopyWorker.class)
+                .build(DownloadCopyWorkerFactory.class));
     }
 
 }

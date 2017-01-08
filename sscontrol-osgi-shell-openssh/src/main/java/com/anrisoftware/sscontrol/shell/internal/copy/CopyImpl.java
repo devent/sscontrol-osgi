@@ -18,25 +18,16 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.copy;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
-import static org.apache.commons.lang3.Validate.isTrue;
-import static org.apache.commons.lang3.Validate.notNull;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
-import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
-import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
+import com.anrisoftware.sscontrol.shell.internal.copy.DownloadCopyWorker.DownloadCopyWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.copy.ScpCopyWorker.ScpCopyWorkerFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
@@ -60,47 +51,32 @@ public class CopyImpl implements Copy {
     private final Object log;
 
     @Inject
-    private ScpRunFactory scpRunFactory;
+    private ScpCopyWorkerFactory scpFactory;
+
+    @Inject
+    private DownloadCopyWorkerFactory downloadFactory;
 
     @Inject
     CopyImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log) {
-        this.args = new HashMap<String, Object>(args);
+        this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
         this.log = log;
-        setupArgs();
-        checkArgs();
     }
 
     @Override
     public ProcessTask call() throws AppException {
-        try {
-            return scpRunFactory.create(args, parent, threads).call();
-        } catch (CommandExecException e) {
-            throw new ShellExecException(e, "scp");
+        Boolean direct = (Boolean) args.get("direct");
+        Copy copy = null;
+        if (direct != null && direct) {
+            copy = downloadFactory.create(args, host, parent, threads, log);
+        } else {
+            copy = scpFactory.create(args, host, parent, threads, log);
         }
-    }
-
-    private void checkArgs() {
-        isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
-        notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
-        isTrue(args.containsKey(DEST_ARG), "%s=null", DEST_ARG);
-        notNull(args.get(DEST_ARG), "%s=null", DEST_ARG);
-    }
-
-    private void setupArgs() {
-        args.put("remoteSrc", false);
-        args.put("remoteDest", true);
-        args.put(LOG_ARG, log);
-        args.put(SSH_USER_ARG, host.getUser());
-        args.put(SSH_HOST, host.getHost());
-        args.put(SSH_PORT_ARG, host.getPort());
-        args.put(SSH_KEY_ARG, host.getKey());
-        String src = args.get(SRC_ARG).toString();
-        args.put(SRC_ARG, new File(src));
+        return copy.call();
     }
 
 }

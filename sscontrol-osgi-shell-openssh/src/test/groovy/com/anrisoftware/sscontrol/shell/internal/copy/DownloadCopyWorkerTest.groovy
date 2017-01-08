@@ -29,11 +29,11 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.copy.DownloadCopyWorker.DownloadCopyWorkerFactory
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.google.inject.Module
@@ -47,118 +47,68 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class CopyTest extends AbstractCmdTestBase {
+class DownloadCopyWorkerTest extends AbstractCmdTestBase {
 
     static Threads threads
 
     @Inject
-    CopyFactory copyFactory
+    DownloadCopyWorkerFactory downloadFactory
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        dest_src_scp: CopyTest.class.getResource('dest_src_scp_expected.txt'),
-        recursive_dest_src_scp: CopyTest.class.getResource('recursive_dest_src_scp_expected.txt'),
-        privileged_src_scp: CopyTest.class.getResource('privileged_src_scp_expected.txt'),
-        privileged_src_sudo: CopyTest.class.getResource('privileged_src_sudo_expected.txt'),
-        privileged_src_cp: CopyTest.class.getResource('privileged_src_cp_expected.txt'),
-        privileged_src_rm: CopyTest.class.getResource('privileged_src_rm_expected.txt'),
-        privileged_recursive_src_scp: CopyTest.class.getResource('privileged_recursive_src_scp_expected.txt'),
-        privileged_recursive_src_sudo: CopyTest.class.getResource('privileged_recursive_src_sudo_expected.txt'),
-        privileged_recursive_src_cp: CopyTest.class.getResource('privileged_recursive_src_cp_expected.txt'),
-        privileged_recursive_src_rm: CopyTest.class.getResource('privileged_recursive_src_rm_expected.txt'),
-        direct_dest_src_wget: DownloadCopyWorkerTest.class.getResource('direct_dest_src_wget_expected.txt'),
-        direct_dest_src_mv: DownloadCopyWorkerTest.class.getResource('direct_dest_src_mv_expected.txt'),
-        direct_dest_src_sudo: DownloadCopyWorkerTest.class.getResource('direct_dest_src_sudo_expected.txt'),
-        privileged_direct_dest_src_wget: DownloadCopyWorkerTest.class.getResource('privileged_direct_dest_src_wget_expected.txt'),
-        privileged_direct_dest_src_mv: DownloadCopyWorkerTest.class.getResource('privileged_direct_dest_src_mv_expected.txt'),
-        privileged_direct_dest_src_sudo: DownloadCopyWorkerTest.class.getResource('privileged_direct_dest_src_sudo_expected.txt'),
+        download_curl_curl: DownloadCopyWorkerTest.class.getResource('download_curl_curl_expected.txt'),
+        download_curl_mv: DownloadCopyWorkerTest.class.getResource('download_curl_mv_expected.txt'),
+        download_curl_sudo: DownloadCopyWorkerTest.class.getResource('download_curl_sudo_expected.txt'),
+        download_wget_wget: DownloadCopyWorkerTest.class.getResource('download_wget_wget_expected.txt'),
+        download_wget_mv: DownloadCopyWorkerTest.class.getResource('download_wget_mv_expected.txt'),
+        download_wget_sudo: DownloadCopyWorkerTest.class.getResource('download_wget_sudo_expected.txt'),
+        download_privileged_curl_curl: DownloadCopyWorkerTest.class.getResource('download_privileged_curl_curl_expected.txt'),
+        download_privileged_curl_mv: DownloadCopyWorkerTest.class.getResource('download_privileged_curl_mv_expected.txt'),
+        download_privileged_curl_sudo: DownloadCopyWorkerTest.class.getResource('download_privileged_curl_sudo_expected.txt'),
+        download_privileged_wget_wget: DownloadCopyWorkerTest.class.getResource('download_privileged_wget_wget_expected.txt'),
+        download_privileged_wget_mv: DownloadCopyWorkerTest.class.getResource('download_privileged_wget_mv_expected.txt'),
+        download_privileged_wget_sudo: DownloadCopyWorkerTest.class.getResource('download_privileged_wget_sudo_expected.txt'),
     ]
 
     @Test
-    void "copy cases"() {
+    void "download cases"() {
         def testCases = [
             [
-                enabled: false,
-                name: "dest_src",
+                enabled: true,
+                name: "download_curl",
                 args: [
-                    src: "aaa.txt",
+                    src: "http://server.com/aaa.txt",
                     dest: "/tmp",
                 ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
+                preTest: { Map args ->
+                    createEchoCommand args.dir, 'curl'
                 },
-            ],
-            [
-                enabled: false,
-                name: "recursive_dest_src",
-                args: [
-                    src: "/home/devent",
-                    dest: "/tmp",
-                    recursive: true,
-                ],
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
-            [
-                enabled: false,
-                name: "privileged_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'curl.out').isFile() == true
+                    assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
+                    assert new File(dir, 'mv.out').isFile() == true
+                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == true
                     assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
-            [
-                enabled: false,
-                name: "privileged_recursive_src",
-                args: [
-                    src: "/home/devent",
-                    dest: "/tmp",
-                    privileged: true,
-                    recursive: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
                 },
             ],
             [
                 enabled: true,
-                name: "direct_dest_src",
+                name: "download_wget",
                 args: [
                     src: "http://server.com/aaa.txt",
                     dest: "/tmp",
-                    direct: true,
                 ],
+                preTest: { Map args ->
+                    createEchoCommand args.dir, 'wget'
+                },
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
                     assert new File(dir, 'wget.out').isFile() == true
                     assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
                     assert new File(dir, 'mv.out').isFile() == true
@@ -169,17 +119,40 @@ class CopyTest extends AbstractCmdTestBase {
             ],
             [
                 enabled: true,
-                name: "privileged_direct_dest_src",
+                name: "download_privileged_curl",
                 args: [
                     src: "http://server.com/aaa.txt",
                     dest: "/tmp",
-                    direct: true,
                     privileged: true,
                 ],
+                preTest: { Map args ->
+                    createEchoCommand args.dir, 'curl'
+                },
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
+                    assert new File(dir, 'curl.out').isFile() == true
+                    assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
+                    assert new File(dir, 'mv.out').isFile() == true
+                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == true
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                },
+            ],
+            [
+                enabled: true,
+                name: "download_privileged_wget",
+                args: [
+                    src: "http://server.com/aaa.txt",
+                    dest: "/tmp",
+                    privileged: true,
+                ],
+                preTest: { Map args ->
+                    createEchoCommand args.dir, 'wget'
+                },
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
                     assert new File(dir, 'wget.out').isFile() == true
                     assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
                     assert new File(dir, 'mv.out').isFile() == true
@@ -194,26 +167,24 @@ class CopyTest extends AbstractCmdTestBase {
                 log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
                 def tmp = folder.newFolder()
                 test.host = SshFactory.localhost(injector).hosts[0]
+                test.preTest(dir: tmp)
                 doTest test, tmp, k
             }
         }
     }
 
     def createCmd(Map test, File tmp, int k) {
-        def fetch = copyFactory.create test.args, test.host, this, threads, log
+        def fetch = downloadFactory.create test.args, test.host, this, threads, log
+        createWhichCommand tmp
+        createBasenameCommand tmp
         createEchoCommands tmp, [
-            'which',
             'id',
-            'basename',
-            'mv',
             'mkdir',
             'chown',
             'chmod',
-            'cp',
-            'rm',
+            'basename',
+            'mv',
             'sudo',
-            'scp',
-            'wget',
         ]
         return fetch
     }

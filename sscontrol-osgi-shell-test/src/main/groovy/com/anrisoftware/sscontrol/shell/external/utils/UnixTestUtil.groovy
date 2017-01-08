@@ -42,6 +42,14 @@ class UnixTestUtil {
         return createCommand(debianJessieCatCommand, dir, name)
     }
 
+    static String createWhichCommand(File dir) {
+        return createCommand(whichCommand, dir, 'which')
+    }
+
+    static String createBasenameCommand(File dir) {
+        return createCommand(basenameCommand, dir, 'basename')
+    }
+
     static String createCommand(URL command, File dir, String name) {
         def file = new File(dir, name)
         def stream = new FileOutputStream(file)
@@ -65,6 +73,7 @@ class UnixTestUtil {
         String str = FileUtils.readFileToString file
         str = str.replaceAll(/junit\d+/, 'junit')
         str.replaceAll(/replace\d+/, 'replace')
+        str.replaceAll(/random\d+/, 'random')
     }
 
     static String resourceToString(URL resource) {
@@ -74,6 +83,10 @@ class UnixTestUtil {
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
 
     static final URL debianJessieCatCommand = UnixTestUtil.class.getResource('debian_jessie_cat_cmd.txt')
+
+    static final URL whichCommand = UnixTestUtil.class.getResource('which_cmd.txt')
+
+    static final URL basenameCommand = UnixTestUtil.class.getResource('basename_cmd.txt')
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 }
