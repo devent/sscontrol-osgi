@@ -33,4 +33,6 @@ public interface K8sMaster extends HostService {
     Cluster getCluster();
 
     List<Plugin> getPlugins();
+
+    Boolean isAllowPrivileged();
 }
