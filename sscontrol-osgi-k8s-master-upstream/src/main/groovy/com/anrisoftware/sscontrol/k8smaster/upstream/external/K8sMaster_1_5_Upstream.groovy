@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5.external
+package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.sshd.external.Sshd
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>K8s-Master</i> 1.5 service.
+ * Configures the <i>K8s-Master</i> 1.5 service from the upstream sources.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -40,29 +39,7 @@ abstract class K8sMaster_1_5 extends ScriptBase {
 
     def configureService() {
         log.info 'Configuring sshd service.'
-        Sshd service = service
-        int debug = service.debugLogging.modules['debug'].level
-        replace "s/(?m)^#?\\s*LogLevel.*/LogLevel ${logLevelMap[debug]}/", privileged: true, dest: configFile call()
-        replace "s/(?m)^#?\\s*PermitRootLogin.*/PermitRootLogin ${permitRootLogin}/", privileged: true, dest: configFile call()
-        replace "s/(?m)^#?\\s*PasswordAuthentication.*/PasswordAuthentication ${passwordAuthentication}/", privileged: true, dest: configFile call()
-    }
-
-    Map getLogLevelMap() {
-        def p = defaultProperties.getProperty('log_level_map')
-        Eval.me p
-    }
-
-    String getPermitRootLogin() {
-        defaultProperties.getProperty('permit_root_login')
-    }
-
-    String getPasswordAuthentication() {
-        defaultProperties.getProperty('password_authentication')
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService();
+        K8sMaster service = service
     }
 
     @Override
