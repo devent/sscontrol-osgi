@@ -50,7 +50,6 @@
         <module>../sscontrol-osgi-hosts-linux</module>
         <module>../sscontrol-osgi-inline</module>
         <module>../sscontrol-osgi-inline-linux</module>
-        <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-systemd</module>
@@ -70,6 +69,7 @@
         <module>../sscontrol-osgi-sshd-6-debian</module>
         <module>../sscontrol-osgi-template</module>
         <module>../sscontrol-osgi-types</module>
+        <module>../sscontrol-osgi-itests-karaf</module>
     </modules>
 
     <dependencyManagement>
