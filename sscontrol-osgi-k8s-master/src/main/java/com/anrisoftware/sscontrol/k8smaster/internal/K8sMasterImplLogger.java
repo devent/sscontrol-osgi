@@ -15,14 +15,21 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.admissionsAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authenticationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authorizationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.clusterSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.pluginAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.tlsSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
+import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
+import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 
 /**
  * Logging for {@link K8sMasterImpl}.
@@ -37,7 +44,15 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         pluginAdded("Plugin {} added to {}"),
 
-        clusterSet("Cluster {} set for {}");
+        clusterSet("Cluster {} set for {}"),
+
+        tlsSet("TLS {} set for {}"),
+
+        authenticationAdded("Authentication {} added for {}"),
+
+        authorizationAdded("Authorization {} added for {}"),
+
+        admissionsAdded("Admissions {} added for {}");
 
         private String name;
 
@@ -64,5 +79,21 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     void clusterSet(K8sMasterImpl k8s, Cluster cluster) {
         debug(clusterSet, cluster, k8s);
+    }
+
+    void tlsSet(K8sMasterImpl k8s, Tls tls) {
+        debug(tlsSet, tls, k8s);
+    }
+
+    void authenticationAdded(K8sMasterImpl k8s, Authentication auth) {
+        debug(authenticationAdded, auth, k8s);
+    }
+
+    void authorizationAdded(K8sMasterImpl k8s, Authorization auth) {
+        debug(authorizationAdded, auth, k8s);
+    }
+
+    void admissionsAdded(K8sMasterImpl k8s, String property) {
+        debug(admissionsAdded, property, k8s);
     }
 }

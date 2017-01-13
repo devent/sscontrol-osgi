@@ -22,6 +22,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
@@ -92,6 +93,69 @@ service "k8s-master" with {
                     assert s.plugins[0].target == 'infra0'
                 },
             ],
+            [
+                name: 'auth',
+                input: '''
+service "k8s-master" with {
+    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    authentication "basic", file: "some_file"
+    authentication type: "basic", tokens: """\
+token,user,uid,"group1,group2,group3"
+"""
+    authorization "allow"
+    authorization "deny"
+    authorization "abac", file: "policy_file.json"
+    authorization mode: "abac", abac: """\
+{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"user": "alice", "namespace": "*", "resource": "*", "apiGroup": "*"}}
+"""
+    admission << "AlwaysAdmit,ServiceAccount"
+    kubelet.with {
+        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+        preferred types: "InternalIP,Hostname,ExternalIP"
+    }
+}
+''',
+                expected: { HostServices services ->
+                    assert services.getServices('k8s-master').size() == 1
+                    K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                    assert s.targets.size() == 0
+                    assert s.cluster.range == null
+                    assert s.plugins.size() == 0
+                    assert s.tls.ca.toString() =~ /.*ca\.pem/
+                    assert s.tls.cert.toString() =~ /.*cert\.pem/
+                    assert s.tls.key.toString() =~ /.*key\.pem/
+                    assert s.authentications.size() == 3
+                    int k = -1
+                    assert s.authentications[++k].type == 'cert'
+                    assert s.authentications[k].ca.toString() =~ /.*ca\.pem/
+                    assert s.authentications[k].cert.toString() =~ /.*cert\.pem/
+                    assert s.authentications[k].key.toString() =~ /.*key\.pem/
+                    assert s.authentications[++k].type == 'basic'
+                    assert s.authentications[k].file.toString() =~ /.*some_file/
+                    assert s.authentications[++k].type == 'basic'
+                    assert s.authentications[k].file == null
+                    assert s.authentications[k].tokens =~ /token,user.*/
+                    assert s.authorizations.size() == 4
+                    k = -1
+                    assert s.authorizations[++k].mode == 'allow'
+                    assert s.authorizations[++k].mode == 'deny'
+                    assert s.authorizations[++k].mode == 'abac'
+                    assert s.authorizations[++k].mode == 'abac'
+                    assert s.admissions.size() == 2
+                    k = -1
+                    assert s.admissions[++k] == 'AlwaysAdmit'
+                    assert s.admissions[++k] == 'ServiceAccount'
+                    assert s.kubelet.tls.ca.toString() =~ /.*ca\.pem/
+                    assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
+                    assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
+                    assert s.kubelet.nodeAddressTypes.size() == 3
+                    k = -1
+                    assert s.kubelet.nodeAddressTypes[++k] == "InternalIP"
+                    assert s.kubelet.nodeAddressTypes[++k] == "Hostname"
+                    assert s.kubelet.nodeAddressTypes[++k] == "ExternalIP"
+                },
+            ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
@@ -117,6 +181,7 @@ service "k8s-master" with {
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesUtilsModule(),
+                new ResourcesModule(),
                 new AbstractModule() {
 
                     @Override

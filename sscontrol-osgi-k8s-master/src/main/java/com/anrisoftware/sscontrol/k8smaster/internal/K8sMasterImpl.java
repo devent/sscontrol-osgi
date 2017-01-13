@@ -16,7 +16,11 @@
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,16 +30,26 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.globalpom.arrays.ToList;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
+import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
@@ -73,14 +87,36 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final List<Plugin> plugins;
 
+    @Inject
+    private TlsImplFactory tlsFactory;
+
+    @Inject
+    private Map<String, AuthenticationFactory> authenticationFactories;
+
+    @Inject
+    private Map<String, AuthorizationFactory> authorizationFactories;
+
     private DebugLogging debug;
 
     private Cluster cluster;
+
+    private Boolean allowPrivileged;
+
+    private final List<Authentication> authentications;
+
+    private final List<Authorization> authorizations;
+
+    private final Kubelet kubelet;
+
+    private final List<String> admissions;
+
+    private Tls tls;
 
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
             HostPropertiesService propertiesService,
+            KubeletImplFactory kubeletFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.clusterFactory = clusterFactory;
@@ -89,6 +125,10 @@ public class K8sMasterImpl implements K8sMaster {
         this.cluster = clusterFactory.create();
         this.pluginFactories = pluginFactories;
         this.plugins = new ArrayList<>();
+        this.authentications = new ArrayList<>();
+        this.authorizations = new ArrayList<>();
+        this.admissions = new ArrayList<>();
+        this.kubelet = kubeletFactory.create();
         parseArgs(args);
     }
 
@@ -180,6 +220,96 @@ public class K8sMasterImpl implements K8sMaster {
         return plugin;
     }
 
+    /**
+     * <pre>
+     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public void tls(Map<String, Object> args) {
+        this.tls = tlsFactory.create(args);
+        log.tlsSet(this, tls);
+    }
+
+    /**
+     * <pre>
+     * authentication "basic", file: "some_file"
+     * </pre>
+     */
+    public void authentication(Map<String, Object> args, String name) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("type", name);
+        authentication(a);
+    }
+
+    /**
+     * <pre>
+     * authentication type: "basic", file: "some_file"
+     * </pre>
+     */
+    public void authentication(Map<String, Object> args) {
+        String name = args.get("type").toString();
+        AuthenticationFactory factory = authenticationFactories.get(name);
+        assertThat(format("authentication(%s)=null", name), factory,
+                is(notNullValue()));
+        Authentication auth = factory.create(args);
+        authentications.add(auth);
+        log.authenticationAdded(this, auth);
+    }
+
+    /**
+     * <pre>
+     * authorization "allow"
+     * </pre>
+     */
+    public void authorization(String name) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("mode", name);
+        authorization(a);
+    }
+
+    /**
+     * <pre>
+     * authorization "abac", file: "policy_file.json"
+     * </pre>
+     */
+    public void authorization(Map<String, Object> args, String name) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("mode", name);
+        authorization(a);
+    }
+
+    /**
+     * <pre>
+     * authorization mode: "abac", abac: ""
+     * </pre>
+     */
+    public void authorization(Map<String, Object> args) {
+        String name = args.get("mode").toString();
+        AuthorizationFactory factory = authorizationFactories.get(name);
+        assertThat(format("authorization(%s)=null", name), factory,
+                is(notNullValue()));
+        Authorization auth = factory.create(args);
+        authorizations.add(auth);
+        log.authorizationAdded(this, auth);
+    }
+
+    /**
+     * <pre>
+     * admission << "AlwaysAdmit,ServiceAccount"
+     * </pre>
+     */
+    public List<String> getAdmission() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                String[] split = StringUtils.split(property, ",");
+                ToList.toList(admissions, split);
+                log.admissionsAdded(K8sMasterImpl.this, property);
+            }
+        });
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -216,9 +346,39 @@ public class K8sMasterImpl implements K8sMaster {
     }
 
     @Override
+    public Boolean isAllowPrivileged() {
+        return allowPrivileged;
+    }
+
+    @Override
+    public List<Authentication> getAuthentications() {
+        return authentications;
+    }
+
+    @Override
+    public List<Authorization> getAuthorizations() {
+        return authorizations;
+    }
+
+    @Override
+    public Kubelet getKubelet() {
+        return kubelet;
+    }
+
+    @Override
+    public List<String> getAdmissions() {
+        return admissions;
+    }
+
+    @Override
+    public Tls getTls() {
+        return tls;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("cluster", getCluster()).toString();
+                .append("targets", targets).toString();
     }
 
     @SuppressWarnings("unchecked")

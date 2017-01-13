@@ -35,4 +35,14 @@ public interface K8sMaster extends HostService {
     List<Plugin> getPlugins();
 
     Boolean isAllowPrivileged();
+
+    Tls getTls();
+
+    List<Authentication> getAuthentications();
+
+    List<Authorization> getAuthorizations();
+
+    List<String> getAdmissions();
+
+    Kubelet getKubelet();
 }
