@@ -39,6 +39,12 @@ public interface Copy {
 
     static final String LOG_ARG = "log";
 
+    static final String HASH_ARG = "hash";
+
+    static final String DIRECT_ARG = "hash";
+
+    static final String PRIVILEGED_ARG = "privileged";
+
     /**
      * Factory to create the copy command.
      *

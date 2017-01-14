@@ -18,11 +18,14 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.copy;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.globalpom.checkfilehash.HashName;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
@@ -69,6 +72,7 @@ public class CopyImpl implements Copy {
 
     @Override
     public ProcessTask call() throws AppException {
+        parseHash();
         args.put("destOriginal", args.get("dest"));
         Boolean direct = (Boolean) args.get("direct");
         Copy copy = null;
@@ -78,6 +82,21 @@ public class CopyImpl implements Copy {
             copy = scpFactory.create(args, host, parent, threads, log);
         }
         return copy.call();
+    }
+
+    private void parseHash() {
+        Object v = args.get(HASH_ARG);
+        if (v == null) {
+            return;
+        }
+        try {
+            URI uri = new URI(v.toString());
+            HashName hash = HashName.forResource(uri);
+            args.put("hashType", hash.getFileExtention());
+            args.put("hash", uri.getSchemeSpecificPart());
+        } catch (URISyntaxException e) {
+            throw new InvalidHashSyntaxException(e, v);
+        }
     }
 
 }

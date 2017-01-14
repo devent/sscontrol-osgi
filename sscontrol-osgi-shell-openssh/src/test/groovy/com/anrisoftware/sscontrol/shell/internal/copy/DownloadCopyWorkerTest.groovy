@@ -73,104 +73,125 @@ class DownloadCopyWorkerTest extends AbstractCmdTestBase {
     ]
 
     @Test
-    void "download cases"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "download_curl",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                ],
-                preTest: { Map args ->
-                    createEchoCommand args.dir, 'curl'
-                },
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'curl.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "download_wget",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                ],
-                preTest: { Map args ->
-                    createEchoCommand args.dir, 'wget'
-                },
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'wget.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "download_privileged_curl",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                ],
-                preTest: { Map args ->
-                    createEchoCommand args.dir, 'curl'
-                },
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'curl.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "download_privileged_wget",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                ],
-                preTest: { Map args ->
-                    createEchoCommand args.dir, 'wget'
-                },
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'wget.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
-        ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
-                def tmp = folder.newFolder()
-                test.host = SshFactory.localhost(injector).hosts[0]
-                test.preTest(dir: tmp)
-                doTest test, tmp, k
-            }
-        }
+    void "download_curl"() {
+        def test =
+                [
+                    name: "download_curl",
+                    args: [
+                        src: "http://server.com/aaa.txt",
+                        dest: "/tmp",
+                    ],
+                    preTest: { Map args ->
+                        createEchoCommand args.dir, 'curl'
+                    },
+                    expected: { Map args ->
+                        File dir = args.dir as File
+                        String name = args.name as String
+                        assert new File(dir, 'curl.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
+                        assert new File(dir, 'mv.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                        assert new File(dir, 'sudo.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    },
+                ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        test.preTest(dir: tmp)
+        doTest test, tmp
+    }
+
+    @Test
+    void "download_wget"() {
+        def test =
+                [
+                    name: "download_wget",
+                    args: [
+                        src: "http://server.com/aaa.txt",
+                        dest: "/tmp",
+                    ],
+                    preTest: { Map args ->
+                        createEchoCommand args.dir, 'wget'
+                    },
+                    expected: { Map args ->
+                        File dir = args.dir as File
+                        String name = args.name as String
+                        assert new File(dir, 'wget.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
+                        assert new File(dir, 'mv.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                        assert new File(dir, 'sudo.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    },
+                ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        test.preTest(dir: tmp)
+        doTest test, tmp
+    }
+
+    @Test
+    void "download_privileged_curl"() {
+        def test =
+                [
+                    name: "download_privileged_curl",
+                    args: [
+                        src: "http://server.com/aaa.txt",
+                        dest: "/tmp",
+                        privileged: true,
+                    ],
+                    preTest: { Map args ->
+                        createEchoCommand args.dir, 'curl'
+                    },
+                    expected: { Map args ->
+                        File dir = args.dir as File
+                        String name = args.name as String
+                        assert new File(dir, 'curl.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'curl.out')), resourceToString(expectedResources["${name}_curl"] as URL)
+                        assert new File(dir, 'mv.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                        assert new File(dir, 'sudo.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    },
+                ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        test.preTest(dir: tmp)
+        doTest test, tmp
+    }
+
+    @Test
+    void "download_privileged_wget"() {
+        def test =
+                [
+                    name: "download_privileged_wget",
+                    args: [
+                        src: "http://server.com/aaa.txt",
+                        dest: "/tmp",
+                        privileged: true,
+                    ],
+                    preTest: { Map args ->
+                        createEchoCommand args.dir, 'wget'
+                    },
+                    expected: { Map args ->
+                        File dir = args.dir as File
+                        String name = args.name as String
+                        assert new File(dir, 'wget.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
+                        assert new File(dir, 'mv.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                        assert new File(dir, 'sudo.out').isFile() == true
+                        assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    },
+                ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        test.preTest(dir: tmp)
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {

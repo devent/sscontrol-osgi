@@ -78,160 +78,338 @@ class CopyTest extends AbstractCmdTestBase {
     ]
 
     @Test
-    void "copy cases"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "dest_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
+    void "dest_src"() {
+        def test = [
+            name: 'dest_src',
+            args: [
+                src: "aaa.txt",
+                dest: "/tmp",
             ],
-            [
-                enabled: true,
-                name: "recursive_dest_src",
-                args: [
-                    src: "/home/devent",
-                    dest: "/tmp",
-                    recursive: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
-            [
-                enabled: true,
-                name: "override_exists_dest_src",
-                args: [
-                    src: "/home/devent",
-                    dest: "/tmp",
-                    override: false,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_recursive_src",
-                args: [
-                    src: "/home/devent",
-                    dest: "/tmp",
-                    privileged: true,
-                    recursive: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_override_exists_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                    override: false,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assert new File(dir, 'cp.out').isFile() == true
-                    assert new File(dir, 'rm.out').isFile() == true
-                },
-            ],
-            [
-                enabled: true,
-                name: "direct_dest_src",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                    direct: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
-                    assert new File(dir, 'wget.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_direct_dest_src",
-                args: [
-                    src: "http://server.com/aaa.txt",
-                    dest: "/tmp",
-                    direct: true,
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assert new File(dir, 'scp.out').isFile() == false
-                    assert new File(dir, 'wget.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
-                    assert new File(dir, 'mv.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == true
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
-                def tmp = folder.newFolder()
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "recursive_dest_src"() {
+        def test = [
+            name: "recursive_dest_src",
+            args: [
+                src: "/home/devent",
+                dest: "/tmp",
+                recursive: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "override_exists_dest_src"() {
+        def test = [
+            name: "override_exists_dest_src",
+            args: [
+                src: "/home/devent",
+                dest: "/tmp",
+                override: false,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assert new File(dir, 'scp.out').isFile() == false
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_src"() {
+        def test = [
+            name: "privileged_src",
+            args: [
+                src: "aaa.txt",
+                dest: "/tmp",
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_recursive_src"() {
+        def test = [
+            name: "privileged_recursive_src",
+            args: [
+                src: "/home/devent",
+                dest: "/tmp",
+                privileged: true,
+                recursive: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_override_exists_src"() {
+        def test = [
+            name: "privileged_override_exists_src",
+            args: [
+                src: "aaa.txt",
+                dest: "/tmp",
+                privileged: true,
+                override: false,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assert new File(dir, 'scp.out').isFile() == false
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assert new File(dir, 'cp.out').isFile() == true
+                assert new File(dir, 'rm.out').isFile() == true
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "direct_dest_src"() {
+        def test = [
+            name: "direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assert new File(dir, 'scp.out').isFile() == false
+                assert new File(dir, 'wget.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
+                assert new File(dir, 'mv.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_direct_dest_src"() {
+        def test = [
+            name: "privileged_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assert new File(dir, 'scp.out').isFile() == false
+                assert new File(dir, 'wget.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'wget.out')), resourceToString(expectedResources["${name}_wget"] as URL)
+                assert new File(dir, 'mv.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'mv.out')), resourceToString(expectedResources["${name}_mv"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == true
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "md5_hash_direct_dest_src"() {
+        def test = [
+            name: "md5_hash_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                hash: "md5:d1b0c3ffb4dfd8d0f55a2a3d2a317d31",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'md5sum',
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
+    @Test
+    void "privileged_md5_hash_direct_dest_src"() {
+        def test = [
+            name: "privileged_md5_hash_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                hash: "md5:d1b0c3ffb4dfd8d0f55a2a3d2a317d31",
+                privileged: true
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'md5sum',
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
+    @Test
+    void "sha_hash_direct_dest_src"() {
+        def test = [
+            name: "sha_hash_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                hash: "sha:3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'shasum',
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
+    @Test
+    void "sha1_hash_direct_dest_src"() {
+        def test = [
+            name: "sha1_hash_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                hash: "sha1:3d47bc8c8a81efe0b9e47ab4250f1a20ef8c308c",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'sum1sum',
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
+    @Test
+    void "sha256_hash_direct_dest_src"() {
+        def test = [
+            name: "sha1_hash_direct_dest_src",
+            args: [
+                src: "http://server.com/aaa.txt",
+                dest: "/tmp",
+                direct: true,
+                hash: "sha256:c71b73872886f8fefdb8c9012a205e57e20bb54858884e0e0571d8df5f18763e",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'sha256sum',
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
         }
     }
 

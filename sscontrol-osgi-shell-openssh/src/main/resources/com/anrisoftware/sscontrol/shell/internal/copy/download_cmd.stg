@@ -1,20 +1,62 @@
 downloadCmd(args) ::= <<
-
-<setupRemoteTmp(args)>
-
 SRC_NAME=$(basename <args.src>)
+<setupRemoteTmp(args)>
+<downloadFile(args)>
+<if(args.hash)><checkHashFile(args)><endif>
+<copyFile(args)>
+>>
 
+setupRemoteTmp(args) ::= <<
+sudo mkdir -p '<args.tmp>'
+sudo chown `id -u` '<args.tmp>'
+sudo chmod o-rwx '<args.tmp>'
+>>
+
+downloadFile(args) ::= <<
 cd '<args.tmp>'
 if which wget >/dev/null; then
     <wgetCmd(args)>
 elif which curl >/dev/null; then
     <curlCmd(args)>
 fi
+>>
+
+copyFile(args) ::= <<
+cd '<args.tmp>'
 <if(args.withSudo)>
 sudo mv "$SRC_NAME" "<args.dest>"
 <else>
 mv "$SRC_NAME" "<args.dest>"
 <endif>
+>>
+
+checkHashFile(args) ::= <<
+cd '<args.tmp>'
+<(args.hashType)(args)>
+>>
+
+md5(args) ::= <<
+if ! echo "<args.hash> $SRC_NAME" | md5sum -c - \>/dev/null; then
+exit 1
+fi
+>>
+
+sha(args) ::= <<
+if ! echo "<args.hash> $SRC_NAME" | sha1sum -c - \>/dev/null; then
+exit 1
+fi
+>>
+
+sha1(args) ::= <<
+if ! echo "<args.hash> $SRC_NAME" | sha1sum -c - \>/dev/null; then
+exit 1
+fi
+>>
+
+sha256(args) ::= <<
+if ! echo "<args.hash> $SRC_NAME" | sha256sum -c - \>/dev/null; then
+exit 1
+fi
 >>
 
 wgetCmd(args) ::= <<
@@ -25,8 +67,3 @@ curlCmd(args) ::= <<
 curl "<args.src>"
 >>
 
-setupRemoteTmp(args) ::= <<
-sudo mkdir -p '<args.tmp>'
-sudo chown `id -u` '<args.tmp>'
-sudo chmod o-rwx '<args.tmp>'
->>

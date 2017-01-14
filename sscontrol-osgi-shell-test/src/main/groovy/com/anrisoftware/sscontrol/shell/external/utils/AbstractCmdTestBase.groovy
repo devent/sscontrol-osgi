@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.shell.external.utils
 
 import static com.anrisoftware.globalpom.utils.TestUtils.toStringStyle
-import groovy.util.logging.Slf4j
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -26,6 +25,8 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.Module
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -38,7 +39,7 @@ abstract class AbstractCmdTestBase {
 
     Injector injector
 
-    void doTest(Map test, File tmp, int k) {
+    void doTest(Map test, File tmp, int k=0) {
         test.args["pwd"] = tmp
         test.args["chdir"] = tmp
         test.args["env"] = [:]
