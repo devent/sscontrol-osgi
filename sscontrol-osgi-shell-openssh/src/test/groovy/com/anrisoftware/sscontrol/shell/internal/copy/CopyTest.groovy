@@ -58,8 +58,15 @@ class CopyTest extends AbstractCmdTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
+        dest_src_sudo: CopyTest.class.getResource('dest_src_sudo_expected.txt'),
         dest_src_scp: CopyTest.class.getResource('dest_src_scp_expected.txt'),
+        dest_src_cp: CopyTest.class.getResource('dest_src_cp_expected.txt'),
+        dest_src_rm: CopyTest.class.getResource('dest_src_rm_expected.txt'),
+        recursive_dest_src_sudo: CopyTest.class.getResource('recursive_dest_src_sudo_expected.txt'),
         recursive_dest_src_scp: CopyTest.class.getResource('recursive_dest_src_scp_expected.txt'),
+        recursive_dest_src_cp: CopyTest.class.getResource('recursive_dest_src_cp_expected.txt'),
+        recursive_dest_src_rm: CopyTest.class.getResource('recursive_dest_src_rm_expected.txt'),
+        override_exists_dest_src_sudo: CopyTest.class.getResource('override_exists_dest_src_sudo_expected.txt'),
         privileged_src_scp: CopyTest.class.getResource('privileged_src_scp_expected.txt'),
         privileged_src_sudo: CopyTest.class.getResource('privileged_src_sudo_expected.txt'),
         privileged_src_cp: CopyTest.class.getResource('privileged_src_cp_expected.txt'),
@@ -88,10 +95,10 @@ class CopyTest extends AbstractCmdTestBase {
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assert new File(dir, 'sudo.out').isFile() == false
-                assert new File(dir, 'cp.out').isFile() == false
-                assert new File(dir, 'rm.out').isFile() == false
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
             },
         ]
         log.info '\n######### {} #########\ncase: {}', test.name, test
@@ -112,10 +119,10 @@ class CopyTest extends AbstractCmdTestBase {
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assert new File(dir, 'sudo.out').isFile() == false
-                assert new File(dir, 'cp.out').isFile() == false
-                assert new File(dir, 'rm.out').isFile() == false
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
             },
         ]
         log.info '\n######### {} #########\ncase: {}', test.name, test
@@ -130,14 +137,14 @@ class CopyTest extends AbstractCmdTestBase {
             name: "override_exists_dest_src",
             args: [
                 src: "/home/devent",
-                dest: "/tmp",
+                dest: "/",
                 override: false,
             ],
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
                 assert new File(dir, 'scp.out').isFile() == false
-                assert new File(dir, 'sudo.out').isFile() == false
                 assert new File(dir, 'cp.out').isFile() == false
                 assert new File(dir, 'rm.out').isFile() == false
             },
@@ -160,8 +167,8 @@ class CopyTest extends AbstractCmdTestBase {
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
             },
@@ -185,8 +192,8 @@ class CopyTest extends AbstractCmdTestBase {
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
                 assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
             },
@@ -203,17 +210,14 @@ class CopyTest extends AbstractCmdTestBase {
             name: "privileged_override_exists_src",
             args: [
                 src: "aaa.txt",
-                dest: "/tmp",
+                dest: "/",
                 privileged: true,
                 override: false,
             ],
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
-                assert new File(dir, 'scp.out').isFile() == false
                 assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                assert new File(dir, 'cp.out').isFile() == true
-                assert new File(dir, 'rm.out').isFile() == true
             },
         ]
         log.info '\n######### {} #########\ncase: {}', test.name, test
@@ -377,7 +381,7 @@ class CopyTest extends AbstractCmdTestBase {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def tmp = folder.newFolder()
         createEchoCommands tmp, [
-            'sum1sum',
+            'sha1sum',
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
         try {
