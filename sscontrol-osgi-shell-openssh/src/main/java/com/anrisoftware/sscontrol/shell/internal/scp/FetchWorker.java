@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import static com.anrisoftware.sscontrol.fetch.external.Fetch.SRC_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.COMMAND_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
 import static java.lang.String.format;
 
 import java.util.HashMap;
@@ -39,12 +38,12 @@ import com.anrisoftware.resources.templates.external.Templates;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ * Fetches a file from the remote destination.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CopyPrivilegedFileWorker extends AbstractFileWorker
+public class FetchWorker extends AbstractFileWorker
         implements Callable<ProcessTask> {
 
     /**
@@ -53,9 +52,9 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface CopyPrivilegedFileWorkerFactory {
+    public interface FetchWorkerFactory {
 
-        CopyPrivilegedFileWorker create(Map<String, Object> args, Object parent,
+        FetchWorker create(Map<String, Object> args, Object parent,
                 Threads threads, Templates templates,
                 TemplateResource scriptRes);
 
@@ -77,12 +76,13 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
         return task;
     }
 
-    private ProcessTask cleanFiles() throws CommandExecException {
+    protected ProcessTask copyFiles() throws CommandExecException {
         String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getCleanFileCommands();
-        String src = FilenameUtils.getName(getSrc());
+        String cmd = linuxPropertiesProvider.getCopyFileCommands();
+        String src = getSrc();
+        String recursive = isRecursive() ? "-r " : "";
         Map<String, Object> a = new HashMap<>(args);
-        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
         return runCmd(a);
     }
 
@@ -92,16 +92,5 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
         Map<String, Object> a = new HashMap<>(args);
         a.put(SRC_ARG, format("%s/%s", tmp, src));
         return runScript(scriptRes, a);
-    }
-
-    private ProcessTask copyFiles() throws CommandExecException {
-        String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getCopyFileCommands();
-        String src = getSrc();
-        String recursive = isRecursive() ? "-r " : "";
-        Map<String, Object> a = new HashMap<>(args);
-        a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
-        return runCmd(a);
     }
 }

@@ -83,7 +83,7 @@ abstract class AbstractScriptTestBase {
 
     Threads threads
 
-    void doTest(Map test, int k) {
+    void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
@@ -94,6 +94,7 @@ abstract class AbstractScriptTestBase {
         FileUtils.write scriptFile, test.input
         services = runScript scriptFile, services
         createDummyCommands dir
+        def scriptEnv = getScriptEnv(dir: dir)
         services.getServices().each { String name ->
             List<HostService> service = services.getServices(name)
             service.eachWithIndex { HostService s, int i ->
@@ -102,8 +103,7 @@ abstract class AbstractScriptTestBase {
                     List<SshHost> targets = getTargets(services, s)
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
-                        HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads)
-                        script = setupScript script, dir: dir
+                        HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads, scriptEnv)
                         script.run()
                     }
                 }
@@ -135,14 +135,15 @@ abstract class AbstractScriptTestBase {
     def setupHostService(Map args, HostService service) {
     }
 
-    HostServiceScript setupScript(Map args, HostServiceScript script) {
-        script.setChdir args.dir
-        script.setPwd args.dir
-        script.setSudoEnv [:]
-        script.sudoEnv.PATH = args.dir
-        script.setEnv [:]
-        script.env.PATH = args.dir
-        return script
+    Map getScriptEnv(Map args) {
+        def map = [:]
+        map.chdir = args.dir
+        map.pwd = args.dir
+        map.sudoEnv = [:]
+        map.sudoEnv.PATH = args.dir
+        map.env = [:]
+        map.env.PATH = args.dir
+        return map
     }
 
     HostServices runScript(File file, HostServices services) {

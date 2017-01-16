@@ -71,74 +71,81 @@ class TemplateTest extends AbstractCmdTestBase {
     ]
 
     @Test
-    void "template cases"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "base_dest",
-                args: [
-                    base: "TemplateTestTemplates",
-                    resource: "test_template",
-                    name: "testTemplate",
-                    dest: "${folder.newFile()}",
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
+    void "base_dest"() {
+        def test = [
+            name: "base_dest",
+            args: [
+                base: "TemplateTestTemplates",
+                resource: "test_template",
+                name: "testTemplate",
+                dest: "${folder.newFile()}",
             ],
-            [
-                enabled: true,
-                name: "resource_dest",
-                args: [
-                    resource: {
-                        def ts = templatesFactory.create('TemplateTestTemplates')
-                        return ts.getResource('test_template')
-                    }(),
-                    name: "testTemplate",
-                    dest: "${folder.newFile()}",
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_base_dest",
-                args: [
-                    base: "TemplateTestTemplates",
-                    resource: "test_template",
-                    name: "testTemplate",
-                    dest: "${folder.newFile()}",
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. case: {}', k, test
-                def tmp = folder.newFolder()
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
-        }
+        log.info '\n######### {}. case: {}', test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "resource_dest"() {
+        def test = [
+            name: "resource_dest",
+            args: [
+                resource: {
+                    def ts = templatesFactory.create('TemplateTestTemplates')
+                    return ts.getResource('test_template')
+                }(),
+                name: "testTemplate",
+                dest: "${folder.newFile()}",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
+        ]
+        log.info '\n######### {}. case: {}', test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_base_dest"() {
+        def test = [
+            name: "privileged_base_dest",
+            args: [
+                base: "TemplateTestTemplates",
+                resource: "test_template",
+                name: "testTemplate",
+                dest: "${folder.newFile()}",
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+            },
+        ]
+        log.info '\n######### {}. case: {}', test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {

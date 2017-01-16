@@ -53,49 +53,142 @@ import groovy.util.logging.Slf4j
 class ScpRunTest {
 
     @Test
-    void "test scp with control master"() {
+    void "remote_src"() {
+        def test = [
+            name: 'remote_src',
+            args: [
+                debugLevel: 2,
+                src: '/src/file.txt',
+                dest: '/home/local',
+                remoteSrc: true,
+                remoteDest: false,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'rm',
+            ],
+            expected: [
+                scp: 'remote_src_scp_out_expected.txt',
+                mkdir: 'remote_src_mkdir_out_expected.txt',
+                chown: 'remote_src_chown_out_expected.txt',
+                chmod: 'remote_src_chmod_out_expected.txt',
+                rm: 'remote_src_rm_out_expected.txt',
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "privileged_remote_src"() {
+        def test = [
+            name: 'remote_src',
+            args: [
+                debugLevel: 2,
+                src: '/src/file.txt',
+                dest: '/home/local',
+                privileged: true,
+                remoteSrc: true,
+                remoteDest: false,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'rm',
+            ],
+            expected: [
+                scp: 'privileged_remote_src_scp_out_expected.txt',
+                mkdir: 'privileged_remote_src_mkdir_out_expected.txt',
+                chown: 'privileged_remote_src_chown_out_expected.txt',
+                chmod: 'privileged_remote_src_chmod_out_expected.txt',
+                rm: 'privileged_remote_src_rm_out_expected.txt',
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "dest_src"() {
+        def test = [
+            name: 'dest_src',
+            args: [
+                debugLevel: 2,
+                src: '/home/local/file.txt',
+                dest: '/src',
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'find',
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'rm',
+            ],
+            expected: [
+                scp: 'dest_src_scp_out_expected.txt'
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "privileged_dest_src"() {
+        def test = [
+            name: 'privileged_dest_src',
+            args: [
+                debugLevel: 2,
+                src: '/usr/aaa.txt',
+                dest: '/home/devent',
+                privileged: true,
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'id',
+                'rm',
+            ],
+            expected: [
+                scp: 'privileged_dest_src_scp_out_expected.txt'
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    void runTestCases(Map test, ScpRunFactory scpFactory) {
+        log.info '{} case: {}', test.name, test
         def defargs = [:]
         defargs.log = log
-        defargs.src = 'src/file.txt'
         defargs.timeout = Duration.standardSeconds(30)
         defargs.env = [PATH: './']
         defargs.sudoEnv = [PATH: './']
         defargs.sshHost = 'localhost'
         defargs.sshControlMaster = 'auto'
         defargs.sshControlPersistDuration = Duration.standardSeconds(10)
-        def testCases = [
-            [
-                name: 'scp_debug_master_remote_src',
-                args: [debugLevel: 2, dest: 'dest', remoteSrc: true],
-                commands: ['scp'],
-                expected: [scp: 'scp_debug_master_remote_src_out_expected.txt'],
-            ],
-            [
-                name: 'scp_debug_master_dest_src',
-                args: [debugLevel: 2, dest: 'dest', remoteDest: true],
-                commands: ['scp'],
-                expected: [scp: 'scp_debug_master_dest_src_out_expected.txt'],
-            ],
-        ]
-        def factory = scpRunFactory
-        testCases.eachWithIndex { Map test, int k ->
-            runTestCases defargs, test, k, factory
-        }
-    }
-
-    void runTestCases(Map defargs, Map test, int k, ScpRunFactory scpFactory) {
-        log.info '{}. case: {}', k, test
         Map args = new HashMap(defargs)
         args.putAll test.args
-        args.chdir = folder.newFolder String.format('%03d_%s', k, test.name)
+        args.chdir = folder.newFolder test.name
         args.sudoChdir = args.chdir
         createEchoCommands args.chdir, ['sudo']
         createEchoCommands args.chdir, test.commands
         def scp = scpFactory.create args, this, threads
         scp()
         Map testExpected = test.expected
-        test.commands.each { String it ->
-            assertStringContent fileToStringReplace(toFile(args, it)), resourceToString(ScpRunTest.class.getResource(testExpected[it] as String))
+        test.commands.each {
+            def uri = testExpected[it]
+            if (uri) {
+                def res = ScpRunTest.class.getResource(uri)
+                assertStringContent fileToStringReplace(toFile(args, it)), resourceToString(res)
+            }
         }
     }
 

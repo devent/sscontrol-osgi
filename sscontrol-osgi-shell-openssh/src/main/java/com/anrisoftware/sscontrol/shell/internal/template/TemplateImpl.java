@@ -84,7 +84,7 @@ public class TemplateImpl implements Template {
     TemplateImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log) {
-        this.args = new HashMap<String, Object>(args);
+        this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
@@ -99,7 +99,7 @@ public class TemplateImpl implements Template {
             String text = getText();
             File file = getTmpFile();
             FileUtils.write(file, text, getCharset());
-            Map<String, Object> a = new HashMap<String, Object>(args);
+            Map<String, Object> a = new HashMap<>(args);
             a.put("src", file);
             a.put("log", log);
             return scpRunFactory.create(a, parent, threads).call();
@@ -142,15 +142,20 @@ public class TemplateImpl implements Template {
     }
 
     private Object[] getArgs() {
+        List<Object> list = new ArrayList<>();
         @SuppressWarnings("unchecked")
-        List<Object> list = (List<Object>) args.get(ARGS_ARG);
-        if (list == null) {
-            list = new ArrayList<Object>();
+        Map<String, Object> vars = (Map<String, Object>) args.get(VARS_ARG);
+        if (vars == null) {
+            vars = new HashMap<>();
         }
         String name = getStringArg(NAME_ARG);
         if (name != null) {
             list.add(0, name);
         }
+        list.add("parent");
+        list.add(parent);
+        list.add("vars");
+        list.add(vars);
         return list.toArray();
     }
 

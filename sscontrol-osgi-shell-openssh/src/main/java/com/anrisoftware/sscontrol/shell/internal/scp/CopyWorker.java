@@ -18,9 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.copy.external.Copy.DEST_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.COMMAND_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
 import static java.lang.String.format;
 
 import java.util.HashMap;
@@ -44,7 +42,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class PushPrivilegedFileWorker extends AbstractFileWorker
+public class CopyWorker extends AbstractFileWorker
         implements Callable<ProcessTask> {
 
     /**
@@ -53,9 +51,9 @@ public class PushPrivilegedFileWorker extends AbstractFileWorker
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface PushPrivilegedFileWorkerFactory {
+    public interface CopyWorkerFactory {
 
-        PushPrivilegedFileWorker create(Map<String, Object> args, Object parent,
+        CopyWorker create(Map<String, Object> args, Object parent,
                 Threads threads, Templates templates,
                 TemplateResource scriptRes);
 
@@ -65,23 +63,35 @@ public class PushPrivilegedFileWorker extends AbstractFileWorker
     @Assisted
     private TemplateResource scriptRes;
 
-    @Inject
-    private LinuxPropertiesProvider linuxPropertiesProvider;
-
     @Override
     public ProcessTask call() throws CommandExecException {
+        System.out.println(args.get("src")); // TODO println
+        System.out.println(args.get("dest")); // TODO println
+        System.out.println(args.get("override")); // TODO println
         ProcessTask task = null;
-        String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getPushFileCommands();
-        String src = FilenameUtils.getName(getSrc());
-        String dest = getDest();
-        args.put(DEST_ARG, tmp);
-        task = runScript(scriptRes, args);
-        Map<String, Object> a = new HashMap<String, Object>(args);
-        a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(cmd, tmp, src, dest));
-        task = runCmd(a);
+        task = pushFiles();
+        task = copyFiles();
+        task = cleanFiles();
         return task;
+    }
+
+    private ProcessTask pushFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String src = FilenameUtils.getName(getSrc());
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("dest", format("%s/%s", tmp, src));
+        a.put("destOriginal", args.get("dest"));
+        return runScript(scriptRes, a);
+    }
+
+    protected ProcessTask copyFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String cmd = linuxPropertiesProvider.getCopyFileCommands();
+        String src = getSrc();
+        String recursive = isRecursive() ? "-r " : "";
+        Map<String, Object> a = new HashMap<>(args);
+        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
+        return runCmd(a);
     }
 
 }

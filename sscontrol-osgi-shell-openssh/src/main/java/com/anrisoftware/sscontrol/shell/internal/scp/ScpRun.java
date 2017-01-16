@@ -30,9 +30,8 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRun;
-import com.anrisoftware.sscontrol.shell.internal.scp.CopyPrivilegedFileWorker.CopyPrivilegedFileWorkerFactory;
-import com.anrisoftware.sscontrol.shell.internal.scp.CopyUnprivilegedFileWorker.CopyUnprivilegedFileWorkerFactory;
-import com.anrisoftware.sscontrol.shell.internal.scp.PushPrivilegedFileWorker.PushPrivilegedFileWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.CopyWorker.CopyWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.FetchWorker.FetchWorkerFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -60,16 +59,15 @@ public class ScpRun extends AbstractSshRun {
     private ScpRunLogger log;
 
     @Inject
-    private CopyPrivilegedFileWorkerFactory copyPrivileged;
+    private FetchWorkerFactory fetch;
 
     @Inject
-    private PushPrivilegedFileWorkerFactory pushPrivileged;
-
-    @Inject
-    private CopyUnprivilegedFileWorkerFactory copyUnprivileged;
+    private CopyWorkerFactory push;
 
     @Inject
     private LinuxPropertiesProvider linuxPropertiesProvider;
+
+    private Map<String, Object> scpArgs;
 
     @Inject
     ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,
@@ -79,14 +77,10 @@ public class ScpRun extends AbstractSshRun {
 
     @Override
     protected void setupRemote() throws CommandExecException {
-        if (!isPrivileged(args)) {
-            return;
-        }
         ProcessTask task;
         String template = "ssh_wrap_bash";
         TemplateResource res = templates.get().getResource(template);
-        Map<String, Object> a = new HashMap<>();
-        a.putAll(args);
+        Map<String, Object> a = new HashMap<>(args);
         a.put("privileged", true);
         a.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
                 linuxPropertiesProvider.getRemoteTempDir()));
@@ -102,14 +96,10 @@ public class ScpRun extends AbstractSshRun {
     @Override
     protected ProcessTask runCommand(TemplateResource res,
             Map<String, Object> args) throws CommandExecException {
+        this.scpArgs = new HashMap<>(this.args);
+        setupDefaults(scpArgs);
         ProcessTask task = null;
-        Map<String, Object> a = new HashMap<>(args);
-        setupDefaults(a);
-        if (!isPrivileged(a)) {
-            task = runUnprivileged(res, a);
-        } else {
-            task = runPrivileged(res, a);
-        }
+        task = run(res);
         return task;
     }
 
@@ -120,26 +110,25 @@ public class ScpRun extends AbstractSshRun {
         }
     }
 
-    private ProcessTask runPrivileged(TemplateResource res,
-            Map<String, Object> args) throws CommandExecException {
+    private ProcessTask run(TemplateResource res) throws CommandExecException {
         ProcessTask task = null;
-        boolean remoteSrc = (Boolean) args.get("remoteSrc");
-        boolean remoteDest = (Boolean) args.get("remoteDest");
-        if (remoteSrc) {
-            return copyPrivileged
-                    .create(args, parent, threads, templates.get(), res).call();
+        if (isRemoteSrc(scpArgs)) {
+            return fetch.create(scpArgs, parent, threads, templates.get(), res)
+                    .call();
         }
-        if (remoteDest) {
-            return pushPrivileged
-                    .create(args, parent, threads, templates.get(), res).call();
+        if (isRemoteDest(scpArgs)) {
+            return push.create(scpArgs, parent, threads, templates.get(), res)
+                    .call();
         }
         return task;
     }
 
-    private ProcessTask runUnprivileged(TemplateResource res,
-            Map<String, Object> args) throws CommandExecException {
-        return copyUnprivileged
-                .create(args, parent, threads, templates.get(), res).call();
+    private boolean isRemoteDest(Map<String, Object> args) {
+        return (Boolean) args.get("remoteDest");
+    }
+
+    private boolean isRemoteSrc(Map<String, Object> args) {
+        return (Boolean) args.get("remoteSrc");
     }
 
 }

@@ -1,6 +1,6 @@
 delimiters "%", "%"
 
-testTemplate() ::= <<
+testTemplate(parent, vars) ::= <<
 # Fail2Ban action configuration file for ufw
 #
 # You are required to run "ufw enable" before this will have an effect.

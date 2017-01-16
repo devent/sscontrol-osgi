@@ -1,5 +1,6 @@
 sshCmd(args) ::= <<
 #!/bin/bash
+USER=$(id -u)
 <sshCommand(args)>
 <if(args.privileged)>
 <sshChdir(args.sudoChdir)>

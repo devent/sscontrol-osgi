@@ -20,10 +20,15 @@ package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import static com.anrisoftware.sscontrol.copy.external.Copy.DEST_ARG;
 import static com.anrisoftware.sscontrol.fetch.external.Fetch.SRC_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.COMMAND_ARG;
+import static java.lang.String.format;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.apache.commons.io.FilenameUtils;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
@@ -62,6 +67,9 @@ public class AbstractFileWorker {
     @Inject
     @Assisted
     private Templates templates;
+
+    @Inject
+    protected LinuxPropertiesProvider linuxPropertiesProvider;
 
     public boolean isRemoteDest() {
         return (Boolean) args.get("remoteDest");
@@ -104,6 +112,15 @@ public class AbstractFileWorker {
     protected boolean isFileOnly() {
         Boolean fileOnly = (Boolean) args.get("fileOnly");
         return fileOnly != null ? fileOnly : false;
+    }
+
+    protected ProcessTask cleanFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String cmd = linuxPropertiesProvider.getCleanFileCommands();
+        String src = FilenameUtils.getName(getSrc());
+        Map<String, Object> a = new HashMap<>(args);
+        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        return runCmd(a);
     }
 
 }

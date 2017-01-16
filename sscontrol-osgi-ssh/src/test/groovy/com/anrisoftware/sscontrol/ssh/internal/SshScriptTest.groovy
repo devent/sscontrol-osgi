@@ -42,7 +42,6 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -52,65 +51,84 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
 class SshScriptTest {
 
     @Inject
     SshImplFactory sshFactory
 
     @Test
-    void "ssh script"() {
-        def testCases = [
-            [
-                enabled: true,
-                input: """
+    void "ssh_debug_error"() {
+        def test = [
+            name: "debug_error",
+            input: """
 ssh.with {
     debug "error", facility: 'auth', level: 1
 }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.debugLogging.modules.size() == 1
-                },
-            ],
-            [
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.debugLogging.modules.size() == 1
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_debug_shift"() {
+        def test = [
+            name: "debug_shift",
+            input: """
 ssh.with {
     debug << [name: "error", level: 1]
 }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.debugLogging.modules.size() == 1
-                },
-            ],
-            [
-                enabled: true,
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.debugLogging.modules.size() == 1
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_debug_shift_map"() {
+        def test = [
+            name: "debug_shift_map",
+            input: """
 debugLogs = []
 debugLogs << [name: "error", level: 1]
 debugLogs.each { ssh.debug it }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.debugLogging.modules.size() == 1
-                },
-            ],
-            [
-                enabled: true,
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.debugLogging.modules.size() == 1
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_group"() {
+        def test = [
+            name: "group",
+            input: """
 ssh.with {
     group "nodes"
 }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.group == 'nodes'
-                },
-            ],
-            [
-                enabled: true,
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.group == 'nodes'
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_hosts"() {
+        def test = [
+            name: "hosts",
+            input: """
 ssh.with {
     host "localhost"
     host "user@192.168.0.2"
@@ -118,29 +136,34 @@ ssh.with {
 }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.hosts.size() == 3
-                    int i = 0
-                    SshHost host = ssh.hosts[i++]
-                    assert host.user == null
-                    assert host.host == 'localhost'
-                    assert host.port == null
-                    assert host.key == null
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.2'
-                    assert host.port == null
-                    assert host.key == null
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.3'
-                    assert host.port == 22
-                    assert host.key == null
-                },
-            ],
-            [
-                enabled: true,
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.hosts.size() == 3
+                int i = 0
+                SshHost host = ssh.hosts[i++]
+                assert host.user == null
+                assert host.host == 'localhost'
+                assert host.port == null
+                assert host.key == null
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.2'
+                assert host.port == null
+                assert host.key == null
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.3'
+                assert host.port == 22
+                assert host.key == null
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_hosts_shift"() {
+        def test = [
+            name: "hosts_shift",
+            input: """
 ssh.with {
     host << "192.168.0.1"
     host << "user@192.168.0.2"
@@ -148,29 +171,34 @@ ssh.with {
 }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.hosts.size() == 3
-                    int i = 0
-                    SshHost host = ssh.hosts[i++]
-                    assert host.user == null
-                    assert host.host == '192.168.0.1'
-                    assert host.port == null
-                    assert host.key == null
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.2'
-                    assert host.port == null
-                    assert host.key == null
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.3'
-                    assert host.port == 22
-                    assert host.key == null
-                },
-            ],
-            [
-                enabled: true,
-                input: """
+            expected: { Ssh ssh ->
+                assert ssh.hosts.size() == 3
+                int i = 0
+                SshHost host = ssh.hosts[i++]
+                assert host.user == null
+                assert host.host == '192.168.0.1'
+                assert host.port == null
+                assert host.key == null
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.2'
+                assert host.port == null
+                assert host.key == null
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.3'
+                assert host.port == 22
+                assert host.key == null
+            },
+        ]
+        doSshTest test
+    }
+
+    @Test
+    void "ssh_hosts_shift_map"() {
+        def test = [
+            name: "hosts_shift_map",
+            input: """
 sshHosts = []
 sshHosts << [host: "192.168.0.1", user: "user", key: "user.pub"]
 sshHosts << [host: "192.168.0.2", user: "user", key: "user.pub"]
@@ -178,184 +206,220 @@ sshHosts << [host: "192.168.0.3", user: "user", key: "user.pub"]
 sshHosts.each { ssh.host it }
 ssh
 """,
-                expected: { Ssh ssh ->
-                    assert ssh.hosts.size() == 3
-                    int i = 0
-                    SshHost host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.1'
-                    assert host.port == null
-                    assert host.key == new URI('file://user.pub')
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.2'
-                    assert host.port == null
-                    assert host.key == new URI('file://user.pub')
-                    host = ssh.hosts[i++]
-                    assert host.user == 'user'
-                    assert host.host == '192.168.0.3'
-                    assert host.port == null
-                    assert host.key == new URI('file://user.pub')
-                },
-            ],
+            expected: { Ssh ssh ->
+                assert ssh.hosts.size() == 3
+                int i = 0
+                SshHost host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.1'
+                assert host.port == null
+                assert host.key == new URI('file://user.pub')
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.2'
+                assert host.port == null
+                assert host.key == new URI('file://user.pub')
+                host = ssh.hosts[i++]
+                assert host.user == 'user'
+                assert host.host == '192.168.0.3'
+                assert host.port == null
+                assert host.key == new URI('file://user.pub')
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. case: {}', k, test
-                def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
-                log.info '{}. case: ssh: {}', k, ssh
-                Closure expected = test.expected
-                expected ssh
-            }
-        }
+        doSshTest test
+    }
+
+    void doSshTest(Map test) {
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
+        log.info 'ssh: {}', ssh
+        Closure expected = test.expected
+        expected ssh
     }
 
     @Inject
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "ssh service"() {
-        def testCases = [
-            [
-                input: """
+    void "service_host_arg"() {
+        def test = [
+            name: "host_arg",
+            input: """
 service "ssh", host: "192.168.0.2"
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == "default"
-                    assert ssh.hosts.size() == 1
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == "default"
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_host"() {
+        def test = [
+            name: "host",
+            input: """
 service "ssh" with {
     host "192.168.0.2"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == "default"
-                    assert ssh.hosts.size() == 1
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == "default"
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_group_arg_host"() {
+        def test = [
+            name: "group_arg_host",
+            input: """
 service "ssh", group: "master" with {
     host "192.168.0.2"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == 'master'
-                    assert ssh.hosts.size() == 1
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'master'
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_host_system_arg"() {
+        def test = [
+            name: "host_system_arg",
+            input: """
 service "ssh", host: "192.168.0.2", system: "debian-8"
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == 'default'
-                    assert ssh.hosts.size() == 1
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                    HostSystem sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "8"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'default'
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                HostSystem sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "8"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_system_arg_hosts"() {
+        def test = [
+            name: "system_arg_hosts",
+            input: """
 service "ssh", system: "debian-8" with {
     host "192.168.0.2"
     host "192.168.0.3"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == 'default'
-                    assert ssh.hosts.size() == 2
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                    HostSystem sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "8"
-                    host = ssh.hosts[1]
-                    assert host.host == "192.168.0.3"
-                    sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "8"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'default'
+                assert ssh.hosts.size() == 2
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                HostSystem sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "8"
+                host = ssh.hosts[1]
+                assert host.host == "192.168.0.3"
+                sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "8"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_hosts"() {
+        def test = [
+            name: "service_hosts",
+            input: """
 service "ssh" with {
     host host: "192.168.0.2", system: "debian-8"
     host host: "192.168.0.3", system: "debian-9"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == 'default'
-                    assert ssh.hosts.size() == 2
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                    HostSystem sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "8"
-                    host = ssh.hosts[1]
-                    assert host.host == "192.168.0.3"
-                    sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "9"
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'default'
+                assert ssh.hosts.size() == 2
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                HostSystem sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "8"
+                host = ssh.hosts[1]
+                assert host.host == "192.168.0.3"
+                sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "9"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_hosts_system"() {
+        def test = [
+            name: "service_hosts_system",
+            input: """
 service "ssh" with {
     host "192.168.0.2", system: "debian-8"
     host "192.168.0.3", system: "debian-9"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('ssh').size() == 1
-                    Ssh ssh = services.getServices('ssh')[0] as Ssh
-                    assert ssh.group == 'default'
-                    assert ssh.hosts.size() == 2
-                    SshHost host = ssh.hosts[0]
-                    assert host.host == "192.168.0.2"
-                    HostSystem sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "8"
-                    host = ssh.hosts[1]
-                    assert host.host == "192.168.0.3"
-                    sys = host.system
-                    assert sys.name == "debian"
-                    assert sys.version == "9"
-                },
-            ],
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'default'
+                assert ssh.hosts.size() == 2
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                HostSystem sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "8"
+                host = ssh.hosts[1]
+                assert host.host == "192.168.0.3"
+                sys = host.system
+                assert sys.name == "debian"
+                assert sys.version == "9"
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            log.info '\n######### {}. case: {}', k, test
-            def services = servicesFactory.create()
-            services.putAvailableService 'ssh', sshFactory
-            Eval.me 'service', services, test.input as String
-            Closure expected = test.expected
-            expected services
-        }
+        doServiceTest test
+    }
+
+    void doServiceTest(Map test) {
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def services = servicesFactory.create()
+        services.putAvailableService 'ssh', sshFactory
+        Eval.me 'service', services, test.input as String
+        Closure expected = test.expected
+        expected services
     }
 
     @Before
