@@ -43,7 +43,7 @@ public interface Template {
 
     static final String LOCALE_ARG = "locale";
 
-    static final String ARGS_ARG = "args";
+    static final String VARS_ARG = "vars";
 
     static final String NAME_ARG = "name";
 

@@ -15,13 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal
 
-import static com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Debian_8_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.sshd.external.Sshd
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.external.Sshd_6_Debian
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
+import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Systemd_Debian_8.K8sMaster_1_5_Systemd_Debian_8_Factory
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
@@ -33,33 +34,41 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Sshd_Debian_8 extends Sshd_6_Debian {
+class K8sMaster_1_5_Debian_8 extends ScriptBase {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    interface Sshd_Debian_8_Factory extends HostServiceScriptService {
+    interface K8sMaster_1_5_Debian_8_Factory extends HostServiceScriptService {
     }
 
     @Inject
-    Sshd_Debian_8_Properties debianPropertiesProvider
+    K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider
+
+    @Inject
+    K8sMaster_1_5_Systemd_Debian_8_Factory systemdFactory
 
     @Override
     def run() {
         setupDefaults()
         installPackages()
-        configureService()
-        restartService()
+        systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
     def setupDefaults() {
-        Sshd service = service
+        K8sMaster service = service
         if (!service.debugLogging.modules['debug']) {
-            service.debug level: defaultLogLevel
+            service.debug "debug", level: defaultLogLevel
         }
+    }
+
+    void installPackages() {
+        log.info "Installing packages {}.", packages
+        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
+            env "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     def getDefaultLogLevel() {
@@ -69,11 +78,6 @@ class Sshd_Debian_8 extends Sshd_6_Debian {
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService();
     }
 
     @Override

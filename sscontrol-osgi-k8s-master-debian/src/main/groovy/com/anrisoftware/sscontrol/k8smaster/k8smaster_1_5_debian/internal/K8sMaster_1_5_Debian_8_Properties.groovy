@@ -18,17 +18,17 @@ package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal;
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * <i>Sshd Debian 8</i> properties provider from
- * {@code "/sshd_debian_8.properties"}.
+ * <i>K8s-Master 1.5 Debian 8</i> properties provider from
+ * {@code "/k8s_master_1_5_debian_8.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Sshd_Debian_8_Properties extends AbstractContextPropertiesProvider {
+class K8sMaster_1_5_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Sshd_Debian_8_Properties.class.getResource("/sshd_debian_8.properties");
+    private static final URL RESOURCE = K8sMaster_1_5_Debian_8_Properties.class.getResource("/k8s_master_1_5_debian_8.properties");
 
-    Sshd_Debian_8_Properties() {
-        super(Sshd_Debian_8_Properties.class, RESOURCE);
+    K8sMaster_1_5_Debian_8_Properties() {
+        super(K8sMaster_1_5_Debian_8_Properties.class, RESOURCE);
     }
 }

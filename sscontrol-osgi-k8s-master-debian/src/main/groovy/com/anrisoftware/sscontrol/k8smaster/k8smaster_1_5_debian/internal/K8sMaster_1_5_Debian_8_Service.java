@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -25,14 +26,13 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory;
+import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Debian_8.K8sMaster_1_5_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * 
@@ -42,14 +42,15 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Sshd_Debian_8_Service implements HostServiceScriptService {
+public class K8sMaster_1_5_Debian_8_Service
+        implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Sshd_Debian_8_Factory scriptFactory;
+    private K8sMaster_1_5_Debian_8_Factory scriptFactory;
 
     @Override
     public String getSystemName() {
@@ -63,21 +64,20 @@ public class Sshd_Debian_8_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return scriptFactory.create(repository, service, target, threads);
+            HostService service, SshHost target, ExecutorService threads,
+            Map<String, Object> env) {
+        return scriptFactory.create(repository, service, target, threads, env);
     }
 
     @Activate
     protected void start() {
-        createInjector(new AbstractModule() {
+        createInjector(new K8sMaster_1_5_Debian_8_Module(),
+                new AbstractModule() {
 
-            @Override
-            protected void configure() {
-                install(new FactoryModuleBuilder()
-                        .implement(HostServiceScript.class, Sshd_Debian_8.class)
-                        .build(Sshd_Debian_8_Factory.class));
-            }
-        }).injectMembers(this);
+                    @Override
+                    protected void configure() {
+                    }
+                }).injectMembers(this);
     }
 
 }

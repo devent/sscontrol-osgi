@@ -38,13 +38,13 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
     TemplateResource configsTemplate
 
     @Inject
-    K8sMaster_1_5_Systemd(TemplatesFactory templatesFactory) {
+    void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('K8sMaster_1_5_Systemd_Templates')
         this.servicesTemplate = templates.getResource('k8s_master_services')
         this.configsTemplate = templates.getResource('k8s_master_configs')
     }
 
-    def restartServiceSystemd() {
+    def restartServices() {
         log.info 'Restarting k8s services.'
         [
             'kube-apiserver',
@@ -59,9 +59,32 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
     def createServices() {
         log.info 'Create k8s-master services.'
         def systemDir = systemdSystemDir
-        template resource: servicesTemplate, name: 'kubeApiserverService', privileged: true, dest: "$systemDir/kube-apiserver.service" call()
-        template resource: servicesTemplate, name: 'kubeControllerManagerService', privileged: true, dest: "$systemDir/kube-controller-manager.service" call()
-        template resource: servicesTemplate, name: 'kubeSchedulerService', privileged: true, dest: "$systemDir/kube-scheduler.service" call()
+        [
+            [
+                resource: servicesTemplate,
+                name: 'kubeApiserverService',
+                privileged: true,
+                override: false,
+                dest: "$systemDir/kube-apiserver.service",
+                vars: [:],
+            ],
+            [
+                resource: servicesTemplate,
+                name: 'kubeControllerManagerService',
+                privileged: true,
+                override: false,
+                dest: "$systemDir/kube-controller-manager.service",
+                vars: [:],
+            ],
+            [
+                resource: servicesTemplate,
+                name: 'kubeSchedulerService',
+                privileged: true,
+                override: false,
+                dest: "$systemDir/kube-scheduler.service",
+                vars: [:],
+            ],
+        ].each { template it call() }
     }
 
     def createConfig() {
@@ -77,9 +100,26 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
         log.info 'Configure k8s services.'
         def dir = configDir
         K8sMaster service = service
-        int debug = service.debugLogging.modules['debug'].level
-        replace "s/(?m)^#?KUBE_LOG_LEVEL=\"--v=\\d*\".*/KUBE_LOG_LEVEL=\"--v=${debug}\"/", privileged: true, dest: "$dir/config" call()
-        replace "s/(?m)^#?KUBE_ALLOW_PRIV=\"--allow-privileged=.*/KUBE_ALLOW_PRIV=\"--allow-privileged=${service.allowPrivileged}\"/", privileged: true, dest: "$dir/config" call()
+        dest: "$dir/config"
+        replace dest: "$dir/config", privileged: true with {
+            [
+                [
+                    dest: "$dir/config",
+                    key: 'KUBE_LOG_LEVEL',
+                    entry: { "--v=$it" },
+                    value: service.debugLogging.modules['debug'].level
+                ],
+                [
+                    dest: "$dir/config",
+                    key: 'KUBE_ALLOW_PRIV',
+                    entry: { "--allow-privileged=$it" },
+                    value: service.allowPrivileged
+                ],
+            ].each {
+                log.info 'Replace entry {} in {}', it, dest
+                line "s/(?m)^#?${it.key}=\"--v=\\d*\".*/${it.key}=\"${it.entry(it.value)}\"/"
+            }
+        }.call()
     }
 
     String getUser() {

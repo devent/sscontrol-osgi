@@ -158,6 +158,22 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     def createTmpFileCallback = null
 
+    /**
+     * Script environment.
+     */
+    Map scriptEnv
+
+    @Inject
+    void setScriptEnv(@Assisted Map<String, Object> env) {
+        this.scriptEnv = new HashMap(env)
+        this.pwd = env.pwd
+        this.chdir = env.chdir
+        this.sudoChdir = env.sudoChdir
+        this.env = env.env
+        this.sudoEnv = env.sudoEnv
+        this.createTmpFileCallback = env.createTmpFileCallback
+    }
+
     @Override
     public <T extends ExecutorService> T getThreads() {
         threads

@@ -29,17 +29,28 @@ import groovy.util.logging.Slf4j
 abstract class K8sMaster_1_5 extends ScriptBase {
 
     def installKubernetes() {
+        log.info 'Installs k8s-master.'
+        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true call()
+        shell """\
+cd /tmp
+tar xf `basename $archive`
+cd kubernetes
+printf "y\n" | cluster/get-kube-binaries.sh
+cd server
+tar xf kubernetes-server-linux-amd64.tar.gz
+mkdir -p /usr/local/bin
+cd kubernetes/server/bin
+sudo find . -executable -type f -exec cp '{}' /usr/local/bin \\;
+sudo chmod o+rx /usr/local/bin/*
+"""
     }
 
-    def restartServiceSystemd() {
-        log.info 'Restarting k8s services.'
-        shell privileged: true, "service sshd restart" call()
-        shell privileged: true, "service sshd status" call()
+    URI getArchive() {
+        properties.getURIProperty('kubernetes_archive', defaultProperties)
     }
 
-    def configureService() {
-        log.info 'Configuring sshd service.'
-        K8sMaster service = service
+    String getArchiveHash() {
+        properties.getProperty('kubernetes_archive_hash', defaultProperties)
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
@@ -79,41 +80,41 @@ class Fail2ban_0_8_Debian_8_Test extends AbstractScriptTestBase {
     ]
 
     @Test
-    void "fail2ban script"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "default_target",
-                input: """
+    void "basic script"() {
+        def test = [
+            enabled: true,
+            name: "basic",
+            input: """
 service "fail2ban"
 """,
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
-                    assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
-                },
-            ],
-            [
-                enabled: true,
-                name: "apache_jail",
-                input: """
-service "fail2ban" with {
-    jail "apache"
-}
-""",
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
+                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
+                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+                assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                doTest test, k
-            }
-        }
+        doTest test, 0
+    }
+
+    @Test
+    void "apache_jail"() {
+        def test = [
+            enabled: true,
+            name: "basic",
+            input: """
+service "fail2ban"
+""",
+            expected: { Map args ->
+                File dir = args.dir
+                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
+                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
+                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+                assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
+            },
+        ]
+        doTest test, 0
     }
 
     HostServiceScript setupScript(Map args, HostServiceScript script) {
@@ -151,7 +152,7 @@ service "fail2ban" with {
         ]
     }
 
-    void putServices(HostServices services) {
+    HostServices putServices(HostServices services) {
         services.putAvailableService 'fail2ban', fail2banFactory
         services.putAvailableScriptService 'fail2ban/debian/8', fail2banDebianFactory
     }
@@ -172,6 +173,7 @@ service "fail2ban" with {
             new FetchModule(),
             new ReplaceModule(),
             new TemplateModule(),
+            new FactsModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 

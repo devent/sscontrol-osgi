@@ -1,4 +1,4 @@
-kubeApiserverService(args) ::= <<
+kubeApiserverService(parent, vars) ::= <<
 # Authors
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 [Unit]
@@ -8,10 +8,10 @@ After=network.target
 After=etcd.service
 
 [Service]
-EnvironmentFile=-<args.configDir>/config
-EnvironmentFile=-<args.configDir>/apiserver
-User=<args.user>
-ExecStart=<args.binDir>/kube-apiserver \
+EnvironmentFile=-<vars.configDir>/config
+EnvironmentFile=-<vars.configDir>/apiserver
+User=<vars.user>
+ExecStart=<vars.binDir>/kube-apiserver \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \
         $KUBE_ETCD_SERVERS \
@@ -30,7 +30,7 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 >>
 
-kubeControllerManagerService(args) ::= <<
+kubeControllerManagerService(parent, vars) ::= <<
 # Authors
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 [Unit]
@@ -38,10 +38,10 @@ Description=Kubernetes Controller Manager
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
-EnvironmentFile=-<args.configDir>/config
-EnvironmentFile=-<args.configDir>/controller-manager
+EnvironmentFile=-<vars.configDir>/config
+EnvironmentFile=-<vars.configDir>/controller-manager
 User=kube
-ExecStart=<args.binDir>/kube-controller-manager \
+ExecStart=<vars.binDir>/kube-controller-manager \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \
         $KUBE_MASTER \
@@ -53,7 +53,7 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 >>
 
-kubeSchedulerService(args) ::= <<
+kubeSchedulerService(parent, vars) ::= <<
 # Authors
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 [Unit]
@@ -61,10 +61,10 @@ Description=Kubernetes Scheduler Plugin
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
-EnvironmentFile=-<args.configDir>/config
-EnvironmentFile=-<args.configDir>/scheduler
+EnvironmentFile=-<vars.configDir>/config
+EnvironmentFile=-<vars.configDir>/scheduler
 User=kube
-ExecStart=<args.binDir>/kube-scheduler \
+ExecStart=<vars.binDir>/kube-scheduler \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \
         $KUBE_MASTER \

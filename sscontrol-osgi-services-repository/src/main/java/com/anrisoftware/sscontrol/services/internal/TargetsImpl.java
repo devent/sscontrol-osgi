@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
+import static java.lang.String.format;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -80,7 +81,8 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     @Override
     public List<SshHost> getHosts(String name) {
         List<Ssh> targets = hosts.get(name);
-        assertThat("targets=null", targets, is(notNullValue()));
+        assertThat(format("targets(%s)=null", name), targets,
+                is(notNullValue()));
         List<SshHost> result = new ArrayList<>();
         for (Ssh target : targets) {
             result.addAll(target.getHosts());

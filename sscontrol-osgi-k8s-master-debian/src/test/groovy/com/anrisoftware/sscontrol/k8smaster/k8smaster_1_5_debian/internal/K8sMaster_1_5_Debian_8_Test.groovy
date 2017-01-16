@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal
+package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -23,29 +23,32 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.Sshd_Debian_8
+import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule
+import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
+import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Debian_8.K8sMaster_1_5_Debian_8_Factory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
-import com.anrisoftware.sscontrol.sshd.internal.SshdModule
-import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory
-import com.anrisoftware.sscontrol.types.external.HostServiceScript
+import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
-import com.google.inject.assistedinject.FactoryModuleBuilder
 
 import groovy.util.logging.Slf4j
 
@@ -56,50 +59,53 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Sshd_Debian_8_Test extends AbstractScriptTestBase {
+class K8sMaster_1_5_Debian_8_Test extends AbstractScriptTestBase {
 
     @Inject
-    SshdImplFactory sshdFactory
+    K8sMasterImplFactory serviceFactory
 
     @Inject
-    Sshd_Debian_8_Factory sshdDebianFactory
+    K8sMaster_1_5_Debian_8_Factory scriptFactory
+
+    @Inject
+    SshImplFactory sshFactory
 
     @Inject
     CmdRunCaller cmdRunCaller
 
     static Map expectedResources = [
-        default_target_sudo: Sshd_Debian_8_Test.class.getResource('default_target_sudo_expected.txt'),
-        default_target_apt_get: Sshd_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
-        default_target_service: Sshd_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
+        default_target_sudo: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_sudo_expected.txt'),
+        default_target_apt_get: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
+        default_target_service: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
     ]
 
     @Test
-    void "sshd script"() {
-        def testCases = [
-            [
-                name: "default_target",
-                input: """
-service "sshd"
+    void "tls"() {
+        def test = [
+            name: "tls",
+            input: """
+service "ssh", host: "localhost"
+
+service "k8s-master", name: "andrea-cluster" with {
+    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+}
 """,
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
+                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
+                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            doTest test, k
-        }
+        doTest test
     }
 
     String getServiceName() {
-        'sshd'
+        'k8s-master'
     }
 
     String getScriptServiceName() {
-        'sshd/debian/8'
+        'k8s-master/debian/8'
     }
 
     void createDummyCommands(File dir) {
@@ -117,13 +123,17 @@ service "sshd"
     }
 
     HostServices putServices(HostServices services) {
-        services.putAvailableService 'sshd', sshdFactory
-        services.putAvailableScriptService 'sshd/debian/8', sshdDebianFactory
+        services.putAvailableService 'k8s-master', serviceFactory
+        services.putAvailableScriptService 'k8s-master/debian/8', scriptFactory
+        services.putAvailableService 'ssh', sshFactory
     }
 
     List getAdditionalModules() {
         [
-            new SshdModule(),
+            new SshModule(),
+            new SshPreModule(),
+            new K8sMasterModule(),
+            new K8sMaster_1_5_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -136,12 +146,14 @@ service "sshd"
             new CopyModule(),
             new FetchModule(),
             new ReplaceModule(),
+            new FactsModule(),
+            new TemplateModule(),
             new TokensTemplateModule(),
+            new ResourcesModule(),
             new AbstractModule() {
 
                 @Override
                 protected void configure() {
-                    install(new FactoryModuleBuilder().implement(HostServiceScript, Sshd_Debian_8).build(Sshd_Debian_8_Factory))
                 }
             }
         ]

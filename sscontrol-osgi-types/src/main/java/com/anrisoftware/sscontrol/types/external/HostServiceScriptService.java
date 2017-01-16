@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -39,5 +40,5 @@ public interface HostServiceScriptService {
      * Creates the script.
      */
     HostServiceScript create(HostServices repository, HostService service,
-            SshHost target, ExecutorService threads);
+            SshHost target, ExecutorService threads, Map<String, Object> env);
 }
