@@ -1,25 +1,7 @@
 scpCmd(args) ::= <<
 <sshChdir(args.chdir)>
 <sshEnv(args.env)>
-<checkFile(args)>
 <scpCommand(args)>
->>
-
-checkFile(args) ::= <<
-<if(args.remoteDest)>
-ssh <sshArgs(args)> <sshDebug(args)> <sshOptions(args, args.sshDefaultOptions)> <sshOptions(args, args.sshOptions)> <if(args.sshKey)><sshKeyOption(args)><endif> <args.shell> \<\< \eof1
-<if(!args.override)>
-if <if(args.privileged)>sudo <endif>find "<args.destOriginal>" -type f >/dev/null; then
-    FILE_EXISTS=1
-else
-    FILE_EXISTS=0
-fi
-eof1
-if $FILE_EXISTS; then
-    exit 0;
-fi
-<endif>
-<endif>
 >>
 
 scpCommand(args) ::= <%

@@ -1,3 +1,14 @@
+sshCommand(args) ::= <%
+ssh
+<\ ><sshArgs(args)>
+<\ ><sshDebug(args)>
+<\ ><sshOptions(args, args.sshDefaultOptions)>
+<\ ><sshOptions(args, args.sshOptions)>
+<\ ><if(args.sshKey)><sshKeyOption(args)><endif>
+<\ ><args.sshUser>@<args.sshHost>
+<\ >"<args.shell>" \<\< \eof1
+%>
+
 sshDebug(args) ::= <%
 <args.debugLevel>
 %>

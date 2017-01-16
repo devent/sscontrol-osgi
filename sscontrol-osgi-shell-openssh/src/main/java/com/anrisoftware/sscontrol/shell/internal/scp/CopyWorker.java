@@ -37,7 +37,7 @@ import com.anrisoftware.resources.templates.external.Templates;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -46,7 +46,7 @@ public class CopyWorker extends AbstractFileWorker
         implements Callable<ProcessTask> {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -69,10 +69,42 @@ public class CopyWorker extends AbstractFileWorker
         System.out.println(args.get("dest")); // TODO println
         System.out.println(args.get("override")); // TODO println
         ProcessTask task = null;
+        if (!isOverride()) {
+            CheckFiles check = new CheckFiles();
+            task = check.call();
+            if (check.fileExists) {
+                return task;
+            }
+        }
         task = pushFiles();
         task = copyFiles();
-        task = cleanFiles();
         return task;
+    }
+
+    class CheckFiles implements Callable<ProcessTask> {
+
+        boolean fileExists;
+
+        @Override
+        public ProcessTask call() throws CommandExecException {
+            Map<String, Object> a = new HashMap<>(args);
+            a.put("dest", getDest());
+            String cmd = linuxPropertiesProvider.getCheckFileCommands(a);
+            a = new HashMap<>(args);
+            a.put(COMMAND_ARG, cmd);
+            a.put("exitCodes", new int[] { 0, 1 });
+            ProcessTask task = runCmd(a);
+            switch (task.getExitValue()) {
+            case 0:
+                this.fileExists = false;
+                break;
+            case 1:
+                this.fileExists = true;
+                break;
+            }
+            return task;
+        }
+
     }
 
     private ProcessTask pushFiles() throws CommandExecException {
@@ -85,12 +117,12 @@ public class CopyWorker extends AbstractFileWorker
     }
 
     protected ProcessTask copyFiles() throws CommandExecException {
-        String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getCopyFileCommands();
-        String src = getSrc();
-        String recursive = isRecursive() ? "-r " : "";
         Map<String, Object> a = new HashMap<>(args);
-        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
+        a.put("src", FilenameUtils.getName(getSrc()));
+        a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir());
+        String cmd = linuxPropertiesProvider.getPushFileCommands(a);
+        a = new HashMap<>(args);
+        a.put(COMMAND_ARG, cmd);
         return runCmd(a);
     }
 

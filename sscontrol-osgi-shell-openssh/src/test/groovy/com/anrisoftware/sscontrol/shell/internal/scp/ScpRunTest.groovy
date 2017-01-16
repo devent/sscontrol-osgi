@@ -45,7 +45,7 @@ import com.google.inject.Injector
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
@@ -123,15 +123,20 @@ class ScpRunTest {
                 remoteDest: true,
             ],
             commands: [
-                'find',
                 'scp',
                 'mkdir',
                 'chown',
                 'chmod',
+                'cp',
                 'rm',
             ],
             expected: [
-                scp: 'dest_src_scp_out_expected.txt'
+                scp: 'dest_src_scp_out_expected.txt',
+                mkdir: 'dest_src_mkdir_out_expected.txt',
+                chown: 'dest_src_chown_out_expected.txt',
+                chmod: 'dest_src_chmod_out_expected.txt',
+                cp: 'dest_src_cp_out_expected.txt',
+                rm: 'dest_src_rm_out_expected.txt',
             ],
         ]
         runTestCases test, scpRunFactory
@@ -143,8 +148,8 @@ class ScpRunTest {
             name: 'privileged_dest_src',
             args: [
                 debugLevel: 2,
-                src: '/usr/aaa.txt',
-                dest: '/home/devent',
+                src: '/home/local/file.txt',
+                dest: '/src',
                 privileged: true,
                 remoteSrc: false,
                 remoteDest: true,
@@ -154,12 +159,74 @@ class ScpRunTest {
                 'mkdir',
                 'chown',
                 'chmod',
-                'id',
+                'cp',
                 'rm',
             ],
             expected: [
-                scp: 'privileged_dest_src_scp_out_expected.txt'
+                scp: 'privileged_dest_src_scp_out_expected.txt',
+                mkdir: 'privileged_dest_src_mkdir_out_expected.txt',
+                chown: 'privileged_dest_src_chown_out_expected.txt',
+                chmod: 'privileged_dest_src_chmod_out_expected.txt',
+                cp: 'privileged_dest_src_cp_out_expected.txt',
+                rm: 'privileged_dest_src_rm_out_expected.txt',
             ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "dest_override_src"() {
+        def test = [
+            name: 'dest_override_src',
+            args: [
+                debugLevel: 2,
+                src: '/home/local/file.txt',
+                dest: '/notexists',
+                override: false,
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'cp',
+                'rm',
+            ],
+            expected: [
+                scp: 'dest_override_src_scp_out_expected.txt',
+                mkdir: 'dest_override_src_mkdir_out_expected.txt',
+                chown: 'dest_override_src_chown_out_expected.txt',
+                chmod: 'dest_override_src_chmod_out_expected.txt',
+                cp: 'dest_override_src_cp_out_expected.txt',
+                rm: 'dest_override_src_rm_out_expected.txt',
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "dest_override_exists_src"() {
+        def test = [
+            name: 'dest_override_exists_src',
+            args: [
+                debugLevel: 2,
+                src: '/home/local/file.txt',
+                dest: '/',
+                override: false,
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'cp',
+                'rm',
+            ],
+            expected: [:],
         ]
         runTestCases test, scpRunFactory
     }

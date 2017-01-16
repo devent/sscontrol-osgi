@@ -39,7 +39,7 @@ import com.anrisoftware.resources.templates.external.Templates;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -89,6 +89,11 @@ public class AbstractFileWorker {
 
     protected Boolean isRecursive() {
         Boolean recursive = (Boolean) args.get("recursive");
+        return recursive != null && recursive;
+    }
+
+    protected Boolean isOverride() {
+        Boolean recursive = (Boolean) args.get("override");
         return recursive != null && recursive;
     }
 
