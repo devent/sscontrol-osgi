@@ -231,6 +231,65 @@ class ScpRunTest {
         runTestCases test, scpRunFactory
     }
 
+    @Test
+    void "privileged_dest_override_src"() {
+        def test = [
+            name: 'privileged_dest_override_src',
+            args: [
+                debugLevel: 2,
+                src: '/home/local/file.txt',
+                dest: '/notexists',
+                override: false,
+                privileged: true,
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'cp',
+                'rm',
+            ],
+            expected: [
+                scp: 'privileged_dest_override_src_scp_out_expected.txt',
+                mkdir: 'privileged_dest_override_src_mkdir_out_expected.txt',
+                chown: 'privileged_dest_override_src_chown_out_expected.txt',
+                chmod: 'privileged_dest_override_src_chmod_out_expected.txt',
+                cp: 'privileged_dest_override_src_cp_out_expected.txt',
+                rm: 'privileged_dest_override_src_rm_out_expected.txt',
+            ],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
+    @Test
+    void "privileged_dest_override_exists_src"() {
+        def test = [
+            name: 'privileged_dest_override_exists_src',
+            args: [
+                debugLevel: 2,
+                src: '/home/local/file.txt',
+                dest: '/',
+                override: false,
+                privileged: true,
+                remoteSrc: false,
+                remoteDest: true,
+            ],
+            commands: [
+                'scp',
+                'mkdir',
+                'chown',
+                'chmod',
+                'cp',
+                'rm',
+            ],
+            expected: [:],
+        ]
+        runTestCases test, scpRunFactory
+    }
+
     void runTestCases(Map test, ScpRunFactory scpFactory) {
         log.info '{} case: {}', test.name, test
         def defargs = [:]
