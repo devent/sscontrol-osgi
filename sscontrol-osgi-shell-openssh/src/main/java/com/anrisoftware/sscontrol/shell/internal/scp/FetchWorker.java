@@ -77,12 +77,12 @@ public class FetchWorker extends AbstractFileWorker
     }
 
     protected ProcessTask copyFiles() throws CommandExecException {
-        String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getCopyFileCommands();
-        String src = getSrc();
-        String recursive = isRecursive() ? "-r " : "";
         Map<String, Object> a = new HashMap<>(args);
-        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
+        a.put("src", getSrc());
+        a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir());
+        String cmd = linuxPropertiesProvider.getCopyFileCommands(a);
+        a = new HashMap<>(args);
+        a.put(COMMAND_ARG, cmd);
         return runCmd(a);
     }
 

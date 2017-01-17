@@ -49,8 +49,9 @@ public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
         return get().getProperty("setup_commands");
     }
 
-    public String getCopyFileCommands() {
-        return get().getProperty("copy_file_commands");
+    public String getCopyFileCommands(Map<String, Object> args) {
+        String str = get().getProperty("copy_file_commands");
+        return new ST(str).add("args", args).render();
     }
 
     public String getPushFileCommands(Map<String, Object> args) {
@@ -58,8 +59,9 @@ public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
         return new ST(str).add("args", args).render();
     }
 
-    public String getCleanFileCommands() {
-        return get().getProperty("clean_file_commands");
+    public String getCleanFileCommands(Map<String, Object> args) {
+        String str = get().getProperty("clean_file_commands");
+        return new ST(str).add("args", args).render();
     }
 
     public String getCheckFileCommands(Map<String, Object> args) {

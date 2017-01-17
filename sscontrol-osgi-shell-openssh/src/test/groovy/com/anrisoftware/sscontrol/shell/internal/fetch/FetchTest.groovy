@@ -59,7 +59,10 @@ class FetchTest extends AbstractCmdTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
+        src_sudo: FetchTest.class.getResource('src_sudo_expected.txt'),
         src_scp: FetchTest.class.getResource('src_scp_expected.txt'),
+        src_cp: FetchTest.class.getResource('src_cp_expected.txt'),
+        src_rm: FetchTest.class.getResource('src_rm_expected.txt'),
         directory_src_scp: FetchTest.class.getResource('directory_src_scp_expected.txt'),
         dest_src_scp: FetchTest.class.getResource('dest_src_scp_expected.txt'),
         dest_src_sudo: FetchTest.class.getResource('dest_src_sudo_expected.txt'),
@@ -72,95 +75,116 @@ class FetchTest extends AbstractCmdTestBase {
     ]
 
     @Test
-    void "fetch cases"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "src",
-                args: [
-                    src: "aaa.txt",
-                    dest: null,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
+    void "src"() {
+        def test = [
+            name: "src",
+            args: [
+                src: "aaa.txt",
+                dest: null,
             ],
-            [
-                enabled: true,
-                name: "directory_src",
-                args: [
-                    src: "/var/wordpress",
-                    dest: null,
-                    recursive: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
-            [
-                enabled: true,
-                name: "dest_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "privileged_dir_src",
-                args: [
-                    src: "/var/wordpress",
-                    dest: null,
-                    recursive: true,
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. {} #########\ncase: {}', k, test.name, test
-                def tmp = folder.newFolder()
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
-        }
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "directory_src"() {
+        def test = [
+            name: "directory_src",
+            args: [
+                src: "/var/wordpress",
+                dest: null,
+                recursive: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
+        ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "dest_src"() {
+        def test = [
+            name: "dest_src",
+            args: [
+                src: "aaa.txt",
+                dest: "/tmp",
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+            },
+        ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_src"() {
+        def test = [
+            name: "privileged_src",
+            args: [
+                src: "aaa.txt",
+                dest: "/tmp",
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+            },
+        ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "privileged_dir_src"() {
+        def test = [
+            name: "privileged_dir_src",
+            args: [
+                src: "/var/wordpress",
+                dest: null,
+                recursive: true,
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+            },
+        ]
+        log.info '\n######### {}. {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {
