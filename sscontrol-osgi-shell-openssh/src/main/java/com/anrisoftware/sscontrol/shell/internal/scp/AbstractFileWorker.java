@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.shell.internal.scp;
 import static com.anrisoftware.sscontrol.copy.external.Copy.DEST_ARG;
 import static com.anrisoftware.sscontrol.fetch.external.Fetch.SRC_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.COMMAND_ARG;
-import static java.lang.String.format;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,11 +119,12 @@ public class AbstractFileWorker {
     }
 
     protected ProcessTask cleanFiles() throws CommandExecException {
-        String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String cmd = linuxPropertiesProvider.getCleanFileCommands();
-        String src = FilenameUtils.getName(getSrc());
         Map<String, Object> a = new HashMap<>(args);
-        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        a.put("src", FilenameUtils.getName(getSrc()));
+        a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir());
+        String cmd = linuxPropertiesProvider.getCleanFileCommands(a);
+        a = new HashMap<>(args);
+        a.put(COMMAND_ARG, cmd);
         return runCmd(a);
     }
 

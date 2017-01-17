@@ -65,9 +65,6 @@ public class CopyWorker extends AbstractFileWorker
 
     @Override
     public ProcessTask call() throws CommandExecException {
-        System.out.println(args.get("src")); // TODO println
-        System.out.println(args.get("dest")); // TODO println
-        System.out.println(args.get("override")); // TODO println
         ProcessTask task = null;
         if (!isOverride()) {
             CheckFiles check = new CheckFiles();
@@ -81,6 +78,12 @@ public class CopyWorker extends AbstractFileWorker
         return task;
     }
 
+    /**
+     * Checks if the file exists on the remote.
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     class CheckFiles implements Callable<ProcessTask> {
 
         boolean fileExists;
