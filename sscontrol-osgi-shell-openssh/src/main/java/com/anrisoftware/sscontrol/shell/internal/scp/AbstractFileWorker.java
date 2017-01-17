@@ -124,6 +124,7 @@ public class AbstractFileWorker {
         a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir());
         String cmd = linuxPropertiesProvider.getCleanFileCommands(a);
         a = new HashMap<>(args);
+        a.put("privileged", false);
         a.put(COMMAND_ARG, cmd);
         return runCmd(a);
     }

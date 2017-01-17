@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.shell.external.utils
 
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
@@ -22,7 +24,7 @@ import groovy.transform.CompileStatic
 
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -80,6 +82,12 @@ class UnixTestUtil {
 
     static String resourceToString(URL resource) {
         IOUtils.toString resource
+    }
+
+    static assertFileResource(Class context, File dir, String name, String res) {
+        def file = new File(dir, name)
+        assert file.isFile() == true
+        assertStringContent fileToStringReplace(file), resourceToString(context.getResource(res))
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')

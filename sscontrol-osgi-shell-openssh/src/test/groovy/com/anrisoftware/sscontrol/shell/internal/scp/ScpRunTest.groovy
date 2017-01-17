@@ -70,13 +70,14 @@ class ScpRunTest {
                 'chmod',
                 'rm',
             ],
-            expected: [
-                scp: 'remote_src_scp_out_expected.txt',
-                mkdir: 'remote_src_mkdir_out_expected.txt',
-                chown: 'remote_src_chown_out_expected.txt',
-                chmod: 'remote_src_chmod_out_expected.txt',
-                rm: 'remote_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -84,7 +85,7 @@ class ScpRunTest {
     @Test
     void "privileged_remote_src"() {
         def test = [
-            name: 'remote_src',
+            name: 'privileged_remote_src',
             args: [
                 debugLevel: 2,
                 src: '/src/file.txt',
@@ -100,13 +101,14 @@ class ScpRunTest {
                 'chmod',
                 'rm',
             ],
-            expected: [
-                scp: 'privileged_remote_src_scp_out_expected.txt',
-                mkdir: 'privileged_remote_src_mkdir_out_expected.txt',
-                chown: 'privileged_remote_src_chown_out_expected.txt',
-                chmod: 'privileged_remote_src_chmod_out_expected.txt',
-                rm: 'privileged_remote_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -130,14 +132,14 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [
-                scp: 'dest_src_scp_out_expected.txt',
-                mkdir: 'dest_src_mkdir_out_expected.txt',
-                chown: 'dest_src_chown_out_expected.txt',
-                chmod: 'dest_src_chmod_out_expected.txt',
-                cp: 'dest_src_cp_out_expected.txt',
-                rm: 'dest_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -162,14 +164,14 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [
-                scp: 'privileged_dest_src_scp_out_expected.txt',
-                mkdir: 'privileged_dest_src_mkdir_out_expected.txt',
-                chown: 'privileged_dest_src_chown_out_expected.txt',
-                chmod: 'privileged_dest_src_chmod_out_expected.txt',
-                cp: 'privileged_dest_src_cp_out_expected.txt',
-                rm: 'privileged_dest_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -194,14 +196,14 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [
-                scp: 'dest_override_src_scp_out_expected.txt',
-                mkdir: 'dest_override_src_mkdir_out_expected.txt',
-                chown: 'dest_override_src_chown_out_expected.txt',
-                chmod: 'dest_override_src_chmod_out_expected.txt',
-                cp: 'dest_override_src_cp_out_expected.txt',
-                rm: 'dest_override_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -226,7 +228,10 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [:],
+            expected: { Map args ->
+                File dir = args.dir
+                assert new File(dir, "scp.out").isFile() == false
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -252,14 +257,14 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [
-                scp: 'privileged_dest_override_src_scp_out_expected.txt',
-                mkdir: 'privileged_dest_override_src_mkdir_out_expected.txt',
-                chown: 'privileged_dest_override_src_chown_out_expected.txt',
-                chmod: 'privileged_dest_override_src_chmod_out_expected.txt',
-                cp: 'privileged_dest_override_src_cp_out_expected.txt',
-                rm: 'privileged_dest_override_src_rm_out_expected.txt',
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource ScpRunTest, dir, "scp.out", "${args.test.name}_scp_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "mkdir.out", "${args.test.name}_mkdir_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chown.out", "${args.test.name}_chown_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "chmod.out", "${args.test.name}_chmod_out_expected.txt"
+                assertFileResource ScpRunTest, dir, "rm.out", "${args.test.name}_rm_out_expected.txt"
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -285,7 +290,10 @@ class ScpRunTest {
                 'cp',
                 'rm',
             ],
-            expected: [:],
+            expected: { Map args ->
+                File dir = args.dir
+                assert new File(dir, "scp.out").isFile() == false
+            },
         ]
         runTestCases test, scpRunFactory
     }
@@ -308,20 +316,8 @@ class ScpRunTest {
         createEchoCommands args.chdir, test.commands
         def scp = scpFactory.create args, this, threads
         scp()
-        Map testExpected = test.expected
-        test.commands.each {
-            def uri = testExpected[it]
-            if (uri) {
-                def res = ScpRunTest.class.getResource(uri)
-                assertStringContent fileToStringReplace(toFile(args, it)), resourceToString(res)
-            }
-        }
-    }
-
-    File toFile(Map args, String name) {
-        def file = new File(args.chdir, "${name}.out")
-        assert file != null
-        return file
+        Closure expected = test.expected
+        expected test: test, dir: args.chdir
     }
 
     static Injector injector

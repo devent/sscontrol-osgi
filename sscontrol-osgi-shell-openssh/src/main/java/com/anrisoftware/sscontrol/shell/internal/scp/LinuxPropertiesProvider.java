@@ -45,8 +45,9 @@ public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
         return get().getProperty("remote_temp_directory");
     }
 
-    public String getSetupCommands() {
-        return get().getProperty("setup_commands");
+    public String getSetupCommands(Map<String, Object> args) {
+        String str = get().getProperty("setup_commands");
+        return new ST(str).add("args", args).render();
     }
 
     public String getCopyFileCommands(Map<String, Object> args) {

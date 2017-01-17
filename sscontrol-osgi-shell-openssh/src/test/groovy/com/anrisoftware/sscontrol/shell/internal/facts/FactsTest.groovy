@@ -44,7 +44,7 @@ import com.google.inject.Module
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -60,38 +60,27 @@ class FactsTest extends AbstractCmdTestBase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    static Map expectedResources = [
-        cat_release_cat: FactsTest.class.getResource('cat_release_cat_expected.txt'),
-    ]
-
     @Test
-    void "facts cases"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "cat_release",
-                args: [:],
-                expected: { Map args ->
-                    Facts facts = args.cmd
-                    assert facts.system.name == 'debian'
-                    assert facts.system.version == '8'
+    void "cat_release"() {
+        def test = [
+            name: "cat_release",
+            args: [:],
+            expected: { Map args ->
+                Facts facts = args.cmd
+                assert facts.system.name == 'debian'
+                assert facts.system.version == '8'
 
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    def catOut = fileToStringReplace(new File(dir, 'cat.out'))
-                    catOut = catOut.replaceAll("/etc/.*release", '/etc/release')
-                    assertStringContent catOut, resourceToString(expectedResources["${name}_cat"] as URL)
-                },
-            ],
+                File dir = args.dir as File
+                String name = args.name as String
+                def catOut = fileToStringReplace(new File(dir, 'cat.out'))
+                catOut = catOut.replaceAll("/etc/.*release", '/etc/release')
+                assertStringContent catOut, resourceToString(FactsTest.class.getResource('cat_release_cat_expected.txt'))
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if (test.enabled) {
-                log.info '\n######### {}. case: {}', k, test
-                def tmp = folder.newFolder()
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
-        }
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {

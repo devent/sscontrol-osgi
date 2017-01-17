@@ -42,7 +42,7 @@ import com.google.inject.Module
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -82,14 +82,13 @@ class TemplateTest extends AbstractCmdTestBase {
             ],
             expected: { Map args ->
                 File dir = args.dir as File
-                String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assert new File(dir, 'sudo.out').isFile() == false
-                assert new File(dir, 'cp.out').isFile() == false
-                assert new File(dir, 'rm.out').isFile() == false
+                assertFileResource TemplateTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource TemplateTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource TemplateTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource TemplateTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
             },
         ]
-        log.info '\n######### {}. case: {}', test
+        log.info '\n######### {} #########\ncase: {}', test.name, test
         def tmp = folder.newFolder()
         test.host = SshFactory.localhost(injector).hosts[0]
         doTest test, tmp
@@ -109,14 +108,13 @@ class TemplateTest extends AbstractCmdTestBase {
             ],
             expected: { Map args ->
                 File dir = args.dir as File
-                String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assert new File(dir, 'sudo.out').isFile() == false
-                assert new File(dir, 'cp.out').isFile() == false
-                assert new File(dir, 'rm.out').isFile() == false
+                assertFileResource TemplateTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource TemplateTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource TemplateTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource TemplateTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
             },
         ]
-        log.info '\n######### {}. case: {}', test
+        log.info '\n######### {} #########\ncase: {}', test.name, test
         def tmp = folder.newFolder()
         test.host = SshFactory.localhost(injector).hosts[0]
         doTest test, tmp
@@ -135,14 +133,13 @@ class TemplateTest extends AbstractCmdTestBase {
             ],
             expected: { Map args ->
                 File dir = args.dir as File
-                String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+                assertFileResource TemplateTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource TemplateTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource TemplateTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource TemplateTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
             },
         ]
-        log.info '\n######### {}. case: {}', test
+        log.info '\n######### {} #########\ncase: {}', test.name, test
         def tmp = folder.newFolder()
         test.host = SshFactory.localhost(injector).hosts[0]
         doTest test, tmp

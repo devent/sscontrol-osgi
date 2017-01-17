@@ -18,8 +18,6 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static java.lang.String.format;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +41,7 @@ import com.google.inject.assistedinject.Assisted;
 public class ScpRun extends AbstractSshRun {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -81,9 +79,11 @@ public class ScpRun extends AbstractSshRun {
         String template = "ssh_wrap_bash";
         TemplateResource res = templates.get().getResource(template);
         Map<String, Object> a = new HashMap<>(args);
+        a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir());
+        String cmd = linuxPropertiesProvider.getSetupCommands(a);
+        a = new HashMap<>(args);
         a.put("privileged", true);
-        a.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
-                linuxPropertiesProvider.getRemoteTempDir()));
+        a.put(COMMAND_ARG, cmd);
         task = scriptEx.create(a, parent, threads, res, "sshCmd").call();
         log.setupRemoteFinished(parent, task, a);
     }

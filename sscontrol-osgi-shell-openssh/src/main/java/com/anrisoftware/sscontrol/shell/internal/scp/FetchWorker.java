@@ -47,7 +47,7 @@ public class FetchWorker extends AbstractFileWorker
         implements Callable<ProcessTask> {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

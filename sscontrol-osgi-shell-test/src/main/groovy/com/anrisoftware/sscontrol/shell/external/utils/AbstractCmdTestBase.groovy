@@ -29,7 +29,7 @@ import com.google.inject.Module
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -52,7 +52,7 @@ abstract class AbstractCmdTestBase {
         def cmd = createCmd test, tmp, k
         cmd()
         Closure expected = test.expected
-        expected([name: test.name, cmd: cmd, dir: tmp])
+        expected([test: test, cmd: cmd, dir: tmp])
     }
 
     abstract Module[] getAdditionalModules()
