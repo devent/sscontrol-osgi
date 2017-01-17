@@ -90,35 +90,64 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
     def createConfig() {
         log.info 'Create k8s-master configuration.'
         def dir = configDir
-        template resource: configsTemplate, name: 'kubeConfig', privileged: true, override: false, dest: "$dir/config" call()
-        template resource: configsTemplate, name: 'kubeApiserverConfig', privileged: true, override: false, dest: "$dir/apiserver" call()
-        template resource: configsTemplate, name: 'kubeControllerManagerConfig', privileged: true, override: false, dest: "$dir/controller-manager" call()
-        template resource: configsTemplate, name: 'kubeSchedulerConfig', privileged: true, override: false, dest: "$dir/scheduler" call()
+        [
+            [
+                resource: configsTemplate,
+                name: 'kubeConfig',
+                privileged: true,
+                override: false,
+                dest: "$configDir/config",
+                vars: [:],
+            ],
+            [
+                resource: configsTemplate,
+                name: 'kubeApiserverConfig',
+                privileged: true,
+                override: false,
+                dest: "$configDir/apiserver",
+                vars: [:],
+            ],
+            [
+                resource: configsTemplate,
+                name: 'kubeControllerManagerConfig',
+                privileged: true,
+                override: false,
+                dest: "$configDir/controller-manager",
+                vars: [:],
+            ],
+            [
+                resource: configsTemplate,
+                name: 'kubeSchedulerConfig',
+                privileged: true,
+                override: false,
+                dest: "$configDir/scheduler",
+                vars: [:],
+            ],
+        ].each { template it call() }
     }
 
     def configureServices() {
         log.info 'Configure k8s services.'
-        def dir = configDir
         K8sMaster service = service
-        dest: "$dir/config"
+        def dir = configDir
+        def dest = "$dir/config"
         replace dest: "$dir/config", privileged: true with {
             [
                 [
-                    dest: "$dir/config",
                     key: 'KUBE_LOG_LEVEL',
                     entry: { "--v=$it" },
                     value: service.debugLogging.modules['debug'].level
                 ],
                 [
-                    dest: "$dir/config",
                     key: 'KUBE_ALLOW_PRIV',
                     entry: { "--allow-privileged=$it" },
                     value: service.allowPrivileged
                 ],
             ].each {
-                log.info 'Replace entry {} in {}', it, dest
+                log.info 'Replace entry {} in {}', it.entry, dest
                 line "s/(?m)^#?${it.key}=\"--v=\\d*\".*/${it.key}=\"${it.entry(it.value)}\"/"
             }
+            it
         }.call()
     }
 

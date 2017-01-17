@@ -1,4 +1,4 @@
-kubeConfig(args) ::= <<
+kubeConfig(parent, vars) ::= <<
 ###
 # kubernetes system config
 #
@@ -27,7 +27,7 @@ KUBE_ALLOW_PRIV="--allow-privileged=false"
 KUBE_MASTER="--master=http://127.0.0.1:8080"
 >>
 
-kubeApiserverConfig(args) ::= <<
+kubeApiserverConfig(parent, vars) ::= <<
 ###
 # kubernetes system config
 #
@@ -58,7 +58,7 @@ KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,L
 KUBE_API_ARGS=""
 >>
 
-kubeControllerManagerConfig(args) ::= <<
+kubeControllerManagerConfig(parent, vars) ::= <<
 ###
 # The following values are used to configure the kubernetes controller-manager
 # Authors
@@ -70,7 +70,7 @@ kubeControllerManagerConfig(args) ::= <<
 KUBE_CONTROLLER_MANAGER_ARGS=""
 >>
 
-kubeSchedulerConfig(args) ::= <<
+kubeSchedulerConfig(parent, vars) ::= <<
 ###
 # kubernetes scheduler config
 # Authors

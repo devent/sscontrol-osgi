@@ -53,7 +53,7 @@ import com.google.inject.AbstractModule
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -73,12 +73,6 @@ class K8sMaster_1_5_Debian_8_Test extends AbstractScriptTestBase {
     @Inject
     CmdRunCaller cmdRunCaller
 
-    static Map expectedResources = [
-        default_target_sudo: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_sudo_expected.txt'),
-        default_target_apt_get: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
-        default_target_service: K8sMaster_1_5_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
-    ]
-
     @Test
     void "tls"() {
         def test = [
@@ -92,9 +86,9 @@ service "k8s-master", name: "andrea-cluster" with {
 """,
             expected: { Map args ->
                 File dir = args.dir
-                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
             },
         ]
         doTest test
