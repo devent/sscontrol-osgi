@@ -20,19 +20,20 @@ import static com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8smaster.systemd.external.K8sMaster_1_5_Systemd
+import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Systemd
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Master 1.5 service using Systemd and Debian 8.
+ * Configures the K8s-Master 1.5 service from the upstream sources
+ * for Systemd and Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sMaster_1_5_Systemd_Debian_8 extends K8sMaster_1_5_Systemd {
+class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Systemd {
 
     /**
      *
@@ -40,7 +41,7 @@ class K8sMaster_1_5_Systemd_Debian_8 extends K8sMaster_1_5_Systemd {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    interface K8sMaster_1_5_Systemd_Debian_8_Factory extends HostServiceScriptService {
+    interface K8sMaster_1_5_Upstream_Systemd_Debian_8_Factory extends HostServiceScriptService {
     }
 
     @Inject
@@ -48,8 +49,8 @@ class K8sMaster_1_5_Systemd_Debian_8 extends K8sMaster_1_5_Systemd {
 
     @Override
     Object run() {
-        configureServices()
-        restartServices()
+        createServices()
+        createConfig()
     }
 
     @Override

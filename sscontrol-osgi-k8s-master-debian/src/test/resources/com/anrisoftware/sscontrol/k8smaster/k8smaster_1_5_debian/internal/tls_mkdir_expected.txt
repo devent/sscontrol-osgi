@@ -1,0 +1,11 @@
+-p /etc/systemd/system
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /etc/kubernetes
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp

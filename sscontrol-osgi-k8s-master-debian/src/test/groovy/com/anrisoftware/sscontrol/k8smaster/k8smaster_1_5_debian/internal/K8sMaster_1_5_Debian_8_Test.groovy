@@ -89,6 +89,8 @@ service "k8s-master", name: "andrea-cluster" with {
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
             },
         ]
         doTest test
@@ -112,7 +114,8 @@ service "k8s-master", name: "andrea-cluster" with {
             'rm',
             'cp',
             'apt-get',
-            'service'
+            'service',
+            'systemctl',
         ]
     }
 
