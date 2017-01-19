@@ -144,6 +144,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     File sudoChdir
 
     /**
+     * The base directory for the script.
+     */
+    File base
+
+    /**
      * Environment variables.
      */
     Map env = [:]
@@ -168,6 +173,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         this.scriptEnv = new HashMap(env)
         this.pwd = env.pwd
         this.chdir = env.chdir
+        this.base = env.base
         this.sudoChdir = env.sudoChdir
         this.env = env.env
         this.sudoEnv = env.sudoEnv
@@ -364,7 +370,8 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getConfigDir() {
-        properties.getFileProperty "config_dir", defaultProperties
+        def dir = properties.getFileProperty "config_dir", defaultProperties
+        new File(base, dir.path)
     }
 
     /**

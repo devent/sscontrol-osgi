@@ -1,8 +1,13 @@
--p /etc/systemd/system
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/usr/local/bin
+-p /tmp/junit/junit/etc/systemd/system
+-p /tmp/junit/junit/etc/systemd/tmpfiles.d
+-p /tmp/junit/junit/run/kubernetes
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
--p /etc/kubernetes
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/kubernetes
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp

@@ -259,8 +259,8 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     /**
      * Returns the profile path property. If the profile property was not set
-     * return the default value from the default properties. If the path is not
-     * absolute then it is assume to be under the specified parent directory.
+     * return the default value from the default properties. The path is assumed
+     * to be under the specified parent directory.
      *
      * @param key
      *            the key of the profile property.
@@ -285,7 +285,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         } else {
             path = new File(value.toString());
         }
-        return path.isAbsolute() ? path : new File(parent, path.getPath());
+        return new File(parent, path.getPath());
     }
 
     public <T> T getTypedProperty(String key, Format format,

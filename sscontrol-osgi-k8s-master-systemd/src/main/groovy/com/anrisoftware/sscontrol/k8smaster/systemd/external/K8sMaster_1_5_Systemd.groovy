@@ -70,19 +70,19 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
     }
 
     File getSystemdSystemDir() {
-        properties.getFileProperty "systemd_system_dir", defaultProperties
+        properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
 
     File getSystemdTmpfilesDir() {
-        properties.getFileProperty "systemd_tmpfiles_dir", defaultProperties
+        properties.getFileProperty "systemd_tmpfiles_dir", base, defaultProperties
     }
 
     File getRunDir() {
-        properties.getFileProperty "run_dir", defaultProperties
+        properties.getFileProperty "run_dir", base, defaultProperties
     }
 
     File getBinDir() {
-        properties.getFileProperty "bin_dir", defaultProperties
+        properties.getFileProperty "bin_dir", base, defaultProperties
     }
 
     @Override

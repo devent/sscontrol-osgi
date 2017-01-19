@@ -38,7 +38,7 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('K8sMaster_1_5_Systemd_Templates')
+        def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
         this.servicesTemplate = templates.getResource('k8s_master_services')
         this.configsTemplate = templates.getResource('k8s_master_configs')
     }
@@ -46,7 +46,14 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
     def createServices() {
         log.info 'Create k8s-master services.'
         def dir = systemdSystemDir
-        shell privileged: true, "mkdir -p $dir" call()
+        def tmpdir = systemdTmpfilesDir
+        shell privileged: true, """
+mkdir -p '$dir'
+mkdir -p '$tmpdir'
+mkdir -p '$runDir'
+chown $user '$runDir'
+useradd -r $user
+""" call()
         [
             [
                 resource: servicesTemplate,
@@ -70,6 +77,14 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
                 privileged: true,
                 override: false,
                 dest: "$dir/kube-scheduler.service",
+                vars: [:],
+            ],
+            [
+                resource: servicesTemplate,
+                name: 'servicesKubernetesConf',
+                privileged: true,
+                override: false,
+                dest: "$tmpdir/kubernetes.conf",
                 vars: [:],
             ],
         ].each { template it call() }
@@ -117,19 +132,19 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
     }
 
     File getSystemdSystemDir() {
-        properties.getFileProperty "systemd_system_dir", defaultProperties
+        properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
 
     File getSystemdTmpfilesDir() {
-        properties.getFileProperty "systemd_tmpfiles_dir", defaultProperties
+        properties.getFileProperty "systemd_tmpfiles_dir", base, defaultProperties
     }
 
     File getRunDir() {
-        properties.getFileProperty "run_dir", defaultProperties
+        properties.getFileProperty "run_dir", base, defaultProperties
     }
 
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", defaultProperties
+    String getUser() {
+        properties.getProperty "user", defaultProperties
     }
 
     @Override

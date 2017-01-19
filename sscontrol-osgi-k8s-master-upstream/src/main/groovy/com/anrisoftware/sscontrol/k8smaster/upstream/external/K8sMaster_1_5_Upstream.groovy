@@ -26,7 +26,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class K8sMaster_1_5 extends ScriptBase {
+abstract class K8sMaster_1_5_Upstream extends ScriptBase {
 
     def installKubernetes() {
         log.info 'Installs k8s-master.'
@@ -38,11 +38,11 @@ cd kubernetes
 printf "y\n" | cluster/get-kube-binaries.sh
 cd server
 tar xf kubernetes-server-linux-amd64.tar.gz
-mkdir -p /usr/local/bin
+mkdir -p '$binDir'
 cd kubernetes/server/bin
-sudo find . -executable -type f -exec cp '{}' /usr/local/bin \\;
-sudo chmod o+rx /usr/local/bin/*
-"""
+sudo find . -executable -type f -exec cp '{}' '$binDir' \\;
+sudo chmod o+rx '$binDir'/*
+""" call()
     }
 
     URI getArchive() {
@@ -51,6 +51,10 @@ sudo chmod o+rx /usr/local/bin/*
 
     String getArchiveHash() {
         properties.getProperty('kubernetes_archive_hash', defaultProperties)
+    }
+
+    File getBinDir() {
+        properties.getFileProperty "bin_dir", base, defaultProperties
     }
 
     @Override

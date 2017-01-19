@@ -75,3 +75,9 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 >>
+
+servicesKubernetesConf(parent, vars) ::= <<
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
+d /var/run/kubernetes 0755 <parent.user> <parent.user> -
+>>

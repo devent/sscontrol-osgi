@@ -116,6 +116,13 @@ service "k8s-master", name: "andrea-cluster" with {
             'apt-get',
             'service',
             'systemctl',
+            'which',
+            'id',
+            'sha256sum',
+            'mv',
+            'basename',
+            'wget',
+            'useradd',
         ]
     }
 

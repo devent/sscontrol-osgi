@@ -139,6 +139,7 @@ abstract class AbstractScriptTestBase {
         def map = [:]
         map.chdir = args.dir
         map.pwd = args.dir
+        map.base = args.dir
         map.sudoEnv = [:]
         map.sudoEnv.PATH = args.dir
         map.env = [:]
