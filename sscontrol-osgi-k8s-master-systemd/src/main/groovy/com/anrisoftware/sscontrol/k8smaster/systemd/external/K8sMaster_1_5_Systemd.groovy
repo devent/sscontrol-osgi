@@ -29,6 +29,16 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class K8sMaster_1_5_Systemd extends ScriptBase {
 
+    def setupDefaults() {
+        K8sMaster service = service
+        if (!service.debugLogging.modules['debug']) {
+            service.debug "debug", level: defaultLogLevel
+        }
+        if (!service.allowPrivileged) {
+            service.privileged defaultAllowPrivileged
+        }
+    }
+
     def restartServices() {
         log.info 'Restarting k8s services.'
         [
@@ -48,18 +58,26 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
         replace dest: "$dir/config", privileged: true with {
             [
                 [
+                    key: 'KUBE_LOGTOSTDERR',
+                    search: "--logtostderr=.*?",
+                    replace: { "--logtostderr=$it" },
+                    value: 'true'
+                ],
+                [
                     key: 'KUBE_LOG_LEVEL',
-                    entry: { "--v=$it" },
+                    search: "--v=\\d+",
+                    replace: { "--v=$it" },
                     value: service.debugLogging.modules['debug'].level
                 ],
                 [
                     key: 'KUBE_ALLOW_PRIV',
-                    entry: { "--allow-privileged=$it" },
+                    search: "--allow-privileged=.*?",
+                    replace: { "--allow-privileged=$it" },
                     value: service.allowPrivileged
                 ],
             ].each {
-                log.info 'Replace entry {} in {}', it.entry, dest
-                line "s/(?m)^#?${it.key}=\"--v=\\d*\".*/${it.key}=\"${it.entry(it.value)}\"/"
+                log.info 'Replace `{}` -> `{}` in {}', it.search, it.replace(it.value), dest
+                line "s/(?m)^#?${it.key}=\"${it.search}\".*/${it.key}=\"${it.replace(it.value)}\"/"
             }
             it
         }.call()
@@ -83,6 +101,14 @@ abstract class K8sMaster_1_5_Systemd extends ScriptBase {
 
     File getBinDir() {
         properties.getFileProperty "bin_dir", base, defaultProperties
+    }
+
+    def getDefaultLogLevel() {
+        properties.getNumberProperty('default_log_level', defaultProperties).intValue()
+    }
+
+    def getDefaultAllowPrivileged() {
+        properties.getBooleanProperty 'default_allow_privileged', defaultProperties
     }
 
     @Override

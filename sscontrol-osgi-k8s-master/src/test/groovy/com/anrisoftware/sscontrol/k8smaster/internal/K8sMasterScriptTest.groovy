@@ -45,7 +45,7 @@ import com.google.inject.Guice
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -73,6 +73,24 @@ service "k8s-master" with {
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
                 assert s.cluster.range == '10.254.0.0/16'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "allow privileged"() {
+        def test = [
+            name: 'allow privileged',
+            input: """
+service "k8s-master" with {
+    privileged true
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.allowPrivileged == true
             },
         ]
         doTest test

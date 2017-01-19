@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.admissionsAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.allowPrivilegedSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authenticationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authorizationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.clusterSet;
@@ -33,7 +34,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 
 /**
  * Logging for {@link K8sMasterImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -52,7 +53,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         authorizationAdded("Authorization {} added for {}"),
 
-        admissionsAdded("Admissions {} added for {}");
+        admissionsAdded("Admissions {} added for {}"),
+
+        allowPrivilegedSet("Allow privileged {} set for {}");
 
         private String name;
 
@@ -95,5 +98,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     void admissionsAdded(K8sMasterImpl k8s, String property) {
         debug(admissionsAdded, property, k8s);
+    }
+
+    void allowPrivilegedSet(K8sMasterImpl k8s, boolean allow) {
+        debug(allowPrivilegedSet, allow, k8s);
     }
 }

@@ -66,7 +66,7 @@ import com.google.inject.assistedinject.Assisted;
 public class K8sMasterImpl implements K8sMaster {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -218,6 +218,16 @@ public class K8sMasterImpl implements K8sMaster {
         plugins.add(plugin);
         log.pluginAdded(this, plugin);
         return plugin;
+    }
+
+    /**
+     * <pre>
+     * privileged true
+     * </pre>
+     */
+    public void privileged(boolean allow) {
+        this.allowPrivileged = allow;
+        log.allowPrivilegedSet(this, allow);
     }
 
     /**

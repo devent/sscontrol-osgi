@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Systemd_Debian_8.K8sMaster_1_5_Systemd_Debian_8_Factory
 import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Upstream_Debian_8.K8sMaster_1_5_Upstream_Debian_8_Factory
 import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Upstream_Systemd_Debian_8.K8sMaster_1_5_Upstream_Systemd_Debian_8_Factory
@@ -61,28 +60,16 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
 
     @Override
     def run() {
-        setupDefaults()
         installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
-    def setupDefaults() {
-        K8sMaster service = service
-        if (!service.debugLogging.modules['debug']) {
-            service.debug "debug", level: defaultLogLevel
-        }
-    }
-
     void installPackages() {
         log.info "Installing packages {}.", packages
         shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
             env "DEBIAN_FRONTEND=noninteractive" } call()
-    }
-
-    def getDefaultLogLevel() {
-        defaultProperties.getNumberProperty('default_log_level').intValue()
     }
 
     @Override
