@@ -7,8 +7,9 @@ SRC_NAME=$(basename <args.src>)
 >>
 
 setupRemoteTmp(args) ::= <<
+USER=$(id -u)
 sudo mkdir -p '<args.tmp>'
-sudo chown `id -u` '<args.tmp>'
+sudo chown $USER '<args.tmp>'
 sudo chmod o-rwx '<args.tmp>'
 >>
 
