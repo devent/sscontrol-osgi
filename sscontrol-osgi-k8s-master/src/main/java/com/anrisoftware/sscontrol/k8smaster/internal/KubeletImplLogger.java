@@ -1,16 +1,18 @@
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.bindingSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.preferredTypesAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.tlsSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 
 /**
  * Logging for {@link KubeletImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -21,7 +23,9 @@ final class KubeletImplLogger extends AbstractLogger {
 
         tlsSet("TLS {} set for {}"),
 
-        preferredTypesAdded("Preferred node address types {} added to {}");
+        preferredTypesAdded("Preferred node address types {} added to {}"),
+
+        bindingSet("Binding {} set for {}");
 
         private String name;
 
@@ -48,5 +52,9 @@ final class KubeletImplLogger extends AbstractLogger {
 
     void preferredTypesAdded(KubeletImpl kubelet, Object v) {
         debug(preferredTypesAdded, v, kubelet);
+    }
+
+    void bindingSet(KubeletImpl kubelet, Binding binding) {
+        debug(bindingSet, binding, kubelet);
     }
 }

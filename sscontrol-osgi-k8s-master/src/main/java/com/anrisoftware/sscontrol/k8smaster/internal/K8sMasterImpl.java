@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
@@ -47,6 +48,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Tls;
+import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
@@ -112,11 +114,16 @@ public class K8sMasterImpl implements K8sMaster {
 
     private Tls tls;
 
+    private Binding binding;
+
+    private final BindingImplFactory bindingFactory;
+
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
             HostPropertiesService propertiesService,
             KubeletImplFactory kubeletFactory,
+            BindingImplFactory bindingFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.clusterFactory = clusterFactory;
@@ -129,6 +136,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.authorizations = new ArrayList<>();
         this.admissions = new ArrayList<>();
         this.kubelet = kubeletFactory.create();
+        this.binding = bindingFactory.create();
+        this.bindingFactory = bindingFactory;
         parseArgs(args);
     }
 
@@ -193,6 +202,17 @@ public class K8sMasterImpl implements K8sMaster {
     @SuppressWarnings("unchecked")
     public List<Object> getDebug() {
         return (List<Object>) invokeMethod(debug, "getDebug", null);
+    }
+
+    /**
+     * <pre>
+     * bind insecure: "127.0.0.1", secure: "0.0.0.0", port: 8080
+     * </pre>
+     */
+    public void bind(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        this.binding = bindingFactory.create(a);
+        log.bindingSet(this, binding);
     }
 
     /**
@@ -343,6 +363,11 @@ public class K8sMasterImpl implements K8sMaster {
     @Override
     public String getName() {
         return "k8s-master";
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
     }
 
     @Override

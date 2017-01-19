@@ -79,6 +79,26 @@ service "k8s-master" with {
     }
 
     @Test
+    void "bind"() {
+        def test = [
+            name: 'cluster range',
+            input: """
+service "k8s-master" with {
+    bind insecure: "127.0.0.1", secure: "0.0.0.0", port: 8080
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.binding.insecureAddress == "127.0.0.1"
+                assert s.binding.secureAddress == "0.0.0.0"
+                assert s.binding.port == 8080
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "allow privileged"() {
         def test = [
             name: 'allow privileged',
@@ -137,10 +157,6 @@ token,user,uid,"group1,group2,group3"
 {"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"user": "alice", "namespace": "*", "resource": "*", "apiGroup": "*"}}
 """
     admission << "AlwaysAdmit,ServiceAccount"
-    kubelet.with {
-        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-        preferred types: "InternalIP,Hostname,ExternalIP"
-    }
 }
 ''',
             expected: { HostServices services ->
@@ -173,11 +189,33 @@ token,user,uid,"group1,group2,group3"
                 k = -1
                 assert s.admissions[++k] == 'AlwaysAdmit'
                 assert s.admissions[++k] == 'ServiceAccount'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "kubelet"() {
+        def test = [
+            name: 'kubelet',
+            input: '''
+service "k8s-master" with {
+    kubelet.with {
+        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+        preferred types: "InternalIP,Hostname,ExternalIP"
+        bind port: 10250
+    }
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.kubelet.tls.ca.toString() =~ /.*ca\.pem/
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
                 assert s.kubelet.nodeAddressTypes.size() == 3
-                k = -1
+                assert s.kubelet.binding.port == 10250
+                def k = -1
                 assert s.kubelet.nodeAddressTypes[++k] == "InternalIP"
                 assert s.kubelet.nodeAddressTypes[++k] == "Hostname"
                 assert s.kubelet.nodeAddressTypes[++k] == "ExternalIP"

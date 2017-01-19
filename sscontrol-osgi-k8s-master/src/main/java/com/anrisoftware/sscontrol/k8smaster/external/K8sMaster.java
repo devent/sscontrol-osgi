@@ -45,4 +45,6 @@ public interface K8sMaster extends HostService {
     List<String> getAdmissions();
 
     Kubelet getKubelet();
+
+    Binding getBinding();
 }

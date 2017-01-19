@@ -21,6 +21,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
@@ -30,6 +31,7 @@ import com.anrisoftware.sscontrol.k8smaster.internal.AbacAuthorizationImpl.AbacA
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysAllowAuthorizationImpl.AlwaysAllowAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BasicAuthenticationImpl.BasicAuthenticationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.EtcdPluginImpl.EtcdPluginImplFactory;
@@ -83,6 +85,9 @@ public class K8sMasterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Kubelet.class, KubeletImpl.class)
                 .build(KubeletImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Binding.class, BindingImpl.class)
+                .build(BindingImplFactory.class));
         bindPlugins();
         bindAuthentication();
         bindAuthorization();

@@ -19,6 +19,7 @@ import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.allowPrivilegedSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authenticationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authorizationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.bindingSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.clusterSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.pluginAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.tlsSet;
@@ -28,6 +29,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Tls;
@@ -55,7 +57,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         admissionsAdded("Admissions {} added for {}"),
 
-        allowPrivilegedSet("Allow privileged {} set for {}");
+        allowPrivilegedSet("Allow privileged {} set for {}"),
+
+        bindingSet("Binding {} set for {}");
 
         private String name;
 
@@ -102,5 +106,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     void allowPrivilegedSet(K8sMasterImpl k8s, boolean allow) {
         debug(allowPrivilegedSet, allow, k8s);
+    }
+
+    void bindingSet(K8sMasterImpl k8s, Binding binding) {
+        debug(bindingSet, binding, k8s);
     }
 }

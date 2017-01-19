@@ -26,8 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.arrays.ToList;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Tls;
+import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
 
 /**
@@ -39,7 +41,7 @@ import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
 public class KubeletImpl implements Kubelet {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -58,11 +60,22 @@ public class KubeletImpl implements Kubelet {
 
     private final List<String> nodeAddressTypes;
 
+    private Binding binding;
+
+    private final BindingImplFactory bindingFactory;
+
     @Inject
-    KubeletImpl(TlsImplFactory tlsFactory) {
+    KubeletImpl(BindingImplFactory bindingFactory, TlsImplFactory tlsFactory) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
         this.nodeAddressTypes = new ArrayList<>();
+        this.binding = bindingFactory.create();
+        this.bindingFactory = bindingFactory;
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
     }
 
     @Override
@@ -73,6 +86,17 @@ public class KubeletImpl implements Kubelet {
     @Override
     public List<String> getNodeAddressTypes() {
         return nodeAddressTypes;
+    }
+
+    /**
+     * <pre>
+     * bind port: 8080
+     * </pre>
+     */
+    public void bind(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        this.binding = bindingFactory.create(a);
+        log.bindingSet(this, binding);
     }
 
     /**
