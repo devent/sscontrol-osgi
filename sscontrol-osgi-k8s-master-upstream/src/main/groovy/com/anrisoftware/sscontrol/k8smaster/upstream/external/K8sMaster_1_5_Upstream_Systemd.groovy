@@ -76,20 +76,28 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         }
     }
 
-    def createServices() {
-        log.info 'Create k8s-master services.'
+    def createDirectories() {
+        log.info 'Create k8s-master directories.'
         def dir = systemdSystemDir
         def tmpdir = systemdTmpfilesDir
+        def rundir = runDir
+        def certsdir = certsDir
         shell privileged: true, """
 mkdir -p '$dir'
 mkdir -p '$tmpdir'
-mkdir -p '$runDir'
-chown $user '$runDir'
+mkdir -p '$rundir'
+chown $user '$rundir'
 mkdir -p '$certsDir'
 chown ${user}.root '$certsDir'
 chmod o-rx '$certsDir'
 useradd -r $user
 """ call()
+    }
+
+    def createServices() {
+        log.info 'Create k8s-master services.'
+        def dir = systemdSystemDir
+        def tmpdir = systemdTmpfilesDir
         [
             [
                 resource: servicesTemplate,
