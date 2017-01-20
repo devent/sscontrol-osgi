@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +88,7 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final Map<String, PluginFactory> pluginFactories;
 
-    private final List<Plugin> plugins;
+    private final Map<String, Plugin> plugins;
 
     @Inject
     private TlsImplFactory tlsFactory;
@@ -131,7 +132,7 @@ public class K8sMasterImpl implements K8sMaster {
         this.serviceProperties = propertiesService.create();
         this.cluster = clusterFactory.create();
         this.pluginFactories = pluginFactories;
-        this.plugins = new ArrayList<>();
+        this.plugins = new LinkedHashMap<>();
         this.authentications = new ArrayList<>();
         this.authorizations = new ArrayList<>();
         this.admissions = new ArrayList<>();
@@ -235,7 +236,7 @@ public class K8sMasterImpl implements K8sMaster {
         PluginFactory factory = pluginFactories.get(name);
         Map<String, Object> a = new HashMap<>(args);
         Plugin plugin = factory.create(a);
-        plugins.add(plugin);
+        plugins.put(name, plugin);
         log.pluginAdded(this, plugin);
         return plugin;
     }
@@ -376,7 +377,7 @@ public class K8sMasterImpl implements K8sMaster {
     }
 
     @Override
-    public List<Plugin> getPlugins() {
+    public Map<String, Plugin> getPlugins() {
         return plugins;
     }
 

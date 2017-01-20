@@ -18,13 +18,13 @@ kubeConfig(parent, vars) ::= <<
 KUBE_LOGTOSTDERR="--logtostderr=true"
 
 # journal message level, 0 is debug
-KUBE_LOG_LEVEL="--v=0"
+KUBE_LOG_LEVEL="--v=<parent.service.debugLogging.modules.debug.level>"
 
 # Should this cluster be allowed to run privileged docker containers
-KUBE_ALLOW_PRIV="--allow-privileged=false"
+KUBE_ALLOW_PRIV="--allow-privileged=<parent.service.allowPrivileged>"
 
 # How the controller-manager, scheduler, and proxy find the apiserver
-KUBE_MASTER="--master=http://127.0.0.1:8080"
+KUBE_MASTER="--master=http://<parent.service.binding.insecureAddress>:<parent.service.binding.port>"
 >>
 
 kubeApiserverConfig(parent, vars) ::= <<
@@ -37,22 +37,22 @@ kubeApiserverConfig(parent, vars) ::= <<
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 
 # The address on the local server to listen to.
-KUBE_API_ADDRESS="--insecure-bind-address=127.0.0.1"
+KUBE_API_ADDRESS="--insecure-bind-address=<parent.service.binding.insecureAddress> <if(parent.service.binding.secureAddress)><parent.service.binding.secureAddress><endif>"
 
 # The port on the local server to listen on.
-# KUBE_API_PORT="--port=8080"
+KUBE_API_PORT="--port=<parent.service.binding.port>"
 
 # Port minions listen on
-# KUBELET_PORT="--kubelet-port=10250"
+KUBELET_PORT="--kubelet-port=<parent.service.kubelet.binding.port>"
 
 # Comma separated list of nodes in the etcd cluster
-KUBE_ETCD_SERVERS="--etcd-servers=http://127.0.0.1:2379"
+KUBE_ETCD_SERVERS="--etcd-servers=<parent.pluginsTargets.etcd;separator=",">"
 
 # Address range to use for services
-KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=<parent.service.cluster.range>"
 
 # default admission control policies
-KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
+KUBE_ADMISSION_CONTROL="--admission-control=<parent.service.admissions;separator=",">"
 
 # Add your own!
 KUBE_API_ARGS=""

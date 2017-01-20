@@ -20,6 +20,8 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
+import com.anrisoftware.sscontrol.k8smaster.external.Plugin
 
 import groovy.util.logging.Slf4j
 
@@ -41,6 +43,17 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
         this.servicesTemplate = templates.getResource('k8s_master_services')
         this.configsTemplate = templates.getResource('k8s_master_configs')
+    }
+
+    def setupDefaults() {
+        K8sMaster service = service
+        if (!service.debugLogging.modules['debug']) {
+            service.debug "debug", level: defaultLogLevel
+        }
+        if (!service.allowPrivileged) {
+            service.privileged defaultAllowPrivileged
+        }
+        println pluginsTargets.etcd
     }
 
     def createServices() {
@@ -145,6 +158,27 @@ useradd -r $user
 
     String getUser() {
         properties.getProperty "user", defaultProperties
+    }
+
+    def getDefaultLogLevel() {
+        properties.getNumberProperty('default_log_level', defaultProperties).intValue()
+    }
+
+    def getDefaultAllowPrivileged() {
+        properties.getBooleanProperty 'default_allow_privileged', defaultProperties
+    }
+
+    Map getPluginsTargets() {
+        def repo = scriptsRepository
+        K8sMaster service = service
+        new HashMap(service.plugins) {
+                    Object get(Object key) {
+                        println "plugins targets $key"
+                        println service.plugins
+                        Plugin plugin = service.plugins[key]
+                        repo.targets plugin.target
+                    }
+                }
     }
 
     @Override

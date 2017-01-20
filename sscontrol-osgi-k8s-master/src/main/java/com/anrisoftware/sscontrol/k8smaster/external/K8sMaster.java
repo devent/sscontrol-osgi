@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.util.List;
+import java.util.Map;
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostService;
@@ -32,7 +33,7 @@ public interface K8sMaster extends HostService {
 
     Cluster getCluster();
 
-    List<Plugin> getPlugins();
+    Map<String, Plugin> getPlugins();
 
     Boolean isAllowPrivileged();
 

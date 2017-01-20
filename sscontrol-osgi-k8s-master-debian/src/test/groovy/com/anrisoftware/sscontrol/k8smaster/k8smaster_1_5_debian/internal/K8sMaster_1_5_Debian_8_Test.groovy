@@ -80,8 +80,15 @@ class K8sMaster_1_5_Debian_8_Test extends AbstractScriptTestBase {
             input: """
 service "ssh", host: "localhost"
 
+service "ssh", host: "localhost", group: "etcd"
+
 service "k8s-master", name: "andrea-cluster" with {
     tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    plugin "etcd", target: "etcd"
+    kubelet.with {
+        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    }
 }
 """,
             expected: { Map args ->
@@ -123,6 +130,7 @@ service "k8s-master", name: "andrea-cluster" with {
             'basename',
             'wget',
             'useradd',
+            'tar',
         ]
     }
 
