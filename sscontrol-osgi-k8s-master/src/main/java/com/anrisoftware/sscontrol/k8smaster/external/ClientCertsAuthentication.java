@@ -16,4 +16,9 @@ public interface ClientCertsAuthentication extends Authentication {
 
     URI getKey();
 
+    String getCaName();
+
+    String getCertName();
+
+    String getKeyName();
 }

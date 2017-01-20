@@ -288,7 +288,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Template command.
      */
     Template template(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'template')
         template.create(a, a.target, this, threads, log)
     }
 
@@ -377,15 +377,15 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     /**
      * Creates and returns a temporary file.
      */
-    File createTmpFile() {
+    File createTmpFile(Map args=[:]) {
         if (createTmpFileCallback) {
-            createTmpFileCallback()
+            createTmpFileCallback(args)
         } else {
             File.createTempFile('robobee', null)
         }
     }
 
-    private setupArgs(Map args) {
+    private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
         if (!args.containsKey('target')) {
@@ -404,6 +404,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
             a.sudoEnv = sudoEnv
         } else {
             a.sudoEnv.putAll sudoEnv
+        }
+        if (createTmpFileCallback) {
+            args.cmdName = name
+            a.tmpFile = createTmpFileCallback(args)
         }
         return a
     }

@@ -58,7 +58,7 @@ public class KubeletImpl implements Kubelet {
 
     private transient TlsImplFactory tlsFactory;
 
-    private final List<String> nodeAddressTypes;
+    private final List<String> preferredAddressTypes;
 
     private Binding binding;
 
@@ -68,7 +68,7 @@ public class KubeletImpl implements Kubelet {
     KubeletImpl(BindingImplFactory bindingFactory, TlsImplFactory tlsFactory) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
-        this.nodeAddressTypes = new ArrayList<>();
+        this.preferredAddressTypes = new ArrayList<>();
         this.binding = bindingFactory.create();
         this.bindingFactory = bindingFactory;
     }
@@ -84,8 +84,8 @@ public class KubeletImpl implements Kubelet {
     }
 
     @Override
-    public List<String> getNodeAddressTypes() {
-        return nodeAddressTypes;
+    public List<String> getPreferredAddressTypes() {
+        return preferredAddressTypes;
     }
 
     /**
@@ -118,7 +118,7 @@ public class KubeletImpl implements Kubelet {
         Object v = args.get("types");
         if (v != null) {
             String[] split = StringUtils.split(v.toString(), ",");
-            ToList.toList(nodeAddressTypes, split);
+            ToList.toList(preferredAddressTypes, split);
             log.preferredTypesAdded(this, v);
         }
     }

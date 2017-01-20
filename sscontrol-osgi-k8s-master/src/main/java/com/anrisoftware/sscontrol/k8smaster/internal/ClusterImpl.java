@@ -33,7 +33,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class ClusterImpl implements Cluster {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -56,6 +56,10 @@ public class ClusterImpl implements Cluster {
     @AssistedInject
     ClusterImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
+    }
+
+    public void setRange(String range) {
+        this.range = range;
     }
 
     @Override

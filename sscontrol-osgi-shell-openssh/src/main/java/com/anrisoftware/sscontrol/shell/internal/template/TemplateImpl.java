@@ -55,7 +55,7 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -90,14 +90,16 @@ public class TemplateImpl implements Template {
         this.threads = threads;
         this.log = log;
         setupArgs();
+        parseArgs();
         checkArgs();
     }
 
     @Override
     public ProcessTask call() throws AppException {
+        File file = null;
         try {
             String text = getText();
-            File file = getTmpFile();
+            file = getTmpFile();
             FileUtils.write(file, text, getCharset());
             Map<String, Object> a = new HashMap<>(args);
             a.put("src", file);
@@ -107,6 +109,12 @@ public class TemplateImpl implements Template {
             throw new WriteTemplateException(e, args);
         } catch (CommandExecException e) {
             throw new ShellExecException(e, "scp");
+        } finally {
+            if (tmpFile == null) {
+                if (file != null) {
+                    file.delete();
+                }
+            }
         }
     }
 
@@ -247,6 +255,13 @@ public class TemplateImpl implements Template {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+    }
+
+    private void parseArgs() {
+        Object v = args.get("tmpFile");
+        if (v != null) {
+            this.tmpFile = (File) v;
+        }
     }
 
 }

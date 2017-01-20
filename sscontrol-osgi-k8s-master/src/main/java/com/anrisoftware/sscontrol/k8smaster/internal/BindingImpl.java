@@ -62,14 +62,26 @@ public class BindingImpl implements Binding {
         parseArgs(args);
     }
 
+    public void setInsecureAddress(String insecure) {
+        this.insecure = insecure;
+    }
+
     @Override
     public String getInsecureAddress() {
         return insecure;
     }
 
+    public void setSecureAddress(String secure) {
+        this.secure = secure;
+    }
+
     @Override
     public String getSecureAddress() {
         return secure;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override

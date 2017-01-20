@@ -1,0 +1,44 @@
+###
+# kubernetes system config
+#
+# The following values are used to configure the kube-apiserver
+#
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
+
+# The address on the local server to listen to.
+KUBE_API_ADDRESS="--insecure-bind-address=127.0.0.1 --bind-address=0.0.0.0"
+
+# The port on the local server to listen on.
+KUBE_API_PORT="--port=8080"
+
+# Port minions listen on
+KUBELET_PORT="--kubelet-port=10250"
+
+# Comma separated list of nodes in the etcd cluster
+KUBE_ETCD_SERVERS="--etcd-servers=http://localhost:2379"
+
+# Address range to use for services
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
+
+# default admission control policies
+KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
+
+# To secure access from Admission Controllers.
+KUBE_TLS_CA="--tls-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem"
+
+# HTTPS certificates.
+KUBE_TLS_CERT="--tls-cert-file=/tmp/junit/junit/etc/kubernetes/ssl/cert.pem --tls-private-key-file=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+
+# Authentication.
+KUBE_AUTHENTICATION="--client-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem"
+
+# Keys used to verify ServiceAccount tokens.
+KUBE_SERVICE_ACCOUNT_KEY="--service-account-key-file=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+
+KUBELET_PREFERRED_ADDRESS_TYPES="--kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP"
+
+KUBELET_TLS="--kubelet-certificate-authority=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem --kubelet-client-certificate=/tmp/junit/junit/etc/kubernetes/ssl/cert.pem --kubelet-client-key=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+
+# Add your own!
+KUBE_API_ARGS=""

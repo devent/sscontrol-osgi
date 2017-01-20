@@ -20,6 +20,7 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
@@ -94,7 +95,7 @@ abstract class AbstractScriptTestBase {
         FileUtils.write scriptFile, test.input
         services = runScript scriptFile, services
         createDummyCommands dir
-        def scriptEnv = getScriptEnv(dir: dir)
+        def scriptEnv = getScriptEnv(dir: dir, test: test)
         services.getServices().each { String name ->
             List<HostService> service = services.getServices(name)
             service.eachWithIndex { HostService s, int i ->
@@ -104,6 +105,7 @@ abstract class AbstractScriptTestBase {
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
                         HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads, scriptEnv)
+                        setupServiceScript script, dir: dir
                         script.run()
                     }
                 }
@@ -135,6 +137,9 @@ abstract class AbstractScriptTestBase {
     def setupHostService(Map args, HostService service) {
     }
 
+    def setupServiceScript(Map args, HostServiceScript script) {
+    }
+
     Map getScriptEnv(Map args) {
         def map = [:]
         map.chdir = args.dir
@@ -144,7 +149,23 @@ abstract class AbstractScriptTestBase {
         map.sudoEnv.PATH = args.dir
         map.env = [:]
         map.env.PATH = args.dir
+        map.createTmpFileCallback = createGenerateTempDir(args)
         return map
+    }
+
+    def createGenerateTempDir(Map args) {
+        //.
+        { Map a ->
+            def file = null
+            switch (a.cmdName) {
+                case 'template':
+                    def split = StringUtils.split(a.dest.toString(), File.separator)
+                    def name = split[3..split.length-1].join(File.separator)
+                    file = new File(args.test.generatedDir, name)
+                    break;
+            }
+            return file ? file : folder.newFile()
+        }
     }
 
     HostServices runScript(File file, HostServices services) {

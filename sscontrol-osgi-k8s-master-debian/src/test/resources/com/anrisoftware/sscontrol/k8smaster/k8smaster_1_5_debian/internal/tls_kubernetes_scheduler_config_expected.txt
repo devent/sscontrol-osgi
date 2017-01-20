@@ -1,0 +1,9 @@
+###
+# kubernetes scheduler config
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
+
+# default config should be adequate
+
+# Add your own!
+KUBE_SCHEDULER_ARGS=""

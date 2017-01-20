@@ -18,7 +18,7 @@ public interface Kubelet {
     /**
      * List of the preferred NodeAddressTypes.
      */
-    List<String> getNodeAddressTypes();
+    List<String> getPreferredAddressTypes();
 
     Binding getBinding();
 }

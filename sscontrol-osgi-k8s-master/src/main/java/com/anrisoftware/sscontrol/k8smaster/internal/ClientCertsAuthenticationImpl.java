@@ -38,7 +38,7 @@ public class ClientCertsAuthenticationImpl
         implements ClientCertsAuthentication {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -74,6 +74,21 @@ public class ClientCertsAuthenticationImpl
     @Override
     public URI getKey() {
         return tls.getKey();
+    }
+
+    @Override
+    public String getCaName() {
+        return tls.getCaName();
+    }
+
+    @Override
+    public String getCertName() {
+        return tls.getCertName();
+    }
+
+    @Override
+    public String getKeyName() {
+        return tls.getKeyName();
     }
 
     @Override

@@ -53,7 +53,24 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (!service.allowPrivileged) {
             service.privileged defaultAllowPrivileged
         }
-        println pluginsTargets.etcd
+        if (!service.binding.insecureAddress) {
+            service.binding.insecureAddress = defaultInsecureAddress
+        }
+        if (!service.binding.secureAddress) {
+            service.binding.secureAddress = defaultSecureAddress
+        }
+        if (!service.binding.port) {
+            service.binding.port = defaultPort
+        }
+        if (!service.kubelet.binding.port) {
+            service.kubelet.binding.port = defaultKubeletPort
+        }
+        if (!service.cluster.range) {
+            service.cluster.range = defaultClusterRange
+        }
+        if (service.admissions.size() == 0) {
+            service.admissions.addAll defaultAdmissions
+        }
     }
 
     def createServices() {
@@ -65,6 +82,9 @@ mkdir -p '$dir'
 mkdir -p '$tmpdir'
 mkdir -p '$runDir'
 chown $user '$runDir'
+mkdir -p '$certsDir'
+chown ${user}.root '$certsDir'
+chmod o-rx '$certsDir'
 useradd -r $user
 """ call()
         [
@@ -152,8 +172,16 @@ useradd -r $user
         properties.getFileProperty "systemd_tmpfiles_dir", base, defaultProperties
     }
 
+    File getBinDir() {
+        properties.getFileProperty "bin_dir", base, defaultProperties
+    }
+
     File getRunDir() {
         properties.getFileProperty "run_dir", base, defaultProperties
+    }
+
+    File getCertsDir() {
+        properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     String getUser() {
@@ -168,15 +196,42 @@ useradd -r $user
         properties.getBooleanProperty 'default_allow_privileged', defaultProperties
     }
 
+    def getDefaultInsecureAddress() {
+        properties.getProperty 'default_bind_insecure_address', defaultProperties
+    }
+
+    def getDefaultSecureAddress() {
+        properties.getProperty 'default_bind_secure_address', defaultProperties
+    }
+
+    def getDefaultPort() {
+        properties.getNumberProperty 'default_bind_port', defaultProperties
+    }
+
+    def getDefaultKubeletPort() {
+        properties.getNumberProperty 'default_kubelet_port', defaultProperties
+    }
+
+    def getDefaultClusterRange() {
+        properties.getProperty 'default_cluster_range', defaultProperties
+    }
+
+    def getDefaultAdmissions() {
+        properties.getListProperty 'default_admissions', defaultProperties
+    }
+
     Map getPluginsTargets() {
         def repo = scriptsRepository
         K8sMaster service = service
         new HashMap(service.plugins) {
                     Object get(Object key) {
-                        println "plugins targets $key"
-                        println service.plugins
                         Plugin plugin = service.plugins[key]
-                        repo.targets plugin.target
+                        def targets = repo.targets(plugin.target)
+                        def list = []
+                        targets.host.each {
+                            list << [host: it, protocol: 'http', port: 2379]
+                        }
+                        return list
                     }
                 }
     }

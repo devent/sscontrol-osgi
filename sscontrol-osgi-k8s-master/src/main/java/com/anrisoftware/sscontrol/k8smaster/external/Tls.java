@@ -15,4 +15,10 @@ public interface Tls {
     URI getCert();
 
     URI getKey();
+
+    String getCaName();
+
+    String getCertName();
+
+    String getKeyName();
 }

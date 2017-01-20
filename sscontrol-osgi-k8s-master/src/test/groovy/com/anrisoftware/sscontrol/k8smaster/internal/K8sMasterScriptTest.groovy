@@ -213,12 +213,12 @@ service "k8s-master" with {
                 assert s.kubelet.tls.ca.toString() =~ /.*ca\.pem/
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
-                assert s.kubelet.nodeAddressTypes.size() == 3
+                assert s.kubelet.preferredAddressTypes.size() == 3
                 assert s.kubelet.binding.port == 10250
                 def k = -1
-                assert s.kubelet.nodeAddressTypes[++k] == "InternalIP"
-                assert s.kubelet.nodeAddressTypes[++k] == "Hostname"
-                assert s.kubelet.nodeAddressTypes[++k] == "ExternalIP"
+                assert s.kubelet.preferredAddressTypes[++k] == "InternalIP"
+                assert s.kubelet.preferredAddressTypes[++k] == "Hostname"
+                assert s.kubelet.preferredAddressTypes[++k] == "ExternalIP"
             },
         ]
         doTest test

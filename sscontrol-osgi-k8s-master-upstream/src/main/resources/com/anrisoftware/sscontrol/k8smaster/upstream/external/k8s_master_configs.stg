@@ -25,6 +25,7 @@ KUBE_ALLOW_PRIV="--allow-privileged=<parent.service.allowPrivileged>"
 
 # How the controller-manager, scheduler, and proxy find the apiserver
 KUBE_MASTER="--master=http://<parent.service.binding.insecureAddress>:<parent.service.binding.port>"
+
 >>
 
 kubeApiserverConfig(parent, vars) ::= <<
@@ -37,7 +38,7 @@ kubeApiserverConfig(parent, vars) ::= <<
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 
 # The address on the local server to listen to.
-KUBE_API_ADDRESS="--insecure-bind-address=<parent.service.binding.insecureAddress> <if(parent.service.binding.secureAddress)><parent.service.binding.secureAddress><endif>"
+KUBE_API_ADDRESS="--insecure-bind-address=<parent.service.binding.insecureAddress> <if(parent.service.binding.secureAddress)>--bind-address=<parent.service.binding.secureAddress><endif>"
 
 # The port on the local server to listen on.
 KUBE_API_PORT="--port=<parent.service.binding.port>"
@@ -46,7 +47,7 @@ KUBE_API_PORT="--port=<parent.service.binding.port>"
 KUBELET_PORT="--kubelet-port=<parent.service.kubelet.binding.port>"
 
 # Comma separated list of nodes in the etcd cluster
-KUBE_ETCD_SERVERS="--etcd-servers=<parent.pluginsTargets.etcd;separator=",">"
+KUBE_ETCD_SERVERS="--etcd-servers=<parent.pluginsTargets.etcd:{h|<h.protocol>://<h.host>:<h.port>};separator=",">"
 
 # Address range to use for services
 KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=<parent.service.cluster.range>"
@@ -54,9 +55,28 @@ KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=<parent.service.cluster.range
 # default admission control policies
 KUBE_ADMISSION_CONTROL="--admission-control=<parent.service.admissions;separator=",">"
 
+# To secure access from Admission Controllers.
+KUBE_TLS_CA="<if(parent.service.tls.ca)>--tls-ca-file=<parent.certsDir>/<parent.service.tls.caName><endif>"
+
+# HTTPS certificates.
+KUBE_TLS_CERT="<if(parent.service.tls.cert)>--tls-cert-file=<parent.certsDir>/<parent.service.tls.certName> --tls-private-key-file=<parent.certsDir>/<parent.service.tls.keyName><endif>"
+
+# Authentication.
+KUBE_AUTHENTICATION="<parent.service.authentications:{a|<(a.class.simpleName)(parent, vars, a)>}>"
+
+# Keys used to verify ServiceAccount tokens.
+KUBE_SERVICE_ACCOUNT_KEY="<if(parent.service.tls.key)>--service-account-key-file=<parent.certsDir>/<parent.service.tls.keyName><endif>"
+
+KUBELET_PREFERRED_ADDRESS_TYPES="--kubelet-preferred-address-types=<parent.service.kubelet.preferredAddressTypes;separator=",">"
+
 # Add your own!
 KUBE_API_ARGS=""
+
 >>
+
+ClientCertsAuthenticationImpl(parent, vars, a) ::= <%
+--client-ca-file=<parent.certsDir>/<a.caName>
+%>
 
 kubeControllerManagerConfig(parent, vars) ::= <<
 ###
@@ -68,6 +88,7 @@ kubeControllerManagerConfig(parent, vars) ::= <<
 
 # Add your own!
 KUBE_CONTROLLER_MANAGER_ARGS=""
+
 >>
 
 kubeSchedulerConfig(parent, vars) ::= <<
@@ -80,4 +101,5 @@ kubeSchedulerConfig(parent, vars) ::= <<
 
 # Add your own!
 KUBE_SCHEDULER_ARGS=""
+
 >>

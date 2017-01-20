@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.resources.ToURI;
@@ -36,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 public class TlsImpl implements Tls {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -81,13 +82,28 @@ public class TlsImpl implements Tls {
     }
 
     @Override
+    public String getCaName() {
+        return FilenameUtils.getName(ca.toString());
+    }
+
+    @Override
     public URI getCert() {
         return cert;
     }
 
     @Override
+    public String getCertName() {
+        return FilenameUtils.getName(cert.toString());
+    }
+
+    @Override
     public URI getKey() {
         return key;
+    }
+
+    @Override
+    public String getKeyName() {
+        return FilenameUtils.getName(key.toString());
     }
 
     @Override
