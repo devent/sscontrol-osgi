@@ -69,6 +69,8 @@ KUBE_SERVICE_ACCOUNT_KEY="<if(parent.service.tls.key)>--service-account-key-file
 
 KUBELET_PREFERRED_ADDRESS_TYPES="--kubelet-preferred-address-types=<parent.service.kubelet.preferredAddressTypes;separator=",">"
 
+KUBELET_TLS="<if(parent.service.kubelet.tls.ca)>--kubelet-certificate-authority=<parent.certsDir>/<parent.service.kubelet.tls.caName> --kubelet-client-certificate=<parent.certsDir>/<parent.service.kubelet.tls.certName> --kubelet-client-key=<parent.certsDir>/<parent.service.kubelet.tls.keyName><endif>"
+
 # Add your own!
 KUBE_API_ARGS=""
 

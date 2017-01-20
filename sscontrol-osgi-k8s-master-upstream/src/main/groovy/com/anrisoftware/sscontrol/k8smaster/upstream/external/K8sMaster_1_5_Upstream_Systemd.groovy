@@ -71,6 +71,9 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (service.admissions.size() == 0) {
             service.admissions.addAll defaultAdmissions
         }
+        if (service.kubelet.preferredAddressTypes.size() == 0) {
+            service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
+        }
     }
 
     def createServices() {
@@ -218,6 +221,10 @@ useradd -r $user
 
     def getDefaultAdmissions() {
         properties.getListProperty 'default_admissions', defaultProperties
+    }
+
+    def getDefaultPreferredAddressTypes() {
+        properties.getListProperty 'default_kubelet_preferred_address_types', defaultProperties
     }
 
     Map getPluginsTargets() {
