@@ -36,6 +36,9 @@
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
         <module>../sscontrol-osgi-etcd</module>
+        <module>../sscontrol-osgi-etcd-debian</module>
+        <module>../sscontrol-osgi-etcd-systemd</module>
+        <module>../sscontrol-osgi-etcd-upstream</module>
         <module>../sscontrol-osgi-fail2ban</module>
         <module>../sscontrol-osgi-fail2ban-0-8</module>
         <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
