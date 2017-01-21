@@ -20,7 +20,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.resources.ToURI;
@@ -53,6 +52,12 @@ public class TlsImpl implements Tls {
 
     private final URI key;
 
+    private String caName;
+
+    private String certName;
+
+    private String keyName;
+
     @Inject
     TlsImpl(ToURIFactory touri, @Assisted Map<String, Object> args) {
         ToURI uri = touri.create();
@@ -81,9 +86,13 @@ public class TlsImpl implements Tls {
         return ca;
     }
 
+    public void setCaName(String caName) {
+        this.caName = caName;
+    }
+
     @Override
     public String getCaName() {
-        return FilenameUtils.getName(ca.toString());
+        return caName;
     }
 
     @Override
@@ -91,9 +100,13 @@ public class TlsImpl implements Tls {
         return cert;
     }
 
+    public void setCertName(String certName) {
+        this.certName = certName;
+    }
+
     @Override
     public String getCertName() {
-        return FilenameUtils.getName(cert.toString());
+        return certName;
     }
 
     @Override
@@ -101,9 +114,13 @@ public class TlsImpl implements Tls {
         return key;
     }
 
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
     @Override
     public String getKeyName() {
-        return FilenameUtils.getName(key.toString());
+        return keyName;
     }
 
     @Override

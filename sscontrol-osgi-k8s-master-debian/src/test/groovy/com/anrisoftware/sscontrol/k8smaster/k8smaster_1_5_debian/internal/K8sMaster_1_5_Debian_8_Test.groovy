@@ -83,11 +83,11 @@ service "ssh", host: "localhost"
 service "ssh", host: "localhost", group: "etcd"
 
 service "k8s-master", name: "andrea-cluster" with {
-    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-    authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    authentication "cert", ca: "$certCaPem"
     plugin "etcd", target: "etcd"
     kubelet.with {
-        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     }
 }
 """,
@@ -100,6 +100,7 @@ service "k8s-master", name: "andrea-cluster" with {
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-apiserver.service", "${args.test.name}_kube_apiserver_service_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-controller-manager.service", "${args.test.name}_kube_controller_manager_service_expected.txt"
                 assertFileResource K8sMaster_1_5_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-scheduler.service", "${args.test.name}_kube_scheduler_service_expected.txt"
@@ -188,4 +189,10 @@ service "k8s-master", name: "andrea-cluster" with {
         injector.injectMembers(this)
         this.threads = createThreads()
     }
+
+    static final URL certCaPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_ca.txt')
+
+    static final URL certCertPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_cert.txt')
+
+    static final URL certKeyPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_key.txt')
 }

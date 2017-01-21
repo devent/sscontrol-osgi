@@ -24,6 +24,9 @@ import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.File;
 import java.util.HashMap;
@@ -113,6 +116,7 @@ public class ScpCopyWorker implements Copy {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+        assertThat("src=null", args.get(SRC_ARG), is(notNullValue()));
         String src = args.get(SRC_ARG).toString();
         args.put(SRC_ARG, new File(src));
     }

@@ -25,20 +25,20 @@ KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
 KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
 
 # To secure access from Admission Controllers.
-KUBE_TLS_CA="--tls-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem"
+KUBE_TLS_CA="--tls-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/kub_tls_ca.pem"
 
 # HTTPS certificates.
-KUBE_TLS_CERT="--tls-cert-file=/tmp/junit/junit/etc/kubernetes/ssl/cert.pem --tls-private-key-file=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+KUBE_TLS_CERT="--tls-cert-file=/tmp/junit/junit/etc/kubernetes/ssl/kub_tls_cert.pem --tls-private-key-file=/tmp/junit/junit/etc/kubernetes/ssl/kub_tls_key.pem"
 
 # Authentication.
-KUBE_AUTHENTICATION="--client-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem"
+KUBE_AUTHENTICATION="--client-ca-file=/tmp/junit/junit/etc/kubernetes/ssl/client_ca.pem"
 
 # Keys used to verify ServiceAccount tokens.
-KUBE_SERVICE_ACCOUNT_KEY="--service-account-key-file=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+KUBE_SERVICE_ACCOUNT_KEY="--service-account-key-file=/tmp/junit/junit/etc/kubernetes/ssl/kub_tls_key.pem"
 
 KUBELET_PREFERRED_ADDRESS_TYPES="--kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP"
 
-KUBELET_TLS="--kubelet-certificate-authority=/tmp/junit/junit/etc/kubernetes/ssl/ca.pem --kubelet-client-certificate=/tmp/junit/junit/etc/kubernetes/ssl/cert.pem --kubelet-client-key=/tmp/junit/junit/etc/kubernetes/ssl/key.pem"
+KUBELET_TLS="--kubelet-certificate-authority=/tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_ca.pem --kubelet-client-certificate=/tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_cert.pem --kubelet-client-key=/tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_key.pem"
 
 # Add your own!
 KUBE_API_ARGS=""

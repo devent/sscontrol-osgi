@@ -17,11 +17,14 @@ package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
+
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin
+import com.anrisoftware.sscontrol.k8smaster.external.Tls
 
 import groovy.util.logging.Slf4j
 
@@ -74,6 +77,24 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (service.kubelet.preferredAddressTypes.size() == 0) {
             service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
         }
+        if (!service.tls.caName) {
+            service.tls.caName = defaultKubernetesTlsCaName
+        }
+        if (!service.tls.certName) {
+            service.tls.certName = defaultKubernetesTlsCertName
+        }
+        if (!service.tls.keyName) {
+            service.tls.keyName = defaultKubernetesTlsKeyName
+        }
+        if (!service.kubelet.tls.caName) {
+            service.kubelet.tls.caName = defaultKubeletTlsCaName
+        }
+        if (!service.kubelet.tls.certName) {
+            service.kubelet.tls.certName = defaultKubeletTlsCertName
+        }
+        if (!service.kubelet.tls.keyName) {
+            service.kubelet.tls.keyName = defaultKubeletTlsKeyName
+        }
     }
 
     def createDirectories() {
@@ -92,6 +113,75 @@ chown ${user}.root '$certsDir'
 chmod o-rx '$certsDir'
 useradd -r $user
 """ call()
+    }
+
+    def uploadCertificates() {
+        log.info 'Uploads k8s-master certificates.'
+        def certsdir = certsDir
+        K8sMaster service = service
+        [
+            [
+                src: service.tls.ca,
+                dest: "$certsdir/$service.tls.caName",
+            ],
+            [
+                src: service.tls.cert,
+                dest: "$certsdir/$service.tls.certName",
+            ],
+            [
+                src: service.tls.key,
+                dest: "$certsdir/$service.tls.keyName",
+            ],
+            [
+                src: service.kubelet.tls.ca,
+                dest: "$certsdir/$service.kubelet.tls.caName",
+            ],
+            [
+                src: service.kubelet.tls.cert,
+                dest: "$certsdir/$service.kubelet.tls.certName",
+            ],
+            [
+                src: service.kubelet.tls.key,
+                dest: "$certsdir/$service.kubelet.tls.keyName",
+            ],
+        ].each { copyResource it }
+        service.authentications.findAll { it.tls  } each {
+            Tls tls = it.tls
+            if (!tls.caName) {
+                tls.caName = defaultAuthenticationTlsCaName[it.type]
+            }
+            if (!tls.certName) {
+                tls.certName = defaultAuthenticationTlsCertName[it.type]
+            }
+            if (!tls.keyName) {
+                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
+            }
+            [
+                [
+                    src: tls.ca,
+                    dest: "$certsdir/$tls.caName",
+                ],
+                [
+                    src: tls.cert,
+                    dest: "$certsdir/$tls.certName",
+                ],
+                [
+                    src: tls.key,
+                    dest: "$certsdir/$tls.keyName",
+                ],
+            ].each { copyResource it }
+        }
+    }
+
+    def copyResource(Map args) {
+        if (args.src == null) {
+            return
+        }
+        URL src = args.src.toURL()
+        log.info 'Upload {} to {}', args.src, args.dest
+        def file = createTmpFile()
+        IOUtils.copy src.openStream(), new FileOutputStream(file)
+        copy privileged: true, src: file, dest: args.dest call()
     }
 
     def createServices() {
@@ -233,6 +323,45 @@ useradd -r $user
 
     def getDefaultPreferredAddressTypes() {
         properties.getListProperty 'default_kubelet_preferred_address_types', defaultProperties
+    }
+
+    def getDefaultKubernetesTlsCaName() {
+        properties.getProperty 'default_kubernetes_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultKubernetesTlsCertName() {
+        properties.getProperty 'default_kubernetes_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultKubernetesTlsKeyName() {
+        properties.getProperty 'default_kubernetes_tls_key_name', defaultProperties
+    }
+
+    def getDefaultKubeletTlsCaName() {
+        properties.getProperty 'default_kubelet_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultKubeletTlsCertName() {
+        properties.getProperty 'default_kubelet_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultKubeletTlsKeyName() {
+        properties.getProperty 'default_kubelet_tls_key_name', defaultProperties
+    }
+
+    Map getDefaultAuthenticationTlsCaName() {
+        def s = properties.getProperty 'default_authentication_tls_ca_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultAuthenticationTlsCertName() {
+        def s = properties.getProperty 'default_authentication_tls_cert_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultAuthenticationTlsKeyName() {
+        def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
+        Eval.me s
     }
 
     Map getPluginsTargets() {

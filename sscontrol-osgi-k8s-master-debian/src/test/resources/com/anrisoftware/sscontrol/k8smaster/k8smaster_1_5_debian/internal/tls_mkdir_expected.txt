@@ -8,6 +8,13 @@
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/kubernetes
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
