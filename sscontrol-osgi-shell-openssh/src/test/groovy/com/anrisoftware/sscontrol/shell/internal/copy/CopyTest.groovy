@@ -379,6 +379,69 @@ class CopyTest extends AbstractCmdTestBase {
         }
     }
 
+    @Test
+    void "sig_direct_url_dest_src"() {
+        def test = [
+            name: "sig_direct_url_dest_src",
+            args: [
+                src: "https://github.com/coreos/etcd/releases/download/v3.1.0/etcd-v3.1.0-linux-amd64.tar.gz",
+                dest: "/tmp",
+                direct: true,
+                sig: "https://github.com/coreos/etcd/releases/download/v3.1.0/etcd-v3.1.0-linux-amd64.tar.gz.asc",
+                key: "F804F4137EF48FD3",
+                server: "pgp.uni-mainz.de"
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                assertFileResource CopyTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource CopyTest, dir, "gpg.out", "${args.test.name}_gpg_expected.txt"
+                assertFileResource CopyTest, dir, "wget.out", "${args.test.name}_wget_expected.txt"
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'gpg', //
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
+    @Test
+    void "sig_privileged_direct_url_dest_src"() {
+        def test = [
+            name: "sig_privileged_direct_url_dest_src",
+            args: [
+                src: "https://github.com/coreos/etcd/releases/download/v3.1.0/etcd-v3.1.0-linux-amd64.tar.gz",
+                dest: "/tmp",
+                direct: true,
+                sig: "https://github.com/coreos/etcd/releases/download/v3.1.0/etcd-v3.1.0-linux-amd64.tar.gz.asc",
+                key: "F804F4137EF48FD3",
+                server: "pgp.uni-mainz.de",
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                assertFileResource CopyTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource CopyTest, dir, "gpg.out", "${args.test.name}_gpg_expected.txt"
+                assertFileResource CopyTest, dir, "wget.out", "${args.test.name}_wget_expected.txt"
+            },
+        ]
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def tmp = folder.newFolder()
+        createEchoCommands tmp, [
+            'gpg', //
+        ]
+        test.host = SshFactory.localhost(injector).hosts[0]
+        try {
+            doTest test, tmp
+        } catch (InvalidExitCodeException) {
+        }
+    }
+
     def createCmd(Map test, File tmp, int k) {
         def fetch = copyFactory.create test.args, test.host, this, threads, log
         createEchoCommands tmp, [

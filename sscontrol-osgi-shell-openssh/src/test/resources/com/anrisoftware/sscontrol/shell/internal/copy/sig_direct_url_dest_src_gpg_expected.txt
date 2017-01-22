@@ -1,0 +1,2 @@
+--keyserver pgp.uni-mainz.de --recv-key F804F4137EF48FD3
+--verify ./basename https://github.com/coreos/etcd/releases/download/v3.1.0/etcd-v3.1.0-linux-amd64.tar.gz.asc

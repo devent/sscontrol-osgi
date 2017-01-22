@@ -1,8 +1,9 @@
 downloadCmd(args) ::= <<
 SRC_NAME=$(basename <args.src>)
 <setupRemoteTmp(args)>
-<downloadFile(args)>
+<downloadFile(args, args.src)>
 <if(args.hash)><checkHashFile(args)><endif>
+<if(args.sig)><checkSigFile(args)><endif>
 <copyFile(args)>
 >>
 
@@ -13,12 +14,12 @@ sudo chown $USER '<args.tmp>'
 sudo chmod o-rwx '<args.tmp>'
 >>
 
-downloadFile(args) ::= <<
+downloadFile(args, src) ::= <<
 cd '<args.tmp>'
 if which wget >/dev/null; then
-    <wgetCmd(args)>
+    <wgetCmd(args, src)>
 elif which curl >/dev/null; then
-    <curlCmd(args)>
+    <curlCmd(args, src)>
 fi
 >>
 
@@ -34,6 +35,14 @@ mv "$SRC_NAME" "<args.dest>"
 checkHashFile(args) ::= <<
 cd '<args.tmp>'
 <(args.hashType)(args)>
+>>
+
+checkSigFile(args) ::= <<
+cd '<args.tmp>'
+SIG_NAME=$(basename <args.sig>)
+<if(args.sigRemote)><downloadFile(args, args.sig)><endif>
+gpg --keyserver <args.server> --recv-key <args.key>
+gpg --verify "$SIG_NAME"
 >>
 
 md5(args) ::= <<
@@ -60,11 +69,11 @@ exit 1
 fi
 >>
 
-wgetCmd(args) ::= <<
-wget -O "$SRC_NAME" "<args.src>"
+wgetCmd(args, src) ::= <<
+wget -O "$SRC_NAME" "<src>"
 >>
 
-curlCmd(args) ::= <<
-curl "<args.src>"
+curlCmd(args, src) ::= <<
+curl "<src>"
 >>
 

@@ -22,9 +22,15 @@ import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,6 +124,13 @@ public class DownloadCopyWorker implements Copy {
         notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
         isTrue(args.containsKey(DEST_ARG), "%s=null", DEST_ARG);
         notNull(args.get(DEST_ARG), "%s=null", DEST_ARG);
+        Object v = args.get(SIG_ARG);
+        if (v != null) {
+            assertThat(format("%s=null", SERVER_ARG), args.get(SERVER_ARG),
+                    is(notNullValue()));
+            assertThat(format("%s=null", KEY_ARG), args.get(KEY_ARG),
+                    is(notNullValue()));
+        }
     }
 
     private void setupArgs() {
@@ -126,6 +139,36 @@ public class DownloadCopyWorker implements Copy {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+        Object v = args.get(SIG_ARG);
+        if (v != null) {
+            sigRemote(args, v.toString());
+        }
+    }
+
+    private void sigRemote(Map<String, Object> args, String v) {
+        try {
+            sigRemote0(v);
+        } catch (URISyntaxException e) {
+        }
+    }
+
+    private void sigRemote0(String v) throws URISyntaxException {
+        URI sig = new URI(v);
+        boolean sigRemote = false;
+        switch (sig.getScheme()) {
+        case "http":
+            sigRemote = true;
+            break;
+        case "https":
+            sigRemote = true;
+            break;
+        case "ftp":
+            sigRemote = true;
+            break;
+        default:
+            break;
+        }
+        args.put(SIG_REMOTE_ARGS, sigRemote);
     }
 
 }

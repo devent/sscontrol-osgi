@@ -41,9 +41,17 @@ public interface Copy {
 
     static final String HASH_ARG = "hash";
 
-    static final String DIRECT_ARG = "hash";
+    static final String SIG_ARG = "sig";
+
+    static final String SERVER_ARG = "server";
+
+    static final String KEY_ARG = "key";
+
+    static final String DIRECT_ARG = "direct";
 
     static final String PRIVILEGED_ARG = "privileged";
+
+    static final String SIG_REMOTE_ARGS = "sigRemote";
 
     /**
      * Factory to create the copy command.
