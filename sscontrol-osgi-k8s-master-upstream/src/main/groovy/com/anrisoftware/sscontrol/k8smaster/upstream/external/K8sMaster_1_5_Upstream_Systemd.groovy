@@ -107,11 +107,11 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 mkdir -p '$dir'
 mkdir -p '$tmpdir'
 mkdir -p '$rundir'
+useradd -r $user
 chown $user '$rundir'
 mkdir -p '$certsDir'
 chown ${user}.root '$certsDir'
 chmod o-rx '$certsDir'
-useradd -r $user
 """ call()
     }
 
