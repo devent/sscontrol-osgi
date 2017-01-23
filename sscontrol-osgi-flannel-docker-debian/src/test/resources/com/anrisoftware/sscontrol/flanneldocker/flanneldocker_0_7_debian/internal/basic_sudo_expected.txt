@@ -1,0 +1,16 @@
+/bin/bash -s
+mkdir -p /var/lib/robobee/tmp
+chown /tmp/junit/junit/id -u /var/lib/robobee/tmp
+chmod o-rwx /var/lib/robobee/tmp
+cp flanneld /tmp/junit/junit/usr/local/bin
+cp mk-docker-opts.sh /tmp/junit/junit/usr/libexec/flannel
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s

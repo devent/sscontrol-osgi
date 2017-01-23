@@ -1,0 +1,17 @@
+flannelConfig(parent, vars) ::= <<
+###
+# Flanneld configuration options
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
+
+# etcd url location.  Point this to the server where etcd runs
+FLANNEL_ETCD_ENDPOINTS="<parent.service.etcd.address>"
+
+# etcd config key.  This is the configuration key that flannel queries
+# For address range assignment
+FLANNEL_ETCD_PREFIX="<parent.service.etcd.prefix>"
+
+# Any additional options that you want to pass
+#FLANNEL_OPTIONS=""
+
+>>
