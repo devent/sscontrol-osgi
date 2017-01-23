@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -63,8 +64,10 @@ public class Fail2ban_0_8_Debian_8_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return hostnameFactory.create(repository, service, target, threads);
+            HostService service, SshHost target, ExecutorService threads,
+            Map<String, Object> env) {
+        return hostnameFactory.create(repository, service, target, threads,
+                env);
     }
 
     @Activate
@@ -74,7 +77,8 @@ public class Fail2ban_0_8_Debian_8_Service implements HostServiceScriptService {
             @Override
             protected void configure() {
                 install(new FactoryModuleBuilder()
-                        .implement(HostServiceScript.class, Fail2ban_0_8_Debian_8.class)
+                        .implement(HostServiceScript.class,
+                                Fail2ban_0_8_Debian_8.class)
                         .build(Fail2ban_0_8_Debian_8_Factory.class));
             }
         }).injectMembers(this);
