@@ -45,7 +45,7 @@ import com.google.inject.Guice
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -254,6 +254,26 @@ service "ssh", host: "192.168.0.2"
                 assert ssh.hosts.size() == 1
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_host_key_arg"() {
+        def test = [
+            name: "host_key_arg",
+            input: """
+service "ssh", host: "192.168.0.2", key: "robobee_id_rsa"
+""",
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == "default"
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                assert host.key.toString() == "file://robobee_id_rsa"
             },
         ]
         doServiceTest test

@@ -215,7 +215,7 @@ public class SshImpl implements Ssh {
         }
         v = args.get("host");
         if (v != null) {
-            host(v.toString());
+            host(args);
         }
     }
 
