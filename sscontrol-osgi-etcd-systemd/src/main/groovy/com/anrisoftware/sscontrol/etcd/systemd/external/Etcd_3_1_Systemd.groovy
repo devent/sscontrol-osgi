@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.internal;
+package com.anrisoftware.sscontrol.etcd.systemd.external
 
-import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+
+import groovy.util.logging.Slf4j
 
 /**
- * <i>Etcd</i> script module.
+ * Configures the Etcd 3.1 service using Systemd.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public class EtcdModule extends AbstractModule {
+@Slf4j
+abstract class Etcd_3_1_Systemd extends ScriptBase {
+
+    def restartServices() {
+        log.info 'Restarting k8s services.'
+        [
+            'etcd',
+        ].each {
+            shell privileged: true, "service $it restart && service $it status" call()
+        }
+    }
 
     @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, EtcdImpl.class)
-                .build(EtcdImplFactory.class));
+    def getLog() {
+        log
     }
 }

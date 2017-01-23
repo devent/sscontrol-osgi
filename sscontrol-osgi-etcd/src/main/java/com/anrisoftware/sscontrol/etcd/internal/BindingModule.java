@@ -15,23 +15,23 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.etcd.external.Binding;
+import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>Etcd</i> script module.
+ * <i>Binding</i> script module.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class EtcdModule extends AbstractModule {
+public class BindingModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostService.class, EtcdImpl.class)
-                .build(EtcdImplFactory.class));
+                .implement(Binding.class, BindingImpl.class)
+                .build(BindingFactory.class));
     }
 }

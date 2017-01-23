@@ -87,7 +87,9 @@ class UnixTestUtil {
     static assertFileResource(Class context, File dir, String name, String res) {
         def file = new File(dir, name)
         assert file.isFile() == true
-        assertStringContent fileToStringReplace(file), resourceToString(context.getResource(res))
+        def resource = context.getResource(res)
+        assert resource != null
+        assertStringContent fileToStringReplace(file), resourceToString(resource)
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')

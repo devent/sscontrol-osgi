@@ -31,9 +31,9 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.etcd.external.Binding;
+import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.external.EtcdService;
-import com.anrisoftware.sscontrol.etcd.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
@@ -71,13 +71,13 @@ public class EtcdImpl implements Etcd {
 
     private final List<Binding> advertises;
 
-    private final BindingImplFactory bindingFactory;
+    private final BindingFactory bindingFactory;
 
     private String member;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostPropertiesService propertiesService,
-            BindingImplFactory bindingFactory,
+            BindingFactory bindingFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
@@ -197,7 +197,7 @@ public class EtcdImpl implements Etcd {
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "etcd";
     }
 
     public void setMemberName(String member) {

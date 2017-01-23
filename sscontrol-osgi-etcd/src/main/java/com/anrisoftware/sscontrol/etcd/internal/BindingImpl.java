@@ -32,20 +32,6 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class BindingImpl implements Binding {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface BindingImplFactory {
-
-        Binding create();
-
-        Binding create(@Assisted Map<String, Object> args);
-
-    }
-
     private String address;
 
     private String scheme;

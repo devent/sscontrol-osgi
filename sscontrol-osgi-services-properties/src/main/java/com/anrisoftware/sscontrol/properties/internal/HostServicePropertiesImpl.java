@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -50,6 +51,7 @@ import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.assistedinject.AssistedInject;
 
 import groovy.lang.GroovyObjectSupport;
+import groovy.util.Eval;
 
 /**
  * Implements service properties.
@@ -370,6 +372,19 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
             return typedAllPropertiesFactory.create(defaults)
                     .getListProperty(key, separatorChars);
         }
+    }
+
+    public Map<String, Object> getMapProperty(String key,
+            ContextProperties defaults) {
+        String v = null;
+        if (properties.containsKey(key)) {
+            v = properties.getProperty(key);
+        } else {
+            v = defaults.getProperty(key);
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> a = (Map<String, Object>) Eval.me(v);
+        return a;
     }
 
     @Override

@@ -370,8 +370,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getConfigDir() {
-        def dir = properties.getFileProperty "config_dir", defaultProperties
-        new File(base, dir.path)
+        def dir = properties.getFileProperty "config_dir", base, defaultProperties
     }
 
     /**

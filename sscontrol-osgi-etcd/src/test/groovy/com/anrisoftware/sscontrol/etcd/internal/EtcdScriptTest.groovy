@@ -135,6 +135,7 @@ service "etcd" with {
                 new EtcdPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
+                new BindingModule(),
                 new TypesModule(),
                 new StringsModule(),
                 new HostServicesModule(),

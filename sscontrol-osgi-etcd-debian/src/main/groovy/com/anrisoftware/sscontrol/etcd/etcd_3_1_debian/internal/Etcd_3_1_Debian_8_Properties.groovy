@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.internal;
+package com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal;
 
-import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * <i>Etcd</i> script module.
+ * <i>Etcd 3.1 Debian 8</i> properties provider from
+ * {@code "/etcd_3_1_debian_8.properties"}.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public class EtcdModule extends AbstractModule {
+class Etcd_3_1_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, EtcdImpl.class)
-                .build(EtcdImplFactory.class));
+    private static final URL RESOURCE = Etcd_3_1_Debian_8_Properties.class.getResource("/etcd_3_1_debian_8.properties");
+
+    Etcd_3_1_Debian_8_Properties() {
+        super(Etcd_3_1_Debian_8_Properties.class, RESOURCE);
     }
 }
