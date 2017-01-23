@@ -44,6 +44,7 @@
         <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
         <module>../sscontrol-osgi-features</module>
         <module>../sscontrol-osgi-fetch</module>
+        <module>../sscontrol-osgi-flannel-docker</module>
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
