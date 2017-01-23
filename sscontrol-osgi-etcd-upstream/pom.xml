@@ -59,6 +59,11 @@
             <artifactId>resources-templates</artifactId>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
+            <type>bundle</type>
+        </dependency>
     </dependencies>
 
 </project>

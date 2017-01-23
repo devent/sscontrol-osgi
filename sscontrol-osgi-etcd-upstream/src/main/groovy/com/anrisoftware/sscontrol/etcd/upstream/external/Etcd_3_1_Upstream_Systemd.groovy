@@ -42,8 +42,9 @@ abstract class Etcd_3_1_Upstream_Systemd extends ScriptBase {
     BindingFactory bindingFactory
 
     @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Etcd_3_1_Upstream_Systemd_Templates')
+    void loadTemplates(TemplatesFactory templatesFactory, NumberTrueRenderer numberTrueRenderer) {
+        def attrs = [renderers: [numberTrueRenderer]]
+        def templates = templatesFactory.create('Etcd_3_1_Upstream_Systemd_Templates', attrs)
         this.servicesTemplate = templates.getResource('etcd_services')
         this.configsTemplate = templates.getResource('etcd_configs')
     }

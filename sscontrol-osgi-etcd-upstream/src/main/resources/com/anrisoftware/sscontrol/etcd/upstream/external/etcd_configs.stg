@@ -53,7 +53,7 @@ ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);se
 #ETCD_PEER_AUTO_TLS="false"
 #
 #[logging]
-ETCD_DEBUG="<if(parent.service.debugLogging.modules.debug.level)>true<else>false<endif>"
+ETCD_DEBUG="<parent.service.debugLogging.modules.debug.level;format="numberTrue">"
 # examples for -log-package-levels etcdserver=WARNING,security=DEBUG
 #ETCD_LOG_PACKAGE_LEVELS=""
 
