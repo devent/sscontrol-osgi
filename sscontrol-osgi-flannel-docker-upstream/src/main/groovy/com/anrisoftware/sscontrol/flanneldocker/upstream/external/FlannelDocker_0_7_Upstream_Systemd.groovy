@@ -77,12 +77,13 @@ mkdir -p '$libexecdir'
         def sysdir = systemdSystemDir
         def tmpdir = systemdTmpfilesDir
         def libexecdir = libexecDir
+        def dockerdir = dockerServiceDir
         [
             [
                 resource: servicesTemplate,
                 name: 'flannelService',
                 privileged: true,
-                dest: "$sysdir/flannel.service",
+                dest: "$sysdir/flanneld.service",
                 vars: [:],
             ],
             [
@@ -90,6 +91,13 @@ mkdir -p '$libexecdir'
                 name: 'flannelTmpfiles',
                 privileged: true,
                 dest: "$tmpdir/flannel.conf",
+                vars: [:],
+            ],
+            [
+                resource: servicesTemplate,
+                name: 'flannelDockerConfig',
+                privileged: true,
+                dest: "$dockerdir/flannel.conf",
                 vars: [:],
             ],
         ].each { template it call() }
@@ -139,6 +147,10 @@ systemctl daemon-reload
 
     File getDockerNetworkDir() {
         properties.getFileProperty "docker_network_dir", base, defaultProperties
+    }
+
+    File getDockerServiceDir() {
+        properties.getFileProperty "docker_service_dir", base, defaultProperties
     }
 
     def getDefaultDebugLogLevel() {

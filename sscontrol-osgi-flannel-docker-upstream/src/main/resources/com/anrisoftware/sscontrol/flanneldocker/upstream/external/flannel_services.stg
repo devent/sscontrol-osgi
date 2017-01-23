@@ -29,3 +29,11 @@ flannelTmpfiles(parent, vars) ::= <<
 d <parent.runDir> 0755 root root -
 
 >>
+
+flannelDockerConfig(parent, vars) ::= <<
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
+[Service]
+EnvironmentFile=-<parent.runDir>/docker
+
+>>
