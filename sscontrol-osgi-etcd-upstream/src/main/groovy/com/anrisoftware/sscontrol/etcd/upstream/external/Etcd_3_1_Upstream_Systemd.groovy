@@ -86,12 +86,12 @@ abstract class Etcd_3_1_Upstream_Systemd extends ScriptBase {
     def createDirectories() {
         log.info 'Create etcd directories.'
         def dir = systemdSystemDir
-        def rundir = runDir
+        def datadir = dataDir
         shell privileged: true, """
 mkdir -p '$dir'
-mkdir -p '$rundir'
+mkdir -p '$datadir'
 useradd -r $user
-chown $user '$rundir'
+chown $user '$datadir'
 """ call()
     }
 
@@ -103,7 +103,6 @@ chown $user '$rundir'
                 resource: servicesTemplate,
                 name: 'etcdService',
                 privileged: true,
-                override: false,
                 dest: "$dir/etcd.service",
                 vars: [:],
             ],
@@ -120,7 +119,6 @@ chown $user '$rundir'
                 resource: configsTemplate,
                 name: 'etcdConfig',
                 privileged: true,
-                override: false,
                 dest: "$configDir/etcd.conf",
                 vars: [:],
             ],
@@ -133,10 +131,6 @@ chown $user '$rundir'
 
     File getBinDir() {
         properties.getFileProperty "bin_dir", base, defaultProperties
-    }
-
-    File getRunDir() {
-        properties.getFileProperty "run_dir", base, defaultProperties
     }
 
     File getDataDir() {

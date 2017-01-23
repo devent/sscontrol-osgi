@@ -60,7 +60,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_Test extends AbstractScriptTestBase {
+class Etcd_3_1_Debian_8_ServerTest extends AbstractScriptTestBase {
 
     @Inject
     EtcdImplFactory serviceFactory
@@ -79,22 +79,13 @@ class Etcd_3_1_Debian_8_Test extends AbstractScriptTestBase {
         def test = [
             name: "basic",
             input: """
-service "ssh", host: "localhost"
+service "ssh", host: "robobee@andrea-master", key: "$robobeeKey"
 
 service "etcd", member: "default"
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
-                assertFileResource Etcd_3_1_Debian_8_Test, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
             },
         ]
         doTest test
@@ -109,33 +100,23 @@ service "etcd", member: "default"
     }
 
     void createDummyCommands(File dir) {
-        createEchoCommands dir, [
-            'mkdir',
-            'chown',
-            'chmod',
-            'sudo',
-            'scp',
-            'rm',
-            'cp',
-            'apt-get',
-            'service',
-            'systemctl',
-            'which',
-            'id',
-            'sha256sum',
-            'mv',
-            'basename',
-            'wget',
-            'useradd',
-            'tar',
-            'gpg',
-        ]
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'etcd', serviceFactory
         services.putAvailableScriptService 'etcd/debian/8', scriptFactory
         services.putAvailableService 'ssh', sshFactory
+    }
+
+    Map getScriptEnv(Map args) {
+        def map = [:]
+        map.chdir = null
+        map.pwd = null
+        map.base = null
+        map.sudoEnv = [:]
+        map.env = [:]
+        map.createTmpFileCallback = null
+        return map
     }
 
     List getAdditionalModules() {

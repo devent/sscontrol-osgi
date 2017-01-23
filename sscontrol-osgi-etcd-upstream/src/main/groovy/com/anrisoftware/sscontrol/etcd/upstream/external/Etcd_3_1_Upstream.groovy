@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.etcd.upstream.external
 
+import static org.apache.commons.io.FilenameUtils.getBaseName
+
 import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -34,7 +36,7 @@ abstract class Etcd_3_1_Upstream extends ScriptBase {
         log.info 'Installs etcd.'
         copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true call()
         def archiveFile = FilenameUtils.getName(archive.toString())
-        def archiveName = FilenameUtils.getBaseName(archive.toString())
+        def archiveName = getBaseName(getBaseName(archive.toString()))
         shell """\
 cd /tmp
 tar xf "$archiveFile"
