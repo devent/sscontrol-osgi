@@ -42,9 +42,10 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
         shell """\
 cd /tmp
 tar xf "$archiveFile"
-cd "$archiveName"
-sudo cp flanneld '$bindir'
-sudo cp mk-docker-opts.sh '$libexecdir'
+sudo mkdir -p '$bindir'
+sudo mv flanneld '$bindir'
+sudo mkdir -p '$libexecdir'
+sudo mv mk-docker-opts.sh '$libexecdir'
 """ call()
     }
 

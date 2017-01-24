@@ -1,0 +1,4 @@
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
+[Service]
+EnvironmentFile=-/tmp/junit/junit/run/flannel/docker

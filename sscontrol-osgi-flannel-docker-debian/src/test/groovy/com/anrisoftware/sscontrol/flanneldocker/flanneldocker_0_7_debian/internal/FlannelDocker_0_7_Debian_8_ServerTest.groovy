@@ -80,7 +80,9 @@ class FlannelDocker_0_7_Debian_8_ServerTest extends AbstractScriptTestBase {
             input: """
 service "ssh", host: "robobee@andrea-master", key: "$robobeeKey"
 
-service "flannel-docker", member: "default"
+service "flannel-docker" with {
+    etcd "http://127.0.0.1:2379"
+}
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->

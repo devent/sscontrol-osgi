@@ -80,7 +80,9 @@ class FlannelDocker_0_7_Debian_8_Test extends AbstractScriptTestBase {
             input: """
 service "ssh", host: "localhost"
 
-service "flannel-docker", member: "default"
+service "flannel-docker" with {
+    etcd "http://127.0.0.1:2379"
+}
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -92,8 +94,10 @@ service "flannel-docker", member: "default"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
-                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/system'), "flanneld.service", "${args.test.name}_flanneld_service_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/tmpfiles.d'), "flannel.conf", "${args.test.name}_flanneld_tmpfiles_config_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/usr/lib/systemd/system/docker.service.d'), "flannel.conf", "${args.test.name}_flannel_docker_conf_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/sysconfig'), "flanneld", "${args.test.name}_flanneld_sysconfig_expected.txt"
             },
         ]
         doTest test

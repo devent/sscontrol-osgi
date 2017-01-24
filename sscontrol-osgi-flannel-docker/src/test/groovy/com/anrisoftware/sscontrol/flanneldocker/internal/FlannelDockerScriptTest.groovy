@@ -79,6 +79,25 @@ service "flannel-docker" with {
     }
 
     @Test
+    void "etcd_address"() {
+        def test = [
+            name: 'etcd_address',
+            input: """
+service "flannel-docker" with {
+    etcd "http://127.0.0.1:2379"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('flannel-docker').size() == 1
+                FlannelDocker s = services.getServices('flannel-docker')[0]
+                assert s.etcd.address == "http://127.0.0.1:2379"
+                assert s.etcd.prefix == null
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "network"() {
         def test = [
             name: 'network',

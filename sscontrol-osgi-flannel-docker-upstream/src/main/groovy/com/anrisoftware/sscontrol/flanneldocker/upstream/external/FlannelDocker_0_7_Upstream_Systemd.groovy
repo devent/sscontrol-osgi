@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.upstream.external
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.notNullValue
+
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -53,6 +57,7 @@ abstract class FlannelDocker_0_7_Upstream_Systemd extends ScriptBase {
         if (!service.debugLogging.modules['debug']) {
             service.debug 'debug', level: defaultDebugLogLevel
         }
+        assertThat("etcd.address=null", service.etcd.address, is(notNullValue()));
         if (!service.etcd.prefix) {
             service.etcd.prefix = defaultEtcdPrefix
         }

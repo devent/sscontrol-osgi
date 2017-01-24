@@ -33,7 +33,7 @@ abstract class FlannelDocker_0_7_Systemd extends ScriptBase {
         [
             'flanneld',
         ].each {
-            shell privileged: true, "service $it restart && service $it status && service $it enable" call()
+            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
         }
     }
 
