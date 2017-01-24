@@ -94,6 +94,11 @@
             <artifactId>resources-st</artifactId>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
+
         <!-- For DurationSimpleFormat -->
         <dependency>
             <groupId>org.jscience</groupId>
@@ -106,6 +111,14 @@
             <artifactId>groovy</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- annotation processor -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

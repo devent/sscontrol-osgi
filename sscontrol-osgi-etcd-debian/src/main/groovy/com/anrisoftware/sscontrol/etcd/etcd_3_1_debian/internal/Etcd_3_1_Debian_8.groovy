@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ import static com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal.Etcd_3_1_
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal.Etcd_3_1_Systemd_Debian_8.Etcd_3_1_Systemd_Debian_8_Factory
-import com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal.Etcd_3_1_Upstream_Debian_8.Etcd_3_1_Upstream_Debian_8_Factory
-import com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal.Etcd_3_1_Upstream_Systemd_Debian_8.Etcd_3_1_Upstream_Systemd_Debian_8_Factory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
@@ -36,15 +33,6 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class Etcd_3_1_Debian_8 extends ScriptBase {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface Etcd_3_1_Debian_8_Factory extends HostServiceScriptService {
-    }
 
     @Inject
     Etcd_3_1_Debian_8_Properties debianPropertiesProvider

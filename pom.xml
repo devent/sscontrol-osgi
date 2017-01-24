@@ -18,6 +18,7 @@
 
     <modules>
         <module>sscontrol-osgi-parent</module>
+        <module>sscontrol-app-parent</module>
   </modules>
 
     <build>

@@ -92,6 +92,14 @@
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
+
+        <!-- annotation processor -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

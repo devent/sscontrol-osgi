@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.hosts.linux.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -61,8 +62,9 @@ public class Hosts_Linux_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return hostsFactory.create(repository, service, target, threads);
+            HostService service, SshHost target, ExecutorService threads,
+            Map<String, Object> env) {
+        return hostsFactory.create(repository, service, target, threads, env);
     }
 
     @Activate
