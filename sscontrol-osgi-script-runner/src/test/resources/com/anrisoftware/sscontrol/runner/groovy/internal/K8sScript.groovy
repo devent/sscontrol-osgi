@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,20 @@
  */
 package com.anrisoftware.sscontrol.runner.groovy.internal
 
-service "ssh", group: "master" with {
-    //.
-    host "robobee@andrea-master", key: K8sScript.class.getResource("robobee")
-}
-
-service "ssh", group: "nodes" with {
-    //.
-    host "robobee@andrea-node-1", key: K8sScript.class.getResource("robobee")
-}
+// k8s master host.
+service "ssh", group: "master", host: "robobee@andrea-master", key: K8sScript.class.getResource("robobee")
 
 service "hostname", target: "master", fqdn: "andrea-master.muellerpublic.de"
 
 service "hosts", target: "master" with {
     ip "185.24.220.41", host: "andrea-master.muellerpublic.de", alias: "andrea-master"
     ip "37.252.124.149", host: "andrea-node-1.muellerpublic.de", alias: "andrea-node-1"
+}
+
+// k8s nodes hosts.
+service "ssh", group: "nodes" with {
+    //.
+    host "robobee@andrea-node-1", key: K8sScript.class.getResource("robobee")
 }
 
 service "hostname", target: "nodes", fqdn: "andrea-node-1.muellerpublic.de"
@@ -39,4 +38,5 @@ service "hosts", target: "nodes" with {
     ip "185.24.220.41", host: "andrea-master.muellerpublic.de", alias: "andrea-master"
 }
 
+// k8s master.
 service "k8s-master:1.5", target: "master"

@@ -19,7 +19,7 @@
     <inceptionYear>2016</inceptionYear>
 
     <properties>
-        <project.custom.year>${project.inceptionYear}</project.custom.year>
+        <project.custom.year>${project.inceptionYear}-2017</project.custom.year>
         <project.custom.source.source>1.7</project.custom.source.source>
         <project.custom.source.target>1.7</project.custom.source.target>
         <project.custom.bundles.log.version>2.1</project.custom.bundles.log.version>
@@ -42,7 +42,6 @@
         <module>../sscontrol-osgi-fail2ban</module>
         <module>../sscontrol-osgi-fail2ban-0-8</module>
         <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
-        <module>../sscontrol-osgi-features</module>
         <module>../sscontrol-osgi-fetch</module>
         <module>../sscontrol-osgi-flannel-docker</module>
         <module>../sscontrol-osgi-flannel-docker-debian</module>
@@ -62,7 +61,6 @@
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-systemd</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
-        <module>../sscontrol-osgi-karaf-command-parse</module>
         <module>../sscontrol-osgi-replace</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-services-properties</module>
@@ -77,7 +75,6 @@
         <module>../sscontrol-osgi-sshd-6-debian</module>
         <module>../sscontrol-osgi-template</module>
         <module>../sscontrol-osgi-types</module>
-        <module>../sscontrol-osgi-itests-karaf</module>
     </modules>
 
     <dependencyManagement>
@@ -152,5 +149,18 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- Deactivate signing. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

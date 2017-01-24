@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal.Etcd_3_1_Debian_8.Etcd_3_1_Debian_8_Factory
 import com.anrisoftware.sscontrol.etcd.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory

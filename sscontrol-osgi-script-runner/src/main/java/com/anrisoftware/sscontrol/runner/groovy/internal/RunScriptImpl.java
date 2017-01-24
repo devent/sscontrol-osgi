@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -45,7 +46,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class RunScriptImpl implements RunScript {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -112,7 +113,8 @@ public class RunScriptImpl implements RunScript {
         if (service == null) {
             return script;
         } else {
-            script = service.create(services, s, host, threads);
+            Map<String, Object> vars = new HashMap<>();
+            script = service.create(services, s, host, threads, vars);
             pre.configureServiceScript(script);
             return script;
         }

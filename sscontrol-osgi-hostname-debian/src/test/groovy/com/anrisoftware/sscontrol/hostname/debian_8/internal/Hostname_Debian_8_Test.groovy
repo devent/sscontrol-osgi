@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
@@ -46,7 +47,7 @@ import com.google.inject.AbstractModule
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -64,48 +65,46 @@ class Hostname_Debian_8_Test extends AbstractScriptTestBase {
     CmdRunCaller cmdRunCaller
 
     static Map expectedResources = [
-        short_sudo: Hostname_Debian_8_Test.class.getResource('short_sudo_expected.txt'),
-        short_apt_get: Hostname_Debian_8_Test.class.getResource('short_apt_get_expected.txt'),
-        short_hostnamectl: Hostname_Debian_8_Test.class.getResource('short_hostnamectl_expected.txt'),
         fqdn_sudo: Hostname_Debian_8_Test.class.getResource('fqdn_sudo_expected.txt'),
         fqdn_apt_get: Hostname_Debian_8_Test.class.getResource('fqdn_apt_get_expected.txt'),
         fqdn_hostnamectl: Hostname_Debian_8_Test.class.getResource('fqdn_hostnamectl_expected.txt'),
     ]
 
     @Test
-    void "hostname script"() {
-        def testCases = [
-            [
-                name: "short",
-                input: """
+    void "short"() {
+        def test = [
+            name: "short",
+            input: """
 service "hostname", fqdn: "blog.muellerpublic.de"
 """,
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
-                },
-            ],
-            [
-                name: "fqdn",
-                input: """
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource Hostname_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Hostname_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource Hostname_Debian_8_Test, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "fqdn"() {
+        def test = [
+            name: "fqdn",
+            input: """
 service "hostname" with {
     // Sets the hostname.
     set fqdn: "blog.muellerpublic.de"
 }
 """,
-                expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir
+                assertFileResource Hostname_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Hostname_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource Hostname_Debian_8_Test, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            doTest test, k
-        }
+        doTest test
     }
 
     String getServiceName() {
@@ -146,6 +145,7 @@ service "hostname" with {
             new ReplaceModule(),
             new TemplateModule(),
             new TokensTemplateModule(),
+            new FactsModule(),
             new AbstractModule() {
 
                 @Override

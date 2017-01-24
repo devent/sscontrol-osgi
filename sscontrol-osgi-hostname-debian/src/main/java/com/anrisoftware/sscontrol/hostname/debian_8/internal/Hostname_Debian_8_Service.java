@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.hostname.debian_8.internal;
 
+import static com.google.inject.Guice.createInjector;
+
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -29,12 +32,9 @@ import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -48,7 +48,7 @@ public class Hostname_Debian_8_Service implements HostServiceScriptService {
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Hostname_Debian_8_Factory hostnameFactory;
+    private Hostname_Debian_8_Factory scriptFactory;
 
     @Override
     public String getSystemName() {
@@ -61,23 +61,14 @@ public class Hostname_Debian_8_Service implements HostServiceScriptService {
     }
 
     @Override
-    public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return hostnameFactory.create(repository, service, target, threads);
+    public HostServiceScript create(HostServices rep, HostService service,
+            SshHost target, ExecutorService threads, Map<String, Object> env) {
+        return scriptFactory.create(rep, service, target, threads, env);
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new AbstractModule() {
-
-            @Override
-            protected void configure() {
-                install(new FactoryModuleBuilder()
-                        .implement(HostServiceScript.class,
-                                Hostname_Debian_8.class)
-                        .build(Hostname_Debian_8_Factory.class));
-            }
-        }).injectMembers(this);
+        createInjector(new Hostname_Debian_8_Module()).injectMembers(this);
     }
 
 }

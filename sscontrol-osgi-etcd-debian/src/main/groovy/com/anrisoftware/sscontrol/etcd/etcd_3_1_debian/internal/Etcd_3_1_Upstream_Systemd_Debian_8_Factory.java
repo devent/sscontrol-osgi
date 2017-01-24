@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.itests.karaf
+package com.anrisoftware.sscontrol.etcd.etcd_3_1_debian.internal;
 
-import groovy.util.logging.Slf4j
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
-import org.junit.Test
-import org.ops4j.pax.exam.util.PathUtils
-
-@Slf4j
-class PathUtilsTest {
-
-    @Test
-    void "get base dir"() {
-        log.info 'base dir: "{}"', PathUtils.baseDir
-    }
+/**
+ *
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
+public interface Etcd_3_1_Upstream_Systemd_Debian_8_Factory
+        extends HostServiceScriptService {
 }
