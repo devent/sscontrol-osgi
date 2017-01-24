@@ -18,8 +18,6 @@ package com.anrisoftware.sscontrol.itests.karaf;
 import static org.apache.commons.lang3.StringUtils.*
 import static org.ops4j.pax.exam.CoreOptions.*
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -33,7 +31,8 @@ import org.ops4j.pax.exam.options.UrlReference
 import org.ops4j.pax.exam.util.PathUtils
 import org.osgi.framework.BundleContext
 
-@CompileStatic
+import groovy.util.logging.Slf4j
+
 @Slf4j
 class AbstractBundleTest {
 
