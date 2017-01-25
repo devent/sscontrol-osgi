@@ -18,7 +18,7 @@
     <description>Configures the Etcd service using systemd.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-etcd-systemd</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.etcd.systemd</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

@@ -17,7 +17,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.flannel-docker</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.flanneldocker</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

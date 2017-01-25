@@ -18,7 +18,7 @@
     <description>Configures the Etcd service for Debian GNU/Linux systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-etcd-debian</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.etcd.debian</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

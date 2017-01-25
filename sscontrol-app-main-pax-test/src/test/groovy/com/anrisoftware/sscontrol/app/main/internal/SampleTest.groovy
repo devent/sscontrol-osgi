@@ -24,7 +24,7 @@ public class SampleTest {
     BundleContext bundleContext
 
     @Inject
-    List<HostServiceService> helloService
+    HostServiceService helloService
 
     @Configuration
     Option[] config() {
@@ -35,6 +35,10 @@ public class SampleTest {
         options << mavenBundle("ch.qos.logback", "logback-classic").versionAsInProject()
         options << mavenBundle("ch.qos.logback", "logback-core").versionAsInProject()
         options << mavenBundle("org.codehaus.groovy", "groovy").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.globalpom", "globalpom-log").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-app-main").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-hostname").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-types").versionAsInProject()
         //options << bundle("reference:file:target/classes")
     }
 

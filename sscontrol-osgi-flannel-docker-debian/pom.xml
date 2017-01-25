@@ -18,7 +18,7 @@
     <description>Configures the Flannel-Docker service for Debian GNU/Linux systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-flannel-docker-debian</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.flanneldocker.debian</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

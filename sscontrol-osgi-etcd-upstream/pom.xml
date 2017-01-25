@@ -18,7 +18,7 @@
     <description>Installs Etcd from the upstream source.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-etcd-upstream</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.etcd.upstream</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

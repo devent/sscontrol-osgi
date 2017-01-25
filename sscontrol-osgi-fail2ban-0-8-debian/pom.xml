@@ -18,7 +18,7 @@
     <description>Configures the Fail2ban 0.8 service for Debian systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-fail2ban-0-8-debian</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
