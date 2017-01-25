@@ -23,10 +23,16 @@
 
     <modules>
         <module>../sscontrol-app-main</module>
+        <module>../sscontrol-app-main-pax-test</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-container-forked</artifactId>
+                <version>${project.custom.pax.exam.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
