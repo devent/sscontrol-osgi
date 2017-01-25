@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.ssh.linux.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -61,8 +62,9 @@ public class Ssh_Linux_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return sshFactory.create(repository, service, target, threads);
+            HostService service, SshHost target, ExecutorService threads,
+            Map<String, Object> env) {
+        return sshFactory.create(repository, service, target, threads, env);
     }
 
     @Activate

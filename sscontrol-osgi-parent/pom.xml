@@ -55,8 +55,6 @@
         <module>../sscontrol-osgi-hostname-systemd</module>
         <module>../sscontrol-osgi-hosts</module>
         <module>../sscontrol-osgi-hosts-linux</module>
-        <module>../sscontrol-osgi-inline</module>
-        <module>../sscontrol-osgi-inline-linux</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-systemd</module>

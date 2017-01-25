@@ -26,7 +26,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal.FlannelDocker_0_7_Debian_8.FlannelDocker_0_7_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
@@ -34,14 +33,15 @@ import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class FlannelDocker_0_7_Debian_8_Service implements HostServiceScriptService {
+public class FlannelDocker_0_7_Debian_8_Service
+        implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
@@ -69,7 +69,8 @@ public class FlannelDocker_0_7_Debian_8_Service implements HostServiceScriptServ
 
     @Activate
     protected void start() {
-        createInjector(new FlannelDocker_0_7_Debian_8_Module()).injectMembers(this);
+        createInjector(new FlannelDocker_0_7_Debian_8_Module())
+                .injectMembers(this);
     }
 
 }

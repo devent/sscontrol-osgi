@@ -26,16 +26,14 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Debian_8.K8sMaster_1_5_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.google.inject.AbstractModule;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -71,13 +69,7 @@ public class K8sMaster_1_5_Debian_8_Service
 
     @Activate
     protected void start() {
-        createInjector(new K8sMaster_1_5_Debian_8_Module(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                    }
-                }).injectMembers(this);
+        createInjector(new K8sMaster_1_5_Debian_8_Module()).injectMembers(this);
     }
 
 }

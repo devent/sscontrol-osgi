@@ -14,7 +14,7 @@
 
     <artifactId>sscontrol-osgi-hosts</artifactId>
     <name>sscontrol-osgi - hosts</name>
-    <description>Hostname service.</description>
+    <description>Hosts service.</description>
     <packaging>bundle</packaging>
 
     <properties>

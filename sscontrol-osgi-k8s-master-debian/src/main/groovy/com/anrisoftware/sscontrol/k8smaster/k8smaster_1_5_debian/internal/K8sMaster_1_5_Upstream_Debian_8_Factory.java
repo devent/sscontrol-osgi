@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.external;
+package com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal;
 
-import com.anrisoftware.sscontrol.types.external.Parser;
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
-@SuppressWarnings("serial")
-public class ScriptServiceNotFound extends LoadScriptException {
-
-    public ScriptServiceNotFound(Parser parser, String serviceName) {
-        super("Script service not found");
-        addContextValue("service name", serviceName);
-        addContextValue("parser", parser);
-    }
-
+/**
+ *
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
+public interface K8sMaster_1_5_Upstream_Debian_8_Factory
+        extends HostServiceScriptService {
 }

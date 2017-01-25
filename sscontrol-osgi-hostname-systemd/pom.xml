@@ -14,7 +14,7 @@
 
     <artifactId>sscontrol-osgi-hostname-systemd</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - Hostname - systemd</name>
+    <name>sscontrol-osgi - hostname-systemd</name>
     <description>Configures the Hostname service for systems with systemd.</description>
 
     <properties>

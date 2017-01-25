@@ -21,10 +21,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Systemd_Debian_8.K8sMaster_1_5_Systemd_Debian_8_Factory
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Upstream_Debian_8.K8sMaster_1_5_Upstream_Debian_8_Factory
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Upstream_Systemd_Debian_8.K8sMaster_1_5_Upstream_Systemd_Debian_8_Factory
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -36,15 +32,6 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class K8sMaster_1_5_Debian_8 extends ScriptBase {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface K8sMaster_1_5_Debian_8_Factory extends HostServiceScriptService {
-    }
 
     @Inject
     K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider

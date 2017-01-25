@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -25,17 +26,14 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -63,21 +61,14 @@ public class Sshd_Debian_8_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads) {
-        return scriptFactory.create(repository, service, target, threads);
+            HostService service, SshHost target, ExecutorService threads,
+            Map<String, Object> env) {
+        return scriptFactory.create(repository, service, target, threads, env);
     }
 
     @Activate
     protected void start() {
-        createInjector(new AbstractModule() {
-
-            @Override
-            protected void configure() {
-                install(new FactoryModuleBuilder()
-                        .implement(HostServiceScript.class, Sshd_Debian_8.class)
-                        .build(Sshd_Debian_8_Factory.class));
-            }
-        }).injectMembers(this);
+        createInjector(new Sshd_Debian_8_Module()).injectMembers(this);
     }
 
 }

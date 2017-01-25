@@ -35,15 +35,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class K8sMaster_1_5_Upstream_Debian_8 extends K8sMaster_1_5_Upstream {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface K8sMaster_1_5_Upstream_Debian_8_Factory extends HostServiceScriptService {
-    }
-
     @Inject
     K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider
 

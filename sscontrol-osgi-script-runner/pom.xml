@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>sscontrol-osgi-script-runner</artifactId>
-    <name>sscontrol-osgi - Groovy - Parser</name>
+    <name>sscontrol-osgi - script-runner</name>
     <packaging>bundle</packaging>
     <description>Runs the scripts.</description>
 

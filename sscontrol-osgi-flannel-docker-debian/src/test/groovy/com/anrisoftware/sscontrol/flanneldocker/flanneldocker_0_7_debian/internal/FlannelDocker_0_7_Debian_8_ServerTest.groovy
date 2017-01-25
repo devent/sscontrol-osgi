@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal.FlannelDocker_0_7_Debian_8.FlannelDocker_0_7_Debian_8_Factory
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerModule
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule

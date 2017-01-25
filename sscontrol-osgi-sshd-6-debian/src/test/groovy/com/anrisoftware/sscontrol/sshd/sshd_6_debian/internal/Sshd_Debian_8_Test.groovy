@@ -39,17 +39,13 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
-import com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal.Sshd_Debian_8.Sshd_Debian_8_Factory
-import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
-import com.google.inject.AbstractModule
-import com.google.inject.assistedinject.FactoryModuleBuilder
 
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -123,6 +119,7 @@ service "sshd"
     List getAdditionalModules() {
         [
             new SshdModule(),
+            new Sshd_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -136,13 +133,6 @@ service "sshd"
             new FetchModule(),
             new ReplaceModule(),
             new TokensTemplateModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                    install(new FactoryModuleBuilder().implement(HostServiceScript, Sshd_Debian_8).build(Sshd_Debian_8_Factory))
-                }
-            }
         ]
     }
 

@@ -29,7 +29,6 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
-import com.anrisoftware.sscontrol.k8smaster.k8smaster_1_5_debian.internal.K8sMaster_1_5_Debian_8.K8sMaster_1_5_Debian_8_Factory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase

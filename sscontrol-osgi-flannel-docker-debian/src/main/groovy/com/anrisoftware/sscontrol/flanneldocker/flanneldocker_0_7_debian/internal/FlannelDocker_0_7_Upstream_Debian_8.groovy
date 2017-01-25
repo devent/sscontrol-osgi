@@ -35,15 +35,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class FlannelDocker_0_7_Upstream_Debian_8 extends FlannelDocker_0_7_Upstream {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface FlannelDocker_0_7_Upstream_Debian_8_Factory extends HostServiceScriptService {
-    }
-
     @Inject
     FlannelDocker_0_7_Debian_8_Properties debianPropertiesProvider
 

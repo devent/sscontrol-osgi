@@ -16,11 +16,8 @@
 package com.anrisoftware.sscontrol.hosts.linux.internal
 
 import static com.anrisoftware.sscontrol.hosts.linux.internal.Hosts_Linux_Service.*
-import static com.google.inject.Guice.createInjector
 
 import javax.inject.Inject
-
-import org.apache.felix.scr.annotations.Activate
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -43,11 +40,6 @@ class Hosts_Linux extends ScriptBase {
     @Override
     ContextProperties getDefaultProperties() {
         hostsPropertiesProvider.get()
-    }
-
-    @Activate
-    void start() {
-        createInjector().injectMembers(this)
     }
 
     @Override

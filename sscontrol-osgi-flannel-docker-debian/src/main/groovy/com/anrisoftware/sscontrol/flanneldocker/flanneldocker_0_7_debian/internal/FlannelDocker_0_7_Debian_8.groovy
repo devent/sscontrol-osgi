@@ -20,11 +20,7 @@ import static com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal.FlannelDocker_0_7_Systemd_Debian_8.FlannelDocker_0_7_Systemd_Debian_8_Factory
-import com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal.FlannelDocker_0_7_Upstream_Debian_8.FlannelDocker_0_7_Upstream_Debian_8_Factory
-import com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal.FlannelDocker_0_7_Upstream_Systemd_Debian_8.FlannelDocker_0_7_Upstream_Systemd_Debian_8_Factory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -36,15 +32,6 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class FlannelDocker_0_7_Debian_8 extends ScriptBase {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface FlannelDocker_0_7_Debian_8_Factory extends HostServiceScriptService {
-    }
 
     @Inject
     FlannelDocker_0_7_Debian_8_Properties debianPropertiesProvider

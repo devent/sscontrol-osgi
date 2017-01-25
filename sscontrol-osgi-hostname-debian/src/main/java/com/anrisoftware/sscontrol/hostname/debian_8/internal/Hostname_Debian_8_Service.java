@@ -26,7 +26,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8.Hostname_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;

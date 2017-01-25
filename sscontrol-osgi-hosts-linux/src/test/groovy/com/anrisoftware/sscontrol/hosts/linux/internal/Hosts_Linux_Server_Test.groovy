@@ -49,7 +49,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -101,7 +101,7 @@ service "hosts" with {
     void createDummyCommands(File dir) {
     }
 
-    void putServices(HostServices services) {
+    HostServices putServices(HostServices services) {
         services.putAvailableService 'hosts', hostsFactory
         services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
     }

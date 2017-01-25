@@ -14,7 +14,7 @@
 
     <artifactId>sscontrol-osgi-hosts-linux</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - Hosts - Linux</name>
+    <name>sscontrol-osgi - hosts-linux</name>
     <description>Configures the Hosts service for GNU/Linux systems.</description>
 
     <properties>

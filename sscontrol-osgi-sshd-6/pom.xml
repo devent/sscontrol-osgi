@@ -14,7 +14,7 @@
 
     <artifactId>sscontrol-osgi-sshd-6</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - Sshd 6.0</name>
+    <name>sscontrol-osgi - sshd-6</name>
     <description>Configures the Sshd 6.0 service.</description>
 
     <properties>

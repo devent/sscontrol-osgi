@@ -47,7 +47,7 @@ import com.google.inject.AbstractModule
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0

@@ -14,7 +14,7 @@
 
     <artifactId>sscontrol-osgi-hostname-debian</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - Hostname - Debian</name>
+    <name>sscontrol-osgi - hostname-debian</name>
     <description>Configures the Hostname service for Debian GNU/Linux systems.</description>
 
     <properties>

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.internal;
+package com.anrisoftware.sscontrol.flanneldocker.flanneldocker_0_7_debian.internal;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
 /**
  *
@@ -25,13 +23,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class Hostname_Debian_8_Module extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, Hostname_Debian_8.class)
-                .build(Hostname_Debian_8_Factory.class));
-    }
-
+public interface FlannelDocker_0_7_Upstream_Systemd_Debian_8_Factory
+        extends HostServiceScriptService {
 }

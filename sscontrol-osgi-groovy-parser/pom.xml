@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>sscontrol-osgi-groovy-parser</artifactId>
-    <name>sscontrol-osgi - Groovy - Parser</name>
+    <name>sscontrol-osgi - groovy-parser</name>
     <packaging>bundle</packaging>
     <description>Parses scripts that are using the Groovy syntax.</description>
 

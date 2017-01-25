@@ -26,7 +26,6 @@ import org.apache.felix.scr.annotations.Service
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -37,18 +36,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@Component
-@Service(Hostname_Debian_8.class)
 class Hostname_Debian_8 extends Hostname_Debian {
-
-    /**
-     * 
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface Hostname_Debian_8_Factory extends HostServiceScriptService {
-    }
 
     @Inject
     Hostname_Debian_8_Properties debianPropertiesProvider
