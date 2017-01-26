@@ -98,8 +98,7 @@
                         <_include>osgi.bnd</_include>
                         <Export-Package>!${project.custom.bundle.namespace.internal}.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
                         <Private-Package>${project.custom.bundle.namespace.internal}.*</Private-Package>
-                        <Embed-Dependency>guice,guice-assistedinject,aopalliance</Embed-Dependency>
-                        <Embed-Transitive>true</Embed-Transitive>
+                        <Import-Package>!com.google.inject.internal.asm.util,*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

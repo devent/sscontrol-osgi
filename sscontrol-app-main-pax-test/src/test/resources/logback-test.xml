@@ -34,5 +34,6 @@
     <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
     <logger name="com.anrisoftware.sscontrol" level="INFO" />
     <logger name="com.anrisoftware.sscontrol.groovy.script.external" level="DEBUG" />
+    <logger name="org.ops4j.pax.exam" level="DEBUG"/>
 
 </configuration>

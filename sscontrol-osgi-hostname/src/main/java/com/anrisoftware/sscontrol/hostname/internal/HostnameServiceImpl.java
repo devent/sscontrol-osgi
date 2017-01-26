@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import static com.google.inject.Guice.createInjector;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -26,8 +28,6 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
  * Creates the hostname service.
@@ -35,7 +35,7 @@ import com.google.inject.Guice;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
+@Component(immediate = true)
 @Service(HostnameService.class)
 public class HostnameServiceImpl implements HostnameService {
 
@@ -50,12 +50,8 @@ public class HostnameServiceImpl implements HostnameService {
     }
 
     @Activate
-    protected void start() {
-        Guice.createInjector(new HostnameModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-            }
-        }).injectMembers(this);
+    public void start() {
+        System.out.println("HostnameServiceImpl.start()");
+        createInjector(new HostnameModule()).injectMembers(this);
     }
 }
