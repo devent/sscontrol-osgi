@@ -16,8 +16,13 @@
     <name>sscontrol-osgi - scr-parent</name>
 
     <modules>
+        <module>../sscontrol-osgi-command-copy</module>
         <module>../sscontrol-osgi-command-facts</module>
-        <module>../sscontrol-osgi-copy</module>
+        <module>../sscontrol-osgi-command-fetch</module>
+        <module>../sscontrol-osgi-command-replace</module>
+        <module>../sscontrol-osgi-command-shell</module>
+        <module>../sscontrol-osgi-command-shell-openssh</module>
+        <module>../sscontrol-osgi-command-template</module>
         <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
@@ -28,7 +33,6 @@
         <module>../sscontrol-osgi-fail2ban</module>
         <module>../sscontrol-osgi-fail2ban-0-8</module>
         <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
-        <module>../sscontrol-osgi-fetch</module>
         <module>../sscontrol-osgi-flannel-docker</module>
         <module>../sscontrol-osgi-flannel-docker-debian</module>
         <module>../sscontrol-osgi-flannel-docker-systemd</module>
@@ -45,18 +49,14 @@
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-systemd</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
-        <module>../sscontrol-osgi-replace</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
-        <module>../sscontrol-osgi-shell</module>
-        <module>../sscontrol-osgi-shell-openssh</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-ssh-linux</module>
         <module>../sscontrol-osgi-sshd</module>
         <module>../sscontrol-osgi-sshd-6</module>
         <module>../sscontrol-osgi-sshd-6-debian</module>
-        <module>../sscontrol-osgi-template</module>
         <module>../sscontrol-osgi-types</module>
     </modules>
 
