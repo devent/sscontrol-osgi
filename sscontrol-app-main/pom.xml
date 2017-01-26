@@ -86,11 +86,11 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <Export-Package>!${project.custom.bundle.namespace.internal}.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
-                    <Private-Package>${project.custom.bundle.namespace.internal}.*</Private-Package>
-                    <Bundle-Activator>com.anrisoftware.sscontrol.app.main.internal.Activator</Bundle-Activator>
                     <instructions>
                         <_include>osgi.bnd</_include>
+                        <Export-Package>!${project.custom.bundle.namespace.internal}.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
+                        <Private-Package>${project.custom.bundle.namespace.internal}.*</Private-Package>
+                        <Bundle-Activator>com.anrisoftware.sscontrol.app.main.internal.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>

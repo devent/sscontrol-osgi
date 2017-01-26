@@ -29,17 +29,12 @@ import org.ops4j.pax.exam.spi.reactors.PerMethod
 import org.ops4j.pax.exam.util.PathUtils
 import org.osgi.framework.BundleContext
 
-import com.anrisoftware.sscontrol.hostname.external.HostnameService
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
 public class SampleTest {
 
     @Inject
     BundleContext bundleContext
-
-    @Inject
-    HostnameService helloService
 
     def karafUrl = maven('org.apache.karaf', 'apache-karaf', '4.0.4').type('tar.gz')
 
@@ -73,6 +68,5 @@ public class SampleTest {
 
     @Test
     void getHelloService() {
-        helloService != null
     }
 }

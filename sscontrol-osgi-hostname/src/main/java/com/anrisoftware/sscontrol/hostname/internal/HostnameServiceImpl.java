@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFac
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component(immediate = true)
+@Component
 @Service(HostnameService.class)
 public class HostnameServiceImpl implements HostnameService {
 
