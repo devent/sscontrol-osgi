@@ -32,49 +32,7 @@
     </properties>
 
     <modules>
-        <module>../sscontrol-osgi-command-facts</module>
-        <module>../sscontrol-osgi-copy</module>
-        <module>../sscontrol-osgi-database</module>
-        <module>../sscontrol-osgi-debug</module>
-        <module>../sscontrol-osgi-dhclient</module>
-        <module>../sscontrol-osgi-etcd</module>
-        <module>../sscontrol-osgi-etcd-debian</module>
-        <module>../sscontrol-osgi-etcd-systemd</module>
-        <module>../sscontrol-osgi-etcd-upstream</module>
-        <module>../sscontrol-osgi-fail2ban</module>
-        <module>../sscontrol-osgi-fail2ban-0-8</module>
-        <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
-        <module>../sscontrol-osgi-fetch</module>
-        <module>../sscontrol-osgi-flannel-docker</module>
-        <module>../sscontrol-osgi-flannel-docker-debian</module>
-        <module>../sscontrol-osgi-flannel-docker-systemd</module>
-        <module>../sscontrol-osgi-flannel-docker-upstream</module>
-        <module>../sscontrol-osgi-groovy-parser</module>
-        <module>../sscontrol-osgi-groovy-script</module>
-        <module>../sscontrol-osgi-groovy-types</module>
-        <module>../sscontrol-osgi-hostname</module>
-        <module>../sscontrol-osgi-hostname-debian</module>
-        <module>../sscontrol-osgi-hostname-systemd</module>
-        <module>../sscontrol-osgi-hosts</module>
-        <module>../sscontrol-osgi-hosts-linux</module>
-        <module>../sscontrol-osgi-k8s-master</module>
-        <module>../sscontrol-osgi-k8s-master-debian</module>
-        <module>../sscontrol-osgi-k8s-master-systemd</module>
-        <module>../sscontrol-osgi-k8s-master-upstream</module>
-        <module>../sscontrol-osgi-replace</module>
-        <module>../sscontrol-osgi-script-runner</module>
-        <module>../sscontrol-osgi-services-properties</module>
-        <module>../sscontrol-osgi-services-repository</module>
-        <module>../sscontrol-osgi-shell</module>
-        <module>../sscontrol-osgi-shell-openssh</module>
-        <module>../sscontrol-osgi-shell-test</module>
-        <module>../sscontrol-osgi-ssh</module>
-        <module>../sscontrol-osgi-ssh-linux</module>
-        <module>../sscontrol-osgi-sshd</module>
-        <module>../sscontrol-osgi-sshd-6</module>
-        <module>../sscontrol-osgi-sshd-6-debian</module>
-        <module>../sscontrol-osgi-template</module>
-        <module>../sscontrol-osgi-types</module>
+        <module>../sscontrol-osgi-scr-parent</module>
     </modules>
 
     <dependencyManagement>

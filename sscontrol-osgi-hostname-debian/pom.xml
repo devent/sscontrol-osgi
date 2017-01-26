@@ -7,9 +7,9 @@
 
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
-        <artifactId>sscontrol-osgi-parent</artifactId>
+        <artifactId>sscontrol-osgi-scr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../sscontrol-osgi-parent</relativePath>
+        <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
     <artifactId>sscontrol-osgi-hostname-debian</artifactId>
@@ -18,7 +18,7 @@
     <description>Configures the Hostname service for Debian GNU/Linux systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname-debian</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.hostname.debian</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -87,33 +87,6 @@
             <artifactId>groovy</artifactId>
         </dependency>
 
-        <!-- annotation processor -->
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-                <configuration>
-                    <scanClasses>true</scanClasses>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

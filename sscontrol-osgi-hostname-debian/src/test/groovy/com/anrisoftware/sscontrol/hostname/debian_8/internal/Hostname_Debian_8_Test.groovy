@@ -24,6 +24,8 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Module
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule

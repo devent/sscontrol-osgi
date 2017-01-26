@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0

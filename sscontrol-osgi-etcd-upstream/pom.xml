@@ -7,9 +7,9 @@
 
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
-        <artifactId>sscontrol-osgi-parent</artifactId>
+        <artifactId>sscontrol-osgi-scr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../sscontrol-osgi-parent</relativePath>
+        <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
     <artifactId>sscontrol-osgi-etcd-upstream</artifactId>
@@ -64,6 +64,7 @@
             <artifactId>resources-st</artifactId>
             <type>bundle</type>
         </dependency>
+
     </dependencies>
 
 </project>

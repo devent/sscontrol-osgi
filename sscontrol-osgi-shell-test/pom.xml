@@ -11,12 +11,12 @@
     </parent>
 
     <artifactId>sscontrol-osgi-shell-test</artifactId>
-    <name>sscontrol-osgi - Shell Test Utils</name>
+    <name>sscontrol-osgi - shell-test</name>
     <description>Shell command test utilities.</description>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-shell-test</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.shell.external.utils</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

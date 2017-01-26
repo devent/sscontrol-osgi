@@ -5,18 +5,18 @@
 
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
-        <artifactId>sscontrol-osgi-parent</artifactId>
+        <artifactId>sscontrol-osgi-scr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../sscontrol-osgi-parent</relativePath>
+        <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
     <artifactId>sscontrol-osgi-shell-openssh</artifactId>
-    <name>sscontrol-osgi - OpenSSH Shell</name>
+    <name>sscontrol-osgi - shell-openssh</name>
     <description>Implements the shell command by using the OpenSSH client.</description>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-shell-openssh</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.shell</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -105,40 +105,6 @@
             <artifactId>jscience</artifactId>
         </dependency>
 
-        <!-- For maven-scr-plugin -->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- annotation processor -->
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-                <configuration>
-                    <scanClasses>true</scanClasses>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

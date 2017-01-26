@@ -18,7 +18,7 @@
     <description>Integration test using Pax Exam.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-app-main-pax-test</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.app.main</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

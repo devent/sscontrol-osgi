@@ -7,14 +7,14 @@
 
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
-        <artifactId>sscontrol-osgi-parent</artifactId>
+        <artifactId>sscontrol-osgi-scr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../sscontrol-osgi-parent</relativePath>
+        <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
     <artifactId>sscontrol-osgi-fail2ban-0-8-debian</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - Fail2ban 0.8 Debian</name>
+    <name>sscontrol-osgi - fail2ban-0-8-debian</name>
     <description>Configures the Fail2ban 0.8 service for Debian systems.</description>
 
     <properties>
@@ -88,33 +88,6 @@
             <type>bundle</type>
         </dependency>
 
-        <!-- annotation processor -->
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-                <configuration>
-                    <scanClasses>true</scanClasses>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

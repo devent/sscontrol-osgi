@@ -18,7 +18,7 @@
     <description>The command line application main.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-app-main</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.app.main</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -35,7 +35,6 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
-            <version>5.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

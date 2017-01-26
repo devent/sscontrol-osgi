@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal.Sshd_Debian_8_Factory
+import com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal.Sshd_Debian_8_Module
 import com.anrisoftware.sscontrol.sshd.internal.SshdModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
