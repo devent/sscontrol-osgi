@@ -57,6 +57,9 @@ public class ReplaceLine {
             sed.parse();
             a.put("search", sed.getSearch());
             a.put("replace", sed.getReplace());
+        } else {
+            a.put("search", args.get("search"));
+            a.put("replace", args.get("replace"));
         }
         return a;
     }

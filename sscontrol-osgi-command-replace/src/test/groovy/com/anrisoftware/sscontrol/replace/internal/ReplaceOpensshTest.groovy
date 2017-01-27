@@ -72,70 +72,81 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
     ]
 
     @Test
-    void "replace arguments"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "args_dest_search_replace",
-                args: [
-                    dest: "/tmp/aaa.txt",
-                    search: /(?m)^test=.*/,
-                    replace: 'test=replaced',
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
+    void "args_dest_search_replace"() {
+        def test = [
+            name: "args_dest_search_replace",
+            args: [
+                dest: "/tmp/aaa.txt",
+                search: /(?m)^test=.*/,
+                replace: 'test=replaced',
             ],
-            [
-                enabled: true,
-                name: "args_privileged_dest_search_replace",
-                args: [
-                    dest: "/tmp/aaa.txt",
-                    search: /(?m)^test=.*/,
-                    replace: 'test=replaced',
-                    privileged: true,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
-                },
-            ],
-            [
-                enabled: true,
-                name: "args_dest_sed_replace",
-                args: [
-                    dest: "/tmp/aaa.txt",
-                    replace: 's/(?m)^test=.*/test=replaced/',
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assert new File(dir, 'sudo.out').isFile() == false
-                    assert new File(dir, 'cp.out').isFile() == false
-                    assert new File(dir, 'rm.out').isFile() == false
-                },
-            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertFileResource ReplaceOpensshTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if(test.enabled) {
-                def tmp = folder.newFolder()
-                test.args.tmp = folder.newFile("replace_test.txt")
-                FileUtils.write test.args.tmp, 'test=foo\n'
-                log.info '\n######### {}. case: {}', k, test
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
-        }
+        def tmp = folder.newFolder()
+        test.args.tmp = folder.newFile("replace_test.txt")
+        FileUtils.write test.args.tmp, 'test=foo\n'
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "args_privileged_dest_search_replace"() {
+        def test = [
+            name: "args_privileged_dest_search_replace",
+            args: [
+                dest: "/tmp/aaa.txt",
+                search: /(?m)^test=.*/,
+                replace: 'test=replaced',
+                privileged: true,
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertFileResource ReplaceOpensshTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
+            },
+        ]
+        def tmp = folder.newFolder()
+        test.args.tmp = folder.newFile("replace_test.txt")
+        FileUtils.write test.args.tmp, 'test=foo\n'
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
+
+    @Test
+    void "args_dest_sed_replace"() {
+        def test = [
+            name: "args_dest_sed_replace",
+            args: [
+                dest: "/tmp/aaa.txt",
+                replace: 's/(?m)^test=.*/test=replaced/',
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                assert new File(dir, 'sudo.out').isFile() == false
+                assert new File(dir, 'cp.out').isFile() == false
+                assert new File(dir, 'rm.out').isFile() == false
+            },
+        ]
+        def tmp = folder.newFolder()
+        test.args.tmp = folder.newFile("replace_test.txt")
+        FileUtils.write test.args.tmp, 'test=foo\n'
+        log.info '\n######### {}. case: {}', k, test
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
     }
 
     @Test

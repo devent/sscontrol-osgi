@@ -62,62 +62,60 @@ class ReplaceLineOpensshTest extends AbstractCmdTestBase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    static Map expectedResources = [
-        line_search_replace_scp: ReplaceLineOpensshTest.class.getResource('line_search_replace_scp_expected.txt'),
-        line_sed_replace_scp: ReplaceLineOpensshTest.class.getResource('line_sed_replace_scp_expected.txt'),
-    ]
+    @Test
+    void "line_search_replace"() {
+        def test = [
+            name: "line_search_replace",
+            args: [
+                dest: "/tmp/aaa.txt",
+            ],
+            lines: [
+                search: /(?m)^test=.*/,
+                replace: 'test=replaced',
+            ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertFileResource ReplaceLineOpensshTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+            },
+        ]
+        def tmp = folder.newFolder()
+        test.args.tmp = folder.newFile("replace_test.txt")
+        FileUtils.write test.args.tmp, 'test=foo\n'
+        log.info '\n######### {} case: {}', test.name, test
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
+    }
 
     @Test
-    void "replace line"() {
-        def testCases = [
-            [
-                enabled: true,
-                name: "line_search_replace",
-                args: [
-                    dest: "/tmp/aaa.txt",
-                ],
-                lines: [
-                    search: /(?m)^test=.*/,
-                    replace: 'test=replaced',
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                },
+    void "line_sed_replace"() {
+        def test = [
+            name: "line_sed_replace",
+            args: [
+                dest: "/tmp/aaa.txt",
             ],
-            [
-                enabled: true,
-                name: "line_sed_replace",
-                args: [
-                    dest: "/tmp/aaa.txt",
-                ],
-                lines: [
-                    replace: 's/(?m)^test=.*/test=replaced/',
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                },
+            lines: [
+                replace: 's/(?m)^test=.*/test=replaced/',
             ],
+            expected: { Map args ->
+                File dir = args.dir as File
+                String name = args.name as String
+                assertFileResource ReplaceLineOpensshTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            if(test.enabled) {
-                def tmp = folder.newFolder()
-                test.args.tmp = folder.newFile("replace_test.txt")
-                FileUtils.write test.args.tmp, 'test=foo\n'
-                log.info '{}. case: {}', k, test
-                test.host = SshFactory.localhost(injector).hosts[0]
-                doTest test, tmp, k
-            }
-        }
+        def tmp = folder.newFolder()
+        test.args.tmp = folder.newFile("replace_test.txt")
+        FileUtils.write test.args.tmp, 'test=foo\n'
+        log.info '\n######### {} case: {}', test.name, test
+        test.host = SshFactory.localhost(injector).hosts[0]
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {
         def replace = replaceFactory.create test.args, test.host, this, threads, log
         replace.line test.lines
         createEchoCommands tmp, [
+            'rm',
             'mkdir',
             'chown',
             'chmod',
