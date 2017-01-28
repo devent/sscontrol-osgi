@@ -58,22 +58,6 @@ class FetchTest extends AbstractCmdTestBase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    static Map expectedResources = [
-        src_sudo: FetchTest.class.getResource('src_sudo_expected.txt'),
-        src_scp: FetchTest.class.getResource('src_scp_expected.txt'),
-        src_cp: FetchTest.class.getResource('src_cp_expected.txt'),
-        src_rm: FetchTest.class.getResource('src_rm_expected.txt'),
-        directory_src_scp: FetchTest.class.getResource('directory_src_scp_expected.txt'),
-        dest_src_scp: FetchTest.class.getResource('dest_src_scp_expected.txt'),
-        dest_src_sudo: FetchTest.class.getResource('dest_src_sudo_expected.txt'),
-        privileged_src_scp: FetchTest.class.getResource('privileged_src_scp_expected.txt'),
-        privileged_src_sudo: FetchTest.class.getResource('privileged_src_sudo_expected.txt'),
-        privileged_dir_src_scp: FetchTest.class.getResource('privileged_dir_src_scp_expected.txt'),
-        privileged_dir_src_sudo: FetchTest.class.getResource('privileged_dir_src_sudo_expected.txt'),
-        privileged_dir_src_cp: FetchTest.class.getResource('privileged_dir_src_cp_expected.txt'),
-        privileged_dir_src_rm: FetchTest.class.getResource('privileged_dir_src_rm_expected.txt'),
-    ]
-
     @Test
     void "src"() {
         def test = [
