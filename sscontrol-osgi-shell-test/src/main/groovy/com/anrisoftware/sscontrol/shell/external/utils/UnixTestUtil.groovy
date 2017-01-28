@@ -52,6 +52,10 @@ class UnixTestUtil {
         return createCommand(basenameCommand, dir, 'basename')
     }
 
+    static String createIdCommand(File dir) {
+        return createCommand(idCommand, dir, 'id')
+    }
+
     static String createCommand(URL command, File dir, String name) {
         def file = new File(dir, name)
         def stream = new FileOutputStream(file)
@@ -99,6 +103,8 @@ class UnixTestUtil {
     static final URL whichCommand = UnixTestUtil.class.getResource('which_cmd.txt')
 
     static final URL basenameCommand = UnixTestUtil.class.getResource('basename_cmd.txt')
+
+    static final URL idCommand = UnixTestUtil.class.getResource('id_cmd.txt')
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 }

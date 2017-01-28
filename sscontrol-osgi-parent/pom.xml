@@ -33,6 +33,7 @@
 
     <modules>
         <module>../sscontrol-osgi-scr-parent</module>
+        <module>../sscontrol-osgi-shell-test</module>
     </modules>
 
     <dependencyManagement>

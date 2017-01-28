@@ -139,6 +139,7 @@ class TemplateTest extends AbstractCmdTestBase {
     def createCmd(Map test, File tmp, int k) {
         def cmd = templateFactory.create test.args, test.host, this, threads, log
         cmd.tmpFile = folder.newFile()
+        createIdCommand tmp
         createEchoCommands tmp, [
             'mkdir',
             'chown',

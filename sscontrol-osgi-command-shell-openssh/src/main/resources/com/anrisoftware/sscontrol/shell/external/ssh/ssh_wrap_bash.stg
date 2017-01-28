@@ -1,11 +1,13 @@
 sshCmd(args) ::= <<
 #!/bin/bash
 <sshCommand(args)>
+<sshChdir(args.chdir)>
+<sshEnv(args.env)>
 SSH_USER=$(id -u)
 <if(args.privileged)>
+sudo <args.shell> \<\< eof2
 <sshChdir(args.sudoChdir)>
 <sshEnv(args.sudoEnv)>
-sudo <args.shell> \<\< \eof2
 <theCommand(args)>
 eof2
 <else>
@@ -15,7 +17,5 @@ eof1
 >>
 
 theCommand(args) ::= <<
-<sshChdir(args.chdir)>
-<sshEnv(args.env)>
 <args.command>
 >>

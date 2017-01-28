@@ -312,6 +312,7 @@ class ScpRunTest {
         args.putAll test.args
         args.chdir = folder.newFolder test.name
         args.sudoChdir = args.chdir
+        createIdCommand args.chdir
         createEchoCommands args.chdir, ['sudo']
         createEchoCommands args.chdir, test.commands
         def scp = scpFactory.create args, this, threads
