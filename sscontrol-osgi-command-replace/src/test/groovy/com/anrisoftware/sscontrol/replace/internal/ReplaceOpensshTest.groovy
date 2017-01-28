@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.replace.internal
 
-import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
@@ -43,7 +42,7 @@ import com.google.inject.Module
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -135,16 +134,16 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
             expected: { Map args ->
                 File dir = args.dir as File
                 String name = args.name as String
-                assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                assert new File(dir, 'sudo.out').isFile() == false
-                assert new File(dir, 'cp.out').isFile() == false
-                assert new File(dir, 'rm.out').isFile() == false
+                assertFileResource ReplaceOpensshTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource ReplaceOpensshTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
             },
         ]
         def tmp = folder.newFolder()
         test.args.tmp = folder.newFile("replace_test.txt")
         FileUtils.write test.args.tmp, 'test=foo\n'
-        log.info '\n######### {}. case: {}', k, test
+        log.info '\n######### {} #########\ncase: {}', test.name, test
         test.host = SshFactory.localhost(injector).hosts[0]
         doTest test, tmp
     }
