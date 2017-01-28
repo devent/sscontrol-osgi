@@ -61,15 +61,6 @@ class TemplateTest extends AbstractCmdTestBase {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    static Map expectedResources = [
-        base_dest_scp: TemplateTest.class.getResource('base_dest_scp_expected.txt'),
-        resource_dest_scp: TemplateTest.class.getResource('resource_dest_scp_expected.txt'),
-        privileged_base_dest_scp: TemplateTest.class.getResource('privileged_base_dest_scp_expected.txt'),
-        privileged_base_dest_sudo: TemplateTest.class.getResource('privileged_base_dest_sudo_expected.txt'),
-        privileged_base_dest_cp: TemplateTest.class.getResource('privileged_base_dest_cp_expected.txt'),
-        privileged_base_dest_rm: TemplateTest.class.getResource('privileged_base_dest_rm_expected.txt'),
-    ]
-
     @Test
     void "base_dest"() {
         def test = [
