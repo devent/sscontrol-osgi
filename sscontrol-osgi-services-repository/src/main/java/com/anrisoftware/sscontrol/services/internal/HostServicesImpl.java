@@ -21,6 +21,7 @@ import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -248,11 +249,27 @@ public class HostServicesImpl implements HostServices {
 
     private List<SshHost> parseTarget(Map<String, Object> args) {
         Object object = args.get("target");
+        if (object instanceof SshHost) {
+            SshHost host = (SshHost) object;
+            return Arrays.asList(host);
+        }
+        if (object instanceof Ssh) {
+            Ssh ssh = (Ssh) object;
+            return getTargets(ssh);
+        }
         if (object != null) {
             String name = object.toString();
             return getTargets(name);
         } else {
             return getTargets(DEFAULT_TARGETS_NAME);
+        }
+    }
+
+    private List<SshHost> getTargets(Ssh ssh) {
+        try {
+            return targets.getHosts(ssh);
+        } catch (AssertionError e) {
+            throw new NoTargetsForServiceException(e, ssh.getGroup());
         }
     }
 

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
@@ -114,7 +115,11 @@ public class SshImpl implements Ssh {
 
     @Override
     public String getGroup() {
-        return group;
+        if (StringUtils.isEmpty(group)) {
+            return "default";
+        } else {
+            return group;
+        }
     }
 
     public void debug(Map<String, Object> args, String name) {

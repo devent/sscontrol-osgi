@@ -28,6 +28,8 @@ public interface Targets {
 
     List<SshHost> getHosts(String name);
 
+    List<SshHost> getHosts(Ssh ssh);
+
     Set<String> getGroups();
 
     void addTarget(Ssh ssh);

@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.services.internal
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
+
 import com.anrisoftware.sscontrol.types.external.DebugLogging
 import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
@@ -82,7 +84,11 @@ class SshStub implements Ssh {
     }
 
     String getGroup() {
-        group
+        if (StringUtils.isEmpty(group)) {
+            return "default";
+        } else {
+            return group;
+        }
     }
 
     void host(String name) {

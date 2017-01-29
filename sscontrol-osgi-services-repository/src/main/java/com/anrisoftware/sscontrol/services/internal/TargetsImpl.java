@@ -16,16 +16,17 @@
 package com.anrisoftware.sscontrol.services.internal;
 
 import static java.lang.String.format;
-import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.synchronizedList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,14 +59,14 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     }
 
-    private final Map<String, List<Ssh>> hosts;
+    private final List<Ssh> hosts;
 
     @Inject
     private TargetsImplLogger log;
 
     @AssistedInject
     TargetsImpl() {
-        this.hosts = synchronizedMap(new HashMap<String, List<Ssh>>());
+        this.hosts = synchronizedList(new ArrayList<Ssh>());
     }
 
     public List<SshHost> call(String name) {
@@ -79,10 +80,25 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     }
 
     @Override
+    public List<SshHost> getHosts(Ssh ssh) {
+        List<Ssh> list = new ArrayList<>();
+        for (Ssh host : hosts) {
+            if (host == ssh) {
+                list.add(ssh);
+            }
+        }
+        return getHosts(ssh.getGroup(), list);
+    }
+
+    @Override
     public List<SshHost> getHosts(String name) {
-        List<Ssh> targets = hosts.get(name);
-        assertThat(format("targets(%s)=null", name), targets,
-                is(notNullValue()));
+        List<Ssh> targets = searchHosts(name);
+        return getHosts(name, targets);
+    }
+
+    private List<SshHost> getHosts(String name, List<Ssh> targets) {
+        assertThat(format("size targets(%s)=0", name), targets.size(),
+                greaterThan(0));
         List<SshHost> result = new ArrayList<>();
         for (Ssh target : targets) {
             result.addAll(target.getHosts());
@@ -92,21 +108,17 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     @Override
     public Set<String> getGroups() {
-        return hosts.keySet();
+        Set<String> set = new HashSet<>();
+        for (Ssh ssh : hosts) {
+            set.add(ssh.getGroup());
+        }
+        return unmodifiableSet(set);
     }
 
     @Override
     public void addTarget(Ssh ssh) {
         String group = ssh.getGroup();
-        if (isBlank(group)) {
-            group = "default";
-        }
-        List<Ssh> list = hosts.get(group);
-        if (list == null) {
-            list = new ArrayList<>();
-            hosts.put(group, list);
-        }
-        list.add(ssh);
+        hosts.add(ssh);
         log.addHosts(this, ssh, group);
     }
 
@@ -136,12 +148,12 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     @Override
     public boolean containsKey(Object key) {
-        return hosts.containsKey(key);
+        return getGroups().contains(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return hosts.containsValue(value);
+        return hosts.contains(value);
     }
 
     @Override
@@ -197,6 +209,16 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     private Map<String, Object> parseArgs(Map<String, Object> args) {
         Map<String, Object> result = new HashMap<>();
         return unmodifiableMap(result);
+    }
+
+    private List<Ssh> searchHosts(String name) {
+        List<Ssh> list = new ArrayList<>();
+        for (Ssh ssh : hosts) {
+            if (name.equals(ssh.getGroup())) {
+                list.add(ssh);
+            }
+        }
+        return list;
     }
 
 }

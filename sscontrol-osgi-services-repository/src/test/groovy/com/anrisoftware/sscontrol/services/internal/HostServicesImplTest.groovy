@@ -33,8 +33,6 @@
 package com.anrisoftware.sscontrol.services.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -59,13 +57,14 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.assistedinject.FactoryModuleBuilder
 
+import groovy.util.logging.Slf4j
+
 /**
  * 
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
 class HostServicesImplTest {
 
     Injector injector
@@ -83,23 +82,29 @@ class HostServicesImplTest {
     HostsStubServiceImpl hostsService
 
     @Test
-    void "load mock service"() {
-        def testCases = [
-            [
-                input: '''
+    void "default hostname"() {
+        def test = [
+            input: '''
+service 'ssh', host: "192.168.0.3"
+
 service 'hostname' with {
     // Sets the hostname.
     set "blog.muellerpublic.de"
 }
 ''',
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    HostnameStub service = services.getServices('hostname')[0] as HostnameStub
-                    assert service.name == 'blog.muellerpublic.de'
-                },
-            ],
-            [
-                input: '''
+            expected: { HostServices services ->
+                assert services.getServices('hostname').size() == 1
+                HostnameStub service = services.getServices('hostname')[0] as HostnameStub
+                assert service.name == 'blog.muellerpublic.de'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "hosts by nodes by name"() {
+        def test = [
+            input: '''
 service 'ssh' with {
     group "nodes"
     host "192.168.0.3"
@@ -113,21 +118,52 @@ service 'hosts', target: 'nodes' with {
     }
 }
 ''',
-                expected: { HostServices services ->
-                    assert services.getServices('hosts').size() == 1
-                    int i = 0
-                    HostsStub service = services.getServices('hosts')[i++] as HostsStub
-                    int k = 0
-                    Host host = service.hosts[k++] as Host
-                    assert host.host == 'node-0.muellerpublic.de'
-                    host = service.hosts[k++] as Host
-                    assert host.host == 'node-1.muellerpublic.de'
-                    host = service.hosts[k++] as Host
-                    assert host.host == 'node-2.muellerpublic.de'
-                },
-            ],
-            [
-                input: '''
+            expected: { HostServices services ->
+                assert services.getServices('hosts').size() == 1
+                int i = 0
+                HostsStub service = services.getServices('hosts')[i++] as HostsStub
+                int k = 0
+                Host host = service.hosts[k++] as Host
+                assert host.host == 'node-0.muellerpublic.de'
+                host = service.hosts[k++] as Host
+                assert host.host == 'node-1.muellerpublic.de'
+                host = service.hosts[k++] as Host
+                assert host.host == 'node-2.muellerpublic.de'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "hostname by nodes list"() {
+        def test = [
+            input: '''
+def nodes = service 'ssh' with {
+    group "nodes"
+    host "192.168.0.3"
+    host "192.168.0.4"
+    host "192.168.0.5"
+    it
+}
+
+service 'hostname', target: nodes with {
+    set "node.muellerpublic.de"
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('hostname').size() == 1
+                int i = 0
+                HostnameStub service = services.getServices('hostname')[i++] as HostnameStub
+                assert service.name == 'node.muellerpublic.de'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "hostname by nodes by object"() {
+        def test = [
+            input: '''
 service 'ssh' with {
     group "nodes"
     host "192.168.0.3"
@@ -136,34 +172,35 @@ service 'ssh' with {
 }
 
 targets 'nodes' eachWithIndex { host, i ->
-    service 'hostname' with {
+    service 'hostname', target: host with {
         set "node-${i}.muellerpublic.de"
     }
 }
 ''',
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 3
-                    int i = 0
-                    HostnameStub service = services.getServices('hostname')[i++] as HostnameStub
-                    assert service.name == 'node-0.muellerpublic.de'
-                    service = services.getServices('hostname')[i++] as HostnameStub
-                    assert service.name == 'node-1.muellerpublic.de'
-                    service = services.getServices('hostname')[i++] as HostnameStub
-                    assert service.name == 'node-2.muellerpublic.de'
-                },
-            ],
+            expected: { HostServices services ->
+                assert services.getServices('hostname').size() == 3
+                int i = 0
+                HostnameStub service = services.getServices('hostname')[i++] as HostnameStub
+                assert service.name == 'node-0.muellerpublic.de'
+                service = services.getServices('hostname')[i++] as HostnameStub
+                assert service.name == 'node-1.muellerpublic.de'
+                service = services.getServices('hostname')[i++] as HostnameStub
+                assert service.name == 'node-2.muellerpublic.de'
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
-            def services = servicesFactory.create()
-            def targets = services.getTargets()
-            services.putAvailableService 'hostname', hostnameService
-            services.putAvailableService 'ssh', sshService
-            services.putAvailableService 'hosts', hostsService
-            eval service: services, targets: targets, test.input as String
-            Closure expected = test.expected
-            expected services
-        }
+        doTest test
+    }
+
+    def doTest(Map test, int k=0) {
+        log.info '{}. case: {}', k, test
+        def services = servicesFactory.create()
+        def targets = services.getTargets()
+        services.putAvailableService 'hostname', hostnameService
+        services.putAvailableService 'ssh', sshService
+        services.putAvailableService 'hosts', hostsService
+        eval service: services, targets: targets, test.input as String
+        Closure expected = test.expected
+        expected services
     }
 
     def eval(Map args, String script) {
