@@ -52,7 +52,19 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-command-shell</artifactId>
+            <artifactId>sscontrol-osgi-command-copy</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-command-facts</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-command-fetch</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
@@ -64,13 +76,13 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-command-template</artifactId>
+            <artifactId>sscontrol-osgi-command-shell</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-command-facts</artifactId>
+            <artifactId>sscontrol-osgi-command-template</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
