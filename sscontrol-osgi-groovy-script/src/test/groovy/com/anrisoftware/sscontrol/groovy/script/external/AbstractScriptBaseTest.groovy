@@ -46,12 +46,12 @@ import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
-import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller

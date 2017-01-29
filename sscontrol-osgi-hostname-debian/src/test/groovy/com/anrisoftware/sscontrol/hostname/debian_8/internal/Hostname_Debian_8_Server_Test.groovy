@@ -28,7 +28,6 @@ import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Deb
 import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Factory
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
-import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
@@ -36,6 +35,7 @@ import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
