@@ -24,6 +24,7 @@ import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString
@@ -88,7 +89,13 @@ class PropertiesStub implements HostService {
     }
 
     List<String> getProperty() {
-        return stringListStatement(serviceProperties);
+        return stringListStatement(new ListProperty() {
+
+                    @Override
+                    public void add(String property) {
+                        serviceProperties.addProperty(property);
+                    }
+                });
     }
 
     @Override
