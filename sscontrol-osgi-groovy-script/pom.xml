@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>sscontrol-osgi-groovy-script</artifactId>
-    <name>sscontrol-osgi - Groovy - Script</name>
+    <name>sscontrol-osgi - groovy-script</name>
     <packaging>bundle</packaging>
     <description>Base of all scripts that are using the Groovy syntax and compiler.</description>
 
