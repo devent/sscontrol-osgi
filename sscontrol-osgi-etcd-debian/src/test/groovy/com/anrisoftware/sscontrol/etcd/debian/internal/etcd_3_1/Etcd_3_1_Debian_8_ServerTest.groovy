@@ -21,7 +21,6 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import javax.inject.Inject
 
 import org.junit.Before
-import org.junit.Test
 
 import com.anrisoftware.globalpom.resources.ResourcesModule
 import com.anrisoftware.globalpom.strings.StringsModule
@@ -30,13 +29,13 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.etcd.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory
-import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
@@ -73,7 +72,7 @@ class Etcd_3_1_Debian_8_ServerTest extends AbstractScriptTestBase {
     @Inject
     CmdRunCaller cmdRunCaller
 
-    @Test
+    //@Test
     void "basic"() {
         def test = [
             name: "basic",
