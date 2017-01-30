@@ -111,6 +111,12 @@ class UnixTestUtil {
                 .exec("cat $file");
     }
 
+    static String checkRemoteFiles(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        new Shell.Plain(
+                new SSH(host, port, user, key))
+                .exec("ls -l $dir");
+    }
+
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
 
     static final URL debianJessieCatCommand = UnixTestUtil.class.getResource('debian_jessie_cat_cmd.txt')

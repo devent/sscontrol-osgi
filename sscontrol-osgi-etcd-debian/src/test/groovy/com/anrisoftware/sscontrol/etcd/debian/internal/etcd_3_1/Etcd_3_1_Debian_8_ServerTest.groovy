@@ -18,36 +18,7 @@ package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import javax.inject.Inject
-
-import org.junit.Before
-
-import com.anrisoftware.globalpom.resources.ResourcesModule
-import com.anrisoftware.globalpom.strings.StringsModule
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.etcd.internal.BindingModule
-import com.anrisoftware.sscontrol.etcd.internal.EtcdModule
-import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
-import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
-import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
-import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
-import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
-import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
-import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.internal.TypesModule
-import com.google.inject.AbstractModule
+import org.junit.Test
 
 import groovy.util.logging.Slf4j
 
@@ -58,102 +29,34 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_ServerTest extends AbstractScriptTestBase {
+class Etcd_3_1_Debian_8_ServerTest extends AbstractTestEtcd_3_1_Debian_8 {
 
-    @Inject
-    EtcdImplFactory serviceFactory
-
-    @Inject
-    Etcd_3_1_Debian_8_Factory scriptFactory
-
-    @Inject
-    SshImplFactory sshFactory
-
-    @Inject
-    CmdRunCaller cmdRunCaller
-
-    //@Test
-    void "basic"() {
+    @Test
+    void "etcd_script_basic"() {
+        if (!testHostAvailable) {
+            return
+        }
         def test = [
-            name: "basic",
+            name: "etcd_script_basic",
             input: """
-service "ssh", host: "robobee@andrea-master", key: "$robobeeKey"
-
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "etcd", member: "default"
 """,
-            generatedDir: folder.newFolder(),
             expected: { Map args ->
-                File dir = args.dir
+                assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
+                assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
+                def remote = checkRemoteFiles('/usr/local/bin/etcd*')
+                remote = remote.replaceAll '\\w{3} \\d+ \\d+:\\d+', 'date'
+                assertStringResource Etcd_3_1_Debian_8_ServerTest, remote, "${args.test.name}_bins_expected.txt"
             },
         ]
         doTest test
     }
 
-    String getServiceName() {
-        'etcd'
-    }
-
-    String getScriptServiceName() {
-        'etcd/debian/8'
-    }
-
     void createDummyCommands(File dir) {
     }
 
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'etcd', serviceFactory
-        services.putAvailableScriptService 'etcd/debian/8', scriptFactory
-        services.putAvailableService 'ssh', sshFactory
-    }
-
     Map getScriptEnv(Map args) {
-        def map = [:]
-        map.chdir = null
-        map.pwd = null
-        map.base = null
-        map.sudoEnv = [:]
-        map.env = [:]
-        map.createTmpFileCallback = null
-        return map
-    }
-
-    List getAdditionalModules() {
-        [
-            new SshModule(),
-            new SshPreModule(),
-            new EtcdModule(),
-            new BindingModule(),
-            new Etcd_3_1_Debian_8_Module(),
-            new DebugLoggingModule(),
-            new TypesModule(),
-            new StringsModule(),
-            new HostServicesModule(),
-            new ShellCmdModule(),
-            new SshShellModule(),
-            new CmdImplModule(),
-            new CmdModule(),
-            new ScpModule(),
-            new CopyModule(),
-            new FetchModule(),
-            new ReplaceModule(),
-            new FactsModule(),
-            new TemplateModule(),
-            new TokensTemplateModule(),
-            new ResourcesModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                }
-            }
-        ]
-    }
-
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
+        emptyScriptEnv
     }
 }

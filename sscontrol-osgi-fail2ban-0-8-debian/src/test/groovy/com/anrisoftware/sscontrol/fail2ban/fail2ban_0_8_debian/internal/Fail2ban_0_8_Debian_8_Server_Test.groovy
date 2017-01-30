@@ -59,4 +59,7 @@ service "fail2ban" with {
     Map getScriptEnv(Map args) {
         emptyScriptEnv
     }
+
+    void createDummyCommands(File dir) {
+    }
 }

@@ -1,21 +1,54 @@
 downloadCmd(args) ::= <<
 SRC_NAME=$(basename <args.src>)
-<setupRemoteTmp(args)>
-<downloadFile(args, "$SRC_NAME", args.src)>
-<if(args.hash)><checkHashFile(args)><endif>
-<if(args.sig)><checkSigFile(args)><endif>
-<copyFile(args)>
+DEST_FILE="<args.dest>"
+
+function checkHashFile() {
+    <if(args.hash)><checkHashFile(args)><else>true<endif>
+}
+
+function checkSigFile() {
+    <if(args.sig)><checkSigFile(args)><else>true<endif>
+}
+
+function downloadCheckFile() {
+    <setupRemoteTmp(args)>
+    cd '<args.tmp>'
+    downloadFile
+    <if(args.hash)>checkHashFile<endif>
+    <if(args.sig)>checkSigFile<endif>
+    ret=$?
+    if [[ $ret != 0 ]]; then
+        exit $ret
+    fi
+    <copyFile(args)>
+}
+
+function downloadFile() {
+    <downloadFile(args, "$SRC_NAME", args.src)>
+}
+
+if [ -d "<args.dest>" ]; then
+    DEST_FILE="<args.dest>/$SRC_NAME"
+fi
+if [ -f "$DEST_FILE" ]; then
+    cd "`dirname $DEST_FILE`"
+    <if(args.hash)>checkHashFile<endif>
+    <if(args.sig)>checkSigFile<endif>
+    if [[ $? != 0 ]]; then
+        downloadCheckFile
+    fi
+else
+    downloadCheckFile
+fi
 >>
 
 setupRemoteTmp(args) ::= <<
-USER=$(id -u)
 sudo mkdir -p '<args.tmp>'
-sudo chown $USER '<args.tmp>'
+sudo chown $SSH_USER '<args.tmp>'
 sudo chmod o-rwx '<args.tmp>'
 >>
 
 downloadFile(args, name, src) ::= <<
-cd '<args.tmp>'
 if which wget >/dev/null; then
     <wgetCmd(args, name, src)>
 elif which curl >/dev/null; then
@@ -38,16 +71,13 @@ cd '<args.tmp>'
 >>
 
 checkSigFile(args) ::= <<
-cd '<args.tmp>'
 SIG_NAME=$(basename <args.sig>)
 <if(args.sigRemote)><downloadFile(args, "$SIG_NAME", args.sig)><endif>
 gpg --keyserver <args.server> --recv-key <args.key>
 gpg --verify "$SIG_NAME"
 ret=$?
 rm "$SIG_NAME"
-if [[ $ret != 0 ]]; then
-    exit $ret
-fi
+return $ret
 >>
 
 md5(args) ::= <<
