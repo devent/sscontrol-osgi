@@ -1,6 +1,3 @@
-delimiters "%", "%"
-
-ufwAction(parent, vars) ::= <<
 # Fail2Ban action configuration file for ufw
 #
 # You are required to run "ufw enable" before this will have an effect.
@@ -42,5 +39,3 @@ application =
 # Author: Guilhem Lettron
 # Enhancements: Daniel Black
 # Fix actionban and actionunban: Erwin Müller, erwin.mueller@deventm.de
-
->>

@@ -173,6 +173,13 @@ abstract class AbstractScriptTestBase {
         return map
     }
 
+    Map getEmptyScriptEnv() {
+        def map = [:]
+        map.sudoEnv = [:]
+        map.env = [:]
+        return map
+    }
+
     def createGenerateTempDir(Map args) {
         //.
         { Map a ->

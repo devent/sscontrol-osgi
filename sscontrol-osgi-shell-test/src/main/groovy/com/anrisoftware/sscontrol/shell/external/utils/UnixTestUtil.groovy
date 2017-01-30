@@ -20,6 +20,9 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
+import com.jcabi.ssh.SSH
+import com.jcabi.ssh.Shell
+
 import groovy.transform.CompileStatic
 
 
@@ -94,6 +97,18 @@ class UnixTestUtil {
         def resource = context.getResource(res)
         assert resource != null
         assertStringContent fileToStringReplace(file), resourceToString(resource)
+    }
+
+    static assertStringResource(Class context, String string, String res) {
+        def resource = context.getResource(res)
+        assert resource != null
+        assertStringContent string, resourceToString(resource)
+    }
+
+    static String readRemoteFile(String file, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        new Shell.Plain(
+                new SSH(host, port, user, key))
+                .exec("cat $file");
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')

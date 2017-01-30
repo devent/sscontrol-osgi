@@ -37,19 +37,26 @@ class Fail2ban_0_8_Debian_8_Server_Test extends AbstractTestFail2ban_0_8_Debian_
             return
         }
         def test = [
-            name: "default_target",
+            name: "fail2ban_script_ssh_jail",
             input: """
-service "ssh", host: "robobee-test"
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "fail2ban" with {
-    debug "debug", level: 3
+    debug "debug", level: 4
     banning time: "PT1M"
     jail "ssh"
 }
 """,
             expected: { Map args ->
                 File dir = args.dir as File
+                assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/fail2ban.local'), "${args.test.name}_fail2ban_local_expected.txt"
+                assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/jail.local'), "${args.test.name}_jail_local_expected.txt"
+                assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/action.d/ufw.conf'), "${args.test.name}_ufw_conf_expected.txt"
             },
         ]
         doTest test
+    }
+
+    Map getScriptEnv(Map args) {
+        emptyScriptEnv
     }
 }

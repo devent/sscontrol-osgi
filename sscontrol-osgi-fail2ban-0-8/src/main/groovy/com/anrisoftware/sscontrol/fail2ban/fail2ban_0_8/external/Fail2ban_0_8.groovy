@@ -158,7 +158,7 @@ fi
     }
 
     File getFail2banLocalConfigFile() {
-        properties.getFileProperty "local_config_file", base, defaultProperties
+        properties.getFileProperty "local_config_file", configDir, defaultProperties
     }
 
     String getFirewall() {

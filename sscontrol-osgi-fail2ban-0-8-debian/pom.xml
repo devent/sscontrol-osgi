@@ -94,7 +94,6 @@
             <artifactId>resources-templates</artifactId>
             <type>bundle</type>
         </dependency>
-
     </dependencies>
 
 </project>

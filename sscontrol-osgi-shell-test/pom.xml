@@ -46,6 +46,10 @@
             <artifactId>globalpomutils-exec</artifactId>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-ssh</artifactId>
+        </dependency>
 
         <!-- own modules -->
         <dependency>
