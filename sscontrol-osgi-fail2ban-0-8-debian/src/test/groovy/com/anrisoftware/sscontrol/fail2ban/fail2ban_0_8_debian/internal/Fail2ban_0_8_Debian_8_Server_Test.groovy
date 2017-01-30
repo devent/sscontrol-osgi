@@ -47,7 +47,6 @@ service "fail2ban" with {
 }
 """,
             expected: { Map args ->
-                File dir = args.dir as File
                 assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/fail2ban.local'), "${args.test.name}_fail2ban_local_expected.txt"
                 assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/jail.local'), "${args.test.name}_jail_local_expected.txt"
                 assertStringResource Fail2ban_0_8_Debian_8_Server_Test, readRemoteFile('/etc/fail2ban/action.d/ufw.conf'), "${args.test.name}_ufw_conf_expected.txt"

@@ -106,15 +106,17 @@ class UnixTestUtil {
     }
 
     static String readRemoteFile(String file, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
-        new Shell.Plain(
-                new SSH(host, port, user, key))
-                .exec("cat $file");
+        remoteCommand "cat $file", host, port, user, key
     }
 
     static String checkRemoteFiles(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        remoteCommand "ls -l $dir", host, port, user, key
+    }
+
+    static String remoteCommand(String cmd, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Plain(
                 new SSH(host, port, user, key))
-                .exec("ls -l $dir");
+                .exec(cmd);
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
