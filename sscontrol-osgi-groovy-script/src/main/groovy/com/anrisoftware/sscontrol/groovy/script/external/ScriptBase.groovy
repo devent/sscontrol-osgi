@@ -163,6 +163,16 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     Map scriptEnv
 
+    /**
+     * Creates a temporary file.
+     */
+    def createTmpFileCallback
+
+    /**
+     * Returns to copy and replace local files for tests.
+     */
+    def filesLocal
+
     @Inject
     void setScriptEnv(@Assisted Map<String, Object> scriptEnv) {
         this.scriptEnv = new HashMap(scriptEnv)
@@ -172,6 +182,8 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         this.sudoChdir = scriptEnv.sudoChdir
         this.env = scriptEnv.env
         this.sudoEnv = scriptEnv.sudoEnv
+        this.createTmpFileCallback = scriptEnv.createTmpFileCallback
+        this.filesLocal = scriptEnv.filesLocal
     }
 
     @Override
@@ -376,20 +388,6 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         } else {
             File.createTempFile('robobee', null)
         }
-    }
-
-    /**
-     * Creates a temporary file.
-     */
-    def getCreateTmpFileCallback() {
-        scriptEnv.createTmpFileCallback
-    }
-
-    /**
-     * Returns to copy and replace local files for tests.
-     */
-    def getFilesLocal() {
-        scriptEnv.filesLocal
     }
 
     private setupArgs(Map args, String name='') {
