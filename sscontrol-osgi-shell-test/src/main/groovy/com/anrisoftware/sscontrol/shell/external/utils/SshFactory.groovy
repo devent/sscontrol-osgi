@@ -55,7 +55,7 @@ class SshFactory implements Ssh {
         def ssh = injector.getInstance(SshFactory)
         ssh.hosts = [
             [
-                getHost: { 'robobee' },
+                getHost: { 'robobee-test' },
                 getUser: { 'robobee' },
                 getPort: { 22 },
                 getKey: { UnixTestUtil.robobeeKey.toURI() },

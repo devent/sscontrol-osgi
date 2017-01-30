@@ -84,6 +84,23 @@ abstract class AbstractScriptTestBase {
 
     Threads threads
 
+    static boolean isTestHostAvailable() {
+        return isHostAvailable('robobee-test')
+    }
+
+    static boolean isHostAvailable(String host) {
+        boolean a = false
+        try {
+            def address = InetAddress.getByName host
+            a = address.isReachable(2000)
+        } catch (UnknownHostException e) {
+        }
+        if (!a) {
+            log.info 'Test host `{}` not available.', host
+        }
+        return a
+    }
+
     void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
         File parent = folder.newFolder()
