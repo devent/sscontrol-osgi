@@ -53,11 +53,10 @@ abstract class Ufw_Fail2ban_0_8 extends ScriptBase {
     @Inject
     SectionFactory sectionFactory
 
-    Object script
-
-    File jailLocalConfigFileTmp
-
-    File jailLocalConfigFileDest
+    @Override
+    def getLog() {
+        log
+    }
 
     def enableService() {
         log.info 'Enable Ufw.'
@@ -69,45 +68,18 @@ ufw -f enable
 
     def configureService() {
         Fail2ban service = service
-        def tmpJailLocal = fetchJailLocalConfigFile()
+        def tmp = createTmpFile()
+        fetch privileged: true, src: jailLocalConfigFile, dest: tmp call()
         setupDefaultJail service.defaultJail
-        def builder = configureJail service.defaultJail, tmpJailLocal
-        storeJailLocalFile builder, tmpJailLocal
+        def builder = configureJail service.defaultJail, tmp
+        FileUtils.write tmp, builder.toString(), charset
         service.jails.each {
             setupDefaults it
-            builder = configureJail it, tmpJailLocal
-            storeJailLocalFile builder, tmpJailLocal
+            builder = configureJail it, tmp
+            FileUtils.write tmp, builder.toString(), charset
         }
-        copyJailLocalConfigFile builder, tmpJailLocal
-    }
-
-    def storeJailLocalFile(StringBuilder builder, File jailLocalFile) {
-        if (!jailLocalConfigFileDest) {
-            FileUtils.write jailLocalFile, builder.toString(), charset
-        } else {
-            FileUtils.write jailLocalConfigFileDest, builder.toString(), charset
-        }
-    }
-
-    def fetchJailLocalConfigFile() {
-        if (!jailLocalConfigFileTmp) {
-            def tmp = File.createTempFile("jail", ".local")
-            fetch privileged: true, src: new File(configDir, jailLocalConfigFile), dest: tmp call()
-            return tmp
-        } else {
-            jailLocalConfigFileTmp
-        }
-    }
-
-    def copyJailLocalConfigFile(StringBuilder builder, File jailLocalFile) {
-        if (!jailLocalConfigFileDest) {
-            FileUtils.write jailLocalFile, builder.toString(), charset
-            copy privileged: true, src: jailLocalFile, dest: new File(configDir, jailLocalConfigFile) call()
-            jailLocalFile.delete()
-        } else {
-            FileUtils.write jailLocalConfigFileDest, builder.toString(), charset
-            jailLocalConfigFileDest
-        }
+        copy privileged: true, src: tmp, dest: jailLocalConfigFile call()
+        tmp.delete()
     }
 
     def configureJail(Jail jail, File jailLocalConfigFile) {
@@ -261,16 +233,7 @@ ufw -f enable
         properties.getProperty "logpath_${name}", defaultProperties
     }
 
-    def propertyMissing(String name) {
-        script.getProperty name
-    }
-
-    def methodMissing(String name, def args) {
-        script.invokeMethod name, args
-    }
-
-    @Override
-    def getLog() {
-        log
+    File getJailLocalConfigFile() {
+        properties.getFileProperty "jail_local_config_file", configDir, defaultProperties
     }
 }

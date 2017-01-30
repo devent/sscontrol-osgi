@@ -26,7 +26,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Fail2ban_0_8_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;

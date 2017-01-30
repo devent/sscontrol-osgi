@@ -62,16 +62,16 @@ import groovy.util.logging.Slf4j
 class Etcd_3_1_Debian_8_Test extends AbstractScriptTestBase {
 
     @Inject
-    EtcdImplFactory serviceFactory
-
-    @Inject
-    Etcd_3_1_Debian_8_Factory scriptFactory
-
-    @Inject
     SshImplFactory sshFactory
 
     @Inject
     CmdRunCaller cmdRunCaller
+
+    @Inject
+    EtcdImplFactory serviceFactory
+
+    @Inject
+    Etcd_3_1_Debian_8_Factory scriptFactory
 
     @Test
     void "basic"() {
@@ -79,7 +79,6 @@ class Etcd_3_1_Debian_8_Test extends AbstractScriptTestBase {
             name: "basic",
             input: """
 service "ssh", host: "localhost"
-
 service "etcd", member: "default"
 """,
             generatedDir: folder.newFolder(),
@@ -132,9 +131,9 @@ service "etcd", member: "default"
     }
 
     HostServices putServices(HostServices services) {
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'etcd', serviceFactory
         services.putAvailableScriptService 'etcd/debian/8', scriptFactory
-        services.putAvailableService 'ssh', sshFactory
     }
 
     List getAdditionalModules() {

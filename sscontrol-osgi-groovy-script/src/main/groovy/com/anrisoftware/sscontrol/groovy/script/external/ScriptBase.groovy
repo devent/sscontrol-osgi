@@ -159,25 +159,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     Map sudoEnv = [:]
 
     /**
-     * Creates a temporary file.
-     */
-    def createTmpFileCallback = null
-
-    /**
      * Script environment.
      */
     Map scriptEnv
 
     @Inject
-    void setScriptEnv(@Assisted Map<String, Object> env) {
-        this.scriptEnv = new HashMap(env)
-        this.pwd = env.pwd
-        this.chdir = env.chdir
-        this.base = env.base
-        this.sudoChdir = env.sudoChdir
-        this.env = env.env
-        this.sudoEnv = env.sudoEnv
-        this.createTmpFileCallback = env.createTmpFileCallback
+    void setScriptEnv(@Assisted Map<String, Object> scriptEnv) {
+        this.scriptEnv = new HashMap(scriptEnv)
+        this.pwd = scriptEnv.pwd
+        this.chdir = scriptEnv.chdir
+        this.base = scriptEnv.base
+        this.sudoChdir = scriptEnv.sudoChdir
+        this.env = scriptEnv.env
+        this.sudoEnv = scriptEnv.sudoEnv
     }
 
     @Override
@@ -384,6 +378,20 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         }
     }
 
+    /**
+     * Creates a temporary file.
+     */
+    def getCreateTmpFileCallback() {
+        scriptEnv.createTmpFileCallback
+    }
+
+    /**
+     * Returns to copy and replace local files for tests.
+     */
+    def getFilesLocal() {
+        scriptEnv.filesLocal
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
@@ -408,6 +416,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
             args.cmdName = name
             a.tmpFile = createTmpFileCallback(args)
         }
+        a.filesLocal = filesLocal
         return a
     }
 

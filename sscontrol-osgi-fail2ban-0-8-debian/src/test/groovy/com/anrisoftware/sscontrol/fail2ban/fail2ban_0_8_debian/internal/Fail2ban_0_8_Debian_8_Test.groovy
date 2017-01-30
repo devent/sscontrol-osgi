@@ -28,7 +28,6 @@ import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Fail2ban_0_8_Debian_8_Factory
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
@@ -45,11 +44,12 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
-import com.anrisoftware.sscontrol.types.external.HostServiceScript
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
-import com.google.inject.assistedinject.FactoryModuleBuilder
 
 import groovy.util.logging.Slf4j
 
@@ -63,66 +63,70 @@ import groovy.util.logging.Slf4j
 class Fail2ban_0_8_Debian_8_Test extends AbstractScriptTestBase {
 
     @Inject
+    SshImplFactory sshFactory
+
+    @Inject
+    CmdRunCaller cmdRunCaller
+
+    @Inject
     Fail2banImplFactory fail2banFactory
 
     @Inject
     Fail2ban_0_8_Debian_8_Factory fail2banDebianFactory
 
-    @Inject
-    CmdRunCaller cmdRunCaller
-
-    static Map expectedResources = [
-        default_target_sudo: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_sudo_expected.txt'),
-        default_target_apt_get: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_apt_get_expected.txt'),
-        default_target_service: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_service_expected.txt'),
-        default_target_jail_local: Fail2ban_0_8_Debian_8_Test.class.getResource('default_target_jail_local_expected.txt'),
-        apache_jail_jail_local: Fail2ban_0_8_Debian_8_Test.class.getResource('apache_jail_jail_local_expected.txt'),
-    ]
-
     @Test
     void "basic script"() {
         def test = [
-            enabled: true,
             name: "basic",
             input: """
+service "ssh", host: "localhost"
 service "fail2ban"
 """,
+            generatedDir: folder.newFolder(),
+            pretest: { Map test ->
+                def configDir = new File(test.dir, 'etc/fail2ban')
+                configDir.mkdirs()
+                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
+                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
+                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
+                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
+            },
             expected: { Map args ->
                 File dir = args.dir
-                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
-                assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
-            },
+                File gen = args.test.generatedDir
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
+            }
         ]
-        doTest test, 0
+        doTest test
     }
 
     @Test
     void "apache_jail"() {
         def test = [
-            enabled: true,
-            name: "basic",
+            name: "apache_jail",
             input: """
+service "ssh", host: "localhost"
 service "fail2ban"
 """,
+            generatedDir: folder.newFolder(),
+            pretest: { Map test ->
+                def configDir = new File(test.dir, 'etc/fail2ban')
+                configDir.mkdirs()
+                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
+                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
+                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
+                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
+            },
             expected: { Map args ->
                 File dir = args.dir
-                assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                assertStringContent fileToString(new File(dir, 'service.out')), resourceToString(expectedResources["${args.test.name}_service"])
-                assertStringContent fileToString(new File(dir, '/etc/fail2ban/jail.local')), resourceToString(expectedResources["${args.test.name}_jail_local"])
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
             },
         ]
         doTest test, 0
-    }
-
-    HostServiceScript setupScript(Map args, HostServiceScript script) {
-        super.setupScript args, script
-        def configDir = new File(args.dir, "/etc/fail2ban")
-        script.ufwScript.setJailLocalConfigFileTmp new File(configDir, "jail.local")
-        script.ufwScript.setJailLocalConfigFileDest new File(configDir, "jail.local")
-        return script
     }
 
     String getServiceName() {
@@ -133,11 +137,15 @@ service "fail2ban"
         'fail2ban/debian/8'
     }
 
+    static URL jail2banConf = Fail2ban_0_8_Debian_8_Test.class.getResource("fail2ban_conf.txt")
+
+    static URL jailLocal = Fail2ban_0_8_Debian_8_Test.class.getResource("jail_local.txt")
+
     void createDummyCommands(File dir) {
         def configDir = new File(dir, 'etc/fail2ban')
         configDir.mkdirs()
-        IOUtils.copy(Fail2ban_0_8_Debian_8_Test.class.getResource("fail2ban_conf.txt").openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf")))
-        IOUtils.copy(Fail2ban_0_8_Debian_8_Test.class.getResource("jail_local.txt").openStream(), new FileOutputStream(new File(configDir, "jail.local")))
+        IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
+        IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -153,6 +161,7 @@ service "fail2ban"
     }
 
     HostServices putServices(HostServices services) {
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'fail2ban', fail2banFactory
         services.putAvailableScriptService 'fail2ban/debian/8', fail2banDebianFactory
     }
@@ -160,7 +169,10 @@ service "fail2ban"
     List getAdditionalModules() {
         [
             new Fail2banModule(),
+            new Fail2ban_0_8_Debian_8_Module(),
             new InitFileParserModule(),
+            new SshModule(),
+            new SshPreModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -180,7 +192,6 @@ service "fail2ban"
                 @Override
                 protected void configure() {
                     bind Cmd to CmdImpl
-                    install(new FactoryModuleBuilder().implement(HostServiceScript, Fail2ban_0_8_Debian_8).build(Fail2ban_0_8_Debian_8_Factory))
                 }
             }
         ]

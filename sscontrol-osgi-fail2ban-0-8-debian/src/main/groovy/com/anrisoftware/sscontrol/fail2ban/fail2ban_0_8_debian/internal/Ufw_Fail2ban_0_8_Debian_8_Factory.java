@@ -13,33 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal;
 
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
 /**
- * Creates the host service script.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface HostServiceScriptService {
-
-    /**
-     * Returns the system name, for example {@code "ubuntu"}.
-     */
-    String getSystemName();
-
-    /**
-     * Returns the system version, for example {@code "14.04"}.
-     */
-    String getSystemVersion();
-
-    /**
-     * Creates the script.
-     */
-    HostServiceScript create(HostServices repository, HostService service,
-            SshHost target, ExecutorService threads,
-            Map<String, Object> scriptEnv);
+public interface Ufw_Fail2ban_0_8_Debian_8_Factory
+        extends HostServiceScriptService {
 }

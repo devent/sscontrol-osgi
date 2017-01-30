@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Fail2ban_0_8_Debian_8_Factory
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule

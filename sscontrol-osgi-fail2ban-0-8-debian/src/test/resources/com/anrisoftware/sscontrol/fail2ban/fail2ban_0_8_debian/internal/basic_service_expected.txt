@@ -1,0 +1,2 @@
+fail2ban restart
+fail2ban status

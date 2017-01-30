@@ -89,6 +89,8 @@ abstract class AbstractScriptTestBase {
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
+        test.dir = dir
+        test.pretest ? test.pretest(test) : false
         def services = servicesFactory.create()
         putServices services
         putSshService services
@@ -150,6 +152,7 @@ abstract class AbstractScriptTestBase {
         map.env = [:]
         map.env.PATH = args.dir
         map.createTmpFileCallback = createGenerateTempDir(args)
+        map.filesLocal = true
         return map
     }
 
@@ -161,6 +164,7 @@ abstract class AbstractScriptTestBase {
                 case 'template':
                     def split = StringUtils.split(a.dest.toString(), File.separator)
                     def name = split[3..split.length-1].join(File.separator)
+                    assert args.test.generatedDir != null
                     file = new File(args.test.generatedDir, name)
                     break;
             }

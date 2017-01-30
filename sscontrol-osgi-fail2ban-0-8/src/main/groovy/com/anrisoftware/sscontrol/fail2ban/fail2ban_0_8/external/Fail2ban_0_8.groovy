@@ -70,32 +70,32 @@ abstract class Fail2ban_0_8 extends ScriptBase {
     }
 
     def configureService() {
-        log.info 'Configuring sshd service.'
+        log.info 'Configuring fail2ban service.'
         copyConfFile()
         configureDebugLog()
+    }
+
+    def copyConfFile() {
+        shell privileged: true, """
+cd '${configDir}'
+if [ ! -f ${fail2banLocalConfigFileName} ]; then
+cp '${fail2banConfigFileName}' '${fail2banLocalConfigFileName}'
+fi
+if [ ! -f ${jailLocalConfigFileName} ]; then
+cp '${jailConfigFileName}' '${jailLocalConfigFileName}'
+fi
+""" call()
     }
 
     def configureDebugLog() {
         Fail2ban service = service
         int debugLevel = service.debugLogging.modules['debug'].level
         String debugTarget = service.debugLogging.modules['debug'].target
-        replace privileged: true, dest: new File(configDir, fail2banLocalConfigFile) with {
+        replace privileged: true, dest: fail2banLocalConfigFile with {
             line "s/(?m)^loglevel\\s*=.*/loglevel = ${debugLevel}/"
             line "s|(?m)^logtarget\\s*=.*|logtarget = ${debugTarget}|"
             it
         }()
-    }
-
-    def copyConfFile() {
-        shell privileged: true, """
-cd '${configDir}'
-if [ ! -f ${fail2banLocalConfigFile} ]; then
-cp '${fail2banConfigFile}' '${fail2banLocalConfigFile}'
-fi
-if [ ! -f ${jailLocalConfigFile} ]; then
-cp '${jailConfigFile}' '${jailLocalConfigFile}'
-fi
-""" call()
     }
 
     HostServiceScript getFirewallScript() {
@@ -141,20 +141,24 @@ fi
         Type.valueOf properties.getProperty('banning_type', defaultProperties)
     }
 
-    String getFail2banConfigFile() {
+    String getFail2banConfigFileName() {
         properties.getProperty "config_file", defaultProperties
     }
 
-    String getFail2banLocalConfigFile() {
-        properties.getProperty "local_config_file", defaultProperties
-    }
-
-    String getJailConfigFile() {
+    String getJailConfigFileName() {
         properties.getProperty "jail_config_file", defaultProperties
     }
 
-    String getJailLocalConfigFile() {
+    String getJailLocalConfigFileName() {
         properties.getProperty "jail_local_config_file", defaultProperties
+    }
+
+    String getFail2banLocalConfigFileName() {
+        properties.getProperty "local_config_file", defaultProperties
+    }
+
+    File getFail2banLocalConfigFile() {
+        properties.getFileProperty "local_config_file", base, defaultProperties
     }
 
     String getFirewall() {

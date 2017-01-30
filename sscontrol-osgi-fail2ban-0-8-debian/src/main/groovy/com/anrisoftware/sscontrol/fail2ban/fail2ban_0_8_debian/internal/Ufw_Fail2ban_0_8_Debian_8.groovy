@@ -20,7 +20,6 @@ import static com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal.F
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplatesFactory
-import com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.external.Ufw_Fail2ban_0_8_Debian
 
 /**
  * 

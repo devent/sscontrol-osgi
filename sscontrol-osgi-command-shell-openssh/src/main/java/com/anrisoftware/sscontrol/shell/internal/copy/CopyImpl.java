@@ -18,12 +18,16 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.copy;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.apache.commons.io.FileUtils;
 
 import com.anrisoftware.globalpom.checkfilehash.HashName;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
@@ -42,6 +46,8 @@ import com.google.inject.assistedinject.Assisted;
  * @version 1.0
  */
 public class CopyImpl implements Copy {
+
+    private static final Object FILES_LOCAL_ARG = "filesLocal";
 
     private final Map<String, Object> args;
 
@@ -80,8 +86,28 @@ public class CopyImpl implements Copy {
             copy = downloadFactory.create(args, host, parent, threads, log);
         } else {
             copy = scpFactory.create(args, host, parent, threads, log);
+            if (isFilesLocal()) {
+                try {
+                    FileUtils.copyFile(getSrc(), getDest());
+                } catch (IOException e) {
+                    throw new CopyFileException(e, getSrc(), getDest());
+                }
+            }
         }
         return copy.call();
+    }
+
+    private File getDest() {
+        return new File(args.get(DEST_ARG).toString());
+    }
+
+    private File getSrc() {
+        return new File(args.get(SRC_ARG).toString());
+    }
+
+    private boolean isFilesLocal() {
+        Boolean v = (Boolean) args.get(FILES_LOCAL_ARG);
+        return v != null && v;
     }
 
     private void parseHash() {
