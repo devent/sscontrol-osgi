@@ -18,11 +18,12 @@ package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Fail2ban_0_8_Debian_8_Factory extends HostServiceScriptService {
+public interface Fail2ban_0_8_Debian_8_Factory
+        extends HostServiceScriptService {
 
 }

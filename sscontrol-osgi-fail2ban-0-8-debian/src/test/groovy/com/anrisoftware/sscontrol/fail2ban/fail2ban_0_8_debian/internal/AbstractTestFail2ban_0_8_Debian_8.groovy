@@ -51,7 +51,7 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0

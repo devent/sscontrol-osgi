@@ -16,7 +16,7 @@ action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)
 mta = sendmail
 backend = auto
 sendername = Fail2Ban
-action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
 action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protocol="%(protocol)s", chain="%(chain)s", sendername="%(sendername)s"]
 
 [ssh]
@@ -33,7 +33,6 @@ port = ssh
 enabled = false
 filter = dropbear
 maxretry = 6
-app = SSH
 logpath = /var/log/auth.log
 
 [pam-generic]
