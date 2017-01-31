@@ -32,7 +32,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Etcd_3_1_Upstream extends ScriptBase {
 
-    def installKubernetes() {
+    def installEtcd() {
         log.info 'Installs etcd.'
         copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true call()
         def archiveFile = FilenameUtils.getName(archive.toString())

@@ -39,7 +39,7 @@ class Etcd_3_1_Upstream_Debian_8 extends Etcd_3_1_Upstream {
 
     @Override
     Object run() {
-        installKubernetes()
+        installEtcd()
     }
 
     @Override
