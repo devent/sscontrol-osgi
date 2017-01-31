@@ -82,9 +82,9 @@ class UnixTestUtil {
         def user = System.getProperty('user.name')
         String str = FileUtils.readFileToString file
         str = str.replaceAll(/junit\d+/, 'junit')
-        str.replaceAll(/replace\d+/, 'replace')
-        str.replaceAll(/random\d+/, 'random')
-        str.replaceAll(/$user/, 'user')
+        str = str.replaceAll(/replace\d+/, 'replace')
+        str = str.replaceAll(/random\d+/, 'random')
+        str = str.replaceAll(/$user/, 'user')
     }
 
     static String resourceToString(URL resource) {
