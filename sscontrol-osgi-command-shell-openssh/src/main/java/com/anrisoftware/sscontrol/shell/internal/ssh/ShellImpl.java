@@ -73,14 +73,14 @@ public class ShellImpl implements Shell {
     ShellImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log, @Assisted String command) {
-        this.args = new HashMap<String, Object>(args);
+        this.args = new HashMap<>(args);
         this.parent = parent;
         this.threads = threads;
         this.log = log;
         this.command = command;
         this.host = host;
-        this.env = new HashMap<String, String>(getEnv("env", args));
-        this.sudoEnv = new HashMap<String, String>(getEnv("sudoEnv", args));
+        this.env = new HashMap<>(getEnv("env", args));
+        this.sudoEnv = new HashMap<>(getEnv("sudoEnv", args));
         setupArgs();
     }
 
@@ -104,6 +104,33 @@ public class ShellImpl implements Shell {
     }
 
     public Shell env(String string) {
+        return putEnv(string, env);
+    }
+
+    public Shell env(Map<String, Object> args) {
+        putEnvArgs(args, env);
+        return this;
+    }
+
+    public Shell sudoEnv(String string) {
+        return putEnv(string, sudoEnv);
+    }
+
+    public Shell sudoEnv(Map<String, Object> args) {
+        putEnvArgs(args, sudoEnv);
+        return this;
+    }
+
+    private Map<String, String> getEnv(String name, Map<String, Object> args) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> env = (Map<String, String>) args.get(name);
+        if (env == null) {
+            env = new HashMap<>();
+        }
+        return env;
+    }
+
+    private Shell putEnv(String string, Map<String, String> env) {
         int i = string.indexOf('=');
         String key = string.substring(0, i);
         String value = string.substring(i + 1);
@@ -111,7 +138,7 @@ public class ShellImpl implements Shell {
         return this;
     }
 
-    public Shell env(Map<String, Object> args) {
+    private void putEnvArgs(Map<String, Object> args, Map<String, String> env) {
         Boolean literally = (Boolean) args.get("literally");
         String value = args.get("value").toString();
         String quote = "\'";
@@ -120,16 +147,6 @@ public class ShellImpl implements Shell {
         }
         value = String.format("%s%s%s", quote, value, quote);
         env.put(args.get("name").toString(), value);
-        return this;
-    }
-
-    private Map<String, String> getEnv(String name, Map<String, Object> args) {
-        @SuppressWarnings("unchecked")
-        Map<String, String> env = (Map<String, String>) args.get(name);
-        if (env == null) {
-            env = new HashMap<String, String>();
-        }
-        return env;
     }
 
 }

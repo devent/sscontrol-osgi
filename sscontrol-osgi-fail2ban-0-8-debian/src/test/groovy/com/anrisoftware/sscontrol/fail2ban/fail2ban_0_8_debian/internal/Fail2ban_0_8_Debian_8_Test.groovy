@@ -54,7 +54,7 @@ service "fail2ban"
                 File gen = args.test.generatedDir
                 assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
             }
         ]
         doTest test
@@ -81,7 +81,7 @@ service "fail2ban"
                 File dir = args.dir
                 assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "service.out", "${args.test.name}_service_expected.txt"
+                assertFileResource Fail2ban_0_8_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
             },
         ]
         doTest test, 0

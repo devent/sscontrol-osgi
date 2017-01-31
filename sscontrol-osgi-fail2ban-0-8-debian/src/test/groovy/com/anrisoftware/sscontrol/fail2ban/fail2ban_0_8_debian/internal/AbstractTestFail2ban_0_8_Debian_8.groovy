@@ -96,7 +96,7 @@ abstract class AbstractTestFail2ban_0_8_Debian_8 extends AbstractScriptTestBase 
             'rm',
             'cp',
             'apt-get',
-            'service',
+            'systemctl',
             'ufw'
         ]
     }

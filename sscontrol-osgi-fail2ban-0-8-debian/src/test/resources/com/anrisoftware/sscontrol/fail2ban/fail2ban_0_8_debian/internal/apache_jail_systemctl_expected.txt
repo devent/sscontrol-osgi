@@ -1,0 +1,3 @@
+restart fail2ban
+status fail2ban
+enable fail2ban

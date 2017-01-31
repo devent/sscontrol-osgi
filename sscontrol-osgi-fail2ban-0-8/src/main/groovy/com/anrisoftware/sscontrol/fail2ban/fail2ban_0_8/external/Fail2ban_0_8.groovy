@@ -36,8 +36,11 @@ abstract class Fail2ban_0_8 extends ScriptBase {
 
     def restartService() {
         log.info 'Restarting fail2ban service.'
-        shell privileged: true, "service fail2ban restart" call()
-        shell privileged: true, "service fail2ban status" call()
+        [
+            'fail2ban',
+        ].each {
+            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
+        }
     }
 
     def setupDefaults() {
