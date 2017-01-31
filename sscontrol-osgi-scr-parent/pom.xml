@@ -26,6 +26,9 @@
         <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
+        <module>../sscontrol-osgi-docker</module>
+        <module>../sscontrol-osgi-docker-debian</module>
+        <module>../sscontrol-osgi-docker-systemd</module>
         <module>../sscontrol-osgi-etcd</module>
         <module>../sscontrol-osgi-etcd-debian</module>
         <module>../sscontrol-osgi-etcd-systemd</module>
