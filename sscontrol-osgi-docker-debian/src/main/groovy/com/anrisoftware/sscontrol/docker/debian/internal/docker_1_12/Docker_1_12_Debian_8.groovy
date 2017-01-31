@@ -63,7 +63,7 @@ class Docker_1_12_Debian_8 extends ScriptBase {
 
     def installPackages() {
         log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: aptgetTimeout, "apt-get -y install ${packages.join(' ')}" with { //
+        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
             env "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
