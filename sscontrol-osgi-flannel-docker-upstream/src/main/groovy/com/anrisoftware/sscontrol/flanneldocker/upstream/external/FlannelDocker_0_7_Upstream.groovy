@@ -17,8 +17,13 @@ package com.anrisoftware.sscontrol.flanneldocker.upstream.external
 
 import static org.apache.commons.io.FilenameUtils.getBaseName
 
+import javax.inject.Inject
+
 import org.apache.commons.io.FilenameUtils
 
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
+import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
 import groovy.util.logging.Slf4j
@@ -32,25 +37,34 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
 
+    TemplateResource installCmdResource
+
+    @Inject
+    def setTemplates(TemplatesFactory factory, NetworkRenderer networkRenderer) {
+        def attr = [renderers: [networkRenderer]]
+        def t = factory.create 'FlannelDocker_0_7_Upstream_Templates', attr
+        this.installCmdResource = t.getResource 'install_cmd'
+    }
+
     def installKubernetes() {
         log.info 'Installs Flannel-Docker.'
+        FlannelDocker service = this.service
         copy src: archive, hash: archiveHash, dest: "/tmp", direct: true call()
-        def archiveFile = FilenameUtils.getName(archive.toString())
-        def archiveName = getBaseName(getBaseName(archive.toString()))
-        def bindir = binDir
-        def libexecdir = libexecDir
-        shell """\
-cd /tmp
-tar xf "$archiveFile"
-sudo mkdir -p '$bindir'
-sudo mv flanneld '$bindir'
-sudo mkdir -p '$libexecdir'
-sudo mv mk-docker-opts.sh '$libexecdir'
-""" call()
+        installCmdResource.invalidate()
+        def cmd = installCmdResource.getText('installCmd', 'parent', this, 'vars', [:])
+        shell cmd call()
     }
 
     URI getArchive() {
         properties.getURIProperty 'flannel_archive', defaultProperties
+    }
+
+    String getArchiveFile() {
+        FilenameUtils.getName(archive.toString())
+    }
+
+    String getArchiveName() {
+        getBaseName(getBaseName(archive.toString()))
     }
 
     String getArchiveHash() {

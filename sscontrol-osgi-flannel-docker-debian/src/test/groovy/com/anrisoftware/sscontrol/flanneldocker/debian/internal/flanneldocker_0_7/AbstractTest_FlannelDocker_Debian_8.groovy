@@ -49,7 +49,7 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -98,6 +98,7 @@ abstract class AbstractTest_FlannelDocker_Debian_8 extends AbstractScriptTestBas
             'useradd',
             'tar',
             'gpg',
+            'curl',
         ]
     }
 

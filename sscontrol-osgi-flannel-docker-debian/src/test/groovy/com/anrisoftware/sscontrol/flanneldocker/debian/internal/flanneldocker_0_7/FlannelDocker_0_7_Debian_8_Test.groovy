@@ -50,9 +50,10 @@ service "flannel-docker" with {
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "curl.out", "${args.test.name}_curl_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/system'), "flanneld.service", "${args.test.name}_flanneld_service_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/tmpfiles.d'), "flannel.conf", "${args.test.name}_flanneld_tmpfiles_config_expected.txt"
-                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "flannel.conf", "${args.test.name}_flannel_docker_conf_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/lib/systemd/system/docker.service.d'), "flannel.conf", "${args.test.name}_flannel_docker_conf_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/sysconfig'), "flanneld", "${args.test.name}_flanneld_sysconfig_expected.txt"
             },
         ]

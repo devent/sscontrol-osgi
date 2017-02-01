@@ -1,17 +1,10 @@
-flannelConfig(parent, vars) ::= <<
-###
-# Flanneld configuration options
-# Authors
-# https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
-
-# etcd url location.  Point this to the server where etcd runs
-FLANNEL_ETCD_ENDPOINTS="<parent.service.etcd.address>"
-
-# etcd config key.  This is the configuration key that flannel queries
-# For address range assignment
-FLANNEL_ETCD_PREFIX="<parent.service.etcd.prefix>"
-
-# Any additional options that you want to pass
-#FLANNEL_OPTIONS=""
+installCmd(parent, vars) ::= <<
+cd /tmp
+tar xf "<parent.archiveFile>"
+sudo mkdir -p '<parent.binDir>'
+sudo mv flanneld '<parent.binDir>'
+sudo mkdir -p '<parent.libexecDir>'
+sudo mv mk-docker-opts.sh '<parent.libexecDir>'
+curl -X PUT -d "value={\"Network\":\"<parent.service.network>\",\"Backend\":{\"Type\":\"<parent.service.backend.type>\"}}" "<parent.service.etcd.address>/v2/keys/coreos.com/network/config"
 
 >>
