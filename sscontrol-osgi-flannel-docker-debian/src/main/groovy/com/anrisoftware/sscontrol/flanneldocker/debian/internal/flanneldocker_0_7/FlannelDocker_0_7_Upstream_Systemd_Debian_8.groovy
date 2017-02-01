@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0_7
 
-import static com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0_7.FlannelDocker_0_7_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -53,15 +51,5 @@ class FlannelDocker_0_7_Upstream_Systemd_Debian_8 extends FlannelDocker_0_7_Upst
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

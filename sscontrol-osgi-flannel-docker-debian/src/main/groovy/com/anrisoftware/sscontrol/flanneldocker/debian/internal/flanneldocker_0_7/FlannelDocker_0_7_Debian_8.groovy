@@ -56,7 +56,7 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
     void installPackages() {
         log.info "Installing packages {}.", packages
         shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override
@@ -67,15 +67,5 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

@@ -105,6 +105,14 @@ mkdir -p '$libexecdir'
                 dest: "$dockerdir/flannel.conf",
                 vars: [:],
             ],
+            [
+                resource: servicesTemplate,
+                name: 'dockerNetworkConfig',
+                privileged: true,
+                override: false,
+                dest: "$dockerNetworkFile",
+                vars: [:],
+            ],
         ].each { template it call() }
         shell privileged: true, """
 systemctl daemon-reload

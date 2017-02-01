@@ -50,11 +50,11 @@ sudo mv mk-docker-opts.sh '$libexecdir'
     }
 
     URI getArchive() {
-        properties.getURIProperty 'etcd_archive', defaultProperties
+        properties.getURIProperty 'flannel_archive', defaultProperties
     }
 
     String getArchiveHash() {
-        properties.getProperty 'etcd_archive_hash', defaultProperties
+        properties.getProperty 'flannel_archive_hash', defaultProperties
     }
 
     File getBinDir() {

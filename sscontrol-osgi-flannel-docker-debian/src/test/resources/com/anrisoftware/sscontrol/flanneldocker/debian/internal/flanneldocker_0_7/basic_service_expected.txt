@@ -1,3 +1,0 @@
-flanneld restart
-flanneld status
-flanneld enable
