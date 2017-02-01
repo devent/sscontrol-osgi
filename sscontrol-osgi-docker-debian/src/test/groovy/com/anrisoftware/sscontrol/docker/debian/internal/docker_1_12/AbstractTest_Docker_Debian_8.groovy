@@ -98,6 +98,7 @@ abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
             'tar',
             'gpg',
             'update-grub',
+            'grep',
         ]
     }
 

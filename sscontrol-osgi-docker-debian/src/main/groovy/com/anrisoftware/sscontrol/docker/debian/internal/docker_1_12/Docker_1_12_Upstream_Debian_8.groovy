@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
@@ -40,8 +42,8 @@ class Docker_1_12_Upstream_Debian_8 extends ScriptBase {
 curl -fsSL $repositoryKey | sudo apt-key add -
 sudo add-apt-repository "deb $repository $systemName-$distributionName main"
 """ call()
-        shell privileged: true, "apt-get update && apt-get -y install docker-engine=$dockerVersion" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
+        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install docker-engine=$dockerVersion" with { //
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     String getRepository() {
@@ -54,6 +56,10 @@ sudo add-apt-repository "deb $repository $systemName-$distributionName main"
 
     String getDockerVersion() {
         properties.getProperty 'docker_version', defaultProperties
+    }
+
+    Duration getAptgetTimeout() {
+        properties.getDurationProperty 'apt_get_timeout', defaultProperties
     }
 
     @Override
