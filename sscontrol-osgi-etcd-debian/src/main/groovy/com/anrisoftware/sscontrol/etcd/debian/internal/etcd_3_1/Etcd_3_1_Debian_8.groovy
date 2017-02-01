@@ -37,20 +37,25 @@ class Etcd_3_1_Debian_8 extends ScriptBase {
     Etcd_3_1_Debian_8_Properties debianPropertiesProvider
 
     @Inject
-    Etcd_3_1_Systemd_Debian_8_Factory systemdFactory
-
-    @Inject
     Etcd_3_1_Upstream_Debian_8_Factory upstreamFactory
 
     @Inject
     Etcd_3_1_Upstream_Systemd_Debian_8_Factory upstreamSystemdFactory
 
+    ScriptBase systemd
+
     @Override
     def run() {
+        systemd.stopServices()
         installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        systemd.startServices()
+    }
+
+    @Inject
+    def setSystemdFactory(Etcd_3_1_Systemd_Debian_8_Factory systemdFactory) {
+        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     void installPackages() {

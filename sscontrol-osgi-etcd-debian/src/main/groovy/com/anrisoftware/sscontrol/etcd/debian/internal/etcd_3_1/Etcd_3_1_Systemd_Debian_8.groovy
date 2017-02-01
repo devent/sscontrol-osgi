@@ -38,7 +38,6 @@ class Etcd_3_1_Systemd_Debian_8 extends Etcd_3_1_Systemd {
 
     @Override
     Object run() {
-        restartServices()
     }
 
     @Override

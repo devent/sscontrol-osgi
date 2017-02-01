@@ -46,7 +46,7 @@ service "etcd", member: "default"
                 assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
                 assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
                 def remote = checkRemoteFiles('/usr/local/bin/etcd*')
-                remote = remote.replaceAll '\\w{3} \\d+ \\d+:\\d+', 'date'
+                remote = remote.replaceAll '\\w{3}\\s+\\d+\\s+\\d+:\\d+', 'date'
                 assertStringResource Etcd_3_1_Debian_8_ServerTest, remote, "${args.test.name}_bins_expected.txt"
             },
         ]
