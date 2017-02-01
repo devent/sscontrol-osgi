@@ -28,12 +28,21 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Docker_1_12_Systemd extends ScriptBase {
 
-    def restartServices() {
-        log.info 'Restarting Docker services.'
+    def stopServices() {
+        log.info 'Stopping Docker services.'
         [
             'docker',
         ].each {
-            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
+            shell privileged: true, "if systemctl list-unit-files --type=service|grep $it; then systemctl stop $it; fi" call()
+        }
+    }
+
+    def startServices() {
+        log.info 'Starting Docker services.'
+        [
+            'docker',
+        ].each {
+            shell privileged: true, "systemctl start $it && systemctl status $it && systemctl enable $it" call()
         }
     }
 

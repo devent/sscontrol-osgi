@@ -36,7 +36,6 @@ class Docker_1_12_Systemd_Debian_8 extends Docker_1_12_Systemd {
 
     @Override
     Object run() {
-        restartServices()
     }
 
     @Override

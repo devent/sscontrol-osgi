@@ -38,8 +38,12 @@ class Docker_1_12_Debian_8 extends ScriptBase {
     @Inject
     Docker_1_12_Debian_8_Properties debianPropertiesProvider
 
+    ScriptBase systemd
+
     @Inject
-    Docker_1_12_Systemd_Debian_8_Factory systemdFactory
+    def setSystemdFactory(Docker_1_12_Systemd_Debian_8_Factory systemdFactory) {
+        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
 
     @Inject
     Docker_1_12_Upstream_Debian_8_Factory upstreamFactory
@@ -47,9 +51,10 @@ class Docker_1_12_Debian_8 extends ScriptBase {
     @Override
     def run() {
         setupDefaults()
+        systemd.stopServices()
         installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        systemd.startServices()
         updateGrub()
     }
 
@@ -64,7 +69,7 @@ class Docker_1_12_Debian_8 extends ScriptBase {
     def installPackages() {
         log.info "Installing packages {}.", packages
         shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     def updateGrub() {
