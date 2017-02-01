@@ -66,7 +66,6 @@ mv "$SRC_NAME" "<args.dest>"
 >>
 
 checkHashFile(args) ::= <<
-cd '<args.tmp>'
 <(args.hashType)(args)>
 >>
 
