@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.hostname.debian.external
 
-import groovy.util.logging.Slf4j
-
 import com.anrisoftware.sscontrol.hostname.systemd.external.Hostname_Systemd
+
+import groovy.util.logging.Slf4j
 
 /**
  * Configures the <i>hostname</i> on Debian systems.
@@ -37,7 +37,7 @@ abstract class Hostname_Debian extends Hostname_Systemd {
     void installPackages() {
         log.info "Installing packages {}.", packages
         shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override
