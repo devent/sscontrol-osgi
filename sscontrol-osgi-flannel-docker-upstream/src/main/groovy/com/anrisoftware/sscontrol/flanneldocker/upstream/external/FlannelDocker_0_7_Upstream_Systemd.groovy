@@ -48,15 +48,12 @@ abstract class FlannelDocker_0_7_Upstream_Systemd extends ScriptBase {
 
     def createDirectories() {
         log.info 'Create Flannel-Docker directories.'
-        def sysdir = systemdSystemDir
-        def tmpdir = systemdTmpfilesDir
-        def datadir = runDir
-        def libexecdir = libexecDir
         shell privileged: true, """
-mkdir -p '$sysdir'
-mkdir -p '$tmpdir'
-mkdir -p '$datadir'
-mkdir -p '$libexecdir'
+mkdir -p '$systemdSystemDir'
+mkdir -p '$systemdTmpfilesDir'
+mkdir -p '$runDir'
+mkdir -p '$libexecDir'
+mkdir -p '$dockerServiceDir'
 """ call()
     }
 

@@ -110,7 +110,9 @@ class UnixTestUtil {
     }
 
     static String checkRemoteFiles(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
-        remoteCommand "ls -l $dir", host, port, user, key
+        def s = remoteCommand "ls -l $dir", host, port, user, key
+        s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d{4}', 'date'
+        s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d+:\\d+', 'date'
     }
 
     static String remoteCommand(String cmd, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
