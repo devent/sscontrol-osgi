@@ -87,7 +87,6 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
             'rm',
             'cp',
             'apt-get',
-            'service',
             'systemctl',
             'which',
             'id',
@@ -98,6 +97,7 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
             'useradd',
             'tar',
             'gpg',
+            'grep',
         ]
     }
 

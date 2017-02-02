@@ -36,7 +36,6 @@ class FlannelDocker_0_7_Systemd_Debian_8 extends FlannelDocker_0_7_Systemd {
 
     @Override
     Object run() {
-        restartServices()
     }
 
     @Override

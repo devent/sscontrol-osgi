@@ -39,8 +39,7 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
     @Inject
     FlannelDocker_0_7_Debian_8_Properties debianPropertiesProvider
 
-    @Inject
-    FlannelDocker_0_7_Systemd_Debian_8_Factory systemdFactory
+    ScriptBase systemd
 
     @Inject
     FlannelDocker_0_7_Upstream_Debian_8_Factory upstreamFactory
@@ -50,11 +49,17 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
 
     @Override
     def run() {
+        systemd.stopServices()
         installPackages()
         setupDefaults()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        systemd.startServices()
+    }
+
+    @Inject
+    void setSystemdFactory(FlannelDocker_0_7_Systemd_Debian_8_Factory systemdFactory) {
+        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     def setupDefaults() {

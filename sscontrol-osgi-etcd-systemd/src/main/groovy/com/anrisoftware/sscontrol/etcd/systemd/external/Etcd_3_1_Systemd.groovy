@@ -29,21 +29,15 @@ import groovy.util.logging.Slf4j
 abstract class Etcd_3_1_Systemd extends ScriptBase {
 
     def stopServices() {
-        log.info 'Stop k8s services.'
-        [
+        stopSystemdService([
             'etcd',
-        ].each {
-            shell privileged: true, "systemctl stop $it" call()
-        }
+        ])
     }
 
     def startServices() {
-        log.info 'Starting k8s services.'
-        [
+        startEnableSystemdService([
             'etcd',
-        ].each {
-            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
-        }
+        ])
     }
 
     @Override

@@ -314,6 +314,26 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Stop the specified services.
+     */
+    def stopSystemdService(List services) {
+        log.info 'Stopping {}.', services
+        services.each {
+            shell privileged: true, "if systemctl list-unit-files --type=service|grep $it; then systemctl stop $it; fi" call()
+        }
+    }
+
+    /**
+     * Start and enable the specified services.
+     */
+    def startEnableSystemdService(List services) {
+        log.info 'Stopping {}.', services
+        services.each {
+            shell privileged: true, "systemctl start $it && systemctl status $it && systemctl enable $it" call()
+        }
+    }
+
+    /**
      * Returns the system name, for
      * example {@code "debian"}
      *

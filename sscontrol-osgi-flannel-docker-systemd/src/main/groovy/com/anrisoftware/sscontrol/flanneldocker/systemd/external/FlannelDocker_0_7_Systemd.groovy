@@ -28,13 +28,18 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class FlannelDocker_0_7_Systemd extends ScriptBase {
 
-    def restartServices() {
-        log.info 'Restarting Flannel-Docker services.'
-        [
+    def stopServices() {
+        stopSystemdService([
+            'docker',
             'flanneld',
-        ].each {
-            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
-        }
+        ])
+    }
+
+    def startServices() {
+        startEnableSystemdService([
+            'flanneld',
+            'docker',
+        ])
     }
 
     @Override
