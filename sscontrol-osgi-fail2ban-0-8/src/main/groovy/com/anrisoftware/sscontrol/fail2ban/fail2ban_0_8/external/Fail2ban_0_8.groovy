@@ -34,15 +34,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Fail2ban_0_8 extends ScriptBase {
 
-    def restartService() {
-        log.info 'Restarting fail2ban service.'
-        [
-            'fail2ban',
-        ].each {
-            shell privileged: true, "systemctl restart $it && systemctl status $it && systemctl enable $it" call()
-        }
-    }
-
     def setupDefaults() {
         Fail2ban service = service
         if (!service.debugLogging.modules['debug']) {

@@ -1,3 +1,5 @@
-restart fail2ban
+list-unit-files --type=service
+stop fail2ban
+start fail2ban
 status fail2ban
 enable fail2ban
