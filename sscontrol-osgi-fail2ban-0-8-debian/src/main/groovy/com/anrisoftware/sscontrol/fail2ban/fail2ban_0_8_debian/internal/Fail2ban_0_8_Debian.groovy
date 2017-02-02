@@ -36,6 +36,18 @@ abstract class Fail2ban_0_8_Debian extends Fail2ban_0_8 {
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
+    def stopService() {
+        stopSystemdService([
+            'fail2ban',
+        ])
+    }
+
+    def startService() {
+        startEnableSystemdService([
+            'fail2ban',
+        ])
+    }
+
     @Override
     def getLog() {
         log

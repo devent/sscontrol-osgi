@@ -41,10 +41,11 @@ class Fail2ban_0_8_Debian_8 extends Fail2ban_0_8_Debian {
     @Override
     def run() {
         setupDefaults()
+        stopService()
         installPackages()
         configureService()
         firewallScript.run()
-        restartService()
+        startService()
     }
 
     @Override
