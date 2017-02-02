@@ -1,4 +1,11 @@
+list-unit-files --type=service
+stop docker
+list-unit-files --type=service
+stop flanneld
 daemon-reload
-restart flanneld
+start flanneld
 status flanneld
 enable flanneld
+start docker
+status docker
+enable docker

@@ -99,6 +99,7 @@ abstract class AbstractTest_FlannelDocker_Debian_8 extends AbstractScriptTestBas
             'tar',
             'gpg',
             'curl',
+            'grep',
         ]
     }
 
