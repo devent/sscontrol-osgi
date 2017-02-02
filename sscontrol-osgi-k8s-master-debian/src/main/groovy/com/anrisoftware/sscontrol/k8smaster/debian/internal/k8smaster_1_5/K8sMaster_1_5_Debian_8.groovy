@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 
-import static com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5.K8sMaster_1_5_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -36,8 +34,7 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
     @Inject
     K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider
 
-    @Inject
-    K8sMaster_1_5_Systemd_Debian_8_Factory systemdFactory
+    def systemd
 
     @Inject
     K8sMaster_1_5_Upstream_Debian_8_Factory upstreamFactory
@@ -47,16 +44,22 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
 
     @Override
     def run() {
+        systemd.stopServices()
         installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        systemd.startServices()
+    }
+
+    @Inject
+    def setSystemdFactory(K8sMaster_1_5_Systemd_Debian_8_Factory systemdFactory) {
+        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     void installPackages() {
         log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
+        shell privileged: true, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override
@@ -67,15 +70,5 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

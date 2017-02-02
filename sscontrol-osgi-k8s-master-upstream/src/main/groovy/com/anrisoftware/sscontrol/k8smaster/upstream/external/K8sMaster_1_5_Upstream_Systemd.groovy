@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import org.apache.commons.io.IOUtils
@@ -121,26 +123,32 @@ chmod o-rx '$certsDir'
         K8sMaster service = service
         [
             [
+                name: 'service.tls.ca',
                 src: service.tls.ca,
                 dest: "$certsdir/$service.tls.caName",
             ],
             [
+                name: 'service.tls.cert',
                 src: service.tls.cert,
                 dest: "$certsdir/$service.tls.certName",
             ],
             [
+                name: 'service.tls.key',
                 src: service.tls.key,
                 dest: "$certsdir/$service.tls.keyName",
             ],
             [
+                name: 'service.kubelet.tls.ca',
                 src: service.kubelet.tls.ca,
                 dest: "$certsdir/$service.kubelet.tls.caName",
             ],
             [
+                name: 'service.kubelet.tls.cert',
                 src: service.kubelet.tls.cert,
                 dest: "$certsdir/$service.kubelet.tls.certName",
             ],
             [
+                name: 'service.kubelet.tls.key',
                 src: service.kubelet.tls.key,
                 dest: "$certsdir/$service.kubelet.tls.keyName",
             ],
@@ -158,14 +166,17 @@ chmod o-rx '$certsDir'
             }
             [
                 [
+                    name: 'tls.ca',
                     src: tls.ca,
                     dest: "$certsdir/$tls.caName",
                 ],
                 [
+                    name: 'tls.cert',
                     src: tls.cert,
                     dest: "$certsdir/$tls.certName",
                 ],
                 [
+                    name: 'tls.key',
                     src: tls.key,
                     dest: "$certsdir/$tls.keyName",
                 ],
