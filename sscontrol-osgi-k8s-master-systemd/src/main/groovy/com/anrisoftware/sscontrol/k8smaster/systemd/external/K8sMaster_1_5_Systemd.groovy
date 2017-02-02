@@ -28,15 +28,20 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class K8sMaster_1_5_Systemd extends ScriptBase {
 
-    def restartServices() {
-        log.info 'Restarting k8s services.'
-        [
+    def stopServices() {
+        stopSystemdService([
             'kube-apiserver',
             'kube-controller-manager',
             'kube-scheduler'
-        ].each {
-            shell privileged: true, "service $it restart && service $it status" call()
-        }
+        ])
+    }
+
+    def startServices() {
+        startEnableSystemdService([
+            'kube-apiserver',
+            'kube-controller-manager',
+            'kube-scheduler'
+        ])
     }
 
     @Override

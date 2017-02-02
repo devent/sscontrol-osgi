@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 
-import static com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5.K8sMaster_1_5_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -38,7 +36,6 @@ class K8sMaster_1_5_Systemd_Debian_8 extends K8sMaster_1_5_Systemd {
 
     @Override
     Object run() {
-        restartServices()
     }
 
     @Override
@@ -49,15 +46,5 @@ class K8sMaster_1_5_Systemd_Debian_8 extends K8sMaster_1_5_Systemd {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }
