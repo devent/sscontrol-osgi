@@ -53,7 +53,7 @@ mkdir -p '$systemdSystemDir'
 mkdir -p '$systemdTmpfilesDir'
 mkdir -p '$runDir'
 mkdir -p '$libexecDir'
-mkdir -p '$dockerServiceDir'
+mkdir -p '$dockerServiceDropDir'
 """ call()
     }
 
@@ -62,7 +62,7 @@ mkdir -p '$dockerServiceDir'
         def sysdir = systemdSystemDir
         def tmpdir = systemdTmpfilesDir
         def libexecdir = libexecDir
-        def dockerdir = dockerServiceDir
+        def dockerdir = dockerServiceDropDir
         [
             [
                 resource: servicesTemplate,
@@ -94,9 +94,6 @@ mkdir -p '$dockerServiceDir'
                 vars: [:],
             ],
         ].each { template it call() }
-        shell privileged: true, """
-systemctl daemon-reload
-""" call()
     }
 
     def createConfig() {
@@ -112,6 +109,17 @@ systemctl daemon-reload
                 vars: [:],
             ],
         ].each { template it call() }
+    }
+
+    def patchDockerService() {
+        replace dest: dockerServiceFile, privileged: true with {
+            line 's|ExecStart=/usr/bin/dockerd.*|ExecStart=/usr/bin/dockerd -H fd:// $DOCKER_NETWORK_OPTIONS|'
+            it
+        }.call()
+    }
+
+    def reloadSystemd() {
+        shell privileged: true, "systemctl daemon-reload" call()
     }
 
     File getSystemdSystemDir() {
@@ -142,8 +150,16 @@ systemctl daemon-reload
         properties.getFileProperty "docker_network_dir", base, defaultProperties
     }
 
+    File getDockerServiceDropDir() {
+        properties.getFileProperty "docker_service_drop_dir", base, defaultProperties
+    }
+
     File getDockerServiceDir() {
         properties.getFileProperty "docker_service_dir", base, defaultProperties
+    }
+
+    File getDockerServiceFile() {
+        properties.getFileProperty "docker_service_file", dockerServiceDir, defaultProperties
     }
 
     @Override

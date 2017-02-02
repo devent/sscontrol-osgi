@@ -40,6 +40,8 @@ class FlannelDocker_0_7_Upstream_Systemd_Debian_8 extends FlannelDocker_0_7_Upst
         createDirectories()
         createServices()
         createConfig()
+        patchDockerService()
+        reloadSystemd()
     }
 
     @Override
