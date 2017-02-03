@@ -1,2 +1,2 @@
--rf /var/lib/robobee/tmp/hosts
--rf /var/lib/robobee/tmp/replace.dest
+/var/lib/robobee/tmp/hosts
+/var/lib/robobee/tmp/replace.dest
