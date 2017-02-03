@@ -50,7 +50,9 @@ service "flannel-docker" with {
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/lib/systemd/system/docker.service.d/flannel.conf'), "${args.test.name}_flannel_docker_conf_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/local/bin/flannel*'), "${args.test.name}_local_bin_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/libexec/flannel'), "${args.test.name}_libexec_flannel_expected.txt"
-                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/run/flannel'), "${args.test.name}_run_flannel_expected.txt"
+                def s = checkRemoteFiles('/run/flannel')
+                s = s.replaceAll('\\d{2,3}', 'n')
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, s, "${args.test.name}_run_flannel_expected.txt"
             },
         ]
         doTest test
