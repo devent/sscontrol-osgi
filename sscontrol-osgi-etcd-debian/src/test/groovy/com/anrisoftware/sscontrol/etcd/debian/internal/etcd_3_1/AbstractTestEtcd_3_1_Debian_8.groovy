@@ -42,6 +42,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -128,6 +129,7 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
             new ReplaceModule(),
             new FactsModule(),
             new TemplateModule(),
+            new TemplateResModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
             new AbstractModule() {
