@@ -47,7 +47,7 @@ class Etcd_3_1_Debian_8 extends ScriptBase {
     @Override
     def run() {
         systemd.stopServices()
-        installPackages()
+        installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
@@ -56,12 +56,6 @@ class Etcd_3_1_Debian_8 extends ScriptBase {
     @Inject
     def setSystemdFactory(Etcd_3_1_Systemd_Debian_8_Factory systemdFactory) {
         this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
-    void installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override

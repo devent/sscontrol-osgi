@@ -30,12 +30,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Fail2ban_0_8_Debian extends Fail2ban_0_8 {
 
-    void installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: standardHours(1), "apt-get -y install ${packages.join(' ')}" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
-    }
-
     def stopService() {
         stopSystemdService([
             'fail2ban',

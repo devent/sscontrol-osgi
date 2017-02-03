@@ -50,7 +50,7 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
     @Override
     def run() {
         systemd.stopServices()
-        installPackages()
+        installAptPackages()
         setupDefaults()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
@@ -78,12 +78,6 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
         if (!service.network.address) {
             service.network.address = defaultFlannelNetworkAddress
         }
-    }
-
-    void installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     def getDefaultDebugLogLevel() {

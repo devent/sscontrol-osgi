@@ -34,10 +34,10 @@ abstract class Etcd_3_1_Upstream extends ScriptBase {
 
     def installEtcd() {
         log.info 'Installs etcd.'
-        copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true call()
+        copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true, timeout: timeoutLong call()
         def archiveFile = FilenameUtils.getName(archive.toString())
         def archiveName = getBaseName(getBaseName(archive.toString()))
-        shell """\
+        shell timeout: timeoutMiddle, """\
 cd /tmp
 tar xf "$archiveFile"
 cd "$archiveName"

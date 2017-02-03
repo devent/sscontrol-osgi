@@ -49,7 +49,7 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
     def installFlannel() {
         log.info 'Installs Flannel-Docker.'
         FlannelDocker service = this.service
-        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true call()
+        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
         shell resource: installCmdResource, name: 'installCmd' call()
     }
 

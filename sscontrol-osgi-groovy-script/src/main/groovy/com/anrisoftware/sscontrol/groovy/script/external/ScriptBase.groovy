@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService
 import javax.inject.Inject
 
 import org.apache.commons.lang3.builder.ToStringBuilder
+import org.joda.time.Duration
 
 import com.anrisoftware.sscontrol.copy.external.Copy
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
@@ -343,6 +344,17 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Installs the specified packages via apt-get. Per default installs the
+     * packages from the profile property {@code packages}.
+     */
+    void installAptPackages(def packages=packages, def timeout=timeoutLong) {
+        log.info "Installing packages {}.", packages
+        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+    }
+
+
+    /**
      * Returns the system name, for
      * example {@code "debian"}
      *
@@ -459,6 +471,18 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         } else {
             File.createTempFile('robobee', null)
         }
+    }
+
+    Duration getTimeoutShort() {
+        properties.getDurationProperty('command_timeout_short', defaultProperties)
+    }
+
+    Duration getTimeoutMiddle() {
+        properties.getDurationProperty('command_timeout_middle', defaultProperties)
+    }
+
+    Duration getTimeoutLong() {
+        properties.getDurationProperty('command_timeout_long', defaultProperties)
     }
 
     private setupArgs(Map args, String name='') {

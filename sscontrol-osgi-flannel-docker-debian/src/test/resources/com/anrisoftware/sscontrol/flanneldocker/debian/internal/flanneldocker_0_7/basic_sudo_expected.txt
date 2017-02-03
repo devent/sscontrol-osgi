@@ -28,3 +28,7 @@ chmod -w /tmp/junit/junit/usr/libexec/flannel/mk-docker-opts.sh
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s

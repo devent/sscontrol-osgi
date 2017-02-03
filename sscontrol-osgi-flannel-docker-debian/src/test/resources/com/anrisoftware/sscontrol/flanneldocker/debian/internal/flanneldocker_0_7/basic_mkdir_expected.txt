@@ -5,9 +5,12 @@
 -p /tmp/junit/junit/etc/systemd/tmpfiles.d
 -p /tmp/junit/junit/run/flannel
 -p /tmp/junit/junit/usr/libexec/flannel
+-p /tmp/junit/junit/lib/systemd/system/docker.service.d
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/sysconfig
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
