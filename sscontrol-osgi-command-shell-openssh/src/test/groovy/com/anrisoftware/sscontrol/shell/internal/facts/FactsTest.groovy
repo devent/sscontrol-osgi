@@ -39,6 +39,7 @@ import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -106,6 +107,7 @@ class FactsTest extends AbstractCmdTestBase {
 
     Module[] getAdditionalModules() {
         [
+            new TemplateResModule(),
             new SshShellModule(),
             new ShellCmdModule(),
             new CmdModule(),

@@ -46,13 +46,11 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
         this.installCmdResource = t.getResource 'install_cmd'
     }
 
-    def installKubernetes() {
+    def installFlannel() {
         log.info 'Installs Flannel-Docker.'
         FlannelDocker service = this.service
         copy src: archive, hash: archiveHash, dest: "/tmp", direct: true call()
-        installCmdResource.invalidate()
-        def cmd = installCmdResource.getText('installCmd', 'parent', this, 'vars', [:])
-        shell cmd call()
+        shell resource: installCmdResource, name: 'installCmd' call()
     }
 
     URI getArchive() {

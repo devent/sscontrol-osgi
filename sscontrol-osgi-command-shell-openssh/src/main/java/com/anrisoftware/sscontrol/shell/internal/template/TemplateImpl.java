@@ -27,14 +27,9 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle.Control;
 
 import javax.inject.Inject;
 
@@ -43,12 +38,10 @@ import org.apache.commons.io.FileUtils;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.resources.templates.external.TemplateResource;
-import com.anrisoftware.resources.templates.external.Templates;
-import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
 import com.anrisoftware.sscontrol.shell.external.template.WriteTemplateException;
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResourceArgs.TemplateResourceArgsFactory;
 import com.anrisoftware.sscontrol.template.external.Template;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -72,23 +65,24 @@ public class TemplateImpl implements Template {
 
     private final Object log;
 
+    private final String text;
+
     private File tmpFile;
 
     @Inject
     private ScpRunFactory scpRunFactory;
 
     @Inject
-    private TemplatesFactory templatesFactory;
-
-    @Inject
     TemplateImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log) {
+            @Assisted("log") Object log,
+            TemplateResourceArgsFactory templateFactory) {
         this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
         this.log = log;
+        this.text = templateFactory.create(args, parent).getText();
         setupArgs();
         parseArgs();
         checkArgs();
@@ -98,7 +92,6 @@ public class TemplateImpl implements Template {
     public ProcessTask call() throws AppException {
         File file = null;
         try {
-            String text = getText();
             file = getTmpFile();
             FileUtils.write(file, text, getCharset());
             Map<String, Object> a = new HashMap<>(args);
@@ -126,121 +119,8 @@ public class TemplateImpl implements Template {
         return file;
     }
 
-    private String getText() {
-        TemplateResource res = getResourceFromArgs();
-        if (res == null) {
-            Templates t = getTemplates();
-            res = getResourceFromTemplates(t);
-        }
-        res.invalidate();
-        String text = res.getText(getArgs());
-        return text;
-    }
-
-    private TemplateResource getResourceFromArgs() {
-        Object v = args.get(RESOURCE_ARG);
-        if (v instanceof TemplateResource) {
-            return (TemplateResource) v;
-        }
-        return null;
-    }
-
     private Charset getCharset() {
         return (Charset) args.get(CHARSET_ARG);
-    }
-
-    private Object[] getArgs() {
-        List<Object> list = new ArrayList<>();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> vars = (Map<String, Object>) args.get(VARS_ARG);
-        if (vars == null) {
-            vars = new HashMap<>();
-        }
-        String name = getStringArg(NAME_ARG);
-        if (name != null) {
-            list.add(0, name);
-        }
-        list.add("parent");
-        list.add(parent);
-        list.add("vars");
-        list.add(vars);
-        return list.toArray();
-    }
-
-    private TemplateResource getResourceFromTemplates(Templates t) {
-        String resource = getResource();
-        Locale locale = getLocale();
-        TemplateResource res = null;
-        if (locale != null) {
-            res = t.getResource(resource, locale);
-        } else {
-            res = t.getResource(resource);
-        }
-        return res;
-    }
-
-    private Templates getTemplates() {
-        Templates t = null;
-        String baseName = getBaseName();
-        Map<Serializable, Serializable> attributes = getAttributes();
-        ClassLoader classLoader = getClassLoader();
-        Control control = getControl();
-        if (baseName != null && attributes != null && classLoader != null
-                && control != null) {
-            t = templatesFactory.create(baseName, attributes, classLoader,
-                    control);
-        } else if (baseName != null && attributes != null && classLoader == null
-                && control != null) {
-            t = templatesFactory.create(baseName, attributes, control);
-        } else if (baseName != null && attributes != null && classLoader != null
-                && control == null) {
-            t = templatesFactory.create(baseName, attributes, classLoader);
-        } else if (baseName != null && attributes != null && classLoader == null
-                && control == null) {
-            t = templatesFactory.create(baseName, attributes);
-        }
-        // TemplatesFactory#create(String baseName)
-        else if (baseName != null && attributes == null && classLoader == null
-                && control == null) {
-            t = templatesFactory.create(baseName);
-        } else {
-            notNull(baseName, "%s=null", BASE_ARG);
-        }
-        return t;
-    }
-
-    private Locale getLocale() {
-        return (Locale) args.get(LOCALE_ARG);
-    }
-
-    private String getResource() {
-        return getStringArg(RESOURCE_ARG);
-    }
-
-    private Control getControl() {
-        return (Control) args.get(CONTROL_ARG);
-    }
-
-    private ClassLoader getClassLoader() {
-        return (ClassLoader) args.get(CLASS_LOADER_ARG);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Map<Serializable, Serializable> getAttributes() {
-        return (Map<Serializable, Serializable>) args.get(ATTRIBUTES_ARG);
-    }
-
-    private String getBaseName() {
-        return getStringArg(BASE_ARG);
-    }
-
-    private String getStringArg(Object key) {
-        Object v = args.get(key);
-        if (v != null) {
-            return v.toString();
-        } else {
-            return null;
-        }
     }
 
     private void checkArgs() {
