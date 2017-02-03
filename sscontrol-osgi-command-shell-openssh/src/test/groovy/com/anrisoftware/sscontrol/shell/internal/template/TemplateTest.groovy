@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
 import com.google.inject.Module
 
@@ -160,6 +161,7 @@ class TemplateTest extends AbstractCmdTestBase {
 
     Module[] getAdditionalModules() {
         [
+            new TemplateResModule(),
             new SshShellModule(),
             new CmdModule(),
             new TemplateModule(),

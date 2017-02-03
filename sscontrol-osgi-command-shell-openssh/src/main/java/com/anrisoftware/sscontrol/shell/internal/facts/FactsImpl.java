@@ -30,9 +30,11 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
+import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.resources.templates.external.Templates;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.sscontrol.facts.external.Facts;
+import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
 import com.anrisoftware.sscontrol.shell.internal.facts.CatReleaseParse.CatReleaseParseFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
@@ -41,7 +43,7 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -97,12 +99,13 @@ public class FactsImpl implements Facts {
 
     @Override
     public Facts call() throws AppException {
-        String cmd = templates.getResource("facts").getText("factsCmd", "args",
-                args);
+        TemplateResource res = templates.getResource("facts");
         Map<String, Object> a = new HashMap<>(args);
         a.put("outString", true);
-        this.process = shellFactory.create(a, host, parent, threads, log, cmd)
-                .call();
+        a.put("resource", res);
+        a.put("name", "factsCmd");
+        Shell shell = shellFactory.create(a, host, parent, threads, log);
+        this.process = shell.call();
         this.system = catReleaseParse.create(process.getOut()).call();
         return this;
     }

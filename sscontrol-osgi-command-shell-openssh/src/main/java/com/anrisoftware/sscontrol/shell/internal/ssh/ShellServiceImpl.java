@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
+import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
 
 import java.util.Map;
@@ -33,11 +34,10 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.shell.external.Cmd;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
-import com.anrisoftware.sscontrol.shell.external.ssh.OpenSshShellService;
 import com.anrisoftware.sscontrol.shell.external.ShellService;
+import com.anrisoftware.sscontrol.shell.external.ssh.OpenSshShellService;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -58,13 +58,13 @@ public class ShellServiceImpl implements ShellService, OpenSshShellService {
 
     @Override
     public Shell create(Map<String, Object> args, @Assisted SshHost ssh,
-            Object parent, Threads threads, Object log, String command) {
-        return shellFactory.create(args, ssh, parent, threads, log, command);
+            Object parent, Threads threads, Object log) {
+        return shellFactory.create(args, ssh, parent, threads, log);
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ShellCmdModule(), new AbstractModule() {
+        createInjector(new ShellCmdModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
