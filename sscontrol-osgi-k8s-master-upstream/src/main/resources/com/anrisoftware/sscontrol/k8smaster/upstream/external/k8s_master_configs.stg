@@ -41,7 +41,7 @@ kubeApiserverConfig(parent, vars) ::= <<
 KUBE_API_ADDRESS="--insecure-bind-address=<parent.service.binding.insecureAddress> <if(parent.service.binding.secureAddress)>--bind-address=<parent.service.binding.secureAddress><endif>"
 
 # The port on the local server to listen on.
-KUBE_API_PORT="--port=<parent.service.binding.port>"
+KUBE_API_PORT="--insecure-port=<parent.service.binding.port>"
 
 # Port minions listen on
 KUBELET_PORT="--kubelet-port=<parent.service.kubelet.binding.port>"

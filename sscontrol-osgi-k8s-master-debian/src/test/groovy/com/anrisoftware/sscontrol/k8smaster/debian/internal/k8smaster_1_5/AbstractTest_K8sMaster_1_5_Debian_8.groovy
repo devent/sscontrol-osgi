@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -34,7 +35,7 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -62,6 +63,7 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
     }
 
     void createDummyCommands(File dir) {
+        createIdCommand dir
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -73,7 +75,6 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
             'apt-get',
             'systemctl',
             'which',
-            'id',
             'sha256sum',
             'mv',
             'basename',
@@ -85,9 +86,9 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
     }
 
     HostServices putServices(HostServices services) {
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-master', serviceFactory
         services.putAvailableScriptService 'k8s-master/debian/8', scriptFactory
-        services.putAvailableService 'ssh', sshFactory
     }
 
     List getAdditionalModules() {
@@ -110,6 +111,7 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
             new ReplaceModule(),
             new FactsModule(),
             new TemplateModule(),
+            new TemplateResModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
             new AbstractModule() {

@@ -39,6 +39,7 @@ class K8sMaster_1_5_Debian_8_ServerTest extends AbstractTest_K8sMaster_1_5_Debia
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "ssh", group: "etcd", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-master", name: "andrea-cluster" with {
+    bind secure: "192.168.56.120"
     tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     authentication "cert", ca: "$certCaPem"
     plugin "etcd", target: "etcd"
