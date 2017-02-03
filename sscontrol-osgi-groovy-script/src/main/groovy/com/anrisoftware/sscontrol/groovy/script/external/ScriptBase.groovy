@@ -228,8 +228,17 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Shell command.
      */
     Shell shell(Map args, String command) {
+        def a = new HashMap(args)
+        a.command = command
+        shell a
+    }
+
+    /**
+     * Shell command.
+     */
+    Shell shell(Map args) {
         def a = setupArgs(args)
-        shell.create(a, a.target, this, threads, log, command)
+        shell.create(a, a.target, this, threads, log)
     }
 
     /**
