@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
@@ -190,8 +191,9 @@ chmod o-rx '$certsDir'
         }
         URL src = args.src.toURL()
         log.info 'Upload {} to {}', args.src, args.dest
-        def file = createTmpFile()
+        File file = createTmpFile()
         IOUtils.copy src.openStream(), new FileOutputStream(file)
+        assertThat "resource>0 for $args", file.size(), greaterThan(0l)
         copy privileged: true, src: file, dest: args.dest call()
     }
 
@@ -204,7 +206,6 @@ chmod o-rx '$certsDir'
                 resource: servicesTemplate,
                 name: 'kubeApiserverService',
                 privileged: true,
-                override: false,
                 dest: "$dir/kube-apiserver.service",
                 vars: [:],
             ],
@@ -212,7 +213,6 @@ chmod o-rx '$certsDir'
                 resource: servicesTemplate,
                 name: 'kubeControllerManagerService',
                 privileged: true,
-                override: false,
                 dest: "$dir/kube-controller-manager.service",
                 vars: [:],
             ],
@@ -220,7 +220,6 @@ chmod o-rx '$certsDir'
                 resource: servicesTemplate,
                 name: 'kubeSchedulerService',
                 privileged: true,
-                override: false,
                 dest: "$dir/kube-scheduler.service",
                 vars: [:],
             ],
@@ -228,7 +227,6 @@ chmod o-rx '$certsDir'
                 resource: servicesTemplate,
                 name: 'servicesKubernetesConf',
                 privileged: true,
-                override: false,
                 dest: "$tmpdir/kubernetes.conf",
                 vars: [:],
             ],
@@ -245,7 +243,6 @@ chmod o-rx '$certsDir'
                 resource: configsTemplate,
                 name: 'kubeConfig',
                 privileged: true,
-                override: false,
                 dest: "$configDir/config",
                 vars: [:],
             ],
@@ -253,7 +250,6 @@ chmod o-rx '$certsDir'
                 resource: configsTemplate,
                 name: 'kubeApiserverConfig',
                 privileged: true,
-                override: false,
                 dest: "$configDir/apiserver",
                 vars: [:],
             ],
@@ -261,7 +257,6 @@ chmod o-rx '$certsDir'
                 resource: configsTemplate,
                 name: 'kubeControllerManagerConfig',
                 privileged: true,
-                override: false,
                 dest: "$configDir/controller-manager",
                 vars: [:],
             ],
@@ -269,7 +264,6 @@ chmod o-rx '$certsDir'
                 resource: configsTemplate,
                 name: 'kubeSchedulerConfig',
                 privileged: true,
-                override: false,
                 dest: "$configDir/scheduler",
                 vars: [:],
             ],

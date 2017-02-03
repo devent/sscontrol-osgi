@@ -30,12 +30,12 @@ abstract class K8sMaster_1_5_Upstream extends ScriptBase {
 
     def installKubernetes() {
         log.info 'Installs k8s-master.'
-        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true call()
-        shell """\
+        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
+        shell timeout: timeoutVeryLong, """\
 cd /tmp
 tar xf `basename $archive`
 cd kubernetes
-printf "y\n" | cluster/get-kube-binaries.sh
+printf "y\\n" | cluster/get-kube-binaries.sh
 cd server
 tar xf kubernetes-server-linux-amd64.tar.gz
 mkdir -p '$binDir'

@@ -485,6 +485,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         properties.getDurationProperty('command_timeout_long', defaultProperties)
     }
 
+    Duration getTimeoutVeryLong() {
+        properties.getDurationProperty('command_timeout_very_long', defaultProperties)
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
