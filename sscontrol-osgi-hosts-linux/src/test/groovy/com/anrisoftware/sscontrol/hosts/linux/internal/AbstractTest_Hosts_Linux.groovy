@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.linux.internal
+package com.anrisoftware.sscontrol.hosts.linux.internal;
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -21,18 +21,19 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import javax.inject.Inject
 
 import org.junit.Before
-import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
@@ -41,11 +42,14 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
-import com.anrisoftware.sscontrol.types.external.HostServiceScript
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -55,8 +59,13 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
-class Hosts_Linux_Server_Test extends AbstractScriptTestBase {
+abstract class AbstractTest_Hosts_Linux extends AbstractScriptTestBase {
+
+    @Inject
+    SshImplFactory sshFactory
+
+    @Inject
+    CmdRunCaller cmdRunCaller
 
     @Inject
     HostsImplFactory hostsFactory
@@ -64,50 +73,31 @@ class Hosts_Linux_Server_Test extends AbstractScriptTestBase {
     @Inject
     Hosts_Linux_Factory hostsLinuxFactory
 
-    @Inject
-    CmdRunCaller cmdRunCaller
-
-    @Test
-    void "hosts script"() {
-        def testCases = [
-            [
-                input: """
-service "hosts" with {
-    ip target.hostAddress, host: "andrea-master.muellerpublic.de", alias: "andrea-master", on: "address"
-}
-""",
-                expected: { Map args ->
-                    File dir = args.dir as File
-                },
-            ],
-        ]
-        testCases.eachWithIndex { Map test, int k ->
-            doTest test, k
-        }
-    }
-
-    void putSshService(HostServices services) {
-        services.addService 'ssh', SshFactory.testServer(injector)
-    }
-
     String getServiceName() {
         'hosts'
     }
 
     String getScriptServiceName() {
-        'hosts/linux/0'
+        'hosts/debian/8'
     }
 
     void createDummyCommands(File dir) {
+        createIdCommand dir
+        createEchoCommands dir, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'cp',
+            'rm',
+            'sudo',
+            'scp',
+        ]
     }
 
     HostServices putServices(HostServices services) {
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'hosts', hostsFactory
-        services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
-    }
-
-    HostServiceScript setupScript(Map args, HostServiceScript script) {
-        return script
+        services.putAvailableScriptService 'hosts/debian/8', hostsLinuxFactory
     }
 
     List getAdditionalModules() {
@@ -115,14 +105,21 @@ service "hosts" with {
             new HostsModule(),
             new Hosts_Linux_Module(),
             new HostServicesModule(),
+            new SshModule(),
+            new SshPreModule(),
+            new DebugLoggingModule(),
+            new TypesModule(),
+            new StringsModule(),
             new ShellCmdModule(),
             new SshShellModule(),
             new CmdModule(),
             new ScpModule(),
             new CopyModule(),
             new FetchModule(),
-            new TemplateModule(),
             new ReplaceModule(),
+            new TemplateModule(),
+            new TemplateResModule(),
+            new FactsModule(),
             new TokensTemplateModule(),
             new AbstractModule() {
 
