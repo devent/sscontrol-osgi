@@ -24,6 +24,8 @@ import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SUDO_ENV_ARG;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,12 +38,13 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.shell.external.Cmd;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResourceArgs.TemplateResourceArgsFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -72,16 +75,31 @@ public class ShellImpl implements Shell {
     @Inject
     ShellImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log, @Assisted String command) {
+            @Assisted("log") Object log,
+            TemplateResourceArgsFactory templateArgs) {
         this.args = new HashMap<>(args);
         this.parent = parent;
         this.threads = threads;
         this.log = log;
-        this.command = command;
+        this.command = getCmd(args, parent, templateArgs);
         this.host = host;
         this.env = new HashMap<>(getEnv("env", args));
         this.sudoEnv = new HashMap<>(getEnv("sudoEnv", args));
         setupArgs();
+    }
+
+    private String getCmd(Map<String, Object> args, Object parent,
+            TemplateResourceArgsFactory templateArgs) {
+        Object v = args.get(CMD_ARG);
+        if (v == null) {
+            Object base = args.get(BASE_ARG);
+            Object res = args.get(RESOURCE_ARG);
+            if (base != null || res != null) {
+                v = templateArgs.create(args, parent).getText();
+            }
+        }
+        assertThat(String.format("args(%s)=null", CMD_ARG), v, notNullValue());
+        return v.toString();
     }
 
     @Override

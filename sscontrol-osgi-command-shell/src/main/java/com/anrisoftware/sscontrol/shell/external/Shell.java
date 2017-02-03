@@ -31,6 +31,22 @@ import com.google.inject.assistedinject.Assisted;
  */
 public interface Shell {
 
+    static final String CMD_ARG = "command";
+
+    static final String BASE_ARG = "base";
+
+    static final String ATTRIBUTES_ARG = "attributes";
+
+    static final String CLASS_LOADER_ARG = "classLoader";
+
+    static final String CONTROL_ARG = "control";
+
+    static final String RESOURCE_ARG = "resource";
+
+    static final String LOCALE_ARG = "locale";
+
+    static final String VARS_ARG = "vars";
+
     /**
      * Factory to create the shell command.
      *
@@ -41,12 +57,12 @@ public interface Shell {
 
         Shell create(@Assisted Map<String, Object> args, @Assisted SshHost host,
                 @Assisted("parent") Object parent, @Assisted Threads threads,
-                @Assisted("log") Object log, @Assisted String command);
+                @Assisted("log") Object log);
     }
 
     /**
      * Executes the shell.
-     * 
+     *
      * @throws AppException
      */
     ProcessTask call() throws AppException;
