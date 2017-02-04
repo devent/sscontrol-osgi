@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
 
 import java.util.Map;
@@ -31,7 +32,6 @@ import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
  * <i>Ssh</i> service.
@@ -56,7 +56,7 @@ public class K8sMasterServiceImpl implements K8sMasterService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new K8sMasterModule(), new AbstractModule() {
+        createInjector(new K8sMasterModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

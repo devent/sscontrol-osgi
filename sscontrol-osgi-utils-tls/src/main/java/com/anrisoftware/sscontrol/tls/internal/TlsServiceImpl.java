@@ -47,6 +47,11 @@ public class TlsServiceImpl implements TlsService {
         return sshFactory.create(args);
     }
 
+    @Override
+    public Tls create() {
+        return sshFactory.create();
+    }
+
     @Activate
     protected void start() {
         createInjector(new TlsModule()).injectMembers(this);

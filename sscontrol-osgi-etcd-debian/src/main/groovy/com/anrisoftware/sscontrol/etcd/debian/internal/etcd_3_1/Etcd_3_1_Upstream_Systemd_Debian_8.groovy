@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
 
-import static com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1.Etcd_3_1_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -43,6 +41,8 @@ class Etcd_3_1_Upstream_Systemd_Debian_8 extends Etcd_3_1_Upstream_Systemd {
         createDirectories()
         createServices()
         createConfig()
+        uploadTls()
+        uploadAuth()
     }
 
     @Override
@@ -53,15 +53,5 @@ class Etcd_3_1_Upstream_Systemd_Debian_8 extends Etcd_3_1_Upstream_Systemd {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

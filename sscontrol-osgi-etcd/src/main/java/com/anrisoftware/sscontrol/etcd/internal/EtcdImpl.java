@@ -16,7 +16,11 @@
 package com.anrisoftware.sscontrol.etcd.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +34,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.etcd.external.Authentication;
+import com.anrisoftware.sscontrol.etcd.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.etcd.external.Binding;
 import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.external.EtcdService;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
@@ -75,9 +83,18 @@ public class EtcdImpl implements Etcd {
 
     private String member;
 
+    private final TlsFactory tlsFactory;
+
+    private Tls tls;
+
+    @Inject
+    private Map<String, AuthenticationFactory> authenticationFactories;
+
+    private final List<Authentication> authentications;
+
     @Inject
     EtcdImpl(EtcdImplLogger log, HostPropertiesService propertiesService,
-            BindingFactory bindingFactory,
+            BindingFactory bindingFactory, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
@@ -85,6 +102,9 @@ public class EtcdImpl implements Etcd {
         this.bindings = new ArrayList<>();
         this.advertises = new ArrayList<>();
         this.bindingFactory = bindingFactory;
+        this.tls = tlsFactory.create();
+        this.tlsFactory = tlsFactory;
+        this.authentications = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -175,6 +195,42 @@ public class EtcdImpl implements Etcd {
         advertises.add(binding);
     }
 
+    /**
+     * <pre>
+     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public void tls(Map<String, Object> args) {
+        this.tls = tlsFactory.create(args);
+        log.tlsSet(this, tls);
+    }
+
+    /**
+     * <pre>
+     * authentication "basic", file: "some_file"
+     * </pre>
+     */
+    public void authentication(Map<String, Object> args, String name) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("type", name);
+        authentication(a);
+    }
+
+    /**
+     * <pre>
+     * authentication type: "basic", file: "some_file"
+     * </pre>
+     */
+    public void authentication(Map<String, Object> args) {
+        String name = args.get("type").toString();
+        AuthenticationFactory factory = authenticationFactories.get(name);
+        assertThat(format("authentication(%s)=null", name), factory,
+                is(notNullValue()));
+        Authentication auth = factory.create(args);
+        authentications.add(auth);
+        log.authenticationAdded(this, auth);
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -218,6 +274,16 @@ public class EtcdImpl implements Etcd {
     @Override
     public List<Binding> getAdvertises() {
         return advertises;
+    }
+
+    @Override
+    public Tls getTls() {
+        return tls;
+    }
+
+    @Override
+    public List<Authentication> getAuthentications() {
+        return authentications;
     }
 
     @Override

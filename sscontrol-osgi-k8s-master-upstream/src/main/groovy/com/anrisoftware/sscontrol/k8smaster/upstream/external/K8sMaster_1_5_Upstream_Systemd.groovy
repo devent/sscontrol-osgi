@@ -15,12 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
-
-import org.apache.commons.io.IOUtils
 
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
@@ -112,9 +109,9 @@ mkdir -p '$tmpdir'
 mkdir -p '$rundir'
 useradd -r $user
 chown $user '$rundir'
-mkdir -p '$certsDir'
-chown ${user}.root '$certsDir'
-chmod o-rx '$certsDir'
+mkdir -p '$certsdir'
+chown ${user}.root '$certsdir'
+chmod o-rx '$certsdir'
 """ call()
     }
 
@@ -153,7 +150,11 @@ chmod o-rx '$certsDir'
                 src: service.kubelet.tls.key,
                 dest: "$certsdir/$service.kubelet.tls.keyName",
             ],
-        ].each { copyResource it }
+        ].each {
+            if (it.src) {
+                copyResource it call()
+            }
+        }
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
             if (!tls.caName) {
@@ -181,20 +182,12 @@ chmod o-rx '$certsDir'
                     src: tls.key,
                     dest: "$certsdir/$tls.keyName",
                 ],
-            ].each { copyResource it }
+            ].each {
+                if (it.src) {
+                    copyResource it call()
+                }
+            }
         }
-    }
-
-    def copyResource(Map args) {
-        if (args.src == null) {
-            return
-        }
-        URL src = args.src.toURL()
-        log.info 'Upload {} to {}', args.src, args.dest
-        File file = createTmpFile()
-        IOUtils.copy src.openStream(), new FileOutputStream(file)
-        assertThat "resource>0 for $args", file.size(), greaterThan(0l)
-        copy privileged: true, src: file, dest: args.dest call()
     }
 
     def createServices() {

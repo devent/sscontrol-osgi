@@ -15,10 +15,16 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.etcd.external.Authentication;
+import com.anrisoftware.sscontrol.etcd.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.etcd.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * <i>Etcd</i> script module.
@@ -33,5 +39,18 @@ public class EtcdModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, EtcdImpl.class)
                 .build(EtcdImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Authentication.class,
+                        ClientCertsAuthenticationImpl.class)
+                .build(ClientCertsAuthenticationImplFactory.class));
+        bindAuthentication();
     }
+
+    private void bindAuthentication() {
+        MapBinder<String, AuthenticationFactory> mapbinder = newMapBinder(
+                binder(), String.class, AuthenticationFactory.class);
+        mapbinder.addBinding("cert")
+                .to(ClientCertsAuthenticationImplFactory.class);
+    }
+
 }

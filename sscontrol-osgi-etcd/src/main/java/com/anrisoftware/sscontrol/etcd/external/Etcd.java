@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.etcd.external;
 
 import java.util.List;
 
+import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostService;
 
@@ -35,4 +36,8 @@ public interface Etcd extends HostService {
     List<Binding> getBindings();
 
     List<Binding> getAdvertises();
+
+    Tls getTls();
+
+    List<Authentication> getAuthentications();
 }

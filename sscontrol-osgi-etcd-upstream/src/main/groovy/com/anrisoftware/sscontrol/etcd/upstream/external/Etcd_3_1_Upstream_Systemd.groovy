@@ -22,6 +22,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.etcd.external.Etcd
 import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.tls.external.Tls
 
 import groovy.util.logging.Slf4j
 
@@ -81,17 +82,42 @@ abstract class Etcd_3_1_Upstream_Systemd extends ScriptBase {
         if (!service.memberName) {
             service.memberName = defaultMemberName
         }
+        if (!service.tls.caName) {
+            service.tls.caName = defaultTlsCaName
+        }
+        if (!service.tls.certName) {
+            service.tls.certName = defaultTlsCertName
+        }
+        if (!service.tls.keyName) {
+            service.tls.keyName = defaultTlsKeyName
+        }
+        service.authentications.findAll { it.tls  } each {
+            Tls tls = it.tls
+            if (!tls.caName) {
+                tls.caName = defaultAuthenticationTlsCaName[it.type]
+            }
+            if (!tls.certName) {
+                tls.certName = defaultAuthenticationTlsCertName[it.type]
+            }
+            if (!tls.keyName) {
+                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
+            }
+        }
     }
 
     def createDirectories() {
         log.info 'Create etcd directories.'
         def dir = systemdSystemDir
         def datadir = dataDir
+        def certsdir = certsDir
         shell privileged: true, """
 mkdir -p '$dir'
 mkdir -p '$datadir'
 useradd -r $user
 chown $user '$datadir'
+mkdir -p '$certsdir'
+chown ${user}.root '$certsdir'
+chmod o-rx '$certsdir'
 """ call()
     }
 
@@ -125,6 +151,61 @@ chown $user '$datadir'
         ].each { template it call() }
     }
 
+    def uploadTls() {
+        log.info 'Uploads etcd tls certificates.'
+        def certsdir = certsDir
+        Etcd service = service
+        [
+            [
+                name: 'service.tls.ca',
+                src: service.tls.ca,
+                dest: "$certsdir/$service.tls.caName",
+            ],
+            [
+                name: 'service.tls.cert',
+                src: service.tls.cert,
+                dest: "$certsdir/$service.tls.certName",
+            ],
+            [
+                name: 'service.tls.key',
+                src: service.tls.key,
+                dest: "$certsdir/$service.tls.keyName",
+            ],
+        ].each {
+            if (it.src) {
+                copyResource it call()
+            }
+        }
+    }
+
+    def uploadAuth() {
+        log.info 'Uploads etcd authentication certificates.'
+        service.authentications.findAll { it.tls  } each {
+            Tls tls = it.tls
+            [
+                [
+                    name: 'tls.ca',
+                    src: tls.ca,
+                    dest: "$certsdir/$tls.caName",
+                ],
+                [
+                    name: 'tls.cert',
+                    src: tls.cert,
+                    dest: "$certsdir/$tls.certName",
+                ],
+                [
+                    name: 'tls.key',
+                    src: tls.key,
+                    dest: "$certsdir/$tls.keyName",
+                ],
+            ].each {
+                if (it.src) {
+                    copyResource it call()
+                }
+            }
+        }
+    }
+
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
@@ -135,6 +216,10 @@ chown $user '$datadir'
 
     File getDataDir() {
         properties.getFileProperty "data_dir", base, defaultProperties
+    }
+
+    File getCertsDir() {
+        properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     String getUser() {
@@ -171,6 +256,33 @@ chown $user '$datadir'
 
     def getDefaultMemberName() {
         properties.getProperty 'default_member_name', defaultProperties
+    }
+
+    def getDefaultTlsCaName() {
+        properties.getProperty 'default_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultTlsCertName() {
+        properties.getProperty 'default_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultTlsKeyName() {
+        properties.getProperty 'default_tls_key_name', defaultProperties
+    }
+
+    Map getDefaultAuthenticationTlsCaName() {
+        def s = properties.getProperty 'default_authentication_tls_ca_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultAuthenticationTlsCertName() {
+        def s = properties.getProperty 'default_authentication_tls_cert_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultAuthenticationTlsKeyName() {
+        def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
+        Eval.me s
     }
 
     @Override
