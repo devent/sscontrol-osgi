@@ -16,13 +16,17 @@
 package com.anrisoftware.sscontrol.etcd.internal;
 
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.advertiseAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.authenticationAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.bindingAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.memberNameSet;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.tlsSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.etcd.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.external.Binding;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link EtcdImpl}.
@@ -39,7 +43,11 @@ final class EtcdImplLogger extends AbstractLogger {
 
         memberNameSet("Member name {} set for {}"),
 
-        advertiseAdded("Advertise {} added for {}");
+        advertiseAdded("Advertise {} added for {}"),
+
+        tlsSet("TLS {} set for {}"),
+
+        authenticationAdded("Authentication {} added for {}");
 
         private String name;
 
@@ -70,5 +78,13 @@ final class EtcdImplLogger extends AbstractLogger {
 
     void advertiseAdded(EtcdImpl etcd, Binding binding) {
         debug(advertiseAdded, binding, etcd);
+    }
+
+    void tlsSet(EtcdImpl etcd, Tls tls) {
+        debug(tlsSet, tls, etcd);
+    }
+
+    void authenticationAdded(EtcdImpl etcd, Authentication auth) {
+        debug(authenticationAdded, auth, etcd);
     }
 }

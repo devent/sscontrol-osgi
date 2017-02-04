@@ -16,9 +16,8 @@
 package com.anrisoftware.sscontrol.tls.internal;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -26,6 +25,7 @@ import com.anrisoftware.globalpom.resources.ToURI;
 import com.anrisoftware.globalpom.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * TLS certificates.
@@ -47,7 +47,12 @@ public class TlsImpl implements Tls {
 
     private String keyName;
 
-    @Inject
+    @AssistedInject
+    TlsImpl(ToURIFactory touri) {
+        this(new HashMap<String, Object>(), touri);
+    }
+
+    @AssistedInject
     TlsImpl(@Assisted Map<String, Object> args, ToURIFactory touri) {
         ToURI uri = touri.create();
         Object v = args.get("ca");

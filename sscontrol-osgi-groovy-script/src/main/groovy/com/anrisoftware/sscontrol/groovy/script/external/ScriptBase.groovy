@@ -16,12 +16,15 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static org.apache.commons.lang3.Validate.*
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
 
 import java.nio.charset.Charset
 import java.util.concurrent.ExecutorService
 
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
@@ -353,6 +356,20 @@ abstract class ScriptBase extends Script implements HostServiceScript {
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
+    /**
+     * Copies the resource by temporarily saving it locally.
+     * <pre>
+     * copyResource src: src, dest: dest call()
+     * </pre>
+     */
+    def copyResource(Map args) {
+        URL src = args.src.toURL()
+        log.info 'Upload {} to {}', args.src, args.dest
+        File file = createTmpFile()
+        IOUtils.copy src.openStream(), new FileOutputStream(file)
+        assertThat "resource>0 for $args", file.size(), greaterThan(0l)
+        copy privileged: true, src: file, dest: args.dest
+    }
 
     /**
      * Returns the system name, for

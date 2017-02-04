@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -117,6 +118,53 @@ service "etcd" with {
         doTest test
     }
 
+    @Test
+    void "tls"() {
+        def test = [
+            name: 'tls',
+            input: """
+service "etcd" with {
+    tls cert: 'cert.pem', key: 'key.pem'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.tls.cert.toString() == 'file:cert.pem'
+                assert s.tls.key.toString() == 'file:key.pem'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "authentication_args"() {
+        def test = [
+            name: 'authentication_args',
+            input: """
+service "etcd" with {
+    authentication type: "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.authentications.size() == 2
+                int k = -1
+                assert s.authentications[++k].type == 'cert'
+                assert s.authentications[k].ca.toString() == 'file:ca.pem'
+                assert s.authentications[k].cert.toString() == 'file:cert.pem'
+                assert s.authentications[k].key.toString() == 'file:key.pem'
+                assert s.authentications[++k].type == 'cert'
+                assert s.authentications[k].ca.toString() == 'file:ca.pem'
+                assert s.authentications[k].cert.toString() == 'file:cert.pem'
+                assert s.authentications[k].key.toString() == 'file:key.pem'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
@@ -142,6 +190,7 @@ service "etcd" with {
                 new TargetsModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
+                new TlsModule(),
                 new AbstractModule() {
 
                     @Override

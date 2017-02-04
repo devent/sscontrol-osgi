@@ -13,44 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.tls.external;
+package com.anrisoftware.sscontrol.etcd.external;
 
-import java.net.URI;
 import java.util.Map;
 
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * TLS certificates.
+ * 
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Tls {
+public interface AuthenticationFactory {
 
-    /**
-     * TLS certificates factory.
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface TlsFactory {
+    Authentication create(@Assisted Map<String, Object> args);
 
-        Tls create(@Assisted Map<String, Object> args);
-
-        Tls create();
-
-    }
-
-    URI getCa();
-
-    URI getCert();
-
-    URI getKey();
-
-    String getCaName();
-
-    String getCertName();
-
-    String getKeyName();
 }
