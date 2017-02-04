@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link K8sMasterImpl}.

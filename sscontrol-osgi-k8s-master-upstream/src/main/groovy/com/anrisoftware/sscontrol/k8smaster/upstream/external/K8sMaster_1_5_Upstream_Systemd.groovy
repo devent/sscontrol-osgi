@@ -27,7 +27,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin
-import com.anrisoftware.sscontrol.k8smaster.external.Tls
+import com.anrisoftware.sscontrol.tls.external.Tls
 
 import groovy.util.logging.Slf4j
 

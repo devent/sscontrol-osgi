@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.external;
+package com.anrisoftware.sscontrol.tls.external;
 
 import java.net.URI;
+import java.util.Map;
+
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * TLS certificates.
@@ -24,6 +27,18 @@ import java.net.URI;
  * @version 1.0
  */
 public interface Tls {
+
+    /**
+     * TLS certificates factory.
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    public interface TlsFactory {
+
+        Tls create(@Assisted Map<String, Object> args);
+
+    }
 
     URI getCa();
 

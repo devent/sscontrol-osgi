@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.external;
-
-import java.util.List;
+package com.anrisoftware.sscontrol.tls.internal;
 
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Kubelet client.
+ * TLS certificates module.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Kubelet {
+public class TlsModule extends AbstractModule {
 
-    /**
-     * Kubelet client TLS.
-     */
-    Tls getTls();
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(Tls.class, TlsImpl.class)
+                .build(TlsFactory.class));
+    }
 
-    /**
-     * List of the preferred NodeAddressTypes.
-     */
-    List<String> getPreferredAddressTypes();
-
-    Binding getBinding();
 }
