@@ -48,11 +48,11 @@ import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
-import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
@@ -91,7 +91,7 @@ public class K8sMasterImpl implements K8sMaster {
     private final Map<String, Plugin> plugins;
 
     @Inject
-    private TlsImplFactory tlsFactory;
+    private TlsFactory tlsFactory;
 
     @Inject
     private Map<String, AuthenticationFactory> authenticationFactories;

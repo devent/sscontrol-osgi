@@ -24,8 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.ClientCertsAuthentication;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
-import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -51,7 +51,7 @@ public class ClientCertsAuthenticationImpl
     private final Tls tls;
 
     @Inject
-    ClientCertsAuthenticationImpl(TlsImplFactory tlsFactory,
+    ClientCertsAuthenticationImpl(TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.tls = tlsFactory.create(args);
     }

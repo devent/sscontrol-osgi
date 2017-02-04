@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -131,8 +132,8 @@ service "k8s-master" with {
                 assert s.targets.size() == 0
                 assert s.cluster.range == null
                 assert s.plugins.size() == 1
-                assert s.plugins[0].name == 'etcd'
-                assert s.plugins[0].target == 'infra0'
+                assert s.plugins['etcd'].name == 'etcd'
+                assert s.plugins['etcd'].target == 'infra0'
             },
         ]
         doTest test
@@ -248,6 +249,7 @@ service "k8s-master" with {
                 new TargetsModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
+                new TlsModule(),
                 new AbstractModule() {
 
                     @Override

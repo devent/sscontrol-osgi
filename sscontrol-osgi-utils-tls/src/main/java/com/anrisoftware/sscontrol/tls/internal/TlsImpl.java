@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.internal;
+package com.anrisoftware.sscontrol.tls.internal;
 
 import java.net.URI;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.resources.ToURI;
 import com.anrisoftware.globalpom.resources.ToURIFactory;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -34,17 +34,6 @@ import com.google.inject.assistedinject.Assisted;
  * @version 1.0
  */
 public class TlsImpl implements Tls {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface TlsImplFactory {
-
-        Tls create(@Assisted Map<String, Object> args);
-    }
 
     private final URI ca;
 
@@ -59,7 +48,7 @@ public class TlsImpl implements Tls {
     private String keyName;
 
     @Inject
-    TlsImpl(ToURIFactory touri, @Assisted Map<String, Object> args) {
+    TlsImpl(@Assisted Map<String, Object> args, ToURIFactory touri) {
         ToURI uri = touri.create();
         Object v = args.get("ca");
         if (v != null) {

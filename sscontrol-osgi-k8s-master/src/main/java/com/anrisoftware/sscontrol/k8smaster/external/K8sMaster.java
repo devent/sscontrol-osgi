@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 import java.util.List;
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostService;
 

@@ -26,7 +26,6 @@ import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 import com.anrisoftware.sscontrol.k8smaster.internal.AbacAuthorizationImpl.AbacAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysAllowAuthorizationImpl.AlwaysAllowAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
@@ -37,7 +36,6 @@ import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFact
 import com.anrisoftware.sscontrol.k8smaster.internal.EtcdPluginImpl.EtcdPluginImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
-import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -62,8 +60,6 @@ public class K8sMasterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Plugin.class, EtcdPluginImpl.class)
                 .build(EtcdPluginImplFactory.class));
-        install(new FactoryModuleBuilder().implement(Tls.class, TlsImpl.class)
-                .build(TlsImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Authentication.class,
                         ClientCertsAuthenticationImpl.class)

@@ -28,9 +28,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.globalpom.arrays.ToList;
 import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
-import com.anrisoftware.sscontrol.k8smaster.internal.TlsImpl.TlsImplFactory;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 
 /**
  * Kubelet client.
@@ -56,7 +56,7 @@ public class KubeletImpl implements Kubelet {
 
     private Tls tls;
 
-    private transient TlsImplFactory tlsFactory;
+    private transient TlsFactory tlsFactory;
 
     private final List<String> preferredAddressTypes;
 
@@ -65,7 +65,7 @@ public class KubeletImpl implements Kubelet {
     private final BindingImplFactory bindingFactory;
 
     @Inject
-    KubeletImpl(BindingImplFactory bindingFactory, TlsImplFactory tlsFactory) {
+    KubeletImpl(BindingImplFactory bindingFactory, TlsFactory tlsFactory) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
         this.preferredAddressTypes = new ArrayList<>();

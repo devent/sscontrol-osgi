@@ -61,6 +61,7 @@
         <module>../sscontrol-osgi-sshd-6</module>
         <module>../sscontrol-osgi-sshd-6-debian</module>
         <module>../sscontrol-osgi-types</module>
+        <module>../sscontrol-osgi-utils-tls</module>
     </modules>
 
     <dependencies>

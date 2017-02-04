@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.k8smaster.external.Binding;
-import com.anrisoftware.sscontrol.k8smaster.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link KubeletImpl}.
