@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.hosts.internal;
 
 import static com.anrisoftware.sscontrol.hosts.internal.HostsServiceImpl.HOSTS_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,8 +90,13 @@ public class HostsImpl implements Hosts {
         List<String> aliases = new ArrayList<String>();
         a.put("address", a.get("ip"));
         a.put("aliases", aliases);
-        if (a.get("alias") != null) {
-            aliases = ToList.toList(args.get("alias"));
+        Object v = a.get("alias");
+        if (v != null) {
+            if (v instanceof String) {
+                aliases.addAll(asList(split(v.toString(), ',')));
+            } else {
+                aliases.addAll(ToList.<String>toList(args.get("alias")));
+            }
             a.put("aliases", aliases);
         }
         a.put("identifier", a.get("on"));
