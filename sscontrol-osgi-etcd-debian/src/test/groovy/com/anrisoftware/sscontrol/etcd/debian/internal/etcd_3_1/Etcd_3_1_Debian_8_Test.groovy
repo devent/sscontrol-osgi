@@ -80,4 +80,27 @@ service "etcd", member: "default" with {
         ]
         doTest test
     }
+
+    @Test
+    void "cert_auth"() {
+        def test = [
+            name: "cert_auth",
+            input: """
+service "ssh", host: "localhost"
+service "etcd", member: "default" with {
+    authentication "cert", ca: "$certCaPem"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource Etcd_3_1_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource Etcd_3_1_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource Etcd_3_1_Debian_8_Test, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
+                assertFileResource Etcd_3_1_Debian_8_Test, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

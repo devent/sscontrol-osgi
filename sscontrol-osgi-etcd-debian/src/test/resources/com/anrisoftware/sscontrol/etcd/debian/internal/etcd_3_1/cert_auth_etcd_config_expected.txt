@@ -1,4 +1,3 @@
-etcdConfig(parent, vars) ::= <<
 ###
 # etcd system config
 #
@@ -6,14 +5,14 @@ etcdConfig(parent, vars) ::= <<
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
 
 # [member]
-ETCD_NAME=<parent.service.memberName>
-ETCD_DATA_DIR="<parent.dataDir>/<parent.service.memberName>.etcd"
+ETCD_NAME=default
+ETCD_DATA_DIR="/tmp/junit/junit/var/lib/etcd/default.etcd"
 #ETCD_WAL_DIR=""
 #ETCD_SNAPSHOT_COUNT="10000"
 #ETCD_HEARTBEAT_INTERVAL="100"
 #ETCD_ELECTION_TIMEOUT="1000"
 #ETCD_LISTEN_PEER_URLS="http://localhost:2380"
-ETCD_LISTEN_CLIENT_URLS="<parent.service.bindings:bindings(parent, vars);separator=",">"
+ETCD_LISTEN_CLIENT_URLS="http://localhost:2379"
 #ETCD_MAX_SNAPSHOTS="5"
 #ETCD_MAX_WALS="5"
 #ETCD_CORS=""
@@ -24,7 +23,7 @@ ETCD_LISTEN_CLIENT_URLS="<parent.service.bindings:bindings(parent, vars);separat
 #ETCD_INITIAL_CLUSTER="default=http://localhost:2380"
 #ETCD_INITIAL_CLUSTER_STATE="new"
 #ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
-ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);separator=",">"
+ETCD_ADVERTISE_CLIENT_URLS="http://localhost:2379"
 #ETCD_DISCOVERY=""
 #ETCD_DISCOVERY_SRV=""
 #ETCD_DISCOVERY_FALLBACK="proxy"
@@ -41,11 +40,12 @@ ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);se
 #ETCD_PROXY_READ_TIMEOUT="0"
 #
 #[security]
-<if(parent.service.tls.cert)>ETCD_CERT_FILE="<parent.certsDir>/<parent.service.tls.certName>"<else>#ETCD_CERT_FILE=""<endif>
-<if(parent.service.tls.cert)>ETCD_KEY_FILE="<parent.certsDir>/<parent.service.tls.keyName>"<else>#ETCD_KEY_FILE=""<endif>
+#ETCD_CERT_FILE=""
+#ETCD_KEY_FILE=""
 #ETCD_CLIENT_CERT_AUTH="false"
 #ETCD_TRUSTED_CA_FILE=""
-<parent.service.authentications:{a|<(a.class.simpleName)(parent, vars, a)>}>
+ETCD_TRUSTED_CA_FILE="/tmp/junit/junit/etc/etcd/ssl/ectd_ca.pem"
+ETCD_CLIENT_CERT_AUTH="true"
 #ETCD_AUTO_TLS="false"
 #ETCD_PEER_CERT_FILE=""
 #ETCD_PEER_KEY_FILE=""
@@ -54,18 +54,6 @@ ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);se
 #ETCD_PEER_AUTO_TLS="false"
 #
 #[logging]
-ETCD_DEBUG="<parent.service.debugLogging.modules.debug.level;format="numberTrue">"
+ETCD_DEBUG="false"
 # examples for -log-package-levels etcdserver=WARNING,security=DEBUG
 #ETCD_LOG_PACKAGE_LEVELS=""
-
->>
-
-bindings(bind, parent, vars) ::= <%
-<bind.scheme>://<bind.address>:<bind.port>
-%>
-
-ClientCertsAuthenticationImpl(parent, vars, a) ::= <<
-<if(a.ca)>ETCD_TRUSTED_CA_FILE="<parent.certsDir>/<a.caName>"<endif>
-ETCD_CLIENT_CERT_AUTH="true"
->>
-

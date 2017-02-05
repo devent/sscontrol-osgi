@@ -42,6 +42,7 @@ service "etcd", member: "etcd-0" with {
     bind scheme: "https", address: "185.24.220.41", port: 2379
     advertise scheme: "https", address: "etcd-0.muellerpublic.de", port: 2379
     tls cert: '$certCertPem', key: '$certKeyPem'
+    authentication "cert", ca: "$certCaPem"
 }
 """,
             expected: { Map args ->

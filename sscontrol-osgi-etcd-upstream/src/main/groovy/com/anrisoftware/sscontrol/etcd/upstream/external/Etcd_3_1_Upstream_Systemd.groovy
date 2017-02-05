@@ -180,6 +180,7 @@ chmod o-rx '$certsdir'
 
     def uploadAuth() {
         log.info 'Uploads etcd authentication certificates.'
+        def certsdir = certsDir
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
             [
