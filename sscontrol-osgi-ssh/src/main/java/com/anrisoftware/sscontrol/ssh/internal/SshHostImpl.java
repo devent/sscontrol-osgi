@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.resources.StringToURI;
+import com.anrisoftware.globalpom.resources.ToURI;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostSystem;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -98,7 +98,7 @@ public class SshHostImpl implements SshHost {
         }
         v = a.get("key");
         if (v != null) {
-            this.key = StringToURI.toURI(v.toString());
+            this.key = ToURI.toURI(v.toString());
         }
         v = a.get("system");
         if (v != null) {

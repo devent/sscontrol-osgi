@@ -30,12 +30,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Ufw_Fail2ban_0_8_Debian extends Ufw_Fail2ban_0_8 {
 
-    void installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: standardHours(1), "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
-    }
-
     @Override
     def getLog() {
         log

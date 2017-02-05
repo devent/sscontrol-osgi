@@ -34,15 +34,16 @@ import groovy.util.logging.Slf4j
 class Hostname_Debian_8_Andrea_Master_Test extends AbstractTestHostname_Debian_8 {
 
     @Test
-    void "hostname script"() {
+    void "andrea_master_nodes"() {
         def test = [
-            name: "hostname_script_fqdn",
+            name: "andrea_master_nodes",
             input: """
-service "ssh", host: "robobee@andrea-master", key: "$robobeeKey"
-service "hostname" with {
-    // Sets the hostname.
-    set fqdn: "andrea-master.muellerpublic.de"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
+    host "robobee@andrea-node-1"
 }
+service "hostname", target: "andrea-master", fqdn: "andrea-master.muellerpublic.de"
+service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.muellerpublic.de"
 """,
             expected: { Map args ->
             },

@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
-import static com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal.Fail2ban_0_8_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplatesFactory
@@ -37,7 +35,7 @@ class Ufw_Fail2ban_0_8_Debian_8 extends Ufw_Fail2ban_0_8_Debian {
 
     @Override
     def run() {
-        installPackages()
+        installAptPackages()
         configureService()
         configureActions()
         enableService()
@@ -60,15 +58,5 @@ class Ufw_Fail2ban_0_8_Debian_8 extends Ufw_Fail2ban_0_8_Debian {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

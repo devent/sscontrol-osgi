@@ -340,7 +340,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Start and enable the specified services.
      */
     def startEnableSystemdService(List services) {
-        log.info 'Stopping {}.', services
+        log.info 'Starting {}.', services
         services.each {
             shell privileged: true, "systemctl start $it && systemctl status $it && systemctl enable $it" call()
         }

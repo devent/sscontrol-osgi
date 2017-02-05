@@ -213,17 +213,17 @@ ssh
                 assert host.user == 'user'
                 assert host.host == '192.168.0.1'
                 assert host.port == null
-                assert host.key == new URI('file://user.pub')
+                assert host.key == new URI('file:user.pub')
                 host = ssh.hosts[i++]
                 assert host.user == 'user'
                 assert host.host == '192.168.0.2'
                 assert host.port == null
-                assert host.key == new URI('file://user.pub')
+                assert host.key == new URI('file:user.pub')
                 host = ssh.hosts[i++]
                 assert host.user == 'user'
                 assert host.host == '192.168.0.3'
                 assert host.port == null
-                assert host.key == new URI('file://user.pub')
+                assert host.key == new URI('file:user.pub')
             },
         ]
         doSshTest test
@@ -273,7 +273,7 @@ service "ssh", host: "192.168.0.2", key: "robobee_id_rsa"
                 assert ssh.hosts.size() == 1
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
-                assert host.key.toString() == "file://robobee_id_rsa"
+                assert host.key.toString() == "file:robobee_id_rsa"
             },
         ]
         doServiceTest test
@@ -295,6 +295,32 @@ service "ssh" with {
                 assert ssh.hosts.size() == 1
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
+            },
+        ]
+        doServiceTest test
+    }
+
+    @Test
+    void "service_host_key"() {
+        def test = [
+            name: "host",
+            input: """
+service "ssh", key: "id_rsa" with {
+    host "192.168.0.2"
+    host "192.168.0.3"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == "default"
+                assert ssh.hosts.size() == 2
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                assert host.key == new URI("file:id_rsa")
+                host = ssh.hosts[1]
+                assert host.host == "192.168.0.3"
+                assert host.key == new URI("file:id_rsa")
             },
         ]
         doServiceTest test

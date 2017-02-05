@@ -145,8 +145,7 @@ abstract class AbstractScriptTestBase {
     abstract List getAdditionalModules()
 
     List getTargets(HostServices services, HostService service) {
-        def all = services.targets.getHosts('default')
-        service.targets.size() == 0 ? all : service.targets
+        service.targets.size() == 0 ? services.targets.getHosts('default') : service.targets
     }
 
     void putSshService(HostServices services) {
