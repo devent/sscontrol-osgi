@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
@@ -137,6 +138,7 @@ service "ssh", host: "localhost"
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
+            new TemplateResModule(),
             new AbstractModule() {
 
                 @Override

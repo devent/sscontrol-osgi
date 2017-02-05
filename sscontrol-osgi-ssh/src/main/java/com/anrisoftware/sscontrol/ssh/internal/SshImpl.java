@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.ssh.internal;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.globalpom.resources.ToURI;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
@@ -70,6 +72,8 @@ public class SshImpl implements Ssh {
 
     private String system;
 
+    private URI defaultKey;
+
     @AssistedInject
     SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
             SshHostImplFactory sshHostFactory,
@@ -79,6 +83,7 @@ public class SshImpl implements Ssh {
         this.hosts = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.sshHostFactory = sshHostFactory;
+        this.defaultKey = null;
         parseArgs(args);
     }
 
@@ -136,17 +141,20 @@ public class SshImpl implements Ssh {
     public void host(String host) {
         Map<String, Object> a = new HashMap<>();
         a.put("host", host);
-        addHost(a);
+        host(a);
     }
 
     public void host(Map<String, Object> args, String host) {
         Map<String, Object> a = new HashMap<>(args);
         a.put("host", host);
-        addHost(a);
+        host(a);
     }
 
     public void host(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
+        if (a.get("key") == null) {
+            a.put("key", defaultKey);
+        }
         addHost(a);
     }
 
@@ -217,6 +225,10 @@ public class SshImpl implements Ssh {
         v = args.get("system");
         if (v != null) {
             this.system = v.toString();
+        }
+        v = args.get("key");
+        if (v != null) {
+            this.defaultKey = ToURI.toURI(v);
         }
         v = args.get("host");
         if (v != null) {

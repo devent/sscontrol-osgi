@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hosts.linux.internal
+package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -29,24 +29,24 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Andrea_Master_Test extends AbstractTest_Hosts_Linux {
+class Fail2ban_0_8_Debian_8_Andrea_Master_Test extends AbstractTestFail2ban_0_8_Debian_8 {
 
     @Test
     void "andrea_master_nodes"() {
         def test = [
-            name: 'andrea_master_nodes',
+            name: "andrea_master_nodes",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
-service "hosts", target: "andrea-master" with {
-    ip '185.24.220.41', host: 'andrea-master.muellerpublic.de', alias: 'andrea-master, etcd-0'
-    ip '37.252.124.149', host: 'andrea-node-1.muellerpublic.de', alias: 'andrea-node-1, etcd-1'
+service "fail2ban", target: "andrea-master" with {
+    banning time: "PT24H"
+    jail "ssh"
 }
-service "hosts", target: "andrea-nodes" with {
-    ip '37.252.124.149', host: 'andrea-node-1.muellerpublic.de', alias: 'andrea-node-1, etcd-1'
-    ip '185.24.220.41', host: 'andrea-master.muellerpublic.de', alias: 'andrea-master, etcd-0'
+service "fail2ban", target: "andrea-nodes" with {
+    banning time: "PT24H"
+    jail "ssh"
 }
 """,
             expected: { Map args ->
@@ -55,10 +55,10 @@ service "hosts", target: "andrea-nodes" with {
         doTest test
     }
 
-    void createDummyCommands(File dir) {
-    }
-
     Map getScriptEnv(Map args) {
         emptyScriptEnv
+    }
+
+    void createDummyCommands(File dir) {
     }
 }
