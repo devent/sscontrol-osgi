@@ -61,23 +61,11 @@ abstract class Etcd_3_1_Upstream_Systemd extends ScriptBase {
         if (!service.bindings[0].address) {
             service.bindings[0].address = defaultBindingAddress
         }
-        if (!service.bindings[0].scheme) {
-            service.bindings[0].scheme = defaultBindingScheme
-        }
-        if (!service.bindings[0].port) {
-            service.bindings[0].port = defaultBindingPort
-        }
         if (service.advertises.size() == 0) {
             service.advertises << bindingFactory.create()
         }
         if (!service.advertises[0].address) {
             service.advertises[0].address = defaultAdvertiseAddress
-        }
-        if (!service.advertises[0].scheme) {
-            service.advertises[0].scheme = defaultAdvertiseScheme
-        }
-        if (!service.advertises[0].port) {
-            service.advertises[0].port = defaultAdvertisePort
         }
         if (!service.memberName) {
             service.memberName = defaultMemberName
@@ -231,28 +219,12 @@ chmod o-rx '$certsdir'
         properties.getNumberProperty 'default_debug_log_level', defaultProperties intValue()
     }
 
-    def getDefaultBindingAddress() {
-        properties.getProperty 'default_binding_address', defaultProperties
+    URI getDefaultBindingAddress() {
+        properties.getURIProperty 'default_binding_address', defaultProperties
     }
 
-    def getDefaultBindingScheme() {
-        properties.getProperty 'default_binding_scheme', defaultProperties
-    }
-
-    def getDefaultBindingPort() {
-        properties.getNumberProperty 'default_binding_port', defaultProperties intValue()
-    }
-
-    def getDefaultAdvertiseAddress() {
-        properties.getProperty 'default_advertise_address', defaultProperties
-    }
-
-    def getDefaultAdvertiseScheme() {
-        properties.getProperty 'default_advertise_scheme', defaultProperties
-    }
-
-    def getDefaultAdvertisePort() {
-        properties.getNumberProperty 'default_advertise_port', defaultProperties intValue()
+    URI getDefaultAdvertiseAddress() {
+        properties.getURIProperty 'default_advertise_address', defaultProperties
     }
 
     def getDefaultMemberName() {

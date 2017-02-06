@@ -62,9 +62,9 @@ service "etcd", member: "default"
             input: """
 service "ssh", host: "localhost"
 service "etcd", member: "default" with {
-    bind scheme: "http", address: "localhost", port: 2379
-    bind scheme: "https", address: "etcd-0.muellerpublic.de", port: 2379
-    advertise scheme: "https", address: "etcd-0.muellerpublic.de", port: 2379
+    bind "http://localhost:2379"
+    bind "https://etcd-0.muellerpublic.de:2379"
+    advertise "https://etcd-0.muellerpublic.de:2379"
     tls cert: '$certCertPem', key: '$certKeyPem'
 }
 """,

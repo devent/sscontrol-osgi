@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.etcd.external;
 
+import java.net.URI;
+
 /**
  * <i>Binding</i>.
  *
@@ -32,9 +34,5 @@ public interface Binding {
     public interface BindingFactory extends BindingService {
     }
 
-    String getAddress();
-
-    Integer getPort();
-
-    String getScheme();
+    URI getAddress();
 }

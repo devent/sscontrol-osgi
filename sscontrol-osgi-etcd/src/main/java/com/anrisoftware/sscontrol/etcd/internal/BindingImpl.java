@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,11 +34,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class BindingImpl implements Binding {
 
-    private String address;
-
-    private String scheme;
-
-    private int port;
+    private URI address;
 
     @AssistedInject
     BindingImpl() {
@@ -45,55 +43,40 @@ public class BindingImpl implements Binding {
 
     @AssistedInject
     BindingImpl(@Assisted Map<String, Object> args) {
-        parseArgs(args);
+        try {
+            parseArgs(args);
+        } catch (URISyntaxException e) {
+            throw new ParseBindingException(e, args);
+        }
     }
 
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
+    public void setAddress(String address) throws URISyntaxException {
+        this.address = new URI(address);
+    }
+
+    public void setAddress(URI address) {
+        this.address = address;
     }
 
     @Override
-    public String getScheme() {
-        return scheme;
-    }
-
-    public void setAddress(String insecure) {
-        this.address = insecure;
-    }
-
-    @Override
-    public String getAddress() {
+    public URI getAddress() {
         return address;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    @Override
-    public Integer getPort() {
-        return port;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("scheme", getScheme())
-                .append("address", getAddress()).append("port", getPort())
+        return new ToStringBuilder(this).append("address", getAddress())
                 .toString();
     }
 
-    private void parseArgs(Map<String, Object> args) {
+    private void parseArgs(Map<String, Object> args) throws URISyntaxException {
         Object v = args.get("address");
         if (v != null) {
-            this.address = v.toString();
-        }
-        v = args.get("scheme");
-        if (v != null) {
-            this.scheme = v.toString();
-        }
-        v = args.get("port");
-        if (v != null) {
-            this.port = ((Number) v).intValue();
+            if (v instanceof URI) {
+                this.address = (URI) v;
+            } else {
+                this.address = new URI(v.toString());
+            }
         }
     }
 }

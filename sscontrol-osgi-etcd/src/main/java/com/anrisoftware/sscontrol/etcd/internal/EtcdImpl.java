@@ -40,6 +40,8 @@ import com.anrisoftware.sscontrol.etcd.external.Binding;
 import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.external.EtcdService;
+import com.anrisoftware.sscontrol.etcd.external.Peer;
+import com.anrisoftware.sscontrol.etcd.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
@@ -91,6 +93,11 @@ public class EtcdImpl implements Etcd {
     private Map<String, AuthenticationFactory> authenticationFactories;
 
     private final List<Authentication> authentications;
+
+    @Inject
+    private PeerImplFactory peerFactory;
+
+    private Peer peer;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostPropertiesService propertiesService,
@@ -173,7 +180,18 @@ public class EtcdImpl implements Etcd {
 
     /**
      * <pre>
-     * bind scheme: "http", address: "127.0.0.1", port: 8080
+     * bind "http://10.0.1.10:2379"
+     * </pre>
+     */
+    public void bind(String address) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        bind(a);
+    }
+
+    /**
+     * <pre>
+     * bind address: "http://10.0.1.10:2379"
      * </pre>
      */
     public void bind(Map<String, Object> args) {
@@ -185,7 +203,18 @@ public class EtcdImpl implements Etcd {
 
     /**
      * <pre>
-     * advertise scheme: "http", address: "127.0.0.1", port: 8080
+     * advertise "http://10.0.1.10:2380"
+     * </pre>
+     */
+    public void advertise(String address) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        advertise(a);
+    }
+
+    /**
+     * <pre>
+     * advertise address: "http://10.0.1.10:2380"
      * </pre>
      */
     public void advertise(Map<String, Object> args) {
@@ -229,6 +258,18 @@ public class EtcdImpl implements Etcd {
         Authentication auth = factory.create(args);
         authentications.add(auth);
         log.authenticationAdded(this, auth);
+    }
+
+    /**
+     * <pre>
+     * peer state: "new", advertise: "https://10.0.1.10:2380", listen: "https://10.0.1.10:2380", token: "etcd-cluster-1"
+     * </pre>
+     */
+    public Peer peer(Map<String, Object> args) {
+        Peer peer = peerFactory.create(args);
+        this.peer = peer;
+        log.peerSet(this, peer);
+        return peer;
     }
 
     @Override
@@ -284,6 +325,11 @@ public class EtcdImpl implements Etcd {
     @Override
     public List<Authentication> getAuthentications() {
         return authentications;
+    }
+
+    @Override
+    public Peer getPeer() {
+        return peer;
     }
 
     @Override

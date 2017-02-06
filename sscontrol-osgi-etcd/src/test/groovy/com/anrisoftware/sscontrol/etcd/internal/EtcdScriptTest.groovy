@@ -77,21 +77,57 @@ service "etcd", member: "default"
     }
 
     @Test
-    void "bind"() {
+    void "bind_address"() {
         def test = [
-            name: 'bind',
+            name: 'bind_address',
             input: """
 service "etcd" with {
-    bind scheme: "http", address: "localhost", port: 2379
+    bind address: "http://localhost:2379"
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
                 assert s.bindings.size() == 1
-                assert s.bindings[0].address == "localhost"
-                assert s.bindings[0].scheme == "http"
-                assert s.bindings[0].port == 2379
+                assert s.bindings[0].address == new URI("http://localhost:2379")
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "bind"() {
+        def test = [
+            name: 'bind',
+            input: """
+service "etcd" with {
+    bind "http://localhost:2379"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.bindings.size() == 1
+                assert s.bindings[0].address == new URI("http://localhost:2379")
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "advertise_address"() {
+        def test = [
+            name: 'advertise_address',
+            input: """
+service "etcd" with {
+    advertise address: "http://localhost:2380"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.advertises.size() == 1
+                assert s.advertises[0].address == new URI("http://localhost:2380")
             },
         ]
         doTest test
@@ -103,16 +139,14 @@ service "etcd" with {
             name: 'advertise',
             input: """
 service "etcd" with {
-    advertise scheme: "http", address: "localhost", port: 2379
+    advertise "http://localhost:2380"
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
                 assert s.advertises.size() == 1
-                assert s.advertises[0].address == "localhost"
-                assert s.advertises[0].scheme == "http"
-                assert s.advertises[0].port == 2379
+                assert s.advertises[0].address == new URI("http://localhost:2380")
             },
         ]
         doTest test
@@ -160,6 +194,45 @@ service "etcd" with {
                 assert s.authentications[k].ca.toString() == 'file:ca.pem'
                 assert s.authentications[k].cert.toString() == 'file:cert.pem'
                 assert s.authentications[k].key.toString() == 'file:key.pem'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "static_cluster"() {
+        def test = [
+            name: 'static_cluster',
+            input: """
+service "etcd" with {
+    peer state: "new", advertise: "https://10.0.1.10:2380", listen: "https://10.0.1.10:2380", token: "etcd-cluster-1" with {
+        cluster << "infra0=https://10.0.1.10:2380"
+        cluster name: "infra1", address: "https://10.0.1.11:2380"
+        cluster "infra2", address: "https://10.0.1.12:2380"
+        authentication "cert", ca: "ca.pem", cert: 'cert.pem', key: 'key.pem'
+    }
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.peer.state == 'new'
+                assert s.peer.advertises.size() == 1
+                assert s.peer.advertises[0].address == new URI('https://10.0.1.10:2380')
+                assert s.peer.listens.size() == 1
+                assert s.peer.listens[0].address == new URI('https://10.0.1.10:2380')
+                assert s.peer.clusters.size() == 3
+                assert s.peer.clusters[0].name == 'infra0'
+                assert s.peer.clusters[0].address.address == new URI('https://10.0.1.10:2380')
+                assert s.peer.clusters[1].name == 'infra1'
+                assert s.peer.clusters[1].address.address == new URI('https://10.0.1.11:2380')
+                assert s.peer.clusters[2].name == 'infra2'
+                assert s.peer.clusters[2].address.address == new URI('https://10.0.1.12:2380')
+                assert s.peer.authentications.size() == 1
+                assert s.peer.authentications[0].type == 'cert'
+                assert s.peer.authentications[0].ca.toString() == 'file:ca.pem'
+                assert s.peer.authentications[0].cert.toString() == 'file:cert.pem'
+                assert s.peer.authentications[0].key.toString() == 'file:key.pem'
             },
         ]
         doTest test
