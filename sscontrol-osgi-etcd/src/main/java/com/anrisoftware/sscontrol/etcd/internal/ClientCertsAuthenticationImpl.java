@@ -56,6 +56,10 @@ public class ClientCertsAuthenticationImpl
         this.tls = tlsFactory.create(args);
     }
 
+    public Tls getTls() {
+        return tls;
+    }
+
     @Override
     public String getType() {
         return "cert";

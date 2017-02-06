@@ -180,7 +180,7 @@ public class PeerImpl implements Peer {
 
     /**
      * <pre>
-     * authentication "basic", file: "some_file"
+     * authentication "cert", ca: "ca.pem"
      * </pre>
      */
     public void authentication(Map<String, Object> args, String name) {
@@ -191,11 +191,12 @@ public class PeerImpl implements Peer {
 
     /**
      * <pre>
-     * authentication type: "basic", file: "some_file"
+     * authentication type: "cert", ca: "ca.pem"
      * </pre>
      */
     public void authentication(Map<String, Object> args) {
         String name = args.get("type").toString();
+        name = format("peer-%s", name);
         AuthenticationFactory factory = authenticationFactories.get(name);
         assertThat(format("authentication(%s)=null", name), factory,
                 is(notNullValue()));

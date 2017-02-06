@@ -217,6 +217,9 @@ service "etcd" with {
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
+                s.tls.ca == null
+                s.tls.cert == null
+                s.tls.key == null
                 assert s.peer.state == 'new'
                 assert s.peer.advertises.size() == 1
                 assert s.peer.advertises[0].address == new URI('https://10.0.1.10:2380')
