@@ -209,6 +209,7 @@ service "etcd" with {
         cluster << "infra0=https://10.0.1.10:2380"
         cluster name: "infra1", address: "https://10.0.1.11:2380"
         cluster "infra2", address: "https://10.0.1.12:2380"
+        tls cert: "cert.pem", key: "key.pem"
         authentication "cert", ca: "ca.pem", cert: 'cert.pem', key: 'key.pem'
     }
 }
@@ -228,6 +229,8 @@ service "etcd" with {
                 assert s.peer.clusters[1].address.address == new URI('https://10.0.1.11:2380')
                 assert s.peer.clusters[2].name == 'infra2'
                 assert s.peer.clusters[2].address.address == new URI('https://10.0.1.12:2380')
+                assert s.peer.tls.cert == new URI('file:cert.pem')
+                assert s.peer.tls.key == new URI('file:key.pem')
                 assert s.peer.authentications.size() == 1
                 assert s.peer.authentications[0].type == 'cert'
                 assert s.peer.authentications[0].ca.toString() == 'file:ca.pem'

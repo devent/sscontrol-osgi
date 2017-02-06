@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.etcd.external;
 
 import java.util.List;
 
+import com.anrisoftware.sscontrol.tls.external.Tls;
+
 /**
  * <i>Etcd</i> peer.
  *
@@ -28,6 +30,8 @@ public interface Peer {
     String getState();
 
     String getToken();
+
+    Tls getTls();
 
     List<Binding> getListens();
 
