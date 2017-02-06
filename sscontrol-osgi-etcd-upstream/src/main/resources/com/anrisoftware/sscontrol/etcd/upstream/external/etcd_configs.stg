@@ -12,18 +12,22 @@ ETCD_DATA_DIR="<parent.dataDir>/<parent.service.memberName>.etcd"
 #ETCD_SNAPSHOT_COUNT="10000"
 #ETCD_HEARTBEAT_INTERVAL="100"
 #ETCD_ELECTION_TIMEOUT="1000"
-#ETCD_LISTEN_PEER_URLS="http://localhost:2380"
+<peerListens(parent, vars, parent.service.peer)>
 ETCD_LISTEN_CLIENT_URLS="<parent.service.bindings:bindings(parent, vars);separator=",">"
 #ETCD_MAX_SNAPSHOTS="5"
 #ETCD_MAX_WALS="5"
 #ETCD_CORS=""
 #
 #[cluster]
+<if(parent.service.peer)>
+<clusterConfig(parent, vars, parent.service.peer)>
+<else>
 #ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380"
 # if you use different ETCD_NAME (e.g. test), set ETCD_INITIAL_CLUSTER value for this name, i.e. "test=http://..."
 #ETCD_INITIAL_CLUSTER="default=http://localhost:2380"
 #ETCD_INITIAL_CLUSTER_STATE="new"
 #ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+<endif>
 ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);separator=",">"
 #ETCD_DISCOVERY=""
 #ETCD_DISCOVERY_SRV=""
@@ -42,15 +46,12 @@ ETCD_ADVERTISE_CLIENT_URLS="<parent.service.advertises:bindings(parent, vars);se
 #
 #[security]
 <if(parent.service.tls.cert)>ETCD_CERT_FILE="<parent.certsDir>/<parent.service.tls.certName>"<else>#ETCD_CERT_FILE=""<endif>
-<if(parent.service.tls.cert)>ETCD_KEY_FILE="<parent.certsDir>/<parent.service.tls.keyName>"<else>#ETCD_KEY_FILE=""<endif>
+<if(parent.service.tls.key)>ETCD_KEY_FILE="<parent.certsDir>/<parent.service.tls.keyName>"<else>#ETCD_KEY_FILE=""<endif>
 #ETCD_CLIENT_CERT_AUTH="false"
 #ETCD_TRUSTED_CA_FILE=""
 <parent.service.authentications:{a|<(a.class.simpleName)(parent, vars, a)>}>
 #ETCD_AUTO_TLS="false"
-#ETCD_PEER_CERT_FILE=""
-#ETCD_PEER_KEY_FILE=""
-#ETCD_PEER_CLIENT_CERT_AUTH="false"
-#ETCD_PEER_TRUSTED_CA_FILE=""
+<peerCerts(parent, vars, parent.service.peer)>
 #ETCD_PEER_AUTO_TLS="false"
 #
 #[logging]
@@ -69,3 +70,41 @@ ClientCertsAuthenticationImpl(parent, vars, a) ::= <<
 ETCD_CLIENT_CERT_AUTH="true"
 >>
 
+PeerClientCertsAuthenticationImpl(parent, vars, a) ::= <<
+ETCD_PEER_TRUSTED_CA_FILE="<parent.certsDir>/<a.caName>"
+ETCD_PEER_CLIENT_CERT_AUTH="true"
+>>
+
+peerListens(parent, vars, peer) ::= <%
+<if(peer)>
+<if(peer.listens)>ETCD_LISTEN_PEER_URLS="<peer.listens:bindings(parent, vars);separator=",">"
+<else>
+#ETCD_LISTEN_PEER_URLS="http://localhost:2380"
+<endif>
+<else>
+#ETCD_LISTEN_PEER_URLS="http://localhost:2380"
+<endif>
+%>
+
+peerCerts(parent, vars, peer) ::= <<
+<if(peer)>
+<peer.authentications:{a|<(a.class.simpleName)(parent, vars, a)>}>
+#ETCD_PEER_CLIENT_CERT_AUTH="false"
+<if(peer.tls.cert)>ETCD_PEER_CERT_FILE="<parent.certsDir>/<peer.tls.certName>"<else>#ETCD_PEER_CERT_FILE=""<endif>
+<if(peer.tls.key)>ETCD_PEER_KEY_FILE="<parent.certsDir>/<peer.tls.keyName>"<else>#ETCD_PEER_KEY_FILE=""<endif><else>
+#ETCD_PEER_CLIENT_CERT_AUTH="false"
+#ETCD_PEER_TRUSTED_CA_FILE=""
+#ETCD_PEER_CERT_FILE=""
+#ETCD_PEER_KEY_FILE=""<endif>
+>>
+
+clusterConfig(parent, vars, peer) ::= <<
+ETCD_INITIAL_ADVERTISE_PEER_URLS="<peer.advertises:bindings(parent, vars);separator=",">"
+ETCD_INITIAL_CLUSTER="<peer.clusters:clusters(parent, vars);separator=",">"
+ETCD_INITIAL_CLUSTER_STATE="<peer.state>"
+ETCD_INITIAL_CLUSTER_TOKEN="<peer.token>"
+>>
+
+clusters(cluster, parent, vars) ::= <%
+<cluster.name>=<cluster.address.address>
+%>

@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
+import com.anrisoftware.sscontrol.etcd.external.Authentication
 import com.anrisoftware.sscontrol.etcd.external.Etcd
 import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -71,24 +72,47 @@ abstract class Etcd_3_1_Upstream_Systemd extends ScriptBase {
             service.memberName = defaultMemberName
         }
         if (!service.tls.caName) {
-            service.tls.caName = defaultTlsCaName
+            service.tls.caName = defaultClientTlsCaName
         }
         if (!service.tls.certName) {
-            service.tls.certName = defaultTlsCertName
+            service.tls.certName = defaultClientTlsCertName
         }
         if (!service.tls.keyName) {
-            service.tls.keyName = defaultTlsKeyName
+            service.tls.keyName = defaultClientTlsKeyName
         }
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
             if (!tls.caName) {
-                tls.caName = defaultAuthenticationTlsCaName[it.type]
+                tls.caName = defaultClientAuthenticationTlsCaName[it.type]
             }
             if (!tls.certName) {
-                tls.certName = defaultAuthenticationTlsCertName[it.type]
+                tls.certName = defaultClientAuthenticationTlsCertName[it.type]
             }
             if (!tls.keyName) {
-                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
+                tls.keyName = defaultClientAuthenticationTlsKeyName[it.type]
+            }
+        }
+        if (service.peer) {
+            if (!service.peer.tls.caName) {
+                service.peer.tls.caName = defaultPeerTlsCaName
+            }
+            if (!service.peer.tls.certName) {
+                service.peer.tls.certName = defaultPeerTlsCertName
+            }
+            if (!service.peer.tls.keyName) {
+                service.peer.tls.keyName = defaultPeerTlsKeyName
+            }
+            service.peer.authentications.findAll { it.tls  } each {
+                Tls tls = it.tls
+                if (!tls.caName) {
+                    tls.caName = defaultPeerAuthenticationTlsCaName[it.type]
+                }
+                if (!tls.certName) {
+                    tls.certName = defaultPeerAuthenticationTlsCertName[it.type]
+                }
+                if (!tls.keyName) {
+                    tls.keyName = defaultPeerAuthenticationTlsKeyName[it.type]
+                }
             }
         }
     }
@@ -139,25 +163,35 @@ chmod o-rx '$certsdir'
         ].each { template it call() }
     }
 
-    def uploadTls() {
-        log.info 'Uploads etcd tls certificates.'
+    def uploadClientTls() {
+        uploadTls 'service.tls', service.tls
+    }
+
+    def uploadPeerTls() {
+        if (service.peer) {
+            uploadTls 'service.peer.tls', service.peer.tls
+        }
+    }
+
+    def uploadTls(String name, Tls tls) {
+        log.info 'Uploads etcd $name certificates.'
         def certsdir = certsDir
         Etcd service = service
         [
             [
-                name: 'service.tls.ca',
-                src: service.tls.ca,
-                dest: "$certsdir/$service.tls.caName",
+                name: "${name}.ca",
+                src: tls.ca,
+                dest: "$certsdir/$tls.caName",
             ],
             [
-                name: 'service.tls.cert',
-                src: service.tls.cert,
-                dest: "$certsdir/$service.tls.certName",
+                name: "${name}.cert",
+                src: tls.cert,
+                dest: "$certsdir/$tls.certName",
             ],
             [
-                name: 'service.tls.key',
-                src: service.tls.key,
-                dest: "$certsdir/$service.tls.keyName",
+                name: "${name}.key",
+                src: tls.key,
+                dest: "$certsdir/$tls.keyName",
             ],
         ].each {
             if (it.src) {
@@ -166,24 +200,36 @@ chmod o-rx '$certsdir'
         }
     }
 
-    def uploadAuth() {
-        log.info 'Uploads etcd authentication certificates.'
+    def uploadClientCertAuth() {
+        Etcd service = service
+        uploadCertAuth 'service.authentications', service.authentications
+    }
+
+    def uploadPeerCertAuth() {
+        Etcd service = service
+        if (service.peer) {
+            uploadCertAuth 'service.peer.authentications', service.peer.authentications
+        }
+    }
+
+    def uploadCertAuth(String name, List<Authentication> auth) {
+        log.info 'Uploads etcd $name certificates.'
         def certsdir = certsDir
-        service.authentications.findAll { it.tls  } each {
+        auth.findAll { it.tls  } each {
             Tls tls = it.tls
             [
                 [
-                    name: 'tls.ca',
+                    name: "${name}.ca",
                     src: tls.ca,
                     dest: "$certsdir/$tls.caName",
                 ],
                 [
-                    name: 'tls.cert',
+                    name: "${name}.cert",
                     src: tls.cert,
                     dest: "$certsdir/$tls.certName",
                 ],
                 [
-                    name: 'tls.key',
+                    name: "${name}.key",
                     src: tls.key,
                     dest: "$certsdir/$tls.keyName",
                 ],
@@ -231,30 +277,57 @@ chmod o-rx '$certsdir'
         properties.getProperty 'default_member_name', defaultProperties
     }
 
-    def getDefaultTlsCaName() {
+    def getDefaultClientTlsCaName() {
         properties.getProperty 'default_tls_ca_name', defaultProperties
     }
 
-    def getDefaultTlsCertName() {
+    def getDefaultClientTlsCertName() {
         properties.getProperty 'default_tls_cert_name', defaultProperties
     }
 
-    def getDefaultTlsKeyName() {
+    def getDefaultClientTlsKeyName() {
         properties.getProperty 'default_tls_key_name', defaultProperties
     }
 
-    Map getDefaultAuthenticationTlsCaName() {
+    def getDefaultPeerTlsCaName() {
+        properties.getProperty 'default_peer_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultPeerTlsCertName() {
+        properties.getProperty 'default_peer_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultPeerTlsKeyName() {
+        properties.getProperty 'default_peer_tls_key_name', defaultProperties
+    }
+
+    Map getDefaultClientAuthenticationTlsCaName() {
         def s = properties.getProperty 'default_authentication_tls_ca_name', defaultProperties
         Eval.me s
     }
 
-    Map getDefaultAuthenticationTlsCertName() {
+    Map getDefaultClientAuthenticationTlsCertName() {
         def s = properties.getProperty 'default_authentication_tls_cert_name', defaultProperties
         Eval.me s
     }
 
-    Map getDefaultAuthenticationTlsKeyName() {
+    Map getDefaultClientAuthenticationTlsKeyName() {
         def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultPeerAuthenticationTlsCaName() {
+        def s = properties.getProperty 'default_peer_authentication_tls_ca_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultPeerAuthenticationTlsCertName() {
+        def s = properties.getProperty 'default_peer_authentication_tls_cert_name', defaultProperties
+        Eval.me s
+    }
+
+    Map getDefaultPeerAuthenticationTlsKeyName() {
+        def s = properties.getProperty 'default_peer_authentication_tls_key_name', defaultProperties
         Eval.me s
     }
 

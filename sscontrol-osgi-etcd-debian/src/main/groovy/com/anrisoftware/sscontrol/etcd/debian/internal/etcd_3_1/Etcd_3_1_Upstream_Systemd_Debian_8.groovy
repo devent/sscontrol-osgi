@@ -41,8 +41,10 @@ class Etcd_3_1_Upstream_Systemd_Debian_8 extends Etcd_3_1_Upstream_Systemd {
         createDirectories()
         createServices()
         createConfig()
-        uploadTls()
-        uploadAuth()
+        uploadClientTls()
+        uploadClientCertAuth()
+        uploadPeerTls()
+        uploadPeerCertAuth()
     }
 
     @Override

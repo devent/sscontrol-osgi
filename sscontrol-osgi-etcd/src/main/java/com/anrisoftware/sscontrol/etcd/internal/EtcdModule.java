@@ -24,6 +24,7 @@ import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.etcd.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
+import com.anrisoftware.sscontrol.etcd.internal.PeerClientCertsAuthenticationImpl.PeerClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
@@ -43,15 +44,19 @@ public class EtcdModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, EtcdImpl.class)
                 .build(EtcdImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authentication.class,
-                        ClientCertsAuthenticationImpl.class)
-                .build(ClientCertsAuthenticationImplFactory.class));
         install(new FactoryModuleBuilder().implement(Peer.class, PeerImpl.class)
                 .build(PeerImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Cluster.class, ClusterImpl.class)
                 .build(ClusterImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Authentication.class,
+                        ClientCertsAuthenticationImpl.class)
+                .build(ClientCertsAuthenticationImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Authentication.class,
+                        PeerClientCertsAuthenticationImpl.class)
+                .build(PeerClientCertsAuthenticationImplFactory.class));
         bindAuthentication();
     }
 
@@ -60,6 +65,8 @@ public class EtcdModule extends AbstractModule {
                 binder(), String.class, AuthenticationFactory.class);
         mapbinder.addBinding("cert")
                 .to(ClientCertsAuthenticationImplFactory.class);
+        mapbinder.addBinding("peer-cert")
+                .to(PeerClientCertsAuthenticationImplFactory.class);
     }
 
 }
