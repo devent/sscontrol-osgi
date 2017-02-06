@@ -17,29 +17,23 @@ package com.anrisoftware.sscontrol.etcd.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
-
 /**
- * <i>Etcd</i> service.
+ * <i>Etcd</i> peer.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Etcd extends HostService {
+public interface Peer {
 
-    String getMemberName();
+    String getState();
 
-    DebugLogging getDebugLogging();
+    String getToken();
 
-    List<Binding> getBindings();
+    List<Binding> getListens();
 
     List<Binding> getAdvertises();
 
-    Tls getTls();
+    List<Cluster> getClusters();
 
     List<Authentication> getAuthentications();
-
-    Peer getPeer();
 }

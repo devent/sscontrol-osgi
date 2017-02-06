@@ -19,6 +19,7 @@ import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.advertis
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.authenticationAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.bindingAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.memberNameSet;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.peerSet;
 import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.tlsSet;
 
 import javax.inject.Singleton;
@@ -26,6 +27,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.etcd.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.external.Binding;
+import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
@@ -47,7 +49,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
         tlsSet("TLS {} set for {}"),
 
-        authenticationAdded("Authentication {} added for {}");
+        authenticationAdded("Authentication {} added for {}"),
+
+        peerSet("Peer {} set for {}");
 
         private String name;
 
@@ -86,5 +90,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
     void authenticationAdded(EtcdImpl etcd, Authentication auth) {
         debug(authenticationAdded, auth, etcd);
+    }
+
+    void peerSet(EtcdImpl etcd, Peer peer) {
+        debug(peerSet, peer, etcd);
     }
 }

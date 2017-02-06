@@ -61,7 +61,7 @@ ETCD_DEBUG="<parent.service.debugLogging.modules.debug.level;format="numberTrue"
 >>
 
 bindings(bind, parent, vars) ::= <%
-<bind.scheme>://<bind.address>:<bind.port>
+<bind.address>
 %>
 
 ClientCertsAuthenticationImpl(parent, vars, a) ::= <<
