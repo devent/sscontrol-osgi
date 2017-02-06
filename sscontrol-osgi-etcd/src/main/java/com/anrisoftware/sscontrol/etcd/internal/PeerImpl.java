@@ -38,6 +38,8 @@ import com.anrisoftware.sscontrol.etcd.external.Binding.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.external.Cluster;
 import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.etcd.internal.ClusterImpl.ClusterImplFactory;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -82,15 +84,21 @@ public class PeerImpl implements Peer {
     @Inject
     private ClusterImplFactory clusterFactory;
 
+    private final TlsFactory tlsFactory;
+
+    private Tls tls;
+
     @Inject
     PeerImpl(PeerImplLogger log, BindingFactory bindingFactory,
-            @Assisted Map<String, Object> args) {
+            TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
         this.log = log;
         this.advertises = new ArrayList<>();
         this.authentications = new ArrayList<>();
         this.listens = new ArrayList<>();
         this.clusters = new ArrayList<>();
         this.bindingFactory = bindingFactory;
+        this.tls = tlsFactory.create();
+        this.tlsFactory = tlsFactory;
         parseArgs(args);
     }
 
@@ -158,6 +166,16 @@ public class PeerImpl implements Peer {
         Binding binding = bindingFactory.create(a);
         log.listenAdded(this, binding);
         listens.add(binding);
+    }
+
+    /**
+     * <pre>
+     * tls cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public void tls(Map<String, Object> args) {
+        this.tls = tlsFactory.create(args);
+        log.tlsSet(this, tls);
     }
 
     /**
@@ -238,6 +256,11 @@ public class PeerImpl implements Peer {
     @Override
     public List<Binding> getListens() {
         return listens;
+    }
+
+    @Override
+    public Tls getTls() {
+        return tls;
     }
 
     @Override

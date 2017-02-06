@@ -5,6 +5,7 @@ import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.authenti
 import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.clusterAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.listenAdded;
 import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.stateSet;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.tlsSet;
 import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.tokenSet;
 
 import javax.inject.Singleton;
@@ -13,6 +14,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.etcd.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.external.Binding;
 import com.anrisoftware.sscontrol.etcd.external.Cluster;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link PeerImpl}.
@@ -35,7 +37,9 @@ final class PeerImplLogger extends AbstractLogger {
 
         listenAdded("Authentication {} added to {}"),
 
-        clusterAdded("Cluster {} added to {}");
+        clusterAdded("Cluster {} added to {}"),
+
+        tlsSet("Tls {} set for {}");
 
         private String name;
 
@@ -78,5 +82,9 @@ final class PeerImplLogger extends AbstractLogger {
 
     void clusterAdded(PeerImpl peer, Cluster cluster) {
         debug(clusterAdded, cluster, peer);
+    }
+
+    void tlsSet(PeerImpl peer, Tls tls) {
+        debug(tlsSet, tls, peer);
     }
 }
