@@ -42,8 +42,8 @@ service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$rob
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
-service "hostname", target: "andrea-master", fqdn: "andrea-master.muellerpublic.de"
-service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.muellerpublic.de"
+service "hostname", target: "andrea-master", fqdn: "andrea-master.anrea.local"
+service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.anrea.local"
 """,
             expected: { Map args ->
             },

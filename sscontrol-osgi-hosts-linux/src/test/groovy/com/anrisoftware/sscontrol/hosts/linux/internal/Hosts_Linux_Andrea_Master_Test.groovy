@@ -41,12 +41,12 @@ service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
 service "hosts", target: "andrea-master" with {
-    ip '192.168.56.120', host: 'andrea-master.muellerpublic.de', alias: 'andrea-master, etcd-0'
-    ip '192.168.56.121', host: 'andrea-node-1.muellerpublic.de', alias: 'andrea-node-1, etcd-1'
+    ip '192.168.56.120', host: 'andrea-master.anrea.local', alias: 'andrea-master, etcd-0'
+    ip '192.168.56.121', host: 'andrea-node-1.anrea.local', alias: 'andrea-node-1, etcd-1'
 }
 service "hosts", target: "andrea-nodes" with {
-    ip '192.168.56.121', host: 'andrea-node-1.muellerpublic.de', alias: 'andrea-node-1, etcd-1'
-    ip '192.168.56.120', host: 'andrea-master.muellerpublic.de', alias: 'andrea-master, etcd-0'
+    ip '192.168.56.121', host: 'andrea-node-1.anrea.local', alias: 'andrea-node-1, etcd-1'
+    ip '192.168.56.120', host: 'andrea-master.anrea.local', alias: 'andrea-master, etcd-0'
 }
 """,
             expected: { Map args ->
