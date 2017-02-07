@@ -41,28 +41,30 @@ service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
 service "etcd", target: "andrea-master", member: "etcd-0" with {
+    debug "debug", level: 1
     bind "http://localhost:2379"
-    bind "https://185.24.220.41:2379"
-    advertise "https://etcd-0.muellerpublic.de:2379"
+    bind "https://192.168.56.120:2379"
+    advertise "https://etcd-0.anrea.local:2379"
     tls cert: '$certCertPem', key: '$certKeyPem'
     authentication "cert", ca: "$certCaPem"
-    peer state: "new", advertise: "https://etcd-0.muellerpublic.de:2380", listen: "https://185.24.220.41:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "infra0=https://etcd-0.muellerpublic.de:2380"
-        cluster << "infra1=https://etcd-1.muellerpublic.de:2380"
+    peer state: "new", advertise: "https://etcd-0.anrea.local:2380", listen: "https://192.168.56.120:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "ectd-0=https://etcd-0.anrea.local:2380"
+        cluster << "ectd-1=https://etcd-1.anrea.local:2380"
         tls cert: '$certCertPem', key: '$certKeyPem'
         authentication "cert", ca: "$certCaPem"
     }
     property << 'etcd_archive_ignore_key=true'
 }
 service "etcd", target: "andrea-nodes", member: "etcd-1" with {
+    debug "debug", level: 1
     bind "http://localhost:2379"
-    bind "https://37.252.124.149:2379"
-    advertise "https://etcd-1.muellerpublic.de:2379"
+    bind "https://192.168.56.121:2379"
+    advertise "https://etcd-1.anrea.local:2379"
     tls cert: '$certCertPem', key: '$certKeyPem'
     authentication "cert", ca: "$certCaPem"
-    peer state: "new", advertise: "https://etcd-1.muellerpublic.de:2380", listen: "https://37.252.124.149:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "infra0=https://etcd-0.muellerpublic.de:2380"
-        cluster << "infra1=https://etcd-1.muellerpublic.de:2380"
+    peer state: "new", advertise: "https://etcd-1.anrea.local:2380", listen: "https://192.168.56.121:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "ectd-0=https://etcd-0.anrea.local:2380"
+        cluster << "ectd-1=https://etcd-1.anrea.local:2380"
         tls cert: '$certCertPem', key: '$certKeyPem'
         authentication "cert", ca: "$certCaPem"
     }
