@@ -29,10 +29,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Sshd_6 extends ScriptBase {
 
-    def restartService() {
-        log.info 'Restarting sshd service.'
-        shell privileged: true, "service sshd restart" call()
-        shell privileged: true, "service sshd status" call()
+    def startService() {
+        restartSystemdService(['sshd'])
     }
 
     def configureService() {
@@ -55,11 +53,6 @@ abstract class Sshd_6 extends ScriptBase {
 
     String getPasswordAuthentication() {
         defaultProperties.getProperty('password_authentication')
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService();
     }
 
     @Override

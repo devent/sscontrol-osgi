@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.sshd.debian.sshd_6.external
 
-import com.anrisoftware.sscontrol.sshd.external.Sshd
 import com.anrisoftware.sscontrol.sshd.sshd_6.external.Sshd_6
 
 import groovy.util.logging.Slf4j
@@ -30,14 +29,7 @@ import groovy.util.logging.Slf4j
 abstract class Sshd_6_Debian extends Sshd_6 {
 
     void installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            env "DEBIAN_FRONTEND=noninteractive" } call()
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService();
+        installAptPackages()
     }
 
     @Override
