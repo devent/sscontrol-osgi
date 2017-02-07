@@ -42,6 +42,7 @@ service "sshd"
             expected: { Map args ->
                 File dir = args.dir
                 assertFileResource Sshd_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Sshd_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource Sshd_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource Sshd_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
             },

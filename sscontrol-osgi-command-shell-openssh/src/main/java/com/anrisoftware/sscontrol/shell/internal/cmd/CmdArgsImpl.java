@@ -49,7 +49,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.PropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -141,14 +141,16 @@ class CmdArgsImpl implements CmdArgs {
         SshOptions sshOptions = sshOptionsFactory.create(args, options);
         sshOptions.addDefaultOptions();
         sshOptions.addDebug();
-        sshOptions.addStringOption(SSH_CONTROL_MASTER_ARG,
-                "ssh_control_master_option");
-        sshOptions.addOption(SSH_CONTROL_PERSIST_DURATION_ARG,
-                "ssh_control_persist_option");
-        sshOptions.addOption(SSH_CONNECTION_TIMEOUT_ARG,
-                "ssh_connection_timeout_option");
-        sshOptions.addControlPathOption(SSH_CONTROL_PATH_ARG,
-                "ssh_control_path_option");
+        if (args.useSshMaster()) {
+            sshOptions.addStringOption(SSH_CONTROL_MASTER_ARG,
+                    "ssh_control_master_option");
+            sshOptions.addOption(SSH_CONTROL_PERSIST_DURATION_ARG,
+                    "ssh_control_persist_option");
+            sshOptions.addOption(SSH_CONNECTION_TIMEOUT_ARG,
+                    "ssh_connection_timeout_option");
+            sshOptions.addControlPathOption(SSH_CONTROL_PATH_ARG,
+                    "ssh_control_path_option");
+        }
     }
 
     private Object getDefaultDuration(ContextProperties p, String property) {
