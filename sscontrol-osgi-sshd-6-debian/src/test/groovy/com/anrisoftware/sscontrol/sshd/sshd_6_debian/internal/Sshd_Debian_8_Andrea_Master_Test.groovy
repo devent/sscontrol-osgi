@@ -29,23 +29,26 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Sshd_Debian_8_Test extends AbstractTestSshd_Debian_8 {
+class Sshd_Debian_8_Andrea_Master_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
-    void "basic"() {
+    void "sshd script"() {
         def test = [
-            name: "basic",
+            name: "default_target",
             input: """
-service "ssh", host: "localhost"
 service "sshd"
 """,
             expected: { Map args ->
-                File dir = args.dir
-                assertFileResource Sshd_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Sshd_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Sshd_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                File dir = args.dir as File
             },
         ]
         doTest test
+    }
+
+    Map getScriptEnv(Map args) {
+        emptyScriptEnv
+    }
+
+    void createDummyCommands(File dir) {
     }
 }

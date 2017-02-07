@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal
 
-import static com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal.Sshd_Debian_8_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -42,7 +40,7 @@ class Sshd_Debian_8 extends Sshd_6_Debian {
         setupDefaults()
         installPackages()
         configureService()
-        restartService()
+        startService()
     }
 
     def setupDefaults() {
@@ -69,15 +67,5 @@ class Sshd_Debian_8 extends Sshd_6_Debian {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }
