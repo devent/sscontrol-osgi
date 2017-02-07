@@ -52,6 +52,7 @@ service "etcd", target: "andrea-master", member: "etcd-0" with {
         tls cert: '$certCertPem', key: '$certKeyPem'
         authentication "cert", ca: "$certCaPem"
     }
+    property << 'etcd_archive_ignore_key=true'
 }
 service "etcd", target: "andrea-nodes", member: "etcd-1" with {
     bind "http://localhost:2379"
@@ -65,6 +66,7 @@ service "etcd", target: "andrea-nodes", member: "etcd-1" with {
         tls cert: '$certCertPem', key: '$certKeyPem'
         authentication "cert", ca: "$certCaPem"
     }
+    property << 'etcd_archive_ignore_key=true'
 }
 """,
             expected: { Map args ->
