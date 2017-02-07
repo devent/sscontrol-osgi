@@ -32,11 +32,16 @@ import groovy.util.logging.Slf4j
 class Sshd_Debian_8_Andrea_Master_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
-    void "sshd script"() {
+    void "andrea_master_nodes"() {
         def test = [
-            name: "default_target",
+            name: "andrea_master_nodes",
             input: """
-service "sshd"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
+    host "robobee@andrea-node-1"
+}
+service target: "andrea-master", "sshd"
+service target: "andrea-nodes", "sshd"
 """,
             expected: { Map args ->
                 File dir = args.dir as File
