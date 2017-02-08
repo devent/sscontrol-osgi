@@ -274,6 +274,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     Copy copy(Map args) {
         def a = setupArgs(args)
+        if (archiveIgnoreKey) {
+            a.sig = null
+            a.server = null
+            a.key = null
+        }
         copy.create(a, a.target, this, threads, log)
     }
 
@@ -484,6 +489,30 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     File getConfigFile() {
         properties.getFileProperty "config_file", configDir, defaultProperties
+    }
+
+    URI getArchive() {
+        properties.getURIProperty 'archive', defaultProperties
+    }
+
+    String getArchiveSig() {
+        properties.getProperty 'archive_sig', defaultProperties
+    }
+
+    String getArchiveServer() {
+        properties.getProperty 'archive_server', defaultProperties
+    }
+
+    String getArchiveKey() {
+        properties.getProperty 'archive_key', defaultProperties
+    }
+
+    Boolean getArchiveIgnoreKey() {
+        properties.getBooleanProperty 'archive_ignore_key', defaultProperties
+    }
+
+    File getBinDir() {
+        properties.getFileProperty "bin_dir", base, defaultProperties
     }
 
     /**
