@@ -31,19 +31,19 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Andrea_Master_Test extends AbstractTestHostname_Debian_8 {
+class Hostname_Debian_8_Andrea_Master_Local_Test extends AbstractTestHostname_Debian_8 {
 
     @Test
-    void "andrea_master_nodes"() {
+    void "andrea_master_local_nodes"() {
         def test = [
-            name: "andrea_master_nodes",
+            name: "andrea_master_local_nodes",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
-service "hostname", target: "andrea-master", fqdn: "andrea-master.anrea.local"
-service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.anrea.local"
+service "hostname", target: "andrea-master", fqdn: "andrea-master.andrea.local"
+service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.andrea.local"
 """,
             expected: { Map args ->
             },

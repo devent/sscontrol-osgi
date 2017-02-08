@@ -35,9 +35,19 @@ abstract class Etcd_3_1_Systemd extends ScriptBase {
     }
 
     def startServices() {
-        startEnableSystemdService([
-            'etcd',
-        ])
+        def services = ['etcd']
+        log.info 'Starting and enabling {}.', services
+        services.each {
+            shell timeout: timeoutMiddle, privileged: true, """
+systemctl start $it
+systemctl status $it
+if systemctl status $it | grep 'Active: failed'; then
+exit 1
+else
+systemctl enable $it
+fi
+""" call()
+        }
     }
 
     @Override
