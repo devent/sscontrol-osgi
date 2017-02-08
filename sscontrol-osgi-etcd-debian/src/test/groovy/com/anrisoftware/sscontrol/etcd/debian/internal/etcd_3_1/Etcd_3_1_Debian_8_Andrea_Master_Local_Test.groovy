@@ -29,12 +29,12 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_Andrea_Master_Test extends AbstractTestEtcd_3_1_Debian_8 {
+class Etcd_3_1_Debian_8_Andrea_Master_Local_Test extends AbstractTestEtcd_3_1_Debian_8 {
 
     @Test
-    void "andrea_master"() {
+    void "andrpea_master_local"() {
         def test = [
-            name: "andrea_master",
+            name: "andrea_master_local",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
@@ -44,31 +44,31 @@ service "etcd", target: "andrea-master", member: "etcd-0" with {
     debug "debug", level: 1
     bind "http://localhost:2379"
     bind "https://192.168.56.120:2379"
-    advertise "https://etcd-0.anrea.local:2379"
-    tls cert: '$certCertPem', key: '$certKeyPem'
-    authentication "cert", ca: "$certCaPem"
-    peer state: "new", advertise: "https://etcd-0.anrea.local:2380", listen: "https://192.168.56.120:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "ectd-0=https://etcd-0.anrea.local:2380"
-        cluster << "ectd-1=https://etcd-1.anrea.local:2380"
-        tls cert: '$certCertPem', key: '$certKeyPem'
-        authentication "cert", ca: "$certCaPem"
+    advertise "https://etcd-0.andrea.local:2379"
+    tls cert: '$certEtcd0CertAndreaMasterLocalPem', key: '$certEtcd0KeyAndreaMasterLocalPem'
+    authentication "cert", ca: "$certCaAndreaMasterLocalPem"
+    peer state: "new", advertise: "https://etcd-0.andrea.local:2380", listen: "https://192.168.56.120:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "etcd-0=https://etcd-0.andrea.local:2380"
+        cluster << "etcd-1=https://etcd-1.andrea.local:2380"
+        tls cert: '$certEtcd0CertAndreaMasterLocalPem', key: '$certEtcd0KeyAndreaMasterLocalPem'
+        authentication "cert", ca: "$certCaAndreaMasterLocalPem"
     }
-    property << 'etcd_archive_ignore_key=true'
+    property << 'archive_ignore_key=true'
 }
 service "etcd", target: "andrea-nodes", member: "etcd-1" with {
     debug "debug", level: 1
     bind "http://localhost:2379"
     bind "https://192.168.56.121:2379"
-    advertise "https://etcd-1.anrea.local:2379"
-    tls cert: '$certCertPem', key: '$certKeyPem'
-    authentication "cert", ca: "$certCaPem"
-    peer state: "new", advertise: "https://etcd-1.anrea.local:2380", listen: "https://192.168.56.121:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "ectd-0=https://etcd-0.anrea.local:2380"
-        cluster << "ectd-1=https://etcd-1.anrea.local:2380"
-        tls cert: '$certCertPem', key: '$certKeyPem'
-        authentication "cert", ca: "$certCaPem"
+    advertise "https://etcd-1.andrea.local:2379"
+    tls cert: '$certEtcd1CertAndreaMasterLocalPem', key: '$certEtcd1KeyAndreaMasterLocalPem'
+    authentication "cert", ca: "$certCaAndreaMasterLocalPem"
+    peer state: "new", advertise: "https://etcd-1.andrea.local:2380", listen: "https://192.168.56.121:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "etcd-0=https://etcd-0.andrea.local:2380"
+        cluster << "etcd-1=https://etcd-1.andrea.local:2380"
+        tls cert: '$certEtcd1CertAndreaMasterLocalPem', key: '$certEtcd1KeyAndreaMasterLocalPem'
+        authentication "cert", ca: "$certCaAndreaMasterLocalPem"
     }
-    property << 'etcd_archive_ignore_key=true'
+    property << 'archive_ignore_key=true'
 }
 """,
             expected: { Map args ->

@@ -34,11 +34,7 @@ abstract class Etcd_3_1_Upstream extends ScriptBase {
 
     def installEtcd() {
         log.info 'Installs etcd.'
-        if (!archiveIgnoreKey) {
-            copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true, timeout: timeoutLong call()
-        } else {
-            copy src: archive, dest: "/tmp", direct: true, timeout: timeoutLong call()
-        }
+        copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true, timeout: timeoutLong call()
         def archiveFile = FilenameUtils.getName(archive.toString())
         def archiveName = getBaseName(getBaseName(archive.toString()))
         shell timeout: timeoutMiddle, """\
@@ -48,30 +44,6 @@ cd "$archiveName"
 sudo find . -executable -type f -exec cp '{}' '$binDir' \\;
 sudo chmod o+rx '$binDir'/*
 """ call()
-    }
-
-    URI getArchive() {
-        properties.getURIProperty 'etcd_archive', defaultProperties
-    }
-
-    String getArchiveSig() {
-        properties.getProperty 'etcd_archive_sig', defaultProperties
-    }
-
-    String getArchiveServer() {
-        properties.getProperty 'etcd_archive_server', defaultProperties
-    }
-
-    String getArchiveKey() {
-        properties.getProperty 'etcd_archive_key', defaultProperties
-    }
-
-    Boolean getArchiveIgnoreKey() {
-        properties.getBooleanProperty 'etcd_archive_ignore_key', defaultProperties
-    }
-
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
     }
 
     @Override

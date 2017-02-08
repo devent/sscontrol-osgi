@@ -29,24 +29,24 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Andrea_Master_Test extends AbstractTest_Hosts_Linux {
+class Hosts_Linux_Andrea_Master_Local_Test extends AbstractTest_Hosts_Linux {
 
     @Test
-    void "andrea_master_nodes"() {
+    void "andrea_master_local_nodes"() {
         def test = [
-            name: 'andrea_master_nodes',
+            name: 'andrea_master_local_nodes',
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-1"
 }
 service "hosts", target: "andrea-master" with {
-    ip '192.168.56.120', host: 'andrea-master.anrea.local', alias: 'andrea-master, etcd-0'
-    ip '192.168.56.121', host: 'andrea-node-1.anrea.local', alias: 'andrea-node-1, etcd-1'
+    ip '192.168.56.120', host: 'andrea-master.andrea.local', alias: 'andrea-master, etcd-0'
+    ip '192.168.56.121', host: 'andrea-node-1.andrea.local', alias: 'andrea-node-1, etcd-1'
 }
 service "hosts", target: "andrea-nodes" with {
-    ip '192.168.56.121', host: 'andrea-node-1.anrea.local', alias: 'andrea-node-1, etcd-1'
-    ip '192.168.56.120', host: 'andrea-master.anrea.local', alias: 'andrea-master, etcd-0'
+    ip '192.168.56.121', host: 'andrea-node-1.andrea.local', alias: 'andrea-node-1, etcd-1'
+    ip '192.168.56.120', host: 'andrea-master.andrea.local', alias: 'andrea-master, etcd-0'
 }
 """,
             expected: { Map args ->
