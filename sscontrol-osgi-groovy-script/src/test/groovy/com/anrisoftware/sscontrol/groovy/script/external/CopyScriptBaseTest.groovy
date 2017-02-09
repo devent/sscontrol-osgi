@@ -23,7 +23,7 @@ import org.junit.Test
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -54,6 +54,11 @@ class CopyScriptBaseTest extends AbstractScriptBaseTest {
                 @Override
                 String getSystemVersion() {
                     ''
+                }
+
+                @Override
+                Boolean getArchiveIgnoreKey() {
+                    false
                 }
             },
             expected: {
@@ -90,6 +95,11 @@ class CopyScriptBaseTest extends AbstractScriptBaseTest {
                 @Override
                 String getSystemVersion() {
                     ''
+                }
+
+                @Override
+                Boolean getArchiveIgnoreKey() {
+                    false
                 }
             },
             expected: {

@@ -57,6 +57,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -64,7 +65,7 @@ import com.google.inject.Injector
 import groovy.transform.CompileStatic
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -150,6 +151,7 @@ class AbstractScriptBaseTest {
                 new PropertiesThreadsModule(),
                 new DurationSimpleFormatModule(),
                 new DurationFormatModule(),
+                new TemplateResModule(),
                 new AbstractModule() {
                     protected void configure() {
                         bind Cmd to CmdImpl
