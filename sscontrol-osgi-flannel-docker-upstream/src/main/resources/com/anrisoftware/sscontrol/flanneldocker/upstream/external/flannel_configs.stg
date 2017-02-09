@@ -11,6 +11,9 @@ FLANNEL_ETCD_ENDPOINTS="<parent.service.etcd.address>"
 # For address range assignment
 FLANNEL_ETCD_PREFIX="<parent.service.etcd.prefix>"
 
+# interface to use (IP or name) for inter-host communication.
+FLANNEL_IFACE="<if(parent.service.binding)>--iface=<parent.service.binding.name><endif>"
+
 # Any additional options that you want to pass
 #FLANNEL_OPTIONS=""
 

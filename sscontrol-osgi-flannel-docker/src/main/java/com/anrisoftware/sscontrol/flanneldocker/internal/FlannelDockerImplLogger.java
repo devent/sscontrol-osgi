@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.flanneldocker.internal;
 
 import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.backendSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.bindingSet;
 import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.etcdSet;
 import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.networkSet;
 
@@ -23,6 +24,7 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.flanneldocker.external.Backend;
+import com.anrisoftware.sscontrol.flanneldocker.external.Binding;
 import com.anrisoftware.sscontrol.flanneldocker.external.Etcd;
 import com.anrisoftware.sscontrol.flanneldocker.external.Network;
 
@@ -41,7 +43,9 @@ final class FlannelDockerImplLogger extends AbstractLogger {
 
         networkSet("Network {} set for {}"),
 
-        backendSet("Backend {} set for {}");
+        backendSet("Backend {} set for {}"),
+
+        bindingSet("Binding {} set for {}");
 
         private String name;
 
@@ -72,5 +76,9 @@ final class FlannelDockerImplLogger extends AbstractLogger {
 
     void backendSet(FlannelDockerImpl flannel, Backend backend) {
         debug(backendSet, backend, flannel);
+    }
+
+    void bindingSet(FlannelDockerImpl flannel, Binding binding) {
+        debug(bindingSet, binding, flannel);
     }
 }

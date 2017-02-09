@@ -36,10 +36,12 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.flanneldocker.external.Backend;
 import com.anrisoftware.sscontrol.flanneldocker.external.Backend.BackendFactory;
+import com.anrisoftware.sscontrol.flanneldocker.external.Binding;
 import com.anrisoftware.sscontrol.flanneldocker.external.Etcd;
 import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDocker;
 import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDockerService;
 import com.anrisoftware.sscontrol.flanneldocker.external.Network;
+import com.anrisoftware.sscontrol.flanneldocker.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
@@ -88,10 +90,15 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     private Backend backend;
 
+    private Binding binding;
+
+    private final BindingImplFactory bindingFactory;
+
     @Inject
     FlannelDockerImpl(FlannelDockerImplLogger log,
             HostPropertiesService propertiesService,
             EtcdImplFactory etcdFactory, NetworkImplFactory networkFactory,
+            BindingImplFactory bindingFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
@@ -100,6 +107,8 @@ public class FlannelDockerImpl implements FlannelDocker {
         this.etcdFactory = etcdFactory;
         this.network = networkFactory.create();
         this.networkFactory = networkFactory;
+        this.binding = null;
+        this.bindingFactory = bindingFactory;
         parseArgs(args);
     }
 
@@ -164,6 +173,30 @@ public class FlannelDockerImpl implements FlannelDocker {
     @SuppressWarnings("unchecked")
     public List<Object> getDebug() {
         return (List<Object>) invokeMethod(debug, "getDebug", null);
+    }
+
+    /**
+     * <pre>
+     * bind "127.0.0.1" // or
+     * bind "eth0"
+     * </pre>
+     */
+    public void bind(String address) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        bind(a);
+    }
+
+    /**
+     * <pre>
+     * bind address: "127.0.0.1" // or
+     * bind name: "eth0"
+     * </pre>
+     */
+    public void bind(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        this.binding = bindingFactory.create(a);
+        log.bindingSet(this, binding);
     }
 
     /**
@@ -238,6 +271,11 @@ public class FlannelDockerImpl implements FlannelDocker {
     @Override
     public String getName() {
         return "flannel-docker";
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
     }
 
     @Override

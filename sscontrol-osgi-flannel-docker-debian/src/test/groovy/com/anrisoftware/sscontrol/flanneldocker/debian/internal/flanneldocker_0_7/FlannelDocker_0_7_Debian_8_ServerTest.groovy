@@ -33,6 +33,9 @@ class FlannelDocker_0_7_Debian_8_ServerTest extends AbstractTest_FlannelDocker_D
 
     @Test
     void "flannel_script_basic"() {
+        if (!testHostAvailable) {
+            return
+        }
         def test = [
             name: "flannel_script_basic",
             input: """

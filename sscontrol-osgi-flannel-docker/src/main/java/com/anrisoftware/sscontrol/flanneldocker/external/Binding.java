@@ -15,24 +15,14 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.external;
 
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
-
 /**
- * <i>Flannel-Docker</i> service.
+ * <i>Binding</i>.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface FlannelDocker extends HostService {
+public interface Binding {
 
-    DebugLogging getDebugLogging();
+    String getName();
 
-    Binding getBinding();
-
-    Etcd getEtcd();
-
-    Network getNetwork();
-
-    Backend getBackend();
 }
