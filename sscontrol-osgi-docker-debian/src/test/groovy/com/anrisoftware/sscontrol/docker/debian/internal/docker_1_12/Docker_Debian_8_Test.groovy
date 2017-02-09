@@ -45,7 +45,6 @@ service "docker"
                 File gen = args.test.generatedDir
                 assertFileResource Docker_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Docker_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
             },
