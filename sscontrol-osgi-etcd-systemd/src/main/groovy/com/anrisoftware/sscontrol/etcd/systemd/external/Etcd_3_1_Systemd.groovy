@@ -42,6 +42,7 @@ abstract class Etcd_3_1_Systemd extends ScriptBase {
 systemctl start $it
 systemctl status $it
 if systemctl status $it | grep 'Active: failed'; then
+echo "Etcd failed."
 exit 1
 else
 systemctl enable $it

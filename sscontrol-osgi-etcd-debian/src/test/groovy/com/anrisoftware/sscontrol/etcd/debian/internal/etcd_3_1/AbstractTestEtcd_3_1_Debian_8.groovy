@@ -75,6 +75,8 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
 
     static final URL certEtcd1KeyAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_etcd_1_key_andrea_master_local.txt')
 
+    static final URL grepActiveCommand = AbstractTestEtcd_3_1_Debian_8.class.getResource('grep_active_command.txt')
+
     @Inject
     SshImplFactory sshFactory
 
@@ -96,6 +98,7 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
     }
 
     void createDummyCommands(File dir) {
+        createCommand grepActiveCommand, dir, 'grep'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -114,8 +117,7 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
             'wget',
             'useradd',
             'tar',
-            'gpg',
-            'grep',
+            'gpg'
         ]
     }
 

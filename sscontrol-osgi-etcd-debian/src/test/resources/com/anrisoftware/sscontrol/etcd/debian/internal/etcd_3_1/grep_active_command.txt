@@ -1,0 +1,16 @@
+#!/bin/bash
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+echo "$1"
+if [[ "$1" == "Active: failed" ]]; then
+    echo "Return 1"
+    exit 1
+fi
+if [ "$#" -gt 0 ]; then
+    cmd=($1)
+    cmd=${cmd[0]}
+    if command -v -- "$cmd"&>/dev/null; then
+        $@
+    fi
+fi
