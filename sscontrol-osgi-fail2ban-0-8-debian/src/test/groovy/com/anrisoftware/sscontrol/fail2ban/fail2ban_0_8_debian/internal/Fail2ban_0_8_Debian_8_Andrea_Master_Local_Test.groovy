@@ -29,16 +29,22 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Fail2ban_0_8_Debian_8_Andrea_Master_Test extends AbstractTestFail2ban_0_8_Debian_8 {
+class Fail2ban_0_8_Debian_8_Andrea_Master_Local_Test extends AbstractTestFail2ban_0_8_Debian_8 {
 
     @Test
-    void "andrea_master_nodes"() {
+    void "andrea_master_local"() {
+        if (!isHostAvailable('andrea-master-local')) {
+            return
+        }
+        if (!isHostAvailable('andrea-node-1-local')) {
+            return
+        }
         def test = [
-            name: "andrea_master_nodes",
+            name: "andrea_master_local",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1"
+    host "robobee@andrea-node-1-local"
 }
 service "fail2ban", target: "andrea-master" with {
     banning time: "PT24H"
