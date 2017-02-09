@@ -33,12 +33,18 @@ class Etcd_3_1_Debian_8_Andrea_Master_Local_Test extends AbstractTestEtcd_3_1_De
 
     @Test
     void "andrea_master_local"() {
+        if (!isHostAvailable('andrea-master-local')) {
+            return
+        }
+        if (!isHostAvailable('andrea-node-1-local')) {
+            return
+        }
         def test = [
             name: "andrea_master_local",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1"
+    host "robobee@andrea-node-1-local"
 }
 service "etcd", target: "andrea-master", member: "etcd-0" with {
     debug "debug", level: 1
