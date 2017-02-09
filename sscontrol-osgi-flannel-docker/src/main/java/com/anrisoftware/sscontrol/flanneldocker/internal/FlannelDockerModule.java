@@ -19,8 +19,10 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.flanneldocker.external.Backend;
 import com.anrisoftware.sscontrol.flanneldocker.external.Backend.BackendFactory;
+import com.anrisoftware.sscontrol.flanneldocker.external.Binding;
 import com.anrisoftware.sscontrol.flanneldocker.external.Etcd;
 import com.anrisoftware.sscontrol.flanneldocker.external.Network;
+import com.anrisoftware.sscontrol.flanneldocker.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
@@ -43,6 +45,9 @@ public class FlannelDockerModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, FlannelDockerImpl.class)
                 .build(FlannelDockerImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Binding.class, BindingImpl.class)
+                .build(BindingImplFactory.class));
         install(new FactoryModuleBuilder().implement(Etcd.class, EtcdImpl.class)
                 .build(EtcdImplFactory.class));
         install(new FactoryModuleBuilder()
