@@ -41,6 +41,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -86,7 +87,6 @@ abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
             'rm',
             'cp',
             'apt-get',
-            'service',
             'systemctl',
             'which',
             'id',
@@ -130,6 +130,7 @@ abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
             new TemplateModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
+            new TemplateResModule(),
             new AbstractModule() {
 
                 @Override

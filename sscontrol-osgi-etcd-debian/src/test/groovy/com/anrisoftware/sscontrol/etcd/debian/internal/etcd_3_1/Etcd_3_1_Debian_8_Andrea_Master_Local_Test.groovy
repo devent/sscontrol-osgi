@@ -32,7 +32,7 @@ import groovy.util.logging.Slf4j
 class Etcd_3_1_Debian_8_Andrea_Master_Local_Test extends AbstractTestEtcd_3_1_Debian_8 {
 
     @Test
-    void "andrpea_master_local"() {
+    void "andrea_master_local"() {
         def test = [
             name: "andrea_master_local",
             input: """

@@ -29,21 +29,27 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Docker_Debian_8_ServerTest extends AbstractTest_Docker_Debian_8 {
+class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debian_8 {
 
     @Test
-    void "docker_script_basic"() {
-        if (!testHostAvailable) {
+    void "andrea_master_local"() {
+        if (!isHostAvailable('andrea-master-local')) {
+            return
+        }
+        if (!isHostAvailable('andrea-node-1-local')) {
             return
         }
         def test = [
-            name: "docker_script_basic",
+            name: "andrea_master_local",
             input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "docker"
+service "ssh", group: "master", host: "robobee@andrea-master-local", key: "$robobeeKey"
+service "ssh", group: "nodes", key: "$robobeeKey" with {
+    host "robobee@andrea-node-1-local"
+}
+service "docker", target: "master"
+service "docker", target: "nodes"
 """,
             expected: { Map args ->
-                assertStringResource Docker_Debian_8_ServerTest, readRemoteFile('/etc/default/grub'), "${args.test.name}_grub_default_expected.txt"
             },
         ]
         doTest test
