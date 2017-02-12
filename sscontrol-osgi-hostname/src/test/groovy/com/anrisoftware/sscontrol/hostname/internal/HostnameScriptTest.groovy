@@ -33,11 +33,11 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -47,7 +47,6 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
 class HostnameScriptTest {
 
     @Inject
@@ -57,40 +56,48 @@ class HostnameScriptTest {
     HostnameImplFactory hostnameFactory
 
     @Test
-    void "hostname service"() {
-        def testCases = [
-            [
-                input: """
+    void "set_fqdn"() {
+        def test = [
+            name: 'set_fqdn',
+            input: """
 service "hostname" with {
     // Sets the hostname.
     set fqdn: "blog.muellerpublic.de"
 }
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
-                    assert hostname.hostname == 'blog.muellerpublic.de'
-                },
-            ],
-            [
-                input: """
+            expected: { HostServices services ->
+                assert services.getServices('hostname').size() == 1
+                Hostname hostname = services.getServices('hostname')[0] as Hostname
+                assert hostname.hostname == 'blog.muellerpublic.de'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "fqdn"() {
+        def test = [
+            name: 'set_fqdn',
+            input: """
 service "hostname", fqdn: "blog.muellerpublic.de"
 """,
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
-                    assert hostname.hostname == 'blog.muellerpublic.de'
-                },
-            ],
+            expected: { HostServices services ->
+                assert services.getServices('hostname').size() == 1
+                Hostname hostname = services.getServices('hostname')[0] as Hostname
+                assert hostname.hostname == 'blog.muellerpublic.de'
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            log.info '\n######### {}. case: {}', k, test
-            def services = servicesFactory.create()
-            services.putAvailableService 'hostname', hostnameFactory
-            Eval.me 'service', services, test.input as String
-            Closure expected = test.expected
-            expected services
-        }
+        doTest test
+    }
+
+    void doTest(Map test) {
+        log.info '\n######### {} #########\ncase: {}', test.name, test
+        def services = servicesFactory.create()
+        services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+        services.putAvailableService 'hostname', hostnameFactory
+        Eval.me 'service', services, test.input as String
+        Closure expected = test.expected
+        expected services
     }
 
     @Before
