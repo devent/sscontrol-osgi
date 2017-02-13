@@ -33,10 +33,10 @@ class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debia
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable('andrea-master-local')) {
-            return
-        }
-        if (!isHostAvailable('andrea-node-1-local')) {
+        if (!isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])) {
             return
         }
         def test = [

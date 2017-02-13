@@ -33,6 +33,12 @@ class Hosts_Linux_Andrea_Master_Local_Test extends AbstractTest_Hosts_Linux {
 
     @Test
     void "andrea_master_local_nodes"() {
+        if (!isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])) {
+            return
+        }
         def test = [
             name: 'andrea_master_local_nodes',
             input: """

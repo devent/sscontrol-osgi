@@ -29,16 +29,22 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Sshd_Debian_8_Andrea_Master_Test extends AbstractTestSshd_Debian_8 {
+class Sshd_Debian_8_Andrea_Master_Local_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
-    void "andrea_master_nodes"() {
+    void "andrea_master_local"() {
+        if (!isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])) {
+            return
+        }
         def test = [
-            name: "andrea_master_nodes",
+            name: "andrea_master_local",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1"
+    host "robobee@andrea-node-1-local"
 }
 service target: "andrea-master", "sshd"
 service target: "andrea-nodes", "sshd"

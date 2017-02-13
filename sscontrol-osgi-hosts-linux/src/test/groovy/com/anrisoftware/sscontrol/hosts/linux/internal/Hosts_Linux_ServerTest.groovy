@@ -33,6 +33,9 @@ class Hosts_Linux_ServerTest extends AbstractTest_Hosts_Linux {
 
     @Test
     void "test_server"() {
+        if (!isHostAvailable('robobee-test')) {
+            return
+        }
         def test = [
             name: 'test_server',
             input: """

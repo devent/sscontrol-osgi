@@ -33,6 +33,9 @@ class Sshd_Debian_8_Server_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
     void "server_basic"() {
+        if (!testHostAvailable) {
+            return
+        }
         def test = [
             name: "server_basic",
             input: """
