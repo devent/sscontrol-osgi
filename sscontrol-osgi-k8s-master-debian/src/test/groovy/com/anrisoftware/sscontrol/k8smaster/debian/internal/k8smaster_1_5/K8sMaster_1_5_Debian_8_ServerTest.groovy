@@ -33,6 +33,9 @@ class K8sMaster_1_5_Debian_8_ServerTest extends AbstractTest_K8sMaster_1_5_Debia
 
     @Test
     void "server_tls"() {
+        if (!testHostAvailable) {
+            return
+        }
         def test = [
             name: "server_tls",
             input: """
