@@ -88,6 +88,11 @@ abstract class AbstractScriptTestBase {
         return isHostAvailable('robobee-test')
     }
 
+    static boolean isHostAvailable(List hosts) {
+        def notAvailable = hosts.find { !isHostAvailable(it) }
+        notAvailable == null
+    }
+
     static boolean isHostAvailable(String host) {
         boolean a = false
         try {

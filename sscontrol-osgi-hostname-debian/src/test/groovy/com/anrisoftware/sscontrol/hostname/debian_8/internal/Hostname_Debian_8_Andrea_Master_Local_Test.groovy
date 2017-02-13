@@ -38,9 +38,9 @@ class Hostname_Debian_8_Andrea_Master_Local_Test extends AbstractTestHostname_De
         def test = [
             name: "andrea_master_local_nodes",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1"
+    host "robobee@andrea-node-1-local"
 }
 service "hostname", target: "andrea-master", fqdn: "andrea-master.andrea.local"
 service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.andrea.local"
