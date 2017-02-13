@@ -25,6 +25,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy
 import org.ops4j.pax.exam.spi.reactors.PerMethod
 
 import com.anrisoftware.sscontrol.hostname.external.HostnameService
+import com.anrisoftware.sscontrol.types.external.HostServiceService
 
 /**
  *
@@ -34,15 +35,20 @@ import com.anrisoftware.sscontrol.hostname.external.HostnameService
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
-class HostnameTest extends AbstractTestPax {
+class LoadServicesTest extends AbstractTestPax {
 
     @Test
-    void "load hostname service"() {
-        def ref = bc.getServiceReference HostnameService
-        assert ref != null
+    void "load hostname services"() {
+        def refs = bc.getServiceReferences HostServiceService, null
+        assert refs.size() == 1
+        refs.each {
+            HostnameService s = bc.getService it
+            bc.ungetService it
+            assert s != null
+        }
     }
 
-    Option[] createConfig(Option[] options) {
+    List<Option> createConfig(List<Option> options) {
         super.createConfig options
         options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-hostname").versionAsInProject()
     }

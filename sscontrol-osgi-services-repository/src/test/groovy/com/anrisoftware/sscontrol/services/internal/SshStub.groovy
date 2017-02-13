@@ -30,7 +30,7 @@ import com.google.inject.assistedinject.Assisted
 import groovy.transform.ToString
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -39,7 +39,7 @@ import groovy.transform.ToString
 class SshStub implements Ssh {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -50,7 +50,7 @@ class SshStub implements Ssh {
     }
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -60,6 +60,10 @@ class SshStub implements Ssh {
 
         @Inject
         SshStubFactory serviceFactory
+
+        @Override
+        String getName() {
+        }
 
         @Override
         HostService create(Map<String, Object> args) {

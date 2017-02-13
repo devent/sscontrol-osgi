@@ -31,6 +31,7 @@ import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.AbstractModule;
 
 /**
@@ -40,7 +41,7 @@ import com.google.inject.AbstractModule;
  * @since 1.0
  */
 @Component
-@Service(K8sMasterService.class)
+@Service(HostServiceService.class)
 public class K8sMasterServiceImpl implements K8sMasterService {
 
     @Inject
@@ -48,6 +49,11 @@ public class K8sMasterServiceImpl implements K8sMasterService {
 
     @Reference
     private ToStringService toStringService;
+
+    @Override
+    public String getName() {
+        return "k8s-master";
+    }
 
     @Override
     public HostService create(Map<String, Object> args) {

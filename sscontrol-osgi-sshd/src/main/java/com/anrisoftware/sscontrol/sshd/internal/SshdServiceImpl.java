@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.sshd.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.external.SshdService;
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * Creates the sshd service.
@@ -36,13 +37,18 @@ import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory;
  * @since 1.0
  */
 @Component
-@Service(SshdService.class)
+@Service(HostServiceService.class)
 public class SshdServiceImpl implements SshdService {
 
     static final String SSHD_NAME = "sshd";
 
     @Inject
     private SshdImplFactory sshdFactory;
+
+    @Override
+    public String getName() {
+        return "sshd";
+    }
 
     @Override
     public Sshd create(Map<String, Object> args) {
