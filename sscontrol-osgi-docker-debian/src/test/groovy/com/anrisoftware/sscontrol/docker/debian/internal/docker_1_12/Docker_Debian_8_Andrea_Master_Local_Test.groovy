@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,12 +35,6 @@ class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debia
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local",
             input: """
@@ -53,6 +49,14 @@ service "docker", target: "nodes"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue(isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ]))
     }
 
     void createDummyCommands(File dir) {
