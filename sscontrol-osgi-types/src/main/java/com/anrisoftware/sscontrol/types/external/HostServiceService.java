@@ -25,5 +25,7 @@ import java.util.Map;
  */
 public interface HostServiceService {
 
+    String getName();
+
     HostService create(Map<String, Object> args);
 }

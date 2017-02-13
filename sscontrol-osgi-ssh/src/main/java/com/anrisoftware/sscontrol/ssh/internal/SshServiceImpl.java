@@ -30,6 +30,7 @@ import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -40,7 +41,7 @@ import com.google.inject.Guice;
  * @since 1.0
  */
 @Component
-@Service(SshService.class)
+@Service(HostServiceService.class)
 public class SshServiceImpl implements SshService {
 
     @Inject
@@ -48,6 +49,11 @@ public class SshServiceImpl implements SshService {
 
     @Reference
     private ToStringService toStringService;
+
+    @Override
+    public String getName() {
+        return "ssh";
+    }
 
     @Override
     public HostService create(Map<String, Object> args) {

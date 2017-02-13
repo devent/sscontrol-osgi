@@ -30,6 +30,7 @@ import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -40,7 +41,7 @@ import com.google.inject.Guice;
  * @since 1.0
  */
 @Component
-@Service(DhclientService.class)
+@Service(HostServiceService.class)
 public class DhclientServiceImpl implements DhclientService {
 
     @Inject
@@ -48,6 +49,11 @@ public class DhclientServiceImpl implements DhclientService {
 
     @Reference
     private ToStringService toStringService;
+
+    @Override
+    public String getName() {
+        return "dhclient";
+    }
 
     @Override
     public Dhclient create(Map<String, Object> args) {

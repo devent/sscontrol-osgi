@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * Creates the hosts service.
@@ -36,13 +37,18 @@ import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFac
  * @since 1.0
  */
 @Component
-@Service(Fail2banService.class)
+@Service(HostServiceService.class)
 public class Fail2banServiceImpl implements Fail2banService {
 
     static final String FAIL2BAN_NAME = "fail2ban";
 
     @Inject
     private Fail2banImplFactory hostsFactory;
+
+    @Override
+    public String getName() {
+        return "fail2ban";
+    }
 
     @Override
     public Fail2ban create(Map<String, Object> args) {

@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * Creates the hosts service.
@@ -36,13 +37,18 @@ import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
  * @since 1.0
  */
 @Component
-@Service(HostsService.class)
+@Service(HostServiceService.class)
 public class HostsServiceImpl implements HostsService {
 
     static final String HOSTS_NAME = "hosts";
 
     @Inject
     private HostsImplFactory hostsFactory;
+
+    @Override
+    public String getName() {
+        return "hosts";
+    }
 
     @Override
     public Hosts create(Map<String, Object> args) {

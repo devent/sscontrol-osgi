@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.database.external.DatabaseService;
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.types.external.BindingHostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -43,7 +44,7 @@ import com.google.inject.Guice;
  * @since 1.0
  */
 @Component
-@Service(DatabaseService.class)
+@Service(HostServiceService.class)
 public class DatabaseServiceImpl implements DatabaseService {
 
     @Inject
@@ -60,6 +61,11 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Reference
     private BindingHostService bindingHostService;
+
+    @Override
+    public String getName() {
+        return "database";
+    }
 
     @Override
     public Database create(Map<String, Object> args) {

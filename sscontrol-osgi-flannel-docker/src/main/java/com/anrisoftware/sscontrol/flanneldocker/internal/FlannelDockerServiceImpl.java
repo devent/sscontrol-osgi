@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDockerService;
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * <i>Etcd</i> service.
@@ -36,11 +37,16 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  * @since 1.0
  */
 @Component
-@Service(FlannelDockerService.class)
+@Service(HostServiceService.class)
 public class FlannelDockerServiceImpl implements FlannelDockerService {
 
     @Inject
     private FlannelDockerImplFactory serviceFactory;
+
+    @Override
+    public String getName() {
+        return "flannel-docker";
+    }
 
     @Override
     public HostService create(Map<String, Object> args) {

@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.etcd.external.EtcdService;
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * <i>Etcd</i> service.
@@ -36,11 +37,16 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  * @since 1.0
  */
 @Component
-@Service(EtcdService.class)
+@Service(HostServiceService.class)
 public class EtcdServiceImpl implements EtcdService {
 
     @Inject
     private EtcdImplFactory serviceFactory;
+
+    @Override
+    public String getName() {
+        return "etcd";
+    }
 
     @Override
     public HostService create(Map<String, Object> args) {

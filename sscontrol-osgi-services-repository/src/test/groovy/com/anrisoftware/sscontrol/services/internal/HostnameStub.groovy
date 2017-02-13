@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted
 import groovy.transform.ToString
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -35,7 +35,7 @@ import groovy.transform.ToString
 class HostnameStub implements HostService {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -46,7 +46,7 @@ class HostnameStub implements HostService {
     }
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -56,6 +56,10 @@ class HostnameStub implements HostService {
 
         @Inject
         HostnameStubFactory serviceFactory
+
+        @Override
+        String getName() {
+        }
 
         @Override
         HostService create(Map<String, Object> args) {

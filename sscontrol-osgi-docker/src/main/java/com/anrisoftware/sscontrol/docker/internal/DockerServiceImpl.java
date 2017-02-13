@@ -28,6 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.docker.external.DockerService;
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * <i>Docker</i> service.
@@ -36,11 +37,16 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  * @since 1.0
  */
 @Component
-@Service(DockerService.class)
+@Service(HostServiceService.class)
 public class DockerServiceImpl implements DockerService {
 
     @Inject
     private DockerImplFactory serviceFactory;
+
+    @Override
+    public String getName() {
+        return "docker";
+    }
 
     @Override
     public HostService create(Map<String, Object> args) {

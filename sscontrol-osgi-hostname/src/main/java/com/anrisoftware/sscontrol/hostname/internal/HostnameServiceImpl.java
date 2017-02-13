@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.hostname.internal;
 
 import static com.google.inject.Guice.createInjector;
+import static com.google.inject.util.Providers.of;
 
 import java.util.Map;
 
@@ -23,11 +24,17 @@ import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.HostServicesService;
+import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.google.inject.AbstractModule;
 
 /**
  * Creates the hostname service.
@@ -36,13 +43,27 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFac
  * @since 1.0
  */
 @Component
-@Service(HostnameService.class)
+@Service(HostServiceService.class)
 public class HostnameServiceImpl implements HostnameService {
 
     static final String HOSTNAME_NAME = "hostname";
 
+    @Reference
+    private HostServicesService hostServicesService;
+
+    @Reference
+    private TargetsService targetsService;
+
+    @Reference
+    private HostPropertiesService hostPropertiesService;
+
     @Inject
     private HostnameImplFactory hostnameFactory;
+
+    @Override
+    public String getName() {
+        return HOSTNAME_NAME;
+    }
 
     @Override
     public Hostname create(Map<String, Object> args) {
@@ -51,7 +72,16 @@ public class HostnameServiceImpl implements HostnameService {
 
     @Activate
     public void start() {
-        System.out.println("HostnameServiceImpl.start()");
-        createInjector(new HostnameModule()).injectMembers(this);
+        createInjector(new HostnameModule(), new AbstractModule() {
+
+            @Override
+            protected void configure() {
+                bind(HostServicesService.class)
+                        .toProvider(of(hostServicesService));
+                bind(TargetsService.class).toProvider(of(targetsService));
+                bind(HostPropertiesService.class)
+                        .toProvider(of(hostPropertiesService));
+            }
+        }).injectMembers(this);
     }
 }

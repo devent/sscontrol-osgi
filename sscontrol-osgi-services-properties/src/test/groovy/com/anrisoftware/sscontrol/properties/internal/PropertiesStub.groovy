@@ -62,6 +62,10 @@ class PropertiesStub implements HostService {
         PropertiesStubFactory serviceFactory
 
         @Override
+        String getName() {
+        }
+
+        @Override
         HostService create(Map<String, Object> args) {
             serviceFactory.create(args)
         }
