@@ -36,9 +36,9 @@ class Hosts_Linux_Andrea_Master_Local_Test extends AbstractTest_Hosts_Linux {
         def test = [
             name: 'andrea_master_local_nodes',
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master", key: "$robobeeKey"
+service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1"
+    host "robobee@andrea-node-1-local"
 }
 service "hosts", target: "andrea-master" with {
     ip '192.168.56.120', host: 'andrea-master.andrea.local', alias: 'andrea-master, etcd-0'
