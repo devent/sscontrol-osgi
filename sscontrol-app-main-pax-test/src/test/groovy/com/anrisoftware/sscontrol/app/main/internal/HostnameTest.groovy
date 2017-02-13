@@ -27,7 +27,7 @@ import org.ops4j.pax.exam.spi.reactors.PerMethod
 import com.anrisoftware.sscontrol.hostname.external.HostnameService
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -38,8 +38,8 @@ class HostnameTest extends AbstractTestPax {
 
     @Test
     void "load hostname service"() {
-        def service = bc.getService HostnameService
-        assert service != null
+        def ref = bc.getServiceReference HostnameService
+        assert ref != null
     }
 
     Option[] createConfig(Option[] options) {

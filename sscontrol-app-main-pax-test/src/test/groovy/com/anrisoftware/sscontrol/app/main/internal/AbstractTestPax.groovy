@@ -25,7 +25,7 @@ import org.ops4j.pax.exam.util.PathUtils
 import org.osgi.framework.BundleContext
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -41,9 +41,10 @@ abstract class AbstractTestPax {
         options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-hostname").versionAsInProject()
         options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-app-main").versionAsInProject()
         options.addAll createConfig(options)
+        options
     }
 
-    Option[] createConfig(Option[] options) {
+    List<Option> createConfig(List<Option> options) {
         options << junitBundles()
         options << systemProperty('logback.configurationFile').value("file:${PathUtils.baseDir}/src/test/resources/logback-test.xml")
         options << mavenBundle("org.apache.felix", "org.apache.felix.scr", "1.6.0")
