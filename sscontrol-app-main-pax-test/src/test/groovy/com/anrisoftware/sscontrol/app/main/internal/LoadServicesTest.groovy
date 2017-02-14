@@ -41,10 +41,14 @@ class LoadServicesTest extends AbstractTestPax {
     void "load hostname services"() {
         def refs = bc.getServiceReferences HostServiceService, null
         assert refs.size() == 1
-        refs.each {
-            HostnameService s = bc.getService it
-            bc.ungetService it
+        refs.each { ref ->
+            def keys = ref.getPropertyKeys()
+            println keys
+            keys.each { println ref.getProperty(it) }
+            HostnameService s = bc.getService ref
+            bc.ungetService ref
             assert s != null
+            //s.create([:])
         }
     }
 
