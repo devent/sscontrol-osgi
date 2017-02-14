@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
@@ -48,6 +49,11 @@ public class HostnameServiceImpl implements HostnameService {
 
     static final String HOSTNAME_NAME = "hostname";
 
+    @Property(value = HOSTNAME_NAME)
+    static final String NAME_PROPERTY = "service.name";
+
+    private String name;
+
     @Reference
     private HostServicesService hostServicesService;
 
@@ -62,7 +68,7 @@ public class HostnameServiceImpl implements HostnameService {
 
     @Override
     public String getName() {
-        return HOSTNAME_NAME;
+        return name;
     }
 
     @Override
