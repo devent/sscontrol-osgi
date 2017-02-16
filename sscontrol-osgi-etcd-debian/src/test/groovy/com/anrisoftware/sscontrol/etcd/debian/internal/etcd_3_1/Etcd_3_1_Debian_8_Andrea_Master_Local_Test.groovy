@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,12 +35,6 @@ class Etcd_3_1_Debian_8_Andrea_Master_Local_Test extends AbstractTestEtcd_3_1_De
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local",
             input: """
@@ -81,6 +77,14 @@ service "etcd", target: "andrea-nodes", member: "etcd-1" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])
     }
 
     void createDummyCommands(File dir) {

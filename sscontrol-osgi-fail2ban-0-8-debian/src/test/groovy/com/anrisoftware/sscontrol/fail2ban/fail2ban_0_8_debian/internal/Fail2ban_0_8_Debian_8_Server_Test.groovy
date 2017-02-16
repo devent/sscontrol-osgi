@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,9 +35,6 @@ class Fail2ban_0_8_Debian_8_Server_Test extends AbstractTestFail2ban_0_8_Debian_
 
     @Test
     void "fail2ban script"() {
-        if (!testHostAvailable) {
-            return
-        }
         def test = [
             name: "fail2ban_script_ssh_jail",
             input: """
@@ -53,6 +52,11 @@ service "fail2ban" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue testHostAvailable
     }
 
     Map getScriptEnv(Map args) {

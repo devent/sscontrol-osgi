@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
@@ -55,6 +57,14 @@ service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.andrea.local"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])
     }
 
     Map getScriptEnv(Map args) {

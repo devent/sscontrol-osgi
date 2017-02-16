@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,12 +35,6 @@ class Fail2ban_0_8_Debian_8_Andrea_Master_Local_Test extends AbstractTestFail2ba
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local",
             input: """
@@ -59,6 +55,14 @@ service "fail2ban", target: "andrea-nodes" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])
     }
 
     Map getScriptEnv(Map args) {

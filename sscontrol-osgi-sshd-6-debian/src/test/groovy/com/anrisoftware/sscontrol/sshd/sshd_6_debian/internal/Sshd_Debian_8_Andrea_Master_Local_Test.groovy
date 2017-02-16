@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,12 +35,6 @@ class Sshd_Debian_8_Andrea_Master_Local_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local",
             input: """
@@ -54,6 +50,14 @@ service target: "andrea-nodes", "sshd"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])
     }
 
     Map getScriptEnv(Map args) {

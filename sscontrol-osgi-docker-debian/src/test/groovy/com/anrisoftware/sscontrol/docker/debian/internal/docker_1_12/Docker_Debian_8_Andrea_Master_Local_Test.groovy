@@ -53,10 +53,10 @@ service "docker", target: "nodes"
 
     @Before
     void beforeMethod() {
-        assumeTrue(isHostAvailable([
+        assumeTrue isHostAvailable([
             'andrea-master-local',
             'andrea-node-1-local'
-        ]))
+        ])
     }
 
     void createDummyCommands(File dir) {
