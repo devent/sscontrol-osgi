@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,9 +35,6 @@ class Sshd_Debian_8_Server_Test extends AbstractTestSshd_Debian_8 {
 
     @Test
     void "server_basic"() {
-        if (!testHostAvailable) {
-            return
-        }
         def test = [
             name: "server_basic",
             input: """
@@ -47,6 +46,11 @@ service "sshd"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue testHostAvailable
     }
 
     Map getScriptEnv(Map args) {

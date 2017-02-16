@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,9 +35,6 @@ class FlannelDocker_0_7_Debian_8_ServerTest extends AbstractTest_FlannelDocker_D
 
     @Test
     void "flannel_script_basic"() {
-        if (!testHostAvailable) {
-            return
-        }
         def test = [
             name: "flannel_script_basic",
             input: """
@@ -59,6 +58,11 @@ service "flannel-docker" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue testHostAvailable
     }
 
     void createDummyCommands(File dir) {

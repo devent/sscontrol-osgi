@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
+package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -29,26 +31,35 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_ServerTest extends AbstractTestEtcd_3_1_Debian_8 {
+class K8sMaster_1_5_Debian_8_Server_Test extends AbstractTest_K8sMaster_1_5_Debian_8 {
 
     @Test
-    void "etcd_script_basic"() {
-        if (!testHostAvailable) {
-            return
-        }
+    void "server_tls"() {
         def test = [
-            name: "etcd_script_basic",
+            name: "server_tls",
             input: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "etcd", member: "default"
+service "ssh", group: "etcd", host: "robobee@robobee-test", key: "$robobeeKey"
+service "k8s-master", name: "andrea-cluster" with {
+    bind secure: "192.168.56.120"
+    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    authentication "cert", ca: "$certCaPem"
+    plugin "etcd", target: "etcd"
+    kubelet.with {
+        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    }
+}
 """,
+            generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
-                assertStringResource Etcd_3_1_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
-                assertStringResource Etcd_3_1_Debian_8_ServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue testHostAvailable
     }
 
     void createDummyCommands(File dir) {

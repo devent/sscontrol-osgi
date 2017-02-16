@@ -71,24 +71,20 @@ class Ssh_Linux_Test extends AbstractScriptTestBase {
     static Map expectedResources = [:]
 
     @Test
-    void "ssh script"() {
-        def testCases = [
-            [
-                name: "cat_release",
-                input: """
+    void "cat_release"() {
+        def test = [
+            name: "cat_release",
+            input: """
 service "ssh", host: "localhost"
 """,
-                expected: { Map args ->
-                    HostServices services = args.services
-                    def targets = services.targets.getHosts 'default'
-                    assert targets[0].system.name == 'debian'
-                    assert targets[0].system.version == '8'
-                },
-            ],
+            expected: { Map args ->
+                HostServices services = args.services
+                def targets = services.targets.getHosts 'default'
+                assert targets[0].system.name == 'debian'
+                assert targets[0].system.version == '8'
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            doTest test, k
-        }
+        doTest test
     }
 
     String getServiceName() {

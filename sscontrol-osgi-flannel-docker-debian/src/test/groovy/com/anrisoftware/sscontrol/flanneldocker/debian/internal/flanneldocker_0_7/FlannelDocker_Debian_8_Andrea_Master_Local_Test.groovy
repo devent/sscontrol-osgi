@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -33,12 +35,6 @@ class FlannelDocker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Flann
 
     @Test
     void "andrea_master_local"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local",
             input: """
@@ -60,6 +56,14 @@ service "flannel-docker", target: "andrea-nodes" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue isHostAvailable([
+            'andrea-master-local',
+            'andrea-node-1-local'
+        ])
     }
 
     void createDummyCommands(File dir) {

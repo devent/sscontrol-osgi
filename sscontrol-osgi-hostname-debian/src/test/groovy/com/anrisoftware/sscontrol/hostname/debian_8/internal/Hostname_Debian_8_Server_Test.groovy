@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
@@ -35,9 +37,6 @@ class Hostname_Debian_8_Server_Test extends AbstractTestHostname_Debian_8 {
 
     @Test
     void "hostname script"() {
-        if (!testHostAvailable) {
-            return
-        }
         def test = [
             name: "hostname_script_fqdn",
             input: """
@@ -53,6 +52,11 @@ service "hostname" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        assumeTrue testHostAvailable
     }
 
     Map getScriptEnv(Map args) {
