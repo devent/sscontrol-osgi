@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
+import org.apache.felix.main.AutoProcessor;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
@@ -59,6 +60,8 @@ public class HostApplication {
         list.add(activator);
         configMap.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
         felix = new Felix(configMap);
+        felix.init();
+        AutoProcessor.process(null, felix.getBundleContext());
         felix.start();
         this.tracker = new ServiceTracker<>(activator.getContext(),
                 HostServiceService.class.getName(), null);

@@ -18,6 +18,16 @@ public class Main implements Runnable {
         app = new HostApplication(args);
         mainThread = new Thread(new Main(), "app");
         mainThread.start();
+        try {
+            Thread.sleep(5000);
+            app.stop();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (BundleException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
