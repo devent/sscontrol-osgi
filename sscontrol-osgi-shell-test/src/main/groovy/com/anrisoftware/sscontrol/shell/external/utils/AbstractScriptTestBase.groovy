@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.shell.external.utils
 
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
 import javax.inject.Inject
 
@@ -68,6 +69,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractScriptTestBase {
 
+    static final String LOCAL_PROFILE = 'project.custom.local.tests.enabled'
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
@@ -104,6 +107,16 @@ abstract class AbstractScriptTestBase {
             log.info 'Test host `{}` not available.', host
         }
         return a
+    }
+
+    /**
+     * Checks if the profile with the specified name is activated.
+     * 
+     * see #LOCAL_PROFILE
+     */
+    void checkProfile(String name) {
+        def localTests = System.getProperty(name)
+        assumeTrue localTests == true
     }
 
     void doTest(Map test, int k=0) {
@@ -194,7 +207,7 @@ abstract class AbstractScriptTestBase {
                     def name = split[3..split.length-1].join(File.separator)
                     assert args.test.generatedDir != null
                     file = new File(args.test.generatedDir, name)
-                    break;
+                    break
             }
             return file ? file : folder.newFile()
         }
@@ -202,16 +215,16 @@ abstract class AbstractScriptTestBase {
 
     HostServices runScript(File file, HostServices services) {
         Binding binding = createBinding services
-        GroovyScriptEngine engine = new GroovyScriptEngine([file.parentFile.toURL()] as URL[]);
-        engine.run(file.name, binding);
+        GroovyScriptEngine engine = new GroovyScriptEngine([file.parentFile.toURL()] as URL[])
+        engine.run(file.name, binding)
         return binding.service
     }
 
     Binding createBinding(HostServices services) {
-        Binding binding = new Binding();
-        binding.setProperty("service", services);
-        binding.setProperty("targets", services.getTargets());
-        return binding;
+        Binding binding = new Binding()
+        binding.setProperty("service", services)
+        binding.setProperty("targets", services.getTargets())
+        return binding
     }
 
     Injector createInjector() {
@@ -246,9 +259,9 @@ abstract class AbstractScriptTestBase {
     }
 
     Threads createThreads() {
-        PropertiesThreads threads = threadsFactory.create();
+        PropertiesThreads threads = threadsFactory.create()
         threads.setProperties threadsProperties.get()
-        threads.setName("script");
+        threads.setName("script")
         threads
     }
 }

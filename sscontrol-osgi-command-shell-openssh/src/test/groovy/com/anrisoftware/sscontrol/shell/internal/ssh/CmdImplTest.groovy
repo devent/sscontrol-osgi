@@ -38,6 +38,7 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 
 import groovy.util.logging.Slf4j
+import static org.junit.Assume.*
 
 /**
  * 
@@ -162,6 +163,12 @@ chmod +w a.txt
     @Before
     void setupTest() {
         injector.injectMembers(this)
+    }
+
+    @Before
+    void checkProfile() {
+        def localTests = System.getProperty('project.custom.local.tests.enabled')
+        assumeTrue localTests == true
     }
 
     @BeforeClass

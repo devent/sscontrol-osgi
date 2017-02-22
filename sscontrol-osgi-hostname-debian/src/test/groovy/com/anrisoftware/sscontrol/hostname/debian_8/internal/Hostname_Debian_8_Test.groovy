@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.hostname.debian_8.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -68,5 +69,10 @@ service "hostname" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }

@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.hosts.linux.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -53,5 +54,10 @@ service "hosts" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }

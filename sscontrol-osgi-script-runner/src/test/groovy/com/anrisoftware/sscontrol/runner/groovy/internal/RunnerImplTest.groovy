@@ -85,6 +85,11 @@ class RunnerImplTest extends AbstractRunnerTestBase {
         }
     }
 
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+    }
+    
     Map createVariables(Map args) {
         def a = [:]
         a.chdir = args.dir

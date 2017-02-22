@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.sshd.sshd_6_debian.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -48,5 +49,10 @@ service "sshd"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }

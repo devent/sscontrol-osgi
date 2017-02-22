@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -58,5 +59,10 @@ service "flannel-docker" with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }
