@@ -16,6 +16,9 @@
 package com.anrisoftware.sscontrol.shell.external.utils
 
 import static com.anrisoftware.globalpom.utils.TestUtils.toStringStyle
+import static org.junit.Assume.*
+
+import org.junit.Before
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -38,6 +41,12 @@ import groovy.util.logging.Slf4j
 abstract class AbstractCmdTestBase {
 
     Injector injector
+
+    @Before
+    void checkProfile() {
+        def localTests = System.getProperty('project.custom.local.tests.enabled')
+        assumeTrue localTests == true
+    }
 
     void doTest(Map test, File tmp, int k=0) {
         test.args["pwd"] = tmp

@@ -87,6 +87,11 @@ service "ssh", host: "localhost"
         doTest test
     }
 
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+    }
+
     String getServiceName() {
         'ssh'
     }

@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.junit.Assume.*
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -125,6 +126,12 @@ class AbstractScriptBaseTest {
         injector.injectMembers(this)
     }
 
+    @Before
+    void checkProfile() {
+        def localTests = System.getProperty('project.custom.local.tests.enabled')
+        assumeTrue localTests == true
+    }
+
     @BeforeClass
     static void setupInjector() {
         toStringStyle
@@ -163,9 +170,9 @@ class AbstractScriptBaseTest {
     }
 
     static Threads createThreads() {
-        PropertiesThreads threads = threadsFactory.create();
+        PropertiesThreads threads = threadsFactory.create()
         threads.setProperties threadsProperties.get()
-        threads.setName("script");
+        threads.setName("script")
         threads
     }
 }

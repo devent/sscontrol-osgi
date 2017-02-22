@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.shell.internal.copy
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
 import javax.inject.Inject
 

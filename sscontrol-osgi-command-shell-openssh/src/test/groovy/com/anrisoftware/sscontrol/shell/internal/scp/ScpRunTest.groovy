@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.shell.internal.scp
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -353,10 +354,16 @@ class ScpRunTest {
         this.threads = createThreads()
     }
 
+    @Before
+    void checkProfile() {
+        def localTests = System.getProperty('project.custom.local.tests.enabled')
+        assumeTrue localTests == true
+    }
+
     static Threads createThreads() {
-        PropertiesThreads threads = threadsFactory.create();
+        PropertiesThreads threads = threadsFactory.create()
         threads.setProperties threadsProperties.get()
-        threads.setName("script");
+        threads.setName("script")
         threads
     }
 }

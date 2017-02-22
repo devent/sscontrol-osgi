@@ -19,6 +19,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.apache.commons.io.IOUtils
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -85,5 +86,10 @@ service "fail2ban"
             },
         ]
         doTest test, 0
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }

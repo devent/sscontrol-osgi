@@ -145,4 +145,13 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>local-tests</id>
+            <properties>
+                <project.custom.local.tests.enabled>true</project.custom.local.tests.enabled>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
