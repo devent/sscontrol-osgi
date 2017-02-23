@@ -23,10 +23,10 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenMarker
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateFactory
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenMarker
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenTemplate
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateFactory
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
