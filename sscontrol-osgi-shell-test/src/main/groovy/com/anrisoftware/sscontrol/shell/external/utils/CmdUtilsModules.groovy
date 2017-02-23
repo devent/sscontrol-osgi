@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.shell.external.utils
 
 import javax.inject.Provider
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatModule
-import com.anrisoftware.globalpom.durationsimpleformat.DurationSimpleFormatModule
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatModule
 import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLineModule
 import com.anrisoftware.globalpom.exec.internal.core.DefaultProcessModule
 import com.anrisoftware.globalpom.exec.internal.logoutputs.LogOutputsModule
@@ -29,10 +29,10 @@ import com.anrisoftware.globalpom.exec.internal.scriptprocess.ScriptProcessModul
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
 import com.anrisoftware.globalpom.threads.properties.internal.PropertiesThreadsModule
+import com.anrisoftware.resources.st.internal.worker.STDefaultPropertiesModule
+import com.anrisoftware.resources.st.internal.worker.STWorkerModule
 import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsModule
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.google.inject.AbstractModule
 import com.google.inject.Injector
 
@@ -55,28 +55,28 @@ class CmdUtilsModules extends AbstractModule {
         if (threads == null) {
             this.threadsProperties = injector.getInstance ThreadsTestPropertiesProvider
             this.threadsFactory = injector.getInstance PropertiesThreadsFactory
-            threads = threadsFactory.create();
+            threads = threadsFactory.create()
             threads.setProperties threadsProperties.get()
-            threads.setName("script");
+            threads.setName("script")
         }
         threads
     }
 
     @Override
     protected void configure() {
-        install(new RunCommandsModule());
-        install(new LogOutputsModule());
-        install(new PipeOutputsModule());
-        install(new DefaultProcessModule());
-        install(new DefaultCommandLineModule());
-        install(new ScriptCommandModule());
-        install(new ScriptProcessModule());
-        install(new STDefaultPropertiesModule());
-        install(new STWorkerModule());
-        install(new TemplatesDefaultMapsModule());
-        install(new TemplatesResourcesModule());
-        install(new PropertiesThreadsModule());
-        install(new DurationSimpleFormatModule());
-        install(new DurationFormatModule());
+        install(new RunCommandsModule())
+        install(new LogOutputsModule())
+        install(new PipeOutputsModule())
+        install(new DefaultProcessModule())
+        install(new DefaultCommandLineModule())
+        install(new ScriptCommandModule())
+        install(new ScriptProcessModule())
+        install(new STDefaultPropertiesModule())
+        install(new STWorkerModule())
+        install(new TemplatesDefaultMapsModule())
+        install(new TemplatesResourcesModule())
+        install(new PropertiesThreadsModule())
+        install(new DurationSimpleFormatModule())
+        install(new DurationFormatModule())
     }
 }

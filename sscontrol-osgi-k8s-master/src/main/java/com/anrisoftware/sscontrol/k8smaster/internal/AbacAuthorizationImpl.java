@@ -22,8 +22,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.resources.ToURI;
-import com.anrisoftware.globalpom.resources.ToURIFactory;
+import com.anrisoftware.globalpom.core.resources.ToURI;
+import com.anrisoftware.globalpom.core.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.AbacAuthorization;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
 import com.google.inject.assistedinject.Assisted;

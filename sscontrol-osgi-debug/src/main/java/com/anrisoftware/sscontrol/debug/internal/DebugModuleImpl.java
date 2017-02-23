@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.strings.ToStringService;
+import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.types.external.DebugModule;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;

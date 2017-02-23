@@ -22,7 +22,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.resources.ResourcesModule
+import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
 import com.google.inject.Guice

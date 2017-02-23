@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.resources.ToURI;
+import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostSystem;
 import com.anrisoftware.sscontrol.types.external.SshHost;

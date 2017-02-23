@@ -26,9 +26,9 @@ import javax.inject.Inject;
 
 import org.joda.time.Duration;
 
-import com.anrisoftware.globalpom.durationsimpleformat.DurationSimpleFormatFactory;
-import com.anrisoftware.globalpom.durationsimpleformat.UnitMultiplier;
-import com.anrisoftware.resources.templates.external.AttributeRenderer;
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatFactory;
+import com.anrisoftware.globalpom.core.durationsimpleformat.UnitMultiplier;
+import com.anrisoftware.resources.st.external.AttributeRenderer;
 
 /**
  * 

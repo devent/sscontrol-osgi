@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.globalpom.resources.ResourcesModule
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.resources.ResourcesModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule

@@ -27,7 +27,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplate;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplate;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.replace.external.Replace;

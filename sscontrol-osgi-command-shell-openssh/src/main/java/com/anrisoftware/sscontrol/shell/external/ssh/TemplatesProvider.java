@@ -28,7 +28,7 @@ import javax.inject.Provider;
 
 import org.stringtemplate.v4.STGroup;
 
-import com.anrisoftware.resources.templates.external.SerializiableGroup;
+import com.anrisoftware.resources.st.external.SerializiableGroup;
 import com.anrisoftware.resources.templates.external.Templates;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 

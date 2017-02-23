@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.etcd.upstream.external;
 
 import java.util.Locale;
 
-import com.anrisoftware.resources.templates.external.AttributeRenderer;
+import com.anrisoftware.resources.st.external.AttributeRenderer;
 
 /**
  * Renders a number as a boolean, where 0=false and 1=true.

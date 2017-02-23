@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.resources.ToURI;
-import com.anrisoftware.globalpom.resources.ToURIFactory;
+import com.anrisoftware.globalpom.core.resources.ToURI;
+import com.anrisoftware.globalpom.core.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;

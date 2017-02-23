@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.strings.ToStringService;
+import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.dhclient.external.PrependStatement;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.google.inject.assistedinject.Assisted;

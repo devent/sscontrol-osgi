@@ -24,8 +24,8 @@ import org.junit.Before
 import org.junit.Test
 import org.slf4j.Logger
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatModule
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.fail2ban.external.Backend

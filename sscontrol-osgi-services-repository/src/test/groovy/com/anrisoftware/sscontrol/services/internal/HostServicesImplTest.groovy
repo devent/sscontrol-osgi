@@ -39,7 +39,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubFactory
 import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubServiceImpl
@@ -224,9 +224,9 @@ targets 'nodes' eachWithIndex { host, i ->
                     @Override
                     protected void configure() {
                         bind(TargetsService).to(TargetsImplFactory)
-                        install(new FactoryModuleBuilder().implement(HostnameStub, HostnameStub).build(HostnameStubFactory));
-                        install(new FactoryModuleBuilder().implement(SshStub, SshStub).build(SshStubFactory));
-                        install(new FactoryModuleBuilder().implement(HostsStub, HostsStub).build(HostsStubFactory));
+                        install(new FactoryModuleBuilder().implement(HostnameStub, HostnameStub).build(HostnameStubFactory))
+                        install(new FactoryModuleBuilder().implement(SshStub, SshStub).build(SshStubFactory))
+                        install(new FactoryModuleBuilder().implement(HostsStub, HostsStub).build(HostsStubFactory))
                     }
                 })
         injector.injectMembers(this)

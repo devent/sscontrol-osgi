@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.Duration;
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatFactory;
 import com.anrisoftware.sscontrol.fail2ban.external.Backend;
 import com.anrisoftware.sscontrol.fail2ban.external.Banning;
 import com.anrisoftware.sscontrol.fail2ban.external.Type;

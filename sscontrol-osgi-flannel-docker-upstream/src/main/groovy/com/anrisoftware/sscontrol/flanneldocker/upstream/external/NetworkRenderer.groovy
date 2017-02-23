@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.upstream.external;
+package com.anrisoftware.sscontrol.flanneldocker.upstream.external
 
-import com.anrisoftware.resources.templates.external.AttributeRenderer;
-import com.anrisoftware.sscontrol.flanneldocker.external.Network;
+import com.anrisoftware.resources.st.external.AttributeRenderer
+import com.anrisoftware.sscontrol.flanneldocker.external.Network
 
 /**
  * Renders Network.
