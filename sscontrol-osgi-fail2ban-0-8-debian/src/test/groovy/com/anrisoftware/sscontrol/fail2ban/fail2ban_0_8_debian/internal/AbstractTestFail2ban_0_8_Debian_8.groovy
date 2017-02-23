@@ -23,9 +23,9 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
-import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory

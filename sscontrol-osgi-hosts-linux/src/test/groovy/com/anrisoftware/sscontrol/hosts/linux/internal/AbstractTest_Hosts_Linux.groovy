@@ -23,7 +23,7 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
