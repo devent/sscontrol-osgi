@@ -38,7 +38,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgs;
 import com.anrisoftware.sscontrol.shell.external.ssh.ParsePropertiesErrorException;

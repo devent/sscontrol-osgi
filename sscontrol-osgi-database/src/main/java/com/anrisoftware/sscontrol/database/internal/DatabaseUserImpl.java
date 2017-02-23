@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.globalpom.strings.ToStringService;
+import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.database.external.DatabaseAccess;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseAccessImplFactory;

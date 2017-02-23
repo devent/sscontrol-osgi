@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import org.apache.commons.io.IOUtils
 
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserModule

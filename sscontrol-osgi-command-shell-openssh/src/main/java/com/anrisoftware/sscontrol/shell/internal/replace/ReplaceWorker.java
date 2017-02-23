@@ -30,10 +30,10 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenMarker;
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate;
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplate;
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateFactory;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenMarker;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenTemplate;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplate;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.shell.internal.replace.ParseSedSyntax.ParseSedSyntaxFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;

@@ -38,8 +38,6 @@ abstract class AbstractTestPax {
     @Configuration
     Option[] config() {
         def options = []
-        options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-hostname").versionAsInProject()
-        options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-app-main").versionAsInProject()
         options.addAll createConfig(options)
         options
     }
@@ -59,6 +57,11 @@ abstract class AbstractTestPax {
         options << mavenBundle("org.apache.commons", "commons-lang3").versionAsInProject().noStart()
         options << mavenBundle("joda-time", "joda-time").versionAsInProject().noStart()
         options << mavenBundle("com.anrisoftware.globalpom", "globalpom-log").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.resources", "resources-api").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.resources", "resources-getbundle").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.resources", "resources-templates").versionAsInProject()
+        options << mavenBundle("org.antlr", "ST4").versionAsInProject()
+        options << mavenBundle("com.anrisoftware.resources", "resources-st").versionAsInProject()
         options << mavenBundle("com.anrisoftware.propertiesutils", "propertiesutils-contextproperties").versionAsInProject()
         options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-types").versionAsInProject()
         options << mavenBundle("com.anrisoftware.sscontrol", "sscontrol-osgi-services-repository").versionAsInProject()

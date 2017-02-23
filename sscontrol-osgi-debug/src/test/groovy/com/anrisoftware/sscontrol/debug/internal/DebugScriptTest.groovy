@@ -16,19 +16,20 @@
 package com.anrisoftware.sscontrol.debug.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.DebugLogging
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 @Slf4j
 @CompileStatic

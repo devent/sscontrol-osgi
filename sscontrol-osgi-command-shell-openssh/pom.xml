@@ -92,6 +92,11 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-api</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
             <artifactId>resources-templates</artifactId>
             <type>bundle</type>
         </dependency>

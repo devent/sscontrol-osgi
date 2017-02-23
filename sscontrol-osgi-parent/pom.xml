@@ -24,9 +24,9 @@
         <project.custom.source.target>1.7</project.custom.source.target>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol</project.custom.bundle.namespace>
         <project.custom.bundle.namespace.internal>${project.custom.bundle.namespace}.internal</project.custom.bundle.namespace.internal>
-        <project.custom.bundles.log.version>2.1</project.custom.bundles.log.version>
-        <project.custom.bundles.resources.version>2.1</project.custom.bundles.resources.version>
-        <project.custom.bundles.globalpomutils.version>3.1</project.custom.bundles.globalpomutils.version>
+        <project.custom.bundles.log.version>2.2</project.custom.bundles.log.version>
+        <project.custom.bundles.resources.version>2.2-SNAPSHOT</project.custom.bundles.resources.version>
+        <project.custom.bundles.globalpomutils.version>3.2-SNAPSHOT</project.custom.bundles.globalpomutils.version>
         <org.osgi.service.http.port>8080</org.osgi.service.http.port>
         <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
     </properties>
@@ -55,6 +55,12 @@
             <!-- resources -->
             <dependency>
                 <groupId>com.anrisoftware.resources</groupId>
+                <artifactId>resources-api</artifactId>
+                <version>${project.custom.bundles.resources.version}</version>
+                <type>bundle</type>
+            </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.resources</groupId>
                 <artifactId>resources-templates</artifactId>
                 <version>${project.custom.bundles.resources.version}</version>
                 <type>bundle</type>
@@ -70,7 +76,7 @@
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-core</artifactId>
-                <version>${project.custom.bundles.globalpomutils.version}.1-SNAPSHOT</version>
+                <version>${project.custom.bundles.globalpomutils.version}</version>
                 <type>bundle</type>
             </dependency>
             <dependency>

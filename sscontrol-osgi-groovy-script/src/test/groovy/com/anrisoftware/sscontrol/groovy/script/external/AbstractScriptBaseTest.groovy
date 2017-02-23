@@ -26,8 +26,9 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatModule
-import com.anrisoftware.globalpom.durationsimpleformat.DurationSimpleFormatModule
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatModule
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLineModule
 import com.anrisoftware.globalpom.exec.internal.core.DefaultProcessModule
 import com.anrisoftware.globalpom.exec.internal.logoutputs.LogOutputsModule
@@ -35,15 +36,14 @@ import com.anrisoftware.globalpom.exec.internal.pipeoutputs.PipeOutputsModule
 import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsModule
 import com.anrisoftware.globalpom.exec.internal.script.ScriptCommandModule
 import com.anrisoftware.globalpom.exec.internal.scriptprocess.ScriptProcessModule
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
 import com.anrisoftware.globalpom.threads.properties.internal.PropertiesThreadsModule
+import com.anrisoftware.resources.st.internal.worker.STDefaultPropertiesModule
+import com.anrisoftware.resources.st.internal.worker.STWorkerModule
 import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsModule
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory

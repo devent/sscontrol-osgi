@@ -29,7 +29,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateService;
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateService;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.CopyService;
 import com.anrisoftware.sscontrol.fetch.external.FetchService;

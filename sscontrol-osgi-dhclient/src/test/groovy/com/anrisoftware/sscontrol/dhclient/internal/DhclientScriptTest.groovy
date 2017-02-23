@@ -24,7 +24,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory

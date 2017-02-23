@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.arrays.ToList;
+import com.anrisoftware.globalpom.core.arrays.ToList;
 import com.anrisoftware.sscontrol.hosts.external.Host;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;

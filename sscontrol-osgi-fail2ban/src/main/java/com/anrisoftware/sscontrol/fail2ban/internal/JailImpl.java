@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.arrays.ToList;
+import com.anrisoftware.globalpom.core.arrays.ToList;
 import com.anrisoftware.sscontrol.fail2ban.external.Banning;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.BanningImpl.BanningImplFactory;

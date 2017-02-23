@@ -22,7 +22,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.resources.ResourcesModule
+import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.docker.external.Docker
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory

@@ -16,20 +16,21 @@
 package com.anrisoftware.sscontrol.types.groovy.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.sscontrol.types.external.BindingHost
 import com.anrisoftware.sscontrol.types.external.BindingHost.Host
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImpl.BindingHostImplFactory
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  *

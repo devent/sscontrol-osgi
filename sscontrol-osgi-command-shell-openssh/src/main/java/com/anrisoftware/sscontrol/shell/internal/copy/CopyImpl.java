@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 
-import com.anrisoftware.globalpom.checkfilehash.HashName;
+import com.anrisoftware.globalpom.core.checkfilehash.HashName;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
