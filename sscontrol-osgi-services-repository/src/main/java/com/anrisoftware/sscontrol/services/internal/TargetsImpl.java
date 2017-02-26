@@ -214,8 +214,13 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     private List<Ssh> searchHosts(String name) {
         List<Ssh> list = new ArrayList<>();
         for (Ssh ssh : hosts) {
+            if ("all".equals(name)) {
+                list.add(ssh);
+                continue;
+            }
             if (name.equals(ssh.getGroup())) {
                 list.add(ssh);
+                continue;
             }
         }
         return list;
