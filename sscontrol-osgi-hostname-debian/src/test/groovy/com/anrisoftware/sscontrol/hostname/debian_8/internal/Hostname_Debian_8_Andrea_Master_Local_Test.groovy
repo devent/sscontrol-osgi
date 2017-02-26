@@ -37,21 +37,18 @@ class Hostname_Debian_8_Andrea_Master_Local_Test extends AbstractTestHostname_De
 
     @Test
     void "andrea_master_local_nodes"() {
-        if (!isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-1-local'
-        ])) {
-            return
-        }
         def test = [
             name: "andrea_master_local_nodes",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1-local"
+    host "robobee@andrea-node-0-local"
 }
-service "hostname", target: "andrea-master", fqdn: "andrea-master.andrea.local"
-service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.andrea.local"
+service "hostname", target: "andrea-master", fqdn: "andrea-master-local.robobee.test"
+
+targets['andrea-nodes'].eachWithIndex { host, i ->
+    service "hostname", target: host, fqdn: "andrea-node-\${i}-local.robobee.test"
+}
 """,
             expected: { Map args ->
             },
@@ -63,7 +60,7 @@ service "hostname", target: "andrea-nodes", fqdn: "andrea-node-1.andrea.local"
     void beforeMethod() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
-            'andrea-node-1-local'
+            'andrea-node-0-local'
         ])
     }
 
