@@ -39,16 +39,16 @@ class Fail2ban_0_8_Debian_8_Andrea_Master_Local_Test extends AbstractTestFail2ba
             name: "andrea_master_local",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
+
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1-local"
+    host "robobee@andrea-node-0-local"
 }
-service "fail2ban", target: "andrea-master" with {
-    banning time: "PT24H"
-    jail "ssh"
-}
-service "fail2ban", target: "andrea-nodes" with {
-    banning time: "PT24H"
-    jail "ssh"
+
+targets['all'].eachWithIndex { host, i ->
+    service "fail2ban", target: host with {
+        banning time: "PT24H"
+        jail "ssh"
+    }
 }
 """,
             expected: { Map args ->
@@ -61,7 +61,7 @@ service "fail2ban", target: "andrea-nodes" with {
     void beforeMethod() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
-            'andrea-node-1-local'
+            'andrea-node-0-local'
         ])
     }
 
