@@ -40,35 +40,35 @@ class Etcd_3_1_Debian_8_Andrea_Master_Local_Test extends AbstractTestEtcd_3_1_De
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1-local"
+    host "robobee@andrea-node-0-local"
 }
 service "etcd", target: "andrea-master", member: "etcd-0" with {
     debug "debug", level: 1
     bind "http://localhost:2379"
-    bind "https://192.168.56.120:2379"
-    advertise "https://etcd-0.andrea.local:2379"
-    tls cert: '$certEtcd0CertAndreaMasterLocalPem', key: '$certEtcd0KeyAndreaMasterLocalPem'
-    authentication "cert", ca: "$certCaAndreaMasterLocalPem"
-    peer state: "new", advertise: "https://etcd-0.andrea.local:2380", listen: "https://192.168.56.120:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "etcd-0=https://etcd-0.andrea.local:2380"
-        cluster << "etcd-1=https://etcd-1.andrea.local:2380"
-        tls cert: '$certEtcd0CertAndreaMasterLocalPem', key: '$certEtcd0KeyAndreaMasterLocalPem'
-        authentication "cert", ca: "$certCaAndreaMasterLocalPem"
+    bind "https://192.168.56.200:2379"
+    advertise "https://etcd-0.robobee.test:2379"
+    tls cert: '$andreaLocalEtcdEtcd0CertPem', key: '$andreaLocalEtcdEtcd0KeyPem'
+    authentication "cert", ca: "$andreaLocalEtcdCaPem"
+    peer state: "new", advertise: "https://etcd-0.robobee.test:2380", listen: "https://192.168.56.200:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "etcd-0=https://etcd-0.robobee.test:2380"
+        cluster << "etcd-1=https://etcd-1.robobee.test:2380"
+        tls cert: '$andreaLocalEtcdEtcd0CertPem', key: '$andreaLocalEtcdEtcd0KeyPem'
+        authentication "cert", ca: "$andreaLocalEtcdCaPem"
     }
     property << 'archive_ignore_key=true'
 }
 service "etcd", target: "andrea-nodes", member: "etcd-1" with {
     debug "debug", level: 1
     bind "http://localhost:2379"
-    bind "https://192.168.56.121:2379"
-    advertise "https://etcd-1.andrea.local:2379"
-    tls cert: '$certEtcd1CertAndreaMasterLocalPem', key: '$certEtcd1KeyAndreaMasterLocalPem'
-    authentication "cert", ca: "$certCaAndreaMasterLocalPem"
-    peer state: "new", advertise: "https://etcd-1.andrea.local:2380", listen: "https://192.168.56.121:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "etcd-0=https://etcd-0.andrea.local:2380"
-        cluster << "etcd-1=https://etcd-1.andrea.local:2380"
-        tls cert: '$certEtcd1CertAndreaMasterLocalPem', key: '$certEtcd1KeyAndreaMasterLocalPem'
-        authentication "cert", ca: "$certCaAndreaMasterLocalPem"
+    bind "https://192.168.56.220:2379"
+    advertise "https://etcd-1.robobee.test:2379"
+    tls cert: '$andreaLocalEtcdEtcd1CertPem', key: '$andreaLocalEtcdEtcd1KeyPem'
+    authentication "cert", ca: "$andreaLocalEtcdCaPem"
+    peer state: "new", advertise: "https://etcd-1.robobee.test:2380", listen: "https://192.168.56.220:2380", token: "andrea-etcd-cluster-1" with {
+        cluster << "etcd-0=https://etcd-0.robobee.test:2380"
+        cluster << "etcd-1=https://etcd-1.robobee.test:2380"
+        tls cert: '$andreaLocalEtcdEtcd1CertPem', key: '$andreaLocalEtcdEtcd1KeyPem'
+        authentication "cert", ca: "$andreaLocalEtcdCaPem"
     }
     property << 'archive_ignore_key=true'
 }
@@ -83,7 +83,7 @@ service "etcd", target: "andrea-nodes", member: "etcd-1" with {
     void beforeMethod() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
-            'andrea-node-1-local'
+            'andrea-node-0-local'
         ])
     }
 
