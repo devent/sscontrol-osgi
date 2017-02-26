@@ -65,15 +65,15 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
 
     static final URL certKeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_key.txt')
 
-    static final URL certCaAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_ca_andrea_master_local.txt')
+    static final URL andreaLocalEtcdCaPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem')
 
-    static final URL certEtcd0CertAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_etcd_0_cert_andrea_master_local.txt')
+    static final URL andreaLocalEtcdEtcd0CertPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem')
 
-    static final URL certEtcd0KeyAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_etcd_0_key_andrea_master_local.txt')
+    static final URL andreaLocalEtcdEtcd0KeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem')
 
-    static final URL certEtcd1CertAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_etcd_1_cert_andrea_master_local.txt')
+    static final URL andreaLocalEtcdEtcd1CertPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem')
 
-    static final URL certEtcd1KeyAndreaMasterLocalPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_etcd_1_key_andrea_master_local.txt')
+    static final URL andreaLocalEtcdEtcd1KeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem')
 
     static final URL grepActiveCommand = AbstractTestEtcd_3_1_Debian_8.class.getResource('grep_active_command.txt')
 
