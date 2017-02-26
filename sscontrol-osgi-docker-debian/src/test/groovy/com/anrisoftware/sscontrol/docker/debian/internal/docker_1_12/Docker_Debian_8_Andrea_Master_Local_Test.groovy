@@ -40,10 +40,11 @@ class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debia
             input: """
 service "ssh", group: "master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1-local"
+    host "robobee@andrea-node-0-local"
 }
-service "docker", target: "master"
-service "docker", target: "nodes"
+targets['all'].eachWithIndex { host, i ->
+    service "docker", target: host
+}
 """,
             expected: { Map args ->
             },
@@ -55,7 +56,7 @@ service "docker", target: "nodes"
     void beforeMethod() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
-            'andrea-node-1-local'
+            'andrea-node-0-local'
         ])
     }
 

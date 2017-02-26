@@ -40,15 +40,13 @@ class FlannelDocker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Flann
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
-    host "robobee@andrea-node-1-local"
+    host "robobee@andrea-node-0-local"
 }
-service "flannel-docker", target: "andrea-master" with {
-    bind 'eth1'
-    etcd "http://127.0.0.1:2379"
-}
-service "flannel-docker", target: "andrea-nodes" with {
-    bind 'eth1'
-    etcd "http://127.0.0.1:2379"
+targets['all'].eachWithIndex { host, i ->
+    service "flannel-docker", target: host with {
+        bind 'eth1'
+        etcd "http://127.0.0.1:2379"
+    }
 }
 """,
             generatedDir: folder.newFolder(),
@@ -62,7 +60,7 @@ service "flannel-docker", target: "andrea-nodes" with {
     void beforeMethod() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
-            'andrea-node-1-local'
+            'andrea-node-0-local'
         ])
     }
 
