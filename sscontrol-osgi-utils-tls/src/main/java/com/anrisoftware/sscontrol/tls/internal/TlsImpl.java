@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.tls.internal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,18 +61,21 @@ public class TlsImpl implements Tls {
         ToURI uri = touri.create();
         Object v = args.get("ca");
         if (v != null) {
+            assertThat("ca=null", v.toString(), not(equalTo("null")));
             this.ca = uri.convert(v);
         } else {
             this.ca = null;
         }
         v = args.get("cert");
         if (v != null) {
+            assertThat("cert=null", v.toString(), not(equalTo("null")));
             this.cert = uri.convert(v);
         } else {
             this.cert = null;
         }
         v = args.get("key");
         if (v != null) {
+            assertThat("key=null", v.toString(), not(equalTo("null")));
             this.key = uri.convert(v);
         } else {
             this.key = null;
