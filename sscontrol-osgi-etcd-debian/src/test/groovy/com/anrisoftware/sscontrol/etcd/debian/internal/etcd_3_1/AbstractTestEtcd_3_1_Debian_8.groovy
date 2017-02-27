@@ -65,15 +65,13 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
 
     static final URL certKeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('cert_key.txt')
 
-    static final URL andreaLocalEtcdCaPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem')
-
-    static final URL andreaLocalEtcdEtcd0CertPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem')
-
-    static final URL andreaLocalEtcdEtcd0KeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem')
-
-    static final URL andreaLocalEtcdEtcd1CertPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem')
-
-    static final URL andreaLocalEtcdEtcd1KeyPem = AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem')
+    static final Map andreaLocalEtcdCerts = [
+        ca: AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
+        etcd_0_cert: AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
+        etcd_0_key: AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
+        etcd_1_cert: AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
+        etcd_1_key: AbstractTestEtcd_3_1_Debian_8.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem'),
+    ]
 
     static final URL grepActiveCommand = AbstractTestEtcd_3_1_Debian_8.class.getResource('grep_active_command.txt')
 
@@ -95,6 +93,12 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
 
     String getScriptServiceName() {
         'etcd/debian/8'
+    }
+
+    Binding createBinding(HostServices services) {
+        Binding binding = super.createBinding(services)
+        binding.setProperty("certs", andreaLocalEtcdCerts)
+        return binding
     }
 
     void createDummyCommands(File dir) {
