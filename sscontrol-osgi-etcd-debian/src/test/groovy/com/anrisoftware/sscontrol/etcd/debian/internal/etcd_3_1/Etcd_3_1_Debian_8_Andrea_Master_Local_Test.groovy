@@ -42,35 +42,23 @@ service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key:
 service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-0-local"
 }
-service "etcd", target: "andrea-master", member: "etcd-0" with {
-    debug "debug", level: 1
-    bind "http://localhost:2379"
-    bind "https://192.168.56.200:2379"
-    advertise "https://etcd-0.robobee.test:2379"
-    tls cert: '$andreaLocalEtcdEtcd0CertPem', key: '$andreaLocalEtcdEtcd0KeyPem'
-    authentication "cert", ca: "$andreaLocalEtcdCaPem"
-    peer state: "new", advertise: "https://etcd-0.robobee.test:2380", listen: "https://192.168.56.200:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "etcd-0=https://etcd-0.robobee.test:2380"
-        cluster << "etcd-1=https://etcd-1.robobee.test:2380"
-        tls cert: '$andreaLocalEtcdEtcd0CertPem', key: '$andreaLocalEtcdEtcd0KeyPem'
-        authentication "cert", ca: "$andreaLocalEtcdCaPem"
+
+targets['all'].eachWithIndex { host, i ->
+    service "etcd", target: host, member: "etcd-\${i}" with {
+        debug "debug", level: 1
+        bind "http://localhost:2379"
+        bind "https://\${host.hostAddress}:2379"
+        advertise "https://etcd-\${i}.robobee.test:2379"
+        tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
+        authentication "cert", ca: "\${certs["ca"]}"
+        peer state: "new", advertise: "https://etcd-\${i}.robobee.test:2380", listen: "https://\${host.hostAddress}:2380", token: "andrea-etcd-cluster-1" with {
+            cluster << "etcd-0=https://etcd-0.robobee.test:2380"
+            cluster << "etcd-1=https://etcd-1.robobee.test:2380"
+            tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
+            authentication "cert", ca: "\${certs["ca"]}"
+        }
+        property << 'archive_ignore_key=true'
     }
-    property << 'archive_ignore_key=true'
-}
-service "etcd", target: "andrea-nodes", member: "etcd-1" with {
-    debug "debug", level: 1
-    bind "http://localhost:2379"
-    bind "https://192.168.56.220:2379"
-    advertise "https://etcd-1.robobee.test:2379"
-    tls cert: '$andreaLocalEtcdEtcd1CertPem', key: '$andreaLocalEtcdEtcd1KeyPem'
-    authentication "cert", ca: "$andreaLocalEtcdCaPem"
-    peer state: "new", advertise: "https://etcd-1.robobee.test:2380", listen: "https://192.168.56.220:2380", token: "andrea-etcd-cluster-1" with {
-        cluster << "etcd-0=https://etcd-0.robobee.test:2380"
-        cluster << "etcd-1=https://etcd-1.robobee.test:2380"
-        tls cert: '$andreaLocalEtcdEtcd1CertPem', key: '$andreaLocalEtcdEtcd1KeyPem'
-        authentication "cert", ca: "$andreaLocalEtcdCaPem"
-    }
-    property << 'archive_ignore_key=true'
 }
 """,
             expected: { Map args ->
