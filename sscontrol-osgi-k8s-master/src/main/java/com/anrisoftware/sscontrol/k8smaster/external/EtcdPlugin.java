@@ -24,4 +24,10 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 public interface EtcdPlugin extends Plugin {
 
     String getTarget();
+
+    String getAddress();
+
+    String getProtocol();
+
+    Integer getPort();
 }

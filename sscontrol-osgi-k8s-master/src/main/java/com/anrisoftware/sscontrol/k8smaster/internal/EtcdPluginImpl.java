@@ -44,6 +44,12 @@ public class EtcdPluginImpl implements EtcdPlugin {
 
     private String target;
 
+    private String address;
+
+    private String protocol;
+
+    private Integer port;
+
     @AssistedInject
     EtcdPluginImpl() {
         this(new HashMap<String, Object>());
@@ -65,6 +71,29 @@ public class EtcdPluginImpl implements EtcdPlugin {
     }
 
     @Override
+    public String getAddress() {
+        return address;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    @Override
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("target", getTarget()).toString();
@@ -74,6 +103,18 @@ public class EtcdPluginImpl implements EtcdPlugin {
         Object v = args.get("target");
         if (v != null) {
             this.target = v.toString();
+        }
+        v = args.get("address");
+        if (v != null) {
+            this.address = v.toString();
+        }
+        v = args.get("protocol");
+        if (v != null) {
+            this.protocol = v.toString();
+        }
+        v = args.get("port");
+        if (v != null) {
+            this.port = (Integer) v;
         }
     }
 
