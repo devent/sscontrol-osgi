@@ -28,6 +28,7 @@ import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateMod
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
+import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -56,7 +57,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBase {
+abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
 
     @Inject
     SshImplFactory sshFactory
@@ -113,6 +114,7 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
             new SshPreModule(),
             new K8sMasterModule(),
             new K8sMaster_1_5_Debian_8_Module(),
+            new K8sMaster_1_5_Upstream_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -148,9 +150,9 @@ abstract class AbstractTest_K8sMaster_1_5_Debian_8 extends AbstractScriptTestBas
         this.threads = createThreads()
     }
 
-    static final URL certCaPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_ca.txt')
+    static final URL certCaPem = K8sMaster_Debian_8_Test.class.getResource('cert_ca.txt')
 
-    static final URL certCertPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_cert.txt')
+    static final URL certCertPem = K8sMaster_Debian_8_Test.class.getResource('cert_cert.txt')
 
-    static final URL certKeyPem = K8sMaster_1_5_Debian_8_Test.class.getResource('cert_key.txt')
+    static final URL certKeyPem = K8sMaster_Debian_8_Test.class.getResource('cert_key.txt')
 }

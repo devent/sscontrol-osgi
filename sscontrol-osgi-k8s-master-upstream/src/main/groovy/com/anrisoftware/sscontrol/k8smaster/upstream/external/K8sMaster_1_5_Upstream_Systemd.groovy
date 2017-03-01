@@ -23,7 +23,7 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
-import com.anrisoftware.sscontrol.k8smaster.external.Plugin
+import com.anrisoftware.sscontrol.k8smaster.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 
 import groovy.util.logging.Slf4j
@@ -40,6 +40,9 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
     TemplateResource servicesTemplate
 
     TemplateResource configsTemplate
+
+    @Inject
+    PluginTargetsMapFactory pluginTargetsMapFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -94,6 +97,18 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         }
         if (!service.kubelet.tls.keyName) {
             service.kubelet.tls.keyName = defaultKubeletTlsKeyName
+        }
+        service.plugins.findAll {it.value.hasProperty('port')} each {
+            def name = it.value.name
+            if (!it.value.port) {
+                it.value.port = getDefaultPluginPort(name)
+            }
+        }
+        service.plugins.findAll {it.value.hasProperty('protocol')} each {
+            def name = it.value.name
+            if (!it.value.protocol) {
+                it.value.protocol = getDefaultPluginProtocol(name)
+            }
         }
     }
 
@@ -362,20 +377,18 @@ chmod o-rx '$certsdir'
         Eval.me s
     }
 
+    int getDefaultPluginPort(String name) {
+        name = name.toLowerCase()
+        properties.getNumberProperty "default_plugin_port_$name", defaultProperties
+    }
+
+    String getDefaultPluginProtocol(String name) {
+        name = name.toLowerCase()
+        properties.getProperty "default_plugin_protocol_$name", defaultProperties
+    }
+
     Map getPluginsTargets() {
-        def repo = scriptsRepository
-        K8sMaster service = service
-        new HashMap(service.plugins) {
-                    Object get(Object key) {
-                        Plugin plugin = service.plugins[key]
-                        def targets = repo.targets(plugin.target)
-                        def list = []
-                        targets.host.each {
-                            list << [host: it, protocol: 'http', port: 2379]
-                        }
-                        return list
-                    }
-                }
+        pluginTargetsMapFactory.create service, scriptsRepository, service.plugins
     }
 
     @Override

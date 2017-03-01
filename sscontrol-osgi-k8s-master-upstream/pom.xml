@@ -23,6 +23,13 @@
 
     <dependencies>
 
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
         <!-- own bundles -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
