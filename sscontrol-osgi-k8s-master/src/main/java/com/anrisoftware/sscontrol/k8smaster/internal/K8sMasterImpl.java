@@ -90,8 +90,7 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final Map<String, Plugin> plugins;
 
-    @Inject
-    private TlsFactory tlsFactory;
+    private final TlsFactory tlsFactory;
 
     @Inject
     private Map<String, AuthenticationFactory> authenticationFactories;
@@ -124,7 +123,7 @@ public class K8sMasterImpl implements K8sMaster {
             Map<String, PluginFactory> pluginFactories,
             HostPropertiesService propertiesService,
             KubeletImplFactory kubeletFactory,
-            BindingImplFactory bindingFactory,
+            BindingImplFactory bindingFactory, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.clusterFactory = clusterFactory;
@@ -139,6 +138,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.kubelet = kubeletFactory.create();
         this.binding = bindingFactory.create();
         this.bindingFactory = bindingFactory;
+        this.tlsFactory = tlsFactory;
+        this.tls = tlsFactory.create();
         parseArgs(args);
     }
 
