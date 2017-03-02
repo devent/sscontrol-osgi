@@ -41,15 +41,15 @@ class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_K8sMaster
             name: "andrea_master_local",
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
-def andreaMaster = targets['andrea-master']
+def andreaMaster = targets['andrea-master'][0]
 println andreaMaster
 service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
     bind secure: "\${andreaMaster.hostAddress}"
-    tls \$certs
-    authentication "cert", ca: \$certs.ca
-    plugin "etcd", target: "etcd-0"
+    tls certs
+    authentication "cert", ca: certs.ca
+    plugin "etcd", address: "http://etcd-0.robobee.test"
     kubelet.with {
-        tls \$certs
+        tls certs
     }
 }
 """,
