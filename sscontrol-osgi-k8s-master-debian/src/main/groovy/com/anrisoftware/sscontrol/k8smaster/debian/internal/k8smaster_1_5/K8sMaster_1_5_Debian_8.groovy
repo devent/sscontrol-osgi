@@ -58,7 +58,7 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
 
     void installPackages() {
         log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
