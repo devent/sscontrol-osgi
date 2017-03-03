@@ -52,6 +52,7 @@
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-systemd</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
+        <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
