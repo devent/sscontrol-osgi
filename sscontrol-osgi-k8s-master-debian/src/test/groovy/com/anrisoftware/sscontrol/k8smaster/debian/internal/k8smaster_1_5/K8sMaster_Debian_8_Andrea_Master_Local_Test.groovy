@@ -42,14 +42,15 @@ class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_K8sMaster
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 def andreaMaster = targets['andrea-master'][0]
-println andreaMaster
 service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
     bind secure: "\${andreaMaster.hostAddress}"
-    tls certs
-    authentication "cert", ca: certs.ca
-    plugin "etcd", address: "http://etcd-0.robobee.test"
+    tls certs.k8s
+    authentication "cert", ca: certs.k8s.ca
+    plugin "etcd", address: "https://etcd-0.robobee.test" with {
+        tls certs.etcd
+    }
     kubelet.with {
-        tls certs
+        tls certs.k8s
     }
 }
 """,
@@ -69,9 +70,16 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
     }
 
     static final Map andreaLocalCerts = [
-        ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-        cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
-        key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
+        k8s: [
+            ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
+            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
+            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
+        ],
+        etcd: [
+            ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
+            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
+            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
+        ]
     ]
 
     Binding createBinding(HostServices services) {

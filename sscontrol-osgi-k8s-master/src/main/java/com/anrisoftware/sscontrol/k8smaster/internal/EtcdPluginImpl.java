@@ -21,6 +21,8 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8smaster.external.EtcdPlugin;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -50,14 +52,24 @@ public class EtcdPluginImpl implements EtcdPlugin {
 
     private Integer port;
 
+    private transient TlsFactory tlsFactory;
+
+    private Tls tls;
+
     @AssistedInject
-    EtcdPluginImpl() {
-        this(new HashMap<String, Object>());
+    EtcdPluginImpl(TlsFactory tlsFactory) {
+        this(tlsFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject
-    EtcdPluginImpl(@Assisted Map<String, Object> args) {
+    EtcdPluginImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
+        this.tlsFactory = tlsFactory;
+        this.tls = tlsFactory.create();
         parseArgs(args);
+    }
+
+    public void tls(Map<String, Object> args) {
+        this.tls = tlsFactory.create(args);
     }
 
     @Override
@@ -93,10 +105,17 @@ public class EtcdPluginImpl implements EtcdPlugin {
         return port;
     }
 
+    public void setTls(Tls tls) {
+        this.tls = tls;
+    }
+
+    public Tls getTls() {
+        return tls;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", getName())
-                .append("target", getTarget()).toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     private void parseArgs(Map<String, Object> args) {

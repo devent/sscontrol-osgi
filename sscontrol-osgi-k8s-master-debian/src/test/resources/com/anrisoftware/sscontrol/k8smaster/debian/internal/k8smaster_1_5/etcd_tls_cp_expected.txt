@@ -1,0 +1,11 @@
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_ca.pem
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_cert.pem
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_key.pem
+/var/lib/robobee/tmp/kube-apiserver.service /tmp/junit/junit/etc/systemd/system/kube-apiserver.service
+/var/lib/robobee/tmp/kube-controller-manager.service /tmp/junit/junit/etc/systemd/system/kube-controller-manager.service
+/var/lib/robobee/tmp/kube-scheduler.service /tmp/junit/junit/etc/systemd/system/kube-scheduler.service
+/var/lib/robobee/tmp/kubernetes.conf /tmp/junit/junit/etc/systemd/tmpfiles.d/kubernetes.conf
+/var/lib/robobee/tmp/config /tmp/junit/junit/etc/kubernetes/config
+/var/lib/robobee/tmp/apiserver /tmp/junit/junit/etc/kubernetes/apiserver
+/var/lib/robobee/tmp/controller-manager /tmp/junit/junit/etc/kubernetes/controller-manager
+/var/lib/robobee/tmp/scheduler /tmp/junit/junit/etc/kubernetes/scheduler
