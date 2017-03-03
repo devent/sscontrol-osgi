@@ -88,4 +88,29 @@ service "k8s-master", name: "andrea-cluster" with {
         ]
         doTest test
     }
+
+    @Test
+    void "etcd_tls"() {
+        def test = [
+            name: "etcd_tls",
+            input: """
+service "ssh", host: "localhost"
+service "k8s-master", name: "andrea-cluster" with {
+    plugin "etcd", address: "etcd" with {
+        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    }
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-apiserver.service", "${args.test.name}_kube_apiserver_service_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "apiserver", "${args.test.name}_kubernetes_apiserver_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

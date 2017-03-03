@@ -15,6 +15,7 @@ ExecStart=<parent.binDir>/kube-apiserver \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \
         $KUBE_ETCD_SERVERS \
+        $KUBE_ETCD_TLS \
         $KUBE_API_ADDRESS \
         $KUBE_API_PORT \
         $KUBELET_PORT \

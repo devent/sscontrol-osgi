@@ -110,6 +110,18 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
                 it.value.protocol = getDefaultPluginProtocol(name)
             }
         }
+        service.plugins.findAll {it.value.hasProperty('tls')} each {
+            def name = it.value.name
+            if (!it.value.tls.caName) {
+                it.value.tls.caName = getDefaultPluginCaName(name)
+            }
+            if (!it.value.tls.certName) {
+                it.value.tls.certName = getDefaultPluginCertName(name)
+            }
+            if (!it.value.tls.keyName) {
+                it.value.tls.keyName = getDefaultPluginKeyName(name)
+            }
+        }
     }
 
     def createDirectories() {
@@ -196,6 +208,30 @@ chmod o-rx '$certsdir'
                     name: 'tls.key',
                     src: tls.key,
                     dest: "$certsdir/$tls.keyName",
+                ],
+            ].each {
+                if (it.src) {
+                    copyResource it call()
+                }
+            }
+        }
+        Tls etcdTls = etcdTls
+        if (etcdTls) {
+            [
+                [
+                    name: 'etcdTls.ca',
+                    src: etcdTls.ca,
+                    dest: "$certsdir/$etcdTls.caName",
+                ],
+                [
+                    name: 'etcdTls.cert',
+                    src: etcdTls.cert,
+                    dest: "$certsdir/$etcdTls.certName",
+                ],
+                [
+                    name: 'etcdTls.key',
+                    src: etcdTls.key,
+                    dest: "$certsdir/$etcdTls.keyName",
                 ],
             ].each {
                 if (it.src) {
@@ -387,8 +423,32 @@ chmod o-rx '$certsdir'
         properties.getProperty "default_plugin_protocol_$name", defaultProperties
     }
 
+    String getDefaultPluginCaName(String name) {
+        name = name.toLowerCase()
+        properties.getProperty "default_plugin_ca_name_$name", defaultProperties
+    }
+
+    String getDefaultPluginCertName(String name) {
+        name = name.toLowerCase()
+        properties.getProperty "default_plugin_cert_name_$name", defaultProperties
+    }
+
+    String getDefaultPluginKeyName(String name) {
+        name = name.toLowerCase()
+        properties.getProperty "default_plugin_key_name_$name", defaultProperties
+    }
+
     Map getPluginsTargets() {
         pluginTargetsMapFactory.create service, scriptsRepository, service.plugins
+    }
+
+    Tls getEtcdTls() {
+        def plugin = service.plugins['etcd']
+        if (plugin) {
+            return plugin.tls
+        } else {
+            return null
+        }
     }
 
     @Override

@@ -247,6 +247,34 @@ service "k8s-master" with {
         doTest test
     }
 
+    @Test
+    void "etcd tls"() {
+        def test = [
+            name: 'etcd tls',
+            input: '''
+service "k8s-master" with {
+    plugin "etcd", target: "infra-0" with {
+        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    }
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.targets.size() == 0
+                assert s.cluster.range == null
+                assert s.plugins.size() == 1
+                def etcd = s.plugins['etcd']
+                assert etcd.name == 'etcd'
+                assert etcd.target == 'infra-0'
+                assert etcd.tls.ca.toString() =~ /.*ca\.pem/
+                assert etcd.tls.cert.toString() =~ /.*cert\.pem/
+                assert etcd.tls.key.toString() =~ /.*key\.pem/
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
