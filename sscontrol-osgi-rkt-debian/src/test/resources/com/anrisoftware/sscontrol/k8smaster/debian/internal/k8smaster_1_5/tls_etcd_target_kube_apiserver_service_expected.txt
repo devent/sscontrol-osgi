@@ -1,0 +1,36 @@
+# Authors
+# https://koji.fedoraproject.org/koji/buildinfo?buildID=831577
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+After=etcd.service
+
+[Service]
+EnvironmentFile=-/tmp/junit/junit/etc/kubernetes/config
+EnvironmentFile=-/tmp/junit/junit/etc/kubernetes/apiserver
+User=kube
+ExecStart=/tmp/junit/junit/usr/local/bin/kube-apiserver \
+        $KUBE_LOGTOSTDERR \
+        $KUBE_LOG_LEVEL \
+        $KUBE_ETCD_SERVERS \
+        $KUBE_ETCD_TLS \
+        $KUBE_API_ADDRESS \
+        $KUBE_API_PORT \
+        $KUBELET_PORT \
+        $KUBE_ALLOW_PRIV \
+        $KUBE_SERVICE_ADDRESSES \
+        $KUBE_ADMISSION_CONTROL \
+        $KUBE_TLS_CA \
+        $KUBE_TLS_CERT \
+        $KUBE_AUTHENTICATION \
+        $KUBE_SERVICE_ACCOUNT_KEY \
+        $KUBELET_PREFERRED_ADDRESS_TYPES \
+        $KUBELET_TLS \
+        $KUBE_API_ARGS
+Restart=on-failure
+Type=notify
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
