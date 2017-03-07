@@ -32,12 +32,12 @@ import groovy.util.logging.Slf4j
 class Rkt_Debian_Test extends AbstractTest_Rkt_Debian {
 
     @Test
-    void "rkt"() {
+    void "rkt_defaults"() {
         def test = [
-            name: "tls_etcd_target",
+            name: "rkt_defaults",
             input: """
 service "ssh", host: "localhost"
-service "rkt-1.25"
+service "rkt", version: "1.25"
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -45,17 +45,7 @@ service "rkt-1.25"
                 File gen = args.test.generatedDir
                 assertFileResource Rkt_Debian_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource Rkt_Debian_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                //assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource Rkt_Debian_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource Rkt_Debian_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/systemd/system'), "kube-apiserver.service", "${args.test.name}_kube_apiserver_service_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/systemd/system'), "kube-controller-manager.service", "${args.test.name}_kube_controller_manager_service_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/systemd/system'), "kube-scheduler.service", "${args.test.name}_kube_scheduler_service_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/systemd/tmpfiles.d'), "kubernetes.conf", "${args.test.name}_kubernetes_conf_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/kubernetes'), "config", "${args.test.name}_kubernetes_config_config_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/kubernetes'), "apiserver", "${args.test.name}_kubernetes_apiserver_config_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/kubernetes'), "controller-manager", "${args.test.name}_kubernetes_controller_manager_config_expected.txt"
-                assertFileResource Rkt_Debian_Test, new File(gen, '/etc/kubernetes'), "scheduler", "${args.test.name}_kubernetes_scheduler_config_expected.txt"
             },
         ]
         doTest test

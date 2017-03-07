@@ -22,8 +22,6 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.external.HostServices
-
 import groovy.util.logging.Slf4j
 
 /**
@@ -33,26 +31,18 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Rkt_Debian {
+class Rkt_Debian_Andrea_Master_Local_Test extends AbstractTest_Rkt_Debian {
 
     @Test
     void "andrea_master_local"() {
         def test = [
             name: "andrea_master_local",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
-def andreaMaster = targets['andrea-master'][0]
-service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
-    bind secure: "\${andreaMaster.hostAddress}"
-    tls certs.k8s
-    authentication "cert", ca: certs.k8s.ca
-    plugin "etcd", address: "https://etcd-0.robobee.test" with {
-        tls certs.etcd
-    }
-    kubelet.with {
-        tls certs.k8s
-    }
+service "ssh" with {
+    host "robobee@andrea-master-local", key: "$robobeeKey"
+    host "robobee@andrea-node-0-local", key: "$robobeeKey"
 }
+service "rkt", version: "1.25"
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -67,25 +57,6 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
             'andrea-master-local',
             'andrea-node-0-local'
         ])
-    }
-
-    static final Map andreaLocalCerts = [
-        k8s: [
-            ca: AbstractTest_Rkt_Debian.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractTest_Rkt_Debian.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
-            key: AbstractTest_Rkt_Debian.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
-        ],
-        etcd: [
-            ca: AbstractTest_Rkt_Debian.class.getResource('andrea_local_etcd_ca_cert.pem'),
-            cert: AbstractTest_Rkt_Debian.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
-            key: AbstractTest_Rkt_Debian.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
-        ]
-    ]
-
-    Binding createBinding(HostServices services) {
-        Binding binding = super.createBinding(services)
-        binding.setProperty("certs", andreaLocalCerts)
-        return binding
     }
 
     void createDummyCommands(File dir) {

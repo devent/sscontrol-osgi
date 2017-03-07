@@ -1,2 +1,0 @@
-update
--y install gnupg2 gcc golang-go curl git

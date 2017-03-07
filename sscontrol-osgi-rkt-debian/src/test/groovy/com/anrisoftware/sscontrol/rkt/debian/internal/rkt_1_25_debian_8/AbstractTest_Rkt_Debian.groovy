@@ -95,12 +95,14 @@ abstract class AbstractTest_Rkt_Debian extends AbstractScriptTestBase {
             'useradd',
             'tar',
             'grep',
+            'apt-get',
+            'gpg',
         ]
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'rkt-1.25', rktDummyFactory
+        services.putAvailableService 'rkt', rktDummyFactory
         services.putAvailableScriptService 'rkt-1.25/debian/8', scriptFactory
     }
 

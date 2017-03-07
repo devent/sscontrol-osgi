@@ -57,11 +57,14 @@ public class RktDummy implements HostService {
 
     private final HostServiceProperties serviceProperties;
 
+    private String version;
+
     @Inject
     RktDummy(HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.targets = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
+        parseArgs(args);
     }
 
     /**
@@ -108,13 +111,18 @@ public class RktDummy implements HostService {
 
     @Override
     public String getName() {
-        return "rkt";
+        return String.format("rkt-%s", version);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+        Object v = args.get("version");
+        this.version = v.toString();
     }
 
 }
