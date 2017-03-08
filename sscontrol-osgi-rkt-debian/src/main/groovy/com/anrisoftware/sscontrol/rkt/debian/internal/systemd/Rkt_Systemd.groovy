@@ -31,7 +31,6 @@ abstract class Rkt_Systemd extends ScriptBase {
     def stopServices() {
         stopSystemdService([
             'rkt-api',
-            'rkt-gc',
             'rkt-metadata'
         ])
     }
@@ -39,7 +38,6 @@ abstract class Rkt_Systemd extends ScriptBase {
     def startServices() {
         startEnableSystemdService([
             'rkt-api',
-            'rkt-gc',
             'rkt-metadata'
         ])
     }

@@ -97,6 +97,7 @@ abstract class AbstractTest_Rkt_Debian extends AbstractScriptTestBase {
             'grep',
             'apt-get',
             'gpg',
+            'dpkg',
         ]
     }
 

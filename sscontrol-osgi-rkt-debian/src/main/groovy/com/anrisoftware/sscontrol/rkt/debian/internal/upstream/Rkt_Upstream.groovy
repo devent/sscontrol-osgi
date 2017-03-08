@@ -39,7 +39,7 @@ abstract class Rkt_Upstream extends ScriptBase {
         def archiveName = getBaseName(getBaseName(archive.toString()))
         shell timeout: timeoutMiddle, """\
 cd /tmp
-sudo dbkg -i "$archiveFile"
+sudo dpkg -i "$archiveFile"
 """ call()
     }
 
