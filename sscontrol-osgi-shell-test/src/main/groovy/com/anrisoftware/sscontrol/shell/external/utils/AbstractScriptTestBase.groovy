@@ -96,6 +96,10 @@ abstract class AbstractScriptTestBase {
         notAvailable == null
     }
 
+    /**
+     * Checks if the specified host is available. The port 7 (Echo) must be
+     * open on the host.
+     */
     static boolean isHostAvailable(String host) {
         boolean a = false
         try {
