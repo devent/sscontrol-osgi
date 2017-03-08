@@ -46,7 +46,6 @@ service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
 targets['all'].eachWithIndex { host, i ->
     service "etcd", target: host, member: "etcd-\${i}" with {
         debug "debug", level: 1
-        bind "http://localhost:2379"
         bind "https://\${host.hostAddress}:2379"
         advertise "https://etcd-\${i}.robobee.test:2379"
         tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
@@ -57,7 +56,6 @@ targets['all'].eachWithIndex { host, i ->
             tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
             authentication "cert", ca: "\${certs["ca"]}"
         }
-        property << 'archive_ignore_key=true'
     }
 }
 """,
