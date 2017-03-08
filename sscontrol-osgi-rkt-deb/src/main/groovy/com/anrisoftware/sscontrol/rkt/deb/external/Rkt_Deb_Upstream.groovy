@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.upstream
+package com.anrisoftware.sscontrol.rkt.deb.external
 
 import static org.apache.commons.io.FilenameUtils.getBaseName
 
@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class Rkt_Upstream extends ScriptBase {
+abstract class Rkt_Deb_Upstream extends ScriptBase {
 
     def installRkt() {
         log.info 'Installs rkt.'
