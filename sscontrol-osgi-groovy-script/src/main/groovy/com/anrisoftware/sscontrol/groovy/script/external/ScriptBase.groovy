@@ -332,6 +332,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Reloads the systemd daemon.
+     */
+    def reloadSystemd() {
+        shell privileged: true, "systemctl daemon-reload" call()
+    }
+
+    /**
      * Stop the specified services.
      */
     def stopSystemdService(List services) {

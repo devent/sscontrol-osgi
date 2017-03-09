@@ -16,6 +16,8 @@
 package com.anrisoftware.sscontrol.flanneldocker.upstream.external
 
 import static org.apache.commons.io.FilenameUtils.getBaseName
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
@@ -25,6 +27,7 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.tls.external.Tls
 
 import groovy.util.logging.Slf4j
 
@@ -44,6 +47,36 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
         def attr = [renderers: [networkRenderer]]
         def t = factory.create 'FlannelDocker_0_7_Upstream_Templates', attr
         this.installCmdResource = t.getResource 'install_cmd'
+    }
+
+    def setupDefaults() {
+        log.info 'Setup Flannel-Docker defaults.'
+        FlannelDocker service = this.service
+        assertThat "etcd.address=null", service.etcd.address, is(notNullValue())
+        if (!service.debugLogging.modules['debug']) {
+            service.debug 'debug', level: defaultDebugLogLevel
+        }
+        if (!service.etcd.prefix) {
+            service.etcd.prefix = defaultEtcdPrefix
+        }
+        if (!service.backend) {
+            service.backend defaultFlannelBackendType
+        }
+        if (!service.network.address) {
+            service.network.address = defaultFlannelNetworkAddress
+        }
+        if (service.etcd) {
+            Tls tls = service.etcd.tls
+            if (!tls.caName) {
+                tls.caName = defaultEtcdCaName
+            }
+            if (!tls.certName) {
+                tls.certName = defaultEtcdCertName
+            }
+            if (!tls.keyName) {
+                tls.keyName = defaultEtcdKeyName
+            }
+        }
     }
 
     def installFlannel() {
@@ -69,12 +102,40 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
         properties.getProperty 'flannel_archive_hash', defaultProperties
     }
 
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
+    File getCertsDir() {
+        properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     File getLibexecDir() {
         properties.getFileProperty "libexec_dir", base, defaultProperties
+    }
+
+    def getDefaultDebugLogLevel() {
+        properties.getNumberProperty 'default_debug_log_level', defaultProperties intValue()
+    }
+
+    def getDefaultEtcdPrefix() {
+        properties.getProperty 'default_etcd_prefix', defaultProperties
+    }
+
+    def getDefaultFlannelBackendType() {
+        properties.getProperty 'default_flannel_backend_type', defaultProperties
+    }
+
+    def getDefaultFlannelNetworkAddress() {
+        properties.getProperty 'default_flannel_network_address', defaultProperties
+    }
+
+    String getDefaultEtcdCaName() {
+        properties.getProperty "default_etcd_ca_name", defaultProperties
+    }
+
+    String getDefaultEtcdCertName() {
+        properties.getProperty "default_etcd_cert_name", defaultProperties
+    }
+
+    String getDefaultEtcdKeyName() {
+        properties.getProperty "default_etcd_key_name", defaultProperties
     }
 
     @Override

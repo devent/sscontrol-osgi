@@ -19,7 +19,9 @@ import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
+import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.groovy.external.NumberTrueRenderer
 
 import groovy.util.logging.Slf4j
@@ -48,13 +50,48 @@ abstract class FlannelDocker_0_7_Upstream_Systemd extends ScriptBase {
 
     def createDirectories() {
         log.info 'Create Flannel-Docker directories.'
+        def certsdir = certsDir
         shell privileged: true, """
 mkdir -p '$systemdSystemDir'
 mkdir -p '$systemdTmpfilesDir'
 mkdir -p '$runDir'
 mkdir -p '$libexecDir'
 mkdir -p '$dockerServiceDropDir'
+mkdir -p '$certsdir'
+chown root.root '$certsdir'
+chmod o-rx '$certsdir'
 """ call()
+    }
+
+    def uploadEtcdCerts() {
+        log.info 'Uploads etcd certificates.'
+        FlannelDocker service = service
+        if (!service.etcd) {
+            return
+        }
+        Tls tls = service.etcd.tls
+        def certsdir = certsDir
+        [
+            [
+                name: "ca",
+                src: tls.ca,
+                dest: "$certsdir/$tls.caName",
+            ],
+            [
+                name: "cert",
+                src: tls.cert,
+                dest: "$certsdir/$tls.certName",
+            ],
+            [
+                name: "key",
+                src: tls.key,
+                dest: "$certsdir/$tls.keyName",
+            ],
+        ].each {
+            if (it.src) {
+                copyResource it call()
+            }
+        }
     }
 
     def createServices() {
@@ -118,10 +155,6 @@ mkdir -p '$dockerServiceDropDir'
         }.call()
     }
 
-    def reloadSystemd() {
-        shell privileged: true, "systemctl daemon-reload" call()
-    }
-
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
@@ -134,12 +167,12 @@ mkdir -p '$dockerServiceDropDir'
         properties.getFileProperty "libexec_dir", base, defaultProperties
     }
 
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
-    }
-
     File getRunDir() {
         properties.getFileProperty "run_dir", base, defaultProperties
+    }
+
+    File getCertsDir() {
+        properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     File getDockerNetworkFile() {

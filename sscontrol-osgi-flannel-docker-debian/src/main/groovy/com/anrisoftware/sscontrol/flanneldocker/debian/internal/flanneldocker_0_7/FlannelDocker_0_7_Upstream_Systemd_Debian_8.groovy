@@ -37,7 +37,9 @@ class FlannelDocker_0_7_Upstream_Systemd_Debian_8 extends FlannelDocker_0_7_Upst
 
     @Override
     Object run() {
+        setupDefaults()
         createDirectories()
+        uploadEtcdCerts()
         createServices()
         createConfig()
         patchDockerService()

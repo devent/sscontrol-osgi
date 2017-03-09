@@ -21,6 +21,8 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.flanneldocker.external.Etcd;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -50,14 +52,34 @@ public class EtcdImpl implements Etcd {
 
     private String prefix;
 
+    private TlsFactory tlsFactory;
+
+    private Tls tls;
+
+    private EtcdImplLogger log;
+
     @AssistedInject
-    EtcdImpl() {
-        this(new HashMap<String, Object>());
+    EtcdImpl(EtcdImplLogger log, TlsFactory tlsFactory) {
+        this(log, tlsFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject
-    EtcdImpl(@Assisted Map<String, Object> args) {
+    EtcdImpl(EtcdImplLogger log, TlsFactory tlsFactory,
+            @Assisted Map<String, Object> args) {
+        this.tlsFactory = tlsFactory;
+        this.tls = tlsFactory.create();
+        this.log = log;
         parseArgs(args);
+    }
+
+    /**
+     * <pre>
+     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public void tls(Map<String, Object> args) {
+        this.tls = tlsFactory.create(args);
+        log.tlsSet(this, tls);
     }
 
     public void setAddress(String address) {
@@ -76,6 +98,11 @@ public class EtcdImpl implements Etcd {
     @Override
     public String getPrefix() {
         return prefix;
+    }
+
+    @Override
+    public Tls getTls() {
+        return tls;
     }
 
     @Override

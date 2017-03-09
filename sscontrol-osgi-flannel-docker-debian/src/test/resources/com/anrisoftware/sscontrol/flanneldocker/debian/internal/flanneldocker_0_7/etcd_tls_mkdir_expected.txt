@@ -11,6 +11,9 @@
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/sysconfig
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp

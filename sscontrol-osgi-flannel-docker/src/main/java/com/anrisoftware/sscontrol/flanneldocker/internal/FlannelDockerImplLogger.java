@@ -15,10 +15,10 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.internal;
 
-import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.backendSet;
-import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.bindingSet;
-import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.etcdSet;
-import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger._.networkSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger.a.backendSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger.a.bindingSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger.a.etcdSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImplLogger.a.networkSet;
 
 import javax.inject.Singleton;
 
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.flanneldocker.external.Network;
 @Singleton
 final class FlannelDockerImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum a {
 
         etcdSet("Etcd {} set for {}"),
 
@@ -49,7 +49,7 @@ final class FlannelDockerImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private a(String name) {
             this.name = name;
         }
 
