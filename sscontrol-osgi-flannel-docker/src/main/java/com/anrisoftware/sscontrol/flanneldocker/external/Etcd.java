@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.external;
 
+import com.anrisoftware.sscontrol.tls.external.Tls;
+
 /**
  * <i>Flannel-Docker</i> Etcd.
  *
@@ -26,4 +28,6 @@ public interface Etcd {
     String getAddress();
 
     String getPrefix();
+
+    Tls getTls();
 }

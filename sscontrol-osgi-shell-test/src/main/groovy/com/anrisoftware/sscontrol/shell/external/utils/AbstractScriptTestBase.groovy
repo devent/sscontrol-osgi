@@ -120,7 +120,7 @@ abstract class AbstractScriptTestBase {
      */
     void checkProfile(String name) {
         def localTests = System.getProperty(name)
-        assumeTrue localTests == true
+        assumeTrue localTests != true
     }
 
     void doTest(Map test, int k=0) {

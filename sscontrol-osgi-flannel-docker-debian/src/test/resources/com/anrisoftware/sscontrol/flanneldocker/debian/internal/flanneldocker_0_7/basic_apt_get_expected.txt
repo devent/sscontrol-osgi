@@ -1,2 +1,2 @@
 update
--y install wget coreutils
+-y install wget curl coreutils

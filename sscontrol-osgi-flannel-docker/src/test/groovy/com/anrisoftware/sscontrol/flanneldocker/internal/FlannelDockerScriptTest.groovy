@@ -34,6 +34,8 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.tls.external.Tls
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -133,6 +135,31 @@ service "flannel-docker" with {
         doTest test
     }
 
+    @Test
+    void "etcd tls"() {
+        def test = [
+            name: "etcd tls",
+            input: """
+service "flannel-docker" with {
+    etcd "https://127.0.0.1:2379" with {
+        tls ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+    }
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('flannel-docker').size() == 1
+                FlannelDocker s = services.getServices('flannel-docker')[0]
+                assert s.etcd.address == "https://127.0.0.1:2379"
+                assert s.etcd.prefix == null
+                Tls tls = s.etcd.tls
+                assert tls.ca == new URI('file:ca.pem')
+                assert tls.cert == new URI('file:cert.pem')
+                assert tls.key == new URI('file:key.pem')
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
@@ -150,6 +177,7 @@ service "flannel-docker" with {
                 new FlannelDockerModule(),
                 new FlannelDockerPreModule(),
                 new PropertiesModule(),
+                new TlsModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),

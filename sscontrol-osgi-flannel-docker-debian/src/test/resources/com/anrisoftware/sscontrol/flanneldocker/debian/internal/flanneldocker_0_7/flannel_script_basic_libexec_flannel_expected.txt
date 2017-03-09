@@ -1,2 +1,0 @@
-total 4
--r-xr-xr-x 1 root root 2139 date mk-docker-opts.sh

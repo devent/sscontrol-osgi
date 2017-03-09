@@ -1,8 +1,0 @@
-# Authors
-# https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
-[Unit]
-Requires=flanneld.service
-After=flanneld.service
-
-[Service]
-EnvironmentFile=-/run/flannel/docker

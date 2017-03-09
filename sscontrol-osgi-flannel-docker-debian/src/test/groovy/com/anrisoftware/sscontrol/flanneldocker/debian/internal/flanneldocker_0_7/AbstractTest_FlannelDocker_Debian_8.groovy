@@ -45,6 +45,7 @@ import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -56,6 +57,18 @@ import com.google.inject.AbstractModule
  * @version 1.0
  */
 abstract class AbstractTest_FlannelDocker_Debian_8 extends AbstractScriptTestBase {
+
+    static final URL certCaPem = AbstractTest_FlannelDocker_Debian_8.class.getResource('cert_ca.txt')
+
+    static final URL certCertPem = AbstractTest_FlannelDocker_Debian_8.class.getResource('cert_cert.txt')
+
+    static final URL certKeyPem = AbstractTest_FlannelDocker_Debian_8.class.getResource('cert_key.txt')
+
+    static final Map andreaLocalEtcdCerts = [
+        ca: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
+        cert: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_client_cert.pem'),
+        key: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_client_key_insecure.pem'),
+    ]
 
     @Inject
     SshImplFactory sshFactory
@@ -117,6 +130,7 @@ abstract class AbstractTest_FlannelDocker_Debian_8 extends AbstractScriptTestBas
             new FlannelDockerModule(),
             new FlannelDocker_0_7_Debian_8_Module(),
             new DebugLoggingModule(),
+            new TlsModule(),
             new TypesModule(),
             new StringsModule(),
             new HostServicesModule(),

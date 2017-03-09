@@ -22,6 +22,8 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.types.external.HostServices
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -45,7 +47,9 @@ service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
 targets['all'].eachWithIndex { host, i ->
     service "flannel-docker", target: host with {
         bind 'eth1'
-        etcd "http://127.0.0.1:2379"
+        etcd "https://\${host.hostAddress}:2379" with {
+            tls ca: certs["ca"], cert: certs["cert"], key: certs["key"]
+        }
     }
 }
 """,
@@ -62,6 +66,12 @@ targets['all'].eachWithIndex { host, i ->
             'andrea-master-local',
             'andrea-node-0-local'
         ])
+    }
+
+    Binding createBinding(HostServices services) {
+        Binding binding = super.createBinding(services)
+        binding.setProperty("certs", andreaLocalEtcdCerts)
+        return binding
     }
 
     void createDummyCommands(File dir) {

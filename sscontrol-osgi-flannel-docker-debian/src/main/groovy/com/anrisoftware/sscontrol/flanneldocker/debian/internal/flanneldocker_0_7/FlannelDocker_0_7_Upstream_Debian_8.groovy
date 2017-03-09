@@ -37,6 +37,7 @@ class FlannelDocker_0_7_Upstream_Debian_8 extends FlannelDocker_0_7_Upstream {
 
     @Override
     Object run() {
+        setupDefaults()
         installFlannel()
     }
 
