@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.rkt.debian.internal.upstream.Rkt_Upstream
+import com.anrisoftware.sscontrol.rkt.deb.external.Rkt_Deb_Upstream
 
 import groovy.util.logging.Slf4j
 
@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Rkt_Upstream_Debian extends Rkt_Upstream {
+class Rkt_Upstream_Debian extends Rkt_Deb_Upstream {
 
     @Inject
     Rkt_Debian_Properties debianPropertiesProvider
