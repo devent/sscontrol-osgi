@@ -48,13 +48,13 @@ targets['all'].eachWithIndex { host, i ->
         debug "debug", level: 1
         bind "https://\${host.hostAddress}:2379"
         advertise "https://etcd-\${i}.robobee.test:2379"
-        tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
-        authentication "cert", ca: "\${certs["ca"]}"
+        tls cert: certs["etcd_\${i}_cert"], key: certs["etcd_\${i}_key"]
+        authentication "cert", ca: certs["ca"]
         peer state: "new", advertise: "https://etcd-\${i}.robobee.test:2380", listen: "https://\${host.hostAddress}:2380", token: "andrea-etcd-cluster-1" with {
             cluster << "etcd-0=https://etcd-0.robobee.test:2380"
             cluster << "etcd-1=https://etcd-1.robobee.test:2380"
-            tls cert: "\${certs["etcd_\${i}_cert"]}", key: "\${certs["etcd_\${i}_key"]}"
-            authentication "cert", ca: "\${certs["ca"]}"
+            tls cert: certs["etcd_\${i}_cert"], key: certs["etcd_\${i}_key"]
+            authentication "cert", ca: certs["ca"]
         }
     }
 }
