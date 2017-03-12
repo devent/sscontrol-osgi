@@ -49,7 +49,7 @@ service "flannel-docker" with {
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/tmpfiles.d/flannel.conf'), "${args.test.name}_flannel_tmpfiles_conf_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/lib/systemd/system/docker.service'), "${args.test.name}_docker_service_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/sysconfig/flanneld'), "${args.test.name}_flanneld_expected.txt"
-                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/lib/systemd/system/docker.service.d/flannel.conf'), "${args.test.name}_flannel_docker_conf_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/docker.service.d/10_flannel.conf'), "${args.test.name}_flannel_docker_conf_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/local/bin/flannel*'), "${args.test.name}_local_bin_expected.txt"
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/libexec/flannel'), "${args.test.name}_libexec_flannel_expected.txt"
                 def s = checkRemoteFiles('/run/flannel')

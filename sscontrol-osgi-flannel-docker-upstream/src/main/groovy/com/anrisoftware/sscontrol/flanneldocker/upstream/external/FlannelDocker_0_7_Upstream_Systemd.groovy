@@ -128,7 +128,7 @@ chmod o-rx '$certsdir'
                 resource: servicesTemplate,
                 name: 'flannelDockerConfig',
                 privileged: true,
-                dest: "$dockerdir/flannel.conf",
+                dest: "$dockerdir/10_flannel.conf",
                 vars: [:],
             ],
             [
