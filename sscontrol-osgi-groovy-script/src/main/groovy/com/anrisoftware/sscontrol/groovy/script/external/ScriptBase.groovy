@@ -241,7 +241,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Shell command.
      */
     Shell shell(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'shell')
         shell.create(a, a.target, this, threads, log)
     }
 
@@ -256,7 +256,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Fetch command.
      */
     Fetch fetch(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'fetch')
         fetch.create(a, a.target, this, threads, log)
     }
 
@@ -273,7 +273,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Copy command.
      */
     Copy copy(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'copy')
         if (archiveIgnoreKey) {
             a.sig = null
             a.server = null
@@ -295,7 +295,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Replace command.
      */
     Replace replace(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'replace')
         replace.create(a, a.target, this, threads, log)
     }
 
@@ -327,7 +327,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Facts command.
      */
     Facts facts(Map args) {
-        def a = setupArgs(args)
+        def a = setupArgs(args, 'facts')
         facts.create(a, a.target, this, threads, log)
     }
 
@@ -336,6 +336,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     def reloadSystemd() {
         shell privileged: true, "systemctl daemon-reload" call()
+    }
+
+    /**
+     * Stop the specified service.
+     */
+    def stopSystemdService(String service) {
+        stopSystemdService([service])
     }
 
     /**
@@ -349,6 +356,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Start the specified service.
+     */
+    def startSystemdService(String service) {
+        startSystemdService([service])
+    }
+
+    /**
      * Start the specified services.
      */
     def startSystemdService(List services) {
@@ -359,6 +373,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Start and enable the specified service.
+     */
+    def startEnableSystemdService(String service) {
+        startEnableSystemdService([service])
+    }
+
+    /**
      * Start and enable the specified services.
      */
     def startEnableSystemdService(List services) {
@@ -366,6 +387,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         services.each {
             shell privileged: true, "systemctl start $it && systemctl status $it && systemctl enable $it" call()
         }
+    }
+
+    /**
+     * Restart and enable the specified service.
+     */
+    def restartEnableSystemdService(String service) {
+        restartEnableSystemdService([service])
     }
 
     /**
@@ -410,7 +438,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         File file = createTmpFile()
         IOUtils.copy src.openStream(), new FileOutputStream(file)
         assertThat "resource>0 for $args", file.size(), greaterThan(0l)
-        copy privileged: true, src: file, dest: args.dest
+        copy privileged: args.privileged, src: file, dest: args.dest
     }
 
     /**

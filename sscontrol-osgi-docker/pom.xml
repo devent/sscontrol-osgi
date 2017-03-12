@@ -82,8 +82,10 @@
             <type>bundle</type>
         </dependency>
         <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-utils-tls</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
         </dependency>
     </dependencies>
 

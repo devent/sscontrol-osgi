@@ -1,0 +1,4 @@
+/var/lib/robobee/tmp/10_mirror.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/10_mirror.conf
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/docker/certs.d/localhost:5000/ca.crt
+/tmp/junit/junit/etc/default/grub /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/default/grub

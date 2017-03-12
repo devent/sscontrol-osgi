@@ -25,6 +25,7 @@ import org.junit.Test
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.docker.external.Docker
+import com.anrisoftware.sscontrol.docker.external.Mirror
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
@@ -32,6 +33,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -91,6 +93,52 @@ service "docker" with {
         doTest test
     }
 
+    @Test
+    void "registry_mirror"() {
+        def test = [
+            name: 'registry_mirror',
+            input: """
+service "docker" with {
+    registry mirror: 'localhost:5000'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('docker').size() == 1
+                Docker s = services.getServices('docker')[0]
+                assert s.registry.mirrorHosts.size() == 1
+                Mirror m = s.registry.mirrorHosts[0]
+                assert m.host.toString() == 'localhost:5000'
+                assert m.tls.ca == null
+                assert m.tls.cert == null
+                assert m.tls.key == null
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "registry_mirror_ca"() {
+        def test = [
+            name: 'registry_mirror_ca',
+            input: """
+service "docker" with {
+    registry mirror: 'localhost:5000', ca: 'ca.pem'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('docker').size() == 1
+                Docker s = services.getServices('docker')[0]
+                assert s.registry.mirrorHosts.size() == 1
+                Mirror m = s.registry.mirrorHosts[0]
+                assert m.host.toString() == 'localhost:5000'
+                assert m.tls.ca.toString() == 'file:ca.pem'
+                assert m.tls.cert == null
+                assert m.tls.key == null
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
@@ -112,6 +160,7 @@ service "docker" with {
                 new TargetsModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
+                new TlsModule(),
                 new AbstractModule() {
 
                     @Override

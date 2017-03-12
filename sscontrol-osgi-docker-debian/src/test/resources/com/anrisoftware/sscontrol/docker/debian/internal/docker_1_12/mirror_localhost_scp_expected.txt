@@ -1,0 +1,3 @@
+-C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/systemd/system/docker.service.d/10_mirror.conf user@localhost:/var/lib/robobee/tmp/10_mirror.conf
+-C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no user@localhost:/var/lib/robobee/tmp/grub /tmp/replace.dest
+-C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/replace.dest user@localhost:/var/lib/robobee/tmp/replace.dest

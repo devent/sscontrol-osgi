@@ -43,7 +43,9 @@ service "ssh", group: "nodes", key: "$robobeeKey" with {
     host "robobee@andrea-node-0-local"
 }
 targets['all'].eachWithIndex { host, i ->
-    service "docker", target: host
+    service "docker", target: host with {
+        registry mirror: 'emlenovo.muellerpublic.de', ca: '$muellerpublicCertCaPem'
+    }
 }
 """,
             expected: { Map args ->

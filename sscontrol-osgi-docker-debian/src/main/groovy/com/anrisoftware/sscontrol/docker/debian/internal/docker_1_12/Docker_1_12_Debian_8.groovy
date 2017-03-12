@@ -22,6 +22,7 @@ import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.docker.external.Docker
+import com.anrisoftware.sscontrol.docker.systemd.external.Docker_1_12_Systemd
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
 import groovy.util.logging.Slf4j
@@ -38,7 +39,7 @@ class Docker_1_12_Debian_8 extends ScriptBase {
     @Inject
     Docker_1_12_Debian_8_Properties debianPropertiesProvider
 
-    ScriptBase systemd
+    Docker_1_12_Systemd systemd
 
     @Inject
     def setSystemdFactory(Docker_1_12_Systemd_Debian_8_Factory systemdFactory) {
@@ -52,7 +53,11 @@ class Docker_1_12_Debian_8 extends ScriptBase {
     def run() {
         setupDefaults()
         systemd.stopServices()
-        installPackages()
+        systemd.setupDefaults()
+        systemd.createDirectories()
+        systemd.createRegistryMirrorConfig()
+        systemd.deployMirrorCerts()
+        installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
         updateGrub()
@@ -64,12 +69,6 @@ class Docker_1_12_Debian_8 extends ScriptBase {
         if (service.cgroups.size() == 0) {
             service.cgroups.addAll(defaultCgroups)
         }
-    }
-
-    def installPackages() {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     def updateGrub() {

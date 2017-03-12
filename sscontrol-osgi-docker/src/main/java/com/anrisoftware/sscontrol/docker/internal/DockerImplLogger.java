@@ -15,11 +15,13 @@
  */
 package com.anrisoftware.sscontrol.docker.internal;
 
-import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger._.cgroupAdded;
+import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger.m.cgroupAdded;
+import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger.m.registrySet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.docker.external.Registry;
 
 /**
  * Logging for {@link DockerImpl}.
@@ -30,13 +32,15 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 final class DockerImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
-        cgroupAdded("Cgroup {} added to {}");
+        cgroupAdded("Cgroup {} added to {}"),
+
+        registrySet("Registry {} set for {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 
@@ -55,5 +59,9 @@ final class DockerImplLogger extends AbstractLogger {
 
     void cgroupAdded(DockerImpl docker, String cgroup) {
         debug(cgroupAdded, cgroup, docker);
+    }
+
+    void registrySet(DockerImpl docker, Registry registry) {
+        debug(registrySet, registry, docker);
     }
 }
