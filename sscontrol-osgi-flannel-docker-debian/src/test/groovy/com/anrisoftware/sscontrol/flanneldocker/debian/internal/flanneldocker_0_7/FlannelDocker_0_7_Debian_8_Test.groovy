@@ -79,6 +79,7 @@ service "flannel-docker" with {
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "curl.out", "${args.test.name}_curl_expected.txt"
                 assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/sysconfig'), "flanneld", "${args.test.name}_flanneld_sysconfig_expected.txt"
             },
         ]

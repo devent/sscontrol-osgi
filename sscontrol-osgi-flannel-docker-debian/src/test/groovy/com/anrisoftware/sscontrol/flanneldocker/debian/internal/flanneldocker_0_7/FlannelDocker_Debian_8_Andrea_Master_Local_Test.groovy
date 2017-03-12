@@ -47,7 +47,7 @@ service "ssh", group: "andrea-nodes", key: "$robobeeKey" with {
 targets['all'].eachWithIndex { host, i ->
     service "flannel-docker", target: host with {
         bind 'eth1'
-        etcd "https://\${host.hostAddress}:2379" with {
+        etcd "https://etcd-\${i}.robobee.test:2379" with {
             tls ca: certs["ca"], cert: certs["cert"], key: certs["key"]
         }
     }

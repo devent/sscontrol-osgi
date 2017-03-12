@@ -8,3 +8,6 @@
 /var/lib/robobee/tmp/flanneld /tmp/junit/junit/etc/sysconfig/flanneld
 /tmp/junit/junit/lib/systemd/system/docker.service /var/lib/robobee/tmp
 /var/lib/robobee/tmp/replace.dest /tmp/junit/junit/lib/systemd/system/docker.service
+/tmp/junit/junit/etc/flanneld/ssl/ectd_ca.pem .
+/tmp/junit/junit/etc/flanneld/ssl/ectd_cert.pem .
+/tmp/junit/junit/etc/flanneld/ssl/ectd_key.pem .

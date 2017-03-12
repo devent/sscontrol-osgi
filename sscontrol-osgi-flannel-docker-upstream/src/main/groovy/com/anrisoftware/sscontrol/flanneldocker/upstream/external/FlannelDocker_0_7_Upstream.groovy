@@ -43,10 +43,9 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
     TemplateResource installCmdResource
 
     @Inject
-    def setTemplates(TemplatesFactory factory, NetworkRenderer networkRenderer) {
-        def attr = [renderers: [networkRenderer]]
-        def t = factory.create 'FlannelDocker_0_7_Upstream_Templates', attr
-        this.installCmdResource = t.getResource 'install_cmd'
+    def setTemplates(TemplatesFactory factory) {
+        def t = factory.create 'FlannelDocker_0_7_Upstream_Templates'
+        this.installCmdResource = t.getResource 'install_flannel'
     }
 
     def setupDefaults() {
