@@ -48,6 +48,55 @@ service "docker"
                 assertFileResource Docker_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource Docker_Debian_8_Test, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "mirror_localhost"() {
+        def test = [
+            name: "mirror_localhost",
+            input: """
+service "ssh", host: "localhost"
+service "docker" with {
+    registry mirror: 'localhost'
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource Docker_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource Docker_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource Docker_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource Docker_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource Docker_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource Docker_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "mirror_localhost_ca"() {
+        def test = [
+            name: "mirror_localhost_ca",
+            input: """
+service "ssh", host: "localhost"
+service "docker" with {
+    registry mirror: 'localhost', ca: '$certCaPem'
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource Docker_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource Docker_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource Docker_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
+                assertFileResource Docker_Debian_8_Test, new File(dir, '/etc/docker/certs.d/localhost:5000'), "ca.crt", "cert_ca.txt"
             },
         ]
         doTest test

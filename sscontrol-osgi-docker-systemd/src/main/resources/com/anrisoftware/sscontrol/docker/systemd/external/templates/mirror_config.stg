@@ -1,0 +1,9 @@
+mirrorService(parent, vars) ::= <<
+[Service]
+Environment="DOCKER_OPTS=$DOCKER_OPTS <parent.service.registry.mirrorHosts:mirrorHosts(parent, vars);separator=" ">"
+
+>>
+
+mirrorHosts(host, parent, vars) ::= <%
+--registry-mirror=<host.host>
+%>

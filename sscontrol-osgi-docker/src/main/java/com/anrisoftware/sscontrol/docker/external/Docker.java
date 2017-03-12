@@ -29,4 +29,5 @@ public interface Docker extends HostService {
 
     List<String> getCgroups();
 
+    Registry getRegistry();
 }

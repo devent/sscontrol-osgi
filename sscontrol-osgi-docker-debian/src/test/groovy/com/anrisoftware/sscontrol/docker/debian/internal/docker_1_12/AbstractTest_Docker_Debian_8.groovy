@@ -45,6 +45,7 @@ import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -56,6 +57,10 @@ import com.google.inject.AbstractModule
  * @version 1.0
  */
 abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
+
+    static final URL certCaPem = AbstractTest_Docker_Debian_8.class.getResource('cert_ca.txt')
+
+    static final URL muellerpublicCertCaPem = AbstractTest_Docker_Debian_8.class.getResource('muellerpublic_de_ca_cert.pem')
 
     @Inject
     SshImplFactory sshFactory
@@ -131,6 +136,7 @@ abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
             new TokensTemplateModule(),
             new ResourcesModule(),
             new TemplateResModule(),
+            new TlsModule(),
             new AbstractModule() {
 
                 @Override

@@ -82,16 +82,19 @@ chmod o-rx '$certsdir'
                 name: "ca",
                 src: tls.ca,
                 dest: "$certsdir/$tls.caName",
+                privileged: true
             ],
             [
                 name: "cert",
                 src: tls.cert,
                 dest: "$certsdir/$tls.certName",
+                privileged: true
             ],
             [
                 name: "key",
                 src: tls.key,
                 dest: "$certsdir/$tls.keyName",
+                privileged: true
             ],
         ].each {
             if (it.src) {

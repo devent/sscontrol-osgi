@@ -29,6 +29,8 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.docker.external.Docker;
 import com.anrisoftware.sscontrol.docker.external.DockerService;
+import com.anrisoftware.sscontrol.docker.external.Registry;
+import com.anrisoftware.sscontrol.docker.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -61,13 +63,20 @@ public class DockerImpl implements Docker {
 
     private final List<String> cgroups;
 
+    private final RegistryImplFactory registryFactory;
+
+    private Registry registry;
+
     @Inject
     DockerImpl(DockerImplLogger log, HostPropertiesService propertiesService,
+            RegistryImplFactory registryFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.cgroups = new ArrayList<>();
+        this.registryFactory = registryFactory;
+        this.registry = registryFactory.create();
         parseArgs(args);
     }
 
@@ -114,6 +123,17 @@ public class DockerImpl implements Docker {
         });
     }
 
+    /**
+     * <pre>
+     * registry mirror: 'host'
+     * </pre>
+     */
+    public Registry registry(Map<String, Object> args) {
+        this.registry = registryFactory.create(args);
+        log.registrySet(this, registry);
+        return registry;
+    }
+
     @Override
     public SshHost getTarget() {
         return getTargets().get(0);
@@ -137,6 +157,11 @@ public class DockerImpl implements Docker {
     @Override
     public String getName() {
         return "docker";
+    }
+
+    @Override
+    public Registry getRegistry() {
+        return registry;
     }
 
     @Override

@@ -15,7 +15,11 @@
  */
 package com.anrisoftware.sscontrol.docker.internal;
 
+import com.anrisoftware.sscontrol.docker.external.Mirror;
+import com.anrisoftware.sscontrol.docker.external.Registry;
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory;
+import com.anrisoftware.sscontrol.docker.internal.MirrorImpl.MirrorImplFactory;
+import com.anrisoftware.sscontrol.docker.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,5 +37,11 @@ public class DockerModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, DockerImpl.class)
                 .build(DockerImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Registry.class, RegistryImpl.class)
+                .build(RegistryImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Mirror.class, MirrorImpl.class)
+                .build(MirrorImplFactory.class));
     }
 }

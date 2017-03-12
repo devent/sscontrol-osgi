@@ -151,31 +151,37 @@ chmod o-rx '$certsdir'
                 name: 'service.tls.ca',
                 src: service.tls.ca,
                 dest: "$certsdir/$service.tls.caName",
+                privileged: true
             ],
             [
                 name: 'service.tls.cert',
                 src: service.tls.cert,
                 dest: "$certsdir/$service.tls.certName",
+                privileged: true
             ],
             [
                 name: 'service.tls.key',
                 src: service.tls.key,
                 dest: "$certsdir/$service.tls.keyName",
+                privileged: true
             ],
             [
                 name: 'service.kubelet.tls.ca',
                 src: service.kubelet.tls.ca,
                 dest: "$certsdir/$service.kubelet.tls.caName",
+                privileged: true
             ],
             [
                 name: 'service.kubelet.tls.cert',
                 src: service.kubelet.tls.cert,
                 dest: "$certsdir/$service.kubelet.tls.certName",
+                privileged: true
             ],
             [
                 name: 'service.kubelet.tls.key',
                 src: service.kubelet.tls.key,
                 dest: "$certsdir/$service.kubelet.tls.keyName",
+                privileged: true
             ],
         ].each {
             if (it.src) {
@@ -198,16 +204,19 @@ chmod o-rx '$certsdir'
                     name: 'tls.ca',
                     src: tls.ca,
                     dest: "$certsdir/$tls.caName",
+                    privileged: true
                 ],
                 [
                     name: 'tls.cert',
                     src: tls.cert,
                     dest: "$certsdir/$tls.certName",
+                    privileged: true
                 ],
                 [
                     name: 'tls.key',
                     src: tls.key,
                     dest: "$certsdir/$tls.keyName",
+                    privileged: true
                 ],
             ].each {
                 if (it.src) {
@@ -222,16 +231,19 @@ chmod o-rx '$certsdir'
                     name: 'etcdTls.ca',
                     src: etcdTls.ca,
                     dest: "$certsdir/$etcdTls.caName",
+                    privileged: true
                 ],
                 [
                     name: 'etcdTls.cert',
                     src: etcdTls.cert,
                     dest: "$certsdir/$etcdTls.certName",
+                    privileged: true
                 ],
                 [
                     name: 'etcdTls.key',
                     src: etcdTls.key,
                     dest: "$certsdir/$etcdTls.keyName",
+                    privileged: true
                 ],
             ].each {
                 if (it.src) {

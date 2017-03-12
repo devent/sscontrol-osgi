@@ -1,0 +1,2 @@
+[Service]
+Environment="DOCKER_OPTS=$DOCKER_OPTS --registry-mirror=https://localhost:5000"
