@@ -39,9 +39,12 @@ abstract class Docker_1_12_Systemd extends ScriptBase {
 
     TemplateResource mirrorTemplate
 
+    TemplateResource dockerdTemplate
+
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('Docker_1_12_Systemd_Templates')
+        this.dockerdTemplate = templates.getResource('dockerd_config')
         this.mirrorTemplate = templates.getResource('mirror_config')
     }
 
@@ -66,6 +69,18 @@ abstract class Docker_1_12_Systemd extends ScriptBase {
         shell privileged: true, """
 mkdir -p '$dropin'
 """ call()
+    }
+
+    def createDockerdConfig() {
+        Docker service = service
+        log.info 'Create dockerd options drop-in.'
+        def dropin = systemdDropinDir
+        template resource: dockerdTemplate,
+        name: 'dockerdConfig',
+        privileged: true,
+        dest: "$dropin/00_dockerd_opts.conf",
+        vars: [:] call()
+        shell privileged: true, "systemctl daemon-reload" call()
     }
 
     def createRegistryMirrorConfig() {

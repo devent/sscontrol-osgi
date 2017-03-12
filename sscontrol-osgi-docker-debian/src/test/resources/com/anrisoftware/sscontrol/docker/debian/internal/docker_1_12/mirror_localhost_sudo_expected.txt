@@ -4,6 +4,9 @@
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
 apt-key add -
 add-apt-repository deb https://apt.dockerproject.org/repo/ debian-jessie main
 /bin/bash -s
