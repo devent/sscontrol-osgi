@@ -40,12 +40,18 @@ abstract class FlannelDocker_0_7_Upstream_Systemd extends ScriptBase {
 
     TemplateResource configsTemplate
 
+    TemplateResource setupCmdResource
+
     @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def attrs = [renderers: [new NumberTrueRenderer()]]
-        def templates = templatesFactory.create('FlannelDocker_0_7_Upstream_Systemd_Templates', attrs)
-        this.servicesTemplate = templates.getResource('flannel_services')
-        this.configsTemplate = templates.getResource('flannel_configs')
+    void loadTemplates(TemplatesFactory templatesFactory, NetworkRenderer networkRenderer) {
+        def attrs = [renderers: [
+                new NumberTrueRenderer(),
+                networkRenderer
+            ]]
+        def t = templatesFactory.create('FlannelDocker_0_7_Upstream_Systemd_Templates', attrs)
+        this.servicesTemplate = t.getResource('flannel_services')
+        this.configsTemplate = t.getResource('flannel_configs')
+        this.setupCmdResource = t.getResource 'setup_flannel'
     }
 
     def createDirectories() {
@@ -153,6 +159,12 @@ chmod o-rx '$certsdir'
             line 's|ExecStart=/usr/bin/dockerd.*|ExecStart=/usr/bin/dockerd -H fd:// $DOCKER_NETWORK_OPTIONS|'
             it
         }.call()
+    }
+
+    def setupFlannel() {
+        log.info 'Setups Flannel-Docker network.'
+        FlannelDocker service = this.service
+        shell resource: setupCmdResource, name: 'setupCmd' call()
     }
 
     File getSystemdSystemDir() {

@@ -1,0 +1,27 @@
+setupCmd(parent, vars) ::= <<
+tmp=$(mktemp -d)
+<copyCerts(parent, vars)>
+curl <curlCerts(parent, vars)> -X PUT -d "value={\"Network\":\"<parent.service.network>\",\"Backend\":{\"Type\":\"<parent.service.backend.type>\"}}" "<parent.service.etcd.address>/v2/keys<parent.service.etcd.prefix>/config"
+rm -rf "$tmp"
+>>
+
+copyCerts(parent, vars) ::= <<
+cd $tmp
+<if(parent.service.etcd&&parent.service.etcd.tls.ca)>
+sudo cp "<parent.certsDir>/<parent.service.etcd.tls.caName>" .
+<endif>
+<if(parent.service.etcd&&parent.service.etcd.tls.cert)>
+sudo cp "<parent.certsDir>/<parent.service.etcd.tls.certName>" .
+<endif>
+<if(parent.service.etcd&&parent.service.etcd.tls.key)>
+sudo cp "<parent.certsDir>/<parent.service.etcd.tls.keyName>" .
+<endif>
+sudo chown $SSH_USER.$SSH_USER -R "$tmp/*"
+chmod o-rwx "$tmp"
+>>
+
+curlCerts(parent, vars) ::= <%
+<if(parent.service.etcd&&parent.service.etcd.tls.ca)> --cacert "$tmp/<parent.service.etcd.tls.caName>"<endif>
+<if(parent.service.etcd&&parent.service.etcd.tls.cert)> --cert "$tmp/<parent.service.etcd.tls.certName>"<endif>
+<if(parent.service.etcd&&parent.service.etcd.tls.key)> --key "$tmp/<parent.service.etcd.tls.keyName>"<endif>
+%>

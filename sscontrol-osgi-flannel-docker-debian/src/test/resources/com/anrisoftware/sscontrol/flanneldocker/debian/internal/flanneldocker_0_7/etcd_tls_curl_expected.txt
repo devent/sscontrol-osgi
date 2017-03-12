@@ -1,0 +1,1 @@
+--cacert /tmp/junit/junit/mktemp -d/ectd_ca.pem --cert /tmp/junit/junit/mktemp -d/ectd_cert.pem --key /tmp/junit/junit/mktemp -d/ectd_key.pem -X PUT -d value={"Network":"10.2.0.0/16","Backend":{"Type":"vxlan"}} https://127.0.0.1:2379/v2/keys/atomic.io/network/config
