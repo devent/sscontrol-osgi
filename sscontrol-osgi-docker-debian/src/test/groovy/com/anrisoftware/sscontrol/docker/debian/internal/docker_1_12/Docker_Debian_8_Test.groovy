@@ -49,6 +49,7 @@ service "docker"
                 assertFileResource Docker_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource Docker_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource Docker_Debian_8_Test, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
+                assertFileResource Docker_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "00_dockerd_opts.conf", "${args.test.name}_dockerd_opts_conf_expected.txt"
             },
         ]
         doTest test

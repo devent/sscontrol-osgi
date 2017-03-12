@@ -55,6 +55,7 @@ class Docker_1_12_Debian_8 extends ScriptBase {
         systemd.stopServices()
         systemd.setupDefaults()
         systemd.createDirectories()
+        systemd.createDockerdConfig()
         systemd.createRegistryMirrorConfig()
         systemd.deployMirrorCerts()
         installAptPackages()
