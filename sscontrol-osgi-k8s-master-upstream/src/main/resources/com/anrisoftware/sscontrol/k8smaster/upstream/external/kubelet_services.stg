@@ -1,0 +1,47 @@
+kubeletService(parent, vars) ::= <<
+# Auto-Generated from Robobee
+# Authors
+# https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
+#
+# <parent.systemdSystemDir>/kubelet.service
+[Service]
+EnvironmentFile=/etc/sysconfig/kubelet
+Environment=KUBELET_VERSION=${K8S_VER}
+Environment=KUBELET_ACI=${HYPERKUBE_IMAGE_REPO}
+Environment="RKT_OPTS=--uuid-file-save=${KUBELET_UUID_FILE} \
+  --volume dns,kind=host,source=/etc/resolv.conf \
+  --mount volume=dns,target=/etc/resolv.conf \
+  --volume rkt,kind=host,source=/opt/bin/host-rkt \
+  --mount volume=rkt,target=/usr/bin/rkt \
+  --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
+  --mount volume=var-lib-rkt,target=/var/lib/rkt \
+  --volume stage,kind=host,source=/tmp \
+  --mount volume=stage,target=/tmp \
+  --volume var-log,kind=host,source=/var/log \
+  --mount volume=var-log,target=/var/log \
+  ${CALICO_OPTS}"
+ExecStartPre=/usr/bin/mkdir -p <parent.manifestsDir>
+ExecStartPre=/usr/bin/mkdir -p <parent.cniBinDir>
+ExecStartPre=/usr/bin/mkdir -p <parent.containersLogDir>
+ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
+ExecStart=/usr/lib/coreos/kubelet-wrapper \
+  --api-servers=${K8S_APISERVERS} \
+  --register-schedulable=false \
+  --cni-conf-dir=<parent.cniNetDir> \
+  --network-plugin=cni \
+  --container-runtime=${CONTAINER_RUNTIME} \
+  --rkt-path=/usr/bin/rkt \
+  --rkt-stage1-image=coreos.com/rkt/stage1-coreos \
+  --allow-privileged=true \
+  --pod-manifest-path=<parent.manifestsDir> \
+  --hostname-override=${ADVERTISE_IP} \
+  --cluster_dns=${DNS_SERVICE_IP} \
+  --cluster_domain=cluster.local
+ExecStop=-/usr/bin/rkt stop --uuid-file=${KUBELET_UUID_FILE}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+>>

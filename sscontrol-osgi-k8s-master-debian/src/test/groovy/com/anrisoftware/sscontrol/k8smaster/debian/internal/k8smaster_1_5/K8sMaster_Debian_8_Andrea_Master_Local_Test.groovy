@@ -77,8 +77,8 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
         ],
         etcd: [
             ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
-            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
-            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
+            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
+            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
         ]
     ]
 

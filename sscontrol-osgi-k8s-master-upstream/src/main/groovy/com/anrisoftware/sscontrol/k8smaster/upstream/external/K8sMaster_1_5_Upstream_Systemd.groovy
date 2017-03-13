@@ -37,7 +37,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
-    TemplateResource servicesTemplate
+    TemplateResource kubeletTemplate
 
     TemplateResource configsTemplate
 
@@ -47,7 +47,7 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
-        this.servicesTemplate = templates.getResource('k8s_master_services')
+        this.kubeletTemplate = templates.getResource('kubelet_services')
         this.configsTemplate = templates.getResource('k8s_master_configs')
     }
 
@@ -98,6 +98,18 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (!service.kubelet.tls.keyName) {
             service.kubelet.tls.keyName = defaultKubeletTlsKeyName
         }
+        service.authentications.findAll { it.tls  } each {
+            Tls tls = it.tls
+            if (!tls.caName) {
+                tls.caName = defaultAuthenticationTlsCaName[it.type]
+            }
+            if (!tls.certName) {
+                tls.certName = defaultAuthenticationTlsCertName[it.type]
+            }
+            if (!tls.keyName) {
+                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
+            }
+        }
         service.plugins.findAll {it.value.hasProperty('port')} each {
             def name = it.value.name
             if (!it.value.port) {
@@ -126,167 +138,45 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     def createDirectories() {
         log.info 'Create k8s-master directories.'
-        def dir = systemdSystemDir
-        def tmpdir = systemdTmpfilesDir
-        def rundir = runDir
-        def certsdir = certsDir
+        def dirs = [
+            configDir,
+            certsDir,
+            cniNetDir,
+            systemdSystemDir
+        ]
         shell privileged: true, """
-mkdir -p '$dir'
-mkdir -p '$tmpdir'
-mkdir -p '$rundir'
-useradd -r $user
-chown $user '$rundir'
-mkdir -p '$certsdir'
-chown ${user}.root '$certsdir'
-chmod o-rx '$certsdir'
+mkdir -p ${dirs.join(' ')}
+chmod o-rx '$certsDir'
 """ call()
     }
 
-    def uploadCertificates() {
+    def uploadK8sCertificates() {
         log.info 'Uploads k8s-master certificates.'
         def certsdir = certsDir
         K8sMaster service = service
-        [
-            [
-                name: 'service.tls.ca',
-                src: service.tls.ca,
-                dest: "$certsdir/$service.tls.caName",
-                privileged: true
-            ],
-            [
-                name: 'service.tls.cert',
-                src: service.tls.cert,
-                dest: "$certsdir/$service.tls.certName",
-                privileged: true
-            ],
-            [
-                name: 'service.tls.key',
-                src: service.tls.key,
-                dest: "$certsdir/$service.tls.keyName",
-                privileged: true
-            ],
-            [
-                name: 'service.kubelet.tls.ca',
-                src: service.kubelet.tls.ca,
-                dest: "$certsdir/$service.kubelet.tls.caName",
-                privileged: true
-            ],
-            [
-                name: 'service.kubelet.tls.cert',
-                src: service.kubelet.tls.cert,
-                dest: "$certsdir/$service.kubelet.tls.certName",
-                privileged: true
-            ],
-            [
-                name: 'service.kubelet.tls.key',
-                src: service.kubelet.tls.key,
-                dest: "$certsdir/$service.kubelet.tls.keyName",
-                privileged: true
-            ],
-        ].each {
-            if (it.src) {
-                copyResource it call()
-            }
-        }
+        uploadTlsCerts tls: service.tls, name: 'k8s-tls'
+        uploadTlsCerts tls: service.tls, name: 'kubelet-tls'
+    }
+
+    def uploadAuthenticationsCertificates() {
+        K8sMaster service = service
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
-            if (!tls.caName) {
-                tls.caName = defaultAuthenticationTlsCaName[it.type]
-            }
-            if (!tls.certName) {
-                tls.certName = defaultAuthenticationTlsCertName[it.type]
-            }
-            if (!tls.keyName) {
-                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
-            }
-            [
-                [
-                    name: 'tls.ca',
-                    src: tls.ca,
-                    dest: "$certsdir/$tls.caName",
-                    privileged: true
-                ],
-                [
-                    name: 'tls.cert',
-                    src: tls.cert,
-                    dest: "$certsdir/$tls.certName",
-                    privileged: true
-                ],
-                [
-                    name: 'tls.key',
-                    src: tls.key,
-                    dest: "$certsdir/$tls.keyName",
-                    privileged: true
-                ],
-            ].each {
-                if (it.src) {
-                    copyResource it call()
-                }
-            }
-        }
-        Tls etcdTls = etcdTls
-        if (etcdTls) {
-            [
-                [
-                    name: 'etcdTls.ca',
-                    src: etcdTls.ca,
-                    dest: "$certsdir/$etcdTls.caName",
-                    privileged: true
-                ],
-                [
-                    name: 'etcdTls.cert',
-                    src: etcdTls.cert,
-                    dest: "$certsdir/$etcdTls.certName",
-                    privileged: true
-                ],
-                [
-                    name: 'etcdTls.key',
-                    src: etcdTls.key,
-                    dest: "$certsdir/$etcdTls.keyName",
-                    privileged: true
-                ],
-            ].each {
-                if (it.src) {
-                    copyResource it call()
-                }
-            }
+            uploadTlsCerts tls: tls, name: it.toString()
         }
     }
 
-    def createServices() {
-        log.info 'Create k8s-master services.'
-        def dir = systemdSystemDir
-        def tmpdir = systemdTmpfilesDir
-        [
-            [
-                resource: servicesTemplate,
-                name: 'kubeApiserverService',
-                privileged: true,
-                dest: "$dir/kube-apiserver.service",
-                vars: [:],
-            ],
-            [
-                resource: servicesTemplate,
-                name: 'kubeControllerManagerService',
-                privileged: true,
-                dest: "$dir/kube-controller-manager.service",
-                vars: [:],
-            ],
-            [
-                resource: servicesTemplate,
-                name: 'kubeSchedulerService',
-                privileged: true,
-                dest: "$dir/kube-scheduler.service",
-                vars: [:],
-            ],
-            [
-                resource: servicesTemplate,
-                name: 'servicesKubernetesConf',
-                privileged: true,
-                dest: "$tmpdir/kubernetes.conf",
-                vars: [:],
-            ],
-        ].each { template it call() }
+    def uploadEtcdCertificates() {
+        uploadTlsCerts tls: etcdTls
+    }
+
+    def createKubeletService() {
+        log.info 'Create kubelet service.'
+        template resource: kubeletTemplate,
+        name: 'kubeletService',
+        privileged: true,
+        dest: "$systemdSystemDir/kubelet.service",
+        vars: [:] call()
         shell privileged: true, "systemctl daemon-reload" call()
     }
 
@@ -330,24 +220,24 @@ chmod o-rx '$certsdir'
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
 
-    File getSystemdTmpfilesDir() {
-        properties.getFileProperty "systemd_tmpfiles_dir", base, defaultProperties
-    }
-
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
-    }
-
     File getRunDir() {
         properties.getFileProperty "run_dir", base, defaultProperties
     }
 
-    File getCertsDir() {
-        properties.getFileProperty "certs_dir", base, defaultProperties
+    File getManifestsDir() {
+        properties.getFileProperty "manifests_dir", base, defaultProperties
     }
 
-    String getUser() {
-        properties.getProperty "user", defaultProperties
+    File getCniNetDir() {
+        properties.getFileProperty "cni_net_dir", base, defaultProperties
+    }
+
+    File getCniBinDir() {
+        properties.getFileProperty "cni_bin_dir", base, defaultProperties
+    }
+
+    File getContainersLogDir() {
+        properties.getFileProperty "containers_log_dir", base, defaultProperties
     }
 
     def getDefaultLogLevel() {

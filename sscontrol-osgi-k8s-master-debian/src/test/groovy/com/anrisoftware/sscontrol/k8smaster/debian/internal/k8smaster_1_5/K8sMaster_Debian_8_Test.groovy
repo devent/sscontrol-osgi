@@ -32,7 +32,7 @@ import groovy.util.logging.Slf4j
 class K8sMaster_Debian_8_Test extends AbstractTest_K8sMaster_Debian_8 {
 
     @Test
-    void "tls etcd target"() {
+    void "tls_etcd_target"() {
         def test = [
             name: "tls_etcd_target",
             input: """
@@ -53,17 +53,9 @@ service "k8s-master", name: "andrea-cluster" with {
                 File gen = args.test.generatedDir
                 assertFileResource K8sMaster_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                //assertFileResource K8sMaster_1_5_Debian_8_Test, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-apiserver.service", "${args.test.name}_kube_apiserver_service_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-controller-manager.service", "${args.test.name}_kube_controller_manager_service_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-scheduler.service", "${args.test.name}_kube_scheduler_service_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/tmpfiles.d'), "kubernetes.conf", "${args.test.name}_kubernetes_conf_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "config", "${args.test.name}_kubernetes_config_config_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "apiserver", "${args.test.name}_kubernetes_apiserver_config_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "controller-manager", "${args.test.name}_kubernetes_controller_manager_config_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "scheduler", "${args.test.name}_kubernetes_scheduler_config_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
             },
         ]
         doTest test
