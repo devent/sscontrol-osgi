@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.external;
 
+import java.util.List;
+
 /**
  * K8s cluster.
  *
@@ -23,5 +25,13 @@ package com.anrisoftware.sscontrol.k8smaster.external;
  */
 public interface Cluster {
 
-    String getRange();
+    String getPodRange();
+
+    String getServiceRange();
+
+    String getAdvertiseAddress();
+
+    String getDnsAddress();
+
+    List<String> getApiServers();
 }

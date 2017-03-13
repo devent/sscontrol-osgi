@@ -61,19 +61,24 @@ class K8sMasterScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "cluster range"() {
+    void "cluster args"() {
         def test = [
-            name: 'cluster range',
+            name: 'cluster args',
             input: """
 service "k8s-master" with {
-    cluster range: "10.254.0.0/16"
+    cluster advertise: '192.168.0.1', hostname: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', dns: '10.3.0.10', api: 'http://localhost:8080'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
-                assert s.cluster.range == '10.254.0.0/16'
+                assert s.cluster.advertiseAddress == '192.168.0.1'
+                assert s.cluster.serviceRange == '10.2.0.0/24'
+                assert s.cluster.podRange == '10.3.0.0/16'
+                assert s.cluster.dnsAddress == '10.3.0.10'
+                assert s.cluster.apiServers.size() == 1
+                assert s.cluster.apiServers[0] == 'http://localhost:8080'
             },
         ]
         doTest test
@@ -85,7 +90,7 @@ service "k8s-master" with {
             name: 'cluster range',
             input: """
 service "k8s-master" with {
-    bind insecure: "127.0.0.1", secure: "0.0.0.0", port: 8080
+    bind insecure: "127.0.0.1", secure: "0.0.0.0", insecurePort: 8080, , port: 443
 }
 """,
             expected: { HostServices services ->
@@ -93,7 +98,8 @@ service "k8s-master" with {
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.binding.insecureAddress == "127.0.0.1"
                 assert s.binding.secureAddress == "0.0.0.0"
-                assert s.binding.port == 8080
+                assert s.binding.insecurePort == 8080
+                assert s.binding.port == 443
             },
         ]
         doTest test
@@ -130,7 +136,7 @@ service "k8s-master" with {
                 assert services.getServices('k8s-master').size() == 1
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
-                assert s.cluster.range == null
+                assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
                 assert s.plugins['etcd'].target == 'infra-0'
@@ -152,7 +158,7 @@ service "k8s-master" with {
                 assert services.getServices('k8s-master').size() == 1
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
-                assert s.cluster.range == null
+                assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
                 assert s.plugins['etcd'].address == 'http://etcd-0:2379'
@@ -186,7 +192,7 @@ token,user,uid,"group1,group2,group3"
                 assert services.getServices('k8s-master').size() == 1
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
-                assert s.cluster.range == null
+                assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 0
                 assert s.tls.ca.toString() =~ /.*ca\.pem/
                 assert s.tls.cert.toString() =~ /.*cert\.pem/
@@ -262,7 +268,7 @@ service "k8s-master" with {
                 assert services.getServices('k8s-master').size() == 1
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
-                assert s.cluster.range == null
+                assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 def etcd = s.plugins['etcd']
                 assert etcd.name == 'etcd'
