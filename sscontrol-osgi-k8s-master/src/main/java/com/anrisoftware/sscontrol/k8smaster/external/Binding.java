@@ -27,5 +27,7 @@ public interface Binding {
 
     String getSecureAddress();
 
+    Integer getInsecurePort();
+
     Integer getPort();
 }

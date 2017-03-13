@@ -34,6 +34,8 @@ public interface K8sMaster extends HostService {
 
     Cluster getCluster();
 
+    String getContainerRuntime();
+
     Map<String, Plugin> getPlugins();
 
     Boolean isAllowPrivileged();

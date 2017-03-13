@@ -46,7 +46,7 @@ public class ClusterImpl implements Cluster {
 
     }
 
-    private String range;
+    private String serviceRange;
 
     @AssistedInject
     ClusterImpl() {
@@ -59,23 +59,23 @@ public class ClusterImpl implements Cluster {
     }
 
     public void setRange(String range) {
-        this.range = range;
+        this.serviceRange = range;
     }
 
     @Override
-    public String getRange() {
-        return range;
+    public String getServiceRange() {
+        return serviceRange;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("range", getRange()).toString();
+        return new ToStringBuilder(this).append("range", getServiceRange()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("range");
         if (v != null) {
-            this.range = v.toString();
+            this.serviceRange = v.toString();
         }
     }
 }
