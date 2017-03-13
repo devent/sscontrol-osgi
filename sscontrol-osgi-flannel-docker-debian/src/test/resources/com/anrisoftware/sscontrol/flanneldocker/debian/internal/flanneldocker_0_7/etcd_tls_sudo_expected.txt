@@ -35,6 +35,8 @@ chmod -w /tmp/junit/junit/usr/libexec/flannel/mk-docker-opts.sh
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
+/bin/bash -s
 cp /tmp/junit/junit/etc/flanneld/ssl/ectd_ca.pem .
 cp /tmp/junit/junit/etc/flanneld/ssl/ectd_cert.pem .
 cp /tmp/junit/junit/etc/flanneld/ssl/ectd_key.pem .
