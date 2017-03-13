@@ -442,6 +442,46 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Uploads the TLS certificates.
+     * <ul>
+     * <li>tls: the TLS;
+     * <li>dest: the destination directory;
+     * <li>name: the name of the TLS;
+     * </ul>
+     */
+    def uploadTlsCerts(Map args) {
+        def tls = args.tls
+        def dest = args.certsDir ? args.dest : certsDir
+        def name = args.name
+        if (tls) {
+            [
+                [
+                    name: "${name}.ca",
+                    src: tls.ca,
+                    dest: "$dest/$tls.caName",
+                    privileged: true
+                ],
+                [
+                    name: '${name}.cert',
+                    src: tls.cert,
+                    dest: "$dest/$tls.certName",
+                    privileged: true
+                ],
+                [
+                    name: '${name}.key',
+                    src: tls.key,
+                    dest: "$dest/$tls.keyName",
+                    privileged: true
+                ],
+            ].each {
+                if (it.src) {
+                    copyResource it call()
+                }
+            }
+        }
+    }
+
+    /**
      * Returns the system name, for
      * example {@code "debian"}
      *
@@ -571,6 +611,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     File getConfigDir() {
         def dir = properties.getFileProperty "config_dir", base, defaultProperties
+    }
+
+    /**
+     * Returns the configuration directory of the certificates for the service.
+     *
+     * <ul>
+     * <li>profile property {@code certs_dir}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getCertsDir() {
+        properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     /**

@@ -29,19 +29,11 @@ import groovy.util.logging.Slf4j
 abstract class K8sMaster_1_5_Systemd extends ScriptBase {
 
     def stopServices() {
-        stopSystemdService([
-            'kube-apiserver',
-            'kube-controller-manager',
-            'kube-scheduler'
-        ])
+        stopSystemdService 'kubelet'
     }
 
     def startServices() {
-        startEnableSystemdService([
-            'kube-apiserver',
-            'kube-controller-manager',
-            'kube-scheduler'
-        ])
+        startEnableSystemdService 'kubelet'
     }
 
     @Override

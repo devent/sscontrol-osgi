@@ -1,0 +1,14 @@
+kubeConfig(parent, vars) ::= <<
+# Auto-Generated from Robobee
+# Authors
+# https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
+#
+# /etc/sysconfig/kubelet
+K8S_VER=<parent.kubernetesVersion>
+HYPERKUBE_IMAGE_REPO=<parent.hypercubeImageRepo>
+KUBELET_UUID_FILE=<parent.kubeletUuidFile>
+K8S_APISERVERS="<parent.service.cluster.apiServers;separator=",">"
+CONTAINER_RUNTIME=<parent.service.containerRuntime>
+ADVERTISE_IP=<parent.service.cluster.advertiseAddress>
+DNS_SERVICE_IP=<parent.service.cluster.dnsAddress>
+>>
