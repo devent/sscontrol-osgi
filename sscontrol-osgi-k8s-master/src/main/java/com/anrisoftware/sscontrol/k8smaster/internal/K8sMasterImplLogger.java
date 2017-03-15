@@ -15,14 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.admissionsAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.allowPrivilegedSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authenticationAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.authorizationAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.bindingSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.clusterSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.pluginAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger._.tlsSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.admissionsAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.allowPrivilegedSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.authenticationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.authorizationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.clusterSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.pluginAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
 
@@ -43,7 +43,7 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 @Singleton
 final class K8sMasterImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         pluginAdded("Plugin {} added to {}"),
 
@@ -63,7 +63,7 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

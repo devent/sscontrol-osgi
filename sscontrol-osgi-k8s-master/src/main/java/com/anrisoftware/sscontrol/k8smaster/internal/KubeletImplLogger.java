@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.bindingSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.preferredTypesAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger._.tlsSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.preferredTypesAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
 
@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 @Singleton
 final class KubeletImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         tlsSet("TLS {} set for {}"),
 
@@ -44,7 +44,7 @@ final class KubeletImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

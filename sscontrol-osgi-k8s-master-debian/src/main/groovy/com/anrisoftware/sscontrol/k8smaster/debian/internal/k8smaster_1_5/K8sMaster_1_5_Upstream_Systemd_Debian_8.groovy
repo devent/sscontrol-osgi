@@ -39,13 +39,18 @@ class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Sys
 
     @Override
     Object run() {
-        setupDefaults()
+        setupMiscDefaults()
+        setupClusterDefaults()
+        setupBindDefaults()
+        setupKubeletDefaults()
+        setupAuthenticationsDefaults()
+        setupPluginsDefaults()
         createDirectories()
         uploadK8sCertificates()
         uploadAuthenticationsCertificates()
         uploadEtcdCertificates()
         createKubeletService()
-        //createConfig()
+        createKubeletConfig()
     }
 
     @Override

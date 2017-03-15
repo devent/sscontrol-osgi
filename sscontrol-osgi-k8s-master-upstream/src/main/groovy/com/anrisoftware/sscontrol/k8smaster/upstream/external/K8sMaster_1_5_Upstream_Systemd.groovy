@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
@@ -37,9 +38,9 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
-    TemplateResource kubeletTemplate
+    TemplateResource kubeletServiceTemplate
 
-    TemplateResource configsTemplate
+    TemplateResource kubeletConfigTemplate
 
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
@@ -47,38 +48,24 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
-        this.kubeletTemplate = templates.getResource('kubelet_services')
-        this.configsTemplate = templates.getResource('k8s_master_configs')
+        this.kubeletServiceTemplate = templates.getResource('kubelet_service')
+        this.kubeletConfigTemplate = templates.getResource('kubelet_config')
     }
 
-    def setupDefaults() {
+    def setupMiscDefaults() {
+        log.debug 'Setup misc defaults for {}', service
         K8sMaster service = service
         if (!service.debugLogging.modules['debug']) {
             service.debug "debug", level: defaultLogLevel
         }
+        if (!service.containerRuntime) {
+            service.containerRuntime = defaultContainerRuntime
+        }
         if (!service.allowPrivileged) {
             service.privileged defaultAllowPrivileged
         }
-        if (!service.binding.insecureAddress) {
-            service.binding.insecureAddress = defaultInsecureAddress
-        }
-        if (!service.binding.secureAddress) {
-            service.binding.secureAddress = defaultSecureAddress
-        }
-        if (!service.binding.port) {
-            service.binding.port = defaultPort
-        }
-        if (!service.kubelet.binding.port) {
-            service.kubelet.binding.port = defaultKubeletPort
-        }
-        if (!service.cluster.range) {
-            service.cluster.range = defaultClusterRange
-        }
         if (service.admissions.size() == 0) {
             service.admissions.addAll defaultAdmissions
-        }
-        if (service.kubelet.preferredAddressTypes.size() == 0) {
-            service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
         }
         if (!service.tls.caName) {
             service.tls.caName = defaultKubernetesTlsCaName
@@ -89,6 +76,55 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (!service.tls.keyName) {
             service.tls.keyName = defaultKubernetesTlsKeyName
         }
+    }
+
+    def setupClusterDefaults() {
+        log.debug 'Setup cluster defaults for {}', service
+        K8sMaster service = service
+        assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
+        if (!service.cluster.hostnameOverride) {
+            service.cluster.hostnameOverride = service.cluster.advertiseAddress
+        }
+        if (!service.cluster.serviceRange) {
+            service.cluster.serviceRange = defaultServiceNetwork
+        }
+        if (!service.cluster.podRange) {
+            service.cluster.podRange = defaultPodNetwork
+        }
+        if (!service.cluster.dnsAddress) {
+            service.cluster.dnsAddress = defaultDnsServiceAddress
+        }
+        if (service.cluster.apiServers.isEmpty()) {
+            service.cluster.apiServers.addAll defaultApiServers
+        }
+    }
+
+    def setupBindDefaults() {
+        log.debug 'Setup bind defaults for {}', service
+        K8sMaster service = service
+        if (!service.binding.insecureAddress) {
+            service.binding.insecureAddress = defaultInsecureAddress
+        }
+        if (!service.binding.secureAddress) {
+            service.binding.secureAddress = defaultSecureAddress
+        }
+        if (!service.binding.port) {
+            service.binding.port = defaultPort
+        }
+        if (!service.binding.insecurePort) {
+            service.binding.insecurePort = defaultInsecurePort
+        }
+    }
+
+    def setupKubeletDefaults() {
+        log.debug 'Setup kubelet defaults for {}', service
+        K8sMaster service = service
+        if (!service.kubelet.binding.port) {
+            service.kubelet.binding.port = defaultKubeletPort
+        }
+        if (service.kubelet.preferredAddressTypes.size() == 0) {
+            service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
+        }
         if (!service.kubelet.tls.caName) {
             service.kubelet.tls.caName = defaultKubeletTlsCaName
         }
@@ -98,6 +134,11 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (!service.kubelet.tls.keyName) {
             service.kubelet.tls.keyName = defaultKubeletTlsKeyName
         }
+    }
+
+    def setupAuthenticationsDefaults() {
+        log.debug 'Setup authentications defaults for {}', service
+        K8sMaster service = service
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
             if (!tls.caName) {
@@ -110,6 +151,11 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
                 tls.keyName = defaultAuthenticationTlsKeyName[it.type]
             }
         }
+    }
+
+    def setupPluginsDefaults() {
+        log.debug 'Setup plugins defaults for {}', service
+        K8sMaster service = service
         service.plugins.findAll {it.value.hasProperty('port')} each {
             def name = it.value.name
             if (!it.value.port) {
@@ -172,7 +218,7 @@ chmod o-rx '$certsDir'
 
     def createKubeletService() {
         log.info 'Create kubelet service.'
-        template resource: kubeletTemplate,
+        template resource: kubeletServiceTemplate,
         name: 'kubeletService',
         privileged: true,
         dest: "$systemdSystemDir/kubelet.service",
@@ -180,68 +226,49 @@ chmod o-rx '$certsDir'
         shell privileged: true, "systemctl daemon-reload" call()
     }
 
-    def createConfig() {
-        log.info 'Create k8s-master configuration.'
-        def dir = configDir
-        shell privileged: true, "mkdir -p $dir" call()
+    def createKubeletConfig() {
+        log.info 'Create kubelet configuration.'
+        [configDir, sysConfigDir].each {
+            shell privileged: true, "mkdir -p $it" call()
+        }
         [
             [
-                resource: configsTemplate,
-                name: 'kubeConfig',
+                resource: kubeletConfigTemplate,
+                name: 'kubeletConfig',
                 privileged: true,
-                dest: "$configDir/config",
+                dest: "$sysConfigDir/kubelet",
                 vars: [:],
             ],
-            [
-                resource: configsTemplate,
-                name: 'kubeApiserverConfig',
-                privileged: true,
-                dest: "$configDir/apiserver",
-                vars: [:],
-            ],
-            [
-                resource: configsTemplate,
-                name: 'kubeControllerManagerConfig',
-                privileged: true,
-                dest: "$configDir/controller-manager",
-                vars: [:],
-            ],
-            [
-                resource: configsTemplate,
-                name: 'kubeSchedulerConfig',
-                privileged: true,
-                dest: "$configDir/scheduler",
-                vars: [:],
-            ],
+            /*[
+             resource: kubeletConfigTemplate,
+             name: 'kubeApiserverConfig',
+             privileged: true,
+             dest: "$configDir/apiserver",
+             vars: [:],
+             ],
+             [
+             resource: kubeletConfigTemplate,
+             name: 'kubeControllerManagerConfig',
+             privileged: true,
+             dest: "$configDir/controller-manager",
+             vars: [:],
+             ],
+             [
+             resource: kubeletConfigTemplate,
+             name: 'kubeSchedulerConfig',
+             privileged: true,
+             dest: "$configDir/scheduler",
+             vars: [:],
+             ],*/
         ].each { template it call() }
-    }
-
-    File getSystemdSystemDir() {
-        properties.getFileProperty "systemd_system_dir", base, defaultProperties
-    }
-
-    File getRunDir() {
-        properties.getFileProperty "run_dir", base, defaultProperties
-    }
-
-    File getManifestsDir() {
-        properties.getFileProperty "manifests_dir", base, defaultProperties
-    }
-
-    File getCniNetDir() {
-        properties.getFileProperty "cni_net_dir", base, defaultProperties
-    }
-
-    File getCniBinDir() {
-        properties.getFileProperty "cni_bin_dir", base, defaultProperties
-    }
-
-    File getContainersLogDir() {
-        properties.getFileProperty "containers_log_dir", base, defaultProperties
     }
 
     def getDefaultLogLevel() {
         properties.getNumberProperty('default_log_level', defaultProperties).intValue()
+    }
+
+    def getDefaultContainerRuntime() {
+        properties.getProperty 'default_container_runtime', defaultProperties
     }
 
     def getDefaultAllowPrivileged() {
@@ -258,6 +285,30 @@ chmod o-rx '$certsDir'
 
     def getDefaultPort() {
         properties.getNumberProperty 'default_bind_port', defaultProperties
+    }
+
+    def getDefaultInsecurePort() {
+        properties.getNumberProperty 'default_insecure_port', defaultProperties
+    }
+
+    def getDefaultPodNetwork() {
+        properties.getProperty 'default_pod_network', defaultProperties
+    }
+
+    def getDefaultServiceNetwork() {
+        properties.getProperty 'default_service_network', defaultProperties
+    }
+
+    def getDefaultKubernetesApiAddress() {
+        properties.getProperty 'default_kubernetes_api_address', defaultProperties
+    }
+
+    def getDefaultDnsServiceAddress() {
+        properties.getProperty 'default_dns_service_address', defaultProperties
+    }
+
+    List getDefaultApiServers() {
+        properties.getListProperty 'default_api_servers', defaultProperties
     }
 
     def getDefaultKubeletPort() {
@@ -340,8 +391,44 @@ chmod o-rx '$certsDir'
         properties.getProperty "default_plugin_key_name_$name", defaultProperties
     }
 
+    def getKubernetesVersion() {
+        properties.getProperty 'kubernetes_version', defaultProperties
+    }
+
+    def getHypercubeImageRepo() {
+        properties.getProperty 'hypercube_image_repo', defaultProperties
+    }
+
+    File getKubeletUuidFile() {
+        properties.getFileProperty 'kubelet_uuid_file', base, defaultProperties
+    }
+
     Map getPluginsTargets() {
         pluginTargetsMapFactory.create service, scriptsRepository, service.plugins
+    }
+
+    File getSystemdSystemDir() {
+        properties.getFileProperty "systemd_system_dir", base, defaultProperties
+    }
+
+    File getRunDir() {
+        properties.getFileProperty "run_dir", base, defaultProperties
+    }
+
+    File getManifestsDir() {
+        properties.getFileProperty "manifests_dir", base, defaultProperties
+    }
+
+    File getCniNetDir() {
+        properties.getFileProperty "cni_net_dir", base, defaultProperties
+    }
+
+    File getCniBinDir() {
+        properties.getFileProperty "cni_bin_dir", base, defaultProperties
+    }
+
+    File getContainersLogDir() {
+        properties.getFileProperty "containers_log_dir", base, defaultProperties
     }
 
     Tls getEtcdTls() {

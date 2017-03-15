@@ -5,7 +5,7 @@ kubeletService(parent, vars) ::= <<
 #
 # <parent.systemdSystemDir>/kubelet.service
 [Service]
-EnvironmentFile=/etc/sysconfig/kubelet
+EnvironmentFile=<parent.sysConfigDir>/kubelet
 Environment=KUBELET_VERSION=${K8S_VER}
 Environment=KUBELET_ACI=${HYPERKUBE_IMAGE_REPO}
 Environment="RKT_OPTS=--uuid-file-save=${KUBELET_UUID_FILE} \

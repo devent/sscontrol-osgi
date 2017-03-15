@@ -15,7 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,18 +50,63 @@ public class ClusterImpl implements Cluster {
 
     private String serviceRange;
 
+    private String advertiseAddress;
+
+    private String dnsAddress;
+
+    private final List<String> apiServers;
+
+    private String hostnameOverride;
+
+    private String podRange;
+
+    private final ClusterImplLogger log;
+
     @AssistedInject
-    ClusterImpl() {
-        this(new HashMap<String, Object>());
+    ClusterImpl(ClusterImplLogger log) {
+        this(log, new HashMap<String, Object>());
     }
 
     @AssistedInject
-    ClusterImpl(@Assisted Map<String, Object> args) {
+    ClusterImpl(ClusterImplLogger log, @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.apiServers = new ArrayList<>();
         parseArgs(args);
     }
 
-    public void setRange(String range) {
+    public void setAdvertiseAddress(String advertise) {
+        this.advertiseAddress = advertise;
+        log.advertiseAddressSet(this, advertise);
+    }
+
+    @Override
+    public String getAdvertiseAddress() {
+        return advertiseAddress;
+    }
+
+    public void setDnsAddress(String address) {
+        this.dnsAddress = address;
+        log.dnsAddressSet(this, address);
+    }
+
+    @Override
+    public String getDnsAddress() {
+        return dnsAddress;
+    }
+
+    @Override
+    public List<String> getApiServers() {
+        return apiServers;
+    }
+
+    public void addApiServer(String server) {
+        apiServers.add(server);
+        log.apiServersAdded(this, server);
+    }
+
+    public void setServiceRange(String range) {
         this.serviceRange = range;
+        log.serviceRangeSet(this, range);
     }
 
     @Override
@@ -67,15 +114,56 @@ public class ClusterImpl implements Cluster {
         return serviceRange;
     }
 
+    public void setHostnameOverride(String hostname) {
+        this.hostnameOverride = hostname;
+        log.hostnameOverrideSet(this, hostname);
+    }
+
+    @Override
+    public String getHostnameOverride() {
+        return hostnameOverride;
+    }
+
+    public void setPodRange(String range) {
+        this.podRange = range;
+        log.podRangeSet(this, range);
+    }
+
+    @Override
+    public String getPodRange() {
+        return podRange;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("range", getServiceRange()).toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("range");
+        Object v = args.get("service");
         if (v != null) {
-            this.serviceRange = v.toString();
+            setServiceRange(v.toString());
+        }
+        v = args.get("advertise");
+        if (v != null) {
+            setAdvertiseAddress(v.toString());
+        }
+        v = args.get("hostname");
+        if (v != null) {
+            setHostnameOverride(v.toString());
+        }
+        v = args.get("pod");
+        if (v != null) {
+            setPodRange(v.toString());
+        }
+        v = args.get("dns");
+        if (v != null) {
+            setDnsAddress(v.toString());
+        }
+        v = args.get("api");
+        if (v != null) {
+            addApiServer(v.toString());
         }
     }
+
 }

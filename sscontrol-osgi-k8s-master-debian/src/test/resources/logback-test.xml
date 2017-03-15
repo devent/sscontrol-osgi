@@ -32,7 +32,7 @@
 
     <logger name="com.anrisoftware" level="INFO" />
     <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
-    <logger name="com.anrisoftware.sscontrol" level="INFO" />
+    <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
     <logger name="com.anrisoftware.sscontrol.groovy.script.external" level="DEBUG" />
 
 </configuration>
