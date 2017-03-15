@@ -1,0 +1,12 @@
+# Auto-Generated from Robobee
+# Authors
+# https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
+#
+# /tmp/junit/junit/etc/sysconfig/kubelet
+K8S_VER=v1.5.4_coreos.0
+HYPERKUBE_IMAGE_REPO=quay.io/coreos/hyperkube
+KUBELET_UUID_FILE=/tmp/junit/junit/var/run/kubelet-pod.uuid
+K8S_APISERVERS="http://127.0.0.1:8080"
+CONTAINER_RUNTIME=docker
+ADVERTISE_IP=192.168.0.100
+DNS_SERVICE_IP=10.3.0.10

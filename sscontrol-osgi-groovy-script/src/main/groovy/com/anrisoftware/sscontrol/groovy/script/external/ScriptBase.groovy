@@ -614,6 +614,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Returns the sys-config directory.
+     *
+     * <ul>
+     * <li>profile property {@code sys_config_dir}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getSysConfigDir() {
+        def dir = properties.getFileProperty "sys_config_dir", base, defaultProperties
+    }
+
+    /**
      * Returns the configuration directory of the certificates for the service.
      *
      * <ul>

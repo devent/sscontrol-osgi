@@ -34,4 +34,6 @@ public interface Cluster {
     String getDnsAddress();
 
     List<String> getApiServers();
+
+    String getHostnameOverride();
 }

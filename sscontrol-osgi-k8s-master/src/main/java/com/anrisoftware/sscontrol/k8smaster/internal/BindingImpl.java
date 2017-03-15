@@ -50,7 +50,9 @@ public class BindingImpl implements Binding {
 
     private String secure;
 
-    private int port;
+    private Integer port;
+
+    private Integer insecurePort;
 
     @AssistedInject
     BindingImpl() {
@@ -89,12 +91,18 @@ public class BindingImpl implements Binding {
         return port;
     }
 
+    public void setInsecurePort(int insecurePort) {
+        this.insecurePort = insecurePort;
+    }
+
+    @Override
+    public Integer getInsecurePort() {
+        return insecurePort;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("insecure-address", getInsecureAddress())
-                .append("secure-address", getSecureAddress())
-                .append("port", getPort()).toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     private void parseArgs(Map<String, Object> args) {
@@ -109,6 +117,10 @@ public class BindingImpl implements Binding {
         v = args.get("port");
         if (v != null) {
             this.port = ((Number) v).intValue();
+        }
+        v = args.get("insecurePort");
+        if (v != null) {
+            this.insecurePort = ((Number) v).intValue();
         }
     }
 }

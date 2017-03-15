@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.internal;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
+import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethodSafe;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -117,6 +118,8 @@ public class K8sMasterImpl implements K8sMaster {
     private Binding binding;
 
     private final BindingImplFactory bindingFactory;
+
+    private String containerRuntime;
 
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
@@ -352,6 +355,10 @@ public class K8sMasterImpl implements K8sMaster {
         return getTargets().get(0);
     }
 
+    public void addTargets(List<SshHost> list) {
+        this.targets.addAll(list);
+    }
+
     @Override
     public List<SshHost> getTargets() {
         return Collections.unmodifiableList(targets);
@@ -412,6 +419,15 @@ public class K8sMasterImpl implements K8sMaster {
         return tls;
     }
 
+    public void setContainerRuntime(String runtime) {
+        this.containerRuntime = runtime;
+    }
+
+    @Override
+    public String getContainerRuntime() {
+        return containerRuntime;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -422,7 +438,15 @@ public class K8sMasterImpl implements K8sMaster {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            addTargets((List<SshHost>) v);
+        }
+        v = args.get("runtime");
+        if (v != null) {
+            setContainerRuntime(v.toString());
+        }
+        v = args.get("advertise");
+        if (v != null) {
+            invokeMethodSafe(cluster, "setAdvertiseAddress", v.toString());
         }
     }
 

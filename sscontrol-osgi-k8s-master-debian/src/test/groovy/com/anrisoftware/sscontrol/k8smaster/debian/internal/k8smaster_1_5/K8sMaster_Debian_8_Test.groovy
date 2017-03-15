@@ -38,7 +38,7 @@ class K8sMaster_Debian_8_Test extends AbstractTest_K8sMaster_Debian_8 {
             input: """
 service "ssh", host: "localhost"
 service "ssh", host: "localhost", group: "etcd"
-service "k8s-master", name: "andrea-cluster" with {
+service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     authentication "cert", ca: "$certCaPem"
     plugin "etcd", target: "etcd"
@@ -51,11 +51,12 @@ service "k8s-master", name: "andrea-cluster" with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
             },
         ]
         doTest test

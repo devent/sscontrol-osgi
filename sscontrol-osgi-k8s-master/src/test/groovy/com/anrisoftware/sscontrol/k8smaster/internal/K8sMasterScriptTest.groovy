@@ -74,8 +74,8 @@ service "k8s-master" with {
                 K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
                 assert s.targets.size() == 0
                 assert s.cluster.advertiseAddress == '192.168.0.1'
-                assert s.cluster.serviceRange == '10.2.0.0/24'
-                assert s.cluster.podRange == '10.3.0.0/16'
+                assert s.cluster.serviceRange == '10.3.0.0/24'
+                assert s.cluster.podRange == '10.2.0.0/16'
                 assert s.cluster.dnsAddress == '10.3.0.10'
                 assert s.cluster.apiServers.size() == 1
                 assert s.cluster.apiServers[0] == 'http://localhost:8080'
@@ -90,7 +90,7 @@ service "k8s-master" with {
             name: 'cluster range',
             input: """
 service "k8s-master" with {
-    bind insecure: "127.0.0.1", secure: "0.0.0.0", insecurePort: 8080, , port: 443
+    bind insecure: "127.0.0.1", secure: "0.0.0.0", insecurePort: 8080, port: 443
 }
 """,
             expected: { HostServices services ->
