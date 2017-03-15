@@ -42,6 +42,8 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     TemplateResource kubeletConfigTemplate
 
+    TemplateResource manifestsTemplate
+
     TemplateResource rktTemplate
 
     @Inject
@@ -52,6 +54,7 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
         this.kubeletServiceTemplate = templates.getResource('kubelet_service')
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
+        this.manifestsTemplate = templates.getResource('manifests_template')
         this.rktTemplate = templates.getResource('rkt_template')
     }
 
@@ -241,13 +244,44 @@ chmod o-rx '$certsDir'
 
     def createRkt() {
         log.info 'Create host-rkt.'
-        shell privileged: true, "mkdir -p $binDir" call()
+        def dir = binDir
+        shell privileged: true, "mkdir -p $dir" call()
         template resource: rktTemplate,
         name: 'hostRkt',
         privileged: true,
-        dest: "$binDir/host-rkt",
+        dest: "$dir/host-rkt",
         vars: [:] call()
-        shell privileged: true, "chmod +x $binDir/host-rkt" call()
+        shell privileged: true, "chmod +x $dir/host-rkt" call()
+    }
+
+    def createKubeletManifests() {
+        log.info 'Create kubelet manifests files.'
+        def dir = manifestsDir
+        def srv = srvManifestsDir
+        shell privileged: true, "mkdir -p $dir; mkdir -p $srv" call()
+        [
+            [
+                resource: manifestsTemplate,
+                name: 'kubeProxyManifest',
+                privileged: true,
+                dest: "$dir/kube-proxy.yml",
+                vars: [:],
+            ],
+            [
+                resource: manifestsTemplate,
+                name: 'kubeApiserverManifest',
+                privileged: true,
+                dest: "$dir/kube-apiserver.yml",
+                vars: [:],
+            ],
+            [
+                resource: manifestsTemplate,
+                name: 'kubeControllerManagerManifest',
+                privileged: true,
+                dest: "$dir/kube-controller-manager.yml",
+                vars: [:],
+            ],
+        ].each { template it call() }
     }
 
     def getDefaultLogLevel() {
@@ -404,6 +438,10 @@ chmod o-rx '$certsDir'
 
     File getManifestsDir() {
         properties.getFileProperty "manifests_dir", base, defaultProperties
+    }
+
+    File getSrvManifestsDir() {
+        properties.getFileProperty "srv_manifests_dir", base, defaultProperties
     }
 
     File getCniNetDir() {
