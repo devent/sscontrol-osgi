@@ -42,6 +42,8 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     TemplateResource kubeletConfigTemplate
 
+    TemplateResource rktTemplate
+
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
 
@@ -50,6 +52,7 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
         this.kubeletServiceTemplate = templates.getResource('kubelet_service')
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
+        this.rktTemplate = templates.getResource('rkt_template')
     }
 
     def setupMiscDefaults() {
@@ -228,39 +231,23 @@ chmod o-rx '$certsDir'
 
     def createKubeletConfig() {
         log.info 'Create kubelet configuration.'
-        [configDir, sysConfigDir].each {
-            shell privileged: true, "mkdir -p $it" call()
-        }
-        [
-            [
-                resource: kubeletConfigTemplate,
-                name: 'kubeletConfig',
-                privileged: true,
-                dest: "$sysConfigDir/kubelet",
-                vars: [:],
-            ],
-            /*[
-             resource: kubeletConfigTemplate,
-             name: 'kubeApiserverConfig',
-             privileged: true,
-             dest: "$configDir/apiserver",
-             vars: [:],
-             ],
-             [
-             resource: kubeletConfigTemplate,
-             name: 'kubeControllerManagerConfig',
-             privileged: true,
-             dest: "$configDir/controller-manager",
-             vars: [:],
-             ],
-             [
-             resource: kubeletConfigTemplate,
-             name: 'kubeSchedulerConfig',
-             privileged: true,
-             dest: "$configDir/scheduler",
-             vars: [:],
-             ],*/
-        ].each { template it call() }
+        shell privileged: true, "mkdir -p $sysConfigDir" call()
+        template resource: kubeletConfigTemplate,
+        name: 'kubeletConfig',
+        privileged: true,
+        dest: "$sysConfigDir/kubelet",
+        vars: [:] call()
+    }
+
+    def createRkt() {
+        log.info 'Create host-rkt.'
+        shell privileged: true, "mkdir -p $binDir" call()
+        template resource: rktTemplate,
+        name: 'hostRkt',
+        privileged: true,
+        dest: "$binDir/host-rkt",
+        vars: [:] call()
+        shell privileged: true, "chmod +x $binDir/host-rkt" call()
     }
 
     def getDefaultLogLevel() {

@@ -11,7 +11,7 @@ Environment=KUBELET_ACI=${HYPERKUBE_IMAGE_REPO}
 Environment="RKT_OPTS=--uuid-file-save=${KUBELET_UUID_FILE} \
   --volume dns,kind=host,source=/etc/resolv.conf \
   --mount volume=dns,target=/etc/resolv.conf \
-  --volume rkt,kind=host,source=/opt/bin/host-rkt \
+  --volume rkt,kind=host,source=<parent.binDir>/host-rkt \
   --mount volume=rkt,target=/usr/bin/rkt \
   --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
   --mount volume=var-lib-rkt,target=/var/lib/rkt \
