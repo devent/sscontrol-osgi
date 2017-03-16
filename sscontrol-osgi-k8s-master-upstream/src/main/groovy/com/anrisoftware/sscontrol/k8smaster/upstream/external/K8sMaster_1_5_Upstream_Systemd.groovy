@@ -73,14 +73,29 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (service.admissions.size() == 0) {
             service.admissions.addAll defaultAdmissions
         }
-        if (!service.tls.caName) {
-            service.tls.caName = defaultKubernetesTlsCaName
+        if (!service.account.tls.ca) {
+            service.account.tls.ca = service.tls.ca
         }
-        if (!service.tls.certName) {
+        if (!service.account.tls.key) {
+            service.account.tls.key = service.tls.key
+        }
+        if (service.account.tls.ca) {
+            service.account.tls.caName = defaultAccountTlsCaName
+        }
+        if (service.account.tls.cert) {
+            service.account.tls.certName = defaultAccountTlsCertName
+        }
+        if (service.account.tls.key) {
+            service.account.tls.keyName = defaultAccountTlsKeyName
+        }
+        if (service.tls.cert) {
             service.tls.certName = defaultKubernetesTlsCertName
         }
-        if (!service.tls.keyName) {
+        if (service.tls.key) {
             service.tls.keyName = defaultKubernetesTlsKeyName
+        }
+        if (service.tls.ca) {
+            service.tls.caName = defaultKubernetesTlsCaName
         }
     }
 
@@ -131,13 +146,13 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         if (service.kubelet.preferredAddressTypes.size() == 0) {
             service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
         }
-        if (!service.kubelet.tls.caName) {
+        if (service.kubelet.tls.ca) {
             service.kubelet.tls.caName = defaultKubeletTlsCaName
         }
-        if (!service.kubelet.tls.certName) {
+        if (service.kubelet.tls.cert) {
             service.kubelet.tls.certName = defaultKubeletTlsCertName
         }
-        if (!service.kubelet.tls.keyName) {
+        if (service.kubelet.tls.key) {
             service.kubelet.tls.keyName = defaultKubeletTlsKeyName
         }
     }
@@ -207,7 +222,8 @@ chmod o-rx '$certsDir'
         def certsdir = certsDir
         K8sMaster service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
-        uploadTlsCerts tls: service.tls, name: 'kubelet-tls'
+        uploadTlsCerts tls: service.account.tls, name: 'account-tls'
+        uploadTlsCerts tls: service.kubelet.tls, name: 'kubelet-tls'
     }
 
     def uploadAuthenticationsCertificates() {
@@ -259,29 +275,113 @@ chmod o-rx '$certsDir'
         def dir = manifestsDir
         def srv = srvManifestsDir
         shell privileged: true, "mkdir -p $dir; mkdir -p $srv" call()
-        [
+        def templates = [
             [
                 resource: manifestsTemplate,
                 name: 'kubeProxyManifest',
                 privileged: true,
-                dest: "$dir/kube-proxy.yml",
+                dest: "$dir/kube-proxy.yaml",
                 vars: [:],
             ],
             [
                 resource: manifestsTemplate,
                 name: 'kubeApiserverManifest',
                 privileged: true,
-                dest: "$dir/kube-apiserver.yml",
+                dest: "$dir/kube-apiserver.yaml",
                 vars: [:],
             ],
             [
                 resource: manifestsTemplate,
                 name: 'kubeControllerManagerManifest',
                 privileged: true,
-                dest: "$dir/kube-controller-manager.yml",
+                dest: "$dir/kube-controller-manager.yaml",
                 vars: [:],
             ],
-        ].each { template it call() }
+            [
+                resource: manifestsTemplate,
+                name: 'kubeSchedulerManifest',
+                privileged: true,
+                dest: "$dir/kube-scheduler.yaml",
+                vars: [:],
+            ],
+        ]
+        if (deployKubeDns) {
+            templates << [
+                resource: manifestsTemplate,
+                name: 'kubeDnsDeManifest',
+                privileged: true,
+                dest: "$srv/kube-dns-de.yaml",
+                vars: [:],
+            ]
+            templates << [
+                resource: manifestsTemplate,
+                name: 'kubeDnsAutoscalerDeManifest',
+                privileged: true,
+                dest: "$srv/kube-dns-autoscaler-de.yaml",
+                vars: [:],
+            ]
+            templates << [
+                resource: manifestsTemplate,
+                name: 'kubeDnsSvcManifest',
+                privileged: true,
+                dest: "$srv/kube-dns-svc.yaml",
+                vars: [:],
+            ]
+        }
+        if (deployHeapster) {
+            templates << [
+                resource: manifestsTemplate,
+                name: 'heapsterDeManifest',
+                privileged: true,
+                dest: "$srv/heapster-de.yaml",
+                vars: [:],
+            ]
+            templates << [
+                resource: manifestsTemplate,
+                name: 'heapsterSvcManifest',
+                privileged: true,
+                dest: "$srv/heapster-svc.yaml",
+                vars: [:],
+            ]
+        }
+        if (deployKubeDashboard) {
+            templates << [
+                resource: manifestsTemplate,
+                name: 'kubeDashboardDeManifest',
+                privileged: true,
+                dest: "$srv/kube-dashboard-de.yaml",
+                vars: [:],
+            ]
+            templates << [
+                resource: manifestsTemplate,
+                name: 'kubeDashboardSvcManifest',
+                privileged: true,
+                dest: "$srv/kube-dashboard-svc.yaml",
+                vars: [:],
+            ]
+        }
+        if (deployCalico) {
+            templates << [
+                resource: manifestsTemplate,
+                name: 'calicoManifest',
+                privileged: true,
+                dest: "$srv/calico.yaml",
+                vars: [:],
+            ]
+        }
+        templates.each { template it call() }
+    }
+
+    def createFlannelCni() {
+        log.info 'Create flannel cni drop-in.'
+        def dir = binDir
+        shell privileged: true, "mkdir -p $dir" call()
+        template resource: flannelCniTemplate,
+        name: 'flannelCniDropin',
+        privileged: true,
+        dest: "$dir/host-rkt",
+        vars: [:] call()
+        shell privileged: true, "chmod +x $dir/host-rkt" call()
     }
 
     def getDefaultLogLevel() {
@@ -358,6 +458,18 @@ chmod o-rx '$certsDir'
 
     def getDefaultKubernetesTlsKeyName() {
         properties.getProperty 'default_kubernetes_tls_key_name', defaultProperties
+    }
+
+    def getDefaultAccountTlsCaName() {
+        properties.getProperty 'default_account_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultAccountTlsCertName() {
+        properties.getProperty 'default_account_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultAccountTlsKeyName() {
+        properties.getProperty 'default_account_tls_key_name', defaultProperties
     }
 
     def getDefaultKubeletTlsCaName() {
@@ -454,6 +566,22 @@ chmod o-rx '$certsDir'
 
     File getContainersLogDir() {
         properties.getFileProperty "containers_log_dir", base, defaultProperties
+    }
+
+    boolean getDeployKubeDns() {
+        properties.getBooleanProperty "deploy_kube_dns", defaultProperties
+    }
+
+    boolean getDeployHeapster() {
+        properties.getBooleanProperty "deploy_heapster", defaultProperties
+    }
+
+    boolean getDeployKubeDashboard() {
+        properties.getBooleanProperty "deploy_kube_dashboard", defaultProperties
+    }
+
+    boolean getDeployCalico() {
+        properties.getBooleanProperty "deploy_calico", defaultProperties
     }
 
     Tls getEtcdTls() {
