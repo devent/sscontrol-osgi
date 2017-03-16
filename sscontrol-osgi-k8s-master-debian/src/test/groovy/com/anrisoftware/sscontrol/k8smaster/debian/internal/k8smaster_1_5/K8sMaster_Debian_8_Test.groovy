@@ -51,15 +51,17 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/usr/local/bin'), "host-rkt", "${args.test.name}_host_rkt_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yml", "${args.test.name}_kube_proxy_yml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yml", "${args.test.name}_kube_apiserver_yml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yml", "${args.test.name}_kube_controller_manager_yml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-de.yml", "${args.test.name}_kube_dns_de_yml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-autoscaler-de.yml", "${args.test.name}_kube_dns_autoscaler_de_yml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-svc.yml", "${args.test.name}_kube_dns_svc_yml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-de.yaml", "${args.test.name}_kube_dns_de_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-autoscaler-de.yaml", "${args.test.name}_kube_dns_autoscaler_de_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-svc.yaml", "${args.test.name}_kube_dns_svc_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "heapster-de.yaml", "${args.test.name}_heapster_de_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "heapster-svc.yaml", "${args.test.name}_heapster_svc_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-de.yaml", "${args.test.name}_kube_dashboard_de_yaml_expected.txt"

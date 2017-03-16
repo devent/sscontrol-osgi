@@ -39,11 +39,11 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class TlsImpl implements Tls {
 
-    private final URI ca;
+    private URI ca;
 
-    private final URI cert;
+    private URI cert;
 
-    private final URI key;
+    private URI key;
 
     private String caName;
 
@@ -82,6 +82,10 @@ public class TlsImpl implements Tls {
         }
     }
 
+    public void setCa(URI ca) {
+        this.ca = ca;
+    }
+
     @Override
     public URI getCa() {
         return ca;
@@ -96,6 +100,10 @@ public class TlsImpl implements Tls {
         return caName;
     }
 
+    public void setCert(URI cert) {
+        this.cert = cert;
+    }
+
     @Override
     public URI getCert() {
         return cert;
@@ -108,6 +116,10 @@ public class TlsImpl implements Tls {
     @Override
     public String getCertName() {
         return certName;
+    }
+
+    public void setKey(URI key) {
+        this.key = key;
     }
 
     @Override
