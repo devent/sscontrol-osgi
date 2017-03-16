@@ -87,7 +87,7 @@ service "k8s-master" with {
     @Test
     void "bind"() {
         def test = [
-            name: 'cluster range',
+            name: 'bind',
             input: """
 service "k8s-master" with {
     bind insecure: "127.0.0.1", secure: "0.0.0.0", insecurePort: 8080, port: 443
@@ -100,6 +100,26 @@ service "k8s-master" with {
                 assert s.binding.secureAddress == "0.0.0.0"
                 assert s.binding.insecurePort == 8080
                 assert s.binding.port == 443
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "account"() {
+        def test = [
+            name: 'account',
+            input: """
+service "k8s-master" with {
+    account ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.account.tls.ca.toString() =~ /.*ca\.pem/
+                assert s.account.tls.cert.toString() =~ /.*cert\.pem/
+                assert s.account.tls.key.toString() =~ /.*key\.pem/
             },
         ]
         doTest test

@@ -51,4 +51,6 @@ public interface K8sMaster extends HostService {
     Kubelet getKubelet();
 
     Binding getBinding();
+
+    Account getAccount();
 }

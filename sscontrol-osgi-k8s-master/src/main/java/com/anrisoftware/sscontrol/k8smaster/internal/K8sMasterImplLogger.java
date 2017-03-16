@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.accountSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.admissionsAdded;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.allowPrivilegedSet;
 import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.authenticationAdded;
@@ -27,6 +28,7 @@ import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
 import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.Binding;
@@ -59,7 +61,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         allowPrivilegedSet("Allow privileged {} set for {}"),
 
-        bindingSet("Binding {} set for {}");
+        bindingSet("Binding {} set for {}"),
+
+        accountSet("Account {} set for {}");
 
         private String name;
 
@@ -110,5 +114,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     void bindingSet(K8sMasterImpl k8s, Binding binding) {
         debug(bindingSet, binding, k8s);
+    }
+
+    void accountSet(K8sMasterImpl k8s, Account account) {
+        debug(accountSet, account, k8s);
     }
 }

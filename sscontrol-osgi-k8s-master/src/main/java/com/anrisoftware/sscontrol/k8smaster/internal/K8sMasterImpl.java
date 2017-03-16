@@ -38,6 +38,7 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.globalpom.core.arrays.ToList;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
 import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
@@ -49,6 +50,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterService;
 import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
@@ -85,19 +87,19 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final K8sMasterImplLogger log;
 
-    private final ClusterImplFactory clusterFactory;
+    private transient ClusterImplFactory clusterFactory;
 
-    private final Map<String, PluginFactory> pluginFactories;
+    private transient Map<String, PluginFactory> pluginFactories;
 
     private final Map<String, Plugin> plugins;
 
-    private final TlsFactory tlsFactory;
+    private transient TlsFactory tlsFactory;
 
     @Inject
-    private Map<String, AuthenticationFactory> authenticationFactories;
+    private transient Map<String, AuthenticationFactory> authenticationFactories;
 
     @Inject
-    private Map<String, AuthorizationFactory> authorizationFactories;
+    private transient Map<String, AuthorizationFactory> authorizationFactories;
 
     private DebugLogging debug;
 
@@ -117,9 +119,13 @@ public class K8sMasterImpl implements K8sMaster {
 
     private Binding binding;
 
-    private final BindingImplFactory bindingFactory;
+    private transient BindingImplFactory bindingFactory;
 
     private String containerRuntime;
+
+    private transient AccountImplFactory accountFactory;
+
+    private Account account;
 
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
@@ -127,6 +133,7 @@ public class K8sMasterImpl implements K8sMaster {
             HostPropertiesService propertiesService,
             KubeletImplFactory kubeletFactory,
             BindingImplFactory bindingFactory, TlsFactory tlsFactory,
+            AccountImplFactory accountFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.clusterFactory = clusterFactory;
@@ -143,6 +150,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.bindingFactory = bindingFactory;
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
+        this.accountFactory = accountFactory;
+        this.account = accountFactory.create();
         parseArgs(args);
     }
 
@@ -345,6 +354,16 @@ public class K8sMasterImpl implements K8sMaster {
         });
     }
 
+    /**
+     * <pre>
+     * account ca: 'ca.pem', key: 'ca_key.pem' // or
+     * </pre>
+     */
+    public void account(Map<String, Object> args) {
+        this.account = accountFactory.create(args);
+        log.accountSet(this, account);
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -426,6 +445,15 @@ public class K8sMasterImpl implements K8sMaster {
     @Override
     public String getContainerRuntime() {
         return containerRuntime;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    @Override
+    public Account getAccount() {
+        return account;
     }
 
     @Override
