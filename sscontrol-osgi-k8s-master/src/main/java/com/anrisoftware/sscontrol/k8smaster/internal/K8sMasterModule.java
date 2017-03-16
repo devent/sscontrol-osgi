@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.internal;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
 import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
@@ -27,6 +28,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin;
 import com.anrisoftware.sscontrol.k8smaster.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AbacAuthorizationImpl.AbacAuthorizationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysAllowAuthorizationImpl.AlwaysAllowAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BasicAuthenticationImpl.BasicAuthenticationImplFactory;
@@ -84,6 +86,9 @@ public class K8sMasterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Binding.class, BindingImpl.class)
                 .build(BindingImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Account.class, AccountImpl.class)
+                .build(AccountImplFactory.class));
         bindPlugins();
         bindAuthentication();
         bindAuthorization();
