@@ -114,10 +114,9 @@ etcdEndpoints(parent, vars, etcd) ::= <%
 %>
 
 etcdTls(parent, vars) ::= <<
-<if(parent.etcdTls)><if(parent.etcdTls.ca)>    - --etcd-cafile=<parent.certsDir>/<parent.etcdTls.caName> <endif>
-<if(parent.etcdTls.cert)>    - --etcd-certfile=<parent.certsDir>/<parent.etcdTls.certName> <endif>
-<if(parent.etcdTls.key)>    - --etcd-keyfile=<parent.certsDir>/<parent.etcdTls.keyName> <endif>
-<endif>
+<if(parent.etcdTls)><if(parent.etcdTls.ca)>    - --etcd-cafile=<parent.certsDir>/<parent.etcdTls.caName><endif>
+<if(parent.etcdTls.cert)>    - --etcd-certfile=<parent.certsDir>/<parent.etcdTls.certName><endif>
+<if(parent.etcdTls.key)>    - --etcd-keyfile=<parent.certsDir>/<parent.etcdTls.keyName><endif><endif>
 >>
 
 ClientCertsAuthenticationImpl(parent, vars, a) ::= <<

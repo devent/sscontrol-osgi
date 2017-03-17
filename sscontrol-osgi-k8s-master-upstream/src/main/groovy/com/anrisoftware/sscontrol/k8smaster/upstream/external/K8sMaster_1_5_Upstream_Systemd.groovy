@@ -189,10 +189,10 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
                 it.value.port = getDefaultPluginPort(name)
             }
         }
-        service.plugins.findAll {it.value.hasProperty('protocol')} each {
+        service.plugins.findAll {it.value.hasProperty('protocol') && it.value.hasProperty('tls')} each {
             def name = it.value.name
             if (!it.value.protocol) {
-                it.value.protocol = getDefaultPluginProtocol(name)
+                it.value.protocol = getDefaultPluginProtocol(name, it.value.tls)
             }
         }
         service.plugins.findAll {it.value.hasProperty('tls')} each {
@@ -555,9 +555,11 @@ chmod o-rx '$certsDir'
         properties.getNumberProperty "default_plugin_port_$name", defaultProperties
     }
 
-    String getDefaultPluginProtocol(String name) {
+    String getDefaultPluginProtocol(String name, Tls tls) {
         name = name.toLowerCase()
-        properties.getProperty "default_plugin_protocol_$name", defaultProperties
+        def insecure = properties.getProperty "default_plugin_protocol_insecure_$name", defaultProperties
+        def secure = properties.getProperty "default_plugin_protocol_secure_$name", defaultProperties
+        tls.cert ? secure : insecure
     }
 
     String getDefaultPluginCaName(String name) {
