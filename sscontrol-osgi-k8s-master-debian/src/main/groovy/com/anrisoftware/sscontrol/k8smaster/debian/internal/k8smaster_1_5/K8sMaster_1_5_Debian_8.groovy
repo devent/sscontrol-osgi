@@ -34,8 +34,6 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
     @Inject
     K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider
 
-    K8sMaster_1_5_Systemd_Debian_8 systemd
-
     @Inject
     K8sMaster_1_5_Upstream_Debian_8_Factory upstreamFactory
 
@@ -44,16 +42,9 @@ class K8sMaster_1_5_Debian_8 extends ScriptBase {
 
     @Override
     def run() {
-        //systemd.stopServices()
         installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        //systemd.startServices()
-    }
-
-    @Inject
-    def setSystemdFactory(K8sMaster_1_5_Systemd_Debian_8_Factory systemdFactory) {
-        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override

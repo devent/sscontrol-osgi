@@ -22,3 +22,4 @@
 /var/lib/robobee/tmp/kube-dashboard-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
 /var/lib/robobee/tmp/calico.yaml /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml
 /var/lib/robobee/tmp/host-rkt /tmp/junit/junit/usr/local/bin/host-rkt
+/var/lib/robobee/tmp/10-flannel.conf /tmp/junit/junit/etc/kubernetes/cni/net.d/10-flannel.conf

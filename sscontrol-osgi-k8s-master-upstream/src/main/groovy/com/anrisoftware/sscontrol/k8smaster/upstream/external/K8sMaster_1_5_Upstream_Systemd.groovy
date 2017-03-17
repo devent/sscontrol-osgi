@@ -46,6 +46,10 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     TemplateResource rktTemplate
 
+    TemplateResource flannelCniTemplate
+
+    TemplateResource addonsCmd
+
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
 
@@ -56,6 +60,8 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
         this.manifestsTemplate = templates.getResource('manifests_template')
         this.rktTemplate = templates.getResource('rkt_template')
+        this.flannelCniTemplate = templates.getResource('flannel_cni_template')
+        this.addonsCmd = templates.getResource('addons_cmd')
     }
 
     def setupMiscDefaults() {
@@ -235,7 +241,7 @@ chmod o-rx '$certsDir'
     }
 
     def uploadEtcdCertificates() {
-        uploadTlsCerts tls: etcdTls
+        uploadTlsCerts tls: etcdTls, name: 'etcd'
     }
 
     def createKubeletService() {
@@ -272,6 +278,7 @@ chmod o-rx '$certsDir'
 
     def createKubeletManifests() {
         log.info 'Create kubelet manifests files.'
+        K8sMaster service = service
         def dir = manifestsDir
         def srv = srvManifestsDir
         shell privileged: true, "mkdir -p $dir; mkdir -p $srv" call()
@@ -360,7 +367,7 @@ chmod o-rx '$certsDir'
                 vars: [:],
             ]
         }
-        if (deployCalico) {
+        if (deployCalico && service.plugins.containsKey('calico')) {
             templates << [
                 resource: manifestsTemplate,
                 name: 'calicoManifest',
@@ -373,15 +380,59 @@ chmod o-rx '$certsDir'
     }
 
     def createFlannelCni() {
+        K8sMaster service = service
+        if (!service.plugins.containsKey('flannel')) {
+            return
+        }
         log.info 'Create flannel cni drop-in.'
-        def dir = binDir
+        def dir = cniNetDir
         shell privileged: true, "mkdir -p $dir" call()
         template resource: flannelCniTemplate,
         name: 'flannelCniDropin',
         privileged: true,
-        dest: "$dir/host-rkt",
+        dest: "$dir/10-flannel.conf",
         vars: [:] call()
-        shell privileged: true, "chmod +x $dir/host-rkt" call()
+    }
+
+    def stopServices() {
+        stopSystemdService 'kubelet'
+    }
+
+    def startServices() {
+        startEnableSystemdService 'kubelet'
+    }
+
+    def startAddons() {
+        K8sMaster service = service
+        if (deployKubeDns) {
+            log.info 'Start kube-dns.'
+            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
+        }
+        if (deployHeapster) {
+            log.info 'Start heapster.'
+            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-de.yaml'] call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-svc.yaml'] call()
+        }
+        if (deployKubeDashboard) {
+            log.info 'Start heapster.'
+            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
+            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
+        }
+    }
+
+    def startCalico() {
+        K8sMaster service = service
+        if (!service.plugins.containsKey('calico')) {
+            return
+        }
+        log.info 'Start Calico.'
+        shell resource: addonsCmd, name: 'waitApi' call()
+        shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
     }
 
     def getDefaultLogLevel() {

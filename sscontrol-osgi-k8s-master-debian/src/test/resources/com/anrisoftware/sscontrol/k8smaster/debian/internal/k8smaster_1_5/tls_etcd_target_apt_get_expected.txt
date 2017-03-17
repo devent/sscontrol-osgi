@@ -1,2 +1,2 @@
 update
--y install gnupg2 gcc golang-go curl git
+-y install util-linux gnupg2 gcc golang-go curl git

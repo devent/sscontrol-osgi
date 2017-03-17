@@ -35,10 +35,6 @@ public class K8sMaster_1_5_Debian_8_Module extends AbstractModule {
                 .build(K8sMaster_1_5_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        K8sMaster_1_5_Systemd_Debian_8.class)
-                .build(K8sMaster_1_5_Systemd_Debian_8_Factory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
                         K8sMaster_1_5_Upstream_Systemd_Debian_8.class)
                 .build(K8sMaster_1_5_Upstream_Systemd_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()

@@ -50,7 +50,6 @@
         <module>../sscontrol-osgi-hosts-linux</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
-        <module>../sscontrol-osgi-k8s-master-systemd</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-rkt-deb</module>

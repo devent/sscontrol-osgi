@@ -242,10 +242,34 @@ public class K8sMasterImpl implements K8sMaster {
 
     /**
      * <pre>
+     * plugin "etcd"
+     * </pre>
+     */
+    public Plugin plugin(String name) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("name", name);
+        return plugin(a);
+    }
+
+    /**
+     * <pre>
      * plugin "etcd", target: "infra0"
      * </pre>
      */
     public Plugin plugin(Map<String, Object> args, String name) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("name", name);
+        return plugin(a);
+    }
+
+    /**
+     * <pre>
+     * plugin name: "etcd", target: "infra0"
+     * </pre>
+     */
+    public Plugin plugin(Map<String, Object> args) {
+        Object v = args.get("name");
+        String name = v.toString();
         PluginFactory factory = pluginFactories.get(name);
         Map<String, Object> a = new HashMap<>(args);
         Plugin plugin = factory.create(a);

@@ -475,6 +475,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
                 ],
             ].each {
                 if (it.src) {
+                    log.debug 'Upload {} TLS', it.name
                     copyResource it call()
                 }
             }
