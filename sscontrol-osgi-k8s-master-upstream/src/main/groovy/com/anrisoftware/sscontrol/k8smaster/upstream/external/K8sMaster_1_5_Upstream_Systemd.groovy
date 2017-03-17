@@ -251,7 +251,15 @@ chmod o-rx '$certsDir'
         privileged: true,
         dest: "$systemdSystemDir/kubelet.service",
         vars: [:] call()
-        shell privileged: true, "systemctl daemon-reload" call()
+        template resource: kubeletServiceTemplate,
+        name: 'kubeletWrapper',
+        privileged: true,
+        dest: "$binDir/kubelet-wrapper",
+        vars: [:] call()
+        shell privileged: true, """
+chmod +x $binDir/kubelet-wrapper
+systemctl daemon-reload
+        """ call()
     }
 
     def createKubeletConfig() {
@@ -406,20 +414,20 @@ chmod o-rx '$certsDir'
         K8sMaster service = service
         if (deployKubeDns) {
             log.info 'Start kube-dns.'
-            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
         }
         if (deployHeapster) {
             log.info 'Start heapster.'
-            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-de.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-svc.yaml'] call()
         }
         if (deployKubeDashboard) {
             log.info 'Start heapster.'
-            shell resource: addonsCmd, name: 'waitApi' call()
+            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
         }
@@ -431,7 +439,7 @@ chmod o-rx '$certsDir'
             return
         }
         log.info 'Start Calico.'
-        shell resource: addonsCmd, name: 'waitApi' call()
+        shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
         shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
     }
 

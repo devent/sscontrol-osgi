@@ -42,10 +42,11 @@ class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_K8sMaster
             input: """
 service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
 def andreaMaster = targets['andrea-master'][0]
-service "k8s-master", name: "andrea-cluster", target: andreaMaster with {
-    bind secure: "\${andreaMaster.hostAddress}"
+service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "\${andreaMaster.hostAddress}" with {
     tls certs.k8s
     authentication "cert", ca: certs.k8s.ca
+    plugin "flannel"
+    plugin "calico"
     plugin "etcd", address: "https://etcd-0.robobee.test" with {
         tls certs.etcd
     }

@@ -19,11 +19,11 @@ Environment="RKT_OPTS=--uuid-file-save=${KUBELET_UUID_FILE} \
   --volume var-log,kind=host,source=/var/log \
   --mount volume=var-log,target=/var/log \
   ${CALICO_OPTS}"
-ExecStartPre=/usr/bin/mkdir -p /tmp/junit/junit/etc/kubernetes/manifests
-ExecStartPre=/usr/bin/mkdir -p /tmp/junit/junit/opt/cni/bin
-ExecStartPre=/usr/bin/mkdir -p /tmp/junit/junit/var/log/containers
+ExecStartPre=/bin/mkdir -p /tmp/junit/junit/etc/kubernetes/manifests
+ExecStartPre=/bin/mkdir -p /tmp/junit/junit/opt/cni/bin
+ExecStartPre=/bin/mkdir -p /tmp/junit/junit/var/log/containers
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
-ExecStart=/usr/lib/coreos/kubelet-wrapper \
+ExecStart=/tmp/junit/junit/usr/local/bin/kubelet-wrapper \
   --api-servers=${K8S_APISERVERS} \
   --register-schedulable=false \
   --cni-conf-dir=/tmp/junit/junit/etc/kubernetes/cni/net.d \
