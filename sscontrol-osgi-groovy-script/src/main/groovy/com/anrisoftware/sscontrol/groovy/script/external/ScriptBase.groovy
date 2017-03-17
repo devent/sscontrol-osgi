@@ -351,7 +351,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     def stopSystemdService(List services) {
         log.info 'Stopping {}.', services
         services.each {
-            shell privileged: true, "if systemctl list-unit-files --type=service|grep $it; then systemctl stop $it; fi" call()
+            shell privileged: true, "if systemctl list-unit-files --type=service|egrep '$it.*\\s+enabled'; then systemctl stop $it; fi" call()
         }
     }
 
