@@ -123,8 +123,10 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 File gen = args.test.generatedDir
                 assertFileResource K8sMaster_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kube-apiserver.service", "${args.test.name}_kube_apiserver_service_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes'), "apiserver", "${args.test.name}_kubernetes_apiserver_config_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
             },
         ]
         doTest test
