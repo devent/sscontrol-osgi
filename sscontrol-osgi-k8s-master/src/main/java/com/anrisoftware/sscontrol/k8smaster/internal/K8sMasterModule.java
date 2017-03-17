@@ -33,9 +33,11 @@ import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysAllowAuthorizationImp
 import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BasicAuthenticationImpl.BasicAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.CalicoPluginImpl.CalicoPluginImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.EtcdPluginImpl.EtcdPluginImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.FlannelPluginImpl.FlannelPluginImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
@@ -60,26 +62,9 @@ public class K8sMasterModule extends AbstractModule {
                 .implement(Cluster.class, ClusterImpl.class)
                 .build(ClusterImplFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(Plugin.class, EtcdPluginImpl.class)
-                .build(EtcdPluginImplFactory.class));
-        install(new FactoryModuleBuilder()
                 .implement(Authentication.class,
                         ClientCertsAuthenticationImpl.class)
                 .build(ClientCertsAuthenticationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authentication.class, BasicAuthenticationImpl.class)
-                .build(BasicAuthenticationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authorization.class,
-                        AlwaysAllowAuthorizationImpl.class)
-                .build(AlwaysAllowAuthorizationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authorization.class,
-                        AlwaysDenyAuthorizationImpl.class)
-                .build(AlwaysDenyAuthorizationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authorization.class, AbacAuthorizationImpl.class)
-                .build(AbacAuthorizationImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Kubelet.class, KubeletImpl.class)
                 .build(KubeletImplFactory.class));
@@ -95,12 +80,26 @@ public class K8sMasterModule extends AbstractModule {
     }
 
     private void bindPlugins() {
+        install(new FactoryModuleBuilder()
+                .implement(Plugin.class, EtcdPluginImpl.class)
+                .build(EtcdPluginImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Plugin.class, FlannelPluginImpl.class)
+                .build(FlannelPluginImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Plugin.class, CalicoPluginImpl.class)
+                .build(CalicoPluginImplFactory.class));
         MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
                 String.class, PluginFactory.class);
         mapbinder.addBinding("etcd").to(EtcdPluginImplFactory.class);
+        mapbinder.addBinding("flannel").to(FlannelPluginImplFactory.class);
+        mapbinder.addBinding("calico").to(CalicoPluginImplFactory.class);
     }
 
     private void bindAuthentication() {
+        install(new FactoryModuleBuilder()
+                .implement(Authentication.class, BasicAuthenticationImpl.class)
+                .build(BasicAuthenticationImplFactory.class));
         MapBinder<String, AuthenticationFactory> mapbinder = newMapBinder(
                 binder(), String.class, AuthenticationFactory.class);
         mapbinder.addBinding("cert")
@@ -109,6 +108,17 @@ public class K8sMasterModule extends AbstractModule {
     }
 
     private void bindAuthorization() {
+        install(new FactoryModuleBuilder()
+                .implement(Authorization.class,
+                        AlwaysAllowAuthorizationImpl.class)
+                .build(AlwaysAllowAuthorizationImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Authorization.class,
+                        AlwaysDenyAuthorizationImpl.class)
+                .build(AlwaysDenyAuthorizationImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Authorization.class, AbacAuthorizationImpl.class)
+                .build(AbacAuthorizationImplFactory.class));
         MapBinder<String, AuthorizationFactory> mapbinder = newMapBinder(
                 binder(), String.class, AuthorizationFactory.class);
         mapbinder.addBinding("allow")

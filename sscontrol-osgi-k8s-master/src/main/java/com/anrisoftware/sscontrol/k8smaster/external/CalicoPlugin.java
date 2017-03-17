@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.external;
 
-import java.io.File;
-
 /**
  * <i>Calico</i> plugin.
  *
@@ -25,5 +23,4 @@ import java.io.File;
  */
 public interface CalicoPlugin extends Plugin {
 
-    File getDir();
 }

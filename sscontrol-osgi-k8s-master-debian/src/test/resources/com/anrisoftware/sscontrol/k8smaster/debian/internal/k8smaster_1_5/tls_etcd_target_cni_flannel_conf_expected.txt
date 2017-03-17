@@ -1,4 +1,3 @@
-flannelCniDropin(parent, vars) ::= <<
 {
     "name": "podnet",
     "type": "flannel",
@@ -6,5 +5,3 @@ flannelCniDropin(parent, vars) ::= <<
         "isDefaultGateway": true
     }
 }
-
->>
