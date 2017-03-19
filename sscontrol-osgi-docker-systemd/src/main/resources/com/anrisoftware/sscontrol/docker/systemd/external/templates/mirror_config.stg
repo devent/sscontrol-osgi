@@ -1,6 +1,6 @@
 mirrorService(parent, vars) ::= <<
 [Service]
-Environment="DOCKER_OPTIONS=$DOCKER_OPTIONS <parent.service.registry.mirrorHosts:mirrorHosts(parent, vars);separator=" ">"
+Environment="DOCKER_MIRROR=<parent.service.registry.mirrorHosts:mirrorHosts(parent, vars);separator=" ">"
 
 >>
 

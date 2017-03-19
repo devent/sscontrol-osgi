@@ -40,8 +40,13 @@ class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_K8sMaster
         def test = [
             name: "andrea_master_local",
             input: """
-service "ssh", group: "andrea-master", host: "robobee@andrea-master-local", key: "$robobeeKey"
-def andreaMaster = targets['andrea-master'][0]
+service "ssh", group: "master", key: "${robobeeKey}" with {
+    host "robobee@andrea-master-local"
+}
+service "ssh", group: "nodes", key: "${robobeeKey}" with {
+    host "robobee@andrea-node-0-local"
+}
+def andreaMaster = targets['master'][0]
 service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "\${andreaMaster.hostAddress}" with {
     tls certs.k8s
     authentication "cert", ca: certs.k8s.ca

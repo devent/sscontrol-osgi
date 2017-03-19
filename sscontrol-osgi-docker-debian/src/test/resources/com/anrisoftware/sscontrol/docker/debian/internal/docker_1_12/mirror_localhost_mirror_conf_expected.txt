@@ -1,2 +1,2 @@
 [Service]
-Environment="DOCKER_OPTIONS=$DOCKER_OPTIONS --registry-mirror=http://localhost:5000"
+Environment="DOCKER_MIRROR=--registry-mirror=http://localhost:5000"

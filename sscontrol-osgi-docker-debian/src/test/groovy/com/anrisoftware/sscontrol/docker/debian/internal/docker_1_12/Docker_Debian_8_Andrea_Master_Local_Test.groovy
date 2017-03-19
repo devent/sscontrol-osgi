@@ -38,8 +38,10 @@ class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debia
         def test = [
             name: "andrea_master_local",
             input: """
-service "ssh", group: "master", host: "robobee@andrea-master-local", key: "$robobeeKey"
-service "ssh", group: "nodes", key: "$robobeeKey" with {
+service "ssh", group: "master", key: "${robobeeKey}" with {
+    host "robobee@andrea-master-local"
+}
+service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"
 }
 targets['all'].eachWithIndex { host, i ->
