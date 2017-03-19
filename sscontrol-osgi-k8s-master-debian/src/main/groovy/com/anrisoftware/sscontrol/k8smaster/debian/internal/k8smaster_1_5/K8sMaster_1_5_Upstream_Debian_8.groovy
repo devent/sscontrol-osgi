@@ -37,7 +37,7 @@ class K8sMaster_1_5_Upstream_Debian_8 extends K8sMaster_1_5_Upstream {
 
     @Override
     Object run() {
-        //installKubernetes()
+        installKubernetes()
     }
 
     @Override

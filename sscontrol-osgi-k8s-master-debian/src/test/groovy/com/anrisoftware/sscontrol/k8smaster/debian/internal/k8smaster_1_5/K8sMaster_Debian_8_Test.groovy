@@ -117,6 +117,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "etcd", address: "etcd" with {
         tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     }
+    plugin "calico"
 }
 """,
             generatedDir: folder.newFolder(),
@@ -129,6 +130,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "calico.yaml", "${args.test.name}_calico_yaml_expected.txt"
             },
         ]
         doTest test

@@ -55,7 +55,7 @@ public class AccountImpl implements Account {
 
     @AssistedInject
     AccountImpl(AccountImplLogger log, TlsFactory tlsFactory) {
-        this(log, tlsFactory, new HashMap<>());
+        this(log, tlsFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject

@@ -6,23 +6,9 @@ kubeletService(parent, vars) ::= <<
 # <parent.systemdSystemDir>/kubelet.service
 [Service]
 EnvironmentFile=<parent.sysConfigDir>/kubelet
-Environment=KUBELET_VERSION=${K8S_VER}
-Environment=KUBELET_ACI=${HYPERKUBE_IMAGE_REPO}
-Environment="RKT_OPTS=--uuid-file-save=${KUBELET_UUID_FILE} \
-  --volume dns,kind=host,source=/etc/resolv.conf \
-  --mount volume=dns,target=/etc/resolv.conf \
-  --volume rkt,kind=host,source=<parent.binDir>/host-rkt \
-  --mount volume=rkt,target=/usr/bin/rkt \
-  --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
-  --mount volume=var-lib-rkt,target=/var/lib/rkt \
-  --volume stage,kind=host,source=/tmp \
-  --mount volume=stage,target=/tmp \
-  --volume var-log,kind=host,source=/var/log \
-  --mount volume=var-log,target=/var/log \
-  ${CALICO_OPTS}"
-ExecStartPre=/bin/mkdir -p /tmp/junit/junit/etc/kubernetes/manifests
-ExecStartPre=/bin/mkdir -p /tmp/junit/junit/opt/cni/bin
-ExecStartPre=/bin/mkdir -p /tmp/junit/junit/var/log/containers
+ExecStartPre=/bin/mkdir -p <parent.manifestsDir>
+ExecStartPre=/bin/mkdir -p <parent.cniBinDir>
+ExecStartPre=/bin/mkdir -p <parent.containersLogDir>
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
 ExecStart=<parent.binDir>/kubelet-wrapper \
   --api-servers=${K8S_APISERVERS} \
@@ -129,7 +115,7 @@ exec ${RKT} ${RKT_GLOBAL_ARGS} \
     --mount volume=run,target=/run \
     ${RKT_STAGE1_ARG} \
     ${KUBELET_IMAGE} \
-        ${KUBELET_IMAGE_ARGS} \
--- "$@"
+    ${KUBELET_IMAGE_ARGS} \
+    -- "$@"
 
 >>

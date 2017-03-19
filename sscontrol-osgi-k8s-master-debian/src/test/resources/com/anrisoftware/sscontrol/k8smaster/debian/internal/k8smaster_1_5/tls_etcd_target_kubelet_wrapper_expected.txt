@@ -80,5 +80,5 @@ exec ${RKT} ${RKT_GLOBAL_ARGS} \
     --mount volume=run,target=/run \
     ${RKT_STAGE1_ARG} \
     ${KUBELET_IMAGE} \
-        ${KUBELET_IMAGE_ARGS} \
--- "$@"
+    ${KUBELET_IMAGE_ARGS} \
+    -- "$@"

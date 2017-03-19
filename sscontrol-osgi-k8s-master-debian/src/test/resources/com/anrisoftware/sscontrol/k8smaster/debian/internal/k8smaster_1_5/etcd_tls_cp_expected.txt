@@ -2,6 +2,7 @@
 /var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_cert.pem
 /var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_key.pem
 /var/lib/robobee/tmp/kubelet.service /tmp/junit/junit/etc/systemd/system/kubelet.service
+/var/lib/robobee/tmp/kubelet-wrapper /tmp/junit/junit/usr/local/bin/kubelet-wrapper
 /var/lib/robobee/tmp/kubelet /tmp/junit/junit/etc/sysconfig/kubelet
 /var/lib/robobee/tmp/kube-proxy.yaml /tmp/junit/junit/etc/kubernetes/manifests/kube-proxy.yaml
 /var/lib/robobee/tmp/kube-apiserver.yaml /tmp/junit/junit/etc/kubernetes/manifests/kube-apiserver.yaml
@@ -14,4 +15,5 @@
 /var/lib/robobee/tmp/heapster-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/heapster-svc.yaml
 /var/lib/robobee/tmp/kube-dashboard-de.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 /var/lib/robobee/tmp/kube-dashboard-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
+/var/lib/robobee/tmp/calico.yaml /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml
 /var/lib/robobee/tmp/host-rkt /tmp/junit/junit/usr/local/bin/host-rkt

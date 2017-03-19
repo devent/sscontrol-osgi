@@ -375,7 +375,7 @@ systemctl daemon-reload
                 vars: [:],
             ]
         }
-        if (deployCalico && service.plugins.containsKey('calico')) {
+        if (deployCalico && havePluginCalico) {
             templates << [
                 resource: manifestsTemplate,
                 name: 'calicoManifest',
@@ -435,7 +435,7 @@ systemctl daemon-reload
 
     def startCalico() {
         K8sMaster service = service
-        if (!service.plugins.containsKey('calico')) {
+        if (!havePluginCalico) {
             return
         }
         log.info 'Start Calico.'
@@ -599,6 +599,11 @@ systemctl daemon-reload
 
     Map getPluginsTargets() {
         pluginTargetsMapFactory.create service, scriptsRepository, service.plugins
+    }
+
+    boolean getHavePluginCalico() {
+        K8sMaster service = service
+        service.plugins.containsKey('calico')
     }
 
     File getSystemdSystemDir() {
