@@ -134,6 +134,10 @@ mkdir -p '$dropin'
         base != null ? new File(base, path) : new File(path)
     }
 
+    List getDockerVariables() {
+        properties.getListProperty 'docker_variables', defaultProperties
+    }
+
     def getDefaultRegistryMirrorCaName() {
         properties.getProperty 'default_registry_mirror_ca_name', defaultProperties
     }

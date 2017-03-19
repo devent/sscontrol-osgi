@@ -30,13 +30,6 @@ d <parent.runDir> 0755 root root -
 
 >>
 
-dockerdConfig(parent, vars) ::= <<
-[Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd -H fd:// $DOCKER_NETWORK_OPTIONS $DOCKER_OPTIONS
-
->>
-
 flannelDockerConfig(parent, vars) ::= <<
 # Authors
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
@@ -50,7 +43,7 @@ EnvironmentFile=-<parent.runDir>/docker
 >>
 
 dockerNetworkConfig(parent, vars) ::= <<
-# /etc/sysconfig/docker-network
+# <parent.dockerNetworkFile>
 DOCKER_NETWORK_OPTIONS=
 
 >>

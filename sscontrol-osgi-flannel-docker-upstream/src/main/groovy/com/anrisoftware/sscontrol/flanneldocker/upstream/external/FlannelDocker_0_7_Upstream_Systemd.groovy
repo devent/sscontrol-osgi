@@ -126,13 +126,6 @@ chmod o-rx '$certsdir'
             ],
             [
                 resource: servicesTemplate,
-                name: 'dockerdConfig',
-                privileged: true,
-                dest: "$dockerdir/01_dockerd_opts.conf",
-                vars: [:],
-            ],
-            [
-                resource: servicesTemplate,
                 name: 'flannelDockerConfig',
                 privileged: true,
                 dest: "$dockerdir/10_flannel.conf",
@@ -162,13 +155,6 @@ chmod o-rx '$certsdir'
                 vars: [:],
             ],
         ].each { template it call() }
-    }
-
-    def patchDockerService() {
-        replace dest: dockerServiceFile, privileged: true with {
-            line 's|ExecStart=/usr/bin/dockerd.*|ExecStart=/usr/bin/dockerd -H fd:// $DOCKER_NETWORK_OPTIONS|'
-            it
-        }.call()
     }
 
     def setupFlannel() {
@@ -211,10 +197,6 @@ chmod o-rx '$certsdir'
 
     File getDockerServiceDir() {
         properties.getFileProperty "docker_service_dir", base, defaultProperties
-    }
-
-    File getDockerServiceFile() {
-        properties.getFileProperty "docker_service_file", dockerServiceDir, defaultProperties
     }
 
     @Override
