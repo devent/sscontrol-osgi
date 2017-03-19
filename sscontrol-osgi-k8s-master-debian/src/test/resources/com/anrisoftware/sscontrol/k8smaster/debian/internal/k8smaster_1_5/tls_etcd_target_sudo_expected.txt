@@ -2,8 +2,10 @@
 mkdir -p /var/lib/robobee/tmp
 chown 1000 /var/lib/robobee/tmp
 chmod o-rwx /var/lib/robobee/tmp
-find . -executable -type f -exec cp {} /tmp/junit/junit/usr/local/bin ;
-chmod o+rx /tmp/junit/junit/usr/local/bin/*
+mv /tmp/junit/junit/basename https://storage.googleapis.com/kubernetes-release/release/v1.5.4/bin/linux/amd64/kubectl /tmp/junit/junit/usr/local/bin
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s

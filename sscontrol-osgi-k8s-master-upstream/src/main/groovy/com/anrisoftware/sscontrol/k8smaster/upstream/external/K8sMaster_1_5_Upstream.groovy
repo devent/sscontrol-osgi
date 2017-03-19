@@ -30,31 +30,16 @@ abstract class K8sMaster_1_5_Upstream extends ScriptBase {
 
     def installKubernetes() {
         log.info 'Installs k8s-master.'
-        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
-        shell timeout: timeoutVeryLong, """\
-cd /tmp
-tar xf `basename $archive`
-cd kubernetes
-printf "y\\n" | cluster/get-kube-binaries.sh
-cd server
-tar xf kubernetes-server-linux-amd64.tar.gz
-mkdir -p '$binDir'
-cd kubernetes/server/bin
-sudo find . -executable -type f -exec cp '{}' '$binDir' \\;
-sudo chmod o+rx '$binDir'/*
-""" call()
+        copy src: archive, hash: archiveHash, dest: binDir, direct: true, privileged: true, timeout: timeoutLong call()
+        shell privileged: true, "chmod o+x '$binDir/kubectl'" call()
     }
 
     URI getArchive() {
-        properties.getURIProperty('kubernetes_archive', defaultProperties)
+        properties.getURIProperty('kubectl_archive', defaultProperties)
     }
 
     String getArchiveHash() {
-        properties.getProperty('kubernetes_archive_hash', defaultProperties)
-    }
-
-    File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
+        properties.getProperty('kubectl_archive_hash', defaultProperties)
     }
 
     @Override
