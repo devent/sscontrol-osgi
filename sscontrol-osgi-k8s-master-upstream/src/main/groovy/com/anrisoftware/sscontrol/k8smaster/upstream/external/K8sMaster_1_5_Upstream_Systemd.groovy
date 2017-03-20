@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
+import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j
 
@@ -55,7 +56,8 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates')
+        def attr = [renderers: [new UriBase64Renderer()]]
+        def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates', attr)
         this.kubeletServiceTemplate = templates.getResource('kubelet_service')
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
         this.manifestsTemplate = templates.getResource('manifests_template')
@@ -593,6 +595,30 @@ systemctl daemon-reload
         properties.getProperty 'hypercube_image_repo', defaultProperties
     }
 
+    def getCalicoNodeVersion() {
+        properties.getProperty 'calico_node_version', defaultProperties
+    }
+
+    def getCalicoNodeImageRepo() {
+        properties.getProperty 'calico_node_image_repo', defaultProperties
+    }
+
+    def getCalicoCniVersion() {
+        properties.getProperty 'calico_cni_version', defaultProperties
+    }
+
+    def getCalicoCniImageRepo() {
+        properties.getProperty 'calico_cni_image_repo', defaultProperties
+    }
+
+    def getCalicoKubePolicyControllerVersion() {
+        properties.getProperty 'calico_kube_policy_controller_version', defaultProperties
+    }
+
+    def getCalicoKubePolicyControllerImageRepo() {
+        properties.getProperty 'calico_kube_policy_controller_image_repo', defaultProperties
+    }
+
     File getKubeletUuidFile() {
         properties.getFileProperty 'kubelet_uuid_file', base, defaultProperties
     }
@@ -604,6 +630,15 @@ systemctl daemon-reload
     boolean getHavePluginCalico() {
         K8sMaster service = service
         service.plugins.containsKey('calico')
+    }
+
+    Tls getPluginEtcdTls() {
+        K8sMaster service = service
+        if (service.plugins.containsKey('etcd')) {
+            return service.plugins.etcd.tls
+        } else {
+            return null
+        }
     }
 
     File getSystemdSystemDir() {
