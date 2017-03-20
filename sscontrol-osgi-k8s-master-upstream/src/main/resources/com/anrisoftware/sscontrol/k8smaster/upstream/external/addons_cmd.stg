@@ -8,7 +8,7 @@ echo "Deploying Calico"
 #TODO: change to rkt once this is resolved (https://github.com/coreos/rkt/issues/3181)
 K8S_VER=<parent.kubernetesVersion>
 HYPERKUBE_IMAGE_REPO=<parent.hypercubeImageRepo>
-docker run --rm --net=host -v <parent.srvManifestsDir>:/host/manifests "$HYPERKUBE_IMAGE_REPO:$K8S_VER" /hyperkube kubectl apply -f /host/manifests/calico.yaml
+docker run --rm --net=host -v <parent.srvManifestsDir>:/host/manifests "\$HYPERKUBE_IMAGE_REPO:\$K8S_VER" /hyperkube kubectl apply -f /host/manifests/calico.yaml
 
 >>
 

@@ -563,33 +563,34 @@ data:
   # Configure the Calico backend to use.
   calico_backend: "none"
 
-  # The CNI network configuration to install on each node.
+ # The CNI network configuration to install on each node.  The special
+  # values in this config will be automatically populated.
   cni_network_config: |-
     {
-        "name": "k8s-pod-network",
-        "type": "calico",
-        "etcd_endpoints": "__ETCD_ENDPOINTS__",
-        "etcd_key_file": "__ETCD_KEY_FILE__",
-        "etcd_cert_file": "__ETCD_CERT_FILE__",
-        "etcd_ca_cert_file": "__ETCD_CA_CERT_FILE__",
-        "log_level": "info",
-        "ipam": {
-            "type": "calico-ipam"
-        },
-        "policy": {
-            "type": "k8s",
-            "k8s_api_root": "https://__KUBERNETES_SERVICE_HOST__:__KUBERNETES_SERVICE_PORT__",
-            "k8s_auth_token": "__SERVICEACCOUNT_TOKEN__"
-        },
-        "kubernetes": {
-            "kubeconfig": "__KUBECONFIG_FILEPATH__"
+        "name": "calico",
+        "type": "flannel",
+        "delegate": {
+          "type": "calico",
+          "etcd_endpoints": "__ETCD_ENDPOINTS__",
+          "etcd_key_file": "__ETCD_KEY_FILE__",
+          "etcd_cert_file": "__ETCD_CERT_FILE__",
+          "etcd_ca_cert_file": "__ETCD_CA_CERT_FILE__",
+          "log_level": "info",
+          "policy": {
+              "type": "k8s",
+              "k8s_api_root": "https://__KUBERNETES_SERVICE_HOST__:__KUBERNETES_SERVICE_PORT__",
+              "k8s_auth_token": "__SERVICEACCOUNT_TOKEN__"
+          },
+          "kubernetes": {
+              "kubeconfig": "/etc/kubernetes/cni/net.d/__KUBECONFIG_FILENAME__"
+          }
         }
     }
   # If you're using TLS enabled etcd uncomment the following.
   # You must also populate the Secret below with these files.
-  etcd_ca: ""   # "/calico-secrets/etcd-ca"
-  etcd_cert: "" # "/calico-secrets/etcd-cert"
-  etcd_key: ""  # "/calico-secrets/etcd-key"
+  etcd_ca: "<if(parent.pluginEtcdTls&&parent.pluginEtcdTls.ca)>/calico-secrets/etcd-ca<endif>"   # "/calico-secrets/etcd-ca"
+  etcd_cert: "<if(parent.pluginEtcdTls&&parent.pluginEtcdTls.cert)>/calico-secrets/etcd-cert<endif>" # "/calico-secrets/etcd-cert"
+  etcd_key: "<if(parent.pluginEtcdTls&&parent.pluginEtcdTls.key)>/calico-secrets/etcd-key<endif>"  # "/calico-secrets/etcd-key"
 
 ---
 
@@ -606,9 +607,9 @@ data:
   # not using TLS for etcd.
   # This self-hosted install expects three files with the following names.  The values
   # should be base64 encoded strings of the entire contents of each file.
-  # etcd-key: null
-  # etcd-cert: null
-  # etcd-ca: null
+  <if(parent.pluginEtcdTls&&parent.pluginEtcdTls.key)>etcd-key: <parent.pluginEtcdTls.key;format="base64"><else># etcd-key: <endif>
+  <if(parent.pluginEtcdTls&&parent.pluginEtcdTls.cert)>etcd-cert: <parent.pluginEtcdTls.cert;format="base64"><else># etcd-cert: <endif>
+  <if(parent.pluginEtcdTls&&parent.pluginEtcdTls.ca)>etcd-ca: <parent.pluginEtcdTls.ca;format="base64"><else># etcd-ca: <endif>
 
 ---
 
@@ -642,7 +643,7 @@ spec:
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          image: <parent.calicoNodeImageRepo>:<parent.calicoNodeImageVersion>
+          image: <parent.calicoNodeImageRepo>:<parent.calicoNodeVersion>
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS
@@ -652,7 +653,10 @@ spec:
                   key: etcd_endpoints
             # Choose the backend to use.
             - name: CALICO_NETWORKING_BACKEND
-              value: "none"
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: calico_backend
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
@@ -693,10 +697,13 @@ spec:
         # This container installs the Calico CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          image: <parent.calicoCniImageRepo>:<parent.calicoCniImageVersion>quay.io/calico/cni:{{site.data.versions[page.version].first.components["calico/cni"].version}}
+          image: <parent.calicoCniImageRepo>:<parent.calicoCniVersion>
           imagePullPolicy: Always
           command: ["/install-cni.sh"]
           env:
+            # CNI configuration filename
+            - name: CNI_CONF_NAME
+              value: "10-calico.conf"
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS
               valueFrom:
@@ -727,10 +734,13 @@ spec:
         # Used to install CNI.
         - name: cni-bin-dir
           hostPath:
-            path: /opt/cni/bin
+            path: <parent.cniBinDir>
         - name: cni-net-dir
           hostPath:
-            path: /etc/cni/net.d
+            path: <parent.cniNetDir>
+        - name: dns
+          hostPath:
+            path: /etc/resolv.conf
         # Mount in the etcd TLS secrets.
         - name: etcd-certs
           secret:
@@ -769,7 +779,7 @@ spec:
       hostNetwork: true
       containers:
         - name: calico-policy-controller
-          image: quay.io/calico/kube-policy-controller:{{site.data.versions[page.version].first.components["calico/kube-policy-controller"].version}}
+          image: <parent.calicoKubePolicyControllerImageRepo>:<parent.calicoKubePolicyControllerVersion>
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS
