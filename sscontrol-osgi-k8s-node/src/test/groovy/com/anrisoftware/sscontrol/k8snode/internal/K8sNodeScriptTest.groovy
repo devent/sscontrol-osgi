@@ -105,15 +105,15 @@ service "k8s-node" with {
             name: 'tls',
             input: """
 service "k8s-node" with {
-    master address: "master"
+    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.targets.size() == 0
-                assert s.master.target == null
-                assert s.master.address == 'master'
+                assert s.tls.ca.toString() =~ /.*ca\.pem/
+                assert s.tls.cert.toString() =~ /.*cert\.pem/
+                assert s.tls.key.toString() =~ /.*key\.pem/
             },
         ]
         doTest test
