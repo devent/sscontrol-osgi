@@ -66,8 +66,8 @@ abstract class AbstractTest_FlannelDocker_Debian_8 extends AbstractScriptTestBas
 
     static final Map andreaLocalEtcdCerts = [
         ca: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
-        cert: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_client_cert.pem'),
-        key: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_client_key_insecure.pem'),
+        cert: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
+        key: AbstractTest_FlannelDocker_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
     ]
 
     @Inject
