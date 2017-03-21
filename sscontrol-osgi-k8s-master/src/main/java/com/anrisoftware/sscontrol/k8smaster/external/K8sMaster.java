@@ -16,11 +16,16 @@
 package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.util.List;
-import java.util.Map;
 
+import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
  * <i>K8s-Master</i> service.
@@ -28,15 +33,13 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8sMaster extends HostService {
+public interface K8sMaster extends K8s {
 
     DebugLogging getDebugLogging();
 
     Cluster getCluster();
 
     String getContainerRuntime();
-
-    Map<String, Plugin> getPlugins();
 
     Boolean isAllowPrivileged();
 

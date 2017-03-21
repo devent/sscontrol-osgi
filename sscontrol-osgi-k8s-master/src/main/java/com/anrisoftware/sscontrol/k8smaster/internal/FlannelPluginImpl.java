@@ -20,7 +20,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8smaster.external.FlannelPlugin;
+import com.anrisoftware.sscontrol.k8sbase.base.external.FlannelPlugin;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImplLogger;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

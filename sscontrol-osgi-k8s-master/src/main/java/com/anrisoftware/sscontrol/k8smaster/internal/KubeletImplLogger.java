@@ -15,14 +15,15 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.bindingSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.preferredTypesAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.KubeletImplLogger.m.tlsSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.preferredTypesAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8smaster.external.Binding;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**

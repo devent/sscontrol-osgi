@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.external;
 
+import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+
 /**
  * <i>Etcd</i> plugin.
  *

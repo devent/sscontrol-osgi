@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.util.Map;
 
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
 import com.google.inject.assistedinject.Assisted;
 
 /**

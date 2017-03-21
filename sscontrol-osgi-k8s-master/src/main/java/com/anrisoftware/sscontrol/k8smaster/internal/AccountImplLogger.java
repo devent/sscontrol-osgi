@@ -15,11 +15,12 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.AccountImplLogger.m.tlsSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.AccountImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.AccountImpl;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**

@@ -21,8 +21,9 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.k8smaster.external.K8sMasterPreScriptService;
-import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterPreScriptImpl.K8sMasterPreScriptImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8sMasterPreScriptService;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreModule;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreScriptImpl.K8sMasterPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

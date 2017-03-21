@@ -22,8 +22,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
-import com.anrisoftware.sscontrol.k8smaster.external.ClientCertsAuthentication;
+import com.anrisoftware.sscontrol.k8sbase.base.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.ClientCertsAuthentication;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
