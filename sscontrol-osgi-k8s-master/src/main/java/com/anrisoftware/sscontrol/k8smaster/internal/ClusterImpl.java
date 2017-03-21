@@ -22,7 +22,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8smaster.external.Cluster;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

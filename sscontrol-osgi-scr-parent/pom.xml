@@ -48,13 +48,14 @@
         <module>../sscontrol-osgi-hostname-systemd</module>
         <module>../sscontrol-osgi-hosts</module>
         <module>../sscontrol-osgi-hosts-linux</module>
+        <module>../sscontrol-osgi-k8s-base</module>
+        <module>../sscontrol-osgi-k8s-base-upstream</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-k8s-node-debian</module>
         <module>../sscontrol-osgi-k8s-node-upstream</module>
-        <module>../sscontrol-osgi-k8s-upstream</module>
         <module>../sscontrol-osgi-rkt-deb</module>
         <module>../sscontrol-osgi-rkt-debian</module>
         <module>../sscontrol-osgi-script-runner</module>

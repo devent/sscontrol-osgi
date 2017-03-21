@@ -1,15 +1,16 @@
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.advertiseAddressSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.apiServersAdded;
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.dnsAddressSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.hostnameOverrideSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.podRangeSet;
-import static com.anrisoftware.sscontrol.k8smaster.internal.ClusterImplLogger.m.serviceRangeSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.advertiseAddressSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.apiServersAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.dnsAddressSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.hostnameOverrideSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.podRangeSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger.m.serviceRangeSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl;
 
 /**
  * Logging for {@link ClusterImpl}.

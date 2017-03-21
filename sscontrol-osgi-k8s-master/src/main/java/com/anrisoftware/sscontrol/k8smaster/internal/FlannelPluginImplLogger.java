@@ -1,10 +1,11 @@
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8smaster.internal.FlannelPluginImplLogger.m.rangeSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImplLogger.m.rangeSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl;
 
 /**
  * Logging for {@link FlannelPluginImpl}.

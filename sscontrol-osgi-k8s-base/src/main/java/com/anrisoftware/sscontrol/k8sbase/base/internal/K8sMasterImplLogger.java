@@ -1,0 +1,123 @@
+/*
+ * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.anrisoftware.sscontrol.k8sbase.base.internal;
+
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.accountSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.admissionsAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.allowPrivilegedSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.authenticationAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.authorizationAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.clusterSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.pluginAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.tlsSet;
+
+import javax.inject.Singleton;
+
+import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+
+/**
+ * Logging for {@link K8sMasterImpl}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+@Singleton
+final class K8sMasterImplLogger extends AbstractLogger {
+
+    enum m {
+
+        pluginAdded("Plugin {} added to {}"),
+
+        clusterSet("Cluster {} set for {}"),
+
+        tlsSet("TLS {} set for {}"),
+
+        authenticationAdded("Authentication {} added for {}"),
+
+        authorizationAdded("Authorization {} added for {}"),
+
+        admissionsAdded("Admissions {} added for {}"),
+
+        allowPrivilegedSet("Allow privileged {} set for {}"),
+
+        bindingSet("Binding {} set for {}"),
+
+        accountSet("Account {} set for {}");
+
+        private String name;
+
+        private m(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    /**
+     * Sets the context of the logger to {@link K8sMasterImpl}.
+     */
+    public K8sMasterImplLogger() {
+        super(K8sMasterImpl.class);
+    }
+
+    void pluginAdded(K8sMasterImpl k8s, Plugin plugin) {
+        debug(pluginAdded, plugin, k8s);
+    }
+
+    void clusterSet(K8sMasterImpl k8s, Cluster cluster) {
+        debug(clusterSet, cluster, k8s);
+    }
+
+    void tlsSet(K8sMasterImpl k8s, Tls tls) {
+        debug(tlsSet, tls, k8s);
+    }
+
+    void authenticationAdded(K8sMasterImpl k8s, Authentication auth) {
+        debug(authenticationAdded, auth, k8s);
+    }
+
+    void authorizationAdded(K8sMasterImpl k8s, Authorization auth) {
+        debug(authorizationAdded, auth, k8s);
+    }
+
+    void admissionsAdded(K8sMasterImpl k8s, String property) {
+        debug(admissionsAdded, property, k8s);
+    }
+
+    void allowPrivilegedSet(K8sMasterImpl k8s, boolean allow) {
+        debug(allowPrivilegedSet, allow, k8s);
+    }
+
+    void bindingSet(K8sMasterImpl k8s, Binding binding) {
+        debug(bindingSet, binding, k8s);
+    }
+
+    void accountSet(K8sMasterImpl k8s, Account account) {
+        debug(accountSet, account, k8s);
+    }
+}

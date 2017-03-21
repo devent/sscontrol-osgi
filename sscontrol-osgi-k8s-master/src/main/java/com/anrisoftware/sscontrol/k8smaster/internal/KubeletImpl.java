@@ -26,9 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.arrays.ToList;
-import com.anrisoftware.sscontrol.k8smaster.external.Binding;
-import com.anrisoftware.sscontrol.k8smaster.external.Kubelet;
-import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 

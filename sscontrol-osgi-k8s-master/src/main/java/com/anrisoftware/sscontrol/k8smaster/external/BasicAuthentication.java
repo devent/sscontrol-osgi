@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.net.URI;
 
+import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
+
 /**
  * Static Token File.
  *

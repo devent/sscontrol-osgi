@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.util.List;
 
+import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
