@@ -26,10 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreModule
-import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
-import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
@@ -54,10 +52,10 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMasterScriptTest {
+class K8sScriptTest {
 
     @Inject
-    K8sMasterImplFactory serviceFactory
+    K8sImplFactory serviceFactory
 
     @Inject
     HostServicesImplFactory servicesFactory
@@ -73,7 +71,7 @@ service "k8s-master" with {
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
                 assert s.cluster.advertiseAddress == '192.168.0.1'
                 assert s.cluster.serviceRange == '10.3.0.0/24'
@@ -81,47 +79,6 @@ service "k8s-master" with {
                 assert s.cluster.dnsAddress == '10.3.0.10'
                 assert s.cluster.apiServers.size() == 1
                 assert s.cluster.apiServers[0] == 'http://localhost:8080'
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "bind"() {
-        def test = [
-            name: 'bind',
-            input: """
-service "k8s-master" with {
-    bind insecure: "127.0.0.1", secure: "0.0.0.0", insecurePort: 8080, port: 443
-}
-""",
-            expected: { HostServices services ->
-                assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
-                assert s.binding.insecureAddress == "127.0.0.1"
-                assert s.binding.secureAddress == "0.0.0.0"
-                assert s.binding.insecurePort == 8080
-                assert s.binding.port == 443
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "account"() {
-        def test = [
-            name: 'account',
-            input: """
-service "k8s-master" with {
-    account ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-}
-""",
-            expected: { HostServices services ->
-                assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
-                assert s.account.tls.ca.toString() =~ /.*ca\.pem/
-                assert s.account.tls.cert.toString() =~ /.*cert\.pem/
-                assert s.account.tls.key.toString() =~ /.*key\.pem/
             },
         ]
         doTest test
@@ -138,7 +95,7 @@ service "k8s-master" with {
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.allowPrivileged == true
             },
         ]
@@ -156,7 +113,7 @@ service "k8s-master" with {
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
@@ -178,68 +135,12 @@ service "k8s-master" with {
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
                 assert s.plugins['etcd'].address == 'http://etcd-0:2379'
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "auth"() {
-        def test = [
-            name: 'auth',
-            input: '''
-service "k8s-master" with {
-    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-    authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-    authentication "basic", file: "some_file"
-    authentication type: "basic", tokens: """\
-token,user,uid,"group1,group2,group3"
-"""
-    authorization "allow"
-    authorization "deny"
-    authorization "abac", file: "policy_file.json"
-    authorization mode: "abac", abac: """\
-{"apiVersion": "abac.authorization.kubernetes.io/v1beta1", "kind": "Policy", "spec": {"user": "alice", "namespace": "*", "resource": "*", "apiGroup": "*"}}
-"""
-    admission << "AlwaysAdmit,ServiceAccount"
-}
-''',
-            expected: { HostServices services ->
-                assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
-                assert s.targets.size() == 0
-                assert s.cluster.serviceRange == null
-                assert s.plugins.size() == 0
-                assert s.tls.ca.toString() =~ /.*ca\.pem/
-                assert s.tls.cert.toString() =~ /.*cert\.pem/
-                assert s.tls.key.toString() =~ /.*key\.pem/
-                assert s.authentications.size() == 3
-                int k = -1
-                assert s.authentications[++k].type == 'cert'
-                assert s.authentications[k].ca.toString() =~ /.*ca\.pem/
-                assert s.authentications[k].cert.toString() =~ /.*cert\.pem/
-                assert s.authentications[k].key.toString() =~ /.*key\.pem/
-                assert s.authentications[++k].type == 'basic'
-                assert s.authentications[k].file.toString() =~ /.*some_file/
-                assert s.authentications[++k].type == 'basic'
-                assert s.authentications[k].file == null
-                assert s.authentications[k].tokens =~ /token,user.*/
-                assert s.authorizations.size() == 4
-                k = -1
-                assert s.authorizations[++k].mode == 'allow'
-                assert s.authorizations[++k].mode == 'deny'
-                assert s.authorizations[++k].mode == 'abac'
-                assert s.authorizations[++k].mode == 'abac'
-                assert s.admissions.size() == 2
-                k = -1
-                assert s.admissions[++k] == 'AlwaysAdmit'
-                assert s.admissions[++k] == 'ServiceAccount'
             },
         ]
         doTest test
@@ -260,7 +161,7 @@ service "k8s-master" with {
 ''',
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.kubelet.tls.ca.toString() =~ /.*ca\.pem/
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
@@ -288,7 +189,7 @@ service "k8s-master" with {
 ''',
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
-                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
@@ -317,8 +218,8 @@ service "k8s-master" with {
     void setupTest() {
         toStringStyle
         Guice.createInjector(
-                new K8sMasterModule(),
-                new K8sMasterPreModule(),
+                new K8sModule(),
+                new K8sPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

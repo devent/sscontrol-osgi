@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.external;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
-
 /**
  * Blocks all requests.
  *

@@ -17,16 +17,12 @@ package com.anrisoftware.sscontrol.k8smaster.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
-import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
-import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethodSafe;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,32 +30,25 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.globalpom.core.arrays.ToList;
-import com.anrisoftware.sscontrol.debug.external.DebugService;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthenticationFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthorizationFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sMaster;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sMasterService;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AccountImpl.AccountImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BindingImpl.BindingImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
+import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
+import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster;
+import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
@@ -79,23 +68,11 @@ public class K8sMasterImpl implements K8sMaster {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface K8sMasterImplFactory extends K8sMasterService {
+    public interface K8sMasterImplFactory extends K8sService {
 
     }
 
-    private final List<SshHost> targets;
-
-    private final HostServiceProperties serviceProperties;
-
     private final K8sMasterImplLogger log;
-
-    private transient ClusterImplFactory clusterFactory;
-
-    private transient Map<String, PluginFactory> pluginFactories;
-
-    private final Map<String, Plugin> plugins;
-
-    private transient TlsFactory tlsFactory;
 
     @Inject
     private transient Map<String, AuthenticationFactory> authenticationFactories;
@@ -103,63 +80,36 @@ public class K8sMasterImpl implements K8sMaster {
     @Inject
     private transient Map<String, AuthorizationFactory> authorizationFactories;
 
-    private DebugLogging debug;
-
-    private Cluster cluster;
-
-    private Boolean allowPrivileged;
-
     private final List<Authentication> authentications;
 
     private final List<Authorization> authorizations;
 
-    private final Kubelet kubelet;
-
     private final List<String> admissions;
-
-    private Tls tls;
 
     private Binding binding;
 
     private transient BindingImplFactory bindingFactory;
 
-    private String containerRuntime;
-
     private transient AccountImplFactory accountFactory;
 
     private Account account;
 
+    private final K8s k8s;
+
     @Inject
-    K8sMasterImpl(K8sMasterImplLogger log, ClusterImplFactory clusterFactory,
-            Map<String, PluginFactory> pluginFactories,
-            HostPropertiesService propertiesService,
-            KubeletImplFactory kubeletFactory,
-            BindingImplFactory bindingFactory, TlsFactory tlsFactory,
+    K8sMasterImpl(K8sMasterImplLogger log, K8sImplFactory k8sFactory,
+            BindingImplFactory bindingFactory,
             AccountImplFactory accountFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
-        this.clusterFactory = clusterFactory;
-        this.targets = new ArrayList<>();
-        this.serviceProperties = propertiesService.create();
-        this.cluster = clusterFactory.create();
-        this.pluginFactories = pluginFactories;
-        this.plugins = new LinkedHashMap<>();
+        this.k8s = (K8s) k8sFactory.create(args);
         this.authentications = new ArrayList<>();
         this.authorizations = new ArrayList<>();
         this.admissions = new ArrayList<>();
-        this.kubelet = kubeletFactory.create();
         this.binding = bindingFactory.create();
         this.bindingFactory = bindingFactory;
-        this.tlsFactory = tlsFactory;
-        this.tls = tlsFactory.create();
         this.accountFactory = accountFactory;
         this.account = accountFactory.create();
-        parseArgs(args);
-    }
-
-    @Inject
-    public void setDebugService(DebugService debugService) {
-        this.debug = debugService.create();
     }
 
     /**
@@ -167,14 +117,9 @@ public class K8sMasterImpl implements K8sMaster {
      * property << 'name=value'
      * </pre>
      */
+    @Override
     public List<String> getProperty() {
-        return stringListStatement(new ListProperty() {
-
-            @Override
-            public void add(String property) {
-                serviceProperties.addProperty(property);
-            }
-        });
+        return k8s.getProperty();
     }
 
     /**
@@ -182,11 +127,9 @@ public class K8sMasterImpl implements K8sMaster {
      * target name: 'master'
      * </pre>
      */
+    @Override
     public void target(Map<String, Object> args) {
-        Object v = args.get("target");
-        @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
-        targets.addAll(l);
+        k8s.target(args);
     }
 
     /**
@@ -194,10 +137,9 @@ public class K8sMasterImpl implements K8sMaster {
      * debug "error", level: 1
      * </pre>
      */
+    @Override
     public void debug(Map<String, Object> args, String name) {
-        Map<String, Object> arguments = new HashMap<>(args);
-        arguments.put("name", name);
-        invokeMethod(debug, "debug", arguments);
+        k8s.debug(args, name);
     }
 
     /**
@@ -205,9 +147,9 @@ public class K8sMasterImpl implements K8sMaster {
      * debug name: "error", level: 1
      * </pre>
      */
+    @Override
     public void debug(Map<String, Object> args) {
-        Map<String, Object> arguments = new HashMap<>(args);
-        invokeMethod(debug, "debug", arguments);
+        k8s.debug(args);
     }
 
     /**
@@ -215,9 +157,9 @@ public class K8sMasterImpl implements K8sMaster {
      * debug << [name: "error", level: 1]
      * </pre>
      */
-    @SuppressWarnings("unchecked")
+    @Override
     public List<Object> getDebug() {
-        return (List<Object>) invokeMethod(debug, "getDebug", null);
+        return k8s.getDebug();
     }
 
     /**
@@ -236,10 +178,9 @@ public class K8sMasterImpl implements K8sMaster {
      * cluster range: "10.254.0.0/16"
      * </pre>
      */
+    @Override
     public void cluster(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<>(args);
-        this.cluster = clusterFactory.create(a);
-        log.clusterSet(this, cluster);
+        k8s.cluster(args);
     }
 
     /**
@@ -247,10 +188,9 @@ public class K8sMasterImpl implements K8sMaster {
      * plugin "etcd"
      * </pre>
      */
+    @Override
     public Plugin plugin(String name) {
-        Map<String, Object> a = new HashMap<>();
-        a.put("name", name);
-        return plugin(a);
+        return k8s.plugin(name);
     }
 
     /**
@@ -258,10 +198,9 @@ public class K8sMasterImpl implements K8sMaster {
      * plugin "etcd", target: "infra0"
      * </pre>
      */
+    @Override
     public Plugin plugin(Map<String, Object> args, String name) {
-        Map<String, Object> a = new HashMap<>(args);
-        a.put("name", name);
-        return plugin(a);
+        return k8s.plugin(args, name);
     }
 
     /**
@@ -269,15 +208,9 @@ public class K8sMasterImpl implements K8sMaster {
      * plugin name: "etcd", target: "infra0"
      * </pre>
      */
+    @Override
     public Plugin plugin(Map<String, Object> args) {
-        Object v = args.get("name");
-        String name = v.toString();
-        PluginFactory factory = pluginFactories.get(name);
-        Map<String, Object> a = new HashMap<>(args);
-        Plugin plugin = factory.create(a);
-        plugins.put(name, plugin);
-        log.pluginAdded(this, plugin);
-        return plugin;
+        return k8s.plugin(args);
     }
 
     /**
@@ -285,9 +218,9 @@ public class K8sMasterImpl implements K8sMaster {
      * privileged true
      * </pre>
      */
+    @Override
     public void privileged(boolean allow) {
-        this.allowPrivileged = allow;
-        log.allowPrivilegedSet(this, allow);
+        k8s.privileged(allow);
     }
 
     /**
@@ -295,9 +228,19 @@ public class K8sMasterImpl implements K8sMaster {
      * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
      * </pre>
      */
+    @Override
     public void tls(Map<String, Object> args) {
-        this.tls = tlsFactory.create(args);
-        log.tlsSet(this, tls);
+        k8s.tls(args);
+    }
+
+    /**
+     * <pre>
+     * kubelet port: 10250
+     * </pre>
+     */
+    @Override
+    public Kubelet kubelet(Map<String, Object> args) {
+        return k8s.kubelet(args);
     }
 
     /**
@@ -392,7 +335,7 @@ public class K8sMasterImpl implements K8sMaster {
 
     @Override
     public DebugLogging getDebugLogging() {
-        return debug;
+        return k8s.getDebugLogging();
     }
 
     @Override
@@ -400,18 +343,19 @@ public class K8sMasterImpl implements K8sMaster {
         return getTargets().get(0);
     }
 
+    @Override
     public void addTargets(List<SshHost> list) {
-        this.targets.addAll(list);
+        k8s.addTargets(list);
     }
 
     @Override
     public List<SshHost> getTargets() {
-        return Collections.unmodifiableList(targets);
+        return k8s.getTargets();
     }
 
     @Override
     public HostServiceProperties getServiceProperties() {
-        return serviceProperties;
+        return k8s.getServiceProperties();
     }
 
     @Override
@@ -426,17 +370,17 @@ public class K8sMasterImpl implements K8sMaster {
 
     @Override
     public Cluster getCluster() {
-        return cluster;
+        return k8s.getCluster();
     }
 
     @Override
     public Map<String, Plugin> getPlugins() {
-        return plugins;
+        return k8s.getPlugins();
     }
 
     @Override
     public Boolean isAllowPrivileged() {
-        return allowPrivileged;
+        return k8s.isAllowPrivileged();
     }
 
     @Override
@@ -451,7 +395,7 @@ public class K8sMasterImpl implements K8sMaster {
 
     @Override
     public Kubelet getKubelet() {
-        return kubelet;
+        return k8s.getKubelet();
     }
 
     @Override
@@ -461,16 +405,17 @@ public class K8sMasterImpl implements K8sMaster {
 
     @Override
     public Tls getTls() {
-        return tls;
+        return k8s.getTls();
     }
 
+    @Override
     public void setContainerRuntime(String runtime) {
-        this.containerRuntime = runtime;
+        k8s.setContainerRuntime(runtime);
     }
 
     @Override
     public String getContainerRuntime() {
-        return containerRuntime;
+        return k8s.getContainerRuntime();
     }
 
     public void setAccount(Account account) {
@@ -485,23 +430,7 @@ public class K8sMasterImpl implements K8sMaster {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("targets", targets).toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("targets");
-        if (v != null) {
-            addTargets((List<SshHost>) v);
-        }
-        v = args.get("runtime");
-        if (v != null) {
-            setContainerRuntime(v.toString());
-        }
-        v = args.get("advertise");
-        if (v != null) {
-            invokeMethodSafe(cluster, "setAdvertiseAddress", v.toString());
-        }
+                .append("targets", getTargets()).toString();
     }
 
 }

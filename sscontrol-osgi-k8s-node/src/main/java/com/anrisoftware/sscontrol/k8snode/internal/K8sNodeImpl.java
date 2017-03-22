@@ -15,32 +15,26 @@
  */
 package com.anrisoftware.sscontrol.k8snode.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
-import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNodeService;
 import com.anrisoftware.sscontrol.k8snode.external.Master;
 import com.anrisoftware.sscontrol.k8snode.internal.MasterImpl.MasterImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -61,39 +55,22 @@ public class K8sNodeImpl implements K8sNode {
 
     }
 
-    private final List<SshHost> targets;
-
-    private final HostServiceProperties serviceProperties;
-
     private final K8sNodeImplLogger log;
-
-    private DebugLogging debug;
-
-    private Tls tls;
-
-    private transient TlsFactory tlsFactory;
 
     private Master master;
 
     private transient MasterImplFactory masterFactory;
 
-    @Inject
-    K8sNodeImpl(K8sNodeImplLogger log, HostPropertiesService propertiesService,
-            TlsFactory tlsFactory, MasterImplFactory masterFactory,
-            @Assisted Map<String, Object> args) {
-        this.log = log;
-        this.targets = new ArrayList<>();
-        this.serviceProperties = propertiesService.create();
-        this.tlsFactory = tlsFactory;
-        this.tls = tlsFactory.create();
-        this.masterFactory = masterFactory;
-        this.master = masterFactory.create();
-        parseArgs(args);
-    }
+    private final K8s k8s;
 
     @Inject
-    public void setDebugService(DebugService debugService) {
-        this.debug = debugService.create();
+    K8sNodeImpl(K8sNodeImplLogger log, K8sImplFactory k8sFactory,
+            MasterImplFactory masterFactory,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.k8s = (K8s) k8sFactory.create(args);
+        this.masterFactory = masterFactory;
+        this.master = masterFactory.create();
     }
 
     /**
@@ -101,14 +78,9 @@ public class K8sNodeImpl implements K8sNode {
      * property << 'name=value'
      * </pre>
      */
+    @Override
     public List<String> getProperty() {
-        return stringListStatement(new ListProperty() {
-
-            @Override
-            public void add(String property) {
-                serviceProperties.addProperty(property);
-            }
-        });
+        return k8s.getProperty();
     }
 
     /**
@@ -116,11 +88,9 @@ public class K8sNodeImpl implements K8sNode {
      * target name: 'master'
      * </pre>
      */
+    @Override
     public void target(Map<String, Object> args) {
-        Object v = args.get("target");
-        @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
-        targets.addAll(l);
+        k8s.target(args);
     }
 
     /**
@@ -128,10 +98,9 @@ public class K8sNodeImpl implements K8sNode {
      * debug "error", level: 1
      * </pre>
      */
+    @Override
     public void debug(Map<String, Object> args, String name) {
-        Map<String, Object> arguments = new HashMap<>(args);
-        arguments.put("name", name);
-        invokeMethod(debug, "debug", arguments);
+        k8s.debug(args, name);
     }
 
     /**
@@ -139,9 +108,9 @@ public class K8sNodeImpl implements K8sNode {
      * debug name: "error", level: 1
      * </pre>
      */
+    @Override
     public void debug(Map<String, Object> args) {
-        Map<String, Object> arguments = new HashMap<>(args);
-        invokeMethod(debug, "debug", arguments);
+        k8s.debug(args);
     }
 
     /**
@@ -149,9 +118,59 @@ public class K8sNodeImpl implements K8sNode {
      * debug << [name: "error", level: 1]
      * </pre>
      */
-    @SuppressWarnings("unchecked")
+    @Override
     public List<Object> getDebug() {
-        return (List<Object>) invokeMethod(debug, "getDebug", null);
+        return k8s.getDebug();
+    }
+
+    /**
+     * <pre>
+     * cluster range: "10.254.0.0/16"
+     * </pre>
+     */
+    @Override
+    public void cluster(Map<String, Object> args) {
+        k8s.cluster(args);
+    }
+
+    /**
+     * <pre>
+     * plugin "etcd"
+     * </pre>
+     */
+    @Override
+    public Plugin plugin(String name) {
+        return k8s.plugin(name);
+    }
+
+    /**
+     * <pre>
+     * plugin "etcd", target: "infra0"
+     * </pre>
+     */
+    @Override
+    public Plugin plugin(Map<String, Object> args, String name) {
+        return k8s.plugin(args, name);
+    }
+
+    /**
+     * <pre>
+     * plugin name: "etcd", target: "infra0"
+     * </pre>
+     */
+    @Override
+    public Plugin plugin(Map<String, Object> args) {
+        return k8s.plugin(args);
+    }
+
+    /**
+     * <pre>
+     * privileged true
+     * </pre>
+     */
+    @Override
+    public void privileged(boolean allow) {
+        k8s.privileged(allow);
     }
 
     /**
@@ -159,9 +178,19 @@ public class K8sNodeImpl implements K8sNode {
      * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
      * </pre>
      */
+    @Override
     public void tls(Map<String, Object> args) {
-        this.tls = tlsFactory.create(args);
-        log.tlsSet(this, tls);
+        k8s.tls(args);
+    }
+
+    /**
+     * <pre>
+     * kubelet port: 10250
+     * </pre>
+     */
+    @Override
+    public Kubelet kubelet(Map<String, Object> args) {
+        return k8s.kubelet(args);
     }
 
     /**
@@ -177,7 +206,12 @@ public class K8sNodeImpl implements K8sNode {
 
     @Override
     public DebugLogging getDebugLogging() {
-        return debug;
+        return k8s.getDebugLogging();
+    }
+
+    @Override
+    public void addTargets(List<SshHost> list) {
+        k8s.addTargets(list);
     }
 
     @Override
@@ -187,22 +221,52 @@ public class K8sNodeImpl implements K8sNode {
 
     @Override
     public List<SshHost> getTargets() {
-        return Collections.unmodifiableList(targets);
+        return k8s.getTargets();
     }
 
     @Override
     public HostServiceProperties getServiceProperties() {
-        return serviceProperties;
+        return k8s.getServiceProperties();
     }
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "k8s-node";
+    }
+
+    @Override
+    public Cluster getCluster() {
+        return k8s.getCluster();
+    }
+
+    @Override
+    public Map<String, Plugin> getPlugins() {
+        return k8s.getPlugins();
     }
 
     @Override
     public Tls getTls() {
-        return tls;
+        return k8s.getTls();
+    }
+
+    @Override
+    public Boolean isAllowPrivileged() {
+        return k8s.isAllowPrivileged();
+    }
+
+    @Override
+    public Kubelet getKubelet() {
+        return k8s.getKubelet();
+    }
+
+    @Override
+    public void setContainerRuntime(String runtime) {
+        k8s.setContainerRuntime(runtime);
+    }
+
+    @Override
+    public String getContainerRuntime() {
+        return k8s.getContainerRuntime();
     }
 
     @Override
@@ -213,15 +277,7 @@ public class K8sNodeImpl implements K8sNode {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("targets", targets).toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("targets");
-        if (v != null) {
-            targets.addAll((List<SshHost>) v);
-        }
+                .append("targets", getTargets()).toString();
     }
 
 }

@@ -37,5 +37,5 @@ public interface Kubelet {
      */
     List<String> getPreferredAddressTypes();
 
-    Binding getBinding();
+    Integer getPort();
 }

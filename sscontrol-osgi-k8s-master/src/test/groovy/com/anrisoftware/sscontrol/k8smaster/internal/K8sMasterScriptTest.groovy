@@ -26,8 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8sbase.internal.K8sMasterModule
-import com.anrisoftware.sscontrol.k8sbase.internal.K8sMasterPreModule
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -265,11 +265,31 @@ service "k8s-master" with {
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
                 assert s.kubelet.preferredAddressTypes.size() == 3
-                assert s.kubelet.binding.port == 10250
+                assert s.kubelet.port == 10250
                 def k = -1
                 assert s.kubelet.preferredAddressTypes[++k] == "InternalIP"
                 assert s.kubelet.preferredAddressTypes[++k] == "Hostname"
                 assert s.kubelet.preferredAddressTypes[++k] == "ExternalIP"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "kubelet port arg"() {
+        def test = [
+            name: 'kubelet',
+            input: '''
+service "k8s-master" with {
+    kubelet port: 10250 with {
+        tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    }
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.kubelet.port == 10250
             },
         ]
         doTest test
@@ -317,6 +337,8 @@ service "k8s-master" with {
     void setupTest() {
         toStringStyle
         Guice.createInjector(
+                new K8sModule(),
+                new K8sPreModule(),
                 new K8sMasterModule(),
                 new K8sMasterPreModule(),
                 new PropertiesModule(),

@@ -21,8 +21,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.AlwaysAllowAuthorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.AlwaysAllowAuthorization;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -34,7 +34,7 @@ import com.google.inject.assistedinject.Assisted;
 public class AlwaysAllowAuthorizationImpl implements AlwaysAllowAuthorization {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

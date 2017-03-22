@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.arrays.ToList;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Kubelet client.
@@ -50,6 +52,8 @@ public class KubeletImpl implements Kubelet {
     public interface KubeletImplFactory {
 
         Kubelet create();
+
+        Kubelet create(Map<String, Object> args);
     }
 
     @Inject
@@ -61,22 +65,19 @@ public class KubeletImpl implements Kubelet {
 
     private final List<String> preferredAddressTypes;
 
-    private Binding binding;
+    private Integer port;
 
-    private final BindingImplFactory bindingFactory;
+    @AssistedInject
+    KubeletImpl(TlsFactory tlsFactory) {
+        this(tlsFactory, new HashMap<>());
+    }
 
-    @Inject
-    KubeletImpl(BindingImplFactory bindingFactory, TlsFactory tlsFactory) {
+    @AssistedInject
+    KubeletImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
         this.preferredAddressTypes = new ArrayList<>();
-        this.binding = bindingFactory.create();
-        this.bindingFactory = bindingFactory;
-    }
-
-    @Override
-    public Binding getBinding() {
-        return binding;
+        parseArgs(args);
     }
 
     @Override
@@ -89,15 +90,14 @@ public class KubeletImpl implements Kubelet {
         return preferredAddressTypes;
     }
 
-    /**
-     * <pre>
-     * bind port: 8080
-     * </pre>
-     */
-    public void bind(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<>(args);
-        this.binding = bindingFactory.create(a);
-        log.bindingSet(this, binding);
+    public void setPort(int port) {
+        assertThat("port>0", port, greaterThan(0));
+        this.port = port;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
     }
 
     /**
@@ -124,9 +124,27 @@ public class KubeletImpl implements Kubelet {
         }
     }
 
+    /**
+     * <pre>
+     * bind port: 10250
+     * </pre>
+     */
+    public void bind(Map<String, Object> args) {
+        Object v = args.get("port");
+        Integer port = (Integer) v;
+        setPort(port);
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+        Object v = args.get("port");
+        if (v != null) {
+            setPort((int) v);
+        }
     }
 
 }

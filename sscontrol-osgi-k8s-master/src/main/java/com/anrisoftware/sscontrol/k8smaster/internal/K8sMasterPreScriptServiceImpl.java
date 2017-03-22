@@ -21,9 +21,9 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sMasterPreScriptService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreModule;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreScriptImpl.K8sMasterPreScriptImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -35,8 +35,8 @@ import com.google.inject.Guice;
  * @since 1.0
  */
 @Component
-@Service(K8sMasterPreScriptService.class)
-public class K8sMasterPreScriptServiceImpl implements K8sMasterPreScriptService {
+@Service(K8sPreScriptService.class)
+public class K8sMasterPreScriptServiceImpl implements K8sPreScriptService {
 
     @Inject
     private K8sMasterPreScriptImplFactory sshPreScriptFactory;
@@ -48,7 +48,7 @@ public class K8sMasterPreScriptServiceImpl implements K8sMasterPreScriptService 
 
     @Activate
     protected void start() {
-        Guice.createInjector(new K8sMasterPreModule(), new AbstractModule() {
+        Guice.createInjector(new K8sPreModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

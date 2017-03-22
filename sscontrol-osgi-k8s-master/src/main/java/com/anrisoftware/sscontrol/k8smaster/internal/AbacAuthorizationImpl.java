@@ -24,8 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.globalpom.core.resources.ToURIFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AbacAuthorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.AbacAuthorization;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 public class AbacAuthorizationImpl implements AbacAuthorization {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

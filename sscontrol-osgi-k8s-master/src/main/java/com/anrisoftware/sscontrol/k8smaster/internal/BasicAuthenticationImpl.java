@@ -24,8 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.globalpom.core.resources.ToURIFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthenticationFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.BasicAuthentication;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.BasicAuthentication;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 public class BasicAuthenticationImpl implements BasicAuthentication {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

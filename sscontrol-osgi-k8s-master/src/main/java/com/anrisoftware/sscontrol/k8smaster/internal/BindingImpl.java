@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

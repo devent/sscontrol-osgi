@@ -17,42 +17,20 @@ package com.anrisoftware.sscontrol.k8smaster.internal;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthenticationFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.AuthorizationFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AbacAuthorizationImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AccountImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AlwaysAllowAuthorizationImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AlwaysDenyAuthorizationImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BasicAuthenticationImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BindingImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.CalicoPluginImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClientCertsAuthenticationImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AbacAuthorizationImpl.AbacAuthorizationImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AccountImpl.AccountImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AlwaysAllowAuthorizationImpl.AlwaysAllowAuthorizationImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BasicAuthenticationImpl.BasicAuthenticationImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.BindingImpl.BindingImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.CalicoPluginImpl.CalicoPluginImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl.EtcdPluginImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl.FlannelPluginImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl.K8sMasterImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
+import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
+import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
+import com.anrisoftware.sscontrol.k8smaster.internal.AbacAuthorizationImpl.AbacAuthorizationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysAllowAuthorizationImpl.AlwaysAllowAuthorizationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.AlwaysDenyAuthorizationImpl.AlwaysDenyAuthorizationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.BasicAuthenticationImpl.BasicAuthenticationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
+import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -72,44 +50,20 @@ public class K8sMasterModule extends AbstractModule {
                 .implement(HostService.class, K8sMasterImpl.class)
                 .build(K8sMasterImplFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(Cluster.class, ClusterImpl.class)
-                .build(ClusterImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authentication.class,
-                        ClientCertsAuthenticationImpl.class)
-                .build(ClientCertsAuthenticationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Kubelet.class, KubeletImpl.class)
-                .build(KubeletImplFactory.class));
-        install(new FactoryModuleBuilder()
                 .implement(Binding.class, BindingImpl.class)
                 .build(BindingImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Account.class, AccountImpl.class)
                 .build(AccountImplFactory.class));
-        bindPlugins();
         bindAuthentication();
         bindAuthorization();
     }
 
-    private void bindPlugins() {
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, EtcdPluginImpl.class)
-                .build(EtcdPluginImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, FlannelPluginImpl.class)
-                .build(FlannelPluginImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, CalicoPluginImpl.class)
-                .build(CalicoPluginImplFactory.class));
-        MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
-                String.class, PluginFactory.class);
-        mapbinder.addBinding("etcd").to(EtcdPluginImplFactory.class);
-        mapbinder.addBinding("flannel").to(FlannelPluginImplFactory.class);
-        mapbinder.addBinding("calico").to(CalicoPluginImplFactory.class);
-    }
-
     private void bindAuthentication() {
+        install(new FactoryModuleBuilder()
+                .implement(Authentication.class,
+                        ClientCertsAuthenticationImpl.class)
+                .build(ClientCertsAuthenticationImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Authentication.class, BasicAuthenticationImpl.class)
                 .build(BasicAuthenticationImplFactory.class));
