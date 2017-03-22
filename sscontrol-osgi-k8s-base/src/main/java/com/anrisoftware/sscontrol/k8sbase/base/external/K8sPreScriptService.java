@@ -13,30 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.external;
+package com.anrisoftware.sscontrol.k8sbase.base.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
-import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * Kubelet client.
+ * <i>K8s-Master</i> pre-script service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface Kubelet {
+public interface K8sPreScriptService extends PreHostService {
 
-    /**
-     * Kubelet client TLS.
-     */
-    Tls getTls();
-
-    /**
-     * List of the preferred NodeAddressTypes.
-     */
-    List<String> getPreferredAddressTypes();
-
-    Binding getBinding();
 }

@@ -26,6 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -133,6 +135,8 @@ service "k8s-node" with {
     void setupTest() {
         toStringStyle
         Guice.createInjector(
+                new K8sModule(),
+                new K8sPreModule(),
                 new K8sNodeModule(),
                 new K8sNodePreModule(),
                 new PropertiesModule(),

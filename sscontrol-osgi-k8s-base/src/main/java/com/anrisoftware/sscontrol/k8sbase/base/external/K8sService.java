@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.external;
+package com.anrisoftware.sscontrol.k8sbase.base.external;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
- * <i>Calico</i> plugin.
+ * <i>K8s-Master</i> service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface CalicoPlugin extends Plugin {
-
+public interface K8sService extends HostServiceService {
 }

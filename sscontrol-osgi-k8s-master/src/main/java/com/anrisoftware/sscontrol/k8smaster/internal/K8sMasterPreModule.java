@@ -15,8 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreScriptImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterPreScriptImpl.K8sMasterPreScriptImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -32,7 +32,7 @@ public class K8sMasterPreModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(PreHost.class, K8sMasterPreScriptImpl.class)
+                .implement(PreHost.class, K8sPreScriptImpl.class)
                 .build(K8sMasterPreScriptImplFactory.class));
     }
 

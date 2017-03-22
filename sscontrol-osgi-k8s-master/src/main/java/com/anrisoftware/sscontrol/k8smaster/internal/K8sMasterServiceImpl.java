@@ -28,9 +28,9 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.core.strings.ToStringService;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sMasterService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterModule;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl.K8sMasterImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.AbstractModule;
@@ -43,10 +43,10 @@ import com.google.inject.AbstractModule;
  */
 @Component
 @Service(HostServiceService.class)
-public class K8sMasterServiceImpl implements K8sMasterService {
+public class K8sMasterServiceImpl implements K8sService {
 
     @Inject
-    private K8sMasterImplFactory sshFactory;
+    private K8sImplFactory sshFactory;
 
     @Reference
     private ToStringService toStringService;
@@ -63,7 +63,7 @@ public class K8sMasterServiceImpl implements K8sMasterService {
 
     @Activate
     protected void start() {
-        createInjector(new K8sMasterModule(), new AbstractModule() {
+        createInjector(new K8sModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

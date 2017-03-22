@@ -17,15 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
-import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
 
 /**
  * <i>K8s-Master</i> service.
@@ -35,25 +27,14 @@ import com.anrisoftware.sscontrol.types.external.DebugLogging;
  */
 public interface K8sMaster extends K8s {
 
-    DebugLogging getDebugLogging();
-
-    Cluster getCluster();
-
-    String getContainerRuntime();
-
-    Boolean isAllowPrivileged();
-
-    Tls getTls();
-
     List<Authentication> getAuthentications();
 
     List<Authorization> getAuthorizations();
 
     List<String> getAdmissions();
 
-    Kubelet getKubelet();
-
     Binding getBinding();
 
     Account getAccount();
+
 }

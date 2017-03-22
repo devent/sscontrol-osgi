@@ -15,27 +15,20 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.internal;
 
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.accountSet;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.admissionsAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.allowPrivilegedSet;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.authenticationAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.authorizationAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.bindingSet;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.clusterSet;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.pluginAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImplLogger.m.tlsSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.accountSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.admissionsAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.allowPrivilegedSet;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.authenticationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.authorizationAdded;
+import static com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImplLogger.m.bindingSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Account;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authentication;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Authorization;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Binding;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sMasterImpl;
-import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.k8smaster.external.Account;
+import com.anrisoftware.sscontrol.k8smaster.external.Authentication;
+import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
+import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 
 /**
  * Logging for {@link K8sMasterImpl}.
@@ -83,18 +76,6 @@ final class K8sMasterImplLogger extends AbstractLogger {
      */
     public K8sMasterImplLogger() {
         super(K8sMasterImpl.class);
-    }
-
-    void pluginAdded(K8sMasterImpl k8s, Plugin plugin) {
-        debug(pluginAdded, plugin, k8s);
-    }
-
-    void clusterSet(K8sMasterImpl k8s, Cluster cluster) {
-        debug(clusterSet, cluster, k8s);
-    }
-
-    void tlsSet(K8sMasterImpl k8s, Tls tls) {
-        debug(tlsSet, tls, k8s);
     }
 
     void authenticationAdded(K8sMasterImpl k8s, Authentication auth) {

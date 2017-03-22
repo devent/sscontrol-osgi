@@ -15,9 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8snode.external;
 
-import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 
 /**
  * <i>K8s-Node</i> service.
@@ -25,11 +23,7 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8sNode extends HostService {
-
-    DebugLogging getDebugLogging();
-
-    Tls getTls();
+public interface K8sNode extends K8s {
 
     Master getMaster();
 }
