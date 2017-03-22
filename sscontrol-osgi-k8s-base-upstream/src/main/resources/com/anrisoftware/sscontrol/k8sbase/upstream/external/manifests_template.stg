@@ -548,7 +548,7 @@ spec:
 
 >>
 
-workerKubeconfigManifest(parent, vars) ::= <<
+workerKubeconfig(parent, vars) ::= <<
 apiVersion: v1
 kind: Config
 clusters:

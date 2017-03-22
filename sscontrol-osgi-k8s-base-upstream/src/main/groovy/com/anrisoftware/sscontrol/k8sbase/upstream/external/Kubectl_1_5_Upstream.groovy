@@ -20,13 +20,13 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>K8s-Node</i> 1.5 service from the upstream sources.
+ * Installs the <i>kubectl</i> 1.5 from the upstream sources.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class K8s_1_5_Upstream extends ScriptBase {
+abstract class Kubectl_1_5_Upstream extends ScriptBase {
 
     def installKubernetes() {
         log.info 'Installs k8s-master.'

@@ -23,15 +23,15 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
-import com.anrisoftware.sscontrol.k8smaster.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Node 1.5 service from the upstream sources for Systemd.
+ * Configures the K8s 1.5 service from the upstream sources for Systemd.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -57,7 +57,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def attr = [renderers: [new UriBase64Renderer()]]
-        def templates = templatesFactory.create('K8sMaster_1_5_Upstream_Systemd_Templates', attr)
+        def templates = templatesFactory.create('K8s_1_5_Upstream_Systemd_Templates', attr)
         this.kubeletServiceTemplate = templates.getResource('kubelet_service')
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
         this.manifestsTemplate = templates.getResource('manifests_template')
@@ -68,7 +68,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     def setupMiscDefaults() {
         log.debug 'Setup misc defaults for {}', service
-        K8sMaster service = service
+        K8s service = service
         if (!service.debugLogging.modules['debug']) {
             service.debug "debug", level: defaultLogLevel
         }
@@ -77,24 +77,6 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
         if (!service.allowPrivileged) {
             service.privileged defaultAllowPrivileged
-        }
-        if (service.admissions.size() == 0) {
-            service.admissions.addAll defaultAdmissions
-        }
-        if (!service.account.tls.ca) {
-            service.account.tls.ca = service.tls.ca
-        }
-        if (!service.account.tls.key) {
-            service.account.tls.key = service.tls.key
-        }
-        if (service.account.tls.ca) {
-            service.account.tls.caName = defaultAccountTlsCaName
-        }
-        if (service.account.tls.cert) {
-            service.account.tls.certName = defaultAccountTlsCertName
-        }
-        if (service.account.tls.key) {
-            service.account.tls.keyName = defaultAccountTlsKeyName
         }
         if (service.tls.cert) {
             service.tls.certName = defaultKubernetesTlsCertName
@@ -109,7 +91,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
-        K8sMaster service = service
+        K8s service = service
         assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
         if (!service.cluster.hostnameOverride) {
             service.cluster.hostnameOverride = service.cluster.advertiseAddress
@@ -128,28 +110,11 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
     }
 
-    def setupBindDefaults() {
-        log.debug 'Setup bind defaults for {}', service
-        K8sMaster service = service
-        if (!service.binding.insecureAddress) {
-            service.binding.insecureAddress = defaultInsecureAddress
-        }
-        if (!service.binding.secureAddress) {
-            service.binding.secureAddress = defaultSecureAddress
-        }
-        if (!service.binding.port) {
-            service.binding.port = defaultPort
-        }
-        if (!service.binding.insecurePort) {
-            service.binding.insecurePort = defaultInsecurePort
-        }
-    }
-
     def setupKubeletDefaults() {
         log.debug 'Setup kubelet defaults for {}', service
-        K8sMaster service = service
-        if (!service.kubelet.binding.port) {
-            service.kubelet.binding.port = defaultKubeletPort
+        K8s service = service
+        if (!service.kubelet.port) {
+            service.kubelet.port = defaultKubeletPort
         }
         if (service.kubelet.preferredAddressTypes.size() == 0) {
             service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
@@ -165,26 +130,9 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
     }
 
-    def setupAuthenticationsDefaults() {
-        log.debug 'Setup authentications defaults for {}', service
-        K8sMaster service = service
-        service.authentications.findAll { it.tls  } each {
-            Tls tls = it.tls
-            if (!tls.caName) {
-                tls.caName = defaultAuthenticationTlsCaName[it.type]
-            }
-            if (!tls.certName) {
-                tls.certName = defaultAuthenticationTlsCertName[it.type]
-            }
-            if (!tls.keyName) {
-                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
-            }
-        }
-    }
-
     def setupPluginsDefaults() {
         log.debug 'Setup plugins defaults for {}', service
-        K8sMaster service = service
+        K8s service = service
         service.plugins.findAll {it.value.hasProperty('port')} each {
             def name = it.value.name
             if (!it.value.port) {
@@ -228,18 +176,9 @@ chmod o-rx '$certsDir'
     def uploadK8sCertificates() {
         log.info 'Uploads k8s-master certificates.'
         def certsdir = certsDir
-        K8sMaster service = service
+        K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
-        uploadTlsCerts tls: service.account.tls, name: 'account-tls'
         uploadTlsCerts tls: service.kubelet.tls, name: 'kubelet-tls'
-    }
-
-    def uploadAuthenticationsCertificates() {
-        K8sMaster service = service
-        service.authentications.findAll { it.tls  } each {
-            Tls tls = it.tls
-            uploadTlsCerts tls: tls, name: it.toString()
-        }
     }
 
     def uploadEtcdCertificates() {
@@ -248,16 +187,8 @@ chmod o-rx '$certsDir'
 
     def createKubeletService() {
         log.info 'Create kubelet service.'
-        template resource: kubeletServiceTemplate,
-        name: 'kubeletService',
-        privileged: true,
-        dest: "$systemdSystemDir/kubelet.service",
-        vars: [:] call()
-        template resource: kubeletServiceTemplate,
-        name: 'kubeletWrapper',
-        privileged: true,
-        dest: "$binDir/kubelet-wrapper",
-        vars: [:] call()
+        template privileged: true, resource: kubeletServiceTemplate, name: 'kubeletService', dest: "$systemdSystemDir/kubelet.service", vars: [:] call()
+        template privileged: true, resource: kubeletServiceTemplate, name: 'kubeletWrapper', dest: "$binDir/kubelet-wrapper", vars: [:] call()
         shell privileged: true, """
 chmod +x $binDir/kubelet-wrapper
 systemctl daemon-reload
@@ -267,141 +198,26 @@ systemctl daemon-reload
     def createKubeletConfig() {
         log.info 'Create kubelet configuration.'
         shell privileged: true, "mkdir -p $sysConfigDir" call()
-        template resource: kubeletConfigTemplate,
-        name: 'kubeletConfig',
-        privileged: true,
-        dest: "$sysConfigDir/kubelet",
-        vars: [:] call()
+        template privileged: true, resource: kubeletConfigTemplate, name: 'kubeletConfig', dest: "$sysConfigDir/kubelet", vars: [:] call()
     }
 
     def createRkt() {
         log.info 'Create host-rkt.'
         def dir = binDir
         shell privileged: true, "mkdir -p $dir" call()
-        template resource: rktTemplate,
-        name: 'hostRkt',
-        privileged: true,
-        dest: "$dir/host-rkt",
-        vars: [:] call()
+        template privileged: true, resource: rktTemplate, name: 'hostRkt', dest: "$dir/host-rkt", vars: [:] call()
         shell privileged: true, "chmod +x $dir/host-rkt" call()
     }
 
-    def createKubeletManifests() {
-        log.info 'Create kubelet manifests files.'
-        K8sMaster service = service
-        def dir = manifestsDir
-        def srv = srvManifestsDir
-        shell privileged: true, "mkdir -p $dir; mkdir -p $srv" call()
-        def templates = [
-            [
-                resource: manifestsTemplate,
-                name: 'kubeProxyManifest',
-                privileged: true,
-                dest: "$dir/kube-proxy.yaml",
-                vars: [:],
-            ],
-            [
-                resource: manifestsTemplate,
-                name: 'kubeApiserverManifest',
-                privileged: true,
-                dest: "$dir/kube-apiserver.yaml",
-                vars: [:],
-            ],
-            [
-                resource: manifestsTemplate,
-                name: 'kubeControllerManagerManifest',
-                privileged: true,
-                dest: "$dir/kube-controller-manager.yaml",
-                vars: [:],
-            ],
-            [
-                resource: manifestsTemplate,
-                name: 'kubeSchedulerManifest',
-                privileged: true,
-                dest: "$dir/kube-scheduler.yaml",
-                vars: [:],
-            ],
-        ]
-        if (deployKubeDns) {
-            templates << [
-                resource: manifestsTemplate,
-                name: 'kubeDnsDeManifest',
-                privileged: true,
-                dest: "$srv/kube-dns-de.yaml",
-                vars: [:],
-            ]
-            templates << [
-                resource: manifestsTemplate,
-                name: 'kubeDnsAutoscalerDeManifest',
-                privileged: true,
-                dest: "$srv/kube-dns-autoscaler-de.yaml",
-                vars: [:],
-            ]
-            templates << [
-                resource: manifestsTemplate,
-                name: 'kubeDnsSvcManifest',
-                privileged: true,
-                dest: "$srv/kube-dns-svc.yaml",
-                vars: [:],
-            ]
-        }
-        if (deployHeapster) {
-            templates << [
-                resource: manifestsTemplate,
-                name: 'heapsterDeManifest',
-                privileged: true,
-                dest: "$srv/heapster-de.yaml",
-                vars: [:],
-            ]
-            templates << [
-                resource: manifestsTemplate,
-                name: 'heapsterSvcManifest',
-                privileged: true,
-                dest: "$srv/heapster-svc.yaml",
-                vars: [:],
-            ]
-        }
-        if (deployKubeDashboard) {
-            templates << [
-                resource: manifestsTemplate,
-                name: 'kubeDashboardDeManifest',
-                privileged: true,
-                dest: "$srv/kube-dashboard-de.yaml",
-                vars: [:],
-            ]
-            templates << [
-                resource: manifestsTemplate,
-                name: 'kubeDashboardSvcManifest',
-                privileged: true,
-                dest: "$srv/kube-dashboard-svc.yaml",
-                vars: [:],
-            ]
-        }
-        if (deployCalico && havePluginCalico) {
-            templates << [
-                resource: manifestsTemplate,
-                name: 'calicoManifest',
-                privileged: true,
-                dest: "$srv/calico.yaml",
-                vars: [:],
-            ]
-        }
-        templates.each { template it call() }
-    }
-
     def createFlannelCni() {
-        K8sMaster service = service
+        K8s service = service
         if (!service.plugins.containsKey('flannel')) {
             return
         }
         log.info 'Create flannel cni drop-in.'
         def dir = cniNetDir
         shell privileged: true, "mkdir -p $dir" call()
-        template resource: flannelCniTemplate,
-        name: 'flannelCniDropin',
-        privileged: true,
-        dest: "$dir/10-flannel.conf",
-        vars: [:] call()
+        template privileged: true, resource: flannelCniTemplate, name: 'flannelCniDropin', dest: "$dir/10-flannel.conf", vars: [:] call()
     }
 
     def stopServices() {
@@ -412,8 +228,8 @@ systemctl daemon-reload
         startEnableSystemdService 'kubelet'
     }
 
-    def startAddons() {
-        K8sMaster service = service
+    def startKubeDnsAddon() {
+        K8s service = service
         if (deployKubeDns) {
             log.info 'Start kube-dns.'
             shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
@@ -421,22 +237,30 @@ systemctl daemon-reload
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
         }
+    }
+
+    def startHeapsterAddon() {
+        K8s service = service
         if (deployHeapster) {
             log.info 'Start heapster.'
             shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-de.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-svc.yaml'] call()
         }
+    }
+
+    def startKubeDashboardAddon() {
+        K8s service = service
         if (deployKubeDashboard) {
-            log.info 'Start heapster.'
+            log.info 'Start dashboard.'
             shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
         }
     }
 
-    def startCalico() {
-        K8sMaster service = service
+    def startCalicoAddon() {
+        K8s service = service
         if (!havePluginCalico) {
             return
         }
@@ -628,12 +452,12 @@ systemctl daemon-reload
     }
 
     boolean getHavePluginCalico() {
-        K8sMaster service = service
+        K8s service = service
         service.plugins.containsKey('calico')
     }
 
     Tls getPluginEtcdTls() {
-        K8sMaster service = service
+        K8s service = service
         if (service.plugins.containsKey('etcd')) {
             return service.plugins.etcd.tls
         } else {

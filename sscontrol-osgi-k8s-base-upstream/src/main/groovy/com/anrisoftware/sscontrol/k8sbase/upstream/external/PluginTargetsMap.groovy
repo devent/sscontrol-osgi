@@ -2,8 +2,8 @@ package com.anrisoftware.sscontrol.k8sbase.upstream.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
-import com.anrisoftware.sscontrol.k8smaster.external.Plugin
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.assistedinject.Assisted
 
@@ -16,23 +16,23 @@ import com.google.inject.assistedinject.Assisted
 class PluginTargetsMap extends HashMap {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
     interface PluginTargetsMapFactory {
 
-        PluginTargetsMap create(K8sMaster service, HostServices repo, Map<String, Plugin> map)
+        PluginTargetsMap create(K8s service, HostServices repo, Map<String, Plugin> map)
     }
 
-    K8sMaster service
+    K8s service
 
     HostServices repo
 
     @Inject
     PluginTargetsMap(
-    @Assisted K8sMaster service,
+    @Assisted K8s service,
     @Assisted HostServices repo,
     @Assisted Map<String, Plugin> map) {
         super(map)
