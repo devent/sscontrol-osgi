@@ -20,7 +20,9 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import javax.inject.Inject
 
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -36,6 +38,11 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScriptModule
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
+import com.anrisoftware.sscontrol.ssh.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
@@ -56,6 +63,15 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class K8sNodeScriptTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder()
+
+    @Inject
+    RobobeeScriptFactory robobeeScriptFactory
+
+    @Inject
+    SshImplFactory sshFactory
+
     @Inject
     K8sNodeImplFactory serviceFactory
 
@@ -63,39 +79,67 @@ class K8sNodeScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "master_target"() {
+    void "cluster_api_host"() {
         def test = [
-            name: 'master_target',
+            name: 'cluster_api_host',
             input: """
 service "k8s-node" with {
-    master target: "master"
+    cluster api: 'https://master.robobee.test'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.targets.size() == 0
-                assert s.master.target == 'master'
+                assert s.cluster.apiServers.size() == 1
+                assert s.cluster.apiServers[0] == 'https://master.robobee.test'
             },
         ]
         doTest test
     }
 
     @Test
-    void "master_address"() {
+    void "cluster_api_targets"() {
         def test = [
-            name: 'master_address',
+            name: 'cluster_api_targets',
             input: """
+service "ssh", group: "master" with {
+    host "robobee@master-0.robobee.test"
+    host "robobee@master-1.robobee.test"
+}
+def master = targets['master']
 service "k8s-node" with {
-    master address: "master"
+    cluster api: master
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.targets.size() == 0
-                assert s.master.target == null
-                assert s.master.address == 'master'
+                assert s.cluster.apiServers.size() == 2
+                assert s.cluster.apiServers[0].host == 'master-0.robobee.test'
+                assert s.cluster.apiServers[1].host == 'master-1.robobee.test'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "cluster_api_target"() {
+        def test = [
+            name: 'cluster_api_target',
+            input: """
+service "ssh", group: "master" with {
+    host "robobee@master.robobee.test"
+}
+def master = targets['master'][0]
+service "k8s-node" with {
+    cluster api: master
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-node').size() == 1
+                K8sNode s = services.getServices('k8s-node')[0] as K8sNode
+                assert s.cluster.apiServers.size() == 1
+                assert s.cluster.apiServers[0].host == 'master.robobee.test'
             },
         ]
         doTest test
@@ -125,8 +169,9 @@ service "k8s-node" with {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-node', serviceFactory
-        Eval.me 'service', services, test.input as String
+        services = robobeeScriptFactory.create folder.newFile(), test.input, services call()
         Closure expected = test.expected
         expected services
     }
@@ -135,10 +180,13 @@ service "k8s-node" with {
     void setupTest() {
         toStringStyle
         Guice.createInjector(
+                new SshModule(),
+                new SshPreModule(),
                 new K8sModule(),
                 new K8sPreModule(),
                 new K8sNodeModule(),
                 new K8sNodePreModule(),
+                new RobobeeScriptModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

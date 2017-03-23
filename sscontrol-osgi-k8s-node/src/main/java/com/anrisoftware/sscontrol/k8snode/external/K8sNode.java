@@ -25,5 +25,4 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
  */
 public interface K8sNode extends K8s {
 
-    Master getMaster();
 }

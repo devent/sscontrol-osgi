@@ -465,6 +465,8 @@ systemctl daemon-reload
         }
     }
 
+    abstract List getMasterHosts()
+
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
@@ -507,6 +509,18 @@ systemctl daemon-reload
 
     boolean getDeployCalico() {
         properties.getBooleanProperty "deploy_calico", defaultProperties
+    }
+
+    boolean getRegisterSchedulable() {
+        properties.getBooleanProperty 'register_schedulable', defaultProperties
+    }
+
+    boolean getRegisterNode() {
+        properties.getBooleanProperty 'register_node', defaultProperties
+    }
+
+    File getKubeconfigFile() {
+        null
     }
 
     Tls getEtcdTls() {

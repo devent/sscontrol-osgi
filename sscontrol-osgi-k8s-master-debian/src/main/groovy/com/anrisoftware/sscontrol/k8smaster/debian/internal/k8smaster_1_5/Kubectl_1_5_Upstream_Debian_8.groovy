@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 
 import groovy.util.logging.Slf4j
 
@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sMaster_1_5_Upstream_Debian_8 extends K8sMaster_1_5_Upstream {
+class Kubectl_1_5_Upstream_Debian_8 extends Kubectl_1_5_Upstream {
 
     @Inject
     K8sMaster_1_5_Debian_8_Properties debianPropertiesProvider

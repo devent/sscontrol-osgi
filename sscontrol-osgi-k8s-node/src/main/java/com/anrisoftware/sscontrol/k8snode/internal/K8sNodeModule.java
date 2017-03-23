@@ -15,9 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8snode.internal;
 
-import com.anrisoftware.sscontrol.k8snode.external.Master;
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory;
-import com.anrisoftware.sscontrol.k8snode.internal.MasterImpl.MasterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -35,9 +33,6 @@ public class K8sNodeModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, K8sNodeImpl.class)
                 .build(K8sNodeImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Master.class, MasterImpl.class)
-                .build(MasterImplFactory.class));
     }
 
 }
