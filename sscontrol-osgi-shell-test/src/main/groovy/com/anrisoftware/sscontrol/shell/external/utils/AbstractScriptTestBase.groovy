@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
@@ -75,6 +76,9 @@ abstract class AbstractScriptTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     Injector injector
+
+    @Inject
+    RobobeeScriptFactory robobeeScriptFactory
 
     @Inject
     HostServicesImplFactory servicesFactory
@@ -115,7 +119,7 @@ abstract class AbstractScriptTestBase {
 
     /**
      * Checks if the profile with the specified name is activated.
-     * 
+     *
      * see #LOCAL_PROFILE
      */
     void checkProfile(String name) {
@@ -133,8 +137,7 @@ abstract class AbstractScriptTestBase {
         def services = servicesFactory.create()
         putServices services
         putSshService services
-        FileUtils.write scriptFile, test.input
-        services = runScript scriptFile, services
+        services = robobeeScriptFactory.create scriptFile, test.input, services call()
         createDummyCommands dir
         def scriptEnv = getScriptEnv(dir: dir, test: test)
         services.getServices().each { String name ->
@@ -217,22 +220,9 @@ abstract class AbstractScriptTestBase {
         }
     }
 
-    HostServices runScript(File file, HostServices services) {
-        Binding binding = createBinding services
-        GroovyScriptEngine engine = new GroovyScriptEngine([file.parentFile.toURL()] as URL[])
-        engine.run(file.name, binding)
-        return binding.service
-    }
-
-    Binding createBinding(HostServices services) {
-        Binding binding = new Binding()
-        binding.setProperty("service", services)
-        binding.setProperty("targets", services.getTargets())
-        return binding
-    }
-
     Injector createInjector() {
         this.injector = Guice.createInjector(
+                new RobobeeScriptModule(),
                 new TargetsModule(),
                 new PropertiesModule(),
                 new PropertiesUtilsModule(),

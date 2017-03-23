@@ -26,7 +26,7 @@ ExecStart=<parent.binDir>/kubelet-wrapper \
   --cluster_domain=cluster.local<if(parent.kubeconfigFile)> \
   --kubeconfig=<parent.kubeconfigFile><endif><if(parent.service.tls.cert)> \
   --tls-cert-file=<parent.certsDir>/<parent.service.tls.certName><endif><if(parent.service.tls.key)> \
-  --tls-private-key-file=<parent.certsDir>/<parent.service.tls.keyName><endif>
+  --tls-private-key-file=<parent.certsDir>/<parent.service.tls.keyName><\n><endif>
 ExecStop=-/usr/bin/rkt stop --uuid-file=${KUBELET_UUID_FILE}
 Restart=always
 RestartSec=10

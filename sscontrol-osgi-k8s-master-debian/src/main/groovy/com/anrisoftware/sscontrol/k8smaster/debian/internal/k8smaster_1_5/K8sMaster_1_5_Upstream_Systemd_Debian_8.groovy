@@ -41,6 +41,9 @@ class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Sys
     Object run() {
         stopServices()
         setupMiscDefaults()
+        setupApiServersDefaults()
+        setupAdmissionsDefaults()
+        setupAccountDefaults()
         setupClusterDefaults()
         setupBindDefaults()
         setupKubeletDefaults()
@@ -48,6 +51,7 @@ class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Sys
         setupPluginsDefaults()
         createDirectories()
         uploadK8sCertificates()
+        uploadAccountCertificates()
         uploadAuthenticationsCertificates()
         uploadEtcdCertificates()
         createKubeletService()

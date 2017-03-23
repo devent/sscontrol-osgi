@@ -29,8 +29,6 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNodeService;
-import com.anrisoftware.sscontrol.k8snode.external.Master;
-import com.anrisoftware.sscontrol.k8snode.internal.MasterImpl.MasterImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
@@ -55,22 +53,11 @@ public class K8sNodeImpl implements K8sNode {
 
     }
 
-    private final K8sNodeImplLogger log;
-
-    private Master master;
-
-    private transient MasterImplFactory masterFactory;
-
     private final K8s k8s;
 
     @Inject
-    K8sNodeImpl(K8sNodeImplLogger log, K8sImplFactory k8sFactory,
-            MasterImplFactory masterFactory,
-            @Assisted Map<String, Object> args) {
-        this.log = log;
+    K8sNodeImpl(K8sImplFactory k8sFactory, @Assisted Map<String, Object> args) {
         this.k8s = (K8s) k8sFactory.create(args);
-        this.masterFactory = masterFactory;
-        this.master = masterFactory.create();
     }
 
     /**
@@ -193,17 +180,6 @@ public class K8sNodeImpl implements K8sNode {
         return k8s.kubelet(args);
     }
 
-    /**
-     * <pre>
-     * master target: 'master' // or
-     * master address: 'http://master'
-     * </pre>
-     */
-    public void master(Map<String, Object> args) {
-        this.master = masterFactory.create(args);
-        log.masterSet(this, master);
-    }
-
     @Override
     public DebugLogging getDebugLogging() {
         return k8s.getDebugLogging();
@@ -267,11 +243,6 @@ public class K8sNodeImpl implements K8sNode {
     @Override
     public String getContainerRuntime() {
         return k8s.getContainerRuntime();
-    }
-
-    @Override
-    public Master getMaster() {
-        return master;
     }
 
     @Override

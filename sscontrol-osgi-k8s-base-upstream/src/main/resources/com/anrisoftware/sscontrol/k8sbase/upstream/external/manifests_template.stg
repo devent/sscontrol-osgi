@@ -19,8 +19,9 @@ spec:
     command:
     - /hyperkube
     - proxy
-    - --master=http://127.0.0.1:8080
+    - --master=<parent.masterHosts;separator=",">
     - --cluster-cidr=<parent.service.cluster.podRange>
+<if(parent.kubeconfigFile)>    - --kubeconfig=<parent.kubeconfigFile><endif>
     securityContext:
       privileged: true
     volumeMounts:

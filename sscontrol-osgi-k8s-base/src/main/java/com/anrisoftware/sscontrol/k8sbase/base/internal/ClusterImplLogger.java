@@ -10,7 +10,6 @@ import static com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl;
 
 /**
  * Logging for {@link ClusterImpl}.
@@ -62,7 +61,7 @@ final class ClusterImplLogger extends AbstractLogger {
         debug(dnsAddressSet, address, cluster);
     }
 
-    void apiServersAdded(ClusterImpl cluster, String server) {
+    void apiServersAdded(ClusterImpl cluster, Object server) {
         debug(apiServersAdded, server, cluster);
     }
 

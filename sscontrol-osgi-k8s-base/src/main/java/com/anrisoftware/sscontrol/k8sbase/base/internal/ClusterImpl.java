@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImplLogger;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -55,7 +54,7 @@ public class ClusterImpl implements Cluster {
 
     private String dnsAddress;
 
-    private final List<String> apiServers;
+    private final List<Object> apiServers;
 
     private String hostnameOverride;
 
@@ -96,13 +95,17 @@ public class ClusterImpl implements Cluster {
     }
 
     @Override
-    public List<String> getApiServers() {
+    public List<Object> getApiServers() {
         return apiServers;
     }
 
-    public void addApiServer(String server) {
+    public void addApiServer(Object server) {
         apiServers.add(server);
         log.apiServersAdded(this, server);
+    }
+
+    public void addAllApiServer(List<?> list) {
+        apiServers.addAll(list);
     }
 
     public void setServiceRange(String range) {
@@ -163,7 +166,11 @@ public class ClusterImpl implements Cluster {
         }
         v = args.get("api");
         if (v != null) {
-            addApiServer(v.toString());
+            if (v instanceof List) {
+                addAllApiServer((List<?>) v);
+            } else {
+                addApiServer(v);
+            }
         }
     }
 

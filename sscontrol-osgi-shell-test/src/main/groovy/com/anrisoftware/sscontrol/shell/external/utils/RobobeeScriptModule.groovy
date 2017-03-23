@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5;
+package com.anrisoftware.sscontrol.shell.external.utils
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
+import com.google.inject.AbstractModule
+import com.google.inject.assistedinject.FactoryModuleBuilder
 
 /**
  *
@@ -23,6 +25,11 @@ import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface K8sMaster_1_5_Upstream_Debian_8_Factory
-        extends HostServiceScriptService {
+class RobobeeScriptModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(RobobeeScript.class,
+                RobobeeScript.class).build(RobobeeScriptFactory.class))
+    }
 }

@@ -13,33 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8sbase.base.external;
+package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 
 /**
- * K8s cluster.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Cluster {
-
-    String getPodRange();
-
-    String getServiceRange();
-
-    String getAdvertiseAddress();
-
-    String getDnsAddress();
-
-    /**
-     * Returns the list of api servers. The list can contain a host string or
-     * {@link SshHost} ssh hosts.
-     */
-    List<Object> getApiServers();
-
-    String getHostnameOverride();
+public interface Kubectl_1_5_Upstream_Debian_8_Factory
+        extends HostServiceScriptService {
 }
