@@ -26,6 +26,9 @@ spec:
     - mountPath: /etc/ssl/certs
       name: ssl-certs-host
       readOnly: true
+    - mountPath: /etc/kubernetes/ssl
+      name: "etc-kube-ssl"
+      readOnly: true
     - mountPath: /var/run/dbus
       name: dbus
       readOnly: false
@@ -33,6 +36,9 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
+  - hostPath:
+      path: "/etc/kubernetes/ssl"
+    name: "etc-kube-ssl"
   - hostPath:
       path: /var/run/dbus
     name: dbus

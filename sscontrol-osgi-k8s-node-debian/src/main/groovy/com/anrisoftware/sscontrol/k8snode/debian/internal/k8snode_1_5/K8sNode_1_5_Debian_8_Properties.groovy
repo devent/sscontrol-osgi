@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5;
+package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * <i>K8s-Master 1.5 Debian 8</i> properties provider from
- * {@code "/k8s_master_1_5_debian_8.properties"}.
+ * <i>K8s-Node 1.5 Debian 8</i> properties provider from
+ * {@code "/k8s_node_1_5_debian_8.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class K8sNode_1_5_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = K8sNode_1_5_Debian_8_Properties.class.getResource("/k8s_master_1_5_debian_8.properties");
+    private static final URL RESOURCE = K8sNode_1_5_Debian_8_Properties.class.getResource("/k8s_node_1_5_debian_8.properties")
 
     K8sNode_1_5_Debian_8_Properties() {
-        super(K8sNode_1_5_Debian_8_Properties.class, RESOURCE);
+        super(K8sNode_1_5_Debian_8_Properties.class, RESOURCE)
     }
 }

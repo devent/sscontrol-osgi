@@ -21,12 +21,20 @@ spec:
     - proxy
     - --master=<parent.masterHosts;separator=",">
     - --cluster-cidr=<parent.service.cluster.podRange>
-<if(parent.kubeconfigFile)>    - --kubeconfig=<parent.kubeconfigFile><endif>
+<if(parent.kubeconfigFile)>    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml<endif>
     securityContext:
       privileged: true
     volumeMounts:
     - mountPath: /etc/ssl/certs
       name: ssl-certs-host
+      readOnly: true
+<if(parent.kubeconfigFile)>
+    - mountPath: /etc/kubernetes/worker-kubeconfig.yaml
+      name: "kubeconfig"
+      readOnly: true
+<endif>
+    - mountPath: /etc/kubernetes/ssl
+      name: "etc-kube-ssl"
       readOnly: true
     - mountPath: /var/run/dbus
       name: dbus
@@ -35,6 +43,14 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
+<if(parent.kubeconfigFile)>
+  - hostPath:
+      path: "<parent.kubeconfigFile>"
+    name: "kubeconfig"
+<endif>
+  - hostPath:
+      path: "/etc/kubernetes/ssl"
+    name: "etc-kube-ssl"
   - hostPath:
       path: /var/run/dbus
     name: dbus

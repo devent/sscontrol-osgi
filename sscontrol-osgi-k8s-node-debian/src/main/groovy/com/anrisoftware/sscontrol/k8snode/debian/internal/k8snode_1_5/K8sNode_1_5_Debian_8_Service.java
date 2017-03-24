@@ -40,8 +40,7 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class K8sNode_1_5_Debian_8_Service
-        implements HostServiceScriptService {
+public class K8sNode_1_5_Debian_8_Service implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 

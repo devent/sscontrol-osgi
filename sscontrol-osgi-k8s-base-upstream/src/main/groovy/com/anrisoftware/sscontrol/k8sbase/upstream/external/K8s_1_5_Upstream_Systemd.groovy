@@ -15,9 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.upstream.external
 
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -92,7 +89,6 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
-        assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
         if (!service.cluster.hostnameOverride) {
             service.cluster.hostnameOverride = service.cluster.advertiseAddress
         }
@@ -465,7 +461,10 @@ systemctl daemon-reload
         }
     }
 
-    abstract List getMasterHosts()
+    List getMasterHosts() {
+        K8s service = service
+        service.cluster.apiServers
+    }
 
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties

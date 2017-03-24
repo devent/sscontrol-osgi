@@ -15,9 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8snode.upstream.external;
 
-import com.anrisoftware.sscontrol.k8snode.upstream.external.PluginTargetsMap.PluginTargetsMapFactory;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -29,9 +27,6 @@ public class K8sNode_1_5_Upstream_Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(PluginTargetsMap.class, PluginTargetsMap.class)
-                .build(PluginTargetsMapFactory.class));
     }
 
 }

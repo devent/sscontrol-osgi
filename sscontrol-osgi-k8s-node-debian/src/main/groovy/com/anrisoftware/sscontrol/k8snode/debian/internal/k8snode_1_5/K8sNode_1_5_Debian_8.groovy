@@ -35,7 +35,7 @@ class K8sNode_1_5_Debian_8 extends ScriptBase {
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
 
     @Inject
-    K8sNode_1_5_Upstream_Debian_8_Factory upstreamFactory
+    Kubectl_1_5_Upstream_Debian_8_Factory upstreamFactory
 
     @Inject
     K8sNode_1_5_Upstream_Systemd_Debian_8_Factory upstreamSystemdFactory

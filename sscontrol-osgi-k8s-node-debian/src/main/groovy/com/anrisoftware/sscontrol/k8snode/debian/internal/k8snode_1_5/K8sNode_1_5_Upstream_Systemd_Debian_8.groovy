@@ -15,24 +15,24 @@
  */
 package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 
-import static com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5.K8sMaster_1_5_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8sNode_1_5_Debian_8_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Systemd
+import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Systemd
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Master 1.5 service from the upstream sources
+ * Configures the K8s-Node 1.5 service from the upstream sources
  * for Systemd and Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Systemd {
+class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd {
 
     @Inject
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
@@ -42,13 +42,10 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Syste
         stopServices()
         setupMiscDefaults()
         setupClusterDefaults()
-        setupBindDefaults()
         setupKubeletDefaults()
-        setupAuthenticationsDefaults()
         setupPluginsDefaults()
         createDirectories()
         uploadK8sCertificates()
-        uploadAuthenticationsCertificates()
         uploadEtcdCertificates()
         createKubeletService()
         createKubeletConfig()
@@ -56,8 +53,6 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Syste
         createRkt()
         createFlannelCni()
         startServices()
-        startAddons()
-        startCalico()
     }
 
     @Override

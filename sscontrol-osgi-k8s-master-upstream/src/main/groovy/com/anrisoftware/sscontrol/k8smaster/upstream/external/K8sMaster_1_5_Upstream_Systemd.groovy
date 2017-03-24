@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.upstream.external
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.K8s_1_5_Upstream_Systemd
@@ -31,6 +32,12 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 abstract class K8sMaster_1_5_Upstream_Systemd extends K8s_1_5_Upstream_Systemd {
+
+    def setupClusterDefaults() {
+        K8sMaster service = service
+        assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
+        super.setupClusterDefaults()
+    }
 
     def setupApiServersDefaults() {
         log.debug 'Setup api-servers hosts defaults for {}', service
@@ -250,11 +257,6 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends K8s_1_5_Upstream_Systemd {
         log.info 'Start Calico.'
         shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
         shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
-    }
-
-    List getMasterHosts() {
-        K8sMaster service = service
-        service.cluster.apiServers
     }
 
     String getDefaultApiServerHost() {

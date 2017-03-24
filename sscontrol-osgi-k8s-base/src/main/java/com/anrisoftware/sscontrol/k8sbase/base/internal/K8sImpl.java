@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
-import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethodSafe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -351,9 +350,10 @@ public class K8sImpl implements K8s {
         if (v != null) {
             setContainerRuntime(v.toString());
         }
-        v = args.get("advertise");
-        if (v != null) {
-            invokeMethodSafe(cluster, "setAdvertiseAddress", v.toString());
+        Object clusterAdvertise = args.get("advertise");
+        Object clusterApi = args.get("api");
+        if (clusterAdvertise != null || clusterApi != null) {
+            this.cluster = clusterFactory.create(args);
         }
     }
 
