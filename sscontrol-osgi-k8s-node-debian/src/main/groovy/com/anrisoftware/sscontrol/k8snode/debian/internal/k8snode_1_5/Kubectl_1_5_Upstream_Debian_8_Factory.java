@@ -23,6 +23,6 @@ import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface K8sNode_1_5_Upstream_Debian_8_Factory
+public interface Kubectl_1_5_Upstream_Debian_8_Factory
         extends HostServiceScriptService {
 }

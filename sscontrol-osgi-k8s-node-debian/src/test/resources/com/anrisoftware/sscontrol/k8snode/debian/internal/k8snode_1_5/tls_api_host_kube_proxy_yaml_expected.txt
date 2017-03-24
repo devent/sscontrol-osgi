@@ -18,13 +18,20 @@ spec:
     command:
     - /hyperkube
     - proxy
-    - --master=http://127.0.0.1:8080
+    - --master=https://192.168.0.100
     - --cluster-cidr=10.2.0.0/16
+    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml
     securityContext:
       privileged: true
     volumeMounts:
     - mountPath: /etc/ssl/certs
       name: ssl-certs-host
+      readOnly: true
+    - mountPath: /etc/kubernetes/worker-kubeconfig.yaml
+      name: "kubeconfig"
+      readOnly: true
+    - mountPath: /etc/kubernetes/ssl
+      name: "etc-kube-ssl"
       readOnly: true
     - mountPath: /var/run/dbus
       name: dbus
@@ -33,6 +40,12 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
+  - hostPath:
+      path: "/tmp/junit/junit/etc/kubernetes/worker-kubeconfig.yaml"
+    name: "kubeconfig"
+  - hostPath:
+      path: "/etc/kubernetes/ssl"
+    name: "etc-kube-ssl"
   - hostPath:
       path: /var/run/dbus
     name: dbus

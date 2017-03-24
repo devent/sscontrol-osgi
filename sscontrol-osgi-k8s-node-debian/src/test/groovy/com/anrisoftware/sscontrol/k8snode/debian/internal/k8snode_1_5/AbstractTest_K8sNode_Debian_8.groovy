@@ -26,11 +26,11 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule
-import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
-import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8sNode_1_5_Debian_8_Factory
-import com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8sNode_1_5_Debian_8_Module
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.K8s_1_5_Upstream_Module
+import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeModule
+import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory
+import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -68,17 +68,17 @@ abstract class AbstractTest_K8sNode_Debian_8 extends AbstractScriptTestBase {
     CmdRunCaller cmdRunCaller
 
     @Inject
-    K8sMasterImplFactory serviceFactory
+    K8sNodeImplFactory serviceFactory
 
     @Inject
     K8sNode_1_5_Debian_8_Factory scriptFactory
 
     String getServiceName() {
-        'k8s-master'
+        'k8s-node'
     }
 
     String getScriptServiceName() {
-        'k8s-master/debian/8'
+        'k8s-node/debian/8'
     }
 
     void createDummyCommands(File dir) {
@@ -110,17 +110,19 @@ abstract class AbstractTest_K8sNode_Debian_8 extends AbstractScriptTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'k8s-master', serviceFactory
-        services.putAvailableScriptService 'k8s-master/debian/8', scriptFactory
+        services.putAvailableService 'k8s-node', serviceFactory
+        services.putAvailableScriptService 'k8s-node/debian/8', scriptFactory
     }
 
     List getAdditionalModules() {
         [
             new SshModule(),
             new SshPreModule(),
-            new K8sMasterModule(),
+            new K8sNodeModule(),
+            new K8sModule(),
             new K8sNode_1_5_Debian_8_Module(),
-            new K8sMaster_1_5_Upstream_Module(),
+            new K8sNode_1_5_Upstream_Module(),
+            new K8s_1_5_Upstream_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

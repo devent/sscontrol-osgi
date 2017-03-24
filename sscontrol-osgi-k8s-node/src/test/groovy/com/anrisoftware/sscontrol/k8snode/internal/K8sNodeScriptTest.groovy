@@ -98,6 +98,24 @@ service "k8s-node" with {
     }
 
     @Test
+    void "cluster_api_host_args"() {
+        def test = [
+            name: 'cluster_api_host_args',
+            input: """
+service "k8s-node", api: 'https://master.robobee.test' with {
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-node').size() == 1
+                K8sNode s = services.getServices('k8s-node')[0] as K8sNode
+                assert s.cluster.apiServers.size() == 1
+                assert s.cluster.apiServers[0] == 'https://master.robobee.test'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "cluster_api_targets"() {
         def test = [
             name: 'cluster_api_targets',

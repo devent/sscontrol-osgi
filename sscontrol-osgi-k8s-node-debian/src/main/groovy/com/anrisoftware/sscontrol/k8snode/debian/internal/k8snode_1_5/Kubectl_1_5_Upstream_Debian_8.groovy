@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.upstream.external
+package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>K8s-Node</i> 1.5 service from the upstream sources.
+ * Configures the K8s-Node 1.5 service from the upstream sources
+ * for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class K8sNode_1_5_Upstream extends ScriptBase {
+class Kubectl_1_5_Upstream_Debian_8 extends Kubectl_1_5_Upstream {
 
-    def installKubernetes() {
-        log.info 'Installs k8s-master.'
-        copy src: archive, hash: archiveHash, dest: binDir, direct: true, privileged: true, timeout: timeoutLong call()
-        shell privileged: true, "chmod o+x '$binDir/kubectl'" call()
+    @Inject
+    K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
+
+    @Override
+    Object run() {
+        installKubernetes()
     }
 
-    URI getArchive() {
-        properties.getURIProperty('kubectl_archive', defaultProperties)
-    }
-
-    String getArchiveHash() {
-        properties.getProperty('kubectl_archive_hash', defaultProperties)
+    @Override
+    ContextProperties getDefaultProperties() {
+        debianPropertiesProvider.get()
     }
 
     @Override
