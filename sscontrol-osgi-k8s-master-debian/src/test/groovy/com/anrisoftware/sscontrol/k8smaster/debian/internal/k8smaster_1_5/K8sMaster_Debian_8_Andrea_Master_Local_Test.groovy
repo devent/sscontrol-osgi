@@ -22,8 +22,6 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.external.HostServices
-
 import groovy.util.logging.Slf4j
 
 /**
@@ -60,6 +58,7 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "
     }
 }
 """,
+            scriptVars: ["certs": andreaLocalCerts],
             generatedDir: folder.newFolder(),
             expected: { Map args ->
             },
@@ -87,12 +86,6 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "
             key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
         ]
     ]
-
-    Binding createBinding(HostServices services) {
-        Binding binding = super.createBinding(services)
-        binding.setProperty("certs", andreaLocalCerts)
-        return binding
-    }
 
     void createDummyCommands(File dir) {
     }
