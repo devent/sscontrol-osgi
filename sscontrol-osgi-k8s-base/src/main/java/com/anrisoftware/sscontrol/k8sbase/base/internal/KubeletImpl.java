@@ -69,7 +69,7 @@ public class KubeletImpl implements Kubelet {
 
     @AssistedInject
     KubeletImpl(TlsFactory tlsFactory) {
-        this(tlsFactory, new HashMap<>());
+        this(tlsFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject
