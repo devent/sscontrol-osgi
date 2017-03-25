@@ -95,12 +95,6 @@ abstract class AbstractTestEtcd_3_1_Debian_8 extends AbstractScriptTestBase {
         'etcd/debian/8'
     }
 
-    Binding createBinding(HostServices services) {
-        Binding binding = super.createBinding(services)
-        binding.setProperty("certs", andreaLocalEtcdCerts)
-        return binding
-    }
-
     void createDummyCommands(File dir) {
         createCommand grepActiveCommand, dir, 'grep'
         createEchoCommands dir, [

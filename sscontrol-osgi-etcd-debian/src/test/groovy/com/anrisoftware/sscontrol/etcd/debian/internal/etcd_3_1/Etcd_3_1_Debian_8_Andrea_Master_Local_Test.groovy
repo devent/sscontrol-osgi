@@ -60,6 +60,7 @@ targets['all'].eachWithIndex { host, i ->
     }
 }
 """,
+            scriptVars: ["certs": andreaLocalEtcdCerts],
             expected: { Map args ->
             },
         ]
