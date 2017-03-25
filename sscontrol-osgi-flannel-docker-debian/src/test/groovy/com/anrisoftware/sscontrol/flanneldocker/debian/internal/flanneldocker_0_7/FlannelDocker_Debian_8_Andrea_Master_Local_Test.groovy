@@ -22,8 +22,6 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.external.HostServices
-
 import groovy.util.logging.Slf4j
 
 /**
@@ -55,6 +53,7 @@ targets['all'].eachWithIndex { host, i ->
     }
 }
 """,
+            scriptVars: ["certs": andreaLocalEtcdCerts],
             generatedDir: folder.newFolder(),
             expected: { Map args ->
             },
@@ -68,12 +67,6 @@ targets['all'].eachWithIndex { host, i ->
             'andrea-master-local',
             'andrea-node-0-local'
         ])
-    }
-
-    Binding createBinding(HostServices services) {
-        Binding binding = super.createBinding(services)
-        binding.setProperty("certs", andreaLocalEtcdCerts)
-        return binding
     }
 
     void createDummyCommands(File dir) {
