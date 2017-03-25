@@ -25,7 +25,7 @@ class RobobeeScript implements Callable<HostServices> {
      */
     interface RobobeeScriptFactory {
 
-        RobobeeScript create(File file, String script, HostServices services)
+        RobobeeScript create(File file, String script, Map scriptVars, HostServices services)
     }
 
     @Inject
@@ -40,6 +40,10 @@ class RobobeeScript implements Callable<HostServices> {
     @Assisted
     HostServices services
 
+    @Inject
+    @Assisted
+    Map scriptVars
+
     HostServices call() {
         Binding binding = createBinding()
         FileUtils.write file, script
@@ -52,6 +56,9 @@ class RobobeeScript implements Callable<HostServices> {
         Binding binding = new Binding()
         binding.setProperty("service", services)
         binding.setProperty("targets", services.getTargets())
+        scriptVars.each { key, value ->
+            binding.setProperty(key, value)
+        }
         return binding
     }
 }

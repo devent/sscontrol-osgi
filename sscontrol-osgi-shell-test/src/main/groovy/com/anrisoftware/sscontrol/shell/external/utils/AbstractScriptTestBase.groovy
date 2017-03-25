@@ -20,7 +20,6 @@ import static org.junit.Assume.*
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -129,6 +128,7 @@ abstract class AbstractScriptTestBase {
 
     void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
+        test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
@@ -137,7 +137,7 @@ abstract class AbstractScriptTestBase {
         def services = servicesFactory.create()
         putServices services
         putSshService services
-        services = robobeeScriptFactory.create scriptFile, test.input, services call()
+        services = robobeeScriptFactory.create scriptFile, test.input, test.scriptVars, services call()
         createDummyCommands dir
         def scriptEnv = getScriptEnv(dir: dir, test: test)
         services.getServices().each { String name ->

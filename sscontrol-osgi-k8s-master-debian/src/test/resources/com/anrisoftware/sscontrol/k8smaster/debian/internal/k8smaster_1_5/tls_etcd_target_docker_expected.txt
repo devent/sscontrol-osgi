@@ -1,1 +1,0 @@
-run --rm --net=host -v /tmp/junit/junit/srv/kubernetes/manifests:/host/manifests quay.io/coreos/hyperkube:v1.5.4_coreos.0 /hyperkube kubectl apply -f /host/manifests/calico.yaml

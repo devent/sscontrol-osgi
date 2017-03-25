@@ -103,8 +103,7 @@ abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
             'grep',
             'curl',
             'sleep',
-            'docker',
-            'cat',
+            'kubectl',
         ]
     }
 

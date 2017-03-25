@@ -256,7 +256,7 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends K8s_1_5_Upstream_Systemd {
         }
         log.info 'Start Calico.'
         shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-        shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
+        shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'calico.yaml'] call()
     }
 
     String getDefaultApiServerHost() {

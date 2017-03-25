@@ -1,7 +1,0 @@
-/tmp/junit/junit/srv/kubernetes/manifests/kube-dns-de.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/kube-dns-svc.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/heapster-de.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/heapster-svc.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
-/tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
