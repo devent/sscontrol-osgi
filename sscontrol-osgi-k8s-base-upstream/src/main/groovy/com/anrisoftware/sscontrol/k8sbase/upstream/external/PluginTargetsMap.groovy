@@ -42,30 +42,32 @@ class PluginTargetsMap extends HashMap {
 
     Object get(Object key) {
         Plugin plugin = service.plugins[key]
-        if (plugin.target) {
-            return getSshTarget(plugin, key)
+        if (plugin.targets) {
+            return getSshTargets(plugin, key)
         }
-        if (plugin.address) {
-            return getAddress(plugin, key)
+        if (plugin.addresses) {
+            return getAddresses(plugin, key)
         }
     }
 
-    private List getSshTarget(Plugin plugin, String key) {
-        def targets = repo.targets(plugin.target)
-        def list = []
-        targets.host.each {
-            list << [host: it, protocol: plugin.protocol, port: plugin.port]
+    private List getSshTargets(Plugin plugin, String key) {
+        def repo = repo
+        plugin.targets.inject([]) { result, target ->
+            repo.targets(target).each {
+                result << [host: it.host, protocol: plugin.protocol, port: plugin.port]
+            }
+            result
         }
-        return list
     }
 
-    private List getAddress(Plugin plugin, String key) {
-        def address = new URI(plugin.address)
-        def host = address.host ? address.host : address.path
-        def proto = address.scheme ? address.scheme : plugin.protocol
-        def port = address.port != -1 ? address.port : plugin.port
-        def list = []
-        list << [host: host, protocol: proto, port: port]
-        return list
+    private List getAddresses(Plugin plugin, String key) {
+        plugin.addresses.inject([]) { result, address ->
+            def uri = new URI(address)
+            def host = uri.host ? uri.host : uri.path
+            def proto = uri.scheme ? uri.scheme : plugin.protocol
+            def port = uri.port != -1 ? uri.port : plugin.port
+            result << [host: host, protocol: proto, port: port]
+            result
+        }
     }
 }
