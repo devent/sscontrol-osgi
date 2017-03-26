@@ -31,7 +31,7 @@ abstract class Kubectl_1_5_Upstream extends ScriptBase {
     def installKubernetes() {
         log.info 'Installs k8s-master.'
         copy src: archive, hash: archiveHash, dest: binDir, direct: true, privileged: true, timeout: timeoutLong call()
-        shell privileged: true, "chmod o+x '$binDir/kubectl'" call()
+        shell privileged: true, "chown root.root '$binDir/kubectl'; chmod +x '$binDir/kubectl';" call()
     }
 
     URI getArchive() {
