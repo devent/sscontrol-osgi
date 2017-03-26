@@ -61,12 +61,15 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     private final List<Ssh> hosts;
 
+    private final Set<String> groups;
+
     @Inject
     private TargetsImplLogger log;
 
     @AssistedInject
     TargetsImpl() {
         this.hosts = synchronizedList(new ArrayList<Ssh>());
+        this.groups = new HashSet<>();
     }
 
     public List<SshHost> call(String name) {
@@ -119,6 +122,7 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     public void addTarget(Ssh ssh) {
         String group = ssh.getGroup();
         hosts.add(ssh);
+        groups.add(group);
         log.addHosts(this, ssh, group);
     }
 
@@ -193,7 +197,10 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     @Override
     public Set<java.util.Map.Entry<String, List<SshHost>>> entrySet() {
-        throw new UnsupportedOperationException();
+        Set<java.util.Map.Entry<String, List<SshHost>>> set = new HashSet<>();
+        for (String group : groups) {
+
+        }
     }
 
     @Override

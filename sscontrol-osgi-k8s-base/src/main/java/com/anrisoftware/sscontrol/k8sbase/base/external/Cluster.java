@@ -41,5 +41,16 @@ public interface Cluster {
      */
     List<Object> getApiServers();
 
+    /**
+     * Returns the default api-server protocol.
+     */
+    String getProtocol();
+
+    /**
+     * Returns the default api-server port.
+     */
+    Integer getPort();
+
     String getHostnameOverride();
+
 }

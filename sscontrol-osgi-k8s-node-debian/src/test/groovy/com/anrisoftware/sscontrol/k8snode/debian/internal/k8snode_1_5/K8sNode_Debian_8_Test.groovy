@@ -66,4 +66,35 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
         ]
         doTest test
     }
+
+    @Test
+    void "tls_api_target"() {
+        def test = [
+            name: "tls_api_target",
+            input: """
+service "ssh", group: "master" with {
+    host "master.robobee.test"
+}
+service "ssh", group: "nodes" with {
+    host "localhost"
+}
+service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
+    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    plugin "flannel"
+    plugin "calico"
+    kubelet.with {
+        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+    }
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

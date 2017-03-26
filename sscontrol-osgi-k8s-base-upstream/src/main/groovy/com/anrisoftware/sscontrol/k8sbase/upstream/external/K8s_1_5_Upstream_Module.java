@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.upstream.external;
 
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory;
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -32,6 +33,9 @@ public class K8s_1_5_Upstream_Module extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(PluginTargetsMap.class, PluginTargetsMap.class)
                 .build(PluginTargetsMapFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Addresses.class, Addresses.class)
+                .build(AddressesFactory.class));
     }
 
 }

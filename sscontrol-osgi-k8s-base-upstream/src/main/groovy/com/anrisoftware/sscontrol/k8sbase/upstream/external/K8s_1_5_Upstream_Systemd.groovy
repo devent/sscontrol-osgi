@@ -21,6 +21,7 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
@@ -50,6 +51,9 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
+
+    @Inject
+    AddressesFactory addressesFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -463,7 +467,7 @@ systemctl daemon-reload
 
     List getMasterHosts() {
         K8s service = service
-        service.cluster.apiServers
+        addressesFactory.create(service.cluster, scriptsRepository.targets, service.cluster.apiServers).hosts
     }
 
     File getSystemdSystemDir() {
