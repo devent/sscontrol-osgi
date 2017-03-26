@@ -22,8 +22,6 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.external.HostServices
-
 import groovy.util.logging.Slf4j
 
 /**
@@ -36,9 +34,9 @@ import groovy.util.logging.Slf4j
 class K8sNode_Debian_8_Andrea_Node_Local_Test extends AbstractTest_K8sNode_Debian_8 {
 
     @Test
-    void "andrea_master_local"() {
+    void "andrea_node_local"() {
         def test = [
-            name: "andrea_master_local",
+            name: "andrea_node_local",
             input: """
 service "ssh", group: "master", key: "${robobeeKey}" with {
     host "robobee@andrea-master-local"
@@ -47,20 +45,16 @@ service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"
 }
 def andreaMaster = targets['master'][0]
-service "k8s-node", name: "andrea-cluster", target: andreaMaster, api: "\${andreaMaster.hostAddress}" with {
-    cluster api: 'https://master'
+service "k8s-node", name: "andrea-cluster", target: "nodes", api: "\${andreaMaster.hostAddress}" with {
     tls certs.k8s
-    authentication "cert", ca: certs.k8s.ca
     plugin "flannel"
     plugin "calico"
-    plugin "etcd", address: "https://etcd-0.robobee.test" with {
-        tls certs.etcd
-    }
     kubelet.with {
         tls certs.k8s
     }
 }
 """,
+            scriptVars: ["certs": andreaLocalCerts],
             generatedDir: folder.newFolder(),
             expected: { Map args ->
             },
@@ -88,12 +82,6 @@ service "k8s-node", name: "andrea-cluster", target: andreaMaster, api: "\${andre
             key: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
         ]
     ]
-
-    Binding createBinding(HostServices services) {
-        Binding binding = super.createBinding(services)
-        binding.setProperty("certs", andreaLocalCerts)
-        return binding
-    }
 
     void createDummyCommands(File dir) {
     }
