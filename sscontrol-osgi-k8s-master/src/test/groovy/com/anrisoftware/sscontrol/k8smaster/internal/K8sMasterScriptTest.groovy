@@ -161,7 +161,32 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].target == 'infra-0'
+                assert s.plugins['etcd'].targets.size() == 1
+                assert s.plugins['etcd'].targets[0] == 'infra-0'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "ectd plugin targets"() {
+        def test = [
+            name: 'ectd plugin targets',
+            input: """
+service "k8s-master" with {
+    plugin "etcd", target: "infra-0,infra-1"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.plugins.size() == 1
+                assert s.plugins['etcd'].name == 'etcd'
+                assert s.plugins['etcd'].targets.size() == 2
+                assert s.plugins['etcd'].targets[0] == 'infra-0'
+                assert s.plugins['etcd'].targets[1] == 'infra-1'
             },
         ]
         doTest test
@@ -183,7 +208,32 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].address == 'http://etcd-0:2379'
+                assert s.plugins['etcd'].addresses.size() == 1
+                assert s.plugins['etcd'].addresses[0] == 'http://etcd-0:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "ectd plugin addresses"() {
+        def test = [
+            name: 'ectd plugin addresses',
+            input: """
+service "k8s-master" with {
+    plugin "etcd", address: "http://etcd-0:2379,http://etcd-1:2379"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0] as K8sMaster
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.plugins.size() == 1
+                assert s.plugins['etcd'].name == 'etcd'
+                assert s.plugins['etcd'].addresses.size() == 2
+                assert s.plugins['etcd'].addresses[0] == 'http://etcd-0:2379'
+                assert s.plugins['etcd'].addresses[1] == 'http://etcd-1:2379'
             },
         ]
         doTest test
@@ -314,7 +364,7 @@ service "k8s-master" with {
                 assert s.plugins.size() == 1
                 def etcd = s.plugins['etcd']
                 assert etcd.name == 'etcd'
-                assert etcd.target == 'infra-0'
+                assert etcd.targets[0] == 'infra-0'
                 assert etcd.tls.ca.toString() =~ /.*ca\.pem/
                 assert etcd.tls.cert.toString() =~ /.*cert\.pem/
                 assert etcd.tls.key.toString() =~ /.*key\.pem/

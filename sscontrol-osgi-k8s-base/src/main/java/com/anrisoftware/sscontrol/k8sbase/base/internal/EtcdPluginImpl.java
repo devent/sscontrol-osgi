@@ -15,7 +15,12 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
+import static org.apache.commons.lang3.StringUtils.split;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -44,17 +49,17 @@ public class EtcdPluginImpl implements EtcdPlugin {
 
     }
 
-    private String target;
+    private final List<Object> targets;
 
-    private String address;
-
-    private String protocol;
-
-    private Integer port;
+    private final List<String> addresses;
 
     private transient TlsFactory tlsFactory;
 
     private Tls tls;
+
+    private Integer port;
+
+    private String protocol;
 
     @AssistedInject
     EtcdPluginImpl(TlsFactory tlsFactory) {
@@ -65,6 +70,8 @@ public class EtcdPluginImpl implements EtcdPlugin {
     EtcdPluginImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
+        this.targets = new ArrayList<>();
+        this.addresses = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -77,23 +84,47 @@ public class EtcdPluginImpl implements EtcdPlugin {
         return "etcd";
     }
 
-    @Override
-    public String getTarget() {
-        return target;
+    public void addTargets(String[] list) {
+        addTargets(Arrays.asList(list));
+    }
+
+    public void addTargets(List<?> list) {
+        targets.addAll(list);
+    }
+
+    public void addTarget(Object target) {
+        targets.add(target);
     }
 
     @Override
-    public String getAddress() {
-        return address;
+    public List<Object> getTarget() {
+        return targets;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void addAddresses(String[] list) {
+        addAddresses(Arrays.asList(list));
+    }
+
+    public void addAddresses(List<String> list) {
+        addresses.addAll(list);
+    }
+
+    public void addAddress(String address) {
+        addresses.add(address);
     }
 
     @Override
-    public String getProtocol() {
-        return protocol;
+    public List<String> getAddress() {
+        return addresses;
+    }
+
+    public void setTls(Tls tls) {
+        this.tls = tls;
+    }
+
+    @Override
+    public Tls getTls() {
+        return tls;
     }
 
     public void setPort(int port) {
@@ -105,12 +136,13 @@ public class EtcdPluginImpl implements EtcdPlugin {
         return port;
     }
 
-    public void setTls(Tls tls) {
-        this.tls = tls;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
-    public Tls getTls() {
-        return tls;
+    @Override
+    public String getProtocol() {
+        return protocol;
     }
 
     @Override
@@ -121,19 +153,28 @@ public class EtcdPluginImpl implements EtcdPlugin {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("target");
         if (v != null) {
-            this.target = v.toString();
+            setTargets(v);
         }
         v = args.get("address");
         if (v != null) {
-            this.address = v.toString();
+            getAddresses(v);
         }
-        v = args.get("protocol");
-        if (v != null) {
-            this.protocol = v.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void getAddresses(Object v) {
+        if (v instanceof List) {
+            addAddresses((List<String>) v);
+        } else {
+            addAddresses(split(v.toString(), ","));
         }
-        v = args.get("port");
-        if (v != null) {
-            this.port = (Integer) v;
+    }
+
+    private void setTargets(Object v) {
+        if (v instanceof List) {
+            addTargets((List<?>) v);
+        } else {
+            addTargets(split(v.toString(), ","));
         }
     }
 

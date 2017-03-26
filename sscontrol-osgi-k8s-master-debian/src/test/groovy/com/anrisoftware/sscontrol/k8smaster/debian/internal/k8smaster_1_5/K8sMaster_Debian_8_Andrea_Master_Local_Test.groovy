@@ -50,7 +50,7 @@ service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "
     authentication "cert", ca: certs.k8s.ca
     plugin "flannel"
     plugin "calico"
-    plugin "etcd", address: "https://etcd-0.robobee.test" with {
+    plugin "etcd", address: "etcd-0.robobee.test,etcd-1.robobee.test" with {
         tls certs.etcd
     }
     kubelet.with {

@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.external;
 
+import java.util.List;
+
+import com.anrisoftware.sscontrol.tls.external.Tls;
+
 /**
  * <i>Etcd</i> plugin.
  *
@@ -23,9 +27,11 @@ package com.anrisoftware.sscontrol.k8sbase.base.external;
  */
 public interface EtcdPlugin extends Plugin {
 
-    String getTarget();
+    List<Object> getTarget();
 
-    String getAddress();
+    List<String> getAddress();
+
+    Tls getTls();
 
     String getProtocol();
 

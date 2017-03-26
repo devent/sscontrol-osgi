@@ -37,7 +37,7 @@ class K8sMaster_Debian_8_Test extends AbstractTest_K8sMaster_Debian_8 {
             name: "tls_etcd_target",
             input: """
 service "ssh", host: "localhost"
-service "ssh", host: "localhost", group: "etcd"
+service "ssh", host: "etcd-0", group: "etcd"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     authentication "cert", ca: "$certCaPem"
@@ -90,6 +90,29 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
 service "ssh", host: "localhost"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "etcd", address: "etcd"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "etcd_addresses"() {
+        def test = [
+            name: "etcd_addresses",
+            input: """
+service "ssh", host: "localhost"
+service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
+    plugin "etcd", address: "https://etcd-0:2379,https://etcd-1:2379"
 }
 """,
             generatedDir: folder.newFolder(),
