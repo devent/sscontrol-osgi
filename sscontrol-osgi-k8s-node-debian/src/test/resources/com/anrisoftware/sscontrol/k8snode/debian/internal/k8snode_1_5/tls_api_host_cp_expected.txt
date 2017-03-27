@@ -1,9 +1,8 @@
-/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_ca.pem
-/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_cert.pem
-/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_key.pem
-/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_ca.pem
 /var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_cert.pem
 /var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_key.pem
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_ca.pem
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_cert.pem
+/var/lib/robobee/tmp/junit.tmp /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_key.pem
 /var/lib/robobee/tmp/kubelet.service /tmp/junit/junit/etc/systemd/system/kubelet.service
 /var/lib/robobee/tmp/kubelet-wrapper /tmp/junit/junit/usr/local/bin/kubelet-wrapper
 /var/lib/robobee/tmp/kubelet /tmp/junit/junit/etc/sysconfig/kubelet

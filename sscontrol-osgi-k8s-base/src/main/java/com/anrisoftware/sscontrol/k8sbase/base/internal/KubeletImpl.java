@@ -67,6 +67,8 @@ public class KubeletImpl implements Kubelet {
 
     private Integer port;
 
+    private Tls client;
+
     @AssistedInject
     KubeletImpl(TlsFactory tlsFactory) {
         this(tlsFactory, new HashMap<String, Object>());
@@ -76,6 +78,7 @@ public class KubeletImpl implements Kubelet {
     KubeletImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
+        this.client = tlsFactory.create(new HashMap<String, Object>());
         this.preferredAddressTypes = new ArrayList<>();
         parseArgs(args);
     }
@@ -83,6 +86,11 @@ public class KubeletImpl implements Kubelet {
     @Override
     public Tls getTls() {
         return tls;
+    }
+
+    @Override
+    public Tls getClient() {
+        return client;
     }
 
     @Override
@@ -108,6 +116,16 @@ public class KubeletImpl implements Kubelet {
     public void tls(Map<String, Object> args) {
         this.tls = tlsFactory.create(args);
         log.tlsSet(this, tls);
+    }
+
+    /**
+     * <pre>
+     * client ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public void client(Map<String, Object> args) {
+        this.client = tlsFactory.create(args);
+        log.clientSet(this, client);
     }
 
     /**
