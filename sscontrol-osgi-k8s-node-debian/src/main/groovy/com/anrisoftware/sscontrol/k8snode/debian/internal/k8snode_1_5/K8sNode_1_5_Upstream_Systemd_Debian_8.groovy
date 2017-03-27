@@ -42,6 +42,7 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
         stopServices()
         setupMiscDefaults()
         setupClusterDefaults()
+        setupClusterApiDefaults()
         setupKubeletDefaults()
         setupPluginsDefaults()
         createDirectories()

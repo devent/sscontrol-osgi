@@ -39,17 +39,18 @@ class Addresses {
     }
 
     List getHosts() {
-        targets.inject([]) { result, target ->
-            if (target instanceof List) {
-                target.each { result << toAddress(target)  }
+        addresses.inject([]) { result, it ->
+            println it
+            if (it instanceof List) {
+                it.each { result << toAddress(it)  }
             }
             else {
-                result << toAddress(target)
+                result << toAddress(it)
             }
         }
     }
 
-    private List toAddress(def target) {
+    private Map toAddress(def target) {
         if (target instanceof SshHost) {
             return [host: target.host, protocol: parent.protocol, port: parent.port]
         } else {
@@ -57,17 +58,7 @@ class Addresses {
         }
     }
 
-    private List getSshTargets() {
-        def targets = targets
-        addresses.inject([]) { result, target ->
-            targets.getHosts(target).each {
-                result << [host: it.host, protocol: parent.protocol, port: parent.port]
-            }
-            result
-        }
-    }
-
-    private List getAddress(String address) {
+    private Map getAddress(String address) {
         def uri = new URI(address)
         def host = uri.host ? uri.host : uri.path
         def proto = uri.scheme ? uri.scheme : parent.protocol

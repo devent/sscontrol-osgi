@@ -19,7 +19,7 @@ spec:
     command:
     - /hyperkube
     - proxy
-    - --master=<parent.masterHosts;separator=",">
+    - --master=<parent.masterHosts:masterHosts(parent, vars);separator=",">
     - --cluster-cidr=<parent.service.cluster.podRange>
 <if(parent.kubeconfigFile)>    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml<endif>
     securityContext:
@@ -56,6 +56,10 @@ spec:
     name: dbus
 
 >>
+
+masterHosts(host, parent, vars) ::= <%
+<host.protocol>://<host.host>:<host.port>
+%>
 
 kubeApiserverManifest(parent, vars) ::= <<
 # Auto-Generated from Robobee

@@ -110,6 +110,25 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
     }
 
+    def setupClusterApiDefaults() {
+        log.debug 'Setup cluster api defaults for {}', service
+        K8s service = service
+        if (!service.cluster.port) {
+            if (service.tls.cert) {
+                service.cluster.port = defaultApiPortSecure
+            } else {
+                service.cluster.port = defaultApiPortInsecure
+            }
+        }
+        if (!service.cluster.protocol) {
+            if (service.tls.cert) {
+                service.cluster.protocol = defaultApiProtocolSecure
+            } else {
+                service.cluster.protocol = defaultApiProtocolInsecure
+            }
+        }
+    }
+
     def setupKubeletDefaults() {
         log.debug 'Setup kubelet defaults for {}', service
         K8s service = service
@@ -382,6 +401,22 @@ systemctl daemon-reload
     Map getDefaultAuthenticationTlsKeyName() {
         def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
         Eval.me s
+    }
+
+    int getDefaultApiPortInsecure() {
+        properties.getNumberProperty "default_api_port_insecure", defaultProperties
+    }
+
+    String getDefaultApiProtocolInsecure() {
+        properties.getProperty "default_api_protocol_insecure", defaultProperties
+    }
+
+    int getDefaultApiPortSecure() {
+        properties.getNumberProperty "default_api_port_secure", defaultProperties
+    }
+
+    String getDefaultApiProtocolSecure() {
+        properties.getProperty "default_api_protocol_secure", defaultProperties
     }
 
     int getDefaultPluginPort(String name) {
