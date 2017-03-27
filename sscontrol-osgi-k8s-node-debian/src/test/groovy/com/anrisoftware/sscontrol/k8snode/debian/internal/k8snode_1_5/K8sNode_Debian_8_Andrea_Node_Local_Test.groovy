@@ -44,8 +44,7 @@ service "ssh", group: "master", key: "${robobeeKey}" with {
 service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"
 }
-def andreaMaster = targets['master'][0]
-service "k8s-node", name: "andrea-cluster", target: "nodes", api: "\${andreaMaster.hostAddress}" with {
+service "k8s-node", name: "andrea-cluster", target: "nodes", api: targets['master'] with {
     tls certs.k8s
     plugin "flannel"
     plugin "calico"

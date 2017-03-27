@@ -62,6 +62,10 @@ public class ClusterImpl implements Cluster {
 
     private final ClusterImplLogger log;
 
+    private String protocol;
+
+    private Integer port;
+
     @AssistedInject
     ClusterImpl(ClusterImplLogger log) {
         this(log, new HashMap<String, Object>());
@@ -136,6 +140,24 @@ public class ClusterImpl implements Cluster {
     @Override
     public String getPodRange() {
         return podRange;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    @Override
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
     }
 
     @Override

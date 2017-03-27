@@ -50,7 +50,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -198,9 +198,28 @@ public class TargetsImpl implements Targets, Map<String, List<SshHost>> {
     @Override
     public Set<java.util.Map.Entry<String, List<SshHost>>> entrySet() {
         Set<java.util.Map.Entry<String, List<SshHost>>> set = new HashSet<>();
-        for (String group : groups) {
+        for (final String group : groups) {
+            final List<SshHost> list = new ArrayList<>();
+            list.addAll(getHosts(group));
+            set.add(new Entry<String, List<SshHost>>() {
 
+                @Override
+                public List<SshHost> setValue(List<SshHost> value) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public List<SshHost> getValue() {
+                    return list;
+                }
+
+                @Override
+                public String getKey() {
+                    return group;
+                }
+            });
         }
+        return set;
     }
 
     @Override
