@@ -38,11 +38,11 @@ class K8sNode_Debian_8_Test extends AbstractTest_K8sNode_Debian_8 {
             input: """
 service "ssh", host: "localhost"
 service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'https://192.168.0.100' with {
-    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     plugin "flannel"
     plugin "calico"
     kubelet.with {
-        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+        tls cert: "$certCertPem", key: "$certKeyPem"
+        client ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     }
 }
 """,
@@ -79,11 +79,11 @@ service "ssh", group: "nodes" with {
     host "localhost"
 }
 service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
-    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     plugin "flannel"
     plugin "calico"
     kubelet.with {
-        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+        tls cert: "$certCertPem", key: "$certKeyPem"
+        client ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     }
 }
 """,
@@ -91,6 +91,7 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
             },

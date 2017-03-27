@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.clientSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.preferredTypesAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImplLogger.m.tlsSet;
 
@@ -36,7 +37,9 @@ final class KubeletImplLogger extends AbstractLogger {
 
         tlsSet("TLS {} set for {}"),
 
-        preferredTypesAdded("Preferred node address types {} added to {}");
+        preferredTypesAdded("Preferred node address types {} added to {}"),
+
+        clientSet("Client {} set for {}");
 
         private String name;
 
@@ -63,6 +66,10 @@ final class KubeletImplLogger extends AbstractLogger {
 
     void preferredTypesAdded(KubeletImpl kubelet, Object v) {
         debug(preferredTypesAdded, v, kubelet);
+    }
+
+    void clientSet(KubeletImpl kubelet, Tls client) {
+        debug(clientSet, client, kubelet);
     }
 
 }

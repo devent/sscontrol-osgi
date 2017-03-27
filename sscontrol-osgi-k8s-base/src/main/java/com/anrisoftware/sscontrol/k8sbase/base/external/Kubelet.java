@@ -28,9 +28,14 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 public interface Kubelet {
 
     /**
-     * Kubelet client TLS.
+     * Kubelet TLS.
      */
     Tls getTls();
+
+    /**
+     * Kubelet client TLS.
+     */
+    Tls getClient();
 
     /**
      * List of the preferred NodeAddressTypes.

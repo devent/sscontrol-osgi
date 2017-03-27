@@ -114,14 +114,14 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         log.debug 'Setup cluster api defaults for {}', service
         K8s service = service
         if (!service.cluster.port) {
-            if (service.tls.cert) {
+            if (service.kubelet.tls.cert) {
                 service.cluster.port = defaultApiPortSecure
             } else {
                 service.cluster.port = defaultApiPortInsecure
             }
         }
         if (!service.cluster.protocol) {
-            if (service.tls.cert) {
+            if (service.kubelet.tls.cert) {
                 service.cluster.protocol = defaultApiProtocolSecure
             } else {
                 service.cluster.protocol = defaultApiProtocolInsecure
@@ -146,6 +146,15 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
         if (service.kubelet.tls.key) {
             service.kubelet.tls.keyName = defaultKubeletTlsKeyName
+        }
+        if (service.kubelet.client.ca) {
+            service.kubelet.client.caName = defaultKubeletClientCaName
+        }
+        if (service.kubelet.client.cert) {
+            service.kubelet.client.certName = defaultKubeletClientCertName
+        }
+        if (service.kubelet.client.key) {
+            service.kubelet.client.keyName = defaultKubeletClientKeyName
         }
     }
 
@@ -198,6 +207,7 @@ chmod o-rx '$certsDir'
         K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
         uploadTlsCerts tls: service.kubelet.tls, name: 'kubelet-tls'
+        uploadTlsCerts tls: service.kubelet.client, name: 'kubelet-client'
     }
 
     def uploadEtcdCertificates() {
@@ -386,6 +396,18 @@ systemctl daemon-reload
 
     def getDefaultKubeletTlsKeyName() {
         properties.getProperty 'default_kubelet_tls_key_name', defaultProperties
+    }
+
+    def getDefaultKubeletClientCaName() {
+        properties.getProperty 'default_kubelet_client_ca_name', defaultProperties
+    }
+
+    def getDefaultKubeletClientCertName() {
+        properties.getProperty 'default_kubelet_client_cert_name', defaultProperties
+    }
+
+    def getDefaultKubeletClientKeyName() {
+        properties.getProperty 'default_kubelet_client_key_name', defaultProperties
     }
 
     Map getDefaultAuthenticationTlsCaName() {
