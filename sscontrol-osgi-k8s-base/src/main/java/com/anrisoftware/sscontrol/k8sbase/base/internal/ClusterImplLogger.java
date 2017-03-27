@@ -53,7 +53,7 @@ final class ClusterImplLogger extends AbstractLogger {
         super(ClusterImpl.class);
     }
 
-    void advertiseAddressSet(ClusterImpl cluster, String address) {
+    void advertiseAddressSet(ClusterImpl cluster, Object address) {
         debug(advertiseAddressSet, address, cluster);
     }
 

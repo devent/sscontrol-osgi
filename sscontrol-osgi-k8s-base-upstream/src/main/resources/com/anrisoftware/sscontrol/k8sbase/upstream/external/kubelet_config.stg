@@ -9,7 +9,7 @@ HYPERKUBE_IMAGE_REPO=<parent.hypercubeImageRepo>
 KUBELET_UUID_FILE=<parent.kubeletUuidFile>
 K8S_APISERVERS="<parent.masterHosts:masterHosts(parent, vars);separator=",">"
 CONTAINER_RUNTIME=<parent.service.containerRuntime>
-ADVERTISE_IP=<parent.service.cluster.advertiseAddress>
+ADVERTISE_IP=<parent.advertiseAddress>
 DNS_SERVICE_IP=<parent.service.cluster.dnsAddress>
 CALICO_OPTS="<if(parent.havePluginCalico)>--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin<endif>"
 KUBELET_IMAGE_TAG=<parent.kubernetesVersion>

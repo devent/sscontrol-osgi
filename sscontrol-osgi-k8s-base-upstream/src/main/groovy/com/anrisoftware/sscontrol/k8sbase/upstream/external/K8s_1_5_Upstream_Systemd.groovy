@@ -24,6 +24,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
+import com.anrisoftware.sscontrol.types.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j
@@ -94,7 +95,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
         if (!service.cluster.hostnameOverride) {
-            service.cluster.hostnameOverride = service.cluster.advertiseAddress
+            service.cluster.hostnameOverride = advertiseAddress
         }
         if (!service.cluster.serviceRange) {
             service.cluster.serviceRange = defaultServiceNetwork
@@ -525,6 +526,15 @@ systemctl daemon-reload
     List getMasterHosts() {
         K8s service = service
         addressesFactory.create(service.cluster, scriptsRepository.targets, service.cluster.apiServers).hosts
+    }
+
+    String getAdvertiseAddress() {
+        K8s service = service
+        if (service.cluster.advertiseAddress instanceof SshHost) {
+            service.cluster.advertiseAddress.hostAddress
+        } else {
+            return service.cluster.advertiseAddress
+        }
     }
 
     File getSystemdSystemDir() {

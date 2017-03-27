@@ -31,7 +31,11 @@ public interface Cluster {
 
     String getServiceRange();
 
-    String getAdvertiseAddress();
+    /**
+     * Returns the advertise address. The address can be either a string of an
+     * IP address or a {@link SshHost} ssh host.
+     */
+    Object getAdvertiseAddress();
 
     String getDnsAddress();
 
