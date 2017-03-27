@@ -44,17 +44,17 @@ service "ssh", group: "master", key: "${robobeeKey}" with {
 service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"
 }
-def andreaMaster = targets['master'][0]
-service "k8s-master", name: "andrea-cluster", target: andreaMaster, advertise: "\${andreaMaster.hostAddress}" with {
+service "ssh", group: "etcd", key: "${robobeeKey}" with {
+    host "robobee@etcd-0.robobee.test"
+    host "robobee@etcd-1.robobee.test"
+}
+service "k8s-master", name: "andrea-cluster", target: "master", advertise: targets['master'][0] with {
     tls certs.k8s
     authentication "cert", ca: certs.k8s.ca
     plugin "flannel"
     plugin "calico"
-    plugin "etcd", address: "etcd-0.robobee.test,etcd-1.robobee.test" with {
+    plugin "etcd", target: "etcd" with {
         tls certs.etcd
-    }
-    kubelet.with {
-        tls certs.k8s
     }
 }
 """,

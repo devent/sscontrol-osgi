@@ -45,11 +45,11 @@ service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"
 }
 service "k8s-node", name: "andrea-cluster", target: "nodes", api: targets['master'] with {
-    tls certs.k8s
     plugin "flannel"
     plugin "calico"
     kubelet.with {
-        tls certs.k8s
+        tls certs.worker
+        client certs.worker
     }
 }
 """,
@@ -70,10 +70,10 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", api: targets['maste
     }
 
     static final Map andreaLocalCerts = [
-        k8s: [
+        worker: [
             ca: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
-            key: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
+            cert: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
+            key: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
         ],
         etcd: [
             ca: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
