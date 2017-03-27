@@ -156,4 +156,27 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
         ]
         doTest test
     }
+
+    @Test
+    void "advertise_target"() {
+        def test = [
+            name: "advertise_target",
+            input: """
+service "ssh", host: "localhost"
+service "ssh", host: "localhost", group: "master"
+service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] with {
+    plugin "etcd", address: "etcd"
+    plugin "calico"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
+                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

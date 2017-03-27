@@ -50,7 +50,7 @@ public class ClusterImpl implements Cluster {
 
     private String serviceRange;
 
-    private String advertiseAddress;
+    private Object advertiseAddress;
 
     private String dnsAddress;
 
@@ -78,13 +78,13 @@ public class ClusterImpl implements Cluster {
         parseArgs(args);
     }
 
-    public void setAdvertiseAddress(String advertise) {
+    public void setAdvertiseAddress(Object advertise) {
         this.advertiseAddress = advertise;
         log.advertiseAddressSet(this, advertise);
     }
 
     @Override
-    public String getAdvertiseAddress() {
+    public Object getAdvertiseAddress() {
         return advertiseAddress;
     }
 
@@ -172,7 +172,7 @@ public class ClusterImpl implements Cluster {
         }
         v = args.get("advertise");
         if (v != null) {
-            setAdvertiseAddress(v.toString());
+            setAdvertiseAddress(v);
         }
         v = args.get("hostname");
         if (v != null) {

@@ -87,7 +87,7 @@ spec:
     - --service-cluster-ip-range=<parent.service.cluster.serviceRange>
     - --insecure-port=8080
     - --secure-port=443
-    - --advertise-address=<parent.service.cluster.advertiseAddress>
+    - --advertise-address=<parent.advertiseAddress>
     - --admission-control=<parent.service.admissions;separator=",">
     - --tls-cert-file=<if(parent.service.tls.cert)><parent.certsDir>/<parent.service.tls.certName><endif>
     - --tls-private-key-file=<if(parent.service.tls.key)><parent.certsDir>/<parent.service.tls.keyName><endif>
