@@ -575,12 +575,12 @@ kind: Config
 clusters:
 - name: local
   cluster:
-    certificate-authority: /etc/kubernetes/ssl/ca.pem
+<if(parent.service.kubelet.client.ca)>    certificate-authority: <parent.certsDir>/<parent.service.kubelet.client.caName><endif>
 users:
 - name: kubelet
   user:
-    client-certificate: /etc/kubernetes/ssl/worker.pem
-    client-key: /etc/kubernetes/ssl/worker-key.pem
+<if(parent.service.kubelet.client.cert)>    client-certificate: <parent.certsDir>/<parent.service.kubelet.client.certName><endif>
+<if(parent.service.kubelet.client.key)>    client-key: <parent.certsDir>/<parent.service.kubelet.client.keyName><endif>
 contexts:
 - context:
     cluster: local
