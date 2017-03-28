@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
 abstract class Kubectl_1_5_Upstream extends ScriptBase {
 
     def installKubernetes() {
-        log.info 'Installs k8s-master.'
+        log.info 'Installs kubectl.'
         copy src: archive, hash: archiveHash, dest: binDir, direct: true, privileged: true, timeout: timeoutLong call()
         shell privileged: true, "chown root.root '$binDir/kubectl'; chmod +x '$binDir/kubectl';" call()
     }

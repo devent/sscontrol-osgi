@@ -39,7 +39,7 @@ class K8sNode_Debian_8_Andrea_Node_Local_Test extends AbstractTest_K8sNode_Debia
             name: "andrea_node_local",
             input: """
 service "ssh", group: "master", key: "${robobeeKey}" with {
-    host "robobee@andrea-master-local"
+    host "robobee@andrea-master-local.robobee.test"
 }
 service "ssh", group: "nodes", key: "${robobeeKey}" with {
     host "robobee@andrea-node-0-local"

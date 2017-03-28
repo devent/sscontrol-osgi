@@ -9,3 +9,4 @@
 /var/lib/robobee/tmp/kube-proxy.yaml /tmp/junit/junit/etc/kubernetes/manifests/kube-proxy.yaml
 /var/lib/robobee/tmp/host-rkt /tmp/junit/junit/usr/local/bin/host-rkt
 /var/lib/robobee/tmp/10-flannel.conf /tmp/junit/junit/etc/kubernetes/cni/net.d/10-flannel.conf
+/var/lib/robobee/tmp/worker-kubeconfig.yaml /tmp/junit/junit/etc/kubernetes/worker-kubeconfig.yaml

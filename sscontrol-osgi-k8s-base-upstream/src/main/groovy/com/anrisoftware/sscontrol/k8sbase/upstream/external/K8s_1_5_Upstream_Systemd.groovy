@@ -250,6 +250,12 @@ systemctl daemon-reload
         template privileged: true, resource: flannelCniTemplate, name: 'flannelCniDropin', dest: "$dir/10-flannel.conf", vars: [:] call()
     }
 
+    def createWorkerKubeconfig() {
+        K8s service = service
+        log.info 'Create worker-kubeconfig.'
+        template privileged: true, resource: manifestsTemplate, name: 'workerKubeconfig', dest: "$configDir/worker-kubeconfig.yaml", vars: [:] call()
+    }
+
     def stopServices() {
         stopSystemdService 'kubelet'
     }

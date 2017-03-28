@@ -56,6 +56,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
                 assertFileResource K8sNode_Debian_8_Test, new File(gen, '/usr/local/bin'), "kubelet-wrapper", "${args.test.name}_kubelet_wrapper_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/kubernetes/cni/net.d'), "10-flannel.conf", "${args.test.name}_cni_flannel_conf_expected.txt"
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/kubernetes'), "worker-kubeconfig.yaml", "${args.test.name}_worker_kubeconfig_yaml_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource K8sNode_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"

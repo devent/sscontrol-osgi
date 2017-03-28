@@ -40,7 +40,6 @@ class Addresses {
 
     List getHosts() {
         addresses.inject([]) { result, it ->
-            println it
             if (it instanceof List) {
                 it.each { result << toAddress(it)  }
             }
