@@ -14,18 +14,18 @@ DNS_SERVICE_IP=<parent.service.cluster.dnsAddress>
 CALICO_OPTS="<if(parent.havePluginCalico)>--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin<endif>"
 KUBELET_IMAGE_TAG=<parent.kubernetesVersion>
 KUBELET_IMAGE_URL=<parent.hypercubeImageRepo>
-RKT_RUN_ARGS="--uuid-file-save=${KUBELET_UUID_FILE}
-  --volume dns,kind=host,source=/etc/resolv.conf
-  --mount volume=dns,target=/etc/resolv.conf
-  --volume rkt,kind=host,source=<parent.binDir>/host-rkt
-  --mount volume=rkt,target=/usr/bin/rkt
-  --volume var-lib-rkt,kind=host,source=/var/lib/rkt
-  --mount volume=var-lib-rkt,target=/var/lib/rkt
-  --volume stage,kind=host,source=/tmp
-  --mount volume=stage,target=/tmp
-  --volume var-log,kind=host,source=/var/log
-  --mount volume=var-log,target=/var/log
-  ${CALICO_OPTS}"
+RKT_RUN_ARGS="--uuid-file-save=<parent.kubeletUuidFile> \
+  --volume dns,kind=host,source=/etc/resolv.conf \
+  --mount volume=dns,target=/etc/resolv.conf \
+  --volume rkt,kind=host,source=<parent.binDir>/host-rkt \
+  --mount volume=rkt,target=/usr/bin/rkt \
+  --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
+  --mount volume=var-lib-rkt,target=/var/lib/rkt \
+  --volume stage,kind=host,source=/tmp \
+  --mount volume=stage,target=/tmp \
+  --volume var-log,kind=host,source=/var/log \
+  --mount volume=var-log,target=/var/log \
+  <if(parent.havePluginCalico)>--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin<endif>"
 
 >>
 
