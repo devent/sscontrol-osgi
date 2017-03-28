@@ -53,7 +53,7 @@ service "k8s-master", name: "andrea-cluster", target: "master", advertise: targe
     authentication "cert", ca: certs.k8s.ca
     plugin "flannel"
     plugin "calico"
-    plugin "etcd", target: "etcd" with {
+    plugin "etcd", address: "https://192.168.56.200:2379,https://192.168.56.220:2379" with {
         tls certs.etcd
     }
 }
