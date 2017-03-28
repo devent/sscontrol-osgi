@@ -13,15 +13,15 @@ DNS_SERVICE_IP=10.3.0.10
 CALICO_OPTS=""
 KUBELET_IMAGE_TAG=v1.5.4_coreos.0
 KUBELET_IMAGE_URL=quay.io/coreos/hyperkube
-RKT_RUN_ARGS="--uuid-file-save=${KUBELET_UUID_FILE}
-  --volume dns,kind=host,source=/etc/resolv.conf
-  --mount volume=dns,target=/etc/resolv.conf
-  --volume rkt,kind=host,source=/tmp/junit/junit/usr/local/bin/host-rkt
-  --mount volume=rkt,target=/usr/bin/rkt
-  --volume var-lib-rkt,kind=host,source=/var/lib/rkt
-  --mount volume=var-lib-rkt,target=/var/lib/rkt
-  --volume stage,kind=host,source=/tmp
-  --mount volume=stage,target=/tmp
-  --volume var-log,kind=host,source=/var/log
-  --mount volume=var-log,target=/var/log
-  ${CALICO_OPTS}"
+RKT_RUN_ARGS="--uuid-file-save=/tmp/junit/junit/var/run/kubelet-pod.uuid \
+  --volume dns,kind=host,source=/etc/resolv.conf \
+  --mount volume=dns,target=/etc/resolv.conf \
+  --volume rkt,kind=host,source=/tmp/junit/junit/usr/local/bin/host-rkt \
+  --mount volume=rkt,target=/usr/bin/rkt \
+  --volume var-lib-rkt,kind=host,source=/var/lib/rkt \
+  --mount volume=var-lib-rkt,target=/var/lib/rkt \
+  --volume stage,kind=host,source=/tmp \
+  --mount volume=stage,target=/tmp \
+  --volume var-log,kind=host,source=/var/log \
+  --mount volume=var-log,target=/var/log \
+"
