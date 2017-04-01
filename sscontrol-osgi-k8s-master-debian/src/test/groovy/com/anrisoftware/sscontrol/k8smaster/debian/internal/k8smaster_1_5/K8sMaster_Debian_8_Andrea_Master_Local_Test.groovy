@@ -48,12 +48,13 @@ service "ssh", group: "etcd", key: "${robobeeKey}" with {
     host "robobee@etcd-0.robobee.test"
     host "robobee@etcd-1.robobee.test"
 }
+def etcdAddresses = targets['etcd'].inject([]) { result, entry -> result << "https://\${entry.hostAddress}:2379" }.join(',')
 service "k8s-master", name: "andrea-cluster", target: "master", advertise: targets['master'][0] with {
     tls certs.k8s
     authentication "cert", ca: certs.k8s.ca
     plugin "flannel"
     plugin "calico"
-    plugin "etcd", address: "https://192.168.56.200:2379,https://192.168.56.220:2379" with {
+    plugin "etcd", address: etcdAddresses with {
         tls certs.etcd
     }
 }
