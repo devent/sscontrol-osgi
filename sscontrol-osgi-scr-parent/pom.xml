@@ -50,6 +50,7 @@
         <module>../sscontrol-osgi-hosts-linux</module>
         <module>../sscontrol-osgi-k8s-base</module>
         <module>../sscontrol-osgi-k8s-base-upstream</module>
+        <module>../sscontrol-osgi-k8s-cluster</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
