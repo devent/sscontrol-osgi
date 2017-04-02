@@ -52,6 +52,12 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class SshImpl implements Ssh {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface SshImplFactory extends SshService {
 
     }
