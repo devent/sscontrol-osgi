@@ -28,10 +28,9 @@ import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
-import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterPreModule
+import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafanaService
+import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
@@ -56,10 +55,13 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sClusterScriptTest {
+class MonitoringClusterHeapsterInfluxdbGrafanaScriptTest {
 
     @Inject
-    K8sClusterImplFactory serviceFactory
+    K8sClusterImplFactory clusterFactory
+
+    @Inject
+    MonitoringClusterHeapsterInfluxdbGrafanaImplFactory serviceFactory
 
     @Inject
     HostServicesImplFactory servicesFactory
@@ -69,48 +71,13 @@ class K8sClusterScriptTest {
         def test = [
             name: 'cluster',
             input: """
-service "k8s-cluster", group: 'default' with {
-    cluster name: 'default-cluster'
-    context name: 'default-system'
-    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
-}
+service "k8s-cluster", group: 'default'
+service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             expected: { HostServices services ->
-                assert services.getServices('k8s-cluster').size() == 1
-                K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.cluster.name == 'default-cluster'
-                assert s.context.name == 'default-system'
-                assert s.credentials.size() == 1
-                assert s.credentials[0].type == 'cert'
-                assert s.credentials[0].name == 'default-admin'
-                assert s.credentials[0].tls.ca.toString() =~ /.*ca\.pem/
-                assert s.credentials[0].tls.cert.toString() =~ /.*cert\.pem/
-                assert s.credentials[0].tls.key.toString() =~ /.*key\.pem/
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "args"() {
-        def test = [
-            name: 'args',
-            input: """
-service "k8s-cluster", group: 'default', cluster: 'default-cluster', context: 'default-system' with {
-    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
-}
-""",
-            expected: { HostServices services ->
-                assert services.getServices('k8s-cluster').size() == 1
-                K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.cluster.name == 'default-cluster'
-                assert s.context.name == 'default-system'
-                assert s.credentials.size() == 1
-                assert s.credentials[0].type == 'cert'
-                assert s.credentials[0].name == 'default-admin'
-                assert s.credentials[0].tls.ca.toString() =~ /.*ca\.pem/
-                assert s.credentials[0].tls.cert.toString() =~ /.*cert\.pem/
-                assert s.credentials[0].tls.key.toString() =~ /.*key\.pem/
+                assert services.getServices('monitoring-cluster-heapster-influxdb-grafana').size() == 1
+                def s = services.getServices('monitoring-cluster-heapster-influxdb-grafana')[0] as MonitoringClusterHeapsterInfluxdbGrafanaService
+                assert s.cluster == 'default-cluster'
             },
         ]
         doTest test
@@ -120,7 +87,8 @@ service "k8s-cluster", group: 'default', cluster: 'default-cluster', context: 'd
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-        services.putAvailableService 'k8s-cluster', serviceFactory
+        services.putAvailableService 'k8s-cluster', clusterFactory
+        services.putAvailableService 'monitoring-cluster-heapster-influxdb-grafana', serviceFactory
         Eval.me 'service', services, test.input as String
         Closure expected = test.expected
         expected services
@@ -132,8 +100,8 @@ service "k8s-cluster", group: 'default', cluster: 'default-cluster', context: 'd
         Guice.createInjector(
                 new K8sModule(),
                 new K8sPreModule(),
-                new K8sClusterModule(),
-                new K8sClusterPreModule(),
+                new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
+                new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

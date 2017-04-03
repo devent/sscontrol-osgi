@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.types.external.PreHostService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class K8sClusterPreScriptImpl implements PreHost {
+public class MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImpl implements PreHost {
 
     /**
      * 

@@ -15,44 +15,25 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
-import javax.inject.Inject;
-
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
-
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>Ssh</i> pre-script service.
+ * <i>K8s-Master</i> pre-script module.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(K8sPreScriptService.class)
-public class K8sClusterPreScriptServiceImpl implements K8sPreScriptService {
-
-    @Inject
-    private K8sMasterPreScriptImplFactory sshPreScriptFactory;
+public class MonitoringClusterHeapsterInfluxdbGrafanaPreModule extends AbstractModule {
 
     @Override
-    public PreHost create() {
-        return sshPreScriptFactory.create();
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(PreHost.class, K8sPreScriptImpl.class)
+                .build(K8sMasterPreScriptImplFactory.class));
     }
 
-    @Activate
-    protected void start() {
-        Guice.createInjector(new K8sPreModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-            }
-        }).injectMembers(this);
-    }
 }
