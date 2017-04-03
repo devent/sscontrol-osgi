@@ -59,4 +59,6 @@ public interface HostServices {
     List<HostService> getServices(String name);
 
     Targets getTargets();
+
+    Clusters getClusters();
 }

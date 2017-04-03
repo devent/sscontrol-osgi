@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Creates the host targets.
+ * Creates the ssh host targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

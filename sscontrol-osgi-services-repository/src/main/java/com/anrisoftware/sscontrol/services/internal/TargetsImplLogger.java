@@ -20,11 +20,10 @@ import static com.anrisoftware.sscontrol.services.internal.TargetsImplLogger._.a
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.Ssh;
 
 /**
- * Logging for {@link TargetsImpl}.
- * 
+ * Logging for {@link AbstractTargetsImpl}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
@@ -48,13 +47,13 @@ final class TargetsImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link TargetsImpl}.
+     * Sets the context of the logger to {@link AbstractTargetsImpl}.
      */
     public TargetsImplLogger() {
-        super(TargetsImpl.class);
+        super(AbstractTargetsImpl.class);
     }
 
-    public void addHosts(TargetsImpl targets, Ssh ssh, String group) {
+    public void addHosts(AbstractTargetsImpl<?, ?> targets, Object ssh, String group) {
         debug(addHosts, group, ssh, targets);
     }
 }

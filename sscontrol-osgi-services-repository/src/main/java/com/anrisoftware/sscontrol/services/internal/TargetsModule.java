@@ -15,7 +15,9 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
+import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
+import com.anrisoftware.sscontrol.types.external.Clusters;
 import com.anrisoftware.sscontrol.types.external.Targets;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,6 +35,9 @@ public class TargetsModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Targets.class, TargetsImpl.class)
                 .build(TargetsImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Clusters.class, ClustersImpl.class)
+                .build(ClustersImplFactory.class));
     }
 
 }

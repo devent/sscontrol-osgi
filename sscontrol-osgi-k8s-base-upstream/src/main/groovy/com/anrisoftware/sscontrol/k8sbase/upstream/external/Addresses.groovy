@@ -3,7 +3,7 @@ package com.anrisoftware.sscontrol.k8sbase.upstream.external
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.SshHost
-import com.anrisoftware.sscontrol.types.external.Targets
+import com.anrisoftware.sscontrol.types.external.HostTargets
 import com.google.inject.assistedinject.Assisted
 
 /**
@@ -22,17 +22,17 @@ class Addresses {
      */
     interface AddressesFactory {
 
-        Addresses create(Object parent, Targets targets, List<Object> addresses)
+        Addresses create(Object parent, HostTargets targets, List<Object> addresses)
     }
 
-    private Targets targets
+    private HostTargets targets
 
     private List<Object> addresses
 
     private Object parent
 
     @Inject
-    Addresses(@Assisted Object parent, @Assisted Targets targets, @Assisted List<Object> addresses) {
+    Addresses(@Assisted Object parent, @Assisted HostTargets targets, @Assisted List<Object> addresses) {
         this.parent = parent
         this.targets = targets
         this.addresses = new ArrayList(addresses)
