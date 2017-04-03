@@ -15,29 +15,25 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import java.net.URI;
-import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Set;
 
 /**
- * <i>Ssh</i> host.
+ * Contains the host targets.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface SshHost extends TargetHost {
+public interface HostTargets<HostType extends TargetHost, TargetType extends TargetHostService<HostType>> {
 
-    String getHost();
+    List<HostType> getHosts(String name);
 
-    String getUser();
+    List<HostType> getHosts(TargetType target);
 
-    Integer getPort();
+    Set<String> getGroups();
 
-    String getHostAddress() throws UnknownHostException;
+    void addTarget(TargetType target);
 
-    /**
-     * Returns the private SSH key.
-     */
-    URI getKey();
+    void removeTarget(String name);
 
-    HostSystem getSystem();
 }

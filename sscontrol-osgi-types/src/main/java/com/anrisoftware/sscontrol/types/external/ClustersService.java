@@ -15,29 +15,14 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import java.net.URI;
-import java.net.UnknownHostException;
-
 /**
- * <i>Ssh</i> host.
+ * Creates the cluster targets.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface SshHost extends TargetHost {
+public interface ClustersService {
 
-    String getHost();
+    Clusters create();
 
-    String getUser();
-
-    Integer getPort();
-
-    String getHostAddress() throws UnknownHostException;
-
-    /**
-     * Returns the private SSH key.
-     */
-    URI getKey();
-
-    HostSystem getSystem();
 }

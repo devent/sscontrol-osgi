@@ -12,12 +12,12 @@
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-k8s-client</artifactId>
-    <name>sscontrol-osgi - k8s-client</name>
+    <artifactId>sscontrol-osgi-k8s-cluster</artifactId>
+    <name>sscontrol-osgi - k8s-cluster</name>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8sclient</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8scluster</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

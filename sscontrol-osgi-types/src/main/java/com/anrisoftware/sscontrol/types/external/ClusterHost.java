@@ -1,11 +1,11 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Ssh host targets.
+ * Cluster target host.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Targets extends HostTargets<SshHost, Ssh> {
+public interface ClusterHost extends TargetHost {
 
 }

@@ -34,13 +34,12 @@ import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
-import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -397,6 +396,7 @@ service "k8s-master" with {
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
@@ -404,7 +404,6 @@ service "k8s-master" with {
 
                     @Override
                     protected void configure() {
-                        bind TargetsService to TargetsImplFactory
                         bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)

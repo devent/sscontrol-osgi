@@ -23,27 +23,27 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
-import com.anrisoftware.sscontrol.types.external.Targets;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
+import com.anrisoftware.sscontrol.types.external.Clusters;
+import com.anrisoftware.sscontrol.types.external.ClustersService;
 
 /**
- * Creates the ssh host targets.
+ * Creates the cluster targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component(immediate = true)
-@Service(TargetsService.class)
-public class TargetsServiceImpl implements TargetsService {
+@Service(ClustersService.class)
+public class ClustersServiceImpl implements ClustersService {
 
     @Inject
-    private TargetsImplFactory targetsFactory;
+    private ClustersImplFactory targetsFactory;
 
-    private Targets targets;
+    private Clusters targets;
 
     @Override
-    public synchronized Targets create() {
+    public synchronized Clusters create() {
         if (targets == null) {
             this.targets = targetsFactory.create();
         }

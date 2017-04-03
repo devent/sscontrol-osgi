@@ -15,43 +15,24 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
-import static com.google.inject.Guice.createInjector;
-
-import javax.inject.Inject;
-
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
-
+import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
-import com.anrisoftware.sscontrol.types.external.Targets;
+import com.anrisoftware.sscontrol.types.external.ClustersService;
 import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.google.inject.AbstractModule;
 
 /**
- * Creates the ssh host targets.
+ *
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component(immediate = true)
-@Service(TargetsService.class)
-public class TargetsServiceImpl implements TargetsService {
-
-    @Inject
-    private TargetsImplFactory targetsFactory;
-
-    private Targets targets;
+public class TargetsServiceModule extends AbstractModule {
 
     @Override
-    public synchronized Targets create() {
-        if (targets == null) {
-            this.targets = targetsFactory.create();
-        }
-        return targets;
+    protected void configure() {
+        bind(TargetsService.class).to(TargetsImplFactory.class);
+        bind(ClustersService.class).to(ClustersImplFactory.class);
     }
 
-    @Activate
-    protected void start() {
-        createInjector(new TargetsModule()).injectMembers(this);
-    }
 }

@@ -15,28 +15,17 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import java.util.List;
-
 /**
  * <i>Ssh</i> script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Ssh extends HostService {
+public interface Ssh extends TargetHostService<SshHost> {
 
     /**
      * Returns the debug logging.
      */
     DebugLogging getDebugLogging();
 
-    /**
-     * Returns the group the hosts belong to.
-     */
-    String getGroup();
-
-    /**
-     * Returns the hosts.
-     */
-    List<SshHost> getHosts();
 }

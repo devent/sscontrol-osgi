@@ -48,9 +48,7 @@ import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubFactory
 import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubServiceImpl
 import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubFactory
 import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubServiceImpl
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -60,7 +58,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
@@ -218,12 +216,12 @@ targets 'nodes' eachWithIndex { host, i ->
         this.injector = Guice.createInjector(
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new TypesModule(),
                 new StringsModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(TargetsService).to(TargetsImplFactory)
                         install(new FactoryModuleBuilder().implement(HostnameStub, HostnameStub).build(HostnameStubFactory))
                         install(new FactoryModuleBuilder().implement(SshStub, SshStub).build(SshStubFactory))
                         install(new FactoryModuleBuilder().implement(HostsStub, HostsStub).build(HostsStubFactory))

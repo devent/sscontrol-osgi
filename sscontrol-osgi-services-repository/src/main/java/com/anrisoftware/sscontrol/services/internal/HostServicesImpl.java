@@ -33,6 +33,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
+import com.anrisoftware.sscontrol.types.external.Clusters;
+import com.anrisoftware.sscontrol.types.external.ClustersService;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
@@ -43,7 +45,6 @@ import com.anrisoftware.sscontrol.types.external.Ssh;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.Targets;
 import com.anrisoftware.sscontrol.types.external.TargetsService;
-import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
@@ -57,7 +58,7 @@ public class HostServicesImpl implements HostServices {
     private static final String DEFAULT_TARGETS_NAME = "default";
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -76,12 +77,16 @@ public class HostServicesImpl implements HostServices {
 
     private final Targets targets;
 
+    private final Clusters clusters;
+
     @Inject
     private HostServicesImplLogger log;
 
     @AssistedInject
-    HostServicesImpl(TargetsService targetsService) {
+    HostServicesImpl(TargetsService targetsService,
+            ClustersService clustersService) {
         this.targets = targetsService.create();
+        this.clusters = clustersService.create();
         this.availableServices = synchronizedMap(
                 new HashMap<String, HostServiceService>());
         this.availablePreServices = synchronizedMap(
@@ -90,12 +95,6 @@ public class HostServicesImpl implements HostServices {
                 new LinkedHashMap<String, List<HostService>>());
         this.availableScriptServices = synchronizedMap(
                 new HashMap<String, HostServiceScriptService>());
-    }
-
-    HostServicesImpl(TargetsService targetsService,
-            @Assisted HostServices services) {
-        this(targetsService);
-        copyAvailableServices(availableServices, services);
     }
 
     public HostService call(String name) {
@@ -114,7 +113,7 @@ public class HostServicesImpl implements HostServices {
 
     /**
      * Returns the target hosts with the specified group name.
-     * 
+     *
      * <pre>
      * targets "master" each {
      * }
@@ -220,19 +219,17 @@ public class HostServicesImpl implements HostServices {
     }
 
     @Override
+    public Clusters getClusters() {
+        return clusters;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("available service", getAvailableServices())
                 .append("available script service",
                         getAvailableScriptServices())
                 .append("services", getServices()).toString();
-    }
-
-    private void copyAvailableServices(Map<String, HostServiceService> scripts,
-            HostServices repository) {
-        for (String name : repository.getAvailableServices()) {
-            scripts.put(name, repository.getAvailableService(name));
-        }
     }
 
     private Map<String, Object> parseArgs(Map<String, Object> args,
