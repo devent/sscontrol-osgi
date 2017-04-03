@@ -50,7 +50,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class K8sClusterImpl implements MonitoringClusterHeapsterInfluxdbGrafana {
+public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringClusterHeapsterInfluxdbGrafana {
 
     /**
      *
@@ -58,11 +58,11 @@ public class K8sClusterImpl implements MonitoringClusterHeapsterInfluxdbGrafana 
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface K8sClusterImplFactory extends HostServiceService {
+    public interface MonitoringClusterHeapsterInfluxdbGrafanaImplFactory extends HostServiceService {
 
     }
 
-    private final K8sClusterImplLogger log;
+    private final MonitoringClusterHeapsterInfluxdbGrafanaImplLogger log;
 
     @Inject
     private transient Map<String, CredentialsFactory> credentialsFactories;
@@ -82,7 +82,7 @@ public class K8sClusterImpl implements MonitoringClusterHeapsterInfluxdbGrafana 
     private Context context;
 
     @Inject
-    K8sClusterImpl(K8sClusterImplLogger log,
+    MonitoringClusterHeapsterInfluxdbGrafanaImpl(MonitoringClusterHeapsterInfluxdbGrafanaImplLogger log,
             HostPropertiesService propertiesService,
             ClusterImplFactory clusterFactory,
             ContextImplFactory contextFactory,

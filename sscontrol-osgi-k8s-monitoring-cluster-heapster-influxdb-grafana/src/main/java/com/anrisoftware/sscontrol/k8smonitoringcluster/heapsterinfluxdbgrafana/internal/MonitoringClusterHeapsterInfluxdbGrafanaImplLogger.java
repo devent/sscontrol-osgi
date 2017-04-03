@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterImplLogger.m.clusterSet;
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterImplLogger.m.contextSet;
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterImplLogger.m.credentialsAdded;
+import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.clusterSet;
+import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.contextSet;
+import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.credentialsAdded;
 
 import javax.inject.Singleton;
 
@@ -27,13 +27,13 @@ import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.e
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Credentials;
 
 /**
- * Logging for {@link K8sClusterImpl}.
+ * Logging for {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class K8sClusterImplLogger extends AbstractLogger {
+final class MonitoringClusterHeapsterInfluxdbGrafanaImplLogger extends AbstractLogger {
 
     enum m {
 
@@ -56,21 +56,21 @@ final class K8sClusterImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link K8sClusterImpl}.
+     * Sets the context of the logger to {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
      */
-    public K8sClusterImplLogger() {
-        super(K8sClusterImpl.class);
+    public MonitoringClusterHeapsterInfluxdbGrafanaImplLogger() {
+        super(MonitoringClusterHeapsterInfluxdbGrafanaImpl.class);
     }
 
-    void credentialsAdded(K8sClusterImpl k8s, Credentials auth) {
+    void credentialsAdded(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Credentials auth) {
         debug(credentialsAdded, auth, k8s);
     }
 
-    void clusterSet(K8sClusterImpl k8s, Cluster cluster) {
+    void clusterSet(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Cluster cluster) {
         debug(clusterSet, cluster, k8s);
     }
 
-    void contextSet(K8sClusterImpl k8s, Context context) {
+    void contextSet(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Context context) {
         debug(contextSet, context, k8s);
     }
 }

@@ -15,59 +15,43 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
-import static com.google.inject.Guice.createInjector;
-import static com.google.inject.util.Providers.of;
-
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.globalpom.core.strings.ToStringService;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 
 /**
- * <i>Ssh</i> service.
+ * <i>Ssh</i> pre-script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service(HostServiceService.class)
-public class K8sClusterServiceImpl implements K8sService {
+@Service(K8sPreScriptService.class)
+public class MonitoringClusterHeapsterInfluxdbGrafanaPreScriptServiceImpl implements K8sPreScriptService {
 
     @Inject
-    private K8sImplFactory sshFactory;
-
-    @Reference
-    private ToStringService toStringService;
+    private K8sMasterPreScriptImplFactory sshPreScriptFactory;
 
     @Override
-    public String getName() {
-        return "k8s-master";
-    }
-
-    @Override
-    public HostService create(Map<String, Object> args) {
-        return sshFactory.create(args);
+    public PreHost create() {
+        return sshPreScriptFactory.create();
     }
 
     @Activate
     protected void start() {
-        createInjector(new K8sModule(), new AbstractModule() {
+        Guice.createInjector(new K8sPreModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(ToStringService.class).toProvider(of(toStringService));
             }
         }).injectMembers(this);
     }

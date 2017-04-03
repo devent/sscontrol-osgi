@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.e
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.CredentialsCertImpl.CredentialsCertImplFactory;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.K8sClusterImpl.K8sClusterImplFactory;
+import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -36,13 +36,13 @@ import com.google.inject.multibindings.MapBinder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class K8sClusterModule extends AbstractModule {
+public class MonitoringClusterHeapsterInfluxdbGrafanaModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostService.class, K8sClusterImpl.class)
-                .build(K8sClusterImplFactory.class));
+                .implement(HostService.class, MonitoringClusterHeapsterInfluxdbGrafanaImpl.class)
+                .build(MonitoringClusterHeapsterInfluxdbGrafanaImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Cluster.class, ClusterImpl.class)
                 .build(ClusterImplFactory.class));
