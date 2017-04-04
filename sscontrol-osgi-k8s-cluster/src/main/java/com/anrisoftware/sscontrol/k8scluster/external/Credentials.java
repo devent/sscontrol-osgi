@@ -32,4 +32,14 @@ public interface Credentials {
      * Returns the user name.
      */
     String getName();
+
+    /**
+     * Returns the cluster host.
+     */
+    String getHost();
+
+    /**
+     * Returns the cluster host port.
+     */
+    Integer getPort();
 }

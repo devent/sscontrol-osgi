@@ -35,8 +35,11 @@ import com.anrisoftware.sscontrol.k8scluster.external.Context;
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
+import com.anrisoftware.sscontrol.types.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
@@ -81,11 +84,14 @@ public class K8sClusterImpl implements K8sCluster {
 
     private Context context;
 
+    private final K8sClusterHostImplFactory clusterHostFactory;
+
     @Inject
     K8sClusterImpl(K8sClusterImplLogger log,
             HostPropertiesService propertiesService,
             ClusterImplFactory clusterFactory,
             ContextImplFactory contextFactory,
+            K8sClusterHostImplFactory clusterHostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
@@ -93,6 +99,7 @@ public class K8sClusterImpl implements K8sCluster {
         this.credentials = new ArrayList<>();
         this.clusterFactory = clusterFactory;
         this.contextFactory = contextFactory;
+        this.clusterHostFactory = clusterHostFactory;
         parseArgs(args);
     }
 
@@ -227,6 +234,23 @@ public class K8sClusterImpl implements K8sCluster {
     @Override
     public List<Credentials> getCredentials() {
         return credentials;
+    }
+
+    @Override
+    public String getGroup() {
+        return cluster.getName();
+    }
+
+    @Override
+    public List<ClusterHost> getHosts() {
+        List<ClusterHost> list = new ArrayList<>();
+        for (Credentials c : credentials) {
+            for (SshHost ssh : targets) {
+                K8sClusterHost host = clusterHostFactory.create(ssh, c);
+                list.add(host);
+            }
+        }
+        return Collections.unmodifiableList(list);
     }
 
     @Override

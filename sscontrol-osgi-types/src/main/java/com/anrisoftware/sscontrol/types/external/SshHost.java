@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.types.external;
 
 import java.net.URI;
-import java.net.UnknownHostException;
 
 /**
  * <i>Ssh</i> host.
@@ -26,13 +25,7 @@ import java.net.UnknownHostException;
  */
 public interface SshHost extends TargetHost {
 
-    String getHost();
-
     String getUser();
-
-    Integer getPort();
-
-    String getHostAddress() throws UnknownHostException;
 
     /**
      * Returns the private SSH key.

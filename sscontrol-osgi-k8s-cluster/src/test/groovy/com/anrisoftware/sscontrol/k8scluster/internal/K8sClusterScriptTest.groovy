@@ -34,6 +34,7 @@ import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
@@ -67,10 +68,10 @@ class K8sClusterScriptTest {
         def test = [
             name: 'cluster',
             input: """
-service "k8s-cluster", group: 'default' with {
+service "k8s-cluster", group: 'default', target: 'default' with {
     cluster name: 'default-cluster'
     context name: 'default-system'
-    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+    credentials type: 'cert', port: 443, name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
 }
 """,
             expected: { HostServices services ->
@@ -81,6 +82,7 @@ service "k8s-cluster", group: 'default' with {
                 assert s.credentials.size() == 1
                 assert s.credentials[0].type == 'cert'
                 assert s.credentials[0].name == 'default-admin'
+                assert s.credentials[0].port == 443
                 assert s.credentials[0].tls.ca.toString() =~ /.*ca\.pem/
                 assert s.credentials[0].tls.cert.toString() =~ /.*cert\.pem/
                 assert s.credentials[0].tls.key.toString() =~ /.*key\.pem/
@@ -135,6 +137,7 @@ service "k8s-cluster", group: 'default', cluster: 'default-cluster', context: 'd
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
+                new TargetsServiceModule(),
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
