@@ -21,9 +21,11 @@ import com.anrisoftware.sscontrol.k8scluster.external.Cluster;
 import com.anrisoftware.sscontrol.k8scluster.external.Context;
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsFactory;
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsCertImpl.CredentialsCertImplFactory;
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
@@ -49,6 +51,9 @@ public class K8sClusterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Context.class, ContextImpl.class)
                 .build(ContextImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(K8sClusterHost.class, K8sClusterHostImpl.class)
+                .build(K8sClusterHostImplFactory.class));
         bindCredentials();
     }
 

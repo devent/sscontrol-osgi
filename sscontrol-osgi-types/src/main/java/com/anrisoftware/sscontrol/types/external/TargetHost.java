@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.types.external;
 
+import java.net.UnknownHostException;
+
 /**
  * Target host.
  *
@@ -7,5 +9,11 @@ package com.anrisoftware.sscontrol.types.external;
  * @version 1.0
  */
 public interface TargetHost {
+
+    String getHost();
+
+    Integer getPort();
+
+    String getHostAddress() throws UnknownHostException;
 
 }

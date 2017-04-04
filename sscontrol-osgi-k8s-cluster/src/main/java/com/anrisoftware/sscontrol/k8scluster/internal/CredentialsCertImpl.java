@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8scluster.internal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.Map;
@@ -55,12 +56,35 @@ public class CredentialsCertImpl implements CredentialsCert {
 
     private final CredentialsCertImplLogger log;
 
+    private String host;
+
+    private Integer port;
+
     @Inject
     CredentialsCertImpl(CredentialsCertImplLogger log, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.tls = tlsFactory.create(args);
         parseArgs(args);
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    @Override
+    public String getHost() {
+        return host;
+    }
+
+    public void setPort(int port) {
+        assertThat("port>0", port, greaterThan(0));
+        this.port = port;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
     }
 
     public void setName(String name) {
@@ -95,6 +119,10 @@ public class CredentialsCertImpl implements CredentialsCert {
         v = args.get("type");
         assertThat("type=null", v, notNullValue());
         assertThat("type=cert", v.toString(), equalToIgnoringCase(getType()));
+        v = args.get("port");
+        if (v != null) {
+            setPort((Integer) v);
+        }
     }
 
 }

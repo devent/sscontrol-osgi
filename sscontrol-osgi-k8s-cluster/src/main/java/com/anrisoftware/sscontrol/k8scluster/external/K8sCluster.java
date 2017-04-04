@@ -17,15 +17,14 @@ package com.anrisoftware.sscontrol.k8scluster.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.external.HostService;
-
 /**
  * <i>K8s-Cluster</i> service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8sCluster extends HostService {
+public interface K8sCluster
+        extends com.anrisoftware.sscontrol.types.external.Cluster {
 
     Cluster getCluster();
 
