@@ -15,50 +15,24 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Cluster;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Context;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Credentials;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.CredentialsFactory;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ContextImpl.ContextImplFactory;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.CredentialsCertImpl.CredentialsCertImplFactory;
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.MapBinder;
 
 /**
- * <i>K8s-Master</i> script module.
- *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class MonitoringClusterHeapsterInfluxdbGrafanaModule extends AbstractModule {
+public class MonitoringClusterHeapsterInfluxdbGrafanaModule
+        extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostService.class, MonitoringClusterHeapsterInfluxdbGrafanaImpl.class)
+                .implement(HostService.class,
+                        MonitoringClusterHeapsterInfluxdbGrafanaImpl.class)
                 .build(MonitoringClusterHeapsterInfluxdbGrafanaImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Cluster.class, ClusterImpl.class)
-                .build(ClusterImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Context.class, ContextImpl.class)
-                .build(ContextImplFactory.class));
-        bindCredentials();
-    }
-
-    private void bindCredentials() {
-        install(new FactoryModuleBuilder()
-                .implement(Credentials.class, CredentialsCertImpl.class)
-                .build(CredentialsCertImplFactory.class));
-        MapBinder<String, CredentialsFactory> mapbinder = newMapBinder(binder(),
-                String.class, CredentialsFactory.class);
-        mapbinder.addBinding("cert").to(CredentialsCertImplFactory.class);
     }
 
 }

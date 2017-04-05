@@ -15,16 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.clusterSet;
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.contextSet;
-import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.credentialsAdded;
+import static com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImplLogger.m.clustersAdded;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Cluster;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Context;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Credentials;
+import com.anrisoftware.sscontrol.types.external.ClusterHost;
 
 /**
  * Logging for {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
@@ -33,15 +31,12 @@ import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.e
  * @since 1.0
  */
 @Singleton
-final class MonitoringClusterHeapsterInfluxdbGrafanaImplLogger extends AbstractLogger {
+final class MonitoringClusterHeapsterInfluxdbGrafanaImplLogger
+        extends AbstractLogger {
 
     enum m {
 
-        clusterSet("Cluster {} set for {}"),
-
-        credentialsAdded("Credentials {} added for {}"),
-
-        contextSet("Context {} set for {}");
+        clustersAdded("Clusters {} added to {}");
 
         private String name;
 
@@ -56,21 +51,15 @@ final class MonitoringClusterHeapsterInfluxdbGrafanaImplLogger extends AbstractL
     }
 
     /**
-     * Sets the context of the logger to {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
+     * Sets the context of the logger to
+     * {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
      */
-    public MonitoringClusterHeapsterInfluxdbGrafanaImplLogger() {
+    MonitoringClusterHeapsterInfluxdbGrafanaImplLogger() {
         super(MonitoringClusterHeapsterInfluxdbGrafanaImpl.class);
     }
 
-    void credentialsAdded(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Credentials auth) {
-        debug(credentialsAdded, auth, k8s);
-    }
-
-    void clusterSet(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Cluster cluster) {
-        debug(clusterSet, cluster, k8s);
-    }
-
-    void contextSet(MonitoringClusterHeapsterInfluxdbGrafanaImpl k8s, Context context) {
-        debug(contextSet, context, k8s);
+    void clustersAdded(MonitoringClusterHeapsterInfluxdbGrafanaImpl monitoring,
+            List<ClusterHost> list) {
+        debug(clustersAdded, list, monitoring);
     }
 }
