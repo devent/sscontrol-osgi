@@ -15,22 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external;
 
-import java.util.List;
-
 import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
- * <i>K8s-Cluster</i> service.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 public interface MonitoringClusterHeapsterInfluxdbGrafana extends HostService {
-
-    Cluster getCluster();
-
-    Context getContext();
-
-    List<Credentials> getCredentials();
 
 }

@@ -71,7 +71,7 @@ class MonitoringClusterHeapsterInfluxdbGrafanaScriptTest {
         def test = [
             name: 'cluster',
             input: """
-service "k8s-cluster", group: 'default'
+service "k8s-cluster", target: 'default', group: 'default'
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             expected: { HostServices services ->

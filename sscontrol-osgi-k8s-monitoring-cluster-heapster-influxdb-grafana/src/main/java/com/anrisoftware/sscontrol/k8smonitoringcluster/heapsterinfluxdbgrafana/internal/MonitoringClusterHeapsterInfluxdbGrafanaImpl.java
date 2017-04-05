@@ -16,12 +16,9 @@
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal;
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,13 +27,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Cluster;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Context;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.Credentials;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafana;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.ContextImpl.ContextImplFactory;
+import com.anrisoftware.sscontrol.types.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
@@ -45,12 +37,13 @@ import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProp
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * <i>K8s-Cluster</i> service.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringClusterHeapsterInfluxdbGrafana {
+public class MonitoringClusterHeapsterInfluxdbGrafanaImpl
+        implements MonitoringClusterHeapsterInfluxdbGrafana {
 
     /**
      *
@@ -58,41 +51,28 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringC
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface MonitoringClusterHeapsterInfluxdbGrafanaImplFactory extends HostServiceService {
+    public interface MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
+            extends HostServiceService {
 
     }
 
     private final MonitoringClusterHeapsterInfluxdbGrafanaImplLogger log;
 
-    @Inject
-    private transient Map<String, CredentialsFactory> credentialsFactories;
-
-    private final List<Credentials> credentials;
-
     private final HostServiceProperties serviceProperties;
 
     private final List<SshHost> targets;
 
-    private final ClusterImplFactory clusterFactory;
-
-    private Cluster cluster;
-
-    private final ContextImplFactory contextFactory;
-
-    private Context context;
+    private final List<ClusterHost> clusters;
 
     @Inject
-    MonitoringClusterHeapsterInfluxdbGrafanaImpl(MonitoringClusterHeapsterInfluxdbGrafanaImplLogger log,
+    MonitoringClusterHeapsterInfluxdbGrafanaImpl(
+            MonitoringClusterHeapsterInfluxdbGrafanaImplLogger log,
             HostPropertiesService propertiesService,
-            ClusterImplFactory clusterFactory,
-            ContextImplFactory contextFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
-        this.credentials = new ArrayList<>();
-        this.clusterFactory = clusterFactory;
-        this.contextFactory = contextFactory;
+        this.clusters = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -123,73 +103,6 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringC
         targets.addAll(l);
     }
 
-    /**
-     * <pre>
-     * cluster "default-cluster"
-     * </pre>
-     */
-    public void cluster(String name) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
-    }
-
-    /**
-     * <pre>
-     * cluster name: "default-cluster"
-     * </pre>
-     */
-    public void cluster(Map<String, Object> args) {
-        this.cluster = clusterFactory.create(args);
-        log.clusterSet(this, cluster);
-    }
-
-    /**
-     * <pre>
-     * context "default-cluster"
-     * </pre>
-     */
-    public void context(String name) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
-    }
-
-    /**
-     * <pre>
-     * context name: "default-cluster"
-     * </pre>
-     */
-    public void context(Map<String, Object> args) {
-        this.context = contextFactory.create(args);
-        log.contextSet(this, context);
-    }
-
-    /**
-     * <pre>
-     * credentials 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
-     * </pre>
-     */
-    public void credentials(Map<String, Object> args, String type) {
-        Map<String, Object> a = new HashMap<>(args);
-        args.put("type", type);
-        credentials(a);
-    }
-
-    /**
-     * <pre>
-     * credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
-     * </pre>
-     */
-    public void credentials(Map<String, Object> args) {
-        Object type = args.get("type");
-        assertThat("type=null", type, notNullValue());
-        CredentialsFactory factory = credentialsFactories.get(type.toString());
-        Credentials c = factory.create(args);
-        credentials.add(c);
-        log.credentialsAdded(this, c);
-    }
-
     @Override
     public SshHost getTarget() {
         return getTargets().get(0);
@@ -204,6 +117,30 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringC
         return Collections.unmodifiableList(targets);
     }
 
+    /**
+     * <pre>
+     * cluster name: 'master'
+     * </pre>
+     */
+    public void cluster(Map<String, Object> args) {
+        Object v = args.get("clusters");
+        @SuppressWarnings("unchecked")
+        List<ClusterHost> l = InvokerHelper.asList(v);
+        clusters.addAll(l);
+    }
+
+    public ClusterHost getCluster() {
+        return getClusters().get(0);
+    }
+
+    public void addClusters(List<ClusterHost> list) {
+        this.clusters.addAll(list);
+    }
+
+    public List<ClusterHost> getClusters() {
+        return Collections.unmodifiableList(clusters);
+    }
+
     @Override
     public HostServiceProperties getServiceProperties() {
         return serviceProperties;
@@ -215,38 +152,20 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl implements MonitoringC
     }
 
     @Override
-    public Cluster getCluster() {
-        return cluster;
-    }
-
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public List<Credentials> getCredentials() {
-        return credentials;
-    }
-
-    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets()).toString();
     }
 
+    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("cluster");
+        Object v = args.get("targets");
         if (v != null) {
-            Map<String, Object> a = new HashMap<>(args);
-            a.put("name", v);
-            cluster(a);
+            addTargets((List<SshHost>) v);
         }
-        v = args.get("context");
+        v = args.get("clusters");
         if (v != null) {
-            Map<String, Object> a = new HashMap<>(args);
-            a.put("name", v);
-            context(a);
+            addClusters((List<ClusterHost>) v);
         }
     }
 
