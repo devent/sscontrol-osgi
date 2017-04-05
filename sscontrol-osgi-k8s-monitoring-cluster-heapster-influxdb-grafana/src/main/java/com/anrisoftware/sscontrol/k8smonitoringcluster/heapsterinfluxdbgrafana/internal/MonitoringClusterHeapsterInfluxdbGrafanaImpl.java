@@ -135,6 +135,7 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl
 
     public void addClusters(List<ClusterHost> list) {
         this.clusters.addAll(list);
+        log.clustersAdded(this, list);
     }
 
     public List<ClusterHost> getClusters() {
