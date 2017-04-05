@@ -18,11 +18,13 @@ package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * <i>K8s-Master</i> pre-script service.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana pre-script
+ * service.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface MonitoringClusterHeapsterInfluxdbGrafanaPreScriptService extends PreHostService {
+public interface MonitoringClusterHeapsterInfluxdbGrafanaPreScriptService
+        extends PreHostService {
 
 }

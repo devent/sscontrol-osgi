@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
- * <i>K8s-Master</i> service.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
