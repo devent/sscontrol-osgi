@@ -21,7 +21,6 @@ import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +31,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
+import com.anrisoftware.sscontrol.types.external.Cluster;
+import com.anrisoftware.sscontrol.types.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.Clusters;
 import com.anrisoftware.sscontrol.types.external.ClustersService;
 import com.anrisoftware.sscontrol.types.external.HostService;
@@ -54,8 +54,6 @@ import com.google.inject.assistedinject.AssistedInject;
  * @since 1.0
  */
 public class HostServicesImpl implements HostServices {
-
-    private static final String DEFAULT_TARGETS_NAME = "default";
 
     /**
      *
@@ -79,6 +77,10 @@ public class HostServicesImpl implements HostServices {
 
     private final Clusters clusters;
 
+    private final GetTargets<SshHost, Ssh> getTargets;
+
+    private final GetTargets<ClusterHost, Cluster> getClusters;
+
     @Inject
     private HostServicesImplLogger log;
 
@@ -95,6 +97,9 @@ public class HostServicesImpl implements HostServices {
                 new LinkedHashMap<String, List<HostService>>());
         this.availableScriptServices = synchronizedMap(
                 new HashMap<String, HostServiceScriptService>());
+        this.getTargets = new GetTargets<>(SshHost.class, Ssh.class, "target");
+        this.getClusters = new GetTargets<>(ClusterHost.class, Cluster.class,
+                "cluster");
     }
 
     public HostService call(String name) {
@@ -120,7 +125,19 @@ public class HostServicesImpl implements HostServices {
      * </pre>
      */
     public List<SshHost> targets(String name) {
-        return getTargets(name);
+        return getTargets.getTargets(targets, name);
+    }
+
+    /**
+     * Returns the clusters with the specified group name.
+     *
+     * <pre>
+     * targets "master" each {
+     * }
+     * </pre>
+     */
+    public List<ClusterHost> clusters(String name) {
+        return getClusters.getTargets(clusters, name);
     }
 
     @SuppressWarnings("unchecked")
@@ -236,46 +253,12 @@ public class HostServicesImpl implements HostServices {
             String name) {
         Map<String, Object> result = new HashMap<>(args);
         if (!name.equals("ssh")) {
-            List<SshHost> targets = parseTarget(args);
-            result.put("targets", targets);
+            List<SshHost> t = getTargets.parseTarget(targets, args);
+            result.put("targets", t);
         } else {
 
         }
         return unmodifiableMap(result);
-    }
-
-    private List<SshHost> parseTarget(Map<String, Object> args) {
-        Object object = args.get("target");
-        if (object instanceof SshHost) {
-            SshHost host = (SshHost) object;
-            return Arrays.asList(host);
-        }
-        if (object instanceof Ssh) {
-            Ssh ssh = (Ssh) object;
-            return getTargets(ssh);
-        }
-        if (object != null) {
-            String name = object.toString();
-            return getTargets(name);
-        } else {
-            return getTargets(DEFAULT_TARGETS_NAME);
-        }
-    }
-
-    private List<SshHost> getTargets(Ssh ssh) {
-        try {
-            return targets.getHosts(ssh);
-        } catch (AssertionError e) {
-            throw new NoTargetsForServiceException(e, ssh.getGroup());
-        }
-    }
-
-    private List<SshHost> getTargets(String name) {
-        try {
-            return targets.getHosts(name);
-        } catch (AssertionError e) {
-            throw new NoTargetsForServiceException(e, name);
-        }
     }
 
     private void checkService(String name, HostServiceService service) {

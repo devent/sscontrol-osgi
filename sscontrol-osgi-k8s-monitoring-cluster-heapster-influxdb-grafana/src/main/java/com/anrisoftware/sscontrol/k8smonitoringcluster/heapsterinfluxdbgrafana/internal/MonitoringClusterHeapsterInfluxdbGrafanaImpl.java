@@ -138,6 +138,7 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl
         log.clustersAdded(this, list);
     }
 
+    @Override
     public List<ClusterHost> getClusters() {
         return Collections.unmodifiableList(clusters);
     }
