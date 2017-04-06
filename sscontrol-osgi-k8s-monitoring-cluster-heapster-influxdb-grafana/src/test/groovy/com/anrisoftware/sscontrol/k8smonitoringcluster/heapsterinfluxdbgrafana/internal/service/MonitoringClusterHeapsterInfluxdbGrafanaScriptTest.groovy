@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal
+package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -28,13 +28,16 @@ import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafanaService
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
+import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
@@ -77,7 +80,6 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
             expected: { HostServices services ->
                 assert services.getServices('monitoring-cluster-heapster-influxdb-grafana').size() == 1
                 def s = services.getServices('monitoring-cluster-heapster-influxdb-grafana')[0] as MonitoringClusterHeapsterInfluxdbGrafanaService
-                assert s.clusters.size() == 1
             },
         ]
         doTest test
@@ -100,6 +102,8 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
         Guice.createInjector(
                 new K8sModule(),
                 new K8sPreModule(),
+                new K8sClusterModule(),
+                new K8sClusterPreModule(),
                 new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
                 new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),
                 new PropertiesModule(),
@@ -108,6 +112,7 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
