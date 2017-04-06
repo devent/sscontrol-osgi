@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external;
+package com.anrisoftware.sscontrol.types.external;
 
-import com.anrisoftware.sscontrol.types.external.ClusterService;
+import java.util.List;
 
 /**
- * Cluster monitoring based on Heapster, InfluxDB and Grafana service.
+ * Cluster service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface MonitoringClusterHeapsterInfluxdbGrafana
-        extends ClusterService {
+public interface ClusterService extends HostService {
+
+    List<ClusterHost> getClusters();
 
 }

@@ -77,7 +77,7 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
             expected: { HostServices services ->
                 assert services.getServices('monitoring-cluster-heapster-influxdb-grafana').size() == 1
                 def s = services.getServices('monitoring-cluster-heapster-influxdb-grafana')[0] as MonitoringClusterHeapsterInfluxdbGrafanaService
-                assert s.cluster == 'default-cluster'
+                assert s.clusters.size() == 1
             },
         ]
         doTest test
