@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
+import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostTargets;
 import com.anrisoftware.sscontrol.types.external.TargetHost;
 import com.anrisoftware.sscontrol.types.external.TargetHostService;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -47,8 +48,13 @@ public class GetTargets<HostType extends TargetHost, TargetType extends TargetHo
             String name = object.toString();
             return getTargets(targets, name);
         } else {
-            return getTargets(targets, DEFAULT_TARGETS_NAME);
+            return getDefaultTargets(targets);
         }
+    }
+
+    public List<HostType> getDefaultTargets(
+            HostTargets<HostType, TargetType> targets) {
+        return getTargets(targets, DEFAULT_TARGETS_NAME);
     }
 
     public List<HostType> getTargets(HostTargets<HostType, TargetType> targets,
@@ -66,6 +72,14 @@ public class GetTargets<HostType extends TargetHost, TargetType extends TargetHo
             return targets.getHosts(name);
         } catch (AssertionError e) {
             throw new NoTargetsForServiceException(e, name);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setupTargets(HostTargets<HostType, TargetType> targets,
+            HostService hostService) {
+        if (targetType.isInstance(hostService)) {
+            targets.addTarget((TargetType) hostService);
         }
     }
 

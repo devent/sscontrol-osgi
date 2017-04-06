@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.external;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.TargetServiceService;
 
 /**
  * <i>Ssh</i> service.
@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.external.HostServiceService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface SshService extends HostServiceService {
+public interface SshService extends TargetServiceService {
 }

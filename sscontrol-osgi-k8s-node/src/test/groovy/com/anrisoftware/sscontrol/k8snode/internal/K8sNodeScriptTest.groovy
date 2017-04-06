@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScriptModule
@@ -187,9 +188,8 @@ service "k8s-node" with {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-node', serviceFactory
-        services = robobeeScriptFactory.create folder.newFile(), test.input, services call()
+        Eval.me 'service', services, test.input as String
         Closure expected = test.expected
         expected services
     }
@@ -211,6 +211,7 @@ service "k8s-node" with {
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
