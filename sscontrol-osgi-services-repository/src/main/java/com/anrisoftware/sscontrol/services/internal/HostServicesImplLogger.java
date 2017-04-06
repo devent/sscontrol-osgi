@@ -15,33 +15,42 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger._.addService;
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger._.availableServiceAdded;
+import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.addService;
+import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.availableServiceAdded;
+import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.clustersInjected;
+import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.targetsInjected;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.types.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * Logging for {@link HostServicesImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 final class HostServicesImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         addService("Service '{}':{} added to {}"),
 
-        availableServiceAdded("Available service '{}':{} added to {}");
+        availableServiceAdded("Available service '{}':{} added to {}"),
+
+        targetsInjected("Inject targets to {} targets {} from {}"),
+
+        clustersInjected("Inject clusters to {} clusters {} from {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 
@@ -66,5 +75,15 @@ final class HostServicesImplLogger extends AbstractLogger {
     void availableServiceAdded(HostServicesImpl services, String name,
             HostServiceService service) {
         debug(availableServiceAdded, name, service, services);
+    }
+
+    void targetsInjected(HostServicesImpl services, String name,
+            List<?> targets) {
+        trace(targetsInjected, name, targets, services);
+    }
+
+    void clustersInjected(HostServicesImpl services, String name,
+            List<ClusterHost> clusters) {
+        trace(clustersInjected, name, clusters, services);
     }
 }

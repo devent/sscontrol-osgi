@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.external;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.TargetServiceService;
 
 /**
  * <i>K8s-Master</i> service.
@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.external.HostServiceService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8sClusterService extends HostServiceService {
+public interface K8sClusterService extends TargetServiceService {
 }
