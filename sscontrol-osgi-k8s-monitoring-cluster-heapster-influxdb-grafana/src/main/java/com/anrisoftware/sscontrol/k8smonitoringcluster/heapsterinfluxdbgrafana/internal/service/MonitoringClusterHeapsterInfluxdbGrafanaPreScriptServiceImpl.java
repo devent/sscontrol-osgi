@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service;
 
+import static com.google.inject.Guice.createInjector;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -25,8 +27,6 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
  * <i>Ssh</i> pre-script service.
@@ -48,11 +48,6 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaPreScriptServiceImpl implem
 
     @Activate
     protected void start() {
-        Guice.createInjector(new K8sPreModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-            }
-        }).injectMembers(this);
+        createInjector(new K8sPreModule()).injectMembers(this);
     }
 }
