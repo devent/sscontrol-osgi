@@ -150,7 +150,7 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaImpl
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "monitoring-cluster-heapster-influxdb-grafana";
     }
 
     @Override

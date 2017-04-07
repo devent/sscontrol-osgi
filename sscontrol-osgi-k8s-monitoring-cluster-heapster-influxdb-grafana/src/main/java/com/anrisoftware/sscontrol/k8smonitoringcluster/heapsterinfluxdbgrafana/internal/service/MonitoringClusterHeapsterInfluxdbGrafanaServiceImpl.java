@@ -29,8 +29,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.AbstractModule;
@@ -53,7 +53,7 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaServiceImpl implements K8sS
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "monitoring-cluster-heapster-influxdb-grafana";
     }
 
     @Override

@@ -42,9 +42,9 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
 @Service(HostServiceScriptService.class)
 public class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Service implements HostServiceScriptService {
 
-    static final String SYSTEM_VERSION = "1.5";
+    static final String SYSTEM_VERSION = "0";
 
-    static final String SYSTEM_NAME = "kube";
+    static final String SYSTEM_NAME = "linux";
 
     @Inject
     private MonitoringClusterHeapsterInfluxdbGrafana_1_5_Factory scriptFactory;
