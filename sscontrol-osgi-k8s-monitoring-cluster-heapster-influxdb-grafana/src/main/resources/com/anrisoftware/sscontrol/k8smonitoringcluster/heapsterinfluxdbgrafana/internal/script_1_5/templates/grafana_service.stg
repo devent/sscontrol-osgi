@@ -1,3 +1,4 @@
+startAddon(parent, vars) ::= <<
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,3 +17,5 @@ spec:
       targetPort: 3000
   selector: 
     k8s-app: influxGrafana
+
+>>

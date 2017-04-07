@@ -1,29 +1,30 @@
+startAddon(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: heapster-v1.3.0
+  name: heapster-<parent.heapsterVersion>
   namespace: kube-system
   labels:
     k8s-app: heapster
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
-    version: v1.3.0
+    version: <parent.heapsterVersion>
 spec:
   replicas: 1
   selector:
     matchLabels:
       k8s-app: heapster
-      version: v1.3.0
+      version: <parent.heapsterVersion>
   template:
     metadata:
       labels:
         k8s-app: heapster
-        version: v1.3.0
+        version: <parent.heapsterVersion>
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       containers:
-        - image: gcr.io/google_containers/heapster-amd64:v1.3.0
+        - image: gcr.io/google_containers/heapster-amd64:<parent.heapsterVersion>
           name: heapster
           livenessProbe:
             httpGet:
@@ -36,21 +37,21 @@ spec:
             - /heapster
             - --source=kubernetes.summary_api:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: gcr.io/google_containers/heapster-amd64:v1.3.0
+        - image: gcr.io/google_containers/heapster-amd64:<parent.heapsterVersion>
           name: eventer
           command:
             - /eventer
             - --source=kubernetes:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: gcr.io/google_containers/addon-resizer:1.7
+        - image: gcr.io/google_containers/addon-resizer:<parent.resizerVersion>
           name: heapster-nanny
           resources:
             limits:
               cpu: 50m
-              memory: {{ nanny_memory }}
+              memory: <parent.nannyMemory>
             requests:
               cpu: 50m
-              memory: {{ nanny_memory }}
+              memory: <parent.nannyMemory>
           env:
             - name: MY_POD_NAME
               valueFrom:
@@ -62,24 +63,24 @@ spec:
                   fieldPath: metadata.namespace
           command:
             - /pod_nanny
-            - --cpu={{ base_metrics_cpu }}
-            - --extra-cpu={{ metrics_cpu_per_node }}m
-            - --memory={{ base_metrics_memory }}
-            - --extra-memory={{ metrics_memory_per_node }}Mi
+            - --cpu=<parent.baseMetricsCpu>
+            - --extra-cpu=<parent.metricsCpuPerNode>
+            - --memory=<parent.baseMetricsMemory>
+            - --extra-memory=<parent.metricsMemoryPerNode>
             - --threshold=5
-            - --deployment=heapster-v1.3.0
+            - --deployment=heapster-<parent.heapsterVersion>
             - --container=heapster
             - --poll-period=300000
             - --estimator=exponential
-        - image: gcr.io/google_containers/addon-resizer:1.7
+        - image: gcr.io/google_containers/addon-resizer:<parent.resizerVersion>
           name: eventer-nanny
           resources:
             limits:
               cpu: 50m
-              memory: {{ nanny_memory }}
+              memory: <parent.nannyMemory>
             requests:
               cpu: 50m
-              memory: {{ nanny_memory }}
+              memory: <parent.nannyMemory>
           env:
             - name: MY_POD_NAME
               valueFrom:
@@ -93,13 +94,15 @@ spec:
             - /pod_nanny
             - --cpu=100m
             - --extra-cpu=0m
-            - --memory={{ base_eventer_memory }}
-            - --extra-memory={{ eventer_memory_per_node }}Ki
+            - --memory=<parent.baseEventerMemory>
+            - --extra-memory=<parent.eventerMemoryPerNode>
             - --threshold=5
-            - --deployment=heapster-v1.3.0
+            - --deployment=heapster-<parent.heapsterVersion>
             - --container=eventer
             - --poll-period=300000
             - --estimator=exponential
       tolerations:
         - key: "CriticalAddonsOnly"
           operator: "Exists"
+
+>>
