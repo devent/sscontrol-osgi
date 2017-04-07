@@ -1,3 +1,4 @@
+startAddon(parent, vars) ::= <<
 kind: Service
 apiVersion: v1
 metadata:
@@ -13,3 +14,5 @@ spec:
       targetPort: 8082
   selector:
     k8s-app: heapster
+
+>>
