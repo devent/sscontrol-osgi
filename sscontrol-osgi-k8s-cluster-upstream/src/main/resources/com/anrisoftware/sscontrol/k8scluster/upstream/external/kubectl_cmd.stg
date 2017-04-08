@@ -1,0 +1,39 @@
+setupKubectl(parent, vars) ::= <<
+<setCluster(parent, vars)>
+<setCredentials(parent, vars)>
+<setContext(parent, vars)>
+<parent.kubectlCmd> config use-context default-system
+
+>>
+
+setupKubectl(parent, vars) ::= <<
+<parent.kubectlCmd> config set-cluster default-cluster --server=https://${MASTER_HOST} <kubeCa(panre, vars)>
+
+>>
+
+setCredentials(parent, vars) ::= <<
+<parent.kubectlCmd> config set-credentials default-admin <kubeCa(panre, vars)> <kubeCert(panre, vars)> <kubeKey(panre, vars)>
+
+>>
+
+setContext(parent, vars) ::= <<
+<parent.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
+
+>>
+
+kubeCa(panre, vars) ::= <%
+<if(parent.service.tls.ca)>--certificate-authority=<parent.certsDir>/<parent.service.tls.caName><endif>
+%>
+
+kubeCert(panre, vars) ::= <%
+<if(parent.service.tls.cert)>--client-certificate=<parent.certsDir>/<parent.service.tls.certName><endif>
+%>
+
+kubeKey(panre, vars) ::= <%
+<if(parent.service.tls.key)>--client-key=<parent.certsDir>/<parent.service.tls.keyName><endif>
+%>
+
+kubectlCmd(parent, vars) ::= <<
+<parent.kubectlCmd> <vars.args>
+
+>>
