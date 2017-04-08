@@ -218,7 +218,7 @@ public class K8sClusterImpl implements K8sCluster {
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "k8s-cluster";
     }
 
     @Override
