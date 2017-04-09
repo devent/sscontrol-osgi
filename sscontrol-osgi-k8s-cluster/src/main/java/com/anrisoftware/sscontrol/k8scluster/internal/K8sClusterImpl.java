@@ -147,7 +147,11 @@ public class K8sClusterImpl implements K8sCluster {
      * </pre>
      */
     public void cluster(Map<String, Object> args) {
-        this.cluster = clusterFactory.create(args);
+        if (cluster != null) {
+            this.cluster = clusterFactory.create(cluster, args);
+        } else {
+            this.cluster = clusterFactory.create(args);
+        }
         log.clusterSet(this, cluster);
     }
 
@@ -244,9 +248,16 @@ public class K8sClusterImpl implements K8sCluster {
     @Override
     public List<ClusterHost> getHosts() {
         List<ClusterHost> list = new ArrayList<>();
-        for (Credentials c : credentials) {
-            for (SshHost ssh : targets) {
-                K8sClusterHost host = clusterHostFactory.create(ssh, c);
+        List<Credentials> creds = new ArrayList<>(credentials);
+        if (creds.size() == 0) {
+            Map<String, Object> args = new HashMap<>();
+            args.put("name", "default-admin");
+            args.put("type", "anon");
+            creds.add(credentialsFactories.get("anon").create(args));
+        }
+        for (SshHost ssh : targets) {
+            for (Credentials c : creds) {
+                K8sClusterHost host = clusterHostFactory.create(this, ssh, c);
                 list.add(host);
             }
         }
@@ -259,8 +270,19 @@ public class K8sClusterImpl implements K8sCluster {
                 .append("targets", getTargets()).toString();
     }
 
+    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("cluster");
+        Object v = args.get("targets");
+        if (v != null) {
+            targets.addAll((List<SshHost>) v);
+        }
+        v = args.get("group");
+        if (v != null) {
+            Map<String, Object> a = new HashMap<>(args);
+            a.put("name", v);
+            cluster(a);
+        }
+        v = args.get("cluster");
         if (v != null) {
             Map<String, Object> a = new HashMap<>(args);
             a.put("name", v);

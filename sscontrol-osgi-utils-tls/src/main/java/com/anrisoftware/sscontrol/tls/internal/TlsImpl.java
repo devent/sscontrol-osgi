@@ -66,6 +66,10 @@ public class TlsImpl implements Tls {
         } else {
             this.ca = null;
         }
+        v = args.get("caName");
+        if (v != null) {
+            this.caName = v.toString();
+        }
         v = args.get("cert");
         if (v != null) {
             assertThat("cert=null", v.toString(), not(equalTo("null")));
@@ -73,12 +77,20 @@ public class TlsImpl implements Tls {
         } else {
             this.cert = null;
         }
+        v = args.get("certName");
+        if (v != null) {
+            this.certName = v.toString();
+        }
         v = args.get("key");
         if (v != null) {
             assertThat("key=null", v.toString(), not(equalTo("null")));
             this.key = uri.convert(v);
         } else {
             this.key = null;
+        }
+        v = args.get("keyName");
+        if (v != null) {
+            this.keyName = v.toString();
         }
     }
 

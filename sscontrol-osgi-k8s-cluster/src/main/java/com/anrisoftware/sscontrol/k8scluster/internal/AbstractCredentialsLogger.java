@@ -1,19 +1,19 @@
 package com.anrisoftware.sscontrol.k8scluster.internal;
 
-import static com.anrisoftware.sscontrol.k8scluster.internal.CredentialsCertImplLogger.m.nameSet;
+import static com.anrisoftware.sscontrol.k8scluster.internal.AbstractCredentialsLogger.m.nameSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link CredentialsCertImpl}.
+ * Logging for {@link AbstractCredentials}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class CredentialsCertImplLogger extends AbstractLogger {
+final class AbstractCredentialsLogger extends AbstractLogger {
 
     enum m {
 
@@ -32,13 +32,13 @@ final class CredentialsCertImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link CredentialsCertImpl}.
+     * Sets the context of the logger to {@link AbstractCredentials}.
      */
-    public CredentialsCertImplLogger() {
-        super(CredentialsCertImpl.class);
+    public AbstractCredentialsLogger() {
+        super(AbstractCredentials.class);
     }
 
-    void nameSet(CredentialsCertImpl cluster, String name) {
-        debug(nameSet, name, cluster);
+    void nameSet(AbstractCredentials credentials, String name) {
+        debug(nameSet, name, credentials);
     }
 }

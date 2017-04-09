@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
+import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -23,30 +24,44 @@ public class K8sClusterHostImpl implements K8sClusterHost {
 
     private final Credentials credentials;
 
+    private final K8sCluster cluster;
+
     /**
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
     public interface K8sClusterHostImplFactory {
 
-        K8sClusterHost create(SshHost target, Credentials credentials);
+        K8sClusterHost create(K8sCluster cluster, SshHost target,
+                Credentials credentials);
     }
 
     @Inject
-    K8sClusterHostImpl(@Assisted SshHost target,
+    K8sClusterHostImpl(@Assisted K8sCluster cluster, @Assisted SshHost target,
             @Assisted Credentials credentials) {
+        this.cluster = cluster;
         this.target = target;
         this.credentials = credentials;
     }
 
     @Override
+    public K8sCluster getCluster() {
+        return cluster;
+    }
+
+    @Override
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    @Override
     public String getHost() {
-        return credentials.getHost();
+        return target.getHost();
     }
 
     @Override
     public Integer getPort() {
-        return credentials.getPort();
+        return target.getPort();
     }
 
     @Override

@@ -19,20 +19,18 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
+import com.anrisoftware.sscontrol.k8scluster.external.CredentialsAnon;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCertFactory;
-import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Certificate based credentials.
+ * Anonymous.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CredentialsCertImpl extends AbstractCredentials
-        implements CredentialsCert {
+public class CredentialsAnonImpl extends AbstractCredentials
+        implements CredentialsAnon {
 
     /**
      *
@@ -40,37 +38,19 @@ public class CredentialsCertImpl extends AbstractCredentials
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface CredentialsCertImplFactory extends CredentialsCertFactory {
+    public interface CredentialsAnonImplFactory extends CredentialsCertFactory {
 
     }
 
-    private Tls tls;
-
     @Inject
-    CredentialsCertImpl(AbstractCredentialsLogger log, TlsFactory tlsFactory,
+    CredentialsAnonImpl(AbstractCredentialsLogger log,
             @Assisted Map<String, Object> args) {
         super(log, args);
-        this.tls = tlsFactory.create(args);
-        parseArgs(args, tlsFactory);
     }
 
     @Override
     public String getType() {
-        return "cert";
-    }
-
-    @Override
-    public Tls getTls() {
-        return tls;
-    }
-
-    private void parseArgs(Map<String, Object> args, TlsFactory tlsFactory) {
-        Object ca = args.get("ca");
-        Object cert = args.get("cert");
-        Object key = args.get("key");
-        if (ca != null || cert != null || key != null) {
-            this.tls = tlsFactory.create(args);
-        }
+        return "anon";
     }
 
 }

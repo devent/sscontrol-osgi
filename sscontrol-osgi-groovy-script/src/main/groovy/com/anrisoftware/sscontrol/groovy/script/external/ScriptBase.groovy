@@ -242,7 +242,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     Shell shell(Map args) {
         def a = setupArgs(args, 'shell')
-        shell.create(a, a.target, this, threads, log)
+        shell.create(a, a.target, a.parent, threads, log)
     }
 
     /**
@@ -670,6 +670,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
+        if (!args.containsKey('parent')) {
+            a.parent = this
+        }
         if (!args.containsKey('target')) {
             a.target = target
         }

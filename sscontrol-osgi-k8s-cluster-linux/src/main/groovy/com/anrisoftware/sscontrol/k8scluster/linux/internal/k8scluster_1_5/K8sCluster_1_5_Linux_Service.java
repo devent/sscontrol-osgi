@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.types.external.HostService;
@@ -42,9 +43,20 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
 @Service(HostServiceScriptService.class)
 public class K8sCluster_1_5_Linux_Service implements HostServiceScriptService {
 
+    static final String SERVICE_NAME = "hostname";
+
+    @Property(value = SERVICE_NAME)
+    static final String SERVICE_NAME_PROPERTY = "service.name";
+
     static final String SYSTEM_VERSION = "0";
 
+    @Property(value = SYSTEM_VERSION)
+    static final String SERVICE_SYSTEM_VERSION_PROPERTY = "service.system.version";
+
     static final String SYSTEM_NAME = "linux";
+
+    @Property(value = SYSTEM_NAME)
+    static final String SERVICE_SYSTEM_NAME_PROPERTY = "service.system.name";
 
     @Inject
     private K8sCluster_1_5_Linux_Factory scriptFactory;

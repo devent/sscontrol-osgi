@@ -127,6 +127,7 @@ public class HostServicesImpl implements HostServices {
         Map<String, Object> a = parseArgs(service, args);
         HostService hostService = service.create(a);
         getTargets.setupTargets(targets, hostService);
+        getClusters.setupTargets(clusters, hostService);
         addService(name, hostService);
         return hostService;
     }

@@ -31,6 +31,8 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
+import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
+import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaModule
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaPreModule
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
@@ -52,6 +54,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -112,6 +115,9 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             'docker',
             'cat',
         ]
+        def binDir = new File(dir, '/usr/local/bin')
+        binDir.mkdirs()
+        createEchoCommands binDir, ['kubectl']
     }
 
     HostServices putServices(HostServices services) {
@@ -129,6 +135,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             new K8sPreModule(),
             new K8sClusterModule(),
             new K8sClusterPreModule(),
+            new K8sCluster_1_5_Linux_Module(),
             new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
             new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),
             new MonitoringClusterHeapsterInfluxdbGrafana_1_5_Module(),
@@ -154,6 +161,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
 
                 @Override
                 protected void configure() {
+                    bind HostServiceScriptService.class to K8sCluster_1_5_Linux_Service.class
                 }
             }
         ]
