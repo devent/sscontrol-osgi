@@ -54,4 +54,31 @@ service "k8s-cluster", group: 'default', target: 'default' with {
         ]
         doTest test
     }
+
+    @Test
+    void "client_cert"() {
+        def test = [
+            name: "client_cert",
+            input: """
+service "ssh", host: "localhost"
+service "k8s-cluster", group: 'default', target: 'default' with {
+    cluster name: 'default-cluster'
+    context name: 'default-system'
+    credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "wget.out", "${args.test.name}_wget_expected.txt"
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource K8sCluster_1_5_Linux_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

@@ -15,7 +15,10 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.upstream.external;
 
+import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
+import com.anrisoftware.sscontrol.k8scluster.upstream.external.CredentialsNop.CredentialsNopFactory;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -27,6 +30,9 @@ public class K8sCluster_1_5_Upstream_Module extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(Credentials.class, CredentialsNop.class)
+                .build(CredentialsNopFactory.class));
     }
 
 }

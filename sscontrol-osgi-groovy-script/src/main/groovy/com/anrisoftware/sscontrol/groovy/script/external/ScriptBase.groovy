@@ -451,7 +451,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     def uploadTlsCerts(Map args) {
         def tls = args.tls
-        def dest = args.certsDir ? args.dest : certsDir
+        def dest = args.dest ? args.dest : certsDir
         def name = args.name
         if (tls) {
             [
@@ -462,13 +462,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
                     privileged: true
                 ],
                 [
-                    name: '${name}.cert',
+                    name: "${name}.cert",
                     src: tls.cert,
                     dest: "$dest/$tls.certName",
                     privileged: true
                 ],
                 [
-                    name: '${name}.key',
+                    name: "${name}.key",
                     src: tls.key,
                     dest: "$dest/$tls.keyName",
                     privileged: true
@@ -647,8 +647,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         if (createTmpFileCallback) {
             createTmpFileCallback(args)
         } else {
-            File.createTempFile('robobee', null)
+            File.createTempFile('robobee', args.suffix)
         }
+    }
+
+    /**
+     * Creates and returns a temporary directory.
+     */
+    File createTmpDir(Map args=[:]) {
+        def file
+        if (createTmpFileCallback) {
+            file = createTmpFileCallback(args)
+        } else {
+            file = File.createTempFile('robobee', args.suffix)
+        }
+        file.delete()
+        file.mkdirs()
+        file
     }
 
     Duration getTimeoutShort() {
