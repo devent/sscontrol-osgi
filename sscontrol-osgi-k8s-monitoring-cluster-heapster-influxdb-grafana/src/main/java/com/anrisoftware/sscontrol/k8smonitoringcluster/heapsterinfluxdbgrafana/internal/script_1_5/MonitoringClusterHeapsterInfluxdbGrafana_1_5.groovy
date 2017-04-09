@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -34,8 +35,14 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5 extends ScriptBase {
     @Inject
     MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties debianPropertiesProvider
 
+    @Inject
+    HostServiceScriptService k8sCluster_1_5_Linux_Service
+
     @Override
     def run() {
+        def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
+        def file
+        cluster.runKubectl service: service, file: file
     }
 
     @Override

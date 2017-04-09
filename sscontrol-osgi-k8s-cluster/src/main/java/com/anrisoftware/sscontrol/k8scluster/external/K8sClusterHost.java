@@ -25,4 +25,8 @@ public interface K8sClusterHost extends ClusterHost {
      * Returns the client certificates or <code>null</code>.
      */
     Tls getTls();
+
+    K8sCluster getCluster();
+
+    Credentials getCredentials();
 }

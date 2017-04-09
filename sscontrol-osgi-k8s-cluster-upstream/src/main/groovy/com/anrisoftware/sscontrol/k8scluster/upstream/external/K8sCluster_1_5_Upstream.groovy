@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.upstream.external
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -22,18 +25,23 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
 import com.anrisoftware.sscontrol.tls.external.Tls
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
+import com.anrisoftware.sscontrol.types.external.ClusterService
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8sCluster-Cluster 1.5 service from the upstream sources.
+ * Configures the K8s-Cluster 1.5 service from the upstream sources.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
 abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
+
+    @Inject
+    TlsFactory tlsFactory
 
     TemplateResource kubectlTemplate
 
@@ -71,15 +79,33 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         }
     }
 
-    def startKubeDnsAddon() {
-        K8sCluster service = service
-        if (deployKubeDns) {
-            log.info 'Start kube-dns.'
-            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
+    def runKubectl(Map vars) {
+        log.info 'Run kubectl with {}', vars
+        ClusterService service = vars.service
+        assertThat "service!=null", service, notNullValue()
+        Map v = new HashMap(vars)
+        v.cluster = this
+        shell parent: service, resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
+    }
+
+    def getClusterTls() {
+        def service = service as ClusterService
+        assert service.clusters.size() > 0 : "service.clusters.size()>0"
+        def credentials = service.clusters.find { it.credentials.hasProperty('tls')  }
+        def args = [:]
+        if (credentials) {
+            args.ca = credentials.tls.ca
+            args.caName = credentials.tls.caName
+            args.cert = credentials.tls.cert
+            args.certName = credentials.tls.certName
+            args.key = credentials.tls.key
+            args.keyName = credentials.tls.keyName
         }
+        return tlsFactory.create(args)
+    }
+
+    def getClientTls() {
+        getClusterTls()
     }
 
     def getDefaultCredentialsTlsCaName() {
@@ -92,6 +118,10 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
 
     def getDefaultCredentialsTlsKeyName() {
         properties.getProperty 'default_credentials_tls_key_name', defaultProperties
+    }
+
+    File getKubectlCmd() {
+        properties.getFileProperty 'kubectl_cmd', binDir, defaultProperties
     }
 
     @Override

@@ -19,14 +19,14 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
  * Cluster monitoring based on Heapster, InfluxDB and Grafana service properties provider from
- * {@code "/MonitoringClusterHeapsterInfluxdbGrafana_1_5.properties"}.
+ * {@code "/monitoring_cluster_heapster_influxdb_grafana_1_5_linux.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties.class.getResource("/MonitoringClusterHeapsterInfluxdbGrafana_1_5.properties")
+    private static final URL RESOURCE = MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties.class.getResource("/monitoring_cluster_heapster_influxdb_grafana_1_5_linux.properties")
 
     MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties() {
         super(MonitoringClusterHeapsterInfluxdbGrafana_1_5_Properties.class, RESOURCE)

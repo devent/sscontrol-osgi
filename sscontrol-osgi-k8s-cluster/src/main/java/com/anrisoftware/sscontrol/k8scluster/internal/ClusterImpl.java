@@ -18,14 +18,14 @@ package com.anrisoftware.sscontrol.k8scluster.internal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8scluster.external.Cluster;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Cluster.
@@ -44,13 +44,28 @@ public class ClusterImpl implements Cluster {
     public interface ClusterImplFactory {
 
         Cluster create(Map<String, Object> args);
+
+        Cluster create(Cluster cluster, Map<String, Object> args);
     }
 
     private String name;
 
     private final ClusterImplLogger log;
 
-    @Inject
+    @AssistedInject
+    ClusterImpl(ClusterImplLogger log, @Assisted Cluster cluster,
+            @Assisted Map<String, Object> args) {
+        this(log, copyArgs(cluster, args));
+    }
+
+    private static Map<String, Object> copyArgs(Cluster cluster,
+            Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("name", cluster.getName());
+        return a;
+    }
+
+    @AssistedInject
     ClusterImpl(ClusterImplLogger log, @Assisted Map<String, Object> args) {
         this.log = log;
         parseArgs(args);

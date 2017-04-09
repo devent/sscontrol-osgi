@@ -32,9 +32,9 @@ import groovy.util.logging.Slf4j
 class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test extends Abstract_1_5_Test {
 
     @Test
-    void "unsecure"() {
+    void "unsecured"() {
         def test = [
-            name: "unsecure",
+            name: "unsecured",
             input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default', group: 'default'
@@ -44,19 +44,8 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/usr/local/bin'), "host-rkt", "${args.test.name}_host_rkt_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/usr/local/bin'), "kubelet-wrapper", "${args.test.name}_kubelet_wrapper_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/etc/kubernetes/cni/net.d'), "10-flannel.conf", "${args.test.name}_cni_flannel_conf_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, '/etc/kubernetes'), "worker-kubeconfig.yaml", "${args.test.name}_worker_kubeconfig_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                File binDir = new File(dir, '/usr/local/bin')
+                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

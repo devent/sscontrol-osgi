@@ -2,38 +2,39 @@ setupKubectl(parent, vars) ::= <<
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>
 <setContext(parent, vars)>
-<parent.kubectlCmd> config use-context default-system
+<vars.cluster.kubectlCmd> config use-context default-system
 
 >>
 
-setupKubectl(parent, vars) ::= <<
-<parent.kubectlCmd> config set-cluster default-cluster --server=https://${MASTER_HOST} <kubeCa(panre, vars)>
+setCluster(parent, vars) ::= <<
+<vars.cluster.kubectlCmd> config set-cluster default-cluster --server=https://${MASTER_HOST} <kubeCa(parent, vars)>
 
 >>
 
 setCredentials(parent, vars) ::= <<
-<parent.kubectlCmd> config set-credentials default-admin <kubeCa(panre, vars)> <kubeCert(panre, vars)> <kubeKey(panre, vars)>
+<vars.cluster.kubectlCmd> config set-credentials default-admin <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
 
 >>
 
 setContext(parent, vars) ::= <<
-<parent.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
+<vars.cluster.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
 
 >>
 
-kubeCa(panre, vars) ::= <%
-<if(parent.service.tls.ca)>--certificate-authority=<parent.certsDir>/<parent.service.tls.caName><endif>
+kubeCa(parent, vars) ::= <%
+<if(vars.cluster.clusterTls.ca)>--certificate-authority=<vars.cluster.certsDir>/<vars.cluster.clusterTls.caName><endif>
 %>
 
-kubeCert(panre, vars) ::= <%
-<if(parent.service.tls.cert)>--client-certificate=<parent.certsDir>/<parent.service.tls.certName><endif>
+kubeCert(parent, vars) ::= <%
+<if(vars.cluster.clientTls.cert)>--client-certificate=<parent.certsDir>/<vars.cluster.clientTls.certName><endif>
 %>
 
-kubeKey(panre, vars) ::= <%
-<if(parent.service.tls.key)>--client-key=<parent.certsDir>/<parent.service.tls.keyName><endif>
+kubeKey(parent, vars) ::= <%
+<if(vars.cluster.clientTls.key)>--client-key=<parent.certsDir>/<vars.cluster.clientTls.keyName><endif>
 %>
 
 kubectlCmd(parent, vars) ::= <<
-<parent.kubectlCmd> <vars.args>
+<setupKubectl(parent, vars)>
+<vars.cluster.kubectlCmd> <vars.args>
 
 >>

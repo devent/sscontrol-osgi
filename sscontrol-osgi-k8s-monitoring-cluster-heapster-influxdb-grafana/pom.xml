@@ -55,6 +55,13 @@
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-k8s-cluster-linux</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+            <scope>test</scope>
+        </dependency>
 
         <!-- compile dependencies -->
         <dependency>
@@ -111,14 +118,6 @@
             <artifactId>sscontrol-osgi-groovy-script</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-k8s-cluster</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

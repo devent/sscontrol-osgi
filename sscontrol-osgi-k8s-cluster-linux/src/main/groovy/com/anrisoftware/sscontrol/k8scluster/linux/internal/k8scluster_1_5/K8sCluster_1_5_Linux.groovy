@@ -34,18 +34,26 @@ class K8sCluster_1_5_Linux extends ScriptBase {
     @Inject
     K8sCluster_1_5_Linux_Properties linuxPropertiesProvider
 
-    @Inject
-    K8sCluster_1_5_Upstream_Linux_Factory upstreamLinuxFactory
+    K8sCluster_1_5_Upstream_Linux upstreamLinux
 
     @Override
     def run() {
         installAptPackages()
-        upstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        upstreamLinux.run()
+    }
+
+    @Inject
+    def injectupStreamLinuxFactory(K8sCluster_1_5_Upstream_Linux_Factory upstreamLinuxFactory) {
+        this.upstreamLinux = upstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
     ContextProperties getDefaultProperties() {
         linuxPropertiesProvider.get()
+    }
+
+    def runKubectl(Map vars) {
+        upstreamLinux.runKubectl vars
     }
 
     @Override

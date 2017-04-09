@@ -24,6 +24,7 @@ import com.anrisoftware.sscontrol.k8scluster.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
+import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsAnonImpl.CredentialsAnonImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsCertImpl.CredentialsCertImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory;
@@ -61,9 +62,13 @@ public class K8sClusterModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Credentials.class, CredentialsCertImpl.class)
                 .build(CredentialsCertImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Credentials.class, CredentialsAnonImpl.class)
+                .build(CredentialsAnonImplFactory.class));
         MapBinder<String, CredentialsFactory> mapbinder = newMapBinder(binder(),
                 String.class, CredentialsFactory.class);
         mapbinder.addBinding("cert").to(CredentialsCertImplFactory.class);
+        mapbinder.addBinding("anon").to(CredentialsAnonImplFactory.class);
     }
 
 }
