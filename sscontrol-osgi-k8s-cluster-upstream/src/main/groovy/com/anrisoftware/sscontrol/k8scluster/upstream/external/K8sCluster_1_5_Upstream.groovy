@@ -23,7 +23,9 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
+import com.anrisoftware.sscontrol.k8scluster.external.Credentials
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
+import com.anrisoftware.sscontrol.k8scluster.upstream.external.CredentialsNop.CredentialsNopFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
 import com.anrisoftware.sscontrol.types.external.ClusterService
@@ -43,6 +45,9 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
     @Inject
     TlsFactory tlsFactory
 
+    @Inject
+    CredentialsNopFactory credentialsNopFactory
+
     TemplateResource kubectlTemplate
 
     @Inject
@@ -55,7 +60,22 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
     def setupMiscDefaults() {
         log.debug 'Setup misc defaults for {}', service
         K8sCluster service = service
-        service.credentials.findAll { it.tls  } each {
+        if (service.credentials.size() == 0) {
+            def args = [:]
+            args.name = "default-admin"
+            args.type = "anon"
+            service.credentials << credentialsNopFactory.create(args)
+        }
+        service.credentials.each { Credentials credentials ->
+            if (!credentials.port) {
+                if (credentials.hasProperty('tls') && credentials.tls.ca) {
+                    credentials.port = defaultServerPortSecured
+                } else {
+                    credentials.port = defaultServerPortUnsecured
+                }
+            }
+        }
+        service.credentials.findAll { it.hasProperty('tls')  } each {
             Tls tls = it.tls
             if (tls.cert) {
                 tls.certName = defaultCredentialsTlsCertName
@@ -73,9 +93,16 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         log.info 'Uploads k8s-cluster certificates.'
         def certsdir = certsDir
         K8sCluster service = service
-        service.credentials.findAll { it.tls  } each {
+        def args = [:]
+        if (!certsDir) {
+            args.dest = createTmpDir(suffix: 'certs')
+        }
+        service.credentials.findAll { it.hasProperty('tls') } each {
             Tls tls = it.tls
-            uploadTlsCerts tls: tls, name: 'client-tls'
+            def a = new HashMap(args)
+            a.tls = tls
+            a.name = 'client-tls'
+            uploadTlsCerts a
         }
     }
 
@@ -86,6 +113,12 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         Map v = new HashMap(vars)
         v.cluster = this
         shell parent: service, resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
+    }
+
+    def getClusterServers() {
+        def service = service as ClusterService
+        assert service.clusters.size() > 0 : "service.clusters.size()>0"
+        service.clusters
     }
 
     def getClusterTls() {
@@ -118,6 +151,14 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
 
     def getDefaultCredentialsTlsKeyName() {
         properties.getProperty 'default_credentials_tls_key_name', defaultProperties
+    }
+
+    def getDefaultServerPortUnsecured() {
+        properties.getNumberProperty 'default_server_port_unsecured', defaultProperties
+    }
+
+    def getDefaultServerPortSecured() {
+        properties.getNumberProperty 'default_server_port_secured', defaultProperties
     }
 
     File getKubectlCmd() {

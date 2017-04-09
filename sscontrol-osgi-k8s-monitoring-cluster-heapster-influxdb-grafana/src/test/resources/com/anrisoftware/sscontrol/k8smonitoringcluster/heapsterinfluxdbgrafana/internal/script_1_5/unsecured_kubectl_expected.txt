@@ -1,4 +1,4 @@
-config set-cluster default-cluster --server=https://
+config set-cluster default-cluster --server=localhost:
 config set-credentials default-admin
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system

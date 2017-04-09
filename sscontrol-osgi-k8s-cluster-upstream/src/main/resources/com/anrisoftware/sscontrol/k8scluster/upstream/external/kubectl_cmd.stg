@@ -7,7 +7,7 @@ setupKubectl(parent, vars) ::= <<
 >>
 
 setCluster(parent, vars) ::= <<
-<vars.cluster.kubectlCmd> config set-cluster default-cluster --server=https://${MASTER_HOST} <kubeCa(parent, vars)>
+<vars.cluster.kubectlCmd> config set-cluster default-cluster --server="<vars.cluster.clusterServers:clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
 
 >>
 
@@ -38,3 +38,7 @@ kubectlCmd(parent, vars) ::= <<
 <vars.cluster.kubectlCmd> <vars.args>
 
 >>
+
+clusterServer(cluster, parent, vars) ::= <%
+<cluster.host>:<cluster.port>
+%>

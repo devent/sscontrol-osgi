@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
+import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaModule
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaPreModule
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
@@ -135,6 +136,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             new K8sPreModule(),
             new K8sClusterModule(),
             new K8sClusterPreModule(),
+            new K8sCluster_1_5_Upstream_Module(),
             new K8sCluster_1_5_Linux_Module(),
             new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
             new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),

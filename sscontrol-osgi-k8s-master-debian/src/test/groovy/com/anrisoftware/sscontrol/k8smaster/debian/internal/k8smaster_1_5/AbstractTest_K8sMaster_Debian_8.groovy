@@ -61,6 +61,12 @@ import com.google.inject.AbstractModule
  */
 abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
 
+    static final URL certCaPem = K8sMaster_Debian_8_Test.class.getResource('cert_ca.txt')
+
+    static final URL certCertPem = K8sMaster_Debian_8_Test.class.getResource('cert_cert.txt')
+
+    static final URL certKeyPem = K8sMaster_Debian_8_Test.class.getResource('cert_key.txt')
+
     @Inject
     SshImplFactory sshFactory
 
@@ -156,10 +162,4 @@ abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
         injector.injectMembers(this)
         this.threads = createThreads()
     }
-
-    static final URL certCaPem = K8sMaster_Debian_8_Test.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = K8sMaster_Debian_8_Test.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = K8sMaster_Debian_8_Test.class.getResource('cert_key.txt')
 }
