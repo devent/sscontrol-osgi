@@ -1,4 +1,4 @@
-startAddon(parent, vars) ::= <<
+influxdbService(parent, vars) ::= <<
 apiVersion: v1
 kind: Service
 metadata:

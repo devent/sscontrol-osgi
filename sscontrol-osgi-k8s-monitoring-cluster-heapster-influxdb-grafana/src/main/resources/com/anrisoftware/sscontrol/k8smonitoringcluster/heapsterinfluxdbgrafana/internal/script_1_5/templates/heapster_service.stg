@@ -1,4 +1,4 @@
-startAddon(parent, vars) ::= <<
+heapsterService(parent, vars) ::= <<
 kind: Service
 apiVersion: v1
 metadata:

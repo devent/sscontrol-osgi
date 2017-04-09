@@ -1,4 +1,4 @@
-startAddon(parent, vars) ::= <<
+heapsterController(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
