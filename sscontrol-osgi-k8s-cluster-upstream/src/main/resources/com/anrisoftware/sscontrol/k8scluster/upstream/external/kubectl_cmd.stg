@@ -22,15 +22,15 @@ setContext(parent, vars) ::= <<
 >>
 
 kubeCa(parent, vars) ::= <%
-<if(vars.cluster.clusterTls.ca)>--certificate-authority=<vars.cluster.certsDir>/<vars.cluster.clusterTls.caName><endif>
+<if(vars.cluster.clusterTls.ca)>--certificate-authority=<vars.certsDir>/<vars.cluster.clusterTls.caName><endif>
 %>
 
 kubeCert(parent, vars) ::= <%
-<if(vars.cluster.clientTls.cert)>--client-certificate=<parent.certsDir>/<vars.cluster.clientTls.certName><endif>
+<if(vars.cluster.clientTls.cert)>--client-certificate=<vars.certsDir>/<vars.cluster.clientTls.certName><endif>
 %>
 
 kubeKey(parent, vars) ::= <%
-<if(vars.cluster.clientTls.key)>--client-key=<parent.certsDir>/<vars.cluster.clientTls.keyName><endif>
+<if(vars.cluster.clientTls.key)>--client-key=<vars.certsDir>/<vars.cluster.clientTls.keyName><endif>
 %>
 
 kubectlCmd(parent, vars) ::= <<
