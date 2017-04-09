@@ -276,24 +276,23 @@ public class K8sClusterImpl implements K8sCluster {
         if (v != null) {
             targets.addAll((List<SshHost>) v);
         }
-        v = args.get("group");
-        if (v != null) {
-            Map<String, Object> a = new HashMap<>(args);
-            a.put("name", v);
-            cluster(a);
-        }
-        v = args.get("cluster");
-        if (v != null) {
-            Map<String, Object> a = new HashMap<>(args);
-            a.put("name", v);
-            cluster(a);
-        }
+        parseCluster(args);
         v = args.get("context");
         if (v != null) {
             Map<String, Object> a = new HashMap<>(args);
             a.put("name", v);
             context(a);
         }
+    }
+
+    private void parseCluster(Map<String, Object> args) {
+        Object v = args.get("cluster");
+        if (v == null) {
+            v = "default";
+        }
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("name", v);
+        cluster(a);
     }
 
 }

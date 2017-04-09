@@ -68,7 +68,8 @@ class K8sClusterScriptTest {
         def test = [
             name: 'cluster',
             input: """
-service "k8s-cluster", group: 'default', target: 'default' with {
+service "k8s-cluster", target: 'default' with {
+    cluster name: 'default-context'
     context name: 'default-system'
     credentials type: 'cert', port: 443, name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
 }
@@ -76,8 +77,8 @@ service "k8s-cluster", group: 'default', target: 'default' with {
             expected: { HostServices services ->
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.group == 'default'
-                assert s.cluster.name == 'default'
+                assert s.group == 'default-context'
+                assert s.cluster.name == 'default-context'
                 assert s.context.name == 'default-system'
                 assert s.credentials.size() == 1
                 assert s.credentials[0].type == 'cert'
@@ -96,14 +97,15 @@ service "k8s-cluster", group: 'default', target: 'default' with {
         def test = [
             name: 'args',
             input: """
-service "k8s-cluster", group: 'default', cluster: 'default-cluster', context: 'default-system' with {
+service "k8s-cluster", cluster: 'default-cluster', context: 'default-system' with {
     credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.cluster.name == 'default'
+                assert s.group == 'default-cluster'
+                assert s.cluster.name == 'default-cluster'
                 assert s.context.name == 'default-system'
                 assert s.credentials.size() == 1
                 assert s.credentials[0].type == 'cert'

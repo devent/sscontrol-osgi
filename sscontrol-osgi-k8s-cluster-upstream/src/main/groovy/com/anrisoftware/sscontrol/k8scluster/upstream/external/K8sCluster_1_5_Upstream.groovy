@@ -94,12 +94,11 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         def certsdir = certsDir
         K8sCluster service = service
         def args = [:]
-        if (!certsDir) {
-            args.dest = createTmpDir(suffix: 'certs')
-        }
+        def certsDir = getClusterCertsDir(service.cluster.name)
         service.credentials.findAll { it.hasProperty('tls') } each {
             Tls tls = it.tls
-            def a = new HashMap(args)
+            def a = [:]
+            a.dest = certsDir
             a.tls = tls
             a.name = 'client-tls'
             uploadTlsCerts a
@@ -112,7 +111,12 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         assertThat "service!=null", service, notNullValue()
         Map v = new HashMap(vars)
         v.cluster = this
+        v.certsDir = getClusterCertsDir(service.cluster.cluster.cluster.name)
         shell parent: service, resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
+    }
+
+    String getClusterCertsDir(String name) {
+        String.format("%s/%s", certsDir, name)
     }
 
     def getClusterServers() {

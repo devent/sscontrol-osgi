@@ -61,7 +61,9 @@ public class ClusterImpl implements Cluster {
     private static Map<String, Object> copyArgs(Cluster cluster,
             Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
-        a.put("name", cluster.getName());
+        if (!a.containsKey("name")) {
+            a.put("name", cluster.getName());
+        }
         return a;
     }
 

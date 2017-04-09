@@ -37,7 +37,7 @@ class K8sCluster_1_5_Linux_Test extends AbstractTest_K8sCluster_1_5_Linux {
             name: "unsecured",
             input: """
 service "ssh", host: "localhost"
-service "k8s-cluster", group: 'default', target: 'default' with {
+service "k8s-cluster", target: 'default' with {
     cluster name: 'default-cluster'
     context name: 'default-system'
 }
@@ -61,7 +61,7 @@ service "k8s-cluster", group: 'default', target: 'default' with {
             name: "client_cert",
             input: """
 service "ssh", host: "localhost"
-service "k8s-cluster", group: 'default', target: 'default' with {
+service "k8s-cluster", target: 'default' with {
     cluster name: 'default-cluster'
     context name: 'default-system'
     credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
