@@ -29,6 +29,8 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
+import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -47,6 +49,9 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class RunnerImplTest extends AbstractRunnerTestBase {
+
+    @Inject
+    RunScriptImplFactory runnerFactory
 
     @Inject
     SshImplFactory sshFactory
@@ -89,16 +94,9 @@ class RunnerImplTest extends AbstractRunnerTestBase {
     void checkProfile() {
         checkProfile LOCAL_PROFILE
     }
-    
-    Map createVariables(Map args) {
-        def a = [:]
-        a.chdir = args.dir
-        a.pwd = args.dir
-        a.sudoEnv = [:]
-        a.sudoEnv.PATH = args.dir
-        a.env = [:]
-        a.env.PATH = args.dir
-        return a
+
+    def getRunScriptFactory() {
+        runnerFactory
     }
 
     HostServices putServices(HostServices services) {
@@ -129,6 +127,7 @@ class RunnerImplTest extends AbstractRunnerTestBase {
 
     List getAdditionalModules() {
         def modules = super.additionalModules
+        modules << new RunnerModule()
         modules << new HostnameModule()
         modules << new HostnamePreModule()
         modules << new Hostname_Debian_8_Module()

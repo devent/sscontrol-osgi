@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.runner.groovy.internal
+package com.anrisoftware.sscontrol.runner.test.external
+
+import java.nio.charset.Charset
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -24,7 +27,6 @@ import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateMod
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserModule
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
-import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
@@ -45,7 +47,7 @@ import com.anrisoftware.sscontrol.types.internal.TypesModule
 import groovy.util.logging.Slf4j
 
 /**
- *
+ * Extend this class to test service scripts that are loaded from a resource.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -57,30 +59,31 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
     ParserImplFactory parserFactory
 
     @Inject
-    RunScriptImplFactory runnerFactory
-
-    @Inject
     HostServicesImplFactory servicesFactory
 
-    void doTest(Map test, int k) {
+    void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
         createDummyCommands dir
-        IOUtils.copy test.script.openStream(), new FileOutputStream(scriptFile)
+        if (test.script instanceof URL) {
+            IOUtils.copy test.script.openStream(), new FileOutputStream(scriptFile)
+        } else {
+            FileUtils.write(scriptFile, test.script.toString(), Charset.defaultCharset())
+        }
         def roots = [parent.toURI()] as URI[]
-        def variables = createVariables(dir: dir)
+        def scriptEnv = getScriptEnv(dir: dir, test: test)
         def services = putServices(servicesFactory.create())
-        def parser = parserFactory.create(roots, "Script.groovy", variables, services)
+        def parser = parserFactory.create(roots, "Script.groovy", scriptEnv, services)
         def parsed = parser.parse()
         assert parsed.services.size() == test.expectedServicesSize
-        runnerFactory.create(threads, parsed).run variables
+        runScriptFactory.create(threads, parsed).run scriptEnv
+        Closure expected = test.expected
+        expected test: test, services: services, dir: dir
     }
 
-    Map createVariables(Map args) {
-        [:]
-    }
+    abstract def getRunScriptFactory()
 
     String getServiceName() {
     }
@@ -92,13 +95,9 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         services
     }
 
-    void createDummyCommands(File dir) {
-    }
-
     List getAdditionalModules() {
         [
             new ParserModule(),
-            new RunnerModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

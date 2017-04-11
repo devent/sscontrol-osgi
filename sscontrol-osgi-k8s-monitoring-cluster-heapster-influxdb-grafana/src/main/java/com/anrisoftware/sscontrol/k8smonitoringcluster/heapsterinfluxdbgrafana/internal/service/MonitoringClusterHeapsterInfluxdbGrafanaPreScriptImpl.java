@@ -21,7 +21,8 @@ import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * <i>K8s-Master</i> pre-script.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana service
+ * pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -29,12 +30,13 @@ import com.anrisoftware.sscontrol.types.external.PreHostService;
 public class MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImpl implements PreHost {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface K8sMasterPreScriptImplFactory extends PreHostService {
+    public interface MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImplFactory
+            extends PreHostService {
 
     }
 
