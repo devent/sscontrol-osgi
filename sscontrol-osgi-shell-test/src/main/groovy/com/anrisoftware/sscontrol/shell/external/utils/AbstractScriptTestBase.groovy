@@ -213,7 +213,7 @@ abstract class AbstractScriptTestBase {
                 case 'template':
                     def split = StringUtils.split(a.dest.toString(), File.separator)
                     def name = split[3..split.length-1].join(File.separator)
-                    assert args.test.generatedDir != null
+                    assert args.test.generatedDir != null : "generatedDir must be set in test case"
                     file = new File(args.test.generatedDir, name)
                     break
             }

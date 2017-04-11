@@ -5,16 +5,19 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials
 import com.google.inject.assistedinject.Assisted
 
+import groovy.transform.ToString
+
 /**
  * Empty credentials.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
+@ToString
 class CredentialsNop implements Credentials {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

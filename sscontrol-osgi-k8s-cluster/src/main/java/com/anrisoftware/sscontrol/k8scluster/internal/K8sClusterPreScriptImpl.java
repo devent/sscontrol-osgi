@@ -21,7 +21,7 @@ import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
- * <i>K8s-Master</i> pre-script.
+ * <i>K8s-Cluster</i> pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -29,12 +29,12 @@ import com.anrisoftware.sscontrol.types.external.PreHostService;
 public class K8sClusterPreScriptImpl implements PreHost {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface K8sMasterPreScriptImplFactory extends PreHostService {
+    public interface K8sClusterPreScriptImplFactory extends PreHostService {
 
     }
 

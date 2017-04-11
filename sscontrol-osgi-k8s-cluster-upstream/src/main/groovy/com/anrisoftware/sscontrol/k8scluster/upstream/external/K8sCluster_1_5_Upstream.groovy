@@ -157,11 +157,11 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         properties.getProperty 'default_credentials_tls_key_name', defaultProperties
     }
 
-    def getDefaultServerPortUnsecured() {
+    int getDefaultServerPortUnsecured() {
         properties.getNumberProperty 'default_server_port_unsecured', defaultProperties
     }
 
-    def getDefaultServerPortSecured() {
+    int getDefaultServerPortSecured() {
         properties.getNumberProperty 'default_server_port_secured', defaultProperties
     }
 

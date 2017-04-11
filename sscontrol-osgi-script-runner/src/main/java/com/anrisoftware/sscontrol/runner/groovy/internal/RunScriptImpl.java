@@ -19,7 +19,6 @@ import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -90,7 +89,8 @@ public class RunScriptImpl implements RunScript {
                 HostService s = ss.get(i);
                 List<SshHost> targets = getTargets(s);
                 for (SshHost host : targets) {
-                    HostServiceScript script = createScript(name, s, host);
+                    HostServiceScript script;
+                    script = createScript(name, s, host, variables);
                     setupScript(variables, script);
                     script.run();
                 }
@@ -99,7 +99,7 @@ public class RunScriptImpl implements RunScript {
     }
 
     private HostServiceScript createScript(String name, HostService s,
-            SshHost host) throws AppException {
+            SshHost host, Map<String, Object> vars) throws AppException {
         PreHost pre = services.getAvailablePreService(name).create();
         String scriptName = getSystemScriptName(host, name);
         HostServiceScriptService service = services
@@ -113,7 +113,6 @@ public class RunScriptImpl implements RunScript {
         if (service == null) {
             return script;
         } else {
-            Map<String, Object> vars = new HashMap<>();
             script = service.create(services, s, host, threads, vars);
             pre.configureServiceScript(script);
             return script;

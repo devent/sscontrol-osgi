@@ -63,6 +63,7 @@
         <module>../sscontrol-osgi-rkt-deb</module>
         <module>../sscontrol-osgi-rkt-debian</module>
         <module>../sscontrol-osgi-script-runner</module>
+        <module>../sscontrol-osgi-script-runner-test</module>
         <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
         <module>../sscontrol-osgi-ssh</module>

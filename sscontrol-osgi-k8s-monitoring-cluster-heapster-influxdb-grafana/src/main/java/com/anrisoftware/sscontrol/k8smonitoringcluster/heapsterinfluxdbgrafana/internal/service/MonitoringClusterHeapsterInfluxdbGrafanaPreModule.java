@@ -15,14 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service;
 
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
+import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImpl.MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>K8s-Master</i> pre-script module.
+ * Cluster monitoring based on Heapster, InfluxDB and Grafana service pre-script
+ * module.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -32,8 +32,9 @@ public class MonitoringClusterHeapsterInfluxdbGrafanaPreModule extends AbstractM
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(PreHost.class, K8sPreScriptImpl.class)
-                .build(K8sMasterPreScriptImplFactory.class));
+                .implement(PreHost.class,
+                        MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImpl.class)
+                .build(MonitoringClusterHeapsterInfluxdbGrafanaPreScriptImplFactory.class));
     }
 
 }
