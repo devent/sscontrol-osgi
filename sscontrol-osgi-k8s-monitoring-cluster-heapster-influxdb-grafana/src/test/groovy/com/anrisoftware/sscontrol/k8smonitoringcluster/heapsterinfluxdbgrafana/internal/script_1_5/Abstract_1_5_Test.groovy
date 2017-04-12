@@ -68,6 +68,8 @@ import com.google.inject.AbstractModule
  */
 abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
 
+    static final URL kubectlCommand = Abstract_1_5_Test.class.getResource('kubectl_command.txt')
+
     @Inject
     SshImplFactory sshFactory
 
@@ -118,7 +120,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
         ]
         def binDir = new File(dir, '/usr/local/bin')
         binDir.mkdirs()
-        createEchoCommands binDir, ['kubectl']
+        createCommand kubectlCommand, binDir, 'kubectl'
     }
 
     HostServices putServices(HostServices services) {

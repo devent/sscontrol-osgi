@@ -12,16 +12,6 @@ import com.anrisoftware.sscontrol.types.external.ClusterHost;
 public interface K8sClusterHost extends ClusterHost {
 
     /**
-     * Returns the credentials type.
-     */
-    String getType();
-
-    /**
-     * Returns the user name.
-     */
-    String getName();
-
-    /**
      * Returns the client certificates or <code>null</code>.
      */
     Tls getTls();
@@ -29,4 +19,6 @@ public interface K8sClusterHost extends ClusterHost {
     K8sCluster getCluster();
 
     Credentials getCredentials();
+
+    Context getContext();
 }
