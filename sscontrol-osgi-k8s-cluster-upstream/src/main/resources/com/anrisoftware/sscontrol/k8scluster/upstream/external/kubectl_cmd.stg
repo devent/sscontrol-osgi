@@ -1,23 +1,25 @@
 setupKubectl(parent, vars) ::= <<
+<parent.kubectlCmd> config use-context <vars.cluster.context.name>
+if [[ $? != 0 ]]; then
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>
 <setContext(parent, vars)>
-<parent.kubectlCmd> config use-context default-system
+fi
 
 >>
 
 setCluster(parent, vars) ::= <<
-<parent.kubectlCmd> config set-cluster default-cluster --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
+<parent.kubectlCmd> config set-cluster <vars.cluster.cluster.group> --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
 
 >>
 
 setCredentials(parent, vars) ::= <<
-<parent.kubectlCmd> config set-credentials default-admin <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
+<parent.kubectlCmd> config set-credentials <vars.cluster.cluster.group>-<vars.cluster.credentials.name> <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
 
 >>
 
 setContext(parent, vars) ::= <<
-<parent.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
+<parent.kubectlCmd> config set-context <vars.cluster.context.name> --cluster=<vars.cluster.cluster.group> --user=<vars.cluster.cluster.group>-<vars.cluster.credentials.name>
 
 >>
 

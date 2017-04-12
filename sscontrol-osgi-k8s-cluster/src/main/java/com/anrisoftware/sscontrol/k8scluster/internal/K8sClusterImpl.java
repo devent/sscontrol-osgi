@@ -256,8 +256,9 @@ public class K8sClusterImpl implements K8sCluster {
             creds.add(credentialsFactories.get("anon").create(args));
         }
         for (SshHost ssh : targets) {
-            for (Credentials c : creds) {
-                K8sClusterHost host = clusterHostFactory.create(this, ssh, c);
+            for (Credentials cred : creds) {
+                K8sClusterHost host;
+                host = clusterHostFactory.create(this, ssh, cred, context);
                 list.add(host);
             }
         }
@@ -277,20 +278,25 @@ public class K8sClusterImpl implements K8sCluster {
             targets.addAll((List<SshHost>) v);
         }
         parseCluster(args);
-        v = args.get("context");
-        if (v != null) {
-            Map<String, Object> a = new HashMap<>(args);
-            a.put("name", v);
-            context(a);
+        parseContext(args);
+    }
+
+    private void parseContext(Map<String, Object> args) {
+        Object v = args.get("context");
+        Map<String, Object> a = new HashMap<>(args);
+        if (v == null) {
+            v = "default-system";
         }
+        a.put("name", v);
+        context(a);
     }
 
     private void parseCluster(Map<String, Object> args) {
         Object v = args.get("cluster");
+        Map<String, Object> a = new HashMap<>(args);
         if (v == null) {
             v = "default";
         }
-        Map<String, Object> a = new HashMap<>(args);
         a.put("name", v);
         cluster(a);
     }

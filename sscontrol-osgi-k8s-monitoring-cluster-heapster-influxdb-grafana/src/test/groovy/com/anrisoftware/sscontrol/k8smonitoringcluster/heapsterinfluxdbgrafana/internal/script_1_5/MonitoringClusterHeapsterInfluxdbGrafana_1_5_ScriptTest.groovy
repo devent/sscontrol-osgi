@@ -63,6 +63,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class MonitoringClusterHeapsterInfluxdbGrafana_1_5_ScriptTest extends AbstractRunnerTestBase {
 
+    static final URL kubectlCommand = MonitoringClusterHeapsterInfluxdbGrafana_1_5_ScriptTest.class.getResource('kubectl_command.txt')
+
     @Inject
     RunScriptImplFactory runnerFactory
 
@@ -157,7 +159,7 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
         ]
         def binDir = new File(dir, '/usr/local/bin')
         binDir.mkdirs()
-        createEchoCommands binDir, ['kubectl']
+        createCommand kubectlCommand, binDir, 'kubectl'
     }
 
     List getAdditionalModules() {

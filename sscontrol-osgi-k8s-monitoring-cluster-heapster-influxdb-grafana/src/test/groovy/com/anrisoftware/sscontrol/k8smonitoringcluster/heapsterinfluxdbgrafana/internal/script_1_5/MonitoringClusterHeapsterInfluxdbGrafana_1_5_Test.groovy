@@ -32,12 +32,14 @@ import groovy.util.logging.Slf4j
 class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test extends Abstract_1_5_Test {
 
     @Test
-    void "unsecured"() {
+    void "unsecured_client_cert"() {
         def test = [
-            name: "unsecured",
+            name: "unsecured_client_cert",
             input: """
 service "ssh", host: "localhost"
-service "k8s-cluster", target: 'default'
+service "k8s-cluster", target: 'default' with {
+    credentials type: 'cert', name: 'default-admin', cent: '$certCertPem', key: '$certKeyPem'
+}
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             generatedDir: folder.newFolder(),
@@ -57,9 +59,9 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
     }
 
     @Test
-    void "client_cert"() {
+    void "secured_client_cert"() {
         def test = [
-            name: "client_cert",
+            name: "secured_client_cert",
             input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default' with {

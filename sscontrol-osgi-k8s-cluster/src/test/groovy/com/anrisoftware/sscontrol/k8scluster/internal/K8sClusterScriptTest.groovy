@@ -118,6 +118,32 @@ service "k8s-cluster", cluster: 'default-cluster', context: 'default-system' wit
         doTest test
     }
 
+    @Test
+    void "defaults"() {
+        def test = [
+            name: 'defaults',
+            input: """
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-cluster').size() == 1
+                K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
+                assert s.group == 'default'
+                assert s.cluster.name == 'default'
+                assert s.context.name == 'default-system'
+                assert s.credentials.size() == 1
+                assert s.credentials[0].type == 'cert'
+                assert s.credentials[0].name == 'default-admin'
+                assert s.credentials[0].tls.ca.toString() =~ /.*ca\.pem/
+                assert s.credentials[0].tls.cert.toString() =~ /.*cert\.pem/
+                assert s.credentials[0].tls.key.toString() =~ /.*key\.pem/
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
