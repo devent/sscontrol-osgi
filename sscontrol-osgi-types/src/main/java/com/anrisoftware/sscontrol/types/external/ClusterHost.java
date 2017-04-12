@@ -8,4 +8,6 @@ package com.anrisoftware.sscontrol.types.external;
  */
 public interface ClusterHost extends TargetHost {
 
+    String getProto();
+
 }

@@ -2,43 +2,43 @@ setupKubectl(parent, vars) ::= <<
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>
 <setContext(parent, vars)>
-<vars.cluster.kubectlCmd> config use-context default-system
+<parent.kubectlCmd> config use-context default-system
 
 >>
 
 setCluster(parent, vars) ::= <<
-<vars.cluster.kubectlCmd> config set-cluster default-cluster --server="<vars.cluster.clusterServers:clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
+<parent.kubectlCmd> config set-cluster default-cluster --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
 
 >>
 
 setCredentials(parent, vars) ::= <<
-<vars.cluster.kubectlCmd> config set-credentials default-admin <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
+<parent.kubectlCmd> config set-credentials default-admin <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
 
 >>
 
 setContext(parent, vars) ::= <<
-<vars.cluster.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
+<parent.kubectlCmd> config set-context default-system --cluster=default-cluster --user=default-admin
 
 >>
 
 kubeCa(parent, vars) ::= <%
-<if(vars.cluster.clusterTls.ca)>--certificate-authority=<vars.certsDir>/<vars.cluster.clusterTls.caName><endif>
+<if(vars.tls)><if(vars.tls.ca)>--certificate-authority=<vars.certsDir>/<vars.tls.caName><endif><endif>
 %>
 
 kubeCert(parent, vars) ::= <%
-<if(vars.cluster.clientTls.cert)>--client-certificate=<vars.certsDir>/<vars.cluster.clientTls.certName><endif>
+<if(vars.tls)><if(vars.tls.cert)>--client-certificate=<vars.certsDir>/<vars.tls.certName><endif><endif>
 %>
 
 kubeKey(parent, vars) ::= <%
-<if(vars.cluster.clientTls.key)>--client-key=<vars.certsDir>/<vars.cluster.clientTls.keyName><endif>
+<if(vars.tls)><if(vars.tls.key)>--client-key=<parent.certsDir>/<vars.tls.keyName><endif><endif>
 %>
 
 kubectlCmd(parent, vars) ::= <<
 <setupKubectl(parent, vars)>
-<vars.cluster.kubectlCmd> <vars.args>
+<parent.kubectlCmd> <vars.args>
 
 >>
 
-clusterServer(cluster, parent, vars) ::= <%
-<cluster.host>:<cluster.port>
+clusterServer(parent, vars) ::= <%
+<vars.cluster.proto>://<vars.cluster.host>:<vars.cluster.port>
 %>

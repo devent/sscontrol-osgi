@@ -1,8 +1,11 @@
 package com.anrisoftware.sscontrol.k8scluster.internal;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
@@ -20,11 +23,15 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class K8sClusterHostImpl implements K8sClusterHost {
 
-    private final SshHost target;
-
     private final Credentials credentials;
 
     private final K8sCluster cluster;
+
+    private String proto;
+
+    private String host;
+
+    private Integer port;
 
     /**
      * @author Erwin Müller <erwin.mueller@deventm.de>
@@ -40,7 +47,8 @@ public class K8sClusterHostImpl implements K8sClusterHost {
     K8sClusterHostImpl(@Assisted K8sCluster cluster, @Assisted SshHost target,
             @Assisted Credentials credentials) {
         this.cluster = cluster;
-        this.target = target;
+        this.host = target.getHost();
+        this.port = target.getPort();
         this.credentials = credentials;
     }
 
@@ -54,19 +62,36 @@ public class K8sClusterHostImpl implements K8sClusterHost {
         return credentials;
     }
 
+    public void setProto(String proto) {
+        this.proto = proto;
+    }
+
+    @Override
+    public String getProto() {
+        return proto;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
     @Override
     public String getHost() {
-        return target.getHost();
+        return host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override
     public Integer getPort() {
-        return target.getPort();
+        return port;
     }
 
     @Override
     public String getHostAddress() throws UnknownHostException {
-        return target.getHostAddress();
+        return InetAddress.getByName(host).getHostAddress();
     }
 
     @Override
@@ -88,4 +113,8 @@ public class K8sClusterHostImpl implements K8sClusterHost {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }
