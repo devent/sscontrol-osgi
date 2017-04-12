@@ -25,6 +25,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.CredentialsNop.CredentialsNopFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
@@ -66,27 +67,6 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
             args.type = "anon"
             service.credentials << credentialsNopFactory.create(args)
         }
-        service.credentials.each { Credentials credentials ->
-            if (!credentials.port) {
-                if (credentials.hasProperty('tls') && credentials.tls.ca) {
-                    credentials.port = defaultServerPortSecured
-                } else {
-                    credentials.port = defaultServerPortUnsecured
-                }
-            }
-        }
-        service.credentials.findAll { it.hasProperty('tls')  } each {
-            Tls tls = it.tls
-            if (tls.cert) {
-                tls.certName = defaultCredentialsTlsCertName
-            }
-            if (tls.key) {
-                tls.keyName = defaultCredentialsTlsKeyName
-            }
-            if (tls.ca) {
-                tls.caName = defaultCredentialsTlsCaName
-            }
-        }
     }
 
     def uploadCertificates() {
@@ -108,11 +88,43 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
     def runKubectl(Map vars) {
         log.info 'Run kubectl with {}', vars
         ClusterService service = vars.service
+        K8sClusterHost host = vars.cluster
         assertThat "service!=null", service, notNullValue()
+        assertThat "host!=null", host, notNullValue()
+        Credentials c = host.credentials
+        if (!host.proto) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.proto = defaultServerProtoSecured
+            } else {
+                host.proto = defaultServerProtoUnsecured
+            }
+        }
+        if (!host.port) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.port = defaultServerPortSecured
+            } else {
+                host.port = defaultServerPortUnsecured
+            }
+        }
+        if (c.hasProperty('tls')) {
+            Tls tls = c.tls
+            if (tls.cert) {
+                tls.certName = defaultCredentialsTlsCertName
+            }
+            if (tls.key) {
+                tls.keyName = defaultCredentialsTlsKeyName
+            }
+            if (tls.ca) {
+                tls.caName = defaultCredentialsTlsCaName
+            }
+        }
         Map v = new HashMap(vars)
-        v.cluster = this
-        v.certsDir = getClusterCertsDir(service.cluster.cluster.cluster.name)
-        shell parent: service, resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
+        v.service = service
+        v.cluster = host
+        v.credentials = c
+        v.tls = c.hasProperty('tls') ? c.tls : null
+        v.certsDir = getClusterCertsDir(host.cluster.cluster.name)
+        shell resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
     }
 
     String getClusterCertsDir(String name) {
@@ -163,6 +175,14 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
 
     int getDefaultServerPortSecured() {
         properties.getNumberProperty 'default_server_port_secured', defaultProperties
+    }
+
+    String getDefaultServerProtoUnsecured() {
+        properties.getProperty 'default_server_proto_unsecured', defaultProperties
+    }
+
+    String getDefaultServerProtoSecured() {
+        properties.getProperty 'default_server_proto_secured', defaultProperties
     }
 
     File getKubectlCmd() {

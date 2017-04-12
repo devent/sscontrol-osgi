@@ -1,25 +1,25 @@
-config set-cluster default-cluster --server=localhost: --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/
-config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/ --client-certificate=/tmp/junit/junit/var/robobee/certs/default/ --client-key=/tmp/junit/junit/var/robobee/certs/default/
+config set-cluster default-cluster --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/grafana-service.yaml
-config set-cluster default-cluster --server=localhost: --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/
-config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/ --client-certificate=/tmp/junit/junit/var/robobee/certs/default/ --client-key=/tmp/junit/junit/var/robobee/certs/default/
+config set-cluster default-cluster --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/heapster-controller.yaml
-config set-cluster default-cluster --server=localhost: --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/
-config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/ --client-certificate=/tmp/junit/junit/var/robobee/certs/default/ --client-key=/tmp/junit/junit/var/robobee/certs/default/
+config set-cluster default-cluster --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/heapster-service.yaml
-config set-cluster default-cluster --server=localhost: --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/
-config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/ --client-certificate=/tmp/junit/junit/var/robobee/certs/default/ --client-key=/tmp/junit/junit/var/robobee/certs/default/
+config set-cluster default-cluster --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/influxdb-grafana-controller.yaml
-config set-cluster default-cluster --server=localhost: --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/
-config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/ --client-certificate=/tmp/junit/junit/var/robobee/certs/default/ --client-key=/tmp/junit/junit/var/robobee/certs/default/
+config set-cluster default-cluster --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
 config set-context default-system --cluster=default-cluster --user=default-admin
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/influxdb-service.yaml

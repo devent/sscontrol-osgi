@@ -25,6 +25,8 @@ import java.util.List;
  */
 public interface ClusterService extends HostService {
 
+    ClusterHost getCluster();
+
     List<ClusterHost> getClusters();
 
 }
