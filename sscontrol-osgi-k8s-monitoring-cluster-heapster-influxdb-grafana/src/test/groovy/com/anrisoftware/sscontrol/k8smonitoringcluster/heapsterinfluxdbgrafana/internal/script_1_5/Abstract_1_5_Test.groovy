@@ -70,6 +70,12 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
 
     static final URL kubectlCommand = Abstract_1_5_Test.class.getResource('kubectl_command.txt')
 
+    static final URL certCaPem = Abstract_1_5_Test.class.getResource('cert_ca.txt')
+
+    static final URL certCertPem = Abstract_1_5_Test.class.getResource('cert_cert.txt')
+
+    static final URL certKeyPem = Abstract_1_5_Test.class.getResource('cert_key.txt')
+
     @Inject
     SshImplFactory sshFactory
 
@@ -178,10 +184,4 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
         injector.injectMembers(this)
         this.threads = createThreads()
     }
-
-    static final URL certCaPem = Abstract_1_5_Test.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = Abstract_1_5_Test.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = Abstract_1_5_Test.class.getResource('cert_key.txt')
 }
