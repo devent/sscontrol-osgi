@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
+package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.script_1_5
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -27,34 +27,24 @@ import groovy.util.logging.Slf4j
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
 @Slf4j
-class K8sNode_Debian_8_Andrea_Node_Local_Test extends AbstractTest_K8sNode_Debian_8 {
+class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Andrea_Master_Local_Test extends Abstract_1_5_ScriptTest {
 
     @Test
-    void "andrea_node_local"() {
+    void "script_unsecured"() {
         def test = [
-            name: "andrea_node_local",
-            input: """
-service "ssh", group: "master", key: "${robobeeKey}" with {
-    host "robobee@andrea-master-local.robobee.test"
-}
-service "ssh", group: "nodes", key: "${robobeeKey}" with {
-    host "robobee@andrea-node-0-local"
-}
-service "k8s-node", name: "andrea-cluster", target: "nodes", api: targets['master'] with {
-    plugin "flannel"
-    plugin "calico"
-    kubelet.with {
-        tls certs.worker
-        client certs.worker
-    }
-}
+            name: "script_unsecured",
+            script: """
+service "ssh", host: "localhost"
+service "k8s-cluster", target: 'default'
+service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             scriptVars: ["certs": andreaLocalCerts],
             generatedDir: folder.newFolder(),
+            expectedServicesSize: 3,
             expected: { Map args ->
             },
         ]
@@ -62,25 +52,13 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", api: targets['maste
     }
 
     @Before
-    void beforeMethod() {
+    void checkProfile() {
         assumeTrue isHostAvailable([
             'andrea-master-local',
             'andrea-node-0-local'
         ])
     }
 
-    static final Map andreaLocalCerts = [
-        worker: [
-            ca: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
-            key: AbstractTest_K8sNode_Debian_8.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
-        ],
-    ]
-
     void createDummyCommands(File dir) {
-    }
-
-    Map getScriptEnv(Map args) {
-        emptyScriptEnv
     }
 }
