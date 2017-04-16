@@ -34,12 +34,14 @@ import groovy.util.logging.Slf4j
 class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Andrea_Master_Local_Test extends Abstract_1_5_ScriptTest {
 
     @Test
-    void "script_unsecured"() {
+    void "andrea-local"() {
         def test = [
-            name: "script_unsecured",
+            name: "andrea-local",
             script: """
 service "ssh", host: "localhost"
-service "k8s-cluster", target: 'default'
+service "k8s-cluster", target: 'default' with {
+    credentials type: 'cert', name: 'default-admin', ca: cert.ca, cert: cert.cert, key: cert.key
+}
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             scriptVars: ["certs": andreaLocalCerts],

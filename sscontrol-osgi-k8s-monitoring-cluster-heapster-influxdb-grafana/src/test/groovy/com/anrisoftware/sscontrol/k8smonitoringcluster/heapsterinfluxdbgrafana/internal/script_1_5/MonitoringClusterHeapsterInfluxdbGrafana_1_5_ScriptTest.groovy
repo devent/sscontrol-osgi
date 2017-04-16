@@ -36,7 +36,7 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5_ScriptTest extends Abstract_1
     void "script_unsecured"() {
         def test = [
             name: "script_unsecured",
-            script: """
+            input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default'
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
@@ -64,6 +64,7 @@ service "k8s-cluster", target: 'default' with {
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,
             generatedDir: folder.newFolder(),
+            expectedServicesSize: 3,
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
