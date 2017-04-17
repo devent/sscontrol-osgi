@@ -25,8 +25,6 @@
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
--p /var/lib/robobee/tmp
--p /var/lib/robobee/tmp
 -p /tmp/junit/junit/usr/local/bin
 -p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/kubernetes/cni/net.d
