@@ -1,8 +1,6 @@
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
-apply -f /tmp/junit/junit/srv/kubernetes/manifests/heapster-de.yaml
-apply -f /tmp/junit/junit/srv/kubernetes/manifests/heapster-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml

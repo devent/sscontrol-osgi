@@ -64,8 +64,6 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-de.yaml", "${args.test.name}_kube_dns_de_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-autoscaler-de.yaml", "${args.test.name}_kube_dns_autoscaler_de_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-svc.yaml", "${args.test.name}_kube_dns_svc_yaml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "heapster-de.yaml", "${args.test.name}_heapster_de_yaml_expected.txt"
-                assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "heapster-svc.yaml", "${args.test.name}_heapster_svc_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-de.yaml", "${args.test.name}_kube_dashboard_de_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-svc.yaml", "${args.test.name}_kube_dashboard_svc_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/srv/kubernetes/manifests'), "calico.yaml", "${args.test.name}_calico_yaml_expected.txt"

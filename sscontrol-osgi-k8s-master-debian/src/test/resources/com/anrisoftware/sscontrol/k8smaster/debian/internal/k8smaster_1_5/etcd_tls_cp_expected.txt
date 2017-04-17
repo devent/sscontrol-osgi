@@ -11,8 +11,6 @@
 /var/lib/robobee/tmp/kube-dns-de.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-de.yaml
 /var/lib/robobee/tmp/kube-dns-autoscaler-de.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
 /var/lib/robobee/tmp/kube-dns-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-svc.yaml
-/var/lib/robobee/tmp/heapster-de.yaml /tmp/junit/junit/srv/kubernetes/manifests/heapster-de.yaml
-/var/lib/robobee/tmp/heapster-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/heapster-svc.yaml
 /var/lib/robobee/tmp/kube-dashboard-de.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 /var/lib/robobee/tmp/kube-dashboard-svc.yaml /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
 /var/lib/robobee/tmp/calico.yaml /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml
