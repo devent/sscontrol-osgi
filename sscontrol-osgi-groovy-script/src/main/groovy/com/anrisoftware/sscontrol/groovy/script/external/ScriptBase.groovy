@@ -658,11 +658,14 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         def file
         if (createTmpFileCallback) {
             file = createTmpFileCallback(args)
+            file.delete()
+            file.mkdirs()
         } else {
-            file = File.createTempFile('robobee', args.suffix)
+            def ret = shell outString: true, """
+mktemp -d
+""" call()
+            file = new File(ret.out[0..-2])
         }
-        file.delete()
-        file.mkdirs()
         file
     }
 
