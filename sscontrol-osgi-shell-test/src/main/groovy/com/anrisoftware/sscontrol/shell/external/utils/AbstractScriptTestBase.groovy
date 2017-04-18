@@ -185,7 +185,7 @@ abstract class AbstractScriptTestBase {
     }
 
     Map getScriptEnv(Map args) {
-        def map = [:]
+        def map = new HashMap(args.test.scriptVars)
         map.chdir = args.dir
         map.pwd = args.dir
         map.base = args.dir
@@ -198,8 +198,8 @@ abstract class AbstractScriptTestBase {
         return map
     }
 
-    Map getEmptyScriptEnv() {
-        def map = [:]
+    Map getEmptyScriptEnv(Map args) {
+        def map = new HashMap(args.test.scriptVars)
         map.sudoEnv = [:]
         map.env = [:]
         return map
