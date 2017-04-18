@@ -66,11 +66,12 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
+        test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars
         createDummyCommands dir
-        if (test.input instanceof URL) {
+        if (test.script instanceof URL) {
             IOUtils.copy test.input.openStream(), new FileOutputStream(scriptFile)
         } else {
-            FileUtils.write(scriptFile, test.input.toString(), Charset.defaultCharset())
+            FileUtils.write(scriptFile, test.script.toString(), Charset.defaultCharset())
         }
         def roots = [parent.toURI()] as URI[]
         def scriptEnv = getScriptEnv(dir: dir, test: test)
