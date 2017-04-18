@@ -77,6 +77,15 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         def certsDir = getClusterCertsDir(service.cluster.name)
         service.credentials.findAll { it.hasProperty('tls') } each {
             Tls tls = it.tls
+            if (tls.cert) {
+                tls.certName = defaultCredentialsTlsCertName
+            }
+            if (tls.key) {
+                tls.keyName = defaultCredentialsTlsKeyName
+            }
+            if (tls.ca) {
+                tls.caName = defaultCredentialsTlsCaName
+            }
             def a = [:]
             a.dest = certsDir
             a.tls = tls
