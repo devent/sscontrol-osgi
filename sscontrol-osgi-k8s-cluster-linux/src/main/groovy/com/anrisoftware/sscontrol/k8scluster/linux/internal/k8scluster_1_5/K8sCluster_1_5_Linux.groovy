@@ -43,7 +43,7 @@ class K8sCluster_1_5_Linux extends ScriptBase {
     }
 
     @Inject
-    def injectupStreamLinuxFactory(K8sCluster_1_5_Upstream_Linux_Factory upstreamLinuxFactory) {
+    def injectUpstreamLinuxFactory(K8sCluster_1_5_Upstream_Linux_Factory upstreamLinuxFactory) {
         this.upstreamLinux = upstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
@@ -54,6 +54,10 @@ class K8sCluster_1_5_Linux extends ScriptBase {
 
     def runKubectl(Map vars) {
         upstreamLinux.runKubectl vars
+    }
+
+    def uploadCertificates(Map vars) {
+        upstreamLinux.uploadCertificates(vars)
     }
 
     @Override

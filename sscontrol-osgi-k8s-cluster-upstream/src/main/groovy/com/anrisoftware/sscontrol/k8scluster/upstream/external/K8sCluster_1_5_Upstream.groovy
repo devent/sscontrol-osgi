@@ -69,13 +69,21 @@ abstract class K8sCluster_1_5_Upstream extends Kubectl_1_5_Upstream {
         }
     }
 
-    def uploadCertificates() {
+    def uploadCertificates(Map vars) {
         log.info 'Uploads k8s-cluster certificates.'
         def certsdir = certsDir
-        K8sCluster service = service
+        List credentials = vars.credentials
+        String clusterName = vars.clusterName
+        assertThat "credentials=null", credentials, notNullValue()
+        assertThat "clusterName=null", clusterName, notNullValue()
         def args = [:]
-        def certsDir = getClusterCertsDir(service.cluster.name)
-        service.credentials.findAll { it.hasProperty('tls') } each {
+        def certsDir = getClusterCertsDir(clusterName)
+        shell privileged: true, """
+mkdir -p $certsDir
+chown robobee.robobee -R $certsDir
+chmod o-rx $certsDir
+""" call()
+        credentials.findAll { it.hasProperty('tls') } each {
             Tls tls = it.tls
             if (tls.cert) {
                 tls.certName = defaultCredentialsTlsCertName

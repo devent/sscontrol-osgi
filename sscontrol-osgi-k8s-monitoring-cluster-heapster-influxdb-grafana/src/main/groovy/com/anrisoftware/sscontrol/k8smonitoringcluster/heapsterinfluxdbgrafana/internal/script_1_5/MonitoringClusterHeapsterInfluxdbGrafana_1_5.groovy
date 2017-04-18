@@ -52,22 +52,27 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5 extends ScriptBase {
     def run() {
         MonitoringClusterHeapsterInfluxdbGrafana service = this.service
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
-        def dir = createTmpDir()
-        def file = "$dir/grafana-service.yaml"
-        template resource: templates.getResource('grafana_service'), name: 'grafanaService', dest: file, vars: [:] call()
-        cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-        file = "$dir/heapster-controller.yaml"
-        template resource: templates.getResource('heapster_controller'), name: 'heapsterController', dest: file, vars: [:] call()
-        cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-        file = "$dir/heapster-service.yaml"
-        template resource: templates.getResource('heapster_service'), name: 'heapsterService', dest: file, vars: [:] call()
-        cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-        file = "$dir/influxdb-grafana-controller.yaml"
-        template resource: templates.getResource('influxdb_grafana_controller'), name: 'influxdbGrafanaController', dest: file, vars: [:] call()
-        cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-        file = "$dir/influxdb-service.yaml"
-        template resource: templates.getResource('influxdb_service'), name: 'influxdbService', dest: file, vars: [:] call()
-        cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+        cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
+        File dir = createTmpDir()
+        try {
+            def file = "$dir/grafana-service.yaml"
+            template resource: templates.getResource('grafana_service'), name: 'grafanaService', dest: file, vars: [:] call()
+            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+            file = "$dir/heapster-controller.yaml"
+            template resource: templates.getResource('heapster_controller'), name: 'heapsterController', dest: file, vars: [:] call()
+            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+            file = "$dir/heapster-service.yaml"
+            template resource: templates.getResource('heapster_service'), name: 'heapsterService', dest: file, vars: [:] call()
+            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+            file = "$dir/influxdb-grafana-controller.yaml"
+            template resource: templates.getResource('influxdb_grafana_controller'), name: 'influxdbGrafanaController', dest: file, vars: [:] call()
+            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+            file = "$dir/influxdb-service.yaml"
+            template resource: templates.getResource('influxdb_service'), name: 'influxdbService', dest: file, vars: [:] call()
+            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+        } finally {
+            dir.deleteDir()
+        }
     }
 
     @Override

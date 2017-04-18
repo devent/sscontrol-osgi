@@ -101,8 +101,5 @@ spec:
             - --container=eventer
             - --poll-period=300000
             - --estimator=exponential
-      tolerations:
-        - key: "CriticalAddonsOnly"
-          operator: "Exists"
 
 >>
