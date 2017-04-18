@@ -62,13 +62,13 @@ import com.google.inject.AbstractModule
  */
 abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase {
 
-    static final URL certCaPem = K8sCluster_1_5_Linux_Test.class.getResource('cert_ca.txt')
+    static final URL certCaPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_ca.txt')
 
-    static final URL certCertPem = K8sCluster_1_5_Linux_Test.class.getResource('cert_cert.txt')
+    static final URL certCertPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_cert.txt')
 
-    static final URL certKeyPem = K8sCluster_1_5_Linux_Test.class.getResource('cert_key.txt')
+    static final URL certKeyPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_key.txt')
 
-    static final URL kubectl = K8sCluster_1_5_Linux_Test.class.getResource('kubectl.txt')
+    static final URL kubectl = AbstractTest_K8sCluster_1_5_Linux.class.getResource('kubectl.txt')
 
     @Inject
     SshImplFactory sshFactory
