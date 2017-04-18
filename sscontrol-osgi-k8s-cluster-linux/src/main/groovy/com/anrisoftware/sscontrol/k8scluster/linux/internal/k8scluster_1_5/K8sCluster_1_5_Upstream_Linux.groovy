@@ -40,7 +40,7 @@ class K8sCluster_1_5_Upstream_Linux extends K8sCluster_1_5_Upstream {
     @Override
     Object run() {
         setupMiscDefaults()
-        uploadCertificates()
+        uploadCertificates credentials: service.credentials, clusterName: service.cluster.name
         installKubernetes()
     }
 

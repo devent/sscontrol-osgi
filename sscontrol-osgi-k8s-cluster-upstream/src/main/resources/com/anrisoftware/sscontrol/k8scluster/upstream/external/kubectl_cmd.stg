@@ -4,6 +4,7 @@ if [[ $? != 0 ]]; then
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>
 <setContext(parent, vars)>
+<parent.kubectlCmd> config use-context <vars.cluster.context.name>
 fi
 
 >>
@@ -32,7 +33,7 @@ kubeCert(parent, vars) ::= <%
 %>
 
 kubeKey(parent, vars) ::= <%
-<if(vars.tls)><if(vars.tls.key)>--client-key=<parent.certsDir>/<vars.tls.keyName><endif><endif>
+<if(vars.tls)><if(vars.tls.key)>--client-key=<vars.certsDir>/<vars.tls.keyName><endif><endif>
 %>
 
 kubectlCmd(parent, vars) ::= <<
