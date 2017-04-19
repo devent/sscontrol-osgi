@@ -84,8 +84,16 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5 extends ScriptBase {
         properties.getProperty 'heapster_version', defaultProperties
     }
 
+    String getHeapsterImage() {
+        properties.getProperty 'heapster_image', defaultProperties
+    }
+
     String getResizerVersion() {
         properties.getProperty 'resizer_version', defaultProperties
+    }
+
+    String getResizerImage() {
+        properties.getProperty 'resizer_image', defaultProperties
     }
 
     String getInfluxGrafanaVersion() {

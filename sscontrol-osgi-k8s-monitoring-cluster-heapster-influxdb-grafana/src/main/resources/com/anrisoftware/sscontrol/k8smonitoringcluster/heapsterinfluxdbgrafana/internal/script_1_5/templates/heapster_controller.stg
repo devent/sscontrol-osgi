@@ -24,7 +24,7 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       containers:
-        - image: gcr.io/google_containers/heapster-amd64:<parent.heapsterVersion>
+        - image: <parent.heapsterImage>:<parent.heapsterVersion>
           name: heapster
           livenessProbe:
             httpGet:
@@ -37,13 +37,13 @@ spec:
             - /heapster
             - --source=kubernetes.summary_api:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: gcr.io/google_containers/heapster-amd64:<parent.heapsterVersion>
+        - image: <parent.heapsterImage>:<parent.heapsterVersion>
           name: eventer
           command:
             - /eventer
             - --source=kubernetes:''
             - --sink=influxdb:http://monitoring-influxdb:8086
-        - image: gcr.io/google_containers/addon-resizer:<parent.resizerVersion>
+        - image: <parent.resizerImage>:<parent.resizerVersion>
           name: heapster-nanny
           resources:
             limits:
@@ -72,7 +72,7 @@ spec:
             - --container=heapster
             - --poll-period=300000
             - --estimator=exponential
-        - image: gcr.io/google_containers/addon-resizer:<parent.resizerVersion>
+        - image: <parent.resizerImage>:<parent.resizerVersion>
           name: eventer-nanny
           resources:
             limits:
