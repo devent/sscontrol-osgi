@@ -30,8 +30,8 @@
 		<appender-ref ref="TESTING_STYLE" />
 	</root>
 
-    <logger name="com.anrisoftware" level="TRACE" />
-    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="TRACE" />
-    <logger name="com.anrisoftware.sscontrol" level="TRACE" />
+    <logger name="com.anrisoftware" level="INFO" />
+    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
 
 </configuration>
