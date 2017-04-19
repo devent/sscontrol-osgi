@@ -8,7 +8,6 @@ metadata:
     k8s-app: influxGrafana
     version: <parent.influxGrafanaVersion>
     kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
 spec:
   replicas: 1
   selector:
@@ -20,6 +19,9 @@ spec:
         k8s-app: influxGrafana
         version: <parent.influxGrafanaVersion>
         kubernetes.io/cluster-service: "true"
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+        scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
         - image: gcr.io/google_containers/heapster-influxdb-amd64:<parent.heapsterInfluxdbVersion>
