@@ -158,6 +158,10 @@ public class EtcdImpl implements Etcd {
                 addAllEndpoints(v.toString());
             }
         }
+        v = args.get("address");
+        if (v != null) {
+            setAddress(v);
+        }
         v = args.get("prefix");
         if (v != null) {
             setPrefix(v.toString());
