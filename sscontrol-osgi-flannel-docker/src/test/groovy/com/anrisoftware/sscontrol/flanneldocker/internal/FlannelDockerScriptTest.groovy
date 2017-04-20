@@ -116,6 +116,28 @@ service "flannel-docker" with {
                 FlannelDocker s = services.getServices('flannel-docker')[0]
                 assert s.etcd.endpoints.size() == 3
                 assert s.etcd.endpoints[0] == "https://etcd-0:2379"
+                assert s.etcd.address == "https://etcd-0:2379"
+                assert s.etcd.prefix == null
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "etcd_address"() {
+        def test = [
+            name: 'etcd_address',
+            input: """
+service "flannel-docker" with {
+    etcd address: "https://etcd-1:2379", endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('flannel-docker').size() == 1
+                FlannelDocker s = services.getServices('flannel-docker')[0]
+                assert s.etcd.endpoints.size() == 3
+                assert s.etcd.endpoints[0] == "https://etcd-0:2379"
+                assert s.etcd.address == "https://etcd-1:2379"
                 assert s.etcd.prefix == null
             },
         ]
