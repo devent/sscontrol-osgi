@@ -51,7 +51,7 @@ abstract class FlannelDocker_0_7_Upstream extends ScriptBase {
     def setupDefaults() {
         log.info 'Setup Flannel-Docker defaults.'
         FlannelDocker service = this.service
-        assertThat "etcd.address=null", service.etcd.address, is(notNullValue())
+        assertThat "etcd.endpoints>0", service.etcd.endpoints.size(), greaterThan(0)
         if (!service.debugLogging.modules['debug']) {
             service.debug 'debug', level: defaultDebugLogLevel
         }

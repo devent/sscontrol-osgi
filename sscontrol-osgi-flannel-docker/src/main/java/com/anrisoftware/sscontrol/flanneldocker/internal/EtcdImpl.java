@@ -15,7 +15,12 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.internal;
 
+import static org.apache.commons.lang3.StringUtils.split;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,15 +53,17 @@ public class EtcdImpl implements Etcd {
 
     }
 
-    private String address;
+    private final List<Object> endpoints;
 
     private String prefix;
 
-    private TlsFactory tlsFactory;
+    private final TlsFactory tlsFactory;
 
     private Tls tls;
 
-    private EtcdImplLogger log;
+    private final EtcdImplLogger log;
+
+    private Object address;
 
     @AssistedInject
     EtcdImpl(EtcdImplLogger log, TlsFactory tlsFactory) {
@@ -69,6 +76,7 @@ public class EtcdImpl implements Etcd {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
         this.log = log;
+        this.endpoints = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -82,12 +90,42 @@ public class EtcdImpl implements Etcd {
         log.tlsSet(this, tls);
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void addEndpoints(List<String> endpoints) {
+        this.endpoints.addAll(endpoints);
     }
 
     @Override
-    public String getAddress() {
+    public List<Object> getEndpoints() {
+        return endpoints;
+    }
+
+    public void addEndpoints(Object endpoint) {
+        endpoints.add(endpoint);
+        if (address == null) {
+            setAddress(endpoint);
+        }
+        log.endpointAdded(this, endpoint);
+    }
+
+    public void addAllEndpoints(String list) {
+        addAllEndpoints(Arrays.asList(split(list, ",")));
+    }
+
+    public void addAllEndpoints(List<?> list) {
+        endpoints.addAll(list);
+        if (address == null) {
+            setAddress(list.get(0));
+        }
+        log.endpointsAdded(this, list);
+    }
+
+    public void setAddress(Object address) {
+        this.address = address;
+        log.addressSet(this, address);
+    }
+
+    @Override
+    public Object getAddress() {
         return address;
     }
 
@@ -107,14 +145,18 @@ public class EtcdImpl implements Etcd {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("address", getAddress())
+        return new ToStringBuilder(this).append("endpoints", getEndpoints())
                 .append("prefix", getPrefix()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("address");
+        Object v = args.get("endpoints");
         if (v != null) {
-            setAddress(v.toString());
+            if (v instanceof List) {
+                addAllEndpoints((List<?>) v);
+            } else {
+                addAllEndpoints(v.toString());
+            }
         }
         v = args.get("prefix");
         if (v != null) {

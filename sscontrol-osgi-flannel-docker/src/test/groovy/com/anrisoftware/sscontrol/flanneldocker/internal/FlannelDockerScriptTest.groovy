@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
@@ -67,13 +68,14 @@ class FlannelDockerScriptTest {
             name: 'etcd',
             input: """
 service "flannel-docker" with {
-    etcd address: "http://127.0.0.1:2379", prefix: "/atomic.io/network"
+    etcd endpoints: "http://127.0.0.1:2379", prefix: "/atomic.io/network"
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('flannel-docker').size() == 1
                 FlannelDocker s = services.getServices('flannel-docker')[0]
-                assert s.etcd.address == "http://127.0.0.1:2379"
+                assert s.etcd.endpoints.size() == 1
+                assert s.etcd.endpoints[0] == "http://127.0.0.1:2379"
                 assert s.etcd.prefix == "/atomic.io/network"
             },
         ]
@@ -81,9 +83,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "etcd_address"() {
+    void "etcd_endpoint"() {
         def test = [
-            name: 'etcd_address',
+            name: 'etcd_endpoint',
             input: """
 service "flannel-docker" with {
     etcd "http://127.0.0.1:2379"
@@ -92,7 +94,28 @@ service "flannel-docker" with {
             expected: { HostServices services ->
                 assert services.getServices('flannel-docker').size() == 1
                 FlannelDocker s = services.getServices('flannel-docker')[0]
-                assert s.etcd.address == "http://127.0.0.1:2379"
+                assert s.etcd.endpoints.size() == 1
+                assert s.etcd.endpoints[0] == "http://127.0.0.1:2379"
+                assert s.etcd.prefix == null
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "multiple_etcd_endpoints"() {
+        def test = [
+            name: 'multiple_etcd_endpoints',
+            input: """
+service "flannel-docker" with {
+    etcd endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('flannel-docker').size() == 1
+                FlannelDocker s = services.getServices('flannel-docker')[0]
+                assert s.etcd.endpoints.size() == 3
+                assert s.etcd.endpoints[0] == "https://etcd-0:2379"
                 assert s.etcd.prefix == null
             },
         ]
@@ -149,7 +172,8 @@ service "flannel-docker" with {
             expected: { HostServices services ->
                 assert services.getServices('flannel-docker').size() == 1
                 FlannelDocker s = services.getServices('flannel-docker')[0]
-                assert s.etcd.address == "https://127.0.0.1:2379"
+                assert s.etcd.endpoints.size() == 1
+                assert s.etcd.endpoints[0] == "https://127.0.0.1:2379"
                 assert s.etcd.prefix == null
                 Tls tls = s.etcd.tls
                 assert tls.ca == new URI('file:ca.pem')
@@ -183,6 +207,7 @@ service "flannel-docker" with {
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new AbstractModule() {

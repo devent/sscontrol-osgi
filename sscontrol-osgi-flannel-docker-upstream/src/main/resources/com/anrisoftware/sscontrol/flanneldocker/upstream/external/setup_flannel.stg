@@ -2,7 +2,9 @@ setupCmd(parent, vars) ::= <<
 tmp=$(mktemp -d)
 <copyCerts(parent, vars)>
 curl <curlCerts(parent, vars)> -X PUT -d "value={\"Network\":\"<parent.service.network>\",\"Backend\":{\"Type\":\"<parent.service.backend.type>\"}}" "<parent.service.etcd.address>/v2/keys<parent.service.etcd.prefix>/config"
+ret=$?
 rm -rf "$tmp"
+exit $ret
 >>
 
 copyCerts(parent, vars) ::= <<
