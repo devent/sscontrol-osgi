@@ -109,8 +109,8 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5 extends ScriptBase {
     }
 
     String getNannyMemory() {
-        int nannyMemory = properties.getNumberProperty 'nanny_memory', defaultProperties
-        int memory = nannyMemory * 1024 + numNodes * nannyMemoryPerNode
+        int nannyMemoryMB = properties.getNumberProperty 'nanny_memory_MB', defaultProperties
+        int memory = nannyMemoryMB * 1024 + numNodes * nannyMemoryPerNodeKB
         "${memory}Ki"
     }
 
@@ -138,8 +138,8 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5 extends ScriptBase {
         properties.getProperty 'eventer_memory_per_node', defaultProperties
     }
 
-    int getNannyMemoryPerNode() {
-        properties.getNumberProperty 'nanny_memory_per_node', defaultProperties
+    int getNannyMemoryPerNodeKB() {
+        properties.getNumberProperty 'nanny_memory_per_node_kB', defaultProperties
     }
 
     int getNumNodes() {
