@@ -206,13 +206,13 @@ public class FlannelDockerImpl implements FlannelDocker {
      */
     public Etcd etcd(String address) {
         Map<String, Object> args = new HashMap<>();
-        args.put("address", address);
+        args.put("endpoints", address);
         return etcd(args);
     }
 
     /**
      * <pre>
-     * etcd address: "http://127.0.0.1:2379", prefix: "/atomic.io/network"
+     * etcd endpoints: "http://127.0.0.1:2379", prefix: "/atomic.io/network"
      * </pre>
      */
     public Etcd etcd(Map<String, Object> args) {

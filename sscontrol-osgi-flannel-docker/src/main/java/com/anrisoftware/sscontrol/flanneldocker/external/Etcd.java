@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.external;
 
+import java.util.List;
+
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
@@ -25,7 +27,12 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
  */
 public interface Etcd {
 
-    String getAddress();
+    List<Object> getEndpoints();
+
+    /**
+     * Returns the address to setup flanneld.
+     */
+    Object getAddress();
 
     String getPrefix();
 

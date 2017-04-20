@@ -15,7 +15,12 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.internal;
 
-import static com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImplLogger.a.tlsSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImplLogger.m.addressSet;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImplLogger.m.endpointAdded;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImplLogger.m.endpointsAdded;
+import static com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImplLogger.m.tlsSet;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -31,13 +36,19 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 @Singleton
 final class EtcdImplLogger extends AbstractLogger {
 
-    enum a {
+    enum m {
 
-        tlsSet("TLS {} set for {}");
+        tlsSet("TLS {} set for {}"),
+
+        endpointAdded("Endpoint {} added to {}"),
+
+        endpointsAdded("Endpoints {} added to {}"),
+
+        addressSet("Address {} set for {}");
 
         private String name;
 
-        private a(String name) {
+        private m(String name) {
             this.name = name;
         }
 
@@ -56,5 +67,17 @@ final class EtcdImplLogger extends AbstractLogger {
 
     void tlsSet(EtcdImpl etcd, Tls tls) {
         debug(tlsSet, tls, etcd);
+    }
+
+    void endpointAdded(EtcdImpl etcd, Object endpoint) {
+        debug(endpointAdded, endpoint, etcd);
+    }
+
+    void endpointsAdded(EtcdImpl etcd, List<?> list) {
+        debug(endpointsAdded, list, etcd);
+    }
+
+    void addressSet(EtcdImpl etcd, Object address) {
+        debug(addressSet, address, etcd);
     }
 }

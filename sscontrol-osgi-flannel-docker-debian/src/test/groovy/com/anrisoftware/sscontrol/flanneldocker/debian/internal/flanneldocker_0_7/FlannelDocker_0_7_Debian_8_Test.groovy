@@ -61,6 +61,27 @@ service "flannel-docker" with {
     }
 
     @Test
+    void "multiple_endpoints"() {
+        def test = [
+            name: "multiple_endpoints",
+            input: """
+service "ssh", host: "localhost"
+service "flannel-docker" with {
+    etcd endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, dir, "curl.out", "${args.test.name}_curl_expected.txt"
+                assertFileResource FlannelDocker_0_7_Debian_8_Test, new File(gen, '/etc/sysconfig'), "flanneld", "${args.test.name}_flanneld_sysconfig_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "etcd_tls"() {
         def test = [
             name: "etcd_tls",
