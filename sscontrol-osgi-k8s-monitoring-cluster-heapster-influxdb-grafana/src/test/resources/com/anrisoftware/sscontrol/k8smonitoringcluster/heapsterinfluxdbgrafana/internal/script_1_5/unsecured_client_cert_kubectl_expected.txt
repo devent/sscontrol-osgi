@@ -1,7 +1,8 @@
 config use-context default-system
 config set-cluster default --server=http://localhost:8080
-config set-credentials default-default-admin --client-key=/tmp/junit/junit/var/robobee/certs/client_key.pem
+config set-credentials default-default-admin --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/default/client_key.pem
 config set-context default-system --cluster=default --user=default-default-admin
+config use-context default-system
 apply -f /tmp/junit/junit.tmp/grafana-service.yaml
 config use-context default-system
 apply -f /tmp/junit/junit.tmp/heapster-controller.yaml

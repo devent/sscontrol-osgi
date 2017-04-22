@@ -38,7 +38,7 @@ class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test extends Abstract_1_5_Tes
             input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default' with {
-    credentials type: 'cert', name: 'default-admin', cent: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
 service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
 """,

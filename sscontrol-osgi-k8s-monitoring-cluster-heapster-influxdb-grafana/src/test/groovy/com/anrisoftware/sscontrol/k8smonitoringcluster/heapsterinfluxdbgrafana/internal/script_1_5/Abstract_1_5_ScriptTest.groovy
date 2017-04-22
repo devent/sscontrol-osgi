@@ -43,7 +43,7 @@ import com.google.inject.AbstractModule
  */
 abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
 
-    static final URL kubectlCommand = MonitoringClusterHeapsterInfluxdbGrafana_1_5_ScriptTest.class.getResource('kubectl_command.txt')
+    static final URL kubectlCommand = Abstract_1_5_ScriptTest.class.getResource('kubectl_command.txt')
 
     static final URL certCaPem = Abstract_1_5_ScriptTest.class.getResource('cert_ca.txt')
 

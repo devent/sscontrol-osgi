@@ -6,7 +6,6 @@ metadata:
   labels:
     k8s-app: heapster
     kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
     version: v1.3.0
 spec:
   replicas: 1
@@ -21,6 +20,7 @@ spec:
         version: v1.3.0
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
+        scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
     spec:
       containers:
         - image: gcr.io/google_containers/heapster-amd64:v1.3.0
@@ -47,10 +47,10 @@ spec:
           resources:
             limits:
               cpu: 50m
-              memory: 92360Ki
+              memory: 61640Ki
             requests:
               cpu: 50m
-              memory: 92360Ki
+              memory: 61640Ki
           env:
             - name: MY_POD_NAME
               valueFrom:
@@ -64,8 +64,8 @@ spec:
             - /pod_nanny
             - --cpu=80m
             - --extra-cpu=0.5m
-            - --memory=140Mi
-            - --extra-memory=4Mi
+            - --memory=80Mi
+            - --extra-memory=5Mi
             - --threshold=5
             - --deployment=heapster-v1.3.0
             - --container=heapster
@@ -76,10 +76,10 @@ spec:
           resources:
             limits:
               cpu: 50m
-              memory: 92360Ki
+              memory: 61640Ki
             requests:
               cpu: 50m
-              memory: 92360Ki
+              memory: 61640Ki
           env:
             - name: MY_POD_NAME
               valueFrom:
@@ -93,13 +93,10 @@ spec:
             - /pod_nanny
             - --cpu=100m
             - --extra-cpu=0m
-            - --memory=190Mi
-            - --extra-memory=190Mi
+            - --memory=80Mi
+            - --extra-memory=5Mi
             - --threshold=5
             - --deployment=heapster-v1.3.0
             - --container=eventer
             - --poll-period=300000
             - --estimator=exponential
-      tolerations:
-        - key: "CriticalAddonsOnly"
-          operator: "Exists"
