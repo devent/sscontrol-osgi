@@ -30,30 +30,27 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.repo.git.external.Cluster;
-import com.anrisoftware.sscontrol.repo.git.external.Context;
 import com.anrisoftware.sscontrol.repo.git.external.Credentials;
-import com.anrisoftware.sscontrol.repo.git.external.CredentialsFactory;
-import com.anrisoftware.sscontrol.repo.git.external.K8sCluster;
-import com.anrisoftware.sscontrol.repo.git.external.K8sClusterHost;
-import com.anrisoftware.sscontrol.repo.git.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.repo.git.internal.ContextImpl.ContextImplFactory;
-import com.anrisoftware.sscontrol.repo.git.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
+import com.anrisoftware.sscontrol.repo.git.external.GitRepo;
+import com.anrisoftware.sscontrol.repo.git.external.GitRepoHost;
+import com.anrisoftware.sscontrol.repo.git.external.Remote;
+import com.anrisoftware.sscontrol.repo.git.internal.GitRepoHostImpl.GitRepoHostImplFactory;
+import com.anrisoftware.sscontrol.repo.git.internal.RemoteImpl.RemoteImplFactory;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
 import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * <i>K8s-Cluster</i> service.
+ * <i>Git</i> code repository service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class K8sClusterImpl implements K8sCluster {
+public class GitRepoImpl implements GitRepo {
 
     /**
      *
@@ -61,45 +58,38 @@ public class K8sClusterImpl implements K8sCluster {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface K8sClusterImplFactory extends HostServiceService {
+    public interface GitRepoImplFactory extends HostServiceService {
 
     }
 
-    private final K8sClusterImplLogger log;
+    private final GitRepoImplLogger log;
 
     @Inject
     private transient Map<String, CredentialsFactory> credentialsFactories;
-
-    private final List<Credentials> credentials;
 
     private final HostServiceProperties serviceProperties;
 
     private final List<SshHost> targets;
 
-    private final ClusterImplFactory clusterFactory;
+    private final GitRepoHostImplFactory hostFactory;
 
-    private Cluster cluster;
+    private Credentials credentials;
 
-    private final ContextImplFactory contextFactory;
+    private String group;
 
-    private Context context;
+    private Remote remote;
 
-    private final K8sClusterHostImplFactory clusterHostFactory;
+    private final RemoteImplFactory remoteFactory;
 
     @Inject
-    K8sClusterImpl(K8sClusterImplLogger log,
-            HostPropertiesService propertiesService,
-            ClusterImplFactory clusterFactory,
-            ContextImplFactory contextFactory,
-            K8sClusterHostImplFactory clusterHostFactory,
+    GitRepoImpl(GitRepoImplLogger log, HostPropertiesService propertiesService,
+            GitRepoHostImplFactory hostFactory, RemoteImplFactory remoteFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
-        this.credentials = new ArrayList<>();
-        this.clusterFactory = clusterFactory;
-        this.contextFactory = contextFactory;
-        this.clusterHostFactory = clusterHostFactory;
+        this.hostFactory = hostFactory;
+        this.remoteFactory = remoteFactory;
         parseArgs(args);
     }
 
@@ -120,7 +110,18 @@ public class K8sClusterImpl implements K8sCluster {
 
     /**
      * <pre>
-     * target name: 'master'
+     * target "default"
+     * </pre>
+     */
+    public void target(String name) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("target", name);
+        target(args);
+    }
+
+    /**
+     * <pre>
+     * target name: "default"
      * </pre>
      */
     public void target(Map<String, Object> args) {
@@ -132,64 +133,60 @@ public class K8sClusterImpl implements K8sCluster {
 
     /**
      * <pre>
-     * cluster "default-cluster"
+     * group "wordpress-app"
      * </pre>
      */
-    public void cluster(String name) {
+    public void group(String name) {
         Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
+        args.put("group", name);
+        group(args);
     }
 
     /**
      * <pre>
-     * cluster name: "default-cluster"
+     * group name: "wordpress-app"
      * </pre>
      */
-    public void cluster(Map<String, Object> args) {
-        if (cluster != null) {
-            this.cluster = clusterFactory.create(cluster, args);
-        } else {
-            this.cluster = clusterFactory.create(args);
-        }
-        log.clusterSet(this, cluster);
+    public void group(Map<String, Object> args) {
+        Object v = args.get("group");
+        this.group = v.toString();
     }
 
     /**
      * <pre>
-     * context "default-cluster"
+     * remote "git://git@github.com/fluentd-logging"
      * </pre>
      */
-    public void context(String name) {
+    public void remote(String name) {
         Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
+        args.put("url", name);
+        remote(args);
     }
 
     /**
      * <pre>
-     * context name: "default-cluster"
+     * remote url: "git://git@github.com/fluentd-logging"
      * </pre>
      */
-    public void context(Map<String, Object> args) {
-        this.context = contextFactory.create(args);
-        log.contextSet(this, context);
+    public void remote(Map<String, Object> args) {
+        this.remote = remoteFactory.create(args);
+        log.remoteSet(this, remote);
     }
 
     /**
      * <pre>
-     * credentials 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+     * credentials "ssh", key: "file://id_rsa.pub"
      * </pre>
      */
     public void credentials(Map<String, Object> args, String type) {
         Map<String, Object> a = new HashMap<>(args);
-        args.put("type", type);
+        a.put("type", type);
         credentials(a);
     }
 
     /**
      * <pre>
-     * credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+     * credentials type: "ssh", key: "file://id_rsa.pub"
      * </pre>
      */
     public void credentials(Map<String, Object> args) {
@@ -197,8 +194,8 @@ public class K8sClusterImpl implements K8sCluster {
         assertThat("type=null", type, notNullValue());
         CredentialsFactory factory = credentialsFactories.get(type.toString());
         Credentials c = factory.create(args);
-        credentials.add(c);
-        log.credentialsAdded(this, c);
+        this.credentials = c;
+        log.credentialsSet(this, c);
     }
 
     @Override
@@ -222,45 +219,31 @@ public class K8sClusterImpl implements K8sCluster {
 
     @Override
     public String getName() {
-        return "k8s-cluster";
+        return "git";
     }
 
     @Override
-    public Cluster getCluster() {
-        return cluster;
-    }
-
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
-    @Override
-    public List<Credentials> getCredentials() {
+    public Credentials getCredentials() {
         return credentials;
     }
 
     @Override
     public String getGroup() {
-        return cluster.getName();
+        return group;
     }
 
     @Override
-    public List<ClusterHost> getHosts() {
-        List<ClusterHost> list = new ArrayList<>();
-        List<Credentials> creds = new ArrayList<>(credentials);
-        if (creds.size() == 0) {
-            Map<String, Object> args = new HashMap<>();
-            args.put("name", "default-admin");
-            args.put("type", "anon");
-            creds.add(credentialsFactories.get("anon").create(args));
-        }
+    public Remote getRemote() {
+        return remote;
+    }
+
+    @Override
+    public List<RepoHost> getHosts() {
+        List<RepoHost> list = new ArrayList<>();
         for (SshHost ssh : targets) {
-            for (Credentials cred : creds) {
-                K8sClusterHost host;
-                host = clusterHostFactory.create(this, ssh, cred, context);
-                list.add(host);
-            }
+            GitRepoHost host;
+            host = hostFactory.create(this, ssh);
+            list.add(host);
         }
         return Collections.unmodifiableList(list);
     }
@@ -271,34 +254,24 @@ public class K8sClusterImpl implements K8sCluster {
                 .append("targets", getTargets()).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
+        parseTargets(args);
+        parseGroup(args);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
             targets.addAll((List<SshHost>) v);
         }
-        parseCluster(args);
-        parseContext(args);
     }
 
-    private void parseContext(Map<String, Object> args) {
-        Object v = args.get("context");
-        Map<String, Object> a = new HashMap<>(args);
-        if (v == null) {
-            v = "default-system";
+    private void parseGroup(Map<String, Object> args) {
+        Object v = args.get("group");
+        if (v != null) {
+            this.group = v.toString();
         }
-        a.put("name", v);
-        context(a);
-    }
-
-    private void parseCluster(Map<String, Object> args) {
-        Object v = args.get("cluster");
-        Map<String, Object> a = new HashMap<>(args);
-        if (v == null) {
-            v = "default";
-        }
-        a.put("name", v);
-        cluster(a);
     }
 
 }

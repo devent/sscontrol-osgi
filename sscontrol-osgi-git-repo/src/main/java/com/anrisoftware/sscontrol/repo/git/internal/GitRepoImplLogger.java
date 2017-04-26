@@ -15,33 +15,29 @@
  */
 package com.anrisoftware.sscontrol.repo.git.internal;
 
-import static com.anrisoftware.sscontrol.repo.git.internal.K8sClusterImplLogger.m.clusterSet;
-import static com.anrisoftware.sscontrol.repo.git.internal.K8sClusterImplLogger.m.contextSet;
-import static com.anrisoftware.sscontrol.repo.git.internal.K8sClusterImplLogger.m.credentialsAdded;
+import static com.anrisoftware.sscontrol.repo.git.internal.GitRepoImplLogger.m.credentialsSet;
+import static com.anrisoftware.sscontrol.repo.git.internal.GitRepoImplLogger.m.remoteSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.repo.git.external.Cluster;
-import com.anrisoftware.sscontrol.repo.git.external.Context;
 import com.anrisoftware.sscontrol.repo.git.external.Credentials;
+import com.anrisoftware.sscontrol.repo.git.external.Remote;
 
 /**
- * Logging for {@link K8sClusterImpl}.
+ * Logging for {@link GitRepoImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class K8sClusterImplLogger extends AbstractLogger {
+final class GitRepoImplLogger extends AbstractLogger {
 
     enum m {
 
-        clusterSet("Cluster {} set for {}"),
+        remoteSet("Remote {} set for {}"),
 
-        credentialsAdded("Credentials {} added for {}"),
-
-        contextSet("Context {} set for {}");
+        credentialsSet("Credentials {} set for {}");
 
         private String name;
 
@@ -56,21 +52,18 @@ final class K8sClusterImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link K8sClusterImpl}.
+     * Sets the context of the logger to {@link GitRepoImpl}.
      */
-    public K8sClusterImplLogger() {
-        super(K8sClusterImpl.class);
+    public GitRepoImplLogger() {
+        super(GitRepoImpl.class);
     }
 
-    void credentialsAdded(K8sClusterImpl k8s, Credentials auth) {
-        debug(credentialsAdded, auth, k8s);
+    void credentialsSet(GitRepoImpl repo, Credentials c) {
+        debug(credentialsSet, c, repo);
     }
 
-    void clusterSet(K8sClusterImpl k8s, Cluster cluster) {
-        debug(clusterSet, cluster, k8s);
+    void remoteSet(GitRepoImpl repo, Remote remote) {
+        debug(remoteSet, remote, repo);
     }
 
-    void contextSet(K8sClusterImpl k8s, Context context) {
-        debug(contextSet, context, k8s);
-    }
 }

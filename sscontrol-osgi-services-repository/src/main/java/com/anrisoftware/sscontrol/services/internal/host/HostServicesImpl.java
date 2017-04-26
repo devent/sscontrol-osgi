@@ -43,6 +43,10 @@ import com.anrisoftware.sscontrol.types.external.host.HostServices;
 import com.anrisoftware.sscontrol.types.external.host.HostServicesService;
 import com.anrisoftware.sscontrol.types.external.host.HostTargets;
 import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.external.repo.Repo;
+import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
+import com.anrisoftware.sscontrol.types.external.repo.Repos;
+import com.anrisoftware.sscontrol.types.external.repo.ReposService;
 import com.anrisoftware.sscontrol.types.external.ssh.Ssh;
 import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
@@ -80,6 +84,8 @@ public class HostServicesImpl implements HostServices {
 
     private final Clusters clusters;
 
+    private final Repos repos;
+
     private final GetTargets<SshHost, Ssh> getTargets;
 
     private final GetTargets<ClusterHost, Cluster> getClusters;
@@ -87,11 +93,14 @@ public class HostServicesImpl implements HostServices {
     @Inject
     private HostServicesImplLogger log;
 
+    private GetTargets<RepoHost, Repo> getRepos;
+
     @AssistedInject
     HostServicesImpl(TargetsService targetsService,
-            ClustersService clustersService) {
+            ClustersService clustersService, ReposService reposService) {
         this.targets = targetsService.create();
         this.clusters = clustersService.create();
+        this.repos = reposService.create();
         this.availableServices = synchronizedMap(
                 new HashMap<String, HostServiceService>());
         this.availablePreServices = synchronizedMap(
@@ -107,6 +116,20 @@ public class HostServicesImpl implements HostServices {
             @Override
             public List<ClusterHost> getTargets(
                     HostTargets<ClusterHost, Cluster> targets, String name) {
+                try {
+                    return targets.getHosts(name);
+                } catch (AssertionError e) {
+                    return Collections.emptyList();
+                }
+            }
+
+        };
+        this.getRepos = new GetTargets<RepoHost, Repo>(RepoHost.class,
+                Repo.class, "repo") {
+
+            @Override
+            public List<RepoHost> getTargets(
+                    HostTargets<RepoHost, Repo> targets, String name) {
                 try {
                     return targets.getHosts(name);
                 } catch (AssertionError e) {
@@ -138,6 +161,7 @@ public class HostServicesImpl implements HostServices {
         HostService hostService = service.create(a);
         getTargets.setupTargets(targets, hostService);
         getClusters.setupTargets(clusters, hostService);
+        getRepos.setupTargets(repos, hostService);
         addService(name, hostService);
         return hostService;
     }
@@ -164,6 +188,18 @@ public class HostServicesImpl implements HostServices {
      */
     public List<ClusterHost> clusters(String name) {
         return getClusters.getTargets(clusters, name);
+    }
+
+    /**
+     * Returns the code repositories with the specified group name.
+     *
+     * <pre>
+     * repos "wordpress-app" each {
+     * }
+     * </pre>
+     */
+    public List<RepoHost> repos(String name) {
+        return getRepos.getTargets(repos, name);
     }
 
     @SuppressWarnings("unchecked")
@@ -285,6 +321,9 @@ public class HostServicesImpl implements HostServices {
             List<ClusterHost> c = getClusters.parseTarget(clusters, args);
             result.put("clusters", c);
             log.clustersInjected(this, service.getName(), c);
+            List<RepoHost> r = getRepos.parseTarget(repos, args);
+            result.put("repos", r);
+            log.reposInjected(this, service.getName(), r);
         }
         return unmodifiableMap(result);
     }

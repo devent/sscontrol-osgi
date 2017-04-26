@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.repo.git.internal;
 
 import static com.google.inject.Guice.createInjector;
-import static com.google.inject.util.Providers.of;
 
 import java.util.Map;
 
@@ -24,51 +23,38 @@ import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.globalpom.core.strings.ToStringService;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
+import com.anrisoftware.sscontrol.repo.git.external.GitRepoService;
+import com.anrisoftware.sscontrol.repo.git.internal.GitRepoImpl.GitRepoImplFactory;
 import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.google.inject.AbstractModule;
 
 /**
- * <i>Ssh</i> service.
+ * <i>Git</i> code repository service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
 @Service(HostServiceService.class)
-public class K8sClusterServiceImpl implements K8sService {
+public class GitRepoServiceImpl implements GitRepoService {
 
     @Inject
-    private K8sImplFactory sshFactory;
-
-    @Reference
-    private ToStringService toStringService;
+    private GitRepoImplFactory factory;
 
     @Override
     public String getName() {
-        return "k8s-master";
+        return "git";
     }
 
     @Override
     public HostService create(Map<String, Object> args) {
-        return sshFactory.create(args);
+        return factory.create(args);
     }
 
     @Activate
     protected void start() {
-        createInjector(new K8sModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-                bind(ToStringService.class).toProvider(of(toStringService));
-            }
-        }).injectMembers(this);
+        createInjector(new GitRepoModule()).injectMembers(this);
     }
 }

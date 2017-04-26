@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.internal;
+package com.anrisoftware.sscontrol.services.internal.repo;
+
+import static com.google.inject.Guice.createInjector;
 
 import javax.inject.Inject;
 
@@ -21,38 +23,36 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
+import com.anrisoftware.sscontrol.services.internal.repo.ReposImpl.ReposImplFactory;
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule;
+import com.anrisoftware.sscontrol.types.external.repo.Repos;
+import com.anrisoftware.sscontrol.types.external.repo.ReposService;
 
 /**
- * <i>Ssh</i> pre-script service.
+ * Creates the code repositories.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(K8sPreScriptService.class)
-public class K8sClusterPreScriptServiceImpl implements K8sPreScriptService {
+@Component(immediate = true)
+@Service(ReposService.class)
+public class ReposServiceImpl implements ReposService {
 
     @Inject
-    private K8sMasterPreScriptImplFactory sshPreScriptFactory;
+    private ReposImplFactory targetsFactory;
+
+    private Repos targets;
 
     @Override
-    public PreHost create() {
-        return sshPreScriptFactory.create();
+    public synchronized Repos create() {
+        if (targets == null) {
+            this.targets = targetsFactory.create();
+        }
+        return targets;
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new K8sPreModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-            }
-        }).injectMembers(this);
+        createInjector(new TargetsModule()).injectMembers(this);
     }
 }

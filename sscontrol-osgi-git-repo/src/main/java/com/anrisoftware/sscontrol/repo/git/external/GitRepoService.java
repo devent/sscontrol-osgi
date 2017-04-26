@@ -15,12 +15,13 @@
  */
 package com.anrisoftware.sscontrol.repo.git.external;
 
-/**
- * 
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
- */
-public interface CredentialsCertFactory extends CredentialsFactory {
+import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
 
+/**
+ * <i>Git</i> code repository service.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+public interface GitRepoService extends TargetServiceService {
 }

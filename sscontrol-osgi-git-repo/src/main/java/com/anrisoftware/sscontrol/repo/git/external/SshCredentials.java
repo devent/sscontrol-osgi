@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.types.external.credentials;
+package com.anrisoftware.sscontrol.repo.git.external;
 
 import java.net.URI;
 
@@ -10,5 +10,5 @@ import java.net.URI;
  */
 public interface SshCredentials extends Credentials {
 
-    URI getPublicKey();
+    URI getKey();
 }

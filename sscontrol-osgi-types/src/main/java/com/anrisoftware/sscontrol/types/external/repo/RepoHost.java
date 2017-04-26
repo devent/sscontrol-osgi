@@ -1,6 +1,5 @@
 package com.anrisoftware.sscontrol.types.external.repo;
 
-import com.anrisoftware.sscontrol.types.external.credentials.Credentials;
 import com.anrisoftware.sscontrol.types.external.ssh.TargetHost;
 
 /**
@@ -10,9 +9,5 @@ import com.anrisoftware.sscontrol.types.external.ssh.TargetHost;
  * @since 1.0
  */
 public interface RepoHost extends TargetHost {
-
-    RepoRemote getRemote();
-
-    Credentials getCredentials();
 
 }

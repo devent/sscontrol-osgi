@@ -1,14 +1,14 @@
-package com.anrisoftware.sscontrol.types.external.repo;
+package com.anrisoftware.sscontrol.repo.git.external;
 
 import java.net.URI;
 
 /**
- * Remote host.
+ * Repository remote host.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface RepoRemote {
+public interface Remote {
 
     URI getUri();
 }
