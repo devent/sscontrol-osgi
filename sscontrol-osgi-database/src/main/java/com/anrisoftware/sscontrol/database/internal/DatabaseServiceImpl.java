@@ -32,8 +32,8 @@ import com.anrisoftware.sscontrol.database.external.DatabaseService;
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.types.external.BindingHostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

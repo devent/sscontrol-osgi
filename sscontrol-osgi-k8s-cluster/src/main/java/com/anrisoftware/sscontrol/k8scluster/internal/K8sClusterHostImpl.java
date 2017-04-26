@@ -13,7 +13,7 @@ import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

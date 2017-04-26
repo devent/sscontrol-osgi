@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.types.external.HostSystem;
+import com.anrisoftware.sscontrol.types.external.host.HostSystem;
 import com.google.inject.assistedinject.Assisted;
 
 /**

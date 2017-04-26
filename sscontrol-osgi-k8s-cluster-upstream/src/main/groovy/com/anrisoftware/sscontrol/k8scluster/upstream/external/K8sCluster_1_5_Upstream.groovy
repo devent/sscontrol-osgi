@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.CredentialsNop.CredentialsNopFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
-import com.anrisoftware.sscontrol.types.external.ClusterService
+import com.anrisoftware.sscontrol.types.external.cluster.ClusterService
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j

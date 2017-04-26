@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 /**
  * <i>Hosts</i> pre-script service.

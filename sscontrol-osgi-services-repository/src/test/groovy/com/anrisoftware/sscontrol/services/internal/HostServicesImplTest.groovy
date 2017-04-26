@@ -48,7 +48,7 @@ import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubFactory
 import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubServiceImpl
 import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubFactory
 import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubServiceImpl
-import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice

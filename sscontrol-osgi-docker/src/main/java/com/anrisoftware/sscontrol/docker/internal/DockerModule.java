@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.docker.external.Registry;
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory;
 import com.anrisoftware.sscontrol.docker.internal.MirrorImpl.MirrorImplFactory;
 import com.anrisoftware.sscontrol.docker.internal.RegistryImpl.RegistryImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

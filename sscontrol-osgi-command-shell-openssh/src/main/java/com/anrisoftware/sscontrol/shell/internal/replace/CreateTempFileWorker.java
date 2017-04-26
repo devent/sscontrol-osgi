@@ -29,7 +29,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.replace.external.CreateTmpException;
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 import com.google.inject.assistedinject.Assisted;
 
 /**

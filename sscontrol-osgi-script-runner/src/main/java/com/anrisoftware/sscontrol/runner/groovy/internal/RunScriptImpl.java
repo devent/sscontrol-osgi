@@ -25,14 +25,14 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.HostServices;
-import com.anrisoftware.sscontrol.types.external.PreHost;
-import com.anrisoftware.sscontrol.types.external.RunScript;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServices;
+import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.external.run.RunScript;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

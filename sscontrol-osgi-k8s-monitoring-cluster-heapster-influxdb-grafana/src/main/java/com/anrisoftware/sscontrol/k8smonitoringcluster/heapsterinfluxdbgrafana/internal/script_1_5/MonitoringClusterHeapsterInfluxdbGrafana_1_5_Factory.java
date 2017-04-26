@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.script_1_5;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
 
 /**
  *

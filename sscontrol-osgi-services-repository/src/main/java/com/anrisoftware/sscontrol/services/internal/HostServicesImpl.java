@@ -32,22 +32,22 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.types.external.Cluster;
-import com.anrisoftware.sscontrol.types.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.Clusters;
-import com.anrisoftware.sscontrol.types.external.ClustersService;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.HostServices;
-import com.anrisoftware.sscontrol.types.external.HostServicesService;
-import com.anrisoftware.sscontrol.types.external.HostTargets;
-import com.anrisoftware.sscontrol.types.external.PreHostService;
-import com.anrisoftware.sscontrol.types.external.Ssh;
-import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.anrisoftware.sscontrol.types.external.TargetServiceService;
-import com.anrisoftware.sscontrol.types.external.Targets;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.types.external.cluster.Cluster;
+import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
+import com.anrisoftware.sscontrol.types.external.cluster.Clusters;
+import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServices;
+import com.anrisoftware.sscontrol.types.external.host.HostServicesService;
+import com.anrisoftware.sscontrol.types.external.host.HostTargets;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
+import com.anrisoftware.sscontrol.types.external.ssh.Targets;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
@@ -117,10 +117,20 @@ public class HostServicesImpl implements HostServices {
         };
     }
 
+    /**
+     * <pre>
+     * service 'ssh'
+     * </pre>
+     */
     public HostService call(String name) {
         return call(new HashMap<String, Object>(), name);
     }
 
+    /**
+     * <pre>
+     * service 'ssh', host: "192.168.0.3"
+     * </pre>
+     */
     public HostService call(Map<String, Object> args, String name) {
         HostServiceService service = availableServices.get(name);
         checkService(name, service);

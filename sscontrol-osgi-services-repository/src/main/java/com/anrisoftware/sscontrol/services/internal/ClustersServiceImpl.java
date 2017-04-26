@@ -24,8 +24,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
-import com.anrisoftware.sscontrol.types.external.Clusters;
-import com.anrisoftware.sscontrol.types.external.ClustersService;
+import com.anrisoftware.sscontrol.types.external.cluster.Clusters;
+import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
 
 /**
  * Creates the cluster targets.

@@ -30,7 +30,7 @@ import com.anrisoftware.sscontrol.dhclient.external.Dhclient
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice

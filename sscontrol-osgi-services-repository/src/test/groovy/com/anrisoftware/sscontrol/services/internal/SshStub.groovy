@@ -20,11 +20,11 @@ import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging
-import com.anrisoftware.sscontrol.types.external.HostService
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.HostServiceService
-import com.anrisoftware.sscontrol.types.external.Ssh
-import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.host.HostService
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost
+import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString
@@ -56,7 +56,7 @@ class SshStub implements Ssh {
      * @version 1.0
      */
     @ToString
-    static class SshStubServiceImpl implements HostServiceService {
+    static class SshStubServiceImpl implements TargetServiceService {
 
         @Inject
         SshStubFactory serviceFactory
@@ -89,9 +89,9 @@ class SshStub implements Ssh {
 
     String getGroup() {
         if (StringUtils.isEmpty(group)) {
-            return "default";
+            return "default"
         } else {
-            return group;
+            return group
         }
     }
 
@@ -127,6 +127,6 @@ class SshStub implements Ssh {
 
     @Override
     DebugLogging getDebugLogging() {
-        return null;
+        return null
     }
 }

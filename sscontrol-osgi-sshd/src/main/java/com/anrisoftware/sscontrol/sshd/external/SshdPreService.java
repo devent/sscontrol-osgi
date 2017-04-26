@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 /**
  * Sshd pre-script service.

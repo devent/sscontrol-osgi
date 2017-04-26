@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.services.internal;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.external.Ssh;
-import com.anrisoftware.sscontrol.types.external.SshHost;
-import com.anrisoftware.sscontrol.types.external.Targets;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.external.ssh.Targets;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 
 /**
  * Ssh host targets.

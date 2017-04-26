@@ -19,8 +19,8 @@ import java.util.List;
 
 import com.anrisoftware.sscontrol.types.external.BindingHost;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 
 /**
  * Database script service.

@@ -35,10 +35,10 @@ import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

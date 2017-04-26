@@ -18,10 +18,10 @@ package com.anrisoftware.sscontrol.shell.external.utils
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.Ssh
-import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost
 import com.google.inject.Injector
 
 import groovy.transform.ToString

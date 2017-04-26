@@ -45,10 +45,10 @@ import com.anrisoftware.sscontrol.flanneldocker.internal.BindingImpl.BindingImpl
 import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.services.external;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 
 /**
  * 

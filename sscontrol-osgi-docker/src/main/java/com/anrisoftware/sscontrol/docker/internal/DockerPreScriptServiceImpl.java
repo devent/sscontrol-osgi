@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.docker.external.DockerPreScriptService;
 import com.anrisoftware.sscontrol.docker.internal.DockerPreScriptImpl.DockerPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.host.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

@@ -26,11 +26,11 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.HostServices;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServices;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 
 /**
  *

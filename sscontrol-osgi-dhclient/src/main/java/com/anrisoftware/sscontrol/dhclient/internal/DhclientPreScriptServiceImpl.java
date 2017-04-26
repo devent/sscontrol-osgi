@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.dhclient.external.DhclientPreScriptService;
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.host.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

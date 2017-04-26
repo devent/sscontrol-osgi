@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.docker.internal;
 
 import com.anrisoftware.sscontrol.docker.internal.DockerPreScriptImpl.DockerPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.host.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

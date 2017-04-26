@@ -31,10 +31,10 @@ import com.anrisoftware.sscontrol.docker.external.Docker;
 import com.anrisoftware.sscontrol.docker.external.DockerService;
 import com.anrisoftware.sscontrol.docker.external.Registry;
 import com.anrisoftware.sscontrol.docker.internal.RegistryImpl.RegistryImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

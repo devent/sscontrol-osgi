@@ -30,7 +30,7 @@ import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.dhclient.external.OptionDeclaration;
 import com.anrisoftware.sscontrol.dhclient.external.RequestsStatement;
 import com.anrisoftware.sscontrol.dhclient.internal.OptionDeclarationImpl.OptionDeclarationImplFactory;
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

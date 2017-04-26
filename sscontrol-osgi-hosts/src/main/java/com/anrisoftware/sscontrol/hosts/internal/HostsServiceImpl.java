@@ -28,7 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 
 /**
  * Creates the hosts service.

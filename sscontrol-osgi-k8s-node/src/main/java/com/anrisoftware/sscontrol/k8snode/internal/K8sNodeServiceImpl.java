@@ -30,8 +30,8 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNodeService;
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 import com.google.inject.AbstractModule;
 
 /**

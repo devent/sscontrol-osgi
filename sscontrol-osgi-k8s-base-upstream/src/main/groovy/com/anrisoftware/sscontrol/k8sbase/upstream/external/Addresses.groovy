@@ -2,8 +2,8 @@ package com.anrisoftware.sscontrol.k8sbase.upstream.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.external.SshHost
-import com.anrisoftware.sscontrol.types.external.HostTargets
+import com.anrisoftware.sscontrol.types.external.host.HostTargets
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost
 import com.google.inject.assistedinject.Assisted
 
 /**

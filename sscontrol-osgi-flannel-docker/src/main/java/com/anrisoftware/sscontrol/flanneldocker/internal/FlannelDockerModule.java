@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactor
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.VxlanBackendImpl.VxlanBackendImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;

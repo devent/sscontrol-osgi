@@ -37,10 +37,10 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.external.Ssh
-import com.anrisoftware.sscontrol.types.external.TargetsService
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
+import com.anrisoftware.sscontrol.types.external.host.HostServices
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice

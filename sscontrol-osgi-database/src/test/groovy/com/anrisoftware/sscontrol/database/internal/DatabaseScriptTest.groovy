@@ -36,8 +36,8 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.types.external.BindingHostService
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.BindingHost.Host
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostServiceImpl
 import com.anrisoftware.sscontrol.types.groovy.internal.GroovyTypesModule
 import com.anrisoftware.sscontrol.types.internal.TypesModule

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.linux.external;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
 
 /**
  * 

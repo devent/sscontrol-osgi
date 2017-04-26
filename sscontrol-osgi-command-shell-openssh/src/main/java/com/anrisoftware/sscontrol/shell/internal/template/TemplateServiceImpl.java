@@ -36,8 +36,8 @@ import com.anrisoftware.sscontrol.shell.external.ScpService;
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule;
 import com.anrisoftware.sscontrol.template.external.Template;
 import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.anrisoftware.sscontrol.template.external.TemplateService;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
 
 /**

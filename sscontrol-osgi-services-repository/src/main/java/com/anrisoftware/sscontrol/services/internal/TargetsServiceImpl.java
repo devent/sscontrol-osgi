@@ -24,8 +24,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
-import com.anrisoftware.sscontrol.types.external.Targets;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.types.external.ssh.Targets;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 
 /**
  * Creates the ssh host targets.

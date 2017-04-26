@@ -31,10 +31,10 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.HostServicesService;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServicesService;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 import com.google.inject.AbstractModule;
 
 /**

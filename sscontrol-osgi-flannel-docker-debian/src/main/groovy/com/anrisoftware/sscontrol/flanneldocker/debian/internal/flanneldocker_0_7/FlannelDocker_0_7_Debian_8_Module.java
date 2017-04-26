@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0_7;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

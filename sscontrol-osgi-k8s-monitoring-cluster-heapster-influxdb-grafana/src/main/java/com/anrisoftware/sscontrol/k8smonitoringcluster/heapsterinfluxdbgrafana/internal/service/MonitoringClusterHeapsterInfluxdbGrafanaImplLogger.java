@@ -22,7 +22,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
 
 /**
  * Logging for {@link MonitoringClusterHeapsterInfluxdbGrafanaImpl}.
