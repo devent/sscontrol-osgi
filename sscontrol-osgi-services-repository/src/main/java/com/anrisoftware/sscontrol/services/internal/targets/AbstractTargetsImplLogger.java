@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.targets;
 
-import static com.anrisoftware.sscontrol.services.internal.TargetsImplLogger._.addHosts;
+import static com.anrisoftware.sscontrol.services.internal.targets.AbstractTargetsImplLogger._.addHosts;
 
 import javax.inject.Singleton;
 
@@ -28,7 +28,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  * @since 1.0
  */
 @Singleton
-final class TargetsImplLogger extends AbstractLogger {
+final class AbstractTargetsImplLogger extends AbstractLogger {
 
     enum _ {
 
@@ -49,7 +49,7 @@ final class TargetsImplLogger extends AbstractLogger {
     /**
      * Sets the context of the logger to {@link AbstractTargetsImpl}.
      */
-    public TargetsImplLogger() {
+    public AbstractTargetsImplLogger() {
         super(AbstractTargetsImpl.class);
     }
 

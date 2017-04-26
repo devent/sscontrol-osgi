@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.etcd.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdModule
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule

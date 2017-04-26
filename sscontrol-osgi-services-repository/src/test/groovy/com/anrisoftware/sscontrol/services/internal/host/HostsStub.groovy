@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal
+package com.anrisoftware.sscontrol.services.internal.host
 
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ import groovy.transform.ToString
  * @version 1.0
  */
 @ToString
-class HostnameStub implements HostService {
+class HostsStub implements HostService {
 
     /**
      *
@@ -40,9 +40,9 @@ class HostnameStub implements HostService {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    interface HostnameStubFactory {
+    interface HostsStubFactory {
 
-        HostnameStub create(Map<String, Object> args)
+        HostsStub create(Map<String, Object> args)
     }
 
     /**
@@ -52,10 +52,10 @@ class HostnameStub implements HostService {
      * @version 1.0
      */
     @ToString
-    static class HostnameStubServiceImpl implements HostServiceService {
+    static class HostsStubServiceImpl implements HostServiceService {
 
         @Inject
-        HostnameStubFactory serviceFactory
+        HostsStubFactory serviceFactory
 
         @Override
         String getName() {
@@ -67,17 +67,40 @@ class HostnameStub implements HostService {
         }
     }
 
-    String name
+    /**
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    static class Host {
+
+        String host
+
+        String address
+    }
+
+    List<Host> hosts
 
     List<SshHost> targets
 
     @Inject
-    HostnameStub(@Assisted Map<String, Object> args) {
+    HostsStub(@Assisted Map<String, Object> args) {
         this.targets = args.targets
+        this.hosts = []
     }
 
-    void set(String name) {
-        this.name = name
+    void host(def name, def address) {
+        hosts.add new Host(host: name, address: address)
+    }
+
+    List<Host> getHosts() {
+        hosts;
+    }
+
+    @Override
+    String getName() {
+        'host'
     }
 
     @Override

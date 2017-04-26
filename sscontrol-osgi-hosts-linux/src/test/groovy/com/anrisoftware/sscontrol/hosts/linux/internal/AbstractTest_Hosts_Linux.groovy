@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
