@@ -49,9 +49,9 @@ import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFact
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

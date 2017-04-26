@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 
 /**
  * Database script service.

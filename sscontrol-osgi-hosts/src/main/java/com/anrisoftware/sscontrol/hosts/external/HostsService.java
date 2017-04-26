@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.external;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 
 /**
  * <i>Hosts</i> service.

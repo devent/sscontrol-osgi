@@ -21,7 +21,7 @@ import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger._.hostAdded;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 
 /**
  * Logging for {@link SshImpl}.

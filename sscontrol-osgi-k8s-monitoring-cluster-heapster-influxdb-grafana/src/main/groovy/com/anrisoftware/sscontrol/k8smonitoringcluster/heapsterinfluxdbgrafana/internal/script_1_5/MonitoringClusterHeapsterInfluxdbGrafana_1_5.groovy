@@ -22,7 +22,7 @@ import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafana
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 

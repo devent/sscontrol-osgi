@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.ssh.linux.internal;
 
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory;
 import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux;
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

@@ -25,7 +25,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy
 import org.ops4j.pax.exam.spi.reactors.PerMethod
 
 import com.anrisoftware.sscontrol.hostname.external.HostnameService
-import com.anrisoftware.sscontrol.types.external.HostServiceService
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService
 
 /**
  *

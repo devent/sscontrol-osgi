@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.services.internal;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.external.Cluster;
-import com.anrisoftware.sscontrol.types.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.Clusters;
-import com.anrisoftware.sscontrol.types.external.ClustersService;
+import com.anrisoftware.sscontrol.types.external.cluster.Cluster;
+import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
+import com.anrisoftware.sscontrol.types.external.cluster.Clusters;
+import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
 
 /**
  * Cluster targets.

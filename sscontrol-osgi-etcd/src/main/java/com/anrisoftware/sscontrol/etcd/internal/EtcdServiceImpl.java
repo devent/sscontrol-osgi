@@ -27,8 +27,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.etcd.external.EtcdService;
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 
 /**
  * <i>Etcd</i> service.

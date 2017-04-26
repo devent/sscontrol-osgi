@@ -36,7 +36,7 @@ import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplate;
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.shell.internal.replace.ParseSedSyntax.ParseSedSyntaxFactory;
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 import com.google.inject.assistedinject.Assisted;
 
 /**

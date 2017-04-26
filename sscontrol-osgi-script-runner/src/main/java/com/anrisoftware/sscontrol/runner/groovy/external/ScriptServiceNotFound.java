@@ -15,8 +15,8 @@
  */
 package com.anrisoftware.sscontrol.runner.groovy.external;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.Parser;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.external.parser.Parser;
 
 /**
  *

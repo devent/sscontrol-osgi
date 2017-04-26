@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 /**
  * <i>Ssh</i> pre-script service.

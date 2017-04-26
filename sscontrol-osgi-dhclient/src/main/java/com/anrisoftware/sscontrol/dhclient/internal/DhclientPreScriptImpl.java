@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.PreHost;
 
 /**
  * <i>Dhclient</i> pre-script.

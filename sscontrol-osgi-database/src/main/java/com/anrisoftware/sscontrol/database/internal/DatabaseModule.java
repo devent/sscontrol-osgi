@@ -21,7 +21,7 @@ import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseA
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

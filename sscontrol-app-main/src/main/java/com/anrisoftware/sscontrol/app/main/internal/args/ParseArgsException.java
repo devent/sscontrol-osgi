@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.app.main.internal.args;
 
 import org.kohsuke.args4j.CmdLineException;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 
 /**
  * 

@@ -44,8 +44,8 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.sscontrol.copy.external.Copy;
 import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshRun.SshRunFactory;
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostTargets;
-import com.anrisoftware.sscontrol.types.external.TargetHost;
-import com.anrisoftware.sscontrol.types.external.TargetHostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostTargets;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetHost;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetHostService;
 
 /**
  *

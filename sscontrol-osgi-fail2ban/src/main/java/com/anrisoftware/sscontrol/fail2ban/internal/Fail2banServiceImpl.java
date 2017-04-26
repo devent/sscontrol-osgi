@@ -28,7 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 
 /**
  * Creates the hosts service.

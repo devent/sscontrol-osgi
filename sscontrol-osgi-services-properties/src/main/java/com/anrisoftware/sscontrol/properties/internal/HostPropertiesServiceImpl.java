@@ -27,8 +27,8 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

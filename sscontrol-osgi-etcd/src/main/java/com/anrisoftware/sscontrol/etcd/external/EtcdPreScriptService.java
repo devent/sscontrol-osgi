@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.etcd.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 /**
  * <i>K8s-Master</i> pre-script service.

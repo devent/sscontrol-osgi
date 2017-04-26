@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.shell.external.Scp;
 import com.anrisoftware.sscontrol.shell.external.Scp.ScpFactory;
 import com.anrisoftware.sscontrol.shell.external.ScpService;
 import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgsService;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.AbstractModule;
 
 /**

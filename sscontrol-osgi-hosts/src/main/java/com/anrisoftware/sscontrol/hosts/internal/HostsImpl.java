@@ -32,10 +32,10 @@ import com.anrisoftware.sscontrol.hosts.external.Host;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.internal.HostImpl.HostImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

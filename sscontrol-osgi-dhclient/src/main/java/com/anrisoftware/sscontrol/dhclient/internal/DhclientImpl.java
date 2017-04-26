@@ -29,10 +29,10 @@ import com.anrisoftware.sscontrol.dhclient.external.DeclareStatement;
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

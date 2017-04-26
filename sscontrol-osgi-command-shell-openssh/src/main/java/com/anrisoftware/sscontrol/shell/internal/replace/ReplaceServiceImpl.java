@@ -35,8 +35,8 @@ import com.anrisoftware.sscontrol.copy.external.CopyService;
 import com.anrisoftware.sscontrol.fetch.external.FetchService;
 import com.anrisoftware.sscontrol.replace.external.Replace;
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.anrisoftware.sscontrol.replace.external.ReplaceService;
-import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

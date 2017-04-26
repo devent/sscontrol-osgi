@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.services.internal;
 
 import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
-import com.anrisoftware.sscontrol.types.external.ClustersService;
-import com.anrisoftware.sscontrol.types.external.TargetsService;
+import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 import com.google.inject.AbstractModule;
 
 /**

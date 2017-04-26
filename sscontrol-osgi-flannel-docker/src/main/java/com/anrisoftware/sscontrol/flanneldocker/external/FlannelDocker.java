@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.flanneldocker.external;
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 
 /**
  * <i>Flannel-Docker</i> service.

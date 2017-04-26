@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8;
 
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

@@ -26,8 +26,8 @@ import org.ops4j.pax.exam.junit.PaxExam
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy
 import org.ops4j.pax.exam.spi.reactors.PerMethod
 
-import com.anrisoftware.sscontrol.types.external.HostServicesService
-import com.anrisoftware.sscontrol.types.external.ParserService
+import com.anrisoftware.sscontrol.types.external.host.HostServicesService
+import com.anrisoftware.sscontrol.types.external.parser.ParserService
 
 /**
  *

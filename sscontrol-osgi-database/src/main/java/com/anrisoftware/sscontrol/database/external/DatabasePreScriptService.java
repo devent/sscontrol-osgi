@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 /**
  * Database pre-script service.

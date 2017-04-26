@@ -45,7 +45,7 @@ import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 

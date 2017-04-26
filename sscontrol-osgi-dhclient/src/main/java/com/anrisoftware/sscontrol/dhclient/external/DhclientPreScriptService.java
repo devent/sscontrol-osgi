@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.external;
 
-import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.host.PreHostService;
 
 public interface DhclientPreScriptService extends PreHostService {
 

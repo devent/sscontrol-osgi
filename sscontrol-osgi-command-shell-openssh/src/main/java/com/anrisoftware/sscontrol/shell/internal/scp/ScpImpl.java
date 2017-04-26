@@ -36,8 +36,8 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.shell.external.Scp;
 import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -15,8 +15,8 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
-import com.anrisoftware.sscontrol.types.external.HostSystem
-import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.host.HostSystem
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost
 
 import groovy.transform.ToString
 

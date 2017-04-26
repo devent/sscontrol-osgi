@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.etcd.internal;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.app.AppException;
 
 /**
  * 

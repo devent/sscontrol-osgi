@@ -40,11 +40,11 @@ import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.template.external.Template
 import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
-import com.anrisoftware.sscontrol.types.external.HostService
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.HostServiceScript
-import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.host.HostService
+import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
+import com.anrisoftware.sscontrol.types.external.host.HostServices
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost
 import com.google.inject.assistedinject.Assisted
 
 import groovy.util.logging.Slf4j

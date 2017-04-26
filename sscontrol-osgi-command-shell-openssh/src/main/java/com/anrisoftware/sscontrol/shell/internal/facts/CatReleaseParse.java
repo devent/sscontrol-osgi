@@ -27,7 +27,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.shell.internal.facts.DefaultHostSystem.DefaultHostSystemFactory;
-import com.anrisoftware.sscontrol.types.external.HostSystem;
+import com.anrisoftware.sscontrol.types.external.host.HostSystem;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -28,11 +28,11 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Factory;
 import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Module;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.HostServices;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.external.host.HostServices;
+import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 
 /**
  *

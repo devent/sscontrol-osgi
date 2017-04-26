@@ -30,7 +30,7 @@ import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

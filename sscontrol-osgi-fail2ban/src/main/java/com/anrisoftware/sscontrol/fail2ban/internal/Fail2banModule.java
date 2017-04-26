@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.BanningImpl.BanningImplFactory;
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory;
 import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

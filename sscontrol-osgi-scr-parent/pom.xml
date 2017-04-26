@@ -40,6 +40,7 @@
         <module>../sscontrol-osgi-flannel-docker-debian</module>
         <module>../sscontrol-osgi-flannel-docker-systemd</module>
         <module>../sscontrol-osgi-flannel-docker-upstream</module>
+        <module>../sscontrol-osgi-git-repo</module>
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>

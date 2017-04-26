@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
-import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.host.HostServices
 
 import groovy.util.logging.Slf4j
 

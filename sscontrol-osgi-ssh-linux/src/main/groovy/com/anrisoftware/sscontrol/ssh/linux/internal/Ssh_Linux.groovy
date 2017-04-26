@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.types.external.Ssh
+import com.anrisoftware.sscontrol.types.external.ssh.Ssh
 
 import groovy.util.logging.Slf4j
 
