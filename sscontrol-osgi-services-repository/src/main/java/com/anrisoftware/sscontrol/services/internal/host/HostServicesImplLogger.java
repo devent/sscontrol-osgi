@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.services.internal.host;
 import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.addService;
 import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.availableServiceAdded;
 import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.clustersInjected;
+import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.reposInjected;
 import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.targetsInjected;
 
 import java.util.List;
@@ -28,6 +29,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
 import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
 
 /**
  * Logging for {@link HostServicesImpl}.
@@ -46,7 +48,9 @@ final class HostServicesImplLogger extends AbstractLogger {
 
         targetsInjected("Inject targets to {} targets {} from {}"),
 
-        clustersInjected("Inject clusters to {} clusters {} from {}");
+        clustersInjected("Inject clusters to {} clusters {} from {}"),
+
+        reposInjected("Inject repos to {} repos {} from {}");
 
         private String name;
 
@@ -86,4 +90,10 @@ final class HostServicesImplLogger extends AbstractLogger {
             List<ClusterHost> clusters) {
         trace(clustersInjected, name, clusters, services);
     }
+
+    void reposInjected(HostServicesImpl services, String name,
+            List<RepoHost> repos) {
+        trace(reposInjected, name, repos, services);
+    }
+
 }

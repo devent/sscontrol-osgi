@@ -16,8 +16,10 @@
 package com.anrisoftware.sscontrol.services.internal.targets;
 
 import com.anrisoftware.sscontrol.services.internal.cluster.ClustersImpl.ClustersImplFactory;
+import com.anrisoftware.sscontrol.services.internal.repo.ReposImpl.ReposImplFactory;
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory;
 import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
+import com.anrisoftware.sscontrol.types.external.repo.ReposService;
 import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 import com.google.inject.AbstractModule;
 
@@ -33,6 +35,7 @@ public class TargetsServiceModule extends AbstractModule {
     protected void configure() {
         bind(TargetsService.class).to(TargetsImplFactory.class);
         bind(ClustersService.class).to(ClustersImplFactory.class);
+        bind(ReposService.class).to(ReposImplFactory.class);
     }
 
 }

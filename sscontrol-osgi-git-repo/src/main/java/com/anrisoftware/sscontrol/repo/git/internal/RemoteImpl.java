@@ -15,25 +15,24 @@
  */
 package com.anrisoftware.sscontrol.repo.git.internal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.repo.git.external.Context;
+import com.anrisoftware.globalpom.core.resources.ToURI;
+import com.anrisoftware.sscontrol.repo.git.external.Remote;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Cluster.
+ * Repository remote host.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class ContextImpl implements Context {
+public class RemoteImpl implements Remote {
 
     /**
      *
@@ -41,29 +40,30 @@ public class ContextImpl implements Context {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface ContextImplFactory {
+    public interface RemoteImplFactory {
 
-        Context create(Map<String, Object> args);
+        Remote create(Map<String, Object> args);
+
     }
 
-    private String name;
+    private URI uri;
 
-    private final ContextImplLogger log;
+    private transient RemoteImplLogger log;
 
     @Inject
-    ContextImpl(ContextImplLogger log, @Assisted Map<String, Object> args) {
+    RemoteImpl(RemoteImplLogger log, @Assisted Map<String, Object> args) {
         this.log = log;
         parseArgs(args);
     }
 
-    public void setName(String name) {
-        this.name = name;
-        log.nameSet(this, name);
+    public void setUri(URI uri) {
+        this.uri = uri;
+        log.uriSet(this, uri);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public URI getUri() {
+        return uri;
     }
 
     @Override
@@ -72,9 +72,8 @@ public class ContextImpl implements Context {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("name");
-        assertThat("name=null", v, notNullValue());
-        setName(v.toString());
+        Object v = args.get("url");
+        setUri(ToURI.toURI(v));
     }
 
 }

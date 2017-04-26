@@ -1,23 +1,25 @@
 package com.anrisoftware.sscontrol.repo.git.internal;
 
-import static com.anrisoftware.sscontrol.repo.git.internal.ContextImplLogger.m.nameSet;
+import static com.anrisoftware.sscontrol.repo.git.internal.RemoteImplLogger.m.uriSet;
+
+import java.net.URI;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ContextImpl}.
- * 
+ * Logging for {@link RemoteImpl}.
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class ContextImplLogger extends AbstractLogger {
+final class RemoteImplLogger extends AbstractLogger {
 
     enum m {
 
-        nameSet("Name {} set for {}");
+        uriSet("URI {} set for {}");
 
         private String name;
 
@@ -32,13 +34,13 @@ final class ContextImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ContextImpl}.
+     * Sets the context of the logger to {@link RemoteImpl}.
      */
-    public ContextImplLogger() {
-        super(ContextImpl.class);
+    public RemoteImplLogger() {
+        super(RemoteImpl.class);
     }
 
-    void nameSet(ContextImpl cluster, String name) {
-        debug(nameSet, name, cluster);
+    void uriSet(RemoteImpl remote, URI uri) {
+        debug(uriSet, uri, remote);
     }
 }

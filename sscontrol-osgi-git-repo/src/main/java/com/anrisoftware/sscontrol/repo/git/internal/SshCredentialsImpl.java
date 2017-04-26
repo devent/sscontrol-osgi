@@ -15,22 +15,23 @@
  */
 package com.anrisoftware.sscontrol.repo.git.internal;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.repo.git.external.CredentialsAnon;
-import com.anrisoftware.sscontrol.repo.git.external.CredentialsCertFactory;
+import com.anrisoftware.globalpom.core.resources.ToURI;
+import com.anrisoftware.sscontrol.repo.git.external.SshCredentials;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Anonymous.
+ * SSH credentials.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CredentialsAnonImpl extends AbstractCredentials
-        implements CredentialsAnon {
+public class SshCredentialsImpl extends AbstractCredentials
+        implements SshCredentials {
 
     /**
      *
@@ -38,19 +39,40 @@ public class CredentialsAnonImpl extends AbstractCredentials
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface CredentialsAnonImplFactory extends CredentialsCertFactory {
+    public interface SshCredentialsImplFactory extends CredentialsFactory {
 
     }
 
+    private URI key;
+
+    private final SshCredentialsImplLogger log;
+
     @Inject
-    CredentialsAnonImpl(AbstractCredentialsLogger log,
+    SshCredentialsImpl(SshCredentialsImplLogger log,
             @Assisted Map<String, Object> args) {
-        super(log, args);
+        super(args);
+        this.log = log;
+        parseArgs(args);
     }
 
     @Override
     public String getType() {
-        return "anon";
+        return "ssh";
+    }
+
+    public void setKey(URI key) {
+        this.key = key;
+        log.keySet(this, key);
+    }
+
+    @Override
+    public URI getKey() {
+        return key;
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+        Object v = args.get("key");
+        setKey(ToURI.toURI(v));
     }
 
 }

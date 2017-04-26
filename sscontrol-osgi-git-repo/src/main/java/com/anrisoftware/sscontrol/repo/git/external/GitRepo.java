@@ -15,12 +15,18 @@
  */
 package com.anrisoftware.sscontrol.repo.git.external;
 
+import com.anrisoftware.sscontrol.types.external.repo.Repo;
+
 /**
- * Anonymous.
+ * <i>Git</i> code repository service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface CredentialsAnon extends Credentials {
+public interface GitRepo extends Repo {
+
+    Remote getRemote();
+
+    Credentials getCredentials();
 
 }
