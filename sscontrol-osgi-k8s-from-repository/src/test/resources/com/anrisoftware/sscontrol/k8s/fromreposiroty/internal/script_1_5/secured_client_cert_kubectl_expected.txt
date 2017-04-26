@@ -1,0 +1,14 @@
+config use-context default-system
+config set-cluster default --server=https://localhost:443 --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem
+config set-credentials default-default-admin --certificate-authority=/tmp/junit/junit/var/robobee/certs/default/client_ca.pem --client-certificate=/tmp/junit/junit/var/robobee/certs/default/client_cert.pem --client-key=/tmp/junit/junit/var/robobee/certs/default/client_key.pem
+config set-context default-system --cluster=default --user=default-default-admin
+config use-context default-system
+apply -f /tmp/junit/junit.tmp/grafana-service.yaml
+config use-context default-system
+apply -f /tmp/junit/junit.tmp/heapster-controller.yaml
+config use-context default-system
+apply -f /tmp/junit/junit.tmp/heapster-service.yaml
+config use-context default-system
+apply -f /tmp/junit/junit.tmp/influxdb-grafana-controller.yaml
+config use-context default-system
+apply -f /tmp/junit/junit.tmp/influxdb-service.yaml

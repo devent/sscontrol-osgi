@@ -27,7 +27,7 @@ import com.google.inject.Injector
 import groovy.transform.ToString
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -60,7 +60,7 @@ class SshFactory implements Ssh {
                 getPort: { 22 },
                 getKey: { UnixTestUtil.robobeeKey.toURI() },
                 getHostAddress: {
-                    InetAddress.getByName('robobee').getHostAddress();
+                    InetAddress.getByName('robobee').getHostAddress()
                 }
             ] as SshHost
         ]
@@ -97,6 +97,7 @@ class SshFactory implements Ssh {
 
     @Override
     String getGroup() {
+        'default'
     }
 
     void setHosts(List<SshHost> hosts) {
