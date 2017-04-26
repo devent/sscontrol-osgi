@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.ssh;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -23,27 +23,28 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
-import com.anrisoftware.sscontrol.types.external.cluster.Clusters;
-import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory;
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule;
+import com.anrisoftware.sscontrol.types.external.ssh.Targets;
+import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 
 /**
- * Creates the cluster targets.
+ * Creates the ssh host targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component(immediate = true)
-@Service(ClustersService.class)
-public class ClustersServiceImpl implements ClustersService {
+@Service(TargetsService.class)
+public class TargetsServiceImpl implements TargetsService {
 
     @Inject
-    private ClustersImplFactory targetsFactory;
+    private TargetsImplFactory targetsFactory;
 
-    private Clusters targets;
+    private Targets targets;
 
     @Override
-    public synchronized Clusters create() {
+    public synchronized Targets create() {
         if (targets == null) {
             this.targets = targetsFactory.create();
         }

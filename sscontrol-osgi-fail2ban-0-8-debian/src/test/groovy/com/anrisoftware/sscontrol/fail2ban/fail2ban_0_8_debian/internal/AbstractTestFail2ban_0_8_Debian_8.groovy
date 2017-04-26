@@ -29,7 +29,7 @@ import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule

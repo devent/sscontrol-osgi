@@ -27,10 +27,10 @@ import com.anrisoftware.sscontrol.hostname.external.Hostname
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.TargetsModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.external.ssh.Ssh
@@ -41,7 +41,7 @@ import com.google.inject.Guice
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0

@@ -30,10 +30,10 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.TargetsModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.host.HostServices

@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal
+package com.anrisoftware.sscontrol.services.internal.host
 
 import javax.inject.Inject
 
-import org.apache.commons.lang3.StringUtils
-
-import com.anrisoftware.sscontrol.types.external.DebugLogging
 import com.anrisoftware.sscontrol.types.external.host.HostService
 import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
+import com.anrisoftware.sscontrol.types.external.host.HostServiceService
 import com.anrisoftware.sscontrol.types.external.ssh.SshHost
-import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString
@@ -36,7 +32,7 @@ import groovy.transform.ToString
  * @version 1.0
  */
 @ToString
-class SshStub implements Ssh {
+class HostnameStub implements HostService {
 
     /**
      *
@@ -44,9 +40,9 @@ class SshStub implements Ssh {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    interface SshStubFactory {
+    interface HostnameStubFactory {
 
-        SshStub create(Map<String, Object> args)
+        HostnameStub create(Map<String, Object> args)
     }
 
     /**
@@ -56,10 +52,10 @@ class SshStub implements Ssh {
      * @version 1.0
      */
     @ToString
-    static class SshStubServiceImpl implements TargetServiceService {
+    static class HostnameStubServiceImpl implements HostServiceService {
 
         @Inject
-        SshStubFactory serviceFactory
+        HostnameStubFactory serviceFactory
 
         @Override
         String getName() {
@@ -71,44 +67,17 @@ class SshStub implements Ssh {
         }
     }
 
-    String group
+    String name
 
     List<SshHost> targets
 
-    List<SshHost> hosts
-
     @Inject
-    SshStub(@Assisted Map<String, Object> args) {
+    HostnameStub(@Assisted Map<String, Object> args) {
         this.targets = args.targets
-        this.hosts = []
     }
 
-    void group(String name) {
-        this.group = name
-    }
-
-    String getGroup() {
-        if (StringUtils.isEmpty(group)) {
-            return "default"
-        } else {
-            return group
-        }
-    }
-
-    void host(String name) {
-        hosts.add([
-            getHost: { name }
-        ] as SshHost)
-    }
-
-    @Override
-    String getName() {
-        'ssh'
-    }
-
-    @Override
-    List<SshHost> getHosts() {
-        hosts
+    void set(String name) {
+        this.name = name
     }
 
     @Override
@@ -123,10 +92,5 @@ class SshStub implements Ssh {
 
     @Override
     HostServiceProperties getServiceProperties() {
-    }
-
-    @Override
-    DebugLogging getDebugLogging() {
-        return null
     }
 }

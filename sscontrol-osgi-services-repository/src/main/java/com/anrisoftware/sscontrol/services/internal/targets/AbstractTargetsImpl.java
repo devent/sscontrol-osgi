@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.targets;
 
 import static java.lang.String.format;
 import static java.util.Collections.synchronizedList;
@@ -53,7 +53,7 @@ public abstract class AbstractTargetsImpl<HostType extends TargetHost, TargetTyp
     private final Set<String> groups;
 
     @Inject
-    private TargetsImplLogger log;
+    private AbstractTargetsImplLogger log;
 
     protected AbstractTargetsImpl() {
         this.hosts = synchronizedList(new ArrayList<TargetType>());

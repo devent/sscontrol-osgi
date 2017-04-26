@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.host;
 
 import java.util.Arrays;
 import java.util.List;

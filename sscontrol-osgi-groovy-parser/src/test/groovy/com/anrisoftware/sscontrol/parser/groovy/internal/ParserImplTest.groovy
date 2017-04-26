@@ -32,10 +32,10 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.Hostna
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.TargetsModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory

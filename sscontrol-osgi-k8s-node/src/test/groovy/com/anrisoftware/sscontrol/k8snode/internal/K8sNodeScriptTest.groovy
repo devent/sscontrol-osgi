@@ -34,11 +34,11 @@ import com.anrisoftware.sscontrol.k8snode.external.K8sNode
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.TargetsModule
-import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScriptModule
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshModule

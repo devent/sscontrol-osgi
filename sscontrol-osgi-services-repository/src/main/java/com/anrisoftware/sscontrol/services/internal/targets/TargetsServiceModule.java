@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.targets;
 
-import com.anrisoftware.sscontrol.services.internal.ClustersImpl.ClustersImplFactory;
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
+import com.anrisoftware.sscontrol.services.internal.cluster.ClustersImpl.ClustersImplFactory;
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory;
 import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
 import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
 import com.google.inject.AbstractModule;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.host;
 
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.addService;
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.availableServiceAdded;
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.clustersInjected;
-import static com.anrisoftware.sscontrol.services.internal.HostServicesImplLogger.m.targetsInjected;
+import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.addService;
+import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.availableServiceAdded;
+import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.clustersInjected;
+import static com.anrisoftware.sscontrol.services.internal.host.HostServicesImplLogger.m.targetsInjected;
 
 import java.util.List;
 

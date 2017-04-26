@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal;
+package com.anrisoftware.sscontrol.services.internal.host;
 
 import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
@@ -25,7 +25,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory;
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory;
 import com.anrisoftware.sscontrol.types.external.host.HostServices;
 import com.anrisoftware.sscontrol.types.external.host.HostServicesService;
 import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;

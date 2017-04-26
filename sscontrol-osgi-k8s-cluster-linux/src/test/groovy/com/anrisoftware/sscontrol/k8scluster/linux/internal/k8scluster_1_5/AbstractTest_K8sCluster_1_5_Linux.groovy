@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule

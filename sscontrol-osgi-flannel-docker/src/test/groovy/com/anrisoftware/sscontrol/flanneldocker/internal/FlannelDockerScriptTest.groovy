@@ -30,11 +30,11 @@ import com.anrisoftware.sscontrol.flanneldocker.external.FlannelDocker
 import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.TargetsModule
-import com.anrisoftware.sscontrol.services.internal.TargetsServiceModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService

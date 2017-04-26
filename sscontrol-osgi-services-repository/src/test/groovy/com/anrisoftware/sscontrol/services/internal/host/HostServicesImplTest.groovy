@@ -30,7 +30,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.services.internal
+package com.anrisoftware.sscontrol.services.internal.host
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -40,14 +40,16 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
-import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubFactory
-import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubServiceImpl
-import com.anrisoftware.sscontrol.services.internal.HostsStub.Host
-import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubFactory
-import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubServiceImpl
-import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubFactory
-import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostnameStub.HostnameStubFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostnameStub.HostnameStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.host.HostsStub.Host
+import com.anrisoftware.sscontrol.services.internal.host.HostsStub.HostsStubFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostsStub.HostsStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.host.SshStub.SshStubFactory
+import com.anrisoftware.sscontrol.services.internal.host.SshStub.SshStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
