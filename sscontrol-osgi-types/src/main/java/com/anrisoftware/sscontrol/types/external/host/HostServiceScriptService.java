@@ -29,16 +29,6 @@ import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 public interface HostServiceScriptService {
 
     /**
-     * Returns the service name.
-     */
-    String getName();
-
-    /**
-     * Returns the system.
-     */
-    HostSystem getSystem();
-
-    /**
      * Creates the script.
      */
     HostServiceScript create(HostServices repository, HostService service,

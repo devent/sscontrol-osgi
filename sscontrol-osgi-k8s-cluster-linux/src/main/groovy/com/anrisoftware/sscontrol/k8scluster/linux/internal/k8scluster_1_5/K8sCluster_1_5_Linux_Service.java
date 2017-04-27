@@ -61,12 +61,10 @@ public class K8sCluster_1_5_Linux_Service implements HostServiceScriptService {
     @Inject
     private K8sCluster_1_5_Linux_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

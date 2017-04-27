@@ -50,12 +50,10 @@ public class Ssh_Linux_Service implements HostServiceScriptService {
     @Inject
     private Ssh_Linux_Factory sshFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

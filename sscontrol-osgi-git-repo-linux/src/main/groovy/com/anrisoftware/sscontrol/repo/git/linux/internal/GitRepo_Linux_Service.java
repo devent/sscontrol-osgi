@@ -68,12 +68,10 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
     @Inject
     private GitRepo_Linux_Factory scriptFactory;
 
-    @Override
     public String getName() {
         return SERVICE_NAME;
     }
 
-    @Override
     public HostSystem getSystem() {
         return new AbstractHostSystem() {
 

@@ -49,12 +49,10 @@ public class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Service implements Hos
     @Inject
     private MonitoringClusterHeapsterInfluxdbGrafana_1_5_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }
