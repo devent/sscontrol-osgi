@@ -30,9 +30,7 @@ import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryScriptTest
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.service.FromRepositoryModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
@@ -40,8 +38,8 @@ import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.repo.git.internal.GitRepoModule
-import com.anrisoftware.sscontrol.repo.git.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
@@ -95,7 +93,7 @@ class FromRepositoryScriptTest {
 service "k8s-cluster"
 service "git", group: "wordpress-app" with {
     remote url: "git://git@github.com:devent/wordpress-app.git"
-    credentials "ssh", key: "id_rsa.pub"
+    credentials "ssh", key: "id_rsa"
 }
 service "from-repository", repo: "wordpress-app"
 """,
