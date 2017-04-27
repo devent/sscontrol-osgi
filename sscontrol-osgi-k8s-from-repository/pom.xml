@@ -17,7 +17,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8s.fromreposiroty</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8s.fromreposiroty.service</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

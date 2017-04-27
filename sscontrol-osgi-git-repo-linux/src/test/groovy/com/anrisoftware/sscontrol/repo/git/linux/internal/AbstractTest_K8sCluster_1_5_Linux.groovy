@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
+package com.anrisoftware.sscontrol.repo.git.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -26,19 +26,14 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Factory
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Module
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaModule
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaPreModule
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -57,7 +52,6 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
 import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -68,15 +62,15 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
+abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase {
 
-    static final URL kubectlCommand = Abstract_1_5_Test.class.getResource('kubectl_command.txt')
+    static final URL certCaPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_ca.txt')
 
-    static final URL certCaPem = Abstract_1_5_Test.class.getResource('cert_ca.txt')
+    static final URL certCertPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_cert.txt')
 
-    static final URL certCertPem = Abstract_1_5_Test.class.getResource('cert_cert.txt')
+    static final URL certKeyPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_key.txt')
 
-    static final URL certKeyPem = Abstract_1_5_Test.class.getResource('cert_key.txt')
+    static final URL kubectl = AbstractTest_K8sCluster_1_5_Linux.class.getResource('kubectl.txt')
 
     @Inject
     SshImplFactory sshFactory
@@ -85,20 +79,17 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
     CmdRunCaller cmdRunCaller
 
     @Inject
-    K8sClusterImplFactory clusterFactory
+    K8sClusterImplFactory serviceFactory
 
     @Inject
-    MonitoringClusterHeapsterInfluxdbGrafanaImplFactory serviceFactory
-
-    @Inject
-    FromRepository_1_5_Factory scriptFactory
+    GitRepo_Linux_Factory scriptFactory
 
     String getServiceName() {
-        'monitoring-cluster-heapster-influxdb-grafana'
+        'k8s-cluster'
     }
 
     String getScriptServiceName() {
-        'monitoring-cluster-heapster-influxdb-grafana/linux/0'
+        'k8s-cluster/linux/0'
     }
 
     void createDummyCommands(File dir) {
@@ -126,16 +117,12 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             'docker',
             'cat',
         ]
-        def binDir = new File(dir, '/usr/local/bin')
-        binDir.mkdirs()
-        createCommand kubectlCommand, binDir, 'kubectl'
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'monitoring-cluster-heapster-influxdb-grafana', serviceFactory
-        services.putAvailableScriptService 'monitoring-cluster-heapster-influxdb-grafana/linux/0', scriptFactory
+        services.putAvailableService 'k8s-cluster', serviceFactory
+        services.putAvailableScriptService 'k8s-cluster/linux/0', scriptFactory
     }
 
     List getAdditionalModules() {
@@ -147,10 +134,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             new K8sClusterModule(),
             new K8sClusterPreModule(),
             new K8sCluster_1_5_Upstream_Module(),
-            new K8sCluster_1_5_Linux_Module(),
-            new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
-            new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),
-            new FromRepository_1_5_Module(),
+            new GitRepo_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -173,7 +157,6 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
 
                 @Override
                 protected void configure() {
-                    bind HostServiceScriptService.class to K8sCluster_1_5_Linux_Service.class
                 }
             }
         ]

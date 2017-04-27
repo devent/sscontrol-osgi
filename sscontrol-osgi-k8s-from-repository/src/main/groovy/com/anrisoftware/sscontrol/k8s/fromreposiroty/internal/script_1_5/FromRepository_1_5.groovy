@@ -21,7 +21,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafana
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
@@ -50,10 +50,10 @@ class FromRepository_1_5 extends ScriptBase {
 
     @Override
     def run() {
-        MonitoringClusterHeapsterInfluxdbGrafana service = this.service
+        FromRepository service = this.service
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
-        File dir = createTmpDir()
+        File dir = checkoutRepo()
         try {
             def file = "$dir/grafana-service.yaml"
             template resource: templates.getResource('grafana_service'), name: 'grafanaService', dest: file, vars: [:] call()
