@@ -7,8 +7,8 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.FromRepository_1_5_Factory
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.FromRepository_1_5_Module
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Factory
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Module
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule

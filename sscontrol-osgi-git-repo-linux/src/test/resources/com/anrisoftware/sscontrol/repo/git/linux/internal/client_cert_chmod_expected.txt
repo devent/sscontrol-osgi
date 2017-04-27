@@ -1,0 +1,5 @@
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
++x /tmp/junit/junit/usr/local/bin/kubectl
