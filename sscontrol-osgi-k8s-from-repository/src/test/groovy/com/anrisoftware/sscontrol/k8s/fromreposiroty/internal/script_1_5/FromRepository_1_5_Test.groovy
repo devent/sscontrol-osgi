@@ -29,30 +29,34 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test extends Abstract_1_5_Test {
+class FromRepository_1_5_Test extends Abstract_1_5_Test {
 
     @Test
-    void "unsecured_client_cert"() {
+    void "git_ssh_unsecured_client_cert"() {
         def test = [
-            name: "unsecured_client_cert",
+            name: "git_ssh_unsecured_client_cert",
             input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default' with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
+service "git", group: "wordpress-app" with {
+    remote url: "git://git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "${idRsa}"
+}
+service "from-repository", repo: "wordpress-app"
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 File binDir = new File(dir, '/usr/local/bin')
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, './'), "grafana-service.yaml", "${args.test.name}_grafana_service_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, './'), "heapster-controller.yaml", "${args.test.name}_heapster_controller_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, './'), "heapster-service.yaml", "${args.test.name}_heapster_service_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, './'), "influxdb-grafana-controller.yaml", "${args.test.name}_influxdb_grafana_controller_yaml_expected.txt"
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, new File(gen, './'), "influxdb-service.yaml", "${args.test.name}_influxdb_service_yaml_expected.txt"
+                assertFileResource FromRepository_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+                assertFileResource FromRepository_1_5_Test, new File(gen, './'), "grafana-service.yaml", "${args.test.name}_grafana_service_yaml_expected.txt"
+                assertFileResource FromRepository_1_5_Test, new File(gen, './'), "heapster-controller.yaml", "${args.test.name}_heapster_controller_yaml_expected.txt"
+                assertFileResource FromRepository_1_5_Test, new File(gen, './'), "heapster-service.yaml", "${args.test.name}_heapster_service_yaml_expected.txt"
+                assertFileResource FromRepository_1_5_Test, new File(gen, './'), "influxdb-grafana-controller.yaml", "${args.test.name}_influxdb_grafana_controller_yaml_expected.txt"
+                assertFileResource FromRepository_1_5_Test, new File(gen, './'), "influxdb-service.yaml", "${args.test.name}_influxdb_service_yaml_expected.txt"
             },
         ]
         doTest test
@@ -74,7 +78,7 @@ service "monitoring-cluster-heapster-influxdb-grafana", cluster: 'default'
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 File binDir = new File(dir, '/usr/local/bin')
-                assertFileResource MonitoringClusterHeapsterInfluxdbGrafana_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+                assertFileResource FromRepository_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

@@ -24,12 +24,15 @@ import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.host.HostServices;
+import com.anrisoftware.sscontrol.types.external.host.HostSystem;
+import com.anrisoftware.sscontrol.types.external.host.HostSystem.AbstractHostSystem;
 import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 
 /**
@@ -42,19 +45,51 @@ import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 @Service(HostServiceScriptService.class)
 public class FromRepository_1_5_Service implements HostServiceScriptService {
 
+    static final String SERVICE_NAME = "from-repository";
+
+    @Property(value = SERVICE_NAME)
+    static final String SERVICE_NAME_PROPERTY = "service.name";
+
     static final String SYSTEM_VERSION = "0";
 
+    @Property(value = SYSTEM_VERSION)
+    static final String SERVICE_SYSTEM_VERSION_PROPERTY = "service.system.version";
+
     static final String SYSTEM_NAME = "linux";
+
+    @Property(value = SYSTEM_NAME)
+    static final String SERVICE_SYSTEM_NAME_PROPERTY = "service.system.name";
+
+    static final String SYSTEM_SYSTEM = "linux";
+
+    @Property(value = SYSTEM_SYSTEM)
+    static final String SERVICE_SYSTEM_SYSTEM_PROPERTY = "service.system.system";
 
     @Inject
     private FromRepository_1_5_Factory scriptFactory;
 
-    public String getSystemName() {
-        return SYSTEM_NAME;
+    public String getName() {
+        return SERVICE_NAME;
     }
 
-    public String getSystemVersion() {
-        return SYSTEM_VERSION;
+    public HostSystem getSystem() {
+        return new AbstractHostSystem() {
+
+            @Override
+            public String getVersion() {
+                return SYSTEM_VERSION;
+            }
+
+            @Override
+            public String getSystem() {
+                return SYSTEM_SYSTEM;
+            }
+
+            @Override
+            public String getName() {
+                return SYSTEM_NAME;
+            }
+        };
     }
 
     @Override

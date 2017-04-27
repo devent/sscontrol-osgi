@@ -26,8 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Factory
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.service.internal.script_1_5.FromRepository_1_5_Module
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryModule
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
@@ -36,9 +36,9 @@ import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterI
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaModule
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaPreModule
-import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service.MonitoringClusterHeapsterInfluxdbGrafanaImpl.MonitoringClusterHeapsterInfluxdbGrafanaImplFactory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -72,6 +72,8 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
 
     static final URL kubectlCommand = Abstract_1_5_Test.class.getResource('kubectl_command.txt')
 
+    static final URL idRsa = Abstract_1_5_Test.class.getResource('id_rsa.txt')
+
     static final URL certCaPem = Abstract_1_5_Test.class.getResource('cert_ca.txt')
 
     static final URL certCertPem = Abstract_1_5_Test.class.getResource('cert_cert.txt')
@@ -88,17 +90,23 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
     K8sClusterImplFactory clusterFactory
 
     @Inject
-    MonitoringClusterHeapsterInfluxdbGrafanaImplFactory serviceFactory
+    GitRepoImplFactory gitFactory
+
+    @Inject
+    GitRepo_Linux_Factory gitScriptFactory
+
+    @Inject
+    FromRepositoryImplFactory serviceFactory
 
     @Inject
     FromRepository_1_5_Factory scriptFactory
 
     String getServiceName() {
-        'monitoring-cluster-heapster-influxdb-grafana'
+        'from-repository'
     }
 
     String getScriptServiceName() {
-        'monitoring-cluster-heapster-influxdb-grafana/linux/0'
+        'from-repository/linux/0'
     }
 
     void createDummyCommands(File dir) {
@@ -134,8 +142,10 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'monitoring-cluster-heapster-influxdb-grafana', serviceFactory
-        services.putAvailableScriptService 'monitoring-cluster-heapster-influxdb-grafana/linux/0', scriptFactory
+        services.putAvailableService 'git', gitFactory
+        services.putAvailableScriptService 'git/linux/0', gitScriptFactory
+        services.putAvailableService 'from-repository', serviceFactory
+        services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
     }
 
     List getAdditionalModules() {
@@ -148,9 +158,9 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             new K8sClusterPreModule(),
             new K8sCluster_1_5_Upstream_Module(),
             new K8sCluster_1_5_Linux_Module(),
-            new MonitoringClusterHeapsterInfluxdbGrafanaModule(),
-            new MonitoringClusterHeapsterInfluxdbGrafanaPreModule(),
+            new FromRepositoryModule(),
             new FromRepository_1_5_Module(),
+            new GitRepoModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
