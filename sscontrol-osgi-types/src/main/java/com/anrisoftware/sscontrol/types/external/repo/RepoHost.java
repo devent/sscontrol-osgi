@@ -10,4 +10,8 @@ import com.anrisoftware.sscontrol.types.external.ssh.TargetHost;
  */
 public interface RepoHost extends TargetHost {
 
+    /**
+     * The type of the repository.
+     */
+    String getType();
 }

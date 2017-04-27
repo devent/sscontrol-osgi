@@ -23,10 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.host.HostSystem;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappingsProperties;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -34,7 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 public class SshHostSystemImpl implements HostSystem {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -49,9 +50,17 @@ public class SshHostSystemImpl implements HostSystem {
 
     private String name;
 
+    private String system;
+
     @Inject
-    public SshHostSystemImpl(@Assisted Map<String, Object> args) {
-        parseArgs(args);
+    public SshHostSystemImpl(SystemNameMappingsProperties mappingsProperties,
+            @Assisted Map<String, Object> args) {
+        parseArgs(mappingsProperties, args);
+    }
+
+    @Override
+    public String getSystem() {
+        return system;
     }
 
     @Override
@@ -70,17 +79,32 @@ public class SshHostSystemImpl implements HostSystem {
                 .append("version", version).toString();
     }
 
-    private void parseArgs(Map<String, Object> args) {
+    private void parseArgs(SystemNameMappingsProperties mappingsProperties,
+            Map<String, Object> args) {
         Object v = args.get("system");
         if (v != null) {
-            parseSystem(v.toString());
+            parseSystem(mappingsProperties, v.toString());
         }
     }
 
-    private void parseSystem(String string) {
-        String[] split = StringUtils.split(string, "-");
-        this.name = split[0];
-        this.version = split[1];
+    private void parseSystem(SystemNameMappingsProperties mappingsProperties,
+            String string) {
+        String[] split = StringUtils.split(string, "/");
+        int i = 0;
+        String system = null;
+        String name;
+        String version;
+        if (split.length == 3) {
+            system = split[i++];
+        }
+        name = split[i++];
+        if (system == null) {
+            system = mappingsProperties.getMapping(name);
+        }
+        version = split[i++];
+        this.system = system;
+        this.name = name;
+        this.version = version;
     }
 
 }

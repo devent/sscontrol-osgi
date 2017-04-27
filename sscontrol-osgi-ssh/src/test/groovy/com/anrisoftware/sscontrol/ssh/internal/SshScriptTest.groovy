@@ -31,6 +31,7 @@ import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.host.HostServices
@@ -352,7 +353,7 @@ service "ssh", group: "master" with {
         def test = [
             name: "host_system_arg",
             input: """
-service "ssh", host: "192.168.0.2", system: "debian-8"
+service "ssh", host: "192.168.0.2", system: "debian/8"
 """,
             expected: { HostServices services ->
                 assert services.getServices('ssh').size() == 1
@@ -362,6 +363,7 @@ service "ssh", host: "192.168.0.2", system: "debian-8"
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
                 HostSystem sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
             },
@@ -374,7 +376,7 @@ service "ssh", host: "192.168.0.2", system: "debian-8"
         def test = [
             name: "system_arg_hosts",
             input: """
-service "ssh", system: "debian-8" with {
+service "ssh", system: "debian/8" with {
     host "192.168.0.2"
     host "192.168.0.3"
 }
@@ -387,11 +389,13 @@ service "ssh", system: "debian-8" with {
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
                 HostSystem sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
                 host = ssh.hosts[1]
                 assert host.host == "192.168.0.3"
                 sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
             },
@@ -405,8 +409,8 @@ service "ssh", system: "debian-8" with {
             name: "service_hosts",
             input: """
 service "ssh" with {
-    host host: "192.168.0.2", system: "debian-8"
-    host host: "192.168.0.3", system: "debian-9"
+    host host: "192.168.0.2", system: "debian/8"
+    host host: "192.168.0.3", system: "debian/9"
 }
 """,
             expected: { HostServices services ->
@@ -417,11 +421,13 @@ service "ssh" with {
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
                 HostSystem sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
                 host = ssh.hosts[1]
                 assert host.host == "192.168.0.3"
                 sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "9"
             },
@@ -435,8 +441,8 @@ service "ssh" with {
             name: "service_hosts_system",
             input: """
 service "ssh" with {
-    host "192.168.0.2", system: "debian-8"
-    host "192.168.0.3", system: "debian-9"
+    host "192.168.0.2", system: "debian/8"
+    host "192.168.0.3", system: "debian/9"
 }
 """,
             expected: { HostServices services ->
@@ -447,11 +453,13 @@ service "ssh" with {
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
                 HostSystem sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
                 host = ssh.hosts[1]
                 assert host.host == "192.168.0.3"
                 sys = host.system
+                assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "9"
             },
@@ -480,6 +488,7 @@ service "ssh" with {
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new AbstractModule() {
 

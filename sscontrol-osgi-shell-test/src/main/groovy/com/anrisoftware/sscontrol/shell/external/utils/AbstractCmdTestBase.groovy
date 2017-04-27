@@ -45,7 +45,7 @@ abstract class AbstractCmdTestBase {
     @Before
     void checkProfile() {
         def localTests = System.getProperty('project.custom.local.tests.enabled')
-        assumeTrue localTests == true
+        assumeTrue localTests == 'true'
     }
 
     void doTest(Map test, File tmp, int k=0) {

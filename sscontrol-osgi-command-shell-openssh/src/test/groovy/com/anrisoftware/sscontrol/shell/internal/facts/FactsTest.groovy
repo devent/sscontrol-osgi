@@ -69,6 +69,7 @@ class FactsTest extends AbstractCmdTestBase {
             args: [:],
             expected: { Map args ->
                 Facts facts = args.cmd
+                assert facts.system.system == 'linux'
                 assert facts.system.name == 'debian'
                 assert facts.system.version == '8'
 

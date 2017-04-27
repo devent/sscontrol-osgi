@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.types.external.host.HostSystem;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -39,7 +39,7 @@ import com.google.inject.assistedinject.Assisted;
 public class CatReleaseParse implements Callable<HostSystem> {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

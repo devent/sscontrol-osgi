@@ -25,10 +25,11 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.host.HostSystem;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappingsProperties;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -36,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 public class DefaultHostSystem implements HostSystem {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -51,10 +52,28 @@ public class DefaultHostSystem implements HostSystem {
 
     private String version;
 
+    private String system;
+
     @Inject
-    DefaultHostSystem(@Assisted Map<String, Object> args) {
+    DefaultHostSystem(SystemNameMappingsProperties mappingsProperties,
+            @Assisted Map<String, Object> args) {
         this.name = args.get("name").toString();
+        Object v = args.get("system");
+        if (v != null) {
+            this.system = v.toString();
+        } else {
+            this.system = mappingsProperties.getMapping(name);
+        }
         this.version = args.get("version").toString();
+    }
+
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
+    @Override
+    public String getSystem() {
+        return system;
     }
 
     public void setName(String name) {
@@ -77,8 +96,8 @@ public class DefaultHostSystem implements HostSystem {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", name)
-                .append("version", version).toString();
+        return new ToStringBuilder(this).append("system", system)
+                .append("name", name).append("version", version).toString();
     }
 
 }
