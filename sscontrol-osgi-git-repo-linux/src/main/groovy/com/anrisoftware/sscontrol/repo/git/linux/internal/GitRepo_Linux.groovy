@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.types.external.repo.RepoHost
 
 import groovy.util.logging.Slf4j
 
@@ -43,12 +44,11 @@ class GitRepo_Linux extends ScriptBase {
         linuxPropertiesProvider.get()
     }
 
-    def runKubectl(Map vars) {
-        upstreamLinux.runKubectl vars
-    }
-
-    def uploadCertificates(Map vars) {
-        upstreamLinux.uploadCertificates(vars)
+    /**
+     * Checkouts the repository and returns the base directory.
+     */
+    File checkoutRepo(Map vars) {
+        RepoHost repo = vars.repo
     }
 
     @Override

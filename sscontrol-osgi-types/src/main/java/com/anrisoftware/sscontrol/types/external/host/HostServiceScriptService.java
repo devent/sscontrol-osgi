@@ -29,14 +29,14 @@ import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
 public interface HostServiceScriptService {
 
     /**
-     * Returns the system name, for example {@code "ubuntu"}.
+     * Returns the service name.
      */
-    String getSystemName();
+    String getName();
 
     /**
-     * Returns the system version, for example {@code "14.04"}.
+     * Returns the system.
      */
-    String getSystemVersion();
+    HostSystem getSystem();
 
     /**
      * Creates the script.

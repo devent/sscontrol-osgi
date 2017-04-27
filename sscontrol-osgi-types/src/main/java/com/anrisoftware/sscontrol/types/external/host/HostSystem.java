@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.types.external.host;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  *
  *
@@ -22,6 +26,32 @@ package com.anrisoftware.sscontrol.types.external.host;
  * @version 1.0
  */
 public interface HostSystem {
+
+    /**
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    public abstract class AbstractHostSystem implements HostSystem {
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this).append("system", getSystem())
+                    .append("name", getName()).append("version", getVersion())
+                    .toString();
+        }
+
+        @Override
+        public int hashCode() {
+            return HashCodeBuilder.reflectionHashCode(this, false);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return EqualsBuilder.reflectionEquals(this, obj, false);
+        }
+    }
 
     /**
      * Returns system name, for example linux, windows, macos.
