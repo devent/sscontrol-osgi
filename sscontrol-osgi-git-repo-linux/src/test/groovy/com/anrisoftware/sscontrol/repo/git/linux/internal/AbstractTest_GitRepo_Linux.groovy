@@ -26,14 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Module
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -51,7 +45,6 @@ import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.external.host.HostServices
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -62,15 +55,9 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase {
+abstract class AbstractTest_GitRepo_Linux extends AbstractScriptTestBase {
 
-    static final URL certCaPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = AbstractTest_K8sCluster_1_5_Linux.class.getResource('cert_key.txt')
-
-    static final URL kubectl = AbstractTest_K8sCluster_1_5_Linux.class.getResource('kubectl.txt')
+    static final URL idRsa = AbstractTest_GitRepo_Linux.class.getResource('id_rsa.txt')
 
     @Inject
     SshImplFactory sshFactory
@@ -79,17 +66,17 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
     CmdRunCaller cmdRunCaller
 
     @Inject
-    K8sClusterImplFactory serviceFactory
+    GitRepoImplFactory serviceFactory
 
     @Inject
     GitRepo_Linux_Factory scriptFactory
 
     String getServiceName() {
-        'k8s-cluster'
+        'git'
     }
 
     String getScriptServiceName() {
-        'k8s-cluster/linux/0'
+        'git/linux/0'
     }
 
     void createDummyCommands(File dir) {
@@ -102,38 +89,23 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
             'scp',
             'rm',
             'cp',
-            'apt-get',
-            'systemctl',
-            'which',
-            'sha256sum',
             'mv',
-            'basename',
-            'wget',
-            'useradd',
-            'tar',
-            'grep',
-            'curl',
-            'sleep',
-            'docker',
             'cat',
+            'git',
         ]
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'k8s-cluster', serviceFactory
-        services.putAvailableScriptService 'k8s-cluster/linux/0', scriptFactory
+        services.putAvailableService 'git', serviceFactory
+        services.putAvailableScriptService 'git/linux/0', scriptFactory
     }
 
     List getAdditionalModules() {
         [
             new SshModule(),
             new SshPreModule(),
-            new K8sModule(),
-            new K8sPreModule(),
-            new K8sClusterModule(),
-            new K8sClusterPreModule(),
-            new K8sCluster_1_5_Upstream_Module(),
+            new GitRepoModule(),
             new GitRepo_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
@@ -152,7 +124,6 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
             new TemplateResModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
-            new TlsModule(),
             new AbstractModule() {
 
                 @Override

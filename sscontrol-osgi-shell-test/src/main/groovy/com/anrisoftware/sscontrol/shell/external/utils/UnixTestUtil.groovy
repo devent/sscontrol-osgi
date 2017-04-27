@@ -84,6 +84,7 @@ class UnixTestUtil {
         str = str.replaceAll(/junit\d+/, 'junit')
         str = str.replaceAll(/replace\d+/, 'replace')
         str = str.replaceAll(/random\d+/, 'random')
+        str = str.replaceAll(/id_rsa\d+/, 'id_rsa')
         str = str.replaceAll(/$user/, 'user')
     }
 
@@ -118,7 +119,7 @@ class UnixTestUtil {
     static String remoteCommand(String cmd, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Plain(
                 new SSH(host, port, user, key))
-                .exec(cmd);
+                .exec(cmd)
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')

@@ -17,8 +17,12 @@ package com.anrisoftware.sscontrol.repo.git.linux.internal
 
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.repo.git.service.external.Credentials
+import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo
 import com.anrisoftware.sscontrol.types.external.repo.RepoHost
 
 import groovy.util.logging.Slf4j
@@ -37,6 +41,8 @@ class GitRepo_Linux extends ScriptBase {
 
     @Override
     def run() {
+        GitRepo service = this.service
+        checkoutRepo repo: service.hosts[0]
     }
 
     @Override
@@ -49,6 +55,39 @@ class GitRepo_Linux extends ScriptBase {
      */
     File checkoutRepo(Map vars) {
         RepoHost repo = vars.repo
+        log.info 'Checkout repository {}', repo
+        Credentials credentials = repo.repo.credentials
+        File dir = vars.dir ? vars.dir : createTmpDir()
+        vars.dir = dir
+        def c = "credentials${credentials.type.capitalize()}"(vars)
+        shell """
+cd "${dir}"
+$c
+git clone ${repo.repo.remote.uri}
+""" call()
+        return dir
+    }
+
+    def credentialsSsh(Map vars) {
+        RepoHost repo = vars.repo
+        Credentials credentials = repo.repo.credentials
+        log.info 'Setup credentials {}', credentials
+        File file = new File(vars.dir, "id_rsa")
+        File tmp = File.createTempFile("id_rsa", null)
+        IOUtils.copy credentials.key.toURL().openStream(), new FileOutputStream(tmp)
+        try {
+            copy src: tmp, dest: file call()
+        } finally {
+            tmp.delete()
+        }
+        """
+cat <<EOF > ssh-wrapper
+#!/bin/bash
+ssh -i "${file}" \$1 \$2
+EOF
+
+export GIT_SSH=ssh-wrapper
+"""
     }
 
     @Override
