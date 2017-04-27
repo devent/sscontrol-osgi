@@ -50,12 +50,10 @@ public class Hosts_Linux_Service implements HostServiceScriptService {
     @Inject
     private Hosts_Linux_Factory hostsFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

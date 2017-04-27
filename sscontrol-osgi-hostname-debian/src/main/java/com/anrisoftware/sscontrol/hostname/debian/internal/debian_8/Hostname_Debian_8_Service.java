@@ -26,8 +26,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Factory;
-import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Module;
 import com.anrisoftware.sscontrol.types.external.host.HostService;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
@@ -51,12 +49,10 @@ public class Hostname_Debian_8_Service implements HostServiceScriptService {
     @Inject
     private Hostname_Debian_8_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

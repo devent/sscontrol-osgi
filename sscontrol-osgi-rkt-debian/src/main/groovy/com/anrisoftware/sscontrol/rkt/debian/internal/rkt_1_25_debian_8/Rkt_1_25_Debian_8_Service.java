@@ -49,12 +49,10 @@ public class Rkt_1_25_Debian_8_Service implements HostServiceScriptService {
     @Inject
     private Rkt_Debian_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

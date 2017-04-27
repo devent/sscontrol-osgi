@@ -49,12 +49,10 @@ public class FromRepository_1_5_Service implements HostServiceScriptService {
     @Inject
     private FromRepository_1_5_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

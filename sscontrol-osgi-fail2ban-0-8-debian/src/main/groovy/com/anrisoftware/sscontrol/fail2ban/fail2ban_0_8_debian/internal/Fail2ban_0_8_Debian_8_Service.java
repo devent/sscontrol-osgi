@@ -51,12 +51,10 @@ public class Fail2ban_0_8_Debian_8_Service implements HostServiceScriptService {
     @Inject
     private Fail2ban_0_8_Debian_8_Factory hostnameFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

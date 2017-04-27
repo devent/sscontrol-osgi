@@ -50,12 +50,10 @@ public class K8sMaster_1_5_Debian_8_Service
     @Inject
     private K8sMaster_1_5_Debian_8_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

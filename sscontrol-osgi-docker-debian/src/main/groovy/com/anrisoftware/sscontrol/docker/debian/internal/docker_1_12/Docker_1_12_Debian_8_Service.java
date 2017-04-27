@@ -49,12 +49,10 @@ public class Docker_1_12_Debian_8_Service implements HostServiceScriptService {
     @Inject
     private Docker_1_12_Debian_8_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }

@@ -49,12 +49,10 @@ public class Sshd_Debian_8_Service implements HostServiceScriptService {
     @Inject
     private Sshd_Debian_8_Factory scriptFactory;
 
-    @Override
     public String getSystemName() {
         return SYSTEM_NAME;
     }
 
-    @Override
     public String getSystemVersion() {
         return SYSTEM_VERSION;
     }
