@@ -43,6 +43,11 @@ public class GitRepoHostImpl implements GitRepoHost {
     }
 
     @Override
+    public String getType() {
+        return "git";
+    }
+
+    @Override
     public GitRepo getRepo() {
         return repo;
     }

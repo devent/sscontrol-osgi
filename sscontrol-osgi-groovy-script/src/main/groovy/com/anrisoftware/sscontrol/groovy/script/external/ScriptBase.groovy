@@ -43,7 +43,9 @@ import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
 import com.anrisoftware.sscontrol.types.external.host.HostService
 import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
+import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
 import com.anrisoftware.sscontrol.types.external.host.HostServices
+import com.anrisoftware.sscontrol.types.external.host.HostSystem
 import com.anrisoftware.sscontrol.types.external.ssh.SshHost
 import com.google.inject.assistedinject.Assisted
 
@@ -480,6 +482,44 @@ abstract class ScriptBase extends Script implements HostServiceScript {
                 }
             }
         }
+    }
+
+    /**
+     * Finds and creates the script.
+     */
+    HostServiceScript createScript(String name, HostSystem system=target.system) {
+        def scriptService = findScriptService(name, system)
+        createScript scriptService
+    }
+
+    /**
+     * Finds and creates the script.
+     */
+    HostServiceScript createScript(String name, String systemName) {
+        def scriptService = findScriptService(name, systemName)
+        createScript scriptService
+    }
+
+    /**
+     * Finds and creates the script.
+     */
+    HostServiceScript createScript(HostServiceScriptService scriptService) {
+        scriptService.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
+    /**
+     * Finds the script.
+     */
+    public <T extends HostServiceScriptService> T findScriptService(String name, HostSystem system=target.system) {
+        findScriptService name, "$name/${system.name}/${system.version}"
+    }
+
+    /**
+     * Finds the script.
+     */
+    public <T extends HostServiceScriptService> T findScriptService(String name, String systemName) {
+        String scriptName = "$name/${systemName}"
+        scriptsRepository.getAvailableScriptService scriptName
     }
 
     /**

@@ -33,8 +33,8 @@
 		<appender-ref ref="TESTING_STYLE" />
 	</root>
 
-	<logger name="com.anrisoftware.globalpom.threads" level="ALL" />
+	<logger name="com.anrisoftware.globalpom.threads" level="INFO" />
     <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="TRACE" />
-	<logger name="com.anrisoftware.sscontrol" level="ALL" />
+	<logger name="com.anrisoftware.sscontrol" level="TRACE" />
 
 </configuration>
