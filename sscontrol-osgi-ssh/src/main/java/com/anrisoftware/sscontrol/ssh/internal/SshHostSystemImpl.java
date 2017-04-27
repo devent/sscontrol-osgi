@@ -20,9 +20,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.host.HostSystem;
+import com.anrisoftware.sscontrol.types.external.host.HostSystem.AbstractHostSystem;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappingsProperties;
 import com.google.inject.assistedinject.Assisted;
 
@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshHostSystemImpl implements HostSystem {
+public class SshHostSystemImpl extends AbstractHostSystem {
 
     /**
      *
@@ -71,12 +71,6 @@ public class SshHostSystemImpl implements HostSystem {
     @Override
     public String getVersion() {
         return version;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("name", name)
-                .append("version", version).toString();
     }
 
     private void parseArgs(SystemNameMappingsProperties mappingsProperties,

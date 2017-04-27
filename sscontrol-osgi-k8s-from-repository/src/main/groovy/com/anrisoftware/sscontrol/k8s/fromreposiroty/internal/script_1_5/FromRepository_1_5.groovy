@@ -55,7 +55,7 @@ class FromRepository_1_5 extends ScriptBase {
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         HostServiceScript fromRepo = createScript service.repo.type
-        File dir = fromRepo.checkoutRepo service.repo
+        File dir = fromRepo.checkoutRepo repo: service.repo
         try {
             def file = "$dir/grafana-service.yaml"
             template resource: templates.getResource('grafana_service'), name: 'grafanaService', dest: file, vars: [:] call()

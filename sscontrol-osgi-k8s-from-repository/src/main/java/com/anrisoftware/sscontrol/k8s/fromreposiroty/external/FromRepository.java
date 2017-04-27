@@ -28,9 +28,9 @@ import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
  */
 public interface FromRepository extends ClusterService {
 
-    RepoHost getRepo();
-
     void addRepos(List<RepoHost> list);
+
+    RepoHost getRepo();
 
     List<RepoHost> getRepos();
 
