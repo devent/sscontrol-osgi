@@ -27,13 +27,13 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem.AbstractHostSystem;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo.AbstractSystemInfo;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
 /**
  *
@@ -72,8 +72,8 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
         return SERVICE_NAME;
     }
 
-    public HostSystem getSystem() {
-        return new AbstractHostSystem() {
+    public SystemInfo getSystem() {
+        return new AbstractSystemInfo() {
 
             @Override
             public String getVersion() {
@@ -94,7 +94,7 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads,
+            HostService service, TargetHost target, ExecutorService threads,
             Map<String, Object> env) {
         return scriptFactory.create(repository, service, target, threads, env);
     }

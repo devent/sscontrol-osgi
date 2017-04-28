@@ -15,24 +15,24 @@
  */
 package com.anrisoftware.sscontrol.ssh.internal;
 
-import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger._.groupSet;
-import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger._.hostAdded;
+import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger.m.groupSet;
+import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger.m.hostAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * Logging for {@link SshImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 final class SshImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         hostAdded("Host added {} to {}"),
 
@@ -40,7 +40,7 @@ final class SshImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

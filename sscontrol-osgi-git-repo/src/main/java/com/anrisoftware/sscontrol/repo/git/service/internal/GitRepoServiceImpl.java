@@ -27,8 +27,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepoService;
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>Git</i> code repository service.

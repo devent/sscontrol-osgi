@@ -15,10 +15,6 @@
  */
 package com.anrisoftware.sscontrol.docker.internal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -26,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.docker.external.Mirror;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
@@ -87,15 +84,9 @@ public class MirrorImpl implements Mirror {
         log.tlsSet(this, tls);
     }
 
-    public void setHost(Object host) throws URISyntaxException {
-        URI h = new URI(host.toString());
-        if (h.getHost() == null) {
-            assertThat("host=null", h.getPath(), not(isEmptyOrNullString()));
-        } else {
-            assertThat("host=null", h.getHost(), not(isEmptyOrNullString()));
-        }
-        this.host = h;
-        log.hostSet(this, h);
+    public void setHost(URI host) {
+        this.host = host;
+        log.hostSet(this, host);
     }
 
     @Override
@@ -113,10 +104,10 @@ public class MirrorImpl implements Mirror {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    private void parseArgs(Map<String, Object> args) throws URISyntaxException {
+    private void parseArgs(Map<String, Object> args) {
         Object v = args.get("host");
         if (v != null) {
-            setHost(v);
+            setHost(ToURI.toURI(v, "http"));
         }
         v = args.get("ca");
         if (v != null) {

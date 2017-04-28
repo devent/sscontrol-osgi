@@ -25,8 +25,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.services.internal.repo.ReposImpl.ReposImplFactory;
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule;
-import com.anrisoftware.sscontrol.types.external.repo.Repos;
-import com.anrisoftware.sscontrol.types.external.repo.ReposService;
+import com.anrisoftware.sscontrol.types.repo.external.Repos;
+import com.anrisoftware.sscontrol.types.repo.external.ReposService;
 
 /**
  * Creates the code repositories.

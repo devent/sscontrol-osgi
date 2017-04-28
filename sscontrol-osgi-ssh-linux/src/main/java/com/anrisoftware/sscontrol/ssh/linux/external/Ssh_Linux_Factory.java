@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.linux.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  * 

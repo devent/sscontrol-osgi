@@ -41,8 +41,8 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 
 import groovy.util.logging.Slf4j
 

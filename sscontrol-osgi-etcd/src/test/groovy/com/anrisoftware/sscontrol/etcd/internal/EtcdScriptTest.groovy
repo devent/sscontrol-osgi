@@ -34,12 +34,13 @@ import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
-import com.anrisoftware.sscontrol.types.external.ssh.TargetsService
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -267,6 +268,7 @@ service "etcd" with {
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),

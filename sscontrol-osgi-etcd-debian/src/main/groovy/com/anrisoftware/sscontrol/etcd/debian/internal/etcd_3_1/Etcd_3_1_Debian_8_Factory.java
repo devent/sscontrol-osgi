@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

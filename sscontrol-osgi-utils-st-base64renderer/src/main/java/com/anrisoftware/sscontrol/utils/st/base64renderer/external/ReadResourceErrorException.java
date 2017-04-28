@@ -2,7 +2,7 @@ package com.anrisoftware.sscontrol.utils.st.base64renderer.external;
 
 import java.io.IOException;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  *

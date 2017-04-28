@@ -15,22 +15,22 @@
  */
 package com.anrisoftware.sscontrol.properties.internal
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.host.HostService
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -39,7 +39,7 @@ import groovy.transform.ToString
 class PropertiesStub implements HostService {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -50,7 +50,7 @@ class PropertiesStub implements HostService {
     }
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -75,16 +75,16 @@ class PropertiesStub implements HostService {
 
     @Inject
     PropertiesStub(HostPropertiesService propertiesService, @Assisted Map<String, Object> args) {
-        this.serviceProperties = propertiesService.create();
+        this.serviceProperties = propertiesService.create()
     }
 
     @Override
-    SshHost getTarget() {
+    TargetHost getTarget() {
         targets[0]
     }
 
     @Override
-    List<SshHost> getTargets() {
+    List<TargetHost> getTargets() {
     }
 
     @Override
@@ -97,9 +97,9 @@ class PropertiesStub implements HostService {
 
                     @Override
                     public void add(String property) {
-                        serviceProperties.addProperty(property);
+                        serviceProperties.addProperty(property)
                     }
-                });
+                })
     }
 
     @Override

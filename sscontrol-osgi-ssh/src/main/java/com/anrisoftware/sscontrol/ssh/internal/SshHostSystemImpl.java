@@ -21,8 +21,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem.AbstractHostSystem;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo.AbstractSystemInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappingsProperties;
 import com.google.inject.assistedinject.Assisted;
 
@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshHostSystemImpl extends AbstractHostSystem {
+public class SshHostSystemImpl extends AbstractSystemInfo {
 
     /**
      *
@@ -42,7 +42,7 @@ public class SshHostSystemImpl extends AbstractHostSystem {
      */
     public interface SshHostSystemImplFactory {
 
-        HostSystem create(@Assisted Map<String, Object> args);
+        SystemInfo create(@Assisted Map<String, Object> args);
 
     }
 

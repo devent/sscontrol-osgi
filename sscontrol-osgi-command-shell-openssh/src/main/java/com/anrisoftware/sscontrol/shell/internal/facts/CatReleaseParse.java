@@ -27,7 +27,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.shell.internal.facts.DefaultHostSystem.DefaultHostSystemFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -36,7 +36,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CatReleaseParse implements Callable<HostSystem> {
+public class CatReleaseParse implements Callable<SystemInfo> {
 
     /**
      *
@@ -61,7 +61,7 @@ public class CatReleaseParse implements Callable<HostSystem> {
     }
 
     @Override
-    public HostSystem call() {
+    public SystemInfo call() {
         Map<String, Object> args = new HashMap<>();
         String[] lines = split(output, '\n');
         for (String line : lines) {

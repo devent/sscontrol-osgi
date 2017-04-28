@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoHostImpl.GitR
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.RemoteImpl.RemoteImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.SshCredentialsImpl.SshCredentialsImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;

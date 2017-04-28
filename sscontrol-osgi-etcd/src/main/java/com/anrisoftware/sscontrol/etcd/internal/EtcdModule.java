@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.etcd.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.PeerClientCertsAuthenticationImpl.PeerClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.internal.PeerImpl.PeerImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;

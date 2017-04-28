@@ -24,7 +24,7 @@ import java.util.List;
  * @since 1.0
  */
 public interface K8sCluster
-        extends com.anrisoftware.sscontrol.types.external.cluster.Cluster {
+        extends com.anrisoftware.sscontrol.types.cluster.external.Cluster {
 
     Cluster getCluster();
 

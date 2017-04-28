@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>dhclient</i> service.

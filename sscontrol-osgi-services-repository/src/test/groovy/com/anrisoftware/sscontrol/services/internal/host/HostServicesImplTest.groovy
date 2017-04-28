@@ -50,8 +50,8 @@ import com.anrisoftware.sscontrol.services.internal.host.SshStub.SshStubFactory
 import com.anrisoftware.sscontrol.services.internal.host.SshStub.SshStubServiceImpl
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector

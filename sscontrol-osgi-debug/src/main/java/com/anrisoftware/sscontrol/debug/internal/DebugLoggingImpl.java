@@ -26,9 +26,9 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.debug.internal.DebugModuleImpl.DebugModuleImplFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.DebugModule;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.DebugModule;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

@@ -32,7 +32,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import com.anrisoftware.sscontrol.app.main.internal.args.AppArgs;
 import com.anrisoftware.sscontrol.app.main.internal.args.AppArgs.AppArgsFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 

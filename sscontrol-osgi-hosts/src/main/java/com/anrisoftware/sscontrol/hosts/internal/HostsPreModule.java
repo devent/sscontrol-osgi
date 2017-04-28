@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.hosts.internal;
 
 import com.anrisoftware.sscontrol.hosts.internal.HostsPreScriptImpl.HostsPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

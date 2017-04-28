@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.fail2ban.internal;
 
 import static com.anrisoftware.sscontrol.fail2ban.internal.Fail2banServiceImpl.FAIL2BAN_NAME;
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
@@ -34,11 +34,11 @@ import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -66,7 +66,7 @@ public class Fail2banImpl implements Fail2ban {
 
     private final HostServiceProperties serviceProperties;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final JailImplFactory jailFactory;
 
@@ -161,12 +161,12 @@ public class Fail2banImpl implements Fail2ban {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return targets;
     }
 
@@ -201,7 +201,7 @@ public class Fail2banImpl implements Fail2ban {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         if (args.get("notify") != null) {
             Map<String, Object> a = new HashMap<>(args);

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>Fail2ban</i> service.

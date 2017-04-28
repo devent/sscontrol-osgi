@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * 

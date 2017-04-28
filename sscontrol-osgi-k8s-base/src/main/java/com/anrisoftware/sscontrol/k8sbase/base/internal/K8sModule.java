@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl.EtcdPlugi
 import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl.FlannelPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;

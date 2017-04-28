@@ -23,7 +23,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo
-import com.anrisoftware.sscontrol.types.external.repo.RepoHost
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost
 
 import groovy.util.logging.Slf4j
 

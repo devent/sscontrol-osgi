@@ -43,8 +43,8 @@ import com.anrisoftware.sscontrol.shell.external.template.WriteTemplateException
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResourceArgs.TemplateResourceArgsFactory;
 import com.anrisoftware.sscontrol.template.external.Template;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

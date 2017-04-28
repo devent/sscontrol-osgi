@@ -33,8 +33,8 @@ import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImpl
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.google.inject.AbstractModule
 
 /**

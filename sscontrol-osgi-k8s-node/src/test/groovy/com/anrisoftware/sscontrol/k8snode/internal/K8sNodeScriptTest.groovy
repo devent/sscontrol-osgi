@@ -45,11 +45,11 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
-import com.anrisoftware.sscontrol.types.external.ssh.TargetsService
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -188,6 +188,7 @@ service "k8s-node" with {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+        services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-node', serviceFactory
         Eval.me 'service', services, test.input as String
         Closure expected = test.expected

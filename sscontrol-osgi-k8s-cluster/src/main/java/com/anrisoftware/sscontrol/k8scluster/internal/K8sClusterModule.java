@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsAnonImpl.Creden
 import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsCertImpl.CredentialsCertImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;

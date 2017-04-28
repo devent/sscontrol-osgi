@@ -27,7 +27,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

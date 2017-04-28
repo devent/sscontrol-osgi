@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.internal.service;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,12 +28,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external.MonitoringClusterHeapsterInfluxdbGrafana;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

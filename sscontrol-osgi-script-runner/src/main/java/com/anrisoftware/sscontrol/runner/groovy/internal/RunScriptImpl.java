@@ -25,14 +25,14 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
-import com.anrisoftware.sscontrol.types.external.run.RunScript;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
+import com.anrisoftware.sscontrol.types.run.external.RunScript;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -75,10 +75,15 @@ public class RunScriptImpl implements RunScript {
         this.threads = threads;
         this.services = services;
         if (services.getTargets().getGroups().contains("default")) {
-            this.defaultTarget = services.getTargets().getHosts("default");
+            this.defaultTarget = getDefaultTarget(services);
         } else {
             this.defaultTarget = new ArrayList<>();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<SshHost> getDefaultTarget(HostServices services) {
+        return (List<SshHost>) services.getTargets().getHosts("default");
     }
 
     @Override

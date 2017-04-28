@@ -22,8 +22,8 @@ import org.osgi.framework.BundleListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.parser.ParserService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.parser.external.ParserService;
 
 /**
  * 

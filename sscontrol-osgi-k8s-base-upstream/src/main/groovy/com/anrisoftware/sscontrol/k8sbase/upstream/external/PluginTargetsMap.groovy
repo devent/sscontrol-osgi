@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin
-import com.anrisoftware.sscontrol.types.external.host.HostServices
+import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.google.inject.assistedinject.Assisted
 
 /**

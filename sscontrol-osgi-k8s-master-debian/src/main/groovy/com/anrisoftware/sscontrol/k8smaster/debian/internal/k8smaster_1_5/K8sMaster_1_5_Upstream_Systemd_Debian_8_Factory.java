@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

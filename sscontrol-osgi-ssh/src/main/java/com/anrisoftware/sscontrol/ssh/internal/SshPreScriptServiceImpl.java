@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.ssh.external.SshPreScriptService;
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

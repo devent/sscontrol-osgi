@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

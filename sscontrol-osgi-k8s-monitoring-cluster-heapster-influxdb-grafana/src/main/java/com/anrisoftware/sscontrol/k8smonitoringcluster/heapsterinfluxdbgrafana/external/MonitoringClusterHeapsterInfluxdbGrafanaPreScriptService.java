@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8smonitoringcluster.heapsterinfluxdbgrafana.external;
 
-import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 
 /**
  * Cluster monitoring based on Heapster, InfluxDB and Grafana pre-script

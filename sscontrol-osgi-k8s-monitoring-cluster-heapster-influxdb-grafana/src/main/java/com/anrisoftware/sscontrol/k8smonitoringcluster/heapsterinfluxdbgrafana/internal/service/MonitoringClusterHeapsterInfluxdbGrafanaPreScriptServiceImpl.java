@@ -26,7 +26,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sPreScriptService;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreScriptImpl.K8sMasterPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 
 /**
  * <i>Ssh</i> pre-script service.

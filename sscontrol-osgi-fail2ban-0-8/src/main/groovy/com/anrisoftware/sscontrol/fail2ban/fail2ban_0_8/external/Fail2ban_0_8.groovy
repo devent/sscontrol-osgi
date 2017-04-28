@@ -21,7 +21,7 @@ import com.anrisoftware.sscontrol.fail2ban.external.Backend
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban
 import com.anrisoftware.sscontrol.fail2ban.external.Type
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
 

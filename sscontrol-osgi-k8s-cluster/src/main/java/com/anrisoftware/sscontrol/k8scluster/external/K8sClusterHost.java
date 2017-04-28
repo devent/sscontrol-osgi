@@ -1,7 +1,7 @@
 package com.anrisoftware.sscontrol.k8scluster.external;
 
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 
 /**
  * <i>K8s</i> cluster host.

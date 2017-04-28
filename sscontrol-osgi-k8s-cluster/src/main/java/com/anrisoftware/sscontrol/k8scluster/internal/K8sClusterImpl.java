@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -39,12 +39,12 @@ import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -74,7 +74,7 @@ public class K8sClusterImpl implements K8sCluster {
 
     private final HostServiceProperties serviceProperties;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final ClusterImplFactory clusterFactory;
 
@@ -126,7 +126,7 @@ public class K8sClusterImpl implements K8sCluster {
     public void target(Map<String, Object> args) {
         Object v = args.get("target");
         @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
+        List<TargetHost> l = InvokerHelper.asList(v);
         targets.addAll(l);
     }
 
@@ -202,16 +202,16 @@ public class K8sClusterImpl implements K8sCluster {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
-    public void addTargets(List<SshHost> list) {
+    public void addTargets(List<TargetHost> list) {
         this.targets.addAll(list);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -255,7 +255,7 @@ public class K8sClusterImpl implements K8sCluster {
             args.put("type", "anon");
             creds.add(credentialsFactories.get("anon").create(args));
         }
-        for (SshHost ssh : targets) {
+        for (TargetHost ssh : targets) {
             for (Credentials cred : creds) {
                 K8sClusterHost host;
                 host = clusterHostFactory.create(this, ssh, cred, context);
@@ -275,7 +275,7 @@ public class K8sClusterImpl implements K8sCluster {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         parseCluster(args);
         parseContext(args);

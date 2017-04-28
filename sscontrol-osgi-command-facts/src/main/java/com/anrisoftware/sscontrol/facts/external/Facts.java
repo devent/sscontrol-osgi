@@ -19,9 +19,9 @@ import java.util.Map;
 
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -47,7 +47,7 @@ public interface Facts {
                 @Assisted("log") Object log);
     }
 
-    HostSystem getSystem();
+    SystemInfo getSystem();
 
     ProcessTask getProcess();
 

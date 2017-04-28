@@ -27,8 +27,8 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.docker.external.DockerService;
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>Docker</i> service.

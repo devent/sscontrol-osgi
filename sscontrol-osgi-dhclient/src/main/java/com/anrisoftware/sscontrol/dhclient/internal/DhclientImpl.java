@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.List;
 import java.util.Map;
@@ -29,10 +29,10 @@ import com.anrisoftware.sscontrol.dhclient.external.DeclareStatement;
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -48,7 +48,7 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
 
     }
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -60,7 +60,7 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
     DhclientImpl(HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         super();
-        this.targets = (List<SshHost>) args.get("targets");
+        this.targets = (List<TargetHost>) args.get("targets");
         this.serviceProperties = propertiesService.create();
     }
 
@@ -89,12 +89,12 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return targets;
     }
 

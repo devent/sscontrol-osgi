@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import static com.anrisoftware.sscontrol.hosts.internal.HostsImplLogger._.hostAdded;
+import static com.anrisoftware.sscontrol.hosts.internal.HostsImplLogger.m.hostAdded;
 
 import javax.inject.Singleton;
 
@@ -32,13 +32,13 @@ import com.anrisoftware.sscontrol.hosts.external.Hosts;
 @Singleton
 final class HostsImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         hostAdded("Host {} added to {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.properties.internal;
 
-import static com.anrisoftware.sscontrol.types.external.app.ArgumentInvalidException.checkBlankArg;
+import static com.anrisoftware.sscontrol.types.app.external.ArgumentInvalidException.checkBlankArg;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,9 +45,9 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.StringToType;
 import com.anrisoftware.propertiesutils.TypedAllProperties;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
-import com.anrisoftware.sscontrol.types.external.app.ArgumentInvalidException;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.app.external.ArgumentInvalidException;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.google.inject.assistedinject.AssistedInject;
 
 import groovy.lang.GroovyObjectSupport;

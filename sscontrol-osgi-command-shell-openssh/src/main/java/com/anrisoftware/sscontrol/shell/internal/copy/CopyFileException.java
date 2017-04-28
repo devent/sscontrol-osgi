@@ -21,7 +21,7 @@ package com.anrisoftware.sscontrol.shell.internal.copy;
 import java.io.File;
 import java.io.IOException;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

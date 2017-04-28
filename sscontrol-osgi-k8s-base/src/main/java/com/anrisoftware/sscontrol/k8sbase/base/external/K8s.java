@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 
 /**
  * <i>K8s</i> service.
@@ -52,7 +52,7 @@ public interface K8s extends HostService {
 
     void tls(Map<String, Object> args);
 
-    void addTargets(List<SshHost> list);
+    void addTargets(List<TargetHost> list);
 
     void setContainerRuntime(String runtime);
 

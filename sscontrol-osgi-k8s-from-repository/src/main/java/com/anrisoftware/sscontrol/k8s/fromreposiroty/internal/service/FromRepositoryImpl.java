@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -29,13 +29,13 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -60,7 +60,7 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final HostServiceProperties serviceProperties;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final List<ClusterHost> clusters;
 
@@ -94,16 +94,16 @@ public class FromRepositoryImpl implements FromRepository {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
-    public void addTargets(List<SshHost> list) {
+    public void addTargets(List<TargetHost> list) {
         this.targets.addAll(list);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -166,7 +166,7 @@ public class FromRepositoryImpl implements FromRepository {
     private void parseTargets(Map<String, Object> args) {
         Object v = args.get("targets");
         assertThat("targets=null", v, notNullValue());
-        addTargets((List<SshHost>) v);
+        addTargets((List<TargetHost>) v);
     }
 
     @SuppressWarnings("unchecked")

@@ -47,9 +47,9 @@ import com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal.Sshd_Debian_8_Fact
 import com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal.Sshd_Debian_8_Module
 import com.anrisoftware.sscontrol.sshd.internal.SshdModule
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j

@@ -15,12 +15,12 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.advertiseAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.authenticationAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.bindingAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.memberNameSet;
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.peerSet;
-import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger._.tlsSet;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.advertiseAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.authenticationAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.bindingAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.memberNameSet;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.peerSet;
+import static com.anrisoftware.sscontrol.etcd.internal.EtcdImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
 
@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 @Singleton
 final class EtcdImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         bindingAdded("Binding {} added for {}"),
 
@@ -55,7 +55,7 @@ final class EtcdImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

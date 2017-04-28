@@ -70,8 +70,8 @@ public class RegistryImpl implements Registry {
         parseArgs(args);
     }
 
-    public void addMirror(Map<String, Object> m) {
-        Mirror mirror = mirrorFactory.create(m);
+    public void addMirror(Map<String, Object> args) {
+        Mirror mirror = mirrorFactory.create(args);
         mirrorHosts.add(mirror);
         log.mirrorAdded(this, mirror);
     }
@@ -89,9 +89,9 @@ public class RegistryImpl implements Registry {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("mirror");
         if (v != null) {
-            Map<String, Object> m = new HashMap<>(args);
-            m.put("host", v);
-            addMirror(m);
+            Map<String, Object> a = new HashMap<>(args);
+            a.put("host", v);
+            addMirror(a);
         }
     }
 

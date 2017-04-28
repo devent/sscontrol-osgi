@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.sshd.internal;
 
 import static com.anrisoftware.sscontrol.sshd.internal.SshdServiceImpl.SSHD_NAME;
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
@@ -31,11 +31,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.sshd.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.external.SshdService;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -48,7 +48,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class SshdImpl implements Sshd {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -61,7 +61,7 @@ public class SshdImpl implements Sshd {
 
     private final HostServiceProperties serviceProperties;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final List<String> users;
 
@@ -72,7 +72,7 @@ public class SshdImpl implements Sshd {
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
-        this.targets = new ArrayList<SshHost>();
+        this.targets = new ArrayList<TargetHost>();
         this.users = new ArrayList<String>();
         parseArgs(args);
     }
@@ -123,12 +123,12 @@ public class SshdImpl implements Sshd {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return targets;
     }
 
@@ -158,7 +158,7 @@ public class SshdImpl implements Sshd {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
     }
 

@@ -23,7 +23,6 @@
         <module>../sscontrol-osgi-command-shell</module>
         <module>../sscontrol-osgi-command-shell-openssh</module>
         <module>../sscontrol-osgi-command-template</module>
-        <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
         <module>../sscontrol-osgi-dhclient</module>
         <module>../sscontrol-osgi-docker</module>
@@ -74,7 +73,14 @@
         <module>../sscontrol-osgi-sshd</module>
         <module>../sscontrol-osgi-sshd-6</module>
         <module>../sscontrol-osgi-sshd-6-debian</module>
-        <module>../sscontrol-osgi-types</module>
+        <module>../sscontrol-osgi-types-app</module>
+        <module>../sscontrol-osgi-types-cluster</module>
+        <module>../sscontrol-osgi-types-host</module>
+        <module>../sscontrol-osgi-types-misc</module>
+        <module>../sscontrol-osgi-types-parser</module>
+        <module>../sscontrol-osgi-types-repo</module>
+        <module>../sscontrol-osgi-types-run</module>
+        <module>../sscontrol-osgi-types-ssh</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-tls</module>
