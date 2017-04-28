@@ -35,10 +35,11 @@ import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplF
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.ssh.external.Ssh
-import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -118,6 +119,29 @@ service "docker" with {
     }
 
     @Test
+    void "registry_mirror_host"() {
+        def test = [
+            name: 'registry_mirror_host',
+            input: """
+service "docker" with {
+    registry mirror: 'localhost'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('docker').size() == 1
+                Docker s = services.getServices('docker')[0]
+                assert s.registry.mirrorHosts.size() == 1
+                Mirror m = s.registry.mirrorHosts[0]
+                assert m.host.toString() == 'localhost'
+                assert m.tls.ca == null
+                assert m.tls.cert == null
+                assert m.tls.key == null
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "registry_mirror_ca"() {
         def test = [
             name: 'registry_mirror_ca',
@@ -163,6 +187,7 @@ service "docker" with {
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override

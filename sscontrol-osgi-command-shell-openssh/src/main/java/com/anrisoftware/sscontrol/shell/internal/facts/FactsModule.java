@@ -21,7 +21,6 @@ package com.anrisoftware.sscontrol.shell.internal.facts;
 import com.anrisoftware.sscontrol.facts.external.Facts;
 import com.anrisoftware.sscontrol.facts.external.Facts.FactsFactory;
 import com.anrisoftware.sscontrol.shell.internal.facts.CatReleaseParse.CatReleaseParseFactory;
-import com.anrisoftware.sscontrol.shell.internal.facts.DefaultHostSystem.DefaultHostSystemFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -41,9 +40,6 @@ public class FactsModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(CatReleaseParse.class, CatReleaseParse.class)
                 .build(CatReleaseParseFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(DefaultHostSystem.class, DefaultHostSystem.class)
-                .build(DefaultHostSystemFactory.class));
     }
 
 }

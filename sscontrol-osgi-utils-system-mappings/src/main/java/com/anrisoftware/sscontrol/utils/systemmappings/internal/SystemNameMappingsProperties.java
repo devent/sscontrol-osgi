@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.systemmappings.external;
+package com.anrisoftware.sscontrol.utils.systemmappings.internal;
 
 import java.net.URL;
 
-import javax.inject.Singleton;
-
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappings;
 
 /**
  *
@@ -27,10 +26,9 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@Singleton
 @SuppressWarnings("serial")
-public class SystemNameMappingsProperties
-        extends AbstractContextPropertiesProvider {
+public class SystemNameMappingsProperties extends
+        AbstractContextPropertiesProvider implements SystemNameMappings {
 
     private static final URL RESOURCE = SystemNameMappingsProperties.class
             .getResource("/system_name_mappings.properties");
@@ -39,6 +37,7 @@ public class SystemNameMappingsProperties
         super(SystemNameMappingsProperties.class, RESOURCE);
     }
 
+    @Override
     public String getMapping(String system) {
         String key = String.format("system_name_%s", system);
         return get().getProperty(key);

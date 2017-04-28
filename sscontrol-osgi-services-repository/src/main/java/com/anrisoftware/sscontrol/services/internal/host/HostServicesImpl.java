@@ -53,6 +53,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService;
 import com.anrisoftware.sscontrol.types.ssh.external.Targets;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultScriptInfoFactory;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
@@ -95,6 +96,9 @@ public class HostServicesImpl implements HostServices {
     private HostServicesImplLogger log;
 
     private GetTargets<RepoHost, Repo> getRepos;
+
+    @Inject
+    private DefaultScriptInfoFactory scriptInfoFactory;
 
     @AssistedInject
     HostServicesImpl(TargetsService targetsService,
@@ -242,16 +246,31 @@ public class HostServicesImpl implements HostServices {
     }
 
     @SuppressWarnings("unchecked")
+    public <T extends HostServiceScriptService> T getAvailableScriptService(
+            String name) {
+        return (T) availableScriptServices.get(scriptInfoFactory.parse(name));
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends HostServiceScriptService> T getAvailableScriptService(
             ScriptInfo info) {
         return (T) availableScriptServices.get(info);
     }
 
+    public void putAvailableScriptService(String name,
+            HostServiceScriptService service) {
+        availableScriptServices.put(scriptInfoFactory.parse(name), service);
+    }
+
     @Override
     public void putAvailableScriptService(ScriptInfo info,
             HostServiceScriptService service) {
         availableScriptServices.put(info, service);
+    }
+
+    public void removeAvailableScriptService(String name) {
+        availableScriptServices.remove(scriptInfoFactory.parse(name));
     }
 
     @Override

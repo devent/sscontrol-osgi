@@ -52,6 +52,7 @@ import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -221,6 +222,7 @@ targets 'nodes' eachWithIndex { host, i ->
                 new TargetsServiceModule(),
                 new TypesModule(),
                 new StringsModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

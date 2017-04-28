@@ -26,8 +26,8 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.shell.internal.facts.DefaultHostSystem.DefaultHostSystemFactory;
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultSystemInfoFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -53,7 +53,7 @@ public class CatReleaseParse implements Callable<SystemInfo> {
     private final String output;
 
     @Inject
-    private DefaultHostSystemFactory hostSystemFactory;
+    private DefaultSystemInfoFactory systemFactory;
 
     @Inject
     CatReleaseParse(@Assisted String output) {
@@ -80,6 +80,6 @@ public class CatReleaseParse implements Callable<SystemInfo> {
                 break;
             }
         }
-        return hostSystemFactory.create(args);
+        return systemFactory.create(args);
     }
 }
