@@ -15,13 +15,13 @@
  */
 package com.anrisoftware.sscontrol.types.groovy.internal;
 
-import static com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImplLogger._.hostAddAdded;
-import static com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImplLogger._.hostRemoveAdded;
+import static com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImplLogger.m.hostAddAdded;
+import static com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImplLogger.m.hostRemoveAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.BindingHost.Host;
+import com.anrisoftware.sscontrol.types.misc.external.BindingHost.Host;
 
 /**
  * Logging for {@link BindingHostImpl}.
@@ -32,7 +32,7 @@ import com.anrisoftware.sscontrol.types.external.BindingHost.Host;
 @Singleton
 final class BindingHostImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         hostAddAdded("Host to add {} added to {}"),
 
@@ -40,7 +40,7 @@ final class BindingHostImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

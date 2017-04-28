@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.external;
 
-import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService;
 
 /**
  * <i>K8s-Master</i> service.

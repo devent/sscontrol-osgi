@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.net.URI;
@@ -35,12 +35,13 @@ import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -53,7 +54,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class SshImpl implements Ssh {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -62,7 +63,7 @@ public class SshImpl implements Ssh {
 
     }
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -190,12 +191,12 @@ public class SshImpl implements Ssh {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -220,7 +221,7 @@ public class SshImpl implements Ssh {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         v = args.get("group");
         if (v != null) {

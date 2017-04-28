@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,11 +44,11 @@ import com.anrisoftware.sscontrol.flanneldocker.external.Network;
 import com.anrisoftware.sscontrol.flanneldocker.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -69,7 +69,7 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     }
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -140,7 +140,7 @@ public class FlannelDockerImpl implements FlannelDocker {
     public void target(Map<String, Object> args) {
         Object v = args.get("target");
         @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
+        List<TargetHost> l = InvokerHelper.asList(v);
         targets.addAll(l);
     }
 
@@ -255,12 +255,12 @@ public class FlannelDockerImpl implements FlannelDocker {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -304,7 +304,7 @@ public class FlannelDockerImpl implements FlannelDocker {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
     }
 

@@ -26,9 +26,9 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.run.RunScript;
-import com.anrisoftware.sscontrol.types.external.run.RunScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.run.external.RunScript;
+import com.anrisoftware.sscontrol.types.run.external.RunScriptService;
 import com.google.inject.AbstractModule;
 
 /**

@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.etcd.internal;
 
 import com.anrisoftware.sscontrol.etcd.internal.EtcdPreScriptImpl.K8sMasterPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

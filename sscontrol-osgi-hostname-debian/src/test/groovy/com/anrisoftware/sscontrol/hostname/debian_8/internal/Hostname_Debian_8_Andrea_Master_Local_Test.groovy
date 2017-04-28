@@ -22,7 +22,7 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
 

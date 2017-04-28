@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

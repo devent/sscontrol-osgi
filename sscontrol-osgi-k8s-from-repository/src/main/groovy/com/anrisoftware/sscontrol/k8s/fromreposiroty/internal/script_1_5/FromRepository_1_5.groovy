@@ -22,8 +22,8 @@ import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 

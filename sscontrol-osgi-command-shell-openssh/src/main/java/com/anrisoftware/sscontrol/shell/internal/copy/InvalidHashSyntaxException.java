@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.shell.internal.copy;
 
 import java.net.URISyntaxException;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

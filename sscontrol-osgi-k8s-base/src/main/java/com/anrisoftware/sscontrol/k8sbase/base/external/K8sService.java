@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>K8s-Master</i> service.

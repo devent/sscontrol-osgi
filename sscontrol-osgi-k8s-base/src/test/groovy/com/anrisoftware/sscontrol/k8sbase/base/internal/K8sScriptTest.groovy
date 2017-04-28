@@ -26,20 +26,20 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8sbase.base.external.EtcdPlugin
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
-import com.anrisoftware.sscontrol.types.external.ssh.TargetsService
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -108,7 +108,7 @@ service "k8s-master" with {
             name: 'ectd plugin target',
             input: """
 service "k8s-master" with {
-    plugin "etcd", target: "infra-0"
+    plugin "etcd", address: "infra-0"
 }
 """,
             expected: { HostServices services ->
@@ -117,8 +117,10 @@ service "k8s-master" with {
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
-                assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].target == 'infra-0'
+                EtcdPlugin e = s.plugins.etcd
+                assert e.name == 'etcd'
+                assert e.address.size() == 1
+                assert e.address[0] == 'infra-0'
             },
         ]
         doTest test
@@ -139,8 +141,10 @@ service "k8s-master" with {
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
-                assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].address == 'http://etcd-0:2379'
+                EtcdPlugin e = s.plugins.etcd
+                assert e.name == 'etcd'
+                assert e.address.size() == 1
+                assert e.address[0] == 'http://etcd-0:2379'
             },
         ]
         doTest test
@@ -166,7 +170,7 @@ service "k8s-master" with {
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
                 assert s.kubelet.preferredAddressTypes.size() == 3
-                assert s.kubelet.binding.port == 10250
+                assert s.kubelet.port == 10250
                 def k = -1
                 assert s.kubelet.preferredAddressTypes[++k] == "InternalIP"
                 assert s.kubelet.preferredAddressTypes[++k] == "Hostname"
@@ -182,7 +186,7 @@ service "k8s-master" with {
             name: 'etcd tls',
             input: '''
 service "k8s-master" with {
-    plugin "etcd", target: "infra-0" with {
+    plugin "etcd", address: "infra-0" with {
         tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     }
 }
@@ -193,12 +197,13 @@ service "k8s-master" with {
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
-                def etcd = s.plugins['etcd']
-                assert etcd.name == 'etcd'
-                assert etcd.target == 'infra-0'
-                assert etcd.tls.ca.toString() =~ /.*ca\.pem/
-                assert etcd.tls.cert.toString() =~ /.*cert\.pem/
-                assert etcd.tls.key.toString() =~ /.*key\.pem/
+                EtcdPlugin e = s.plugins.etcd
+                assert e.name == 'etcd'
+                assert e.address.size() == 1
+                assert e.address[0] == 'infra-0'
+                assert e.tls.ca.toString() == 'file:ca.pem'
+                assert e.tls.cert.toString() == 'file:cert.pem'
+                assert e.tls.key.toString() == 'file:key.pem'
             },
         ]
         doTest test
@@ -223,6 +228,7 @@ service "k8s-master" with {
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
+                new TargetsServiceModule(),
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
@@ -233,7 +239,6 @@ service "k8s-master" with {
 
                     @Override
                     protected void configure() {
-                        bind TargetsService to TargetsImplFactory
                         bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)

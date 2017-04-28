@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.docker.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,16 +25,15 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.docker.external.Docker;
 import com.anrisoftware.sscontrol.docker.external.DockerService;
 import com.anrisoftware.sscontrol.docker.external.Registry;
 import com.anrisoftware.sscontrol.docker.internal.RegistryImpl.RegistryImplFactory;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -55,7 +54,7 @@ public class DockerImpl implements Docker {
 
     }
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -97,18 +96,6 @@ public class DockerImpl implements Docker {
 
     /**
      * <pre>
-     * target name: 'master'
-     * </pre>
-     */
-    public void target(Map<String, Object> args) {
-        Object v = args.get("target");
-        @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
-        targets.addAll(l);
-    }
-
-    /**
-     * <pre>
      * groups << 'memory'
      * </pre>
      */
@@ -134,13 +121,18 @@ public class DockerImpl implements Docker {
         return registry;
     }
 
+    public void addTargets(List<TargetHost> list) {
+        targets.addAll(new ArrayList<>(list));
+        log.targetsAdded(this, list);
+    }
+
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -174,7 +166,7 @@ public class DockerImpl implements Docker {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            addTargets((List<TargetHost>) v);
         }
     }
 

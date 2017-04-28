@@ -32,26 +32,27 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.types.external.cluster.Cluster;
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterHost;
-import com.anrisoftware.sscontrol.types.external.cluster.Clusters;
-import com.anrisoftware.sscontrol.types.external.cluster.ClustersService;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.host.HostServicesService;
-import com.anrisoftware.sscontrol.types.external.host.HostTargets;
-import com.anrisoftware.sscontrol.types.external.host.PreHostService;
-import com.anrisoftware.sscontrol.types.external.repo.Repo;
-import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
-import com.anrisoftware.sscontrol.types.external.repo.Repos;
-import com.anrisoftware.sscontrol.types.external.repo.ReposService;
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
-import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
-import com.anrisoftware.sscontrol.types.external.ssh.Targets;
-import com.anrisoftware.sscontrol.types.external.ssh.TargetsService;
+import com.anrisoftware.sscontrol.types.cluster.external.Cluster;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.cluster.external.Clusters;
+import com.anrisoftware.sscontrol.types.cluster.external.ClustersService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.host.external.HostServicesService;
+import com.anrisoftware.sscontrol.types.host.external.HostTargets;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
+import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
+import com.anrisoftware.sscontrol.types.repo.external.Repo;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
+import com.anrisoftware.sscontrol.types.repo.external.Repos;
+import com.anrisoftware.sscontrol.types.repo.external.ReposService;
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService;
+import com.anrisoftware.sscontrol.types.ssh.external.Targets;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
@@ -76,7 +77,7 @@ public class HostServicesImpl implements HostServices {
 
     private final Map<String, PreHostService> availablePreServices;
 
-    private final Map<String, HostServiceScriptService> availableScriptServices;
+    private final Map<ScriptInfo, HostServiceScriptService> availableScriptServices;
 
     private final Map<String, List<HostService>> hostServices;
 
@@ -108,7 +109,7 @@ public class HostServicesImpl implements HostServices {
         this.hostServices = synchronizedMap(
                 new LinkedHashMap<String, List<HostService>>());
         this.availableScriptServices = synchronizedMap(
-                new HashMap<String, HostServiceScriptService>());
+                new HashMap<ScriptInfo, HostServiceScriptService>());
         this.getTargets = new GetTargets<>(SshHost.class, Ssh.class, "target");
         this.getClusters = new GetTargets<ClusterHost, Cluster>(
                 ClusterHost.class, Cluster.class, "cluster") {
@@ -243,23 +244,23 @@ public class HostServicesImpl implements HostServices {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends HostServiceScriptService> T getAvailableScriptService(
-            String name) {
-        return (T) availableScriptServices.get(name);
+            ScriptInfo info) {
+        return (T) availableScriptServices.get(info);
     }
 
     @Override
-    public void putAvailableScriptService(String name,
+    public void putAvailableScriptService(ScriptInfo info,
             HostServiceScriptService service) {
-        availableScriptServices.put(name, service);
+        availableScriptServices.put(info, service);
     }
 
     @Override
-    public void removeAvailableScriptService(String name) {
-        availableScriptServices.remove(name);
+    public void removeAvailableScriptService(ScriptInfo info) {
+        availableScriptServices.remove(info);
     }
 
     @Override
-    public Set<String> getAvailableScriptServices() {
+    public Set<ScriptInfo> getAvailableScriptServices() {
         return availableScriptServices.keySet();
     }
 

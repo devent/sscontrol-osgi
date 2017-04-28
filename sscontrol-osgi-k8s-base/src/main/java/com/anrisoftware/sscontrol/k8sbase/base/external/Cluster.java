@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.k8sbase.base.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * K8s cluster.

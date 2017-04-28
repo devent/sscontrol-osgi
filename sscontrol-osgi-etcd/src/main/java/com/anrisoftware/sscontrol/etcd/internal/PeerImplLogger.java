@@ -15,13 +15,13 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.advertiseAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.authenticationAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.clusterAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.listenAdded;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.stateSet;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.tlsSet;
-import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger._.tokenSet;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.advertiseAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.authenticationAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.clusterAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.listenAdded;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.stateSet;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.tlsSet;
+import static com.anrisoftware.sscontrol.etcd.internal.PeerImplLogger.m.tokenSet;
 
 import javax.inject.Singleton;
 
@@ -33,14 +33,14 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link PeerImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 final class PeerImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         advertiseAdded("Advertise {} added to {}"),
 
@@ -58,7 +58,7 @@ final class PeerImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

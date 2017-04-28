@@ -28,7 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.sshd.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.external.SshdService;
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * Creates the sshd service.

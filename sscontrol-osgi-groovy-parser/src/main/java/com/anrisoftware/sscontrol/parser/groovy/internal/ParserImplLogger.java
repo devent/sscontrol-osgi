@@ -18,9 +18,9 @@ package com.anrisoftware.sscontrol.parser.groovy.internal;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 
 /**
  * Logging for {@link ParserImpl}.
@@ -31,13 +31,13 @@ import com.anrisoftware.sscontrol.types.external.host.PreHost;
 @Singleton
 final class ParserImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         parsedScript("Parsed {} for {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

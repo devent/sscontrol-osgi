@@ -15,10 +15,10 @@
  */
 package com.anrisoftware.sscontrol.docker.internal;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
-import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 
 /**
  * <i>Docker</i> pre-script.

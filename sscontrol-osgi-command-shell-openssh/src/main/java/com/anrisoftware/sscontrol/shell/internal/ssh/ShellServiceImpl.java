@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
 import com.anrisoftware.sscontrol.shell.external.ShellService;
 import com.anrisoftware.sscontrol.shell.external.ssh.OpenSshShellService;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.Assisted;
 

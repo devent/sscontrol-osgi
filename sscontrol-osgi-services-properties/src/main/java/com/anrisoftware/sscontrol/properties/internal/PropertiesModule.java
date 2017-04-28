@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.properties.internal;
 
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

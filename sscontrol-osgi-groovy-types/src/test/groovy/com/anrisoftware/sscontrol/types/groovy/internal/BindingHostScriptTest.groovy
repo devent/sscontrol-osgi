@@ -23,10 +23,10 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
-import com.anrisoftware.sscontrol.types.external.BindingHost
-import com.anrisoftware.sscontrol.types.external.BindingHost.Host
+import com.anrisoftware.sscontrol.types.misc.external.BindingHost
+import com.anrisoftware.sscontrol.types.misc.external.BindingHost.Host
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImpl.BindingHostImplFactory
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.google.inject.Guice
 
 import groovy.transform.CompileStatic
@@ -70,7 +70,7 @@ bindingParent
             ],
             [
                 input: """
-import static com.anrisoftware.sscontrol.types.external.BindingAddress.*
+import static com.anrisoftware.sscontrol.types.misc.external.BindingAddress.*
 bindingParent.with {
     binding local, port: 22
 }

@@ -15,8 +15,8 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import static com.anrisoftware.sscontrol.etcd.internal.ClusterImplLogger._.addressSet;
-import static com.anrisoftware.sscontrol.etcd.internal.ClusterImplLogger._.nameSet;
+import static com.anrisoftware.sscontrol.etcd.internal.ClusterImplLogger.m.addressSet;
+import static com.anrisoftware.sscontrol.etcd.internal.ClusterImplLogger.m.nameSet;
 
 import javax.inject.Singleton;
 
@@ -25,14 +25,14 @@ import com.anrisoftware.sscontrol.etcd.external.Binding;
 
 /**
  * Logging for {@link ClusterImpl}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 final class ClusterImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         nameSet("Name {} set for {}"),
 
@@ -40,7 +40,7 @@ final class ClusterImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

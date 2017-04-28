@@ -40,13 +40,14 @@ import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.template.external.Template
 import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
-import com.anrisoftware.sscontrol.types.external.host.HostService
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.external.host.HostSystem
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
+import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
 import groovy.util.logging.Slf4j
@@ -91,7 +92,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     @Inject
     @Assisted
-    SshHost target
+    TargetHost target
 
     /**
      * Shell command.
@@ -487,8 +488,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     /**
      * Finds and creates the script.
      */
-    HostServiceScript createScript(String name, HostSystem system=target.system) {
+    HostServiceScript createScript(String name, SystemInfo system=target.system) {
         def scriptService = findScriptService(name, system)
+        assertThat "service=null for name=$name, system=$system", scriptService, notNullValue()
         createScript scriptService
     }
 
@@ -510,8 +512,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     /**
      * Finds the script.
      */
-    public <T extends HostServiceScriptService> T findScriptService(String name, HostSystem system=target.system) {
-        findScriptService name, "$name/${system.name}/${system.version}"
+    public <T extends HostServiceScriptService> T findScriptService(String name, SystemInfo system=target.system) {
+        def s = system.system ? system.system : ''
+        def v = system.version ? system.version : ''
+        findScriptService name, "$name/${s}/${v}"
     }
 
     /**

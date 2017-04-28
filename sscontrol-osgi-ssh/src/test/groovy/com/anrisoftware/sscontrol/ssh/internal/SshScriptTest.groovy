@@ -33,13 +33,13 @@ import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplF
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService
-import com.anrisoftware.sscontrol.types.external.host.HostServices
-import com.anrisoftware.sscontrol.types.external.host.HostSystem
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
-import com.anrisoftware.sscontrol.types.external.ssh.TargetsService
-import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -362,7 +362,7 @@ service "ssh", host: "192.168.0.2", system: "debian/8"
                 assert ssh.hosts.size() == 1
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
-                HostSystem sys = host.system
+                SystemInfo sys = host.system
                 assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
@@ -388,7 +388,7 @@ service "ssh", system: "debian/8" with {
                 assert ssh.hosts.size() == 2
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
-                HostSystem sys = host.system
+                SystemInfo sys = host.system
                 assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
@@ -420,7 +420,7 @@ service "ssh" with {
                 assert ssh.hosts.size() == 2
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
-                HostSystem sys = host.system
+                SystemInfo sys = host.system
                 assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"
@@ -452,7 +452,7 @@ service "ssh" with {
                 assert ssh.hosts.size() == 2
                 SshHost host = ssh.hosts[0]
                 assert host.host == "192.168.0.2"
-                HostSystem sys = host.system
+                SystemInfo sys = host.system
                 assert sys.system == "linux"
                 assert sys.name == "debian"
                 assert sys.version == "8"

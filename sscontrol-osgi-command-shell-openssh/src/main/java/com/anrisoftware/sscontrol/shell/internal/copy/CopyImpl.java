@@ -35,8 +35,8 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
 import com.anrisoftware.sscontrol.shell.internal.copy.DownloadCopyWorker.DownloadCopyWorkerFactory;
 import com.anrisoftware.sscontrol.shell.internal.copy.ScpCopyWorker.ScpCopyWorkerFactory;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**

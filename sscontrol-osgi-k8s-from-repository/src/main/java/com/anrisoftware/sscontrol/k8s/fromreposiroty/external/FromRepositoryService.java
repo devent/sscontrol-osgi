@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * From repository service.

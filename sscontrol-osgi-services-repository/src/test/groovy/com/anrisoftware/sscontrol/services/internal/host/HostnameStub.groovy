@@ -17,10 +17,10 @@ package com.anrisoftware.sscontrol.services.internal.host
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.external.host.HostService
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
+import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString

@@ -30,9 +30,9 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNodeService;
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -186,17 +186,17 @@ public class K8sNodeImpl implements K8sNode {
     }
 
     @Override
-    public void addTargets(List<SshHost> list) {
+    public void addTargets(List<TargetHost> list) {
         k8s.addTargets(list);
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return k8s.getTargets();
     }
 

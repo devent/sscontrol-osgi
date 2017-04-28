@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j

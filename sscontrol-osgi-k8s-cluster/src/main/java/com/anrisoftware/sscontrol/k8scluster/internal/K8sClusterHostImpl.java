@@ -13,7 +13,7 @@ import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -42,12 +42,13 @@ public class K8sClusterHostImpl implements K8sClusterHost {
      */
     public interface K8sClusterHostImplFactory {
 
-        K8sClusterHost create(K8sCluster cluster, SshHost target,
+        K8sClusterHost create(K8sCluster cluster, TargetHost target,
                 Credentials credentials, Context context);
     }
 
     @Inject
-    K8sClusterHostImpl(@Assisted K8sCluster cluster, @Assisted SshHost target,
+    K8sClusterHostImpl(@Assisted K8sCluster cluster,
+            @Assisted TargetHost target,
             @Assisted Credentials credentials, @Assisted Context context) {
         this.cluster = cluster;
         this.host = target.getHost();

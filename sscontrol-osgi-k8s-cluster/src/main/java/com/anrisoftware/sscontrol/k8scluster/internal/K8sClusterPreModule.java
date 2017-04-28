@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.k8scluster.internal;
 
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreScriptImpl.K8sClusterPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

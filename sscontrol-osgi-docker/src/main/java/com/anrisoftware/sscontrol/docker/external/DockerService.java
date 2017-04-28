@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.docker.external;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * <i>Docker</i> service.

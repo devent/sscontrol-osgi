@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8snode.external;
 
-import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 
 /**
  * <i>K8s-Node</i> pre-script service.

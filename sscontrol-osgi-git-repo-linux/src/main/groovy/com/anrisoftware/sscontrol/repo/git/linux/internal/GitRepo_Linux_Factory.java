@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.repo.git.linux.internal;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

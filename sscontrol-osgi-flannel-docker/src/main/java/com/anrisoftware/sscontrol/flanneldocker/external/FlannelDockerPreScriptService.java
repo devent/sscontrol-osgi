@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.external;
 
-import com.anrisoftware.sscontrol.types.external.host.PreHostService;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 
 /**
  * <i>K8s-Master</i> pre-script service.

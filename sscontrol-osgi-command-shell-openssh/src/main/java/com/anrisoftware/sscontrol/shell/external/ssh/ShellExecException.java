@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.shell.external.ssh;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.types.groovy.internal
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.codehaus.groovy.runtime.InvokerHelper
 
-import com.anrisoftware.sscontrol.types.external.BindingHost
+import com.anrisoftware.sscontrol.types.misc.external.BindingHost
 
 class BindingParent {
 

@@ -17,13 +17,12 @@ package com.anrisoftware.sscontrol.dhclient.internal;
 
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.OptionDeclarationImpl.OptionDeclarationImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.OptionStatementImpl.OptionStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.PrependStatementImpl.PrependStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.RequestsStatementImpl.RequestsStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.SendStatementImpl.SendStatementImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -40,9 +39,6 @@ public class DhclientModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, DhclientImpl.class)
                 .build(DhclientImplFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                DhclientPreScriptImpl.class, DhclientPreScriptImpl.class)
-                .build(DhclientPreScriptImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(OptionStatementImpl.class, OptionStatementImpl.class)
                 .build(OptionStatementImplFactory.class));

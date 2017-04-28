@@ -98,7 +98,7 @@
         <!-- own bundles dependencies -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-types</artifactId>
+            <artifactId>sscontrol-osgi-types-run</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>

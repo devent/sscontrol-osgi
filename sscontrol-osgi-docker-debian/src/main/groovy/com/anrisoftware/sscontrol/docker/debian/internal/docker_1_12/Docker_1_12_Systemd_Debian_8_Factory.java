@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

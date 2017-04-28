@@ -26,11 +26,11 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
-import com.anrisoftware.sscontrol.types.external.host.HostServices;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServices;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
 /**
  * rkt 1.25 for debian 8 service.
@@ -59,7 +59,7 @@ public class Rkt_1_25_Debian_8_Service implements HostServiceScriptService {
 
     @Override
     public HostServiceScript create(HostServices repository,
-            HostService service, SshHost target, ExecutorService threads,
+            HostService service, TargetHost target, ExecutorService threads,
             Map<String, Object> env) {
         return scriptFactory.create(repository, service, target, threads, env);
     }

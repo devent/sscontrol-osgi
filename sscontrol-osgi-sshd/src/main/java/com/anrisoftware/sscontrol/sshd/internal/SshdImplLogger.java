@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.internal;
 
-import static com.anrisoftware.sscontrol.sshd.internal.SshdImplLogger._.addUser;
+import static com.anrisoftware.sscontrol.sshd.internal.SshdImplLogger.m.addUser;
 
 import javax.inject.Singleton;
 
@@ -30,13 +30,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 final class SshdImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         addUser("User '{}' added to {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

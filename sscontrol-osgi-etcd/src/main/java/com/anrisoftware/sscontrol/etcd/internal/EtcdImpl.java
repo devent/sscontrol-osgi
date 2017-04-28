@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,7 +31,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.etcd.external.Authentication;
@@ -44,11 +43,11 @@ import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.etcd.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
-import com.anrisoftware.sscontrol.types.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -69,7 +68,7 @@ public class EtcdImpl implements Etcd {
 
     }
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -133,18 +132,6 @@ public class EtcdImpl implements Etcd {
                 serviceProperties.addProperty(property);
             }
         });
-    }
-
-    /**
-     * <pre>
-     * target name: 'master'
-     * </pre>
-     */
-    public void target(Map<String, Object> args) {
-        Object v = args.get("target");
-        @SuppressWarnings("unchecked")
-        List<SshHost> l = InvokerHelper.asList(v);
-        targets.addAll(l);
     }
 
     /**
@@ -278,12 +265,12 @@ public class EtcdImpl implements Etcd {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }
 
@@ -342,7 +329,7 @@ public class EtcdImpl implements Etcd {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         v = args.get("member");
         if (v != null) {

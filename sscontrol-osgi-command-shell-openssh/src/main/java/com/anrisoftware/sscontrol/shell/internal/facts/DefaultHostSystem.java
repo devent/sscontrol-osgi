@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.external.host.HostSystem.AbstractHostSystem;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo.AbstractSystemInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.SystemNameMappingsProperties;
 import com.google.inject.assistedinject.Assisted;
 
@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class DefaultHostSystem extends AbstractHostSystem {
+public class DefaultHostSystem extends AbstractSystemInfo {
 
     /**
      *

@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.shell.external.template;
 
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

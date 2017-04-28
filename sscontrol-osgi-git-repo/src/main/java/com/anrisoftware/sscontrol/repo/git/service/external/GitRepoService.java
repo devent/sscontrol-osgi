@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.repo.git.service.external;
 
-import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService;
 
 /**
  * <i>Git</i> code repository service.

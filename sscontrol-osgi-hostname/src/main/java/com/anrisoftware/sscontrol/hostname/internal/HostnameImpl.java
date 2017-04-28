@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.hostname.internal;
 
 import static com.anrisoftware.sscontrol.hostname.internal.HostnameServiceImpl.HOSTNAME_NAME;
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -47,7 +47,7 @@ public class HostnameImpl implements Hostname {
 
     private final HostnameImplLogger log;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostServiceProperties serviceProperties;
 
@@ -58,7 +58,7 @@ public class HostnameImpl implements Hostname {
             HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
-        this.targets = new ArrayList<SshHost>();
+        this.targets = new ArrayList<TargetHost>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }
@@ -83,12 +83,12 @@ public class HostnameImpl implements Hostname {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return targets;
     }
 
@@ -118,7 +118,7 @@ public class HostnameImpl implements Hostname {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         v = args.get("fqdn");
         if (v != null) {

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.debian.sshd_6.internal;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

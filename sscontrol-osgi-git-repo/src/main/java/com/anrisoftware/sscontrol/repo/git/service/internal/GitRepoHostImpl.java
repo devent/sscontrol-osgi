@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo;
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepoHost;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -32,11 +32,11 @@ public class GitRepoHostImpl implements GitRepoHost {
      */
     public interface GitRepoHostImplFactory {
 
-        GitRepoHost create(GitRepo repo, SshHost target);
+        GitRepoHost create(GitRepo repo, TargetHost target);
     }
 
     @Inject
-    GitRepoHostImpl(@Assisted GitRepo repo, @Assisted SshHost target) {
+    GitRepoHostImpl(@Assisted GitRepo repo, @Assisted TargetHost target) {
         this.repo = repo;
         this.host = target.getHost();
         this.port = target.getPort();

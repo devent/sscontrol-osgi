@@ -37,9 +37,9 @@ import com.anrisoftware.sscontrol.facts.external.Facts;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
 import com.anrisoftware.sscontrol.shell.internal.facts.CatReleaseParse.CatReleaseParseFactory;
-import com.anrisoftware.sscontrol.types.external.app.AppException;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -68,7 +68,7 @@ public class FactsImpl implements Facts {
     @Inject
     private CatReleaseParseFactory catReleaseParse;
 
-    private HostSystem system;
+    private SystemInfo system;
 
     private ProcessTask process;
 
@@ -88,7 +88,7 @@ public class FactsImpl implements Facts {
     }
 
     @Override
-    public HostSystem getSystem() {
+    public SystemInfo getSystem() {
         return system;
     }
 

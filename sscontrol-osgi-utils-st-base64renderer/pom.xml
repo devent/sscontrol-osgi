@@ -28,6 +28,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- own bundles dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types-app</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+
         <!-- compile dependencies -->
         <dependency>
             <groupId>com.anrisoftware.resources</groupId>
@@ -35,13 +43,6 @@
             <type>bundle</type>
         </dependency>
 
-        <!-- own bundles dependencies -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-types</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
     </dependencies>
 
 </project>

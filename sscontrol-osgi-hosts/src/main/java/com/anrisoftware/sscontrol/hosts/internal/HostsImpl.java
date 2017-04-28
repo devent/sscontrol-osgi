@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.hosts.internal;
 
 import static com.anrisoftware.sscontrol.hosts.internal.HostsServiceImpl.HOSTS_NAME;
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.split;
 
@@ -32,10 +32,10 @@ import com.anrisoftware.sscontrol.hosts.external.Host;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.internal.HostImpl.HostImplFactory;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.external.host.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -48,7 +48,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class HostsImpl implements Hosts {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -63,7 +63,7 @@ public class HostsImpl implements Hosts {
 
     private final HostServiceProperties serviceProperties;
 
-    private final List<SshHost> targets;
+    private final List<TargetHost> targets;
 
     private final HostImplFactory hostFactory;
 
@@ -73,7 +73,7 @@ public class HostsImpl implements Hosts {
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.hostFactory = hostFactory;
-        this.targets = new ArrayList<SshHost>();
+        this.targets = new ArrayList<TargetHost>();
         this.hosts = new ArrayList<Host>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
@@ -119,12 +119,12 @@ public class HostsImpl implements Hosts {
     }
 
     @Override
-    public SshHost getTarget() {
+    public TargetHost getTarget() {
         return getTargets().get(0);
     }
 
     @Override
-    public List<SshHost> getTargets() {
+    public List<TargetHost> getTargets() {
         return targets;
     }
 
@@ -153,7 +153,7 @@ public class HostsImpl implements Hosts {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
-            targets.addAll((List<SshHost>) v);
+            targets.addAll((List<TargetHost>) v);
         }
         if (args.get("ip") != null) {
             ip(args);

@@ -17,11 +17,15 @@ package com.anrisoftware.sscontrol.docker.internal;
 
 import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger.m.cgroupAdded;
 import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger.m.registrySet;
+import static com.anrisoftware.sscontrol.docker.internal.DockerImplLogger.m.targetsAdded;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.docker.external.Registry;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
 /**
  * Logging for {@link DockerImpl}.
@@ -36,7 +40,9 @@ final class DockerImplLogger extends AbstractLogger {
 
         cgroupAdded("Cgroup {} added to {}"),
 
-        registrySet("Registry {} set for {}");
+        registrySet("Registry {} set for {}"),
+
+        targetsAdded("Targets {} added to {}");
 
         private String name;
 
@@ -63,5 +69,9 @@ final class DockerImplLogger extends AbstractLogger {
 
     void registrySet(DockerImpl docker, Registry registry) {
         debug(registrySet, registry, docker);
+    }
+
+    void targetsAdded(DockerImpl docker, List<TargetHost> list) {
+        debug(targetsAdded, list, docker);
     }
 }

@@ -30,8 +30,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostSystem;
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * 
@@ -63,7 +63,7 @@ public class SshHostImpl implements SshHost {
 
     private URI key;
 
-    private HostSystem system;
+    private SystemInfo system;
 
     @Inject
     SshHostImpl(SshHostSystemImplFactory systemFactory) {
@@ -127,7 +127,7 @@ public class SshHostImpl implements SshHost {
     }
 
     @Override
-    public HostSystem getSystem() {
+    public SystemInfo getSystem() {
         return system;
     }
 

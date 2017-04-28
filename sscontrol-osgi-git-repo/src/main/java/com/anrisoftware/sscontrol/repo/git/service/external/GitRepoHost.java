@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.repo.git.service.external;
 
-import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
  * <i>Git</i> code repository host.

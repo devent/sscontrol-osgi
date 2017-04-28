@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.etcd.internal;
 
-import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
+import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -40,7 +40,7 @@ import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.etcd.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
-import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -29,8 +29,8 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory;
-import com.anrisoftware.sscontrol.types.external.host.HostService;
-import com.anrisoftware.sscontrol.types.external.host.HostServiceService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

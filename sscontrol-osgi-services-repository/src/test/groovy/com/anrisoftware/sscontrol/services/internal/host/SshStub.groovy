@@ -19,12 +19,12 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
 
-import com.anrisoftware.sscontrol.types.external.DebugLogging
-import com.anrisoftware.sscontrol.types.external.host.HostService
-import com.anrisoftware.sscontrol.types.external.host.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.ssh.Ssh
-import com.anrisoftware.sscontrol.types.external.ssh.SshHost
-import com.anrisoftware.sscontrol.types.external.ssh.TargetServiceService
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
+import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.ssh.external.Ssh
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
+import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService
 import com.google.inject.assistedinject.Assisted
 
 import groovy.transform.ToString

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.fail2ban_0_8_debian.internal;
 
-import com.anrisoftware.sscontrol.types.external.host.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *

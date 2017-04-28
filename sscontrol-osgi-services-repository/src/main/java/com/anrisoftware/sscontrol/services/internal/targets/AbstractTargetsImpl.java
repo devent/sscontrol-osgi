@@ -35,9 +35,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.types.external.host.HostTargets;
-import com.anrisoftware.sscontrol.types.external.ssh.TargetHost;
-import com.anrisoftware.sscontrol.types.external.ssh.TargetHostService;
+import com.anrisoftware.sscontrol.types.host.external.HostTargets;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.host.external.TargetHostService;
 
 /**
  * Host targets.

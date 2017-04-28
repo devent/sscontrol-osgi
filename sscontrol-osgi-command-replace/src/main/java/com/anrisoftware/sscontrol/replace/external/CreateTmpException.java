@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.replace.external;
 
 import java.io.IOException;
 
-import com.anrisoftware.sscontrol.types.external.app.AppException;
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
  * 

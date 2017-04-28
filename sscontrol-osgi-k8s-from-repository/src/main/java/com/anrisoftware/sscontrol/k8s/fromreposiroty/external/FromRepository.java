@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.external.cluster.ClusterService;
-import com.anrisoftware.sscontrol.types.external.repo.RepoHost;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
  * From repository service.

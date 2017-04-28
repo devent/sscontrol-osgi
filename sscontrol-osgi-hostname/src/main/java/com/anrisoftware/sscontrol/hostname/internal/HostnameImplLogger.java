@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
-import static com.anrisoftware.sscontrol.hostname.internal.HostnameImplLogger._.hostnameSet;
+import static com.anrisoftware.sscontrol.hostname.internal.HostnameImplLogger.m.hostnameSet;
 
 import javax.inject.Singleton;
 
@@ -31,13 +31,13 @@ import com.anrisoftware.sscontrol.hostname.external.Hostname;
 @Singleton
 final class HostnameImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         hostnameSet("Hostname '{}' set for {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 
