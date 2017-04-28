@@ -41,7 +41,7 @@ import com.google.inject.Injector
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
@@ -168,7 +168,7 @@ chmod +w a.txt
     @Before
     void checkProfile() {
         def localTests = System.getProperty('project.custom.local.tests.enabled')
-        assumeTrue localTests == true
+        assumeTrue localTests == 'true'
     }
 
     @BeforeClass

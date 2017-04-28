@@ -1,1 +1,1 @@
--r -C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /home/user user@localhost:/var/lib/robobee/tmp/user
+-r -C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /some/dir user@localhost:/var/lib/robobee/tmp/dir
