@@ -29,12 +29,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
-import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultSystemInfoFactory;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -42,7 +42,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 public class SshHostImpl implements SshHost {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -53,7 +53,7 @@ public class SshHostImpl implements SshHost {
 
     }
 
-    private transient SshHostSystemImplFactory systemFactory;
+    private transient DefaultSystemInfoFactory systemFactory;
 
     private String host;
 
@@ -66,7 +66,7 @@ public class SshHostImpl implements SshHost {
     private SystemInfo system;
 
     @Inject
-    SshHostImpl(SshHostSystemImplFactory systemFactory) {
+    SshHostImpl(DefaultSystemInfoFactory systemFactory) {
         this.systemFactory = systemFactory;
         this.system = systemFactory.create(new HashMap<String, Object>());
     }
@@ -102,7 +102,11 @@ public class SshHostImpl implements SshHost {
         }
         v = a.get("system");
         if (v != null) {
-            this.system = systemFactory.create(a);
+            if (v instanceof SystemInfo) {
+                this.system = (SystemInfo) v;
+            } else {
+                this.system = systemFactory.parse(v.toString());
+            }
         }
     }
 

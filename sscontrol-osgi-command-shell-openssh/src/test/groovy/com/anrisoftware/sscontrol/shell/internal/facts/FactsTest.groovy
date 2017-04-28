@@ -41,6 +41,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -109,6 +110,7 @@ class FactsTest extends AbstractCmdTestBase {
 
     Module[] getAdditionalModules() {
         [
+            new SystemNameMappingsModule(),
             new TemplateResModule(),
             new SshShellModule(),
             new ShellCmdModule(),

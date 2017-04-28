@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
 /**
@@ -137,6 +138,7 @@ abstract class AbstractTest_Docker_Debian_8 extends AbstractScriptTestBase {
             new ResourcesModule(),
             new TemplateResModule(),
             new TlsModule(),
+            new SystemNameMappingsModule(),
             new AbstractModule() {
 
                 @Override

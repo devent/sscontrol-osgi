@@ -41,6 +41,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -272,6 +273,7 @@ service "etcd" with {
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override

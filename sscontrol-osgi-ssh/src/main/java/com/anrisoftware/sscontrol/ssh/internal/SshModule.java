@@ -16,10 +16,8 @@
 package com.anrisoftware.sscontrol.ssh.internal;
 
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
-import com.anrisoftware.sscontrol.ssh.internal.SshHostSystemImpl.SshHostSystemImplFactory;
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
-import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -39,9 +37,6 @@ public class SshModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(SshHostImpl.class, SshHostImpl.class)
                 .build(SshHostImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(SystemInfo.class, SshHostSystemImpl.class)
-                .build(SshHostSystemImplFactory.class));
     }
 
 }

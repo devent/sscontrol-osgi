@@ -15,10 +15,6 @@
  */
 package com.anrisoftware.sscontrol.types.host.external;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * Information about the host system.
  *
@@ -26,32 +22,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @version 1.0
  */
 public interface SystemInfo {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public abstract class AbstractSystemInfo implements SystemInfo {
-
-        @Override
-        public String toString() {
-            return new ToStringBuilder(this).append("system", getSystem())
-                    .append("name", getName()).append("version", getVersion())
-                    .toString();
-        }
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this, false);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj, false);
-        }
-    }
 
     /**
      * Returns system name, for example linux, windows, macos.
