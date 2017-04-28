@@ -1,1 +1,1 @@
--r /var/lib/robobee/tmp/user
+-r /var/lib/robobee/tmp/dir

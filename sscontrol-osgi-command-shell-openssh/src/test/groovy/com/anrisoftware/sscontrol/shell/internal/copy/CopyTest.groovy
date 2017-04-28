@@ -85,7 +85,7 @@ class CopyTest extends AbstractCmdTestBase {
         def test = [
             name: "recursive_dest_src",
             args: [
-                src: "/home/devent",
+                src: "/some/dir",
                 dest: "/tmp",
                 recursive: true,
             ],
@@ -157,7 +157,7 @@ class CopyTest extends AbstractCmdTestBase {
         def test = [
             name: "privileged_recursive_src",
             args: [
-                src: "/home/devent",
+                src: "/some/dir",
                 dest: "/tmp",
                 privileged: true,
                 recursive: true,
