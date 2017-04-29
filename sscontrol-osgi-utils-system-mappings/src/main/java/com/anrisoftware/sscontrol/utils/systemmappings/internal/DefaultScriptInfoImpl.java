@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultSystemInfoFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -36,49 +35,27 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class DefaultScriptInfoImpl extends AbstractScriptInfo {
 
-    private final String service;
-
-    private final SystemInfo system;
-
     @AssistedInject
     DefaultScriptInfoImpl(DefaultSystemInfoFactory systemFactory,
-            @Assisted String name) {
-        this.system = systemFactory.parse(name);
-        String[] split = StringUtils.split(name, "/");
-        this.service = split[0];
+            @Assisted String string) {
+        super(parseString(string), systemFactory.parse(string));
+    }
+
+    private static String parseString(String string) {
+        String[] split = StringUtils.split(string, "/");
+        return split[0];
     }
 
     @AssistedInject
     DefaultScriptInfoImpl(DefaultSystemInfoFactory systemFactory,
             @Assisted Map<String, Object> args) {
-        this.system = systemFactory.create(args);
+        super(getService(args), systemFactory.create(args));
+    }
+
+    private static String getService(Map<String, Object> args) {
         Object v = args.get("service");
         assertThat("service=null", v, notNullValue());
-        this.service = v.toString();
-    }
-
-    public SystemInfo getSystemInfo() {
-        return system;
-    }
-
-    @Override
-    public String getService() {
-        return service;
-    }
-
-    @Override
-    public String getSystem() {
-        return system.getSystem();
-    }
-
-    @Override
-    public String getName() {
-        return system.getName();
-    }
-
-    @Override
-    public String getVersion() {
-        return system.getVersion();
+        return v.toString();
     }
 
 }

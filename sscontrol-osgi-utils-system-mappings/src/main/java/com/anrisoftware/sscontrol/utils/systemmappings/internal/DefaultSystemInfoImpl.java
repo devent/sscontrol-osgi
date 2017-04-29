@@ -15,10 +15,14 @@
  */
 package com.anrisoftware.sscontrol.utils.systemmappings.internal;
 
+import static java.lang.String.format;
+
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.generator.qdox.parser.ParseException;
 
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemInfo;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -31,92 +35,116 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class DefaultSystemInfoImpl extends AbstractSystemInfo {
 
-    private String name;
-
-    private String version;
-
-    private String system;
-
     @AssistedInject
     DefaultSystemInfoImpl(SystemNameMappingsProperties mappingsProperties,
             @Assisted String string) {
+        super(parseSystemInfo(mappingsProperties, string));
+    }
+
+    private static SystemInfo parseSystemInfo(
+            SystemNameMappingsProperties mappingsProperties, String string) {
         String[] split = StringUtils.split(string, "/");
+        final String system;
+        final String name;
+        final String version;
         if (split.length == 4) {
-            this.system = split[1];
-            this.name = split[2];
-            this.version = split[3];
+            system = split[1];
+            name = split[2];
+            version = split[3];
+        } else if (split.length == 3) {
+            name = split[1];
+            version = split[2];
+            system = mappingsProperties.getMapping(name);
+        } else if (split.length == 2) {
+            name = split[0];
+            version = split[1];
+            system = mappingsProperties.getMapping(name);
+        } else {
+            throw new ParseException(
+                    format("Expected system/name/version, got '%s'", string), 0,
+                    0);
         }
-        if (split.length == 3) {
-            this.name = split[1];
-            this.version = split[2];
-            this.system = mappingsProperties.getMapping(name);
-        }
-        if (split.length == 2) {
-            this.name = split[0];
-            this.version = split[1];
-            this.system = mappingsProperties.getMapping(name);
-        }
+        return new SystemInfo() {
+
+            @Override
+            public String getVersion() {
+                return version;
+            }
+
+            @Override
+            public String getSystem() {
+                return system;
+            }
+
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
     }
 
     @AssistedInject
     DefaultSystemInfoImpl(SystemNameMappingsProperties mappingsProperties,
             @Assisted Map<String, Object> args) {
-        parseName(args);
-        parseSystem(mappingsProperties, args);
-        parseVersion(args);
+        super(parseArgs(mappingsProperties, args));
     }
 
-    private void parseVersion(Map<String, Object> args) {
+    private static SystemInfo parseArgs(
+            SystemNameMappingsProperties mappingsProperties,
+            Map<String, Object> args) {
+        final String name = parseName(args);
+        final String system = parseSystem(mappingsProperties, name, args);
+        final String version = parseVersion(args);
+        return new SystemInfo() {
+
+            @Override
+            public String getVersion() {
+                return version;
+            }
+
+            @Override
+            public String getSystem() {
+                return system;
+            }
+
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
+    }
+
+    private static String parseVersion(Map<String, Object> args) {
         Object v = args.get("version");
         if (v != null) {
-            this.version = v.toString();
+            return v.toString();
+        } else {
+            return null;
         }
     }
 
-    private void parseSystem(SystemNameMappingsProperties mappingsProperties,
+    private static String parseSystem(
+            SystemNameMappingsProperties mappingsProperties, String name,
             Map<String, Object> args) {
         Object v = args.get("system");
         if (v != null) {
-            this.system = v.toString();
+            return v.toString();
         } else {
             if (name != null) {
-                this.system = mappingsProperties.getMapping(name);
+                return mappingsProperties.getMapping(name);
+            } else {
+                return null;
             }
         }
     }
 
-    private void parseName(Map<String, Object> args) {
+    private static String parseName(Map<String, Object> args) {
         Object v = args.get("name");
         if (v != null) {
-            this.name = v.toString();
+            return v.toString();
+        } else {
+            return null;
         }
-    }
-
-    public void setSystem(String system) {
-        this.system = system;
-    }
-
-    @Override
-    public String getSystem() {
-        return system;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
     }
 
 }

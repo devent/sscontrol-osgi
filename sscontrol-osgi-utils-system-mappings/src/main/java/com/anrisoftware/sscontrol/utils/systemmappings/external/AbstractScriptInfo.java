@@ -20,6 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
+import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 
 /**
  *
@@ -29,6 +30,18 @@ import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
  */
 public abstract class AbstractScriptInfo extends AbstractSystemInfo
         implements ScriptInfo {
+
+    private final String service;
+
+    protected AbstractScriptInfo(String service, SystemInfo system) {
+        super(system);
+        this.service = service;
+    }
+
+    @Override
+    public String getService() {
+        return service;
+    }
 
     @Override
     public String toString() {

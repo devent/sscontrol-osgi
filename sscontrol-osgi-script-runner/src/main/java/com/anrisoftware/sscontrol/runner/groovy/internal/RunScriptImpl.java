@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.runner.groovy.internal;
 
-import static java.lang.String.format;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
@@ -31,8 +30,12 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
 import com.anrisoftware.sscontrol.types.host.external.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
+import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.run.external.RunScript;
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemInfo;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -92,8 +95,8 @@ public class RunScriptImpl implements RunScript {
             List<HostService> ss = services.getServices(name);
             for (int i = 0; i < ss.size(); i++) {
                 HostService s = ss.get(i);
-                List<SshHost> targets = getTargets(s);
-                for (SshHost host : targets) {
+                List<? extends TargetHost> targets = getTargets(s);
+                for (TargetHost host : targets) {
                     HostServiceScript script;
                     script = createScript(name, s, host, variables);
                     setupScript(variables, script);
@@ -104,15 +107,15 @@ public class RunScriptImpl implements RunScript {
     }
 
     private HostServiceScript createScript(String name, HostService s,
-            SshHost host, Map<String, Object> vars) throws AppException {
+            TargetHost host, Map<String, Object> vars) throws AppException {
         PreHost pre = services.getAvailablePreService(name).create();
-        String scriptName = getSystemScriptName(host, name);
+        ScriptInfo system = getSystemScriptName(host, name);
         HostServiceScriptService service = services
-                .getAvailableScriptService(scriptName);
+                .getAvailableScriptService(system);
         if (service == null) {
-            log.scriptNotFound(name, scriptName);
+            log.scriptNotFound(name, system);
             service = services
-                    .getAvailableScriptService(getLinuxScriptName(host, name));
+                    .getAvailableScriptService(getLinuxScriptName(name));
         }
         HostServiceScript script = emptyServiceScript;
         if (service == null) {
@@ -124,14 +127,17 @@ public class RunScriptImpl implements RunScript {
         }
     }
 
-    private String getLinuxScriptName(SshHost host, String name) {
-        return format("%s-%s-%s", name, "linux", "0");
+    private ScriptInfo getLinuxScriptName(String name) {
+        return new AbstractScriptInfo(name,
+                new AbstractSystemInfo("linux", "linux", "0") {
+                }) {
+        };
     }
 
-    private String getSystemScriptName(SshHost host, String name) {
-        String sname = host.getSystem().getName();
-        String sversion = host.getSystem().getVersion();
-        return format("%s-%s-%s", name, sname, sversion);
+    private ScriptInfo getSystemScriptName(TargetHost host, String name) {
+        SshHost ssh = (SshHost) host;
+        return new AbstractScriptInfo(name, ssh.getSystem()) {
+        };
     }
 
     HostServiceScript setupScript(Map<String, Object> args,
@@ -155,7 +161,7 @@ public class RunScriptImpl implements RunScript {
         return script;
     }
 
-    private List<SshHost> getTargets(HostService s) {
+    private List<? extends TargetHost> getTargets(HostService s) {
         return s.getTargets().size() == 0 ? defaultTarget : s.getTargets();
     }
 
