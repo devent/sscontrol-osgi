@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo
 import com.anrisoftware.sscontrol.types.host.external.TargetHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo
 import com.google.inject.assistedinject.Assisted
 
 import groovy.util.logging.Slf4j
@@ -513,9 +514,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * Finds the script.
      */
     public <T extends HostServiceScriptService> T findScriptService(String name, SystemInfo system=target.system) {
-        def s = system.system ? system.system : ''
-        def v = system.version ? system.version : ''
-        findScriptService name, "$name/${s}/${v}"
+        scriptsRepository.getAvailableScriptService(new AbstractScriptInfo(name, system) { })
     }
 
     /**

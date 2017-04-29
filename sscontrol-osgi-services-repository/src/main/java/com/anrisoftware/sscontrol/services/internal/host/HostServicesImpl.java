@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.services.internal.host.ScriptsMap.ScriptsMapFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.Cluster;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Clusters;
@@ -102,7 +103,8 @@ public class HostServicesImpl implements HostServices {
 
     @AssistedInject
     HostServicesImpl(TargetsService targetsService,
-            ClustersService clustersService, ReposService reposService) {
+            ClustersService clustersService, ReposService reposService,
+            ScriptsMapFactory scriptsMapFactory) {
         this.targets = targetsService.create();
         this.clusters = clustersService.create();
         this.repos = reposService.create();
@@ -113,7 +115,7 @@ public class HostServicesImpl implements HostServices {
         this.hostServices = synchronizedMap(
                 new LinkedHashMap<String, List<HostService>>());
         this.availableScriptServices = synchronizedMap(
-                new HashMap<ScriptInfo, HostServiceScriptService>());
+                scriptsMapFactory.create());
         this.getTargets = new GetTargets<>(SshHost.class, Ssh.class, "target");
         this.getClusters = new GetTargets<ClusterHost, Cluster>(
                 ClusterHost.class, Cluster.class, "cluster") {
