@@ -28,6 +28,37 @@ import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
  */
 public abstract class AbstractSystemInfo implements SystemInfo {
 
+    private final String system;
+
+    private final String name;
+
+    private final String version;
+
+    protected AbstractSystemInfo(String system, String name, String version) {
+        this.system = system;
+        this.name = name;
+        this.version = version;
+    }
+
+    protected AbstractSystemInfo(SystemInfo system) {
+        this(system.getSystem(), system.getName(), system.getVersion());
+    }
+
+    @Override
+    public String getSystem() {
+        return system;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("system", getSystem())

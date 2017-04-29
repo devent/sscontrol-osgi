@@ -20,6 +20,7 @@ import static com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImplLog
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
 
 /**
  * Logging for {@link RunScriptImpl}.
@@ -53,7 +54,7 @@ final class RunScriptImplLogger extends AbstractLogger {
         super(RunScriptImpl.class);
     }
 
-    void scriptNotFound(String name, String scriptName) {
-        debug(scriptNotFound, name, scriptName);
+    void scriptNotFound(String name, ScriptInfo system) {
+        debug(scriptNotFound, name, system);
     }
 }
