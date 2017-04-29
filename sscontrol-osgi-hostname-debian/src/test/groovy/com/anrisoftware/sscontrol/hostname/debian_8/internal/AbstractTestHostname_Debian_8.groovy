@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
 /**
@@ -115,6 +116,7 @@ abstract class AbstractTestHostname_Debian_8 extends AbstractScriptTestBase {
             new TokensTemplateModule(),
             new FactsModule(),
             new TemplateResModule(),
+            new SystemNameMappingsModule(),
             new AbstractModule() {
 
                 @Override

@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
@@ -121,6 +122,7 @@ abstract class AbstractTest_Hosts_Linux extends AbstractScriptTestBase {
             new TemplateResModule(),
             new FactsModule(),
             new TokensTemplateModule(),
+            new SystemNameMappingsModule(),
             new AbstractModule() {
 
                 @Override

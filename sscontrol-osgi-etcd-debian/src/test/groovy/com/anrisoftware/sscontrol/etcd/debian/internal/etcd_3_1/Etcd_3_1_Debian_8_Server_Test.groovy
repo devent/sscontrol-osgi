@@ -59,6 +59,6 @@ service "etcd", member: "default"
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv(args)
     }
 }

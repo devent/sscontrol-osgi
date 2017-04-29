@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.k8sbase.upstream.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.host.external.HostTargets
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
@@ -29,27 +28,13 @@ import com.google.inject.assistedinject.Assisted
  */
 class Addresses {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface AddressesFactory {
-
-        Addresses create(Object parent, HostTargets targets, List<Object> addresses)
-    }
-
-    private HostTargets targets
-
     private List<Object> addresses
 
     private Object parent
 
     @Inject
-    Addresses(@Assisted Object parent, @Assisted HostTargets targets, @Assisted List<Object> addresses) {
+    Addresses(@Assisted Object parent, @Assisted List<Object> addresses) {
         this.parent = parent
-        this.targets = targets
         this.addresses = new ArrayList(addresses)
     }
 

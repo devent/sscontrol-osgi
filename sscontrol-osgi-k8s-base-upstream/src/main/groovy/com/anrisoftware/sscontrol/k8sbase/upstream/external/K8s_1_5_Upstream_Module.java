@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.upstream.external;
 
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory;
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

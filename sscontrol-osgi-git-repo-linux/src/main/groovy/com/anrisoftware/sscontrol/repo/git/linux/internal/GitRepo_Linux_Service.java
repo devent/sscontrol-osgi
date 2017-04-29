@@ -31,9 +31,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
-import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
-import com.anrisoftware.sscontrol.types.host.external.SystemInfo.AbstractSystemInfo;
+import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo;
 
 /**
  *
@@ -68,12 +68,8 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
     @Inject
     private GitRepo_Linux_Factory scriptFactory;
 
-    public String getName() {
-        return SERVICE_NAME;
-    }
-
-    public SystemInfo getSystem() {
-        return new AbstractSystemInfo() {
+    public ScriptInfo getSystem() {
+        return new AbstractScriptInfo() {
 
             @Override
             public String getVersion() {
@@ -88,6 +84,11 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
             @Override
             public String getName() {
                 return SYSTEM_NAME;
+            }
+
+            @Override
+            public String getService() {
+                return SERVICE_NAME;
             }
         };
     }

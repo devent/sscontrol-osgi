@@ -30,17 +30,6 @@ import com.google.inject.assistedinject.Assisted
  */
 class PluginTargetsMap extends HashMap {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface PluginTargetsMapFactory {
-
-        PluginTargetsMap create(K8s service, HostServices repo, Map<String, Plugin> map)
-    }
-
     K8s service
 
     HostServices repo

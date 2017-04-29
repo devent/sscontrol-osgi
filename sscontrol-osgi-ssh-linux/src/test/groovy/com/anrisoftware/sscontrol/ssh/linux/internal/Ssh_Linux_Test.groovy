@@ -46,6 +46,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
@@ -140,6 +141,7 @@ service "ssh", host: "localhost"
             new TypesModule(),
             new StringsModule(),
             new TemplateResModule(),
+            new SystemNameMappingsModule(),
             new AbstractModule() {
 
                 @Override

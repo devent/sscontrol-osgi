@@ -26,7 +26,6 @@ import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 import com.anrisoftware.sscontrol.k8scluster.external.Credentials
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
-import com.anrisoftware.sscontrol.k8scluster.upstream.external.CredentialsNop.CredentialsNopFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService

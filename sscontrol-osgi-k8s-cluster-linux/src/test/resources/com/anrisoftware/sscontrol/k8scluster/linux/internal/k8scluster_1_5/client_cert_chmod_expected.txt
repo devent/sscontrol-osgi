@@ -1,3 +1,4 @@
+o-rx /tmp/junit/junit/var/robobee/certs/default-cluster
 o-rwx /var/lib/robobee/tmp
 o-rwx /var/lib/robobee/tmp
 o-rwx /var/lib/robobee/tmp

@@ -37,6 +37,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -138,6 +139,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
                 new TargetsServiceModule(),
                 new PropertiesModule(),
                 new PropertiesUtilsModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override
