@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.utils.systemmappings.internal;
 
 import static java.lang.String.format;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,26 +45,29 @@ public class DefaultSystemInfoImpl extends AbstractSystemInfo {
     private static SystemInfo parseSystemInfo(
             SystemNameMappingsProperties mappingsProperties, String string) {
         String[] split = StringUtils.split(string, "/");
-        final String system;
-        final String name;
-        final String version;
+        String s;
+        String n;
+        String v;
         if (split.length == 4) {
-            system = split[1];
-            name = split[2];
-            version = split[3];
+            s = split[1];
+            n = split[2];
+            v = split[3];
         } else if (split.length == 3) {
-            name = split[1];
-            version = split[2];
-            system = mappingsProperties.getMapping(name);
+            n = split[1];
+            v = split[2];
+            s = mappingsProperties.getMapping(n);
         } else if (split.length == 2) {
-            name = split[0];
-            version = split[1];
-            system = mappingsProperties.getMapping(name);
+            n = split[0];
+            v = split[1];
+            s = mappingsProperties.getMapping(n);
         } else {
             throw new ParseException(
                     format("Expected system/name/version, got '%s'", string), 0,
                     0);
         }
+        final String version = v.toLowerCase(Locale.ENGLISH);
+        final String system = s.toLowerCase(Locale.ENGLISH);
+        final String name = n.toLowerCase(Locale.ENGLISH);
         return new SystemInfo() {
 
             @Override

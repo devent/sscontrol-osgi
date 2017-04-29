@@ -50,6 +50,7 @@ import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
@@ -137,6 +138,7 @@ abstract class AbstractTestSshd_Debian_8 extends AbstractScriptTestBase {
             new TemplateModule(),
             new TokensTemplateModule(),
             new TemplateResModule(),
+            new SystemNameMappingsModule(),
             new AbstractModule() {
 
                 @Override

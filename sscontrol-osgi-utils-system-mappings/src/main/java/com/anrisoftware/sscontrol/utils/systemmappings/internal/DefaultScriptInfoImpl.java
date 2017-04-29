@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.utils.systemmappings.internal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +56,7 @@ public class DefaultScriptInfoImpl extends AbstractScriptInfo {
     private static String getService(Map<String, Object> args) {
         Object v = args.get("service");
         assertThat("service=null", v, notNullValue());
-        return v.toString();
+        return v.toString().toLowerCase(Locale.ENGLISH);
     }
 
 }

@@ -96,16 +96,9 @@ public abstract class AbstractSystemInfo implements SystemInfo {
             return false;
         }
         SystemInfo rhs = (SystemInfo) obj;
-        boolean name = getName().equalsIgnoreCase(rhs.getName());
-        boolean system = getSystem() == null ? true
-                : getSystem().equalsIgnoreCase(rhs.getSystem());
-        boolean version = getVersion().equalsIgnoreCase(rhs.getVersion());
-        boolean s;
-        if (!name) {
-            s = system;
-        } else {
-            s = name;
-        }
-        return s && version;
+        boolean name = getName().equals(rhs.getName());
+        boolean system = getSystem().equals(rhs.getSystem());
+        boolean version = getVersion().equals(rhs.getVersion());
+        return system && name && version;
     }
 }

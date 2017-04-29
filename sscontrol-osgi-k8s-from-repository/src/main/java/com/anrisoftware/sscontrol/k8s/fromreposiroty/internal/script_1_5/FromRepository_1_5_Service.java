@@ -32,8 +32,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
-import com.anrisoftware.sscontrol.types.host.external.SystemInfo.AbstractSystemInfo;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo;
+import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemInfo;
 
 /**
  *
@@ -68,27 +69,10 @@ public class FromRepository_1_5_Service implements HostServiceScriptService {
     @Inject
     private FromRepository_1_5_Factory scriptFactory;
 
-    public String getName() {
-        return SERVICE_NAME;
-    }
-
     public SystemInfo getSystem() {
-        return new AbstractSystemInfo() {
-
-            @Override
-            public String getVersion() {
-                return SYSTEM_VERSION;
-            }
-
-            @Override
-            public String getSystem() {
-                return SYSTEM_SYSTEM;
-            }
-
-            @Override
-            public String getName() {
-                return SYSTEM_NAME;
-            }
+        return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(
+                SYSTEM_SYSTEM, SYSTEM_NAME, SYSTEM_VERSION) {
+        }) {
         };
     }
 
