@@ -21,8 +21,6 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Addresses.AddressesFactory
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.PluginTargetsMap.PluginTargetsMapFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
@@ -531,7 +529,7 @@ systemctl daemon-reload
 
     List getMasterHosts() {
         K8s service = service
-        addressesFactory.create(service.cluster, scriptsRepository.targets, service.cluster.apiServers).hosts
+        addressesFactory.create(service.cluster, service.cluster.apiServers).hosts
     }
 
     String getAdvertiseAddress() {

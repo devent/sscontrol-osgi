@@ -39,9 +39,10 @@ import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
-import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -232,6 +233,7 @@ service "flannel-docker" with {
                 new TargetsServiceModule(),
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override

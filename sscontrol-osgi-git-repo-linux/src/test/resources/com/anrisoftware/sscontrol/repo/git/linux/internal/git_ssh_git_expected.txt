@@ -1,1 +1,1 @@
-clone git://git@github.com/devent/wordpress-app
+clone git://git@github.com/user/wordpress-app

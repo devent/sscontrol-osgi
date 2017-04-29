@@ -5,6 +5,7 @@
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
 mkdir -p /var/lib/robobee/tmp
 chown 1000 /var/lib/robobee/tmp
 chmod o-rwx /var/lib/robobee/tmp

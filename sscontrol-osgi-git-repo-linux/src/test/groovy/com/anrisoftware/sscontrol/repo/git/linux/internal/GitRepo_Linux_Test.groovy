@@ -38,7 +38,7 @@ class GitRepo_Linux_Test extends AbstractTest_GitRepo_Linux {
             input: """
 service "ssh", host: "localhost"
 service "git", group: 'wordpress-app' with {
-    remote url: "git://git@github.com/devent/wordpress-app"
+    remote url: "git://git@github.com/user/wordpress-app"
     credentials "ssh", key: "${idRsa}"
 }
 """,

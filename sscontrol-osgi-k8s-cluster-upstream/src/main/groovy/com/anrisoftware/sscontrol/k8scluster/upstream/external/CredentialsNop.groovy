@@ -31,20 +31,9 @@ import groovy.transform.ToString
 @ToString
 class CredentialsNop implements Credentials {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    static interface CredentialsNopFactory {
-
-        Credentials create(Map args)
-    }
-
     @Inject
     @Assisted
-    private Map args
+    private Map<String, Object> args
 
     @Override
     public String getType() {

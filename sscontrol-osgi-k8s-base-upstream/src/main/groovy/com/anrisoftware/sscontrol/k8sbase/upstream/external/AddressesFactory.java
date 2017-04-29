@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.systemmappings.external;
+package com.anrisoftware.sscontrol.k8sbase.upstream.external;
 
-import java.util.Map;
-
-import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
+import java.util.List;
 
 /**
- * Creates information about the script service.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface DefaultScriptInfoFactory {
+public interface AddressesFactory {
 
-    ScriptInfo create(Map<String, Object> args);
-
-    ScriptInfo parse(String name);
-
+    Addresses create(Object parent, List<Object> addresses);
 }
