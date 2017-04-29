@@ -50,6 +50,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -83,11 +84,12 @@ class K8sNodeScriptTest {
     void "cluster_api_host"() {
         def test = [
             name: 'cluster_api_host',
-            input: """
+            script: """
 service "k8s-node" with {
     cluster api: 'https://master.robobee.test'
 }
 """,
+            scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
@@ -102,10 +104,11 @@ service "k8s-node" with {
     void "cluster_api_host_args"() {
         def test = [
             name: 'cluster_api_host_args',
-            input: """
+            script: """
 service "k8s-node", api: 'https://master.robobee.test' with {
 }
 """,
+            scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
@@ -120,7 +123,7 @@ service "k8s-node", api: 'https://master.robobee.test' with {
     void "cluster_api_targets"() {
         def test = [
             name: 'cluster_api_targets',
-            input: """
+            script: """
 service "ssh", group: "master" with {
     host "robobee@master-0.robobee.test"
     host "robobee@master-1.robobee.test"
@@ -130,6 +133,7 @@ service "k8s-node" with {
     cluster api: master
 }
 """,
+            scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
@@ -145,7 +149,7 @@ service "k8s-node" with {
     void "cluster_api_target"() {
         def test = [
             name: 'cluster_api_target',
-            input: """
+            script: """
 service "ssh", group: "master" with {
     host "robobee@master.robobee.test"
 }
@@ -154,6 +158,7 @@ service "k8s-node" with {
     cluster api: master
 }
 """,
+            scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
@@ -168,11 +173,12 @@ service "k8s-node" with {
     void "tls"() {
         def test = [
             name: 'tls',
-            input: """
+            script: """
 service "k8s-node" with {
     tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
 }
 """,
+            scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
@@ -190,7 +196,7 @@ service "k8s-node" with {
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-node', serviceFactory
-        Eval.me 'service', services, test.input as String
+        robobeeScriptFactory.create folder.newFile(), test.script, test.scriptVars, services call()
         Closure expected = test.expected
         expected services
     }
@@ -216,6 +222,7 @@ service "k8s-node" with {
                 new PropertiesUtilsModule(),
                 new ResourcesModule(),
                 new TlsModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override
