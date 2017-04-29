@@ -28,11 +28,11 @@ import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
  */
 public abstract class AbstractSystemInfo implements SystemInfo {
 
-    private final String system;
+    private String system;
 
-    private final String name;
+    private String name;
 
-    private final String version;
+    private String version;
 
     protected AbstractSystemInfo(String system, String name, String version) {
         this.system = system;
@@ -44,14 +44,26 @@ public abstract class AbstractSystemInfo implements SystemInfo {
         this(system.getSystem(), system.getName(), system.getVersion());
     }
 
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
     @Override
     public String getSystem() {
         return system;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override

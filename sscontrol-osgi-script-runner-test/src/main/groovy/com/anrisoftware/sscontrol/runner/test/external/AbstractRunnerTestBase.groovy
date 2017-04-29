@@ -69,7 +69,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars
         createDummyCommands dir
         if (test.script instanceof URL) {
-            IOUtils.copy test.input.openStream(), new FileOutputStream(scriptFile)
+            IOUtils.copy test.script.openStream(), new FileOutputStream(scriptFile)
         } else {
             FileUtils.write(scriptFile, test.script.toString(), Charset.defaultCharset())
         }

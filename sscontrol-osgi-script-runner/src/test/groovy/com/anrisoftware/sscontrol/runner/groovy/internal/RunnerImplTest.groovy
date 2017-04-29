@@ -38,6 +38,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImpl
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 
 import groovy.util.logging.Slf4j
 
@@ -75,19 +76,15 @@ class RunnerImplTest extends AbstractRunnerTestBase {
 
     @Test
     void "run scripts"() {
-        def testCases = [
-            [
-                name: "default_target",
-                script: hostnameScript,
-                expectedServicesSize: 2,
-                expected: { Map args ->
-                    File dir = args.dir
-                },
-            ],
+        def test = [
+            name: "default_target",
+            script: hostnameScript,
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                File dir = args.dir
+            },
         ]
-        testCases.eachWithIndex { Map test, int k ->
-            doTest test, k
-        }
+        doTest test, 0
     }
 
     @Before
@@ -102,10 +99,10 @@ class RunnerImplTest extends AbstractRunnerTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh-linux-0', ssh_Linux_Factory
+        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailablePreService 'hostname', hostnamePreFactory
-        services.putAvailableScriptService 'hostname-debian-8', hostname_Debian_8_Factory
+        services.putAvailableScriptService 'hostname/debian/8', hostname_Debian_8_Factory
         return services
     }
 
@@ -134,8 +131,8 @@ class RunnerImplTest extends AbstractRunnerTestBase {
         modules << new SshModule()
         modules << new SshPreModule()
         modules << new Ssh_Linux_Module()
+        modules << new SystemNameMappingsModule()
     }
-
 
     @Before
     void setupTest() {
