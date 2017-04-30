@@ -110,6 +110,16 @@ class UnixTestUtil {
         remoteCommand "cat $file", host, port, user, key
     }
 
+    static def execRemoteFile(String script, InputStream fileStream, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        new Shell.Safe(
+                new SSH(host, port, user, key))
+                .exec(script,
+                fileStream,
+                SysStreamsLogger.outputStream,
+                SysStreamsLogger.errorStream
+                )
+    }
+
     static String checkRemoteFiles(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         def s = remoteCommand "ls -l $dir", host, port, user, key
         s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d{4}', 'date'

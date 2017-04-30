@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class GitRepo_Linux_Test extends AbstractTest_GitRepo_Linux {
+class GitRepo_Linux_Test extends Abstract_Git_Script_Linux_Test {
 
     @Test
     void "git_ssh"() {
@@ -50,6 +50,26 @@ service "git", group: 'wordpress-app' with {
                 assertFileResource GitRepo_Linux_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource GitRepo_Linux_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource GitRepo_Linux_Test, dir, "cat.out", "${args.test.name}_cat_expected.txt"
+                assertFileResource GitRepo_Linux_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "git_file"() {
+        def test = [
+            name: "git_file",
+            input: """
+service "ssh", host: "localhost"
+service "git", group: 'wordpress-app' with {
+    remote url: "/user/wordpress-app.git"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
                 assertFileResource GitRepo_Linux_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
             },
         ]

@@ -56,16 +56,26 @@ class GitRepo_Linux extends ScriptBase {
     File checkoutRepo(Map vars) {
         RepoHost repo = vars.repo
         log.info 'Checkout repository {}', repo
-        Credentials credentials = repo.repo.credentials
         File dir = vars.dir ? vars.dir : createTmpDir()
         vars.dir = dir
-        def c = "credentials${credentials.type.capitalize()}"(vars)
+        def c = setupCredentials vars
         shell """
 cd "${dir}"
 $c
 git clone ${repo.repo.remote.uri}
 """ call()
         return dir
+    }
+
+    def setupCredentials(Map vars) {
+        RepoHost repo = vars.repo
+        Credentials credentials = repo.repo.credentials
+        if (credentials) {
+            def c = "credentials${credentials.type.capitalize()}"(vars)
+            return c
+        } else {
+            return ''
+        }
     }
 
     def credentialsSsh(Map vars) {

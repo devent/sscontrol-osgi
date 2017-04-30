@@ -79,9 +79,14 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         def parser = parserFactory.create(roots, "Script.groovy", scriptEnv, services)
         def parsed = parser.parse()
         assert parsed.services.size() == test.expectedServicesSize
-        runScriptFactory.create(threads, parsed).run scriptEnv
-        Closure expected = test.expected
-        expected test: test, services: services, dir: dir
+        test.before ? test.before() : false
+        try {
+            runScriptFactory.create(threads, parsed).run scriptEnv
+            Closure expected = test.expected
+            expected test: test, services: services, dir: dir
+        } finally {
+            test.after ? test.after() : false
+        }
     }
 
     abstract def getRunScriptFactory()
