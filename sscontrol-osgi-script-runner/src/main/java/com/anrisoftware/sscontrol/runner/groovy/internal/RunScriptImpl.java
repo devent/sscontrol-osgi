@@ -30,6 +30,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
 import com.anrisoftware.sscontrol.types.host.external.PreHost;
+import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.run.external.RunScript;
@@ -108,7 +109,6 @@ public class RunScriptImpl implements RunScript {
 
     private HostServiceScript createScript(String name, HostService s,
             TargetHost host, Map<String, Object> vars) throws AppException {
-        PreHost pre = services.getAvailablePreService(name).create();
         ScriptInfo system = getSystemScriptName(host, name);
         HostServiceScriptService service = services
                 .getAvailableScriptService(system);
@@ -122,7 +122,11 @@ public class RunScriptImpl implements RunScript {
             return script;
         } else {
             script = service.create(services, s, host, threads, vars);
-            pre.configureServiceScript(script);
+            PreHostService preService = services.getAvailablePreService(name);
+            if (preService != null) {
+                PreHost pre = preService.create();
+                pre.configureServiceScript(script);
+            }
             return script;
         }
     }

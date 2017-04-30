@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
+package com.anrisoftware.sscontrol.repo.git.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,17 +21,14 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreScriptImpl.K8sClusterPreScriptImplFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -40,23 +37,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
+abstract class Abstract_Git_Runner_Linux_Test extends AbstractRunnerTestBase {
 
-    static final URL kubectlCommand = Abstract_1_5_ScriptTest.class.getResource('kubectl_command.txt')
-
-    static final URL certCaPem = Abstract_1_5_ScriptTest.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = Abstract_1_5_ScriptTest.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = Abstract_1_5_ScriptTest.class.getResource('cert_key.txt')
-
-    static final Map andreaLocalCerts = [
-        worker: [
-            ca: Abstract_1_5_ScriptTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: Abstract_1_5_ScriptTest.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
-            key: Abstract_1_5_ScriptTest.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
-        ],
-    ]
+    static final URL idRsa = Abstract_Git_Runner_Linux_Test.class.getResource('id_rsa.txt')
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -71,25 +54,10 @@ abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    K8sClusterImplFactory clusterFactory
-
-    @Inject
-    K8sClusterPreScriptImplFactory clusterPreFactory
-
-    @Inject
-    K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
-
-    @Inject
     GitRepoImplFactory gitFactory
 
     @Inject
     GitRepo_Linux_Factory gitScriptFactory
-
-    @Inject
-    FromRepositoryImplFactory serviceFactory
-
-    @Inject
-    FromRepository_1_5_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -98,20 +66,17 @@ abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh-linux-0', ssh_Linux_Factory
-        services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailablePreService 'k8s-cluster', clusterPreFactory
-        services.putAvailableScriptService 'k8s-cluster-linux-0', cluster_1_5_Factory
+        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'git', gitFactory
         services.putAvailableScriptService 'git/linux/0', gitScriptFactory
-        services.putAvailableService 'from-repository', serviceFactory
-        services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
         return services
     }
 
     List getAdditionalModules() {
         def modules = super.additionalModules
-        modules.addAll FromRepository_1_5_Modules.getAdditionalModules()
+        modules << new RunnerModule()
+        modules << new Ssh_Linux_Module()
+        modules.addAll Git_Linux_Modules.getAdditionalModules()
         modules
     }
 

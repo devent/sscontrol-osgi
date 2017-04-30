@@ -58,7 +58,7 @@
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
         <module>../sscontrol-osgi-k8s-master-upstream</module>
-        <module>../sscontrol-osgi-k8s-monitoring-cluster-heapster-influxdb-grafana</module>
+<!--        <module>../sscontrol-osgi-k8s-monitoring-cluster-heapster-influxdb-grafana</module>-->
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-k8s-node-debian</module>
         <module>../sscontrol-osgi-k8s-node-upstream</module>

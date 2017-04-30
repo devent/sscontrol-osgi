@@ -57,21 +57,10 @@ class FromRepository_1_5 extends ScriptBase {
         HostServiceScript fromRepo = createScript service.repo.type
         File dir = fromRepo.checkoutRepo repo: service.repo
         try {
-            def file = "$dir/grafana-service.yaml"
-            template resource: templates.getResource('grafana_service'), name: 'grafanaService', dest: file, vars: [:] call()
-            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-            file = "$dir/heapster-controller.yaml"
-            template resource: templates.getResource('heapster_controller'), name: 'heapsterController', dest: file, vars: [:] call()
-            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-            file = "$dir/heapster-service.yaml"
-            template resource: templates.getResource('heapster_service'), name: 'heapsterService', dest: file, vars: [:] call()
-            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-            file = "$dir/influxdb-grafana-controller.yaml"
-            template resource: templates.getResource('influxdb_grafana_controller'), name: 'influxdbGrafanaController', dest: file, vars: [:] call()
-            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
-            file = "$dir/influxdb-service.yaml"
-            template resource: templates.getResource('influxdb_service'), name: 'influxdbService', dest: file, vars: [:] call()
-            cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $file"
+            dir.listFiles([accept: {File d, String f -> f ==~ /(?m)\.(:?(yaml)|(yml)|(json))$/}] as FilenameFilter).each {
+                log.debug 'Apply {}', it
+                cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $it"
+            }
         } finally {
             dir.deleteDir()
         }
