@@ -134,6 +134,8 @@ class UnixTestUtil {
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
 
+    static final URL exit1Command = UnixTestUtil.class.getResource('exit_1_command.txt')
+
     static final URL debianJessieCatCommand = UnixTestUtil.class.getResource('debian_jessie_cat_cmd.txt')
 
     static final URL whichCommand = UnixTestUtil.class.getResource('which_cmd.txt')

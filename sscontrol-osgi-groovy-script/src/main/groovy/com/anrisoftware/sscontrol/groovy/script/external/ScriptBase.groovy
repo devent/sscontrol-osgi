@@ -27,6 +27,7 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
+import org.stringtemplate.v4.ST
 
 import com.anrisoftware.sscontrol.copy.external.Copy
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
@@ -421,12 +422,26 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Checks if the apt-packages are installed. Per default checks the
+     * packages from the profile property {@code packages}.
+     */
+    boolean checkAptPackage(def packages=packages, def timeout=timeoutShort) {
+        log.info "Check installed packages {}.", packages
+        def ret = shell exitCodes: [0, 1] as int[], timeout: timeout, new ST("""
+set -e
+export LANG=en_US.UTF-8
+<packages:{f|dpkg -s <f> | grep '$grepAptPackageInstalled' 1>/dev/null};separator="\\n">
+""").add("packages", packages).render() call()
+        return ret.exitValue == 0
+    }
+
+    /**
      * Installs the specified packages via apt-get. Per default installs the
      * packages from the profile property {@code packages}.
      */
     void installAptPackages(def packages=packages, def timeout=timeoutLong) {
         log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+        shell privileged: true, timeout: timeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
@@ -726,6 +741,10 @@ mktemp -d
 
     Duration getTimeoutVeryLong() {
         properties.getDurationProperty('command_timeout_very_long', defaultProperties)
+    }
+
+    String getGrepAptPackageInstalled() {
+        properties.getProperty 'grep_apt_package_installed', defaultProperties
     }
 
     private setupArgs(Map args, String name='') {

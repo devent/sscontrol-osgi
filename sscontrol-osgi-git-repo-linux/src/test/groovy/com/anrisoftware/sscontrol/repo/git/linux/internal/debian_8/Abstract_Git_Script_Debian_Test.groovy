@@ -60,6 +60,7 @@ abstract class Abstract_Git_Script_Debian_Test extends AbstractScriptTestBase {
 
     void createDummyCommands(File dir) {
         createIdCommand dir
+        createCommand exit1Command, dir, 'dpkg'
         createEchoCommands dir, [
             'apt-get',
             'mkdir',

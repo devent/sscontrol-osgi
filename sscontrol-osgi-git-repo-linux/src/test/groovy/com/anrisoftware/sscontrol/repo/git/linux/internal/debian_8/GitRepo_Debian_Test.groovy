@@ -46,6 +46,8 @@ service "git", group: 'wordpress-app' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource GitRepo_Debian_Test, dir, "dpkg.out", "${args.test.name}_dpkg_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource GitRepo_Debian_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource GitRepo_Debian_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource GitRepo_Debian_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"

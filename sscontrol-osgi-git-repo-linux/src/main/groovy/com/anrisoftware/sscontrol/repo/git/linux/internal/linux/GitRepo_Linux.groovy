@@ -53,12 +53,13 @@ abstract class GitRepo_Linux extends ScriptBase {
             shell """
 cd "${dir}"
 $c
-git clone ${path}
+git clone ${path} .
 """ call()
-        } finally {
+        } catch (e) {
             shell """
 rm -r "${dir}"
 """ call()
+            throw e
         }
         return dir
     }
