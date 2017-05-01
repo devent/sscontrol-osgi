@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class GitRepo_Debian_8_ extends GitRepo_Linux {
+class GitRepo_Debian_8 extends GitRepo_Linux {
 
     @Inject
     GitRepo_Debian_8_Properties debianPropertiesProvider

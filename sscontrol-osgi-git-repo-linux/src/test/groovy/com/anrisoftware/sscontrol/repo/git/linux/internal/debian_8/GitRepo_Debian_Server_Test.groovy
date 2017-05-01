@@ -49,12 +49,16 @@ class GitRepo_Debian_Server_Test extends Abstract_Git_Runner_Debian_Test {
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "git", group: 'wordpress-app' with {
     remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=\$checkoutDir"
 }
 """,
+            scriptVars: [checkoutDir: '/tmp/w'],
             expectedServicesSize: 2,
-            before: {
+            before: { Map test ->
                 def file = SSH.escape('wordpress-app.zip')
                 execRemoteFile """
+rm -rf "${test.scriptVars.checkoutDir}"
+mkdir -p "${test.scriptVars.checkoutDir}"
 if ! which unzip; then
 sudo apt-get update
 sudo apt-get install unzip
@@ -65,12 +69,13 @@ cat > ${file}
 unzip $file
 """, wordpressZip.openStream()
             },
-            after: { remoteCommand """
+            after: { Map test -> remoteCommand """
+rm -rf "${test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """ },
             expected: { Map args ->
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile('/etc/hostname'), "${args.test.name}_hostname_expected.txt"
-                assertStringResource GitRepo_Debian_Server_Test, remoteCommand('hostname -f'), "${args.test.name}_hostname_f_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
             },
         ]
         doTest test

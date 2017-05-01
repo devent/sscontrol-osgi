@@ -51,7 +51,7 @@ public class GitRepo_Debian_8_Service implements HostServiceScriptService {
     @Property(value = SERVICE_NAME)
     static final String SERVICE_NAME_PROPERTY = "service.name";
 
-    static final String SYSTEM_VERSION = "0";
+    static final String SYSTEM_VERSION = "8";
 
     @Property(value = SYSTEM_VERSION)
     static final String SERVICE_SYSTEM_VERSION_PROPERTY = "service.system.version";
@@ -61,7 +61,7 @@ public class GitRepo_Debian_8_Service implements HostServiceScriptService {
     @Property(value = SYSTEM_NAME)
     static final String SERVICE_SYSTEM_NAME_PROPERTY = "service.system.name";
 
-    static final String SYSTEM_SYSTEM = "linux";
+    static final String SYSTEM_SYSTEM = "debian";
 
     @Property(value = SYSTEM_SYSTEM)
     static final String SERVICE_SYSTEM_SYSTEM_PROPERTY = "service.system.system";

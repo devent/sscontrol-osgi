@@ -1,1 +1,1 @@
-clone /user/wordpress-app.git
+clone /user/wordpress-app.git .

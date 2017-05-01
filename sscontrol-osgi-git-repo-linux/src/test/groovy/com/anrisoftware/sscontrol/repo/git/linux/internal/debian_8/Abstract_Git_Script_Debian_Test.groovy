@@ -55,12 +55,12 @@ abstract class Abstract_Git_Script_Debian_Test extends AbstractScriptTestBase {
     }
 
     String getScriptServiceName() {
-        'git/linux/0'
+        'git/debian/8'
     }
 
     void createDummyCommands(File dir) {
         createIdCommand dir
-        createCommand exit1Command, dir, 'dpkg'
+        createCommand exit1Command, dir, 'grep'
         createEchoCommands dir, [
             'apt-get',
             'mkdir',
@@ -73,13 +73,14 @@ abstract class Abstract_Git_Script_Debian_Test extends AbstractScriptTestBase {
             'mv',
             'cat',
             'git',
+            'dpkg',
         ]
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'git', serviceFactory
-        services.putAvailableScriptService 'git/linux/0', scriptFactory
+        services.putAvailableScriptService 'git/debian/8', scriptFactory
     }
 
     List getAdditionalModules() {

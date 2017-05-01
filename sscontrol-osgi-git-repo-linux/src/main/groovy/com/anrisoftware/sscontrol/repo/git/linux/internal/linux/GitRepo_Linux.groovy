@@ -45,7 +45,13 @@ abstract class GitRepo_Linux extends ScriptBase {
     File checkoutRepo(Map vars) {
         RepoHost repo = vars.repo
         log.info 'Checkout repository {}', repo
-        File dir = vars.dir ? vars.dir : createTmpDir()
+        File dir = vars.dir
+        if (!dir) {
+            dir = checkoutDirectory
+            if (!dir) {
+                dir = createTmpDir()
+            }
+        }
         vars.dir = dir
         def c = setupCredentials vars
         def path = toPath repo.repo.remote.uri
@@ -110,5 +116,9 @@ export GIT_SSH=ssh-wrapper
     @Override
     def getLog() {
         log
+    }
+
+    File getCheckoutDirectory() {
+        properties.getFileProperty "checkout_directory", base, defaultProperties
     }
 }
