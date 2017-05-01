@@ -30,7 +30,7 @@ public class GitRepo_Debian_8_Module extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, GitRepo_Debian_8_.class)
+                .implement(HostServiceScript.class, GitRepo_Debian_8.class)
                 .build(GitRepo_Debian_8_Factory.class));
     }
 
