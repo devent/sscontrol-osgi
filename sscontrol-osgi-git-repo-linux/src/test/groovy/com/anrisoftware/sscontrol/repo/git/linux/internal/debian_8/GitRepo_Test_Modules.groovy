@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.repo.git.linux.internal
+package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -29,7 +29,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Git_Linux_Modules {
+class GitRepo_Test_Modules {
 
     /**
      * Returns the needed modules.
@@ -39,7 +39,7 @@ class Git_Linux_Modules {
             new SshModule(),
             new SshPreModule(),
             new GitRepoModule(),
-            new GitRepo_Linux_Module(),
+            new GitRepo_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

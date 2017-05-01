@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal;
+package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class GitRepo_Linux_Service implements HostServiceScriptService {
+public class GitRepo_Debian_8_Service implements HostServiceScriptService {
 
     static final String SERVICE_NAME = "git";
 
@@ -67,7 +67,7 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
     static final String SERVICE_SYSTEM_SYSTEM_PROPERTY = "service.system.system";
 
     @Inject
-    private GitRepo_Linux_Factory scriptFactory;
+    private GitRepo_Debian_8_Factory scriptFactory;
 
     public ScriptInfo getSystem() {
         return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(
@@ -85,7 +85,7 @@ public class GitRepo_Linux_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new GitRepo_Linux_Module()).injectMembers(this);
+        createInjector(new GitRepo_Debian_8_Module()).injectMembers(this);
     }
 
 }
