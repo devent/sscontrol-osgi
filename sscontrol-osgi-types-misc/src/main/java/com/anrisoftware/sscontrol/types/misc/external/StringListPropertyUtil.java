@@ -45,33 +45,33 @@ public class StringListPropertyUtil {
      * property << 'name = value'
      * </pre>
      */
-    @SuppressWarnings("serial")
+    @SuppressWarnings({ "serial", "rawtypes", "unchecked" })
     public static List<String> stringListStatement(
             final ListProperty property) {
-        return new ArrayList<String>() {
+        return new ArrayList() {
 
             @Override
-            public boolean add(String e) {
-                property.add(e);
+            public boolean add(Object e) {
+                property.add(e.toString());
                 return true;
             }
 
             @Override
-            public void add(int index, String element) {
-                property.add(element);
+            public void add(int index, Object element) {
+                property.add(element.toString());
             }
 
             @Override
-            public boolean addAll(Collection<? extends String> c) {
-                for (String string : c) {
+            public boolean addAll(Collection c) {
+                for (Object string : c) {
                     add(string);
                 }
                 return true;
             }
 
             @Override
-            public boolean addAll(int index, Collection<? extends String> c) {
-                for (String string : c) {
+            public boolean addAll(int index, Collection c) {
+                for (Object string : c) {
                     add(string);
                 }
                 return true;
