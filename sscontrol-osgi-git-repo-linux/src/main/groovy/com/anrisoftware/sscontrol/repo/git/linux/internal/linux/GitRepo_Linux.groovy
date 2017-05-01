@@ -48,11 +48,12 @@ abstract class GitRepo_Linux extends ScriptBase {
         File dir = vars.dir ? vars.dir : createTmpDir()
         vars.dir = dir
         def c = setupCredentials vars
+        def path = toPath repo.repo.remote.uri
         try {
             shell """
 cd "${dir}"
 $c
-git clone ${repo.repo.remote.uri}
+git clone ${path}
 """ call()
         } finally {
             shell """
@@ -60,6 +61,16 @@ rm -r "${dir}"
 """ call()
         }
         return dir
+    }
+
+    String toPath(URI uri) {
+        switch (uri.scheme) {
+            case 'file':
+                return uri.path
+                break
+            default:
+                return uri.toString()
+        }
     }
 
     def setupCredentials(Map vars) {
