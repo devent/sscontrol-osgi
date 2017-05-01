@@ -36,7 +36,9 @@ class GitRepo_Debian_8_ extends GitRepo_Linux {
 
     @Override
     def run() {
-        installAptPackages()
+        if (!checkAptPackage()) {
+            installAptPackages()
+        }
         super.run()
     }
 
