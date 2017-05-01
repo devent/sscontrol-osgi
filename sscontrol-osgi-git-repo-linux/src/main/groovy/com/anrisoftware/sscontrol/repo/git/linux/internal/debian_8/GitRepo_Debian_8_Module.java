@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal
+package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>K8s-Cluster properties provider from
- * {@code "/k8s_cluster_1_5_linux.properties"}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class GitRepo_Linux_Properties extends AbstractContextPropertiesProvider {
+public class GitRepo_Debian_8_Module extends AbstractModule {
 
-    private static final URL RESOURCE = GitRepo_Linux_Properties.class.getResource("/k8s_cluster_1_5_linux.properties")
-
-    GitRepo_Linux_Properties() {
-        super(GitRepo_Linux_Properties.class, RESOURCE)
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, GitRepo_Debian_8_.class)
+                .build(GitRepo_Debian_8_Factory.class));
     }
+
 }

@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal
-
-import javax.inject.Inject
+package com.anrisoftware.sscontrol.repo.git.linux.internal.linux
 
 import org.apache.commons.io.IOUtils
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo
@@ -34,20 +31,12 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class GitRepo_Linux extends ScriptBase {
-
-    @Inject
-    GitRepo_Linux_Properties linuxPropertiesProvider
+abstract class GitRepo_Linux extends ScriptBase {
 
     @Override
     def run() {
         GitRepo service = this.service
         checkoutRepo repo: service.hosts[0]
-    }
-
-    @Override
-    ContextProperties getDefaultProperties() {
-        linuxPropertiesProvider.get()
     }
 
     /**
@@ -59,11 +48,17 @@ class GitRepo_Linux extends ScriptBase {
         File dir = vars.dir ? vars.dir : createTmpDir()
         vars.dir = dir
         def c = setupCredentials vars
-        shell """
+        try {
+            shell """
 cd "${dir}"
 $c
 git clone ${repo.repo.remote.uri}
 """ call()
+        } finally {
+            shell """
+rm -r "${dir}"
+""" call()
+        }
         return dir
     }
 

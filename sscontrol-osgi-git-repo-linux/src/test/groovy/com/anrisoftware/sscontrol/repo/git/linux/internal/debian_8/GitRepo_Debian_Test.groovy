@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal
+package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class GitRepo_Linux_Test extends Abstract_Git_Script_Linux_Test {
+class GitRepo_Debian_Test extends Abstract_Git_Script_Debian_Test {
 
     @Test
     void "git_ssh"() {
@@ -46,11 +46,11 @@ service "git", group: 'wordpress-app' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource GitRepo_Linux_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource GitRepo_Linux_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource GitRepo_Linux_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource GitRepo_Linux_Test, dir, "cat.out", "${args.test.name}_cat_expected.txt"
-                assertFileResource GitRepo_Linux_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "cat.out", "${args.test.name}_cat_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
             },
         ]
         doTest test
@@ -70,7 +70,7 @@ service "git", group: 'wordpress-app' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource GitRepo_Linux_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
+                assertFileResource GitRepo_Debian_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
             },
         ]
         doTest test

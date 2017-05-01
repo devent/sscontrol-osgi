@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal
+package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -35,11 +35,11 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class GitRepo_Linux_Server_Test extends Abstract_Git_Runner_Linux_Test {
+class GitRepo_Debian_Server_Test extends Abstract_Git_Runner_Debian_Test {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
-    static final URL wordpressZip = GitRepo_Linux_Server_Test.class.getResource('wordpress-app.zip')
+    static final URL wordpressZip = GitRepo_Debian_Server_Test.class.getResource('wordpress-app.zip')
 
     @Test
     void "git_file"() {
@@ -69,8 +69,8 @@ unzip $file
 rm -r /tmp/wordpress-app
 """ },
             expected: { Map args ->
-                assertStringResource GitRepo_Linux_Server_Test, readRemoteFile('/etc/hostname'), "${args.test.name}_hostname_expected.txt"
-                assertStringResource GitRepo_Linux_Server_Test, remoteCommand('hostname -f'), "${args.test.name}_hostname_f_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile('/etc/hostname'), "${args.test.name}_hostname_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, remoteCommand('hostname -f'), "${args.test.name}_hostname_f_expected.txt"
             },
         ]
         doTest test
