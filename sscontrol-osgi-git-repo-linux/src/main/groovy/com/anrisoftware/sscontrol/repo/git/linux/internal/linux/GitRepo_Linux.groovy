@@ -36,7 +36,8 @@ abstract class GitRepo_Linux extends ScriptBase {
     @Override
     def run() {
         GitRepo service = this.service
-        checkoutRepo repo: service.hosts[0]
+        def dir = checkoutRepo repo: service.hosts[0]
+        putState "git-${service.group}-dir", dir
     }
 
     /**

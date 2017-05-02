@@ -19,6 +19,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
+import org.apache.commons.codec.Charsets
+import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -42,9 +44,9 @@ class FromRepository_Debian_Server_Test extends Abstract_FromRepository_Runner_D
     static final URL wordpressZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app.zip')
 
     @Test
-    void "git_file"() {
+    void "git_file_server"() {
         def test = [
-            name: "git_file",
+            name: "git_file_server",
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
@@ -52,20 +54,34 @@ service "k8s-cluster" with {
 }
 service "git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=\$checkoutDir"
 }
-service "from-repository", repo: "wordpress-app"
+service "from-repository", repo: "wordpress-app" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
 """,
             scriptVars: [checkoutDir: '/tmp/w'],
-            expectedServicesSize: 2,
+            expectedServicesSize: 4,
             before: { Map test ->
                 def file = SSH.escape('wordpress-app.zip')
                 execRemoteFile """
+echo "Create /tmp/kubectl."
+cat > /tmp/kubectl << 'EOL'
+${IOUtils.toString(echoCommand.openStream(), Charsets.UTF_8)}
+EOL
+chmod +x /tmp/kubectl
+
+echo "Create ${test.scriptVars.checkoutDir}."
 rm -rf "${test.scriptVars.checkoutDir}"
 mkdir -p "${test.scriptVars.checkoutDir}"
+
+echo "Install unzip."
 if ! which unzip; then
 sudo apt-get update
 sudo apt-get install unzip
 fi
+
+echo "Unzip to /tmp/wordpress-app."
 mkdir -p /tmp/wordpress-app
 cd /tmp/wordpress-app
 cat > ${file}
@@ -73,12 +89,13 @@ unzip $file
 """, wordpressZip.openStream()
             },
             after: { Map test -> remoteCommand """
+rm /tmp/kubectl
+rm /tmp/kubectl.out
 rm -rf "${test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """ },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
+                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

@@ -140,7 +140,11 @@ chmod o-rx $certsDir
         v.credentials = c
         v.tls = c.hasProperty('tls') ? c.tls : null
         v.certsDir = getClusterCertsDir(host.cluster.cluster.name)
-        shell resource: kubectlTemplate, name: 'kubectlCmd', vars: v call()
+        def args = new HashMap(vars)
+        args.resource = kubectlTemplate
+        args.name = 'kubectlCmd'
+        args.vars = v
+        shell args call()
     }
 
     String getClusterCertsDir(String name) {
@@ -202,7 +206,7 @@ chmod o-rx $certsDir
     }
 
     File getKubectlCmd() {
-        properties.getFileProperty 'kubectl_cmd', binDir, defaultProperties
+        getFileProperty 'kubectl_cmd', binDir, defaultProperties
     }
 
     @Override
