@@ -60,8 +60,8 @@ service "git", group: 'wordpress-app' with {
 rm -rf "${test.scriptVars.checkoutDir}"
 mkdir -p "${test.scriptVars.checkoutDir}"
 if ! which unzip; then
-sudo apt-get update
-sudo apt-get install unzip
+sudo DEBIAN_FRONTEND=noninteractive apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip
 fi
 mkdir -p /tmp/wordpress-app
 cd /tmp/wordpress-app
