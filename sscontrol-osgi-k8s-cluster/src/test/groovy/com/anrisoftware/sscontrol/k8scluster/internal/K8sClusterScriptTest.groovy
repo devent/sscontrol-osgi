@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -160,9 +159,7 @@ service "k8s-cluster" with {
         toStringStyle
         Guice.createInjector(
                 new K8sModule(),
-                new K8sPreModule(),
                 new K8sClusterModule(),
-                new K8sClusterPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

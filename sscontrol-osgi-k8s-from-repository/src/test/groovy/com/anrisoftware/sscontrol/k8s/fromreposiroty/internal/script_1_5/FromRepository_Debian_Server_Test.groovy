@@ -51,8 +51,7 @@ service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
 service "git", group: "wordpress-app" with {
-    remote url: "git://git@github.com:user/wordpress-app.git"
-    credentials "ssh", key: "${idRsa}"
+    remote url: "/tmp/wordpress-app"
 }
 service "from-repository", repo: "wordpress-app"
 """,

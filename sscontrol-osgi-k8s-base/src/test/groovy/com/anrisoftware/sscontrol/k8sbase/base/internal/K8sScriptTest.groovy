@@ -225,7 +225,6 @@ service "k8s-master" with {
         toStringStyle
         Guice.createInjector(
                 new K8sModule(),
-                new K8sPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

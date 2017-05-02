@@ -27,7 +27,6 @@ import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
@@ -388,9 +387,7 @@ service "k8s-master" with {
         toStringStyle
         Guice.createInjector(
                 new K8sModule(),
-                new K8sPreModule(),
                 new K8sMasterModule(),
-                new K8sMasterPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),

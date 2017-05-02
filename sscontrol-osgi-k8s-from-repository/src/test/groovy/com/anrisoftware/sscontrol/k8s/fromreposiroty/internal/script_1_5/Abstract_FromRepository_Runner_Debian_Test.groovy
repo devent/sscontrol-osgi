@@ -23,15 +23,16 @@ import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreScriptImpl.K8sClusterPreScriptImplFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
 import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
 import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -74,9 +75,6 @@ abstract class Abstract_FromRepository_Runner_Debian_Test extends AbstractRunner
     K8sClusterImplFactory clusterFactory
 
     @Inject
-    K8sClusterPreScriptImplFactory clusterPreFactory
-
-    @Inject
     K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
 
     @Inject
@@ -99,8 +97,7 @@ abstract class Abstract_FromRepository_Runner_Debian_Test extends AbstractRunner
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'k8s/cluster', clusterFactory
-        services.putAvailablePreService 'k8s/cluster', clusterPreFactory
+        services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
         services.putAvailableService 'git', gitFactory
         services.putAvailableScriptService 'git/debian/8', gitScriptFactory
@@ -111,6 +108,8 @@ abstract class Abstract_FromRepository_Runner_Debian_Test extends AbstractRunner
 
     List getAdditionalModules() {
         def modules = super.additionalModules
+        modules << new RunnerModule()
+        modules << new Ssh_Linux_Module()
         modules.addAll FromRepository_1_5_Modules.getAdditionalModules()
         modules
     }

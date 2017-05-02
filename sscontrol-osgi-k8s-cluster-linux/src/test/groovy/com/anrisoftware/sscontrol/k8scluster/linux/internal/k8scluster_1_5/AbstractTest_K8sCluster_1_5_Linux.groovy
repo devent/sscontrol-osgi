@@ -27,9 +27,7 @@ import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -129,9 +127,7 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
             new SshModule(),
             new SshPreModule(),
             new K8sModule(),
-            new K8sPreModule(),
             new K8sClusterModule(),
-            new K8sClusterPreModule(),
             new K8sCluster_1_5_Upstream_Module(),
             new K8sCluster_1_5_Linux_Module(),
             new DebugLoggingModule(),
