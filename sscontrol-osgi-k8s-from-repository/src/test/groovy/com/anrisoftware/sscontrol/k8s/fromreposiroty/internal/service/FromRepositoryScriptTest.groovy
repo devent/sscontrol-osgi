@@ -32,9 +32,7 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
@@ -51,8 +49,8 @@ import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScri
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
-import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -136,9 +134,7 @@ service "from-repository", repo: "wordpress-app"
         toStringStyle
         injector = Guice.createInjector(
                 new K8sModule(),
-                new K8sPreModule(),
                 new K8sClusterModule(),
-                new K8sClusterPreModule(),
                 new FromRepositoryModule(),
                 new GitRepoModule(),
                 new PropertiesModule(),
