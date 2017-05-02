@@ -12,7 +12,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreModule
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
 import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Module
+import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Module
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -58,7 +58,7 @@ class FromRepository_1_5_Modules {
             new FromRepositoryModule(),
             new FromRepository_1_5_Module(),
             new GitRepoModule(),
-            new GitRepo_Linux_Module(),
+            new GitRepo_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
