@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromReposi
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterPreScriptImpl.K8sClusterPreScriptImplFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -40,21 +40,21 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
+abstract class Abstract_FromRepository_Runner_Debian_Test extends AbstractRunnerTestBase {
 
-    static final URL kubectlCommand = Abstract_1_5_ScriptTest.class.getResource('kubectl_command.txt')
+    static final URL kubectlCommand = Abstract_FromRepository_Runner_Debian_Test.class.getResource('kubectl_command.txt')
 
-    static final URL certCaPem = Abstract_1_5_ScriptTest.class.getResource('cert_ca.txt')
+    static final URL certCaPem = Abstract_FromRepository_Runner_Debian_Test.class.getResource('cert_ca.txt')
 
-    static final URL certCertPem = Abstract_1_5_ScriptTest.class.getResource('cert_cert.txt')
+    static final URL certCertPem = Abstract_FromRepository_Runner_Debian_Test.class.getResource('cert_cert.txt')
 
-    static final URL certKeyPem = Abstract_1_5_ScriptTest.class.getResource('cert_key.txt')
+    static final URL certKeyPem = Abstract_FromRepository_Runner_Debian_Test.class.getResource('cert_key.txt')
 
     static final Map andreaLocalCerts = [
         worker: [
-            ca: Abstract_1_5_ScriptTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: Abstract_1_5_ScriptTest.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
-            key: Abstract_1_5_ScriptTest.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
+            ca: Abstract_FromRepository_Runner_Debian_Test.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
+            cert: Abstract_FromRepository_Runner_Debian_Test.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
+            key: Abstract_FromRepository_Runner_Debian_Test.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
         ],
     ]
 
@@ -83,7 +83,7 @@ abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
     GitRepoImplFactory gitFactory
 
     @Inject
-    GitRepo_Linux_Factory gitScriptFactory
+    GitRepo_Debian_8_Factory gitScriptFactory
 
     @Inject
     FromRepositoryImplFactory serviceFactory
@@ -98,12 +98,12 @@ abstract class Abstract_1_5_ScriptTest extends AbstractRunnerTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh-linux-0', ssh_Linux_Factory
-        services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailablePreService 'k8s-cluster', clusterPreFactory
-        services.putAvailableScriptService 'k8s-cluster-linux-0', cluster_1_5_Factory
+        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableService 'k8s/cluster', clusterFactory
+        services.putAvailablePreService 'k8s/cluster', clusterPreFactory
+        services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
         services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/linux/0', gitScriptFactory
+        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
         services.putAvailableService 'from-repository', serviceFactory
         services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
         return services

@@ -24,7 +24,7 @@ import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.GitRepo_Linux_Factory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -58,7 +58,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
     GitRepoImplFactory gitFactory
 
     @Inject
-    GitRepo_Linux_Factory gitScriptFactory
+    GitRepo_Debian_8_Factory gitScriptFactory
 
     @Inject
     FromRepositoryImplFactory serviceFactory
@@ -98,7 +98,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/linux/0', gitScriptFactory
+        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
         services.putAvailableService 'from-repository', serviceFactory
         services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
     }
