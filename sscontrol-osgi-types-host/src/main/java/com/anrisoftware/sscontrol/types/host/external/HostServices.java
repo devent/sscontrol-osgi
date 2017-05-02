@@ -58,6 +58,10 @@ public interface HostServices {
 
     List<HostService> getServices(String name);
 
+    void putState(String name, Object state);
+
+    <T> T getState(String name);
+
     HostTargets<?, ?> getTargets();
 
     HostTargets<?, ?> getClusters();

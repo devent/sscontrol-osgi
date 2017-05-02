@@ -83,6 +83,8 @@ public class HostServicesImpl implements HostServices {
 
     private final Map<String, List<HostService>> hostServices;
 
+    private final Map<String, Object> states;
+
     private final Targets targets;
 
     private final Clusters clusters;
@@ -116,6 +118,7 @@ public class HostServicesImpl implements HostServices {
                 new LinkedHashMap<String, List<HostService>>());
         this.availableScriptServices = synchronizedMap(
                 scriptsMapFactory.create());
+        this.states = synchronizedMap(new HashMap<String, Object>());
         this.getTargets = new GetTargets<>(SshHost.class, Ssh.class, "target");
         this.getClusters = new GetTargets<ClusterHost, Cluster>(
                 ClusterHost.class, Cluster.class, "cluster") {
@@ -355,6 +358,17 @@ public class HostServicesImpl implements HostServices {
             throw new NullPointerException(
                     format("Service '%s' not found.", name));
         }
+    }
+
+    @Override
+    public void putState(String name, Object state) {
+        states.put(name, state);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getState(String name) {
+        return (T) states.get(name);
     }
 
 }

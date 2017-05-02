@@ -29,6 +29,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.copy.external.Copy
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.facts.external.Facts
@@ -745,6 +746,28 @@ mktemp -d
 
     String getGrepAptPackageInstalled() {
         properties.getProperty 'grep_apt_package_installed', defaultProperties
+    }
+
+    public void putState(String name, Object state) {
+        scriptsRepository.putState(name, state)
+    }
+
+    public <T> T getState(String name) {
+        return (T) scriptsRepository.getState(name)
+    }
+
+    public File getFileProperty(String key, File parent,
+            ContextProperties defaults, boolean useAbsolute=true) {
+        File file
+        if (useAbsolute) {
+            file = properties.getFileProperty key, defaults
+            if (!file.absolute) {
+                file = properties.getFileProperty key, parent, defaults
+            }
+        } else {
+            file = properties.getFileProperty key, parent, defaults
+        }
+        return file
     }
 
     private setupArgs(Map args, String name='') {

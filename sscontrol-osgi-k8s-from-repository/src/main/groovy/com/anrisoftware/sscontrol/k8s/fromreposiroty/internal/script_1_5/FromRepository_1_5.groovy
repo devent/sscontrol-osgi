@@ -22,7 +22,6 @@ import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
@@ -54,15 +53,14 @@ class FromRepository_1_5 extends ScriptBase {
         FromRepository service = this.service
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
-        HostServiceScript fromRepo = createScript service.repo.type
-        File dir = fromRepo.checkoutRepo repo: service.repo
+        File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         try {
-            dir.listFiles([accept: {File d, String f -> f ==~ /(?m)\.(:?(yaml)|(yml)|(json))$/}] as FilenameFilter).each {
-                log.debug 'Apply {}', it
-                cluster.runKubectl service: service, cluster: service.cluster, args: "apply -f $it"
+            def files = shell outString: true, chdir: dir, "find . -name \\*.yaml ! -name \\*.yml ! -name \\*.json" call() out
+            files.split(/\n/).each {
+                cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
             }
         } finally {
-            dir.deleteDir()
+            shell "rm -rf $dir" call() out
         }
     }
 
