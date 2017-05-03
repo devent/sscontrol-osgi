@@ -48,6 +48,17 @@ public interface Shell {
     static final String VARS_ARG = "vars";
 
     /**
+     * The string passed is used a StringTemplate template. The {@code parent}
+     * and {@code vars} arguments are passed to the template. For example,
+     *
+     * <pre>
+     * shell st: "<vars.patterns:{p|find <p>};separator="\n">",
+     * vars: [patterns: ["*.yaml", "*.json"]] call()
+     * </pre>
+     */
+    static final String ST_ARG = "st";
+
+    /**
      * Factory to create the shell command.
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>

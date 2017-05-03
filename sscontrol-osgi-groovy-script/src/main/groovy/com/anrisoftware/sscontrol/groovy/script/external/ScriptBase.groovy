@@ -756,6 +756,20 @@ mktemp -d
         return (T) scriptsRepository.getState(name)
     }
 
+    /**
+     * Returns the file property.
+     *
+     * @param key
+     * the key of the property.
+     * @param parent
+     * the {@link File} parent directory of the file.
+     * @param defaults
+     * the {@link ContextProperties} default properties.
+     * @param useAbsolute
+     * if true, if the file property is absolute then the file property
+     * is returned, otherwise the file property will always be under the
+     * specified parent directory.
+     */
     public File getFileProperty(String key, File parent,
             ContextProperties defaults, boolean useAbsolute=true) {
         File file

@@ -6,7 +6,7 @@ if [ "$#" -gt 0 ]; then
     cmd=($1)
     cmd=${cmd[0]}
     if command -v -- "$cmd"&>/dev/null; then
-        if [[ "$cmd" != "enable" ]]; then
+        if [[ "$cmd" != "enable" && "$cmd" != "." ]]; then
             $@
         fi
     fi

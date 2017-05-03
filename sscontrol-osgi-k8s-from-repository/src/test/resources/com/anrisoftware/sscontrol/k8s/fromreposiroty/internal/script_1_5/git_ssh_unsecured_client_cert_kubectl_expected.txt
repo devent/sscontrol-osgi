@@ -1,0 +1,2 @@
+config use-context default-system
+apply -f /tmp/junit/junit/find . -name *.yaml ! -name *.yml ! -name *.json

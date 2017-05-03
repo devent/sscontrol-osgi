@@ -51,7 +51,8 @@ service "from-repository", repo: "wordpress-app"
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 File binDir = new File(dir, '/usr/local/bin')
-                assertFileResource FromRepository_1_5_Test, dir, "git.out", "${args.test.name}_git_expected.txt"
+                assertFileResource FromRepository_1_5_Test, dir, "find.out", "${args.test.name}_find_expected.txt"
+                assertFileResource FromRepository_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
