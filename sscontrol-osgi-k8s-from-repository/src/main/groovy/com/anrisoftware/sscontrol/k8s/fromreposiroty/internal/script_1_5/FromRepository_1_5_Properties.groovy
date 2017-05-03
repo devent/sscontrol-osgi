@@ -18,15 +18,15 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Cluster monitoring based on Heapster, InfluxDB and Grafana service properties provider from
- * {@code "/monitoring_cluster_heapster_influxdb_grafana_1_5_linux.properties"}.
+ * From repository service for Kubernetes 1.5 properties provider from
+ * {@code "/from_repository_1_5_linux.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class FromRepository_1_5_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = FromRepository_1_5_Properties.class.getResource("/monitoring_cluster_heapster_influxdb_grafana_1_5_linux.properties")
+    private static final URL RESOURCE = FromRepository_1_5_Properties.class.getResource("/from_repository_1_5_linux.properties")
 
     FromRepository_1_5_Properties() {
         super(FromRepository_1_5_Properties.class, RESOURCE)

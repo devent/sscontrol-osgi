@@ -22,6 +22,7 @@ import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
@@ -70,6 +71,7 @@ class FromRepository_1_5_Modules {
             new FactsModule(),
             new TemplateModule(),
             new TemplateResModule(),
+            new StModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
             new TlsModule(),

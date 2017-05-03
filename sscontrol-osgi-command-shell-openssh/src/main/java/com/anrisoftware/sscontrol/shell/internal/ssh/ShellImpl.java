@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SUDO_ENV_ARG;
+import static java.lang.String.format;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -38,6 +39,7 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.shell.external.Cmd;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
+import com.anrisoftware.sscontrol.shell.internal.st.StTemplate.StTemplateFactory;
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResourceArgs.TemplateResourceArgsFactory;
 import com.anrisoftware.sscontrol.types.app.external.AppException;
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
@@ -59,8 +61,6 @@ public class ShellImpl implements Shell {
 
     private final Map<String, Object> args;
 
-    private final String command;
-
     private final Object log;
 
     private final SshHost host;
@@ -73,42 +73,60 @@ public class ShellImpl implements Shell {
     private Cmd cmd;
 
     @Inject
+    private TemplateResourceArgsFactory templateArgs;
+
+    @Inject
+    private StTemplateFactory stTemplateFactory;
+
+    @Inject
     ShellImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log,
-            TemplateResourceArgsFactory templateArgs) {
+            @Assisted("log") Object log) {
         this.args = new HashMap<>(args);
         this.parent = parent;
         this.threads = threads;
         this.log = log;
-        this.command = getCmd(args, parent, templateArgs);
         this.host = host;
         this.env = new HashMap<>(getEnv("env", args));
         this.sudoEnv = new HashMap<>(getEnv("sudoEnv", args));
         setupArgs();
     }
 
-    private String getCmd(Map<String, Object> args, Object parent,
-            TemplateResourceArgsFactory templateArgs) {
-        Object v = args.get(CMD_ARG);
-        if (v == null) {
-            Object base = args.get(BASE_ARG);
-            Object res = args.get(RESOURCE_ARG);
-            if (base != null || res != null) {
-                v = templateArgs.create(args, parent).getText();
-            }
-        }
-        assertThat(String.format("args(%s)=null", CMD_ARG), v, notNullValue());
-        return v.toString();
-    }
-
     @Override
     public ProcessTask call() throws AppException {
         try {
+            String command = getCmd();
             return cmd.call(args, parent, threads, command);
         } catch (CommandExecException e) {
             throw new ShellExecException(e, "ssh");
         }
+    }
+
+    private String getCmd() {
+        Object v = args.get(CMD_ARG);
+        v = parseResourceArg(v);
+        v = parseStArg(v);
+        assertThat(format("args(%s)=null", CMD_ARG), v, notNullValue());
+        return v.toString();
+    }
+
+    private Object parseStArg(Object v) {
+        if (v != null) {
+            return v;
+        }
+        return stTemplateFactory.create(args, parent).getText();
+    }
+
+    private Object parseResourceArg(Object v) {
+        if (v != null) {
+            return v;
+        }
+        Object base = args.get(BASE_ARG);
+        Object res = args.get(RESOURCE_ARG);
+        if (base != null || res != null) {
+            v = templateArgs.create(args, parent).getText();
+        }
+        return v;
     }
 
     private void setupArgs() {

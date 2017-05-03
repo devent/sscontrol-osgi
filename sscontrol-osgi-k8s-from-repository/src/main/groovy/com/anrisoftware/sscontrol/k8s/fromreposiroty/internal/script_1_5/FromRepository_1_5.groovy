@@ -22,12 +22,13 @@ import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
 /**
- * Cluster monitoring based on Heapster, InfluxDB and Grafana service.
+ * From repository service for Kubernetes 1.5.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -55,12 +56,33 @@ class FromRepository_1_5 extends ScriptBase {
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         try {
-            def files = shell outString: true, chdir: dir, "find . -name \\*.yaml ! -name \\*.yml ! -name \\*.json" call() out
-            files.split(/\n/).each {
-                cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
-            }
+            kubeFiles(dir, cluster)
         } finally {
             shell "rm -rf $dir" call() out
+        }
+    }
+
+    /**
+     * Apply kubectl files.
+     */
+    def kubeFiles(File dir, HostServiceScript cluster) {
+        FromRepository service = this.service
+        def files = shell outString: true, chdir: dir,
+        vars: [patterns: kubectlFilesPatterns],
+        st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
+        files.split(/\n/).each {
+            cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+        }
+    }
+
+    /**
+     * Parse template files.
+     */
+    def kubeTemplateFiles(File dir, HostServiceScript cluster) {
+        FromRepository service = this.service
+        def files = shell outString: true, chdir: dir, "find . -name \\*.stg ! -name \\*.yml ! -name \\*.json" call() out
+        files.split(/\n/).each {
+            cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
         }
     }
 
@@ -69,70 +91,8 @@ class FromRepository_1_5 extends ScriptBase {
         debianPropertiesProvider.get()
     }
 
-    String getHeapsterVersion() {
-        properties.getProperty 'heapster_version', defaultProperties
-    }
-
-    String getHeapsterImage() {
-        properties.getProperty 'heapster_image', defaultProperties
-    }
-
-    String getResizerVersion() {
-        properties.getProperty 'resizer_version', defaultProperties
-    }
-
-    String getResizerImage() {
-        properties.getProperty 'resizer_image', defaultProperties
-    }
-
-    String getInfluxGrafanaVersion() {
-        properties.getProperty 'influx_grafana_version', defaultProperties
-    }
-
-    String getHeapsterInfluxdbVersion() {
-        properties.getProperty 'heapster_influxdb_version', defaultProperties
-    }
-
-    String getHeapsterGrafanaVersion() {
-        properties.getProperty 'heapster_grafana_version', defaultProperties
-    }
-
-    String getNannyMemory() {
-        int nannyMemoryMB = properties.getNumberProperty 'nanny_memory_MB', defaultProperties
-        int memory = nannyMemoryMB * 1024 + numNodes * nannyMemoryPerNodeKB
-        "${memory}Ki"
-    }
-
-    String getBaseMetricsCpu() {
-        properties.getProperty 'base_metrics_cpu', defaultProperties
-    }
-
-    String getMetricsCpuPerNode() {
-        properties.getProperty 'metrics_cpu_per_node', defaultProperties
-    }
-
-    String getBaseMetricsMemory() {
-        properties.getProperty 'base_metrics_memory', defaultProperties
-    }
-
-    String getMetricsMemoryPerNode() {
-        properties.getProperty 'metrics_memory_per_node', defaultProperties
-    }
-
-    String getBaseEventerMemory() {
-        properties.getProperty 'base_eventer_memory', defaultProperties
-    }
-
-    String getEventerMemoryPerNode() {
-        properties.getProperty 'eventer_memory_per_node', defaultProperties
-    }
-
-    int getNannyMemoryPerNodeKB() {
-        properties.getNumberProperty 'nanny_memory_per_node_kB', defaultProperties
-    }
-
-    int getNumNodes() {
-        properties.getNumberProperty 'num_nodes', defaultProperties
+    List getKubectlFilesPatterns() {
+        properties.getListProperty 'kubectl_files_patterns', defaultProperties
     }
 
     @Override

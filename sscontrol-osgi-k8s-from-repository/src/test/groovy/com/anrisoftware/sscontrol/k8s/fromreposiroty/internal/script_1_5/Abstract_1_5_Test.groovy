@@ -88,6 +88,7 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             'mv',
             'basename',
             'git',
+            'find',
         ]
         def binDir = new File(dir, '/usr/local/bin')
         binDir.mkdirs()
