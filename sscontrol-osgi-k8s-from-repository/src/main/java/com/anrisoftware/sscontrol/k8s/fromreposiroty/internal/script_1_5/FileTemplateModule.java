@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service;
+package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5;
 
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class FromRepositoryModule extends AbstractModule {
+public class FileTemplateModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, FromRepositoryImpl.class)
-                .build(FromRepositoryImplFactory.class));
     }
 
 }
