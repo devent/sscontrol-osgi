@@ -24,10 +24,10 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class StgFileTemplateTest {
+class StDirTemplateParserTest {
 
     @Inject
-    StgFileTemplateParser templateParser
+    StDirTemplateParser templateParser
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
@@ -36,11 +36,11 @@ class StgFileTemplateTest {
     void "file name yaml"() {
         [
             [
-                file: 'wordpress-yaml.stg',
+                file: 'wordpress-yaml.st',
                 expected: 'wordpress.yaml'
             ],
             [
-                file: 'wordpress-aaa-yaml.stg',
+                file: 'wordpress-aaa-yaml.st',
                 expected: 'wordpress-aaa.yaml'
             ],
         ].each { Map test ->
@@ -56,7 +56,7 @@ class StgFileTemplateTest {
         def encoding = StandardCharsets.UTF_8
         def dir = folder.newFolder()
         createTemplates dir
-        def string = templateParser.parseFile dir, 'wordpress-yaml.stg', args, encoding
+        def string = templateParser.parseFile dir, 'wordpress-yaml.st', args, encoding
         assertStringContent string, '''\
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -98,7 +98,7 @@ spec:
     }
 
     def createTemplates(File dir) {
-        FileUtils.write new File(dir, 'wordpress-yaml.stg'), '''
+        FileUtils.write new File(dir, 'wordpress-yaml.st'), '''
 wordpress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -139,7 +139,7 @@ spec:
 
 >>
 ''', StandardCharsets.UTF_8
-        FileUtils.write new File(dir, 'mysql-yaml.stg'), '''
+        FileUtils.write new File(dir, 'mysql-yaml.st'), '''
 mysql-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: Service

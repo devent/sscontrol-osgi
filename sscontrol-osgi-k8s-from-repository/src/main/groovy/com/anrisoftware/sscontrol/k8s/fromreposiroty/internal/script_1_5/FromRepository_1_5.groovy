@@ -43,7 +43,7 @@ class FromRepository_1_5 extends ScriptBase {
     HostServiceScriptService k8sCluster_1_5_Linux_Service
 
     @Inject
-    Map<String, FileTemplate> fileTemplates
+    Map<String, TemplateParser> templateParsers
 
     Templates templates
 
@@ -84,7 +84,7 @@ class FromRepository_1_5 extends ScriptBase {
     def kubeTemplateFiles(File dir, HostServiceScript cluster) {
         FromRepository service = this.service
         def files = shell outString: true, chdir: dir,
-        vars: [patterns: fileTemplates.keySet()],
+        vars: [patterns: templateParsers.keySet()],
         st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
         files.split(/\n/).each {
             cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
