@@ -11,6 +11,8 @@ if [ "$#" -gt 0 ]; then
         fi
     fi
 fi
+
+echo $PWD
 if [ ! -f "_kubectl" ]; then
     echo "a" > "_kubectl"
     echo 'error: no context exists with the name: "xx".'
