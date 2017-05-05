@@ -15,10 +15,16 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.StDirTemplateParser;
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.StgFileTemplateParser;
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.TemplateParser;
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * @author Erwin Müller <erwin.mueller@deventm.de>
@@ -31,6 +37,12 @@ public class FromRepositoryModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, FromRepositoryImpl.class)
                 .build(FromRepositoryImplFactory.class));
+        MapBinder<String, TemplateParser> mapbinder = newMapBinder(binder(),
+                String.class, TemplateParser.class);
+        mapbinder.addBinding(StDirTemplateParser.TEMPLATE_NAME)
+                .to(StDirTemplateParser.class);
+        mapbinder.addBinding(StgFileTemplateParser.TEMPLATE_NAME)
+                .to(StDirTemplateParser.class);
     }
 
 }

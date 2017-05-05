@@ -20,6 +20,8 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -32,9 +34,9 @@ import groovy.util.logging.Slf4j
 class FromRepository_1_5_Test extends Abstract_1_5_Test {
 
     @Test
-    void "git_ssh_unsecured_client_cert"() {
+    void "yaml_files"() {
         def test = [
-            name: "git_ssh_unsecured_client_cert",
+            name: "yaml_files",
             input: """
 service "ssh", host: "localhost"
 service "k8s-cluster", target: 'default' with {
@@ -56,5 +58,11 @@ service "from-repository", repo: "wordpress-app"
             },
         ]
         doTest test
+    }
+
+    def setupServiceScript(Map args, HostServiceScript script) {
+        def service = args.service
+        script.putState "${service.repo.type}-${service.repo.repo.group}-dir", args.test.generatedDir
+        script
     }
 }

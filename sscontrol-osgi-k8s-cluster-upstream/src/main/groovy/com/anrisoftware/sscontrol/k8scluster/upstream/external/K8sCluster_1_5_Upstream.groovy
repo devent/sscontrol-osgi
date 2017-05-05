@@ -105,6 +105,7 @@ chmod o-rx $certsDir
         log.info 'Run kubectl with {}', vars
         ClusterService service = vars.service
         K8sClusterHost host = vars.cluster
+        assertThat "chdir!=null", vars.chdir, notNullValue()
         assertThat "service!=null", service, notNullValue()
         assertThat "host!=null", host, notNullValue()
         Credentials c = host.credentials

@@ -150,7 +150,7 @@ abstract class AbstractScriptTestBase {
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
                         HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads, scriptEnv)
-                        setupServiceScript script, dir: dir
+                        setupServiceScript script, test: test, dir: dir, service: s
                         script.run()
                     }
                 }
