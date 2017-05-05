@@ -5,15 +5,15 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
- * Parses the file via a template engine. The template engine is determined from
- * the file name.
+ * Parses the files via a template engine.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface FileTemplate {
+public interface TemplateParser {
 
-    String parseFile(File file, Map<String, Object> args, Charset encoding);
+    String parseFile(File parentDirectory, String fileName,
+            Map<String, Object> args, Charset encoding);
 
     /**
      * Returns the target file name.
