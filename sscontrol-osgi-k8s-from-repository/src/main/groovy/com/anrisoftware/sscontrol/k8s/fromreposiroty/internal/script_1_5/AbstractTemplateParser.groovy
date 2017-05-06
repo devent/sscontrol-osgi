@@ -9,11 +9,16 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 abstract class AbstractTemplateParser implements TemplateParser {
 
     @Override
-    String getFilename(File file) {
-        String[] split = file.name.split(/\./)
+    String getFilename(String fileName) {
+        String[] split = fileName.split(/\./)
         def name = split[-2]
         def m = (name =~ /(.*)-(\w*)/)
         m.find()
         "${m.group(1)}.${m.group(2)}"
+    }
+
+    @Override
+    boolean getNeedCopyRepo() {
+        false
     }
 }

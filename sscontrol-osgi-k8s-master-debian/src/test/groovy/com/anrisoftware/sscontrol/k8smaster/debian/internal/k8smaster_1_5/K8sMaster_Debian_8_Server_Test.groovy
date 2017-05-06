@@ -66,6 +66,6 @@ service "k8s-master", name: "andrea-cluster" with {
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv args
     }
 }

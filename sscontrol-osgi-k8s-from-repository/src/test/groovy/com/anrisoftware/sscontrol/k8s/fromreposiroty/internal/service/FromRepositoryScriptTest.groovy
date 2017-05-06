@@ -51,6 +51,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -111,6 +112,38 @@ service "from-repository", repo: "wordpress-app"
         doTest test
     }
 
+    @Test
+    void "vars"() {
+        def test = [
+            name: 'vars',
+            script: """
+service "k8s-cluster"
+service "git", group: "wordpress-app" with {
+    remote url: "git://git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app" with {
+    vars << [mysql: [version: "5.6", image: "mysql"]]
+    vars << [wordpress: [version: "4.7.3-apache", image: "wordpress"]]
+}
+""",
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("/repo_only_app.zip"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 2
+                assert s.vars.mysql.size() == 2
+                assert s.vars.mysql.version == '5.6'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         test.before(test)
@@ -148,6 +181,7 @@ service "from-repository", repo: "wordpress-app"
                 new ResourcesModule(),
                 new TlsModule(),
                 new RobobeeScriptModule(),
+                new SystemNameMappingsModule(),
                 new AbstractModule() {
 
                     @Override

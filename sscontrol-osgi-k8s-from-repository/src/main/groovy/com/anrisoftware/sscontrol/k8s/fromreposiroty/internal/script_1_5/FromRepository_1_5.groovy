@@ -17,6 +17,9 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.StringUtils
+
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
@@ -25,6 +28,7 @@ import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
+import groovy.io.FileType
 import groovy.util.logging.Slf4j
 
 /**
@@ -59,9 +63,10 @@ class FromRepository_1_5 extends ScriptBase {
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         try {
+            kubeTemplateFiles(dir, cluster)
             kubeFiles(dir, cluster)
         } finally {
-            shell "rm -rf $dir" call() out
+            shell "rm -rf $dir" call()
         }
     }
 
@@ -74,7 +79,9 @@ class FromRepository_1_5 extends ScriptBase {
         vars: [patterns: kubectlFilesPatterns],
         st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
         files.split(/\n/).each {
-            cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+            if (!StringUtils.isBlank(it)) {
+                cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+            }
         }
     }
 
@@ -83,11 +90,65 @@ class FromRepository_1_5 extends ScriptBase {
      */
     def kubeTemplateFiles(File dir, HostServiceScript cluster) {
         FromRepository service = this.service
-        def files = shell outString: true, chdir: dir,
+        def out = shell outString: true, chdir: dir,
         vars: [patterns: templateParsers.keySet()],
         st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
-        files.split(/\n/).each {
-            cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+        def files = out.split(/\n/)
+        def args = [parent: this, vars: service.vars]
+        templateParsers.keySet().each { pattern ->
+            files.findAll { it =~ /(?m)\.${pattern}$/ }.any {
+                def parser = templateParsers[pattern]
+                if (parser.needCopyRepo) {
+                    copyRepoAndParse dir, it, args, parser
+                    return true
+                } else {
+                    parseTemplate dir, it, args, parser
+                }
+            }
+        }
+    }
+
+    def copyRepoAndParse(File dir, String fileName, Map args, TemplateParser parser) {
+        log.info 'Parse templates in {}', dir
+        def tmpdir = File.createTempDir('robobee', null)
+        try {
+            fetch recursive: true, src: "$dir", dest: "$tmpdir" call()
+            def targetdirName
+            tmpdir.eachFileMatch FileType.DIRECTORIES, ~/${dir.name}/, { targetdirName = it.name }
+            def targetdir = new File(tmpdir, targetdirName)
+            targetdir.eachFileMatch FileType.FILES, ~/(?m)^.*\.${parser.templateName}$/, {
+                log.debug 'Parse template {}/{}', dir, it.name
+                def s = parser.parseFile(targetdir, it.name, args, charset)
+                def parsedFileName = parser.getFilename it.name
+                def tmpdest = File.createTempFile('robobee', null)
+                try {
+                    FileUtils.write tmpdest, s, charset
+                    copy src: tmpdest, dest: "$dir/$parsedFileName" call()
+                }finally {
+                    tmpdest.delete()
+                }
+            }
+        } finally {
+            tmpdir.deleteDir()
+        }
+    }
+
+    def parseTemplate(File dir, String fileName, Map args, TemplateParser parser) {
+        log.info 'Parse template {}/{}', dir, fileName
+        def tmpdir = File.createTempDir('robobee', null)
+        try {
+            fetch src: "$dir/$fileName", dest: "$tmpdir/$fileName" call()
+            def s = parser.parseFile(tmpdir, fileName, args, charset)
+            def parsedFileName = parser.getFilename fileName
+            def tmpdest = File.createTempFile('robobee', null)
+            try {
+                FileUtils.write tmpdest, s, charset
+                copy src: tmpdest, dest: "$dir/$parsedFileName" call()
+            } finally {
+                tmpdest.delete()
+            }
+        } finally {
+            tmpdir.deleteDir()
         }
     }
 

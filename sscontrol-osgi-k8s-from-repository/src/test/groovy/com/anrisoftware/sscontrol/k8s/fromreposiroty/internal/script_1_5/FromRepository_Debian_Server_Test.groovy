@@ -19,7 +19,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
-import org.apache.commons.codec.Charsets
+import java.nio.charset.StandardCharsets
+
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
@@ -43,10 +44,12 @@ class FromRepository_Debian_Server_Test extends Abstract_FromRepository_Runner_D
 
     static final URL wordpressZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app.zip')
 
+    static final URL wordpressStZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app-st.zip')
+
     @Test
-    void "git_file_server"() {
+    void "yaml_files_server"() {
         def test = [
-            name: "git_file_server",
+            name: "yaml_files_server",
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
@@ -62,18 +65,55 @@ service "from-repository", repo: "wordpress-app" with {
 """,
             scriptVars: [checkoutDir: '/tmp/w'],
             expectedServicesSize: 4,
-            before: { Map test ->
-                def file = SSH.escape('wordpress-app.zip')
-                execRemoteFile """
+            before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "st_yaml_files_server"() {
+        def test = [
+            name: "st_yaml_files_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+}
+service "git", group: "wordpress-app" with {
+    remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=\$checkoutDir"
+}
+service "from-repository", repo: "wordpress-app" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+""",
+            scriptVars: [checkoutDir: '/tmp/w'],
+            expectedServicesSize: 4,
+            before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    def setupServer(Map args) {
+        def file = SSH.escape('wordpress-app.zip')
+        execRemoteFile """
 echo "Create /tmp/kubectl."
 cat > /tmp/kubectl << 'EOL'
-${IOUtils.toString(echoCommand.openStream(), Charsets.UTF_8)}
+${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
 chmod +x /tmp/kubectl
 
-echo "Create ${test.scriptVars.checkoutDir}."
-rm -rf "${test.scriptVars.checkoutDir}"
-mkdir -p "${test.scriptVars.checkoutDir}"
+echo "Create ${args.test.scriptVars.checkoutDir}."
+rm -rf "${args.test.scriptVars.checkoutDir}"
+mkdir -p "${args.test.scriptVars.checkoutDir}"
 
 echo "Install unzip."
 if ! which unzip; then
@@ -86,19 +126,16 @@ mkdir -p /tmp/wordpress-app
 cd /tmp/wordpress-app
 cat > ${file}
 unzip $file
-""", wordpressZip.openStream()
-            },
-            after: { Map test -> remoteCommand """
+""", args.zipArchive.openStream()
+    }
+
+    def tearDownServer(Map args) {
+        remoteCommand """
 rm /tmp/kubectl
 rm /tmp/kubectl.out
-rm -rf "${test.scriptVars.checkoutDir}"
+rm -rf "${args.test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
-""" },
-            expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
-            },
-        ]
-        doTest test
+"""
     }
 
     @Before

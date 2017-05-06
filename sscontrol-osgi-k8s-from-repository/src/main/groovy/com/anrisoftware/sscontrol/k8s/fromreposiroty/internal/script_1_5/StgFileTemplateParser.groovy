@@ -24,4 +24,9 @@ class StgFileTemplateParser extends AbstractTemplateParser {
         s.add 'parent', args.parent
         return s.render()
     }
+
+    @Override
+    String getTemplateName() {
+        TEMPLATE_NAME
+    }
 }

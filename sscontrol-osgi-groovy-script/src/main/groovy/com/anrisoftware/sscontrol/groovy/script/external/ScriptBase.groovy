@@ -263,6 +263,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     Fetch fetch(Map args) {
         def a = setupArgs(args, 'fetch')
+        log.debug 'Fetch file {}', a
         fetch.create(a, a.target, this, threads, log)
     }
 
@@ -285,6 +286,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
             a.server = null
             a.key = null
         }
+        log.debug 'Copy file {}', a
         copy.create(a, a.target, this, threads, log)
     }
 
@@ -455,7 +457,7 @@ export LANG=en_US.UTF-8
     def copyResource(Map args) {
         URL src = args.src.toURL()
         log.info 'Upload {} to {}', args.src, args.dest
-        File file = createTmpFile()
+        File file = File.createTempFile 'robobee', null
         IOUtils.copy src.openStream(), new FileOutputStream(file)
         assertThat "resource>0 for $args", file.size(), greaterThan(0l)
         copy privileged: args.privileged, src: file, dest: args.dest
@@ -703,11 +705,16 @@ export LANG=en_US.UTF-8
      * Creates and returns a temporary file.
      */
     File createTmpFile(Map args=[:]) {
+        def file
         if (createTmpFileCallback) {
-            createTmpFileCallback(args)
+            file = createTmpFileCallback(args)
         } else {
-            File.createTempFile('robobee', args.suffix)
+            def ret = shell outString: true, """
+mktemp
+""" call()
+            file = new File(ret.out[0..-2])
         }
+        file
     }
 
     /**

@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.external;
 
 import java.util.List;
+import java.util.Map;
 
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
@@ -33,5 +34,10 @@ public interface FromRepository extends ClusterService {
     RepoHost getRepo();
 
     List<RepoHost> getRepos();
+
+    /**
+     * Returns template variables.
+     */
+    Map<String, Object> getVars();
 
 }
