@@ -27,6 +27,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.perf4j.slf4j.Slf4JStopWatch;
+
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplate;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.propertiesutils.ContextProperties;
@@ -79,8 +81,8 @@ public class ReplaceImpl implements Replace {
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object cmdLog,
             PropertiesProvider propertiesProvider) {
-        this.args = new HashMap<String, Object>(args);
-        this.lines = new ArrayList<ReplaceLine>();
+        this.args = new HashMap<>(args);
+        this.lines = new ArrayList<>();
         this.host = host;
         this.parent = parent;
         this.threads = threads;
@@ -90,7 +92,7 @@ public class ReplaceImpl implements Replace {
     }
 
     public void line(String replace) {
-        Map<String, Object> args = new HashMap<String, Object>();
+        Map<String, Object> args = new HashMap<>();
         args.put("replace", replace);
         line(args);
     }
@@ -103,13 +105,22 @@ public class ReplaceImpl implements Replace {
 
     @Override
     public Replace call() throws AppException {
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("replace");
+        try {
+            doReplace();
+            return this;
+        } finally {
+            stopWatch.stop();
+        }
+    }
+
+    private void doReplace() {
         String text = load.create(args, host, parent, threads, cmdLog).call();
         if (lines.size() == 0) {
             lines.add(lineFactory.create(args));
         }
         text = setupReplaceLines(text);
         push.create(args, host, parent, threads, cmdLog, text).call();
-        return this;
     }
 
     private String setupReplaceLines(String text) throws AppException {

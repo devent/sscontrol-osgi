@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
+import org.perf4j.slf4j.Slf4JStopWatch;
 
 import com.anrisoftware.globalpom.core.checkfilehash.HashName;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
@@ -78,23 +79,40 @@ public class CopyImpl implements Copy {
 
     @Override
     public ProcessTask call() throws AppException {
-        parseHash();
-        args.put("destOriginal", args.get("dest"));
-        Boolean direct = (Boolean) args.get("direct");
-        Copy copy = null;
-        if (direct != null && direct) {
-            copy = downloadFactory.create(args, host, parent, threads, log);
-        } else {
-            copy = scpFactory.create(args, host, parent, threads, log);
-            if (isFilesLocal()) {
-                try {
-                    FileUtils.copyFile(getSrc(), getDest());
-                } catch (IOException e) {
-                    throw new CopyFileException(e, getSrc(), getDest());
-                }
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("copy");
+        try {
+            parseHash();
+            args.put("destOriginal", args.get("dest"));
+            Boolean direct = (Boolean) args.get("direct");
+            Copy copy = null;
+            if (direct != null && direct) {
+                copy = copyDirect();
+            } else {
+                copy = copyIndirect();
+            }
+            return copy.call();
+        } finally {
+            stopWatch.stop();
+        }
+    }
+
+    private Copy copyIndirect() {
+        Copy copy;
+        copy = scpFactory.create(args, host, parent, threads, log);
+        if (isFilesLocal()) {
+            try {
+                FileUtils.copyFile(getSrc(), getDest());
+            } catch (IOException e) {
+                throw new CopyFileException(e, getSrc(), getDest());
             }
         }
-        return copy.call();
+        return copy;
+    }
+
+    private Copy copyDirect() {
+        Copy copy;
+        copy = downloadFactory.create(args, host, parent, threads, log);
+        return copy;
     }
 
     private File getDest() {
