@@ -15,8 +15,12 @@ public interface TemplateParser {
     String parseFile(File parentDirectory, String fileName,
             Map<String, Object> args, Charset encoding);
 
+    String getTemplateName();
+
     /**
      * Returns the target file name.
      */
-    String getFilename(File file);
+    String getFilename(String fileName);
+
+    boolean getNeedCopyRepo();
 }

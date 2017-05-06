@@ -60,6 +60,33 @@ service "from-repository", repo: "wordpress-app"
         doTest test
     }
 
+    @Test
+    void "st_yaml_files"() {
+        def test = [
+            name: "st_yaml_files",
+            input: """
+service "ssh", host: "localhost"
+service "k8s-cluster", target: 'default' with {
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+}
+service "git", group: "wordpress-app" with {
+    remote url: "git://git@github.com:user/wordpress-app.git"
+    credentials "ssh", key: "${idRsa}"
+}
+service "from-repository", repo: "wordpress-app"
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                File binDir = new File(dir, '/usr/local/bin')
+                assertFileResource FromRepository_1_5_Test, dir, "find.out", "${args.test.name}_find_expected.txt"
+                assertFileResource FromRepository_1_5_Test, binDir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     def setupServiceScript(Map args, HostServiceScript script) {
         def service = args.service
         script.putState "${service.repo.type}-${service.repo.repo.group}-dir", args.test.generatedDir

@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +67,8 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final List<RepoHost> repos;
 
+    private final Map<String, Object> vars;
+
     @Inject
     FromRepositoryImpl(FromRepositoryImplLogger log,
             HostPropertiesService propertiesService,
@@ -75,6 +78,7 @@ public class FromRepositoryImpl implements FromRepository {
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
         this.repos = new ArrayList<>();
+        this.vars = new HashMap<>();
         parseArgs(args);
     }
 
@@ -91,6 +95,16 @@ public class FromRepositoryImpl implements FromRepository {
                 serviceProperties.addProperty(property);
             }
         });
+    }
+
+    /**
+     * <pre>
+     * vars << [mysql: [version: "5.6", image: "mysql"]]
+     * </pre>
+     */
+    @Override
+    public Map<String, Object> getVars() {
+        return vars;
     }
 
     @Override

@@ -42,6 +42,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
@@ -136,6 +137,7 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
             new HostServicesModule(),
             new ShellCmdModule(),
             new SshShellModule(),
+            new StModule(),
             new CmdImplModule(),
             new CmdModule(),
             new ScpModule(),
