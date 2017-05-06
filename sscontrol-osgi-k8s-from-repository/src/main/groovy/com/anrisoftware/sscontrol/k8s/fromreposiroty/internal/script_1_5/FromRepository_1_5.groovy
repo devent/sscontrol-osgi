@@ -90,6 +90,7 @@ class FromRepository_1_5 extends ScriptBase {
      */
     def kubeTemplateFiles(File dir, HostServiceScript cluster) {
         FromRepository service = this.service
+        shell "rm -rf $dir/.git" call()
         def out = shell outString: true, chdir: dir,
         vars: [patterns: templateParsers.keySet()],
         st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
@@ -124,7 +125,7 @@ class FromRepository_1_5 extends ScriptBase {
                 try {
                     FileUtils.write tmpdest, s, charset
                     copy src: tmpdest, dest: "$dir/$parsedFileName" call()
-                }finally {
+                } finally {
                     tmpdest.delete()
                 }
             }
