@@ -34,6 +34,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
+import org.perf4j.slf4j.Slf4JStopWatch;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
@@ -90,6 +91,7 @@ public class TemplateImpl implements Template {
 
     @Override
     public ProcessTask call() throws AppException {
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("fetch");
         File file = null;
         try {
             file = getTmpFile();
@@ -108,6 +110,7 @@ public class TemplateImpl implements Template {
                     file.delete();
                 }
             }
+            stopWatch.stop();
         }
     }
 

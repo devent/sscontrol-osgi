@@ -28,6 +28,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.perf4j.slf4j.Slf4JStopWatch;
+
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
@@ -99,6 +101,16 @@ public class FactsImpl implements Facts {
 
     @Override
     public Facts call() throws AppException {
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("facts");
+        try {
+            runFacts();
+            return this;
+        } finally {
+            stopWatch.stop();
+        }
+    }
+
+    private void runFacts() {
         TemplateResource res = templates.getResource("facts");
         Map<String, Object> a = new HashMap<>(args);
         a.put("outString", true);
@@ -107,7 +119,6 @@ public class FactsImpl implements Facts {
         Shell shell = shellFactory.create(a, host, parent, threads, log);
         this.process = shell.call();
         this.system = catReleaseParse.create(process.getOut()).call();
-        return this;
     }
 
     private void checkArgs() {

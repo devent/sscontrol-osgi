@@ -27,6 +27,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.perf4j.slf4j.Slf4JStopWatch;
+
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.fetch.external.Fetch;
@@ -60,7 +62,7 @@ public class FetchImpl implements Fetch {
     FetchImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log) {
-        this.args = new HashMap<String, Object>(args);
+        this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
@@ -71,7 +73,12 @@ public class FetchImpl implements Fetch {
 
     @Override
     public ProcessTask call() throws AppException {
-        return scpFactory.create(args, host, parent, threads, log).call();
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("fetch");
+        try {
+            return scpFactory.create(args, host, parent, threads, log).call();
+        } finally {
+            stopWatch.stop();
+        }
     }
 
     private void checkArgs() {

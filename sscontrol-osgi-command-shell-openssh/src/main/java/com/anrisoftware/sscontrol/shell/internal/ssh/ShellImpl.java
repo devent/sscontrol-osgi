@@ -33,6 +33,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.perf4j.slf4j.Slf4JStopWatch;
+
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
@@ -94,11 +96,14 @@ public class ShellImpl implements Shell {
 
     @Override
     public ProcessTask call() throws AppException {
+        Slf4JStopWatch stopWatch = new Slf4JStopWatch("shell");
         try {
             String command = getCmd();
             return cmd.call(args, parent, threads, command);
         } catch (CommandExecException e) {
             throw new ShellExecException(e, "ssh");
+        } finally {
+            stopWatch.stop();
         }
     }
 
