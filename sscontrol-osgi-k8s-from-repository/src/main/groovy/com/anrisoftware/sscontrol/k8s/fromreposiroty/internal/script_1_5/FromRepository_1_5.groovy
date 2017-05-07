@@ -93,7 +93,7 @@ class FromRepository_1_5 extends ScriptBase {
         shell "rm -rf $dir/.git" call()
         def out = shell outString: true, chdir: dir,
         vars: [patterns: templateParsers.keySet()],
-        st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
+        st: "find . -type f <\\u005C>( <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" -or \"> <\\u005C>)" call() out
         def files = out.split(/\n/)
         def args = [parent: this, vars: service.vars]
         templateParsers.keySet().each { pattern ->
@@ -104,6 +104,7 @@ class FromRepository_1_5 extends ScriptBase {
                     return true
                 } else {
                     parseTemplate dir, it, args, parser
+                    return false
                 }
             }
         }

@@ -42,7 +42,7 @@ public class FromRepositoryModule extends AbstractModule {
         mapbinder.addBinding(StDirTemplateParser.TEMPLATE_NAME)
                 .to(StDirTemplateParser.class);
         mapbinder.addBinding(StgFileTemplateParser.TEMPLATE_NAME)
-                .to(StDirTemplateParser.class);
+                .to(StgFileTemplateParser.class);
     }
 
 }
