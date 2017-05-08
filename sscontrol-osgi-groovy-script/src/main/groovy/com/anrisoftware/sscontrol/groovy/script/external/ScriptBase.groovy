@@ -228,6 +228,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Executes the command that is created from the specified factory.
+     *
+     * @param args
+     * the {@link Map} command arguments.
+     * @param factory
+     * the command factory.
+     */
+    def createCmd(Map args, def factory) {
+        def a = setupArgs(args, 'shell')
+        factory.create(a, a.target, a.parent, threads, log)
+    }
+
+    /**
      * Shell command.
      */
     Shell shell(String command) {

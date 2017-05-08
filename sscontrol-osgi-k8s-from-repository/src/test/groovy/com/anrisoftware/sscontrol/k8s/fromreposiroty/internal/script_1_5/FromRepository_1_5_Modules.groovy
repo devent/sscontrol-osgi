@@ -25,6 +25,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
+import com.anrisoftware.sscontrol.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
@@ -76,6 +77,7 @@ class FromRepository_1_5_Modules {
             new ResourcesModule(),
             new TlsModule(),
             new SystemNameMappingsModule(),
+            new FindModule(),
             new AbstractModule() {
 
                 @Override
