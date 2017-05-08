@@ -62,9 +62,29 @@ class GitRepoScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "statements"() {
+    void "file"() {
         def test = [
-            name: 'statements',
+            name: 'git_url',
+            input: """
+service "git", group: 'wordpress-app' with {
+    remote url: "/devent/wordpress-app"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('git').size() == 1
+                GitRepo s = services.getServices('git')[0] as GitRepo
+                assert s.name == 'git'
+                assert s.group == 'wordpress-app'
+                assert s.remote.uri.toString() == 'file:/devent/wordpress-app'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "git_url"() {
+        def test = [
+            name: 'git_url',
             input: """
 service "git", group: 'wordpress-app' with {
     remote url: "git://git@github.com/devent/wordpress-app"
@@ -79,6 +99,26 @@ service "git", group: 'wordpress-app' with {
                 assert s.remote.uri.toString() == 'git://git@github.com/devent/wordpress-app'
                 assert s.credentials.type == 'ssh'
                 assert s.credentials.key.toString() == 'file:id_rsa.pub'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "git_scp"() {
+        def test = [
+            name: 'git_scp',
+            input: """
+service "git", group: 'wordpress-app' with {
+    remote url: "git@github.com:devent/wordpress-app-test.git"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('git').size() == 1
+                GitRepo s = services.getServices('git')[0] as GitRepo
+                assert s.name == 'git'
+                assert s.group == 'wordpress-app'
+                assert s.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app-test.git'
             },
         ]
         doTest test

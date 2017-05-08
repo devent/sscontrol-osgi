@@ -57,8 +57,6 @@ service "git", group: 'wordpress-app' with {
             before: { Map test ->
                 def file = SSH.escape('wordpress-app.zip')
                 execRemoteFile """
-rm -rf "${test.scriptVars.checkoutDir}"
-mkdir -p "${test.scriptVars.checkoutDir}"
 if ! which unzip; then
 sudo DEBIAN_FRONTEND=noninteractive apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip
@@ -72,6 +70,31 @@ unzip $file
             after: { Map test -> remoteCommand """
 rm -rf "${test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
+""" },
+            expected: { Map args ->
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "git_ssh"() {
+        def test = [
+            name: "git_file",
+            script: """
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "git", group: 'wordpress-app' with {
+    remote url: "git@github.com:devent/wordpress-app-test.git"
+    credentials "ssh", key: "$robobeeKey"
+    property << "checkout_directory=\$checkoutDir"
+}
+""",
+            scriptVars: [checkoutDir: '/tmp/w'],
+            expectedServicesSize: 2,
+            after: { Map test -> remoteCommand """
+rm -rf "${test.scriptVars.checkoutDir}"
 """ },
             expected: { Map args ->
                 assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
