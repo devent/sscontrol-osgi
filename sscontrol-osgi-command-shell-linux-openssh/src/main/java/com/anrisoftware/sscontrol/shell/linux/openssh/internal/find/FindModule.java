@@ -16,47 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-command-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.replace;
+package com.anrisoftware.sscontrol.shell.linux.openssh.internal.find;
 
-import static com.anrisoftware.sscontrol.shell.internal.replace.ReplaceImplLogger.m.lineAdded;
-
-import javax.inject.Singleton;
-
-import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.shell.linux.openssh.external.find.FindFiles;
+import com.anrisoftware.sscontrol.shell.linux.openssh.external.find.FindFilesFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Logging for {@link ReplaceImpl}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Singleton
-final class ReplaceImplLogger extends AbstractLogger {
+public class FindModule extends AbstractModule {
 
-    enum m {
-
-        lineAdded("Line {} added to {}");
-
-        private String name;
-
-        private m(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(FindFiles.class, FindFilesImpl.class)
+                .build(FindFilesFactory.class));
     }
 
-    /**
-     * Sets the context of the logger to {@link ReplaceImpl}.
-     */
-    public ReplaceImplLogger() {
-        super(ReplaceImpl.class);
-    }
-
-    void lineAdded(ReplaceImpl replace, ReplaceLine line) {
-        debug(lineAdded, line, replace);
-    }
 }

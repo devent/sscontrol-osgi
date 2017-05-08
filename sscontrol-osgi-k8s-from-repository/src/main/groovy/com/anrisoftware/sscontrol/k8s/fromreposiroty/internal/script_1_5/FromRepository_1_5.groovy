@@ -25,6 +25,7 @@ import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
+import com.anrisoftware.sscontrol.shell.linux.openssh.external.find.FindFilesFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
@@ -48,6 +49,9 @@ class FromRepository_1_5 extends ScriptBase {
 
     @Inject
     Map<String, TemplateParser> templateParsers
+
+    @Inject
+    FindFilesFactory findFilesFactory
 
     Templates templates
 
@@ -75,10 +79,7 @@ class FromRepository_1_5 extends ScriptBase {
      */
     def kubeFiles(File dir, HostServiceScript cluster) {
         FromRepository service = this.service
-        def files = shell outString: true, chdir: dir,
-        vars: [patterns: kubectlFilesPatterns],
-        st: "find . <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" ! \">" call() out
-        files.split(/\n/).each {
+        createCmd findFilesFactory, chdir: dir, suffix: kubectlFilesPatterns call() each {
             if (!StringUtils.isBlank(it)) {
                 cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
             }
@@ -91,10 +92,7 @@ class FromRepository_1_5 extends ScriptBase {
     def kubeTemplateFiles(File dir, HostServiceScript cluster) {
         FromRepository service = this.service
         shell "rm -rf $dir/.git" call()
-        def out = shell outString: true, chdir: dir,
-        vars: [patterns: templateParsers.keySet()],
-        st: "find . -type f <\\u005C>( <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" -or \"> <\\u005C>)" call() out
-        def files = out.split(/\n/)
+        def files = createCmd findFilesFactory, chdir: dir, suffix: templateParsers.keySet() call()
         def args = [parent: this, vars: service.vars]
         templateParsers.keySet().each { pattern ->
             files.findAll { it =~ /(?m)\.${pattern}$/ }.any {

@@ -21,6 +21,7 @@
         <module>../sscontrol-osgi-command-fetch</module>
         <module>../sscontrol-osgi-command-replace</module>
         <module>../sscontrol-osgi-command-shell</module>
+        <module>../sscontrol-osgi-command-shell-linux-openssh</module>
         <module>../sscontrol-osgi-command-shell-openssh</module>
         <module>../sscontrol-osgi-command-template</module>
         <module>../sscontrol-osgi-debug</module>

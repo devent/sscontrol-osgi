@@ -18,9 +18,9 @@
  */
 package com.anrisoftware.sscontrol.shell.external.ssh;
 
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger.m.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger.m.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger.m.command_finished_trace;
 
 import java.util.Map;
 
@@ -35,7 +35,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
  */
 class AbstractCmdRunLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         command_finished_trace("Command finished: {} for {}, {}."),
 
@@ -45,7 +45,7 @@ class AbstractCmdRunLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

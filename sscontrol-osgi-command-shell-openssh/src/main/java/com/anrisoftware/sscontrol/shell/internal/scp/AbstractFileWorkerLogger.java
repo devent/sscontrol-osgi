@@ -18,9 +18,9 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger.m.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger.m.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger.m.command_finished_trace;
 
 import java.util.Map;
 
@@ -31,14 +31,14 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
  * Logging for {@link AbstractFileWorker}.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
 final class AbstractFileWorkerLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         command_finished_trace("Command finished: {} for {}, {}."),
 
@@ -48,7 +48,7 @@ final class AbstractFileWorkerLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 
