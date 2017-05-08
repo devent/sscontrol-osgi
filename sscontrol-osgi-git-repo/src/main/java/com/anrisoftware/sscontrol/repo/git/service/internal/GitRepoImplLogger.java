@@ -15,12 +15,14 @@
  */
 package com.anrisoftware.sscontrol.repo.git.service.internal;
 
+import static com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImplLogger.m.checkoutSet;
 import static com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImplLogger.m.credentialsSet;
 import static com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImplLogger.m.remoteSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.repo.git.service.external.Checkout;
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials;
 import com.anrisoftware.sscontrol.repo.git.service.external.Remote;
 
@@ -37,7 +39,9 @@ final class GitRepoImplLogger extends AbstractLogger {
 
         remoteSet("Remote {} set for {}"),
 
-        credentialsSet("Credentials {} set for {}");
+        credentialsSet("Credentials {} set for {}"),
+
+        checkoutSet("Checkout {} set for {}");
 
         private String name;
 
@@ -64,6 +68,10 @@ final class GitRepoImplLogger extends AbstractLogger {
 
     void remoteSet(GitRepoImpl repo, Remote remote) {
         debug(remoteSet, remote, repo);
+    }
+
+    void checkoutSet(GitRepoImpl repo, Checkout checkout) {
+        debug(checkoutSet, checkout, repo);
     }
 
 }

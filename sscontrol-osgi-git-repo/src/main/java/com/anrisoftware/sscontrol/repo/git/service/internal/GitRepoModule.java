@@ -17,9 +17,11 @@ package com.anrisoftware.sscontrol.repo.git.service.internal;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
+import com.anrisoftware.sscontrol.repo.git.service.external.Checkout;
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials;
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepoHost;
 import com.anrisoftware.sscontrol.repo.git.service.external.Remote;
+import com.anrisoftware.sscontrol.repo.git.service.internal.CheckoutImpl.CheckoutImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoHostImpl.GitRepoHostImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.RemoteImpl.RemoteImplFactory;
@@ -48,6 +50,9 @@ public class GitRepoModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(GitRepoHost.class, GitRepoHostImpl.class)
                 .build(GitRepoHostImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Checkout.class, CheckoutImpl.class)
+                .build(CheckoutImplFactory.class));
         bindCredentials();
     }
 

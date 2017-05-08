@@ -27,6 +27,11 @@ public interface GitRepo extends Repo {
 
     Remote getRemote();
 
+    /**
+     * The commit that should be checkout.
+     */
+    Checkout getCheckout();
+
     Credentials getCredentials();
 
 }
