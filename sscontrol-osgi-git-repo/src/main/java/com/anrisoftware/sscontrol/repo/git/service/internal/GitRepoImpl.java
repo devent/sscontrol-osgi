@@ -30,10 +30,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.sscontrol.repo.git.service.external.Checkout;
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials;
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo;
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepoHost;
 import com.anrisoftware.sscontrol.repo.git.service.external.Remote;
+import com.anrisoftware.sscontrol.repo.git.service.internal.CheckoutImpl.CheckoutImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoHostImpl.GitRepoHostImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.RemoteImpl.RemoteImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -81,15 +83,22 @@ public class GitRepoImpl implements GitRepo {
 
     private final RemoteImplFactory remoteFactory;
 
+    private transient CheckoutImplFactory checkoutFactory;
+
+    private Checkout checkout;
+
     @Inject
     GitRepoImpl(GitRepoImplLogger log, HostPropertiesService propertiesService,
             GitRepoHostImplFactory hostFactory, RemoteImplFactory remoteFactory,
+            CheckoutImplFactory checkoutFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
         this.hostFactory = hostFactory;
         this.remoteFactory = remoteFactory;
+        this.checkoutFactory = checkoutFactory;
+        this.checkout = checkoutFactory.create(new HashMap<>());
         parseArgs(args);
     }
 
@@ -198,6 +207,16 @@ public class GitRepoImpl implements GitRepo {
         log.credentialsSet(this, c);
     }
 
+    /**
+     * <pre>
+     * checkout tag: "aaa", branch: "foo", commit: "e9edddc2e2a59ecb5526febf5044828e7fedd914"
+     * </pre>
+     */
+    public void checkout(Map<String, Object> args) {
+        this.checkout = checkoutFactory.create(args);
+        log.checkoutSet(this, checkout);
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -235,6 +254,11 @@ public class GitRepoImpl implements GitRepo {
     @Override
     public Remote getRemote() {
         return remote;
+    }
+
+    @Override
+    public Checkout getCheckout() {
+        return checkout;
     }
 
     @Override

@@ -77,6 +77,35 @@ service "from-repository", repo: "wordpress-app" with {
     }
 
     @Test
+    void "yaml_ssh_server"() {
+        def test = [
+            name: "yaml_ssh_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+}
+service "git", group: "wordpress-app" with {
+    remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
+    credentials "ssh", key: "$robobeeKey"
+    property << "checkout_directory=\$checkoutDir"
+}
+service "from-repository", repo: "wordpress-app" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+""",
+            scriptVars: [checkoutDir: '/tmp/w'],
+            expectedServicesSize: 4,
+            before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "st_yaml_files_server"() {
         def test = [
             name: "st_yaml_files_server",
@@ -87,6 +116,36 @@ service "k8s-cluster" with {
 }
 service "git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=\$checkoutDir"
+}
+service "from-repository", repo: "wordpress-app" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+""",
+            scriptVars: [checkoutDir: '/tmp/w'],
+            expectedServicesSize: 4,
+            before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "st_yaml_ssh_tag_server"() {
+        def test = [
+            name: "st_yaml_ssh_tag_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+}
+service "git", group: "wordpress-app" with {
+    remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
+    checkout tag: "st"
+    credentials "ssh", key: "$robobeeKey"
     property << "checkout_directory=\$checkoutDir"
 }
 service "from-repository", repo: "wordpress-app" with {

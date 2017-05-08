@@ -24,7 +24,6 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
-import com.jcabi.ssh.SSH
 
 import groovy.util.logging.Slf4j
 
@@ -55,7 +54,6 @@ service "git", group: 'wordpress-app' with {
             scriptVars: [checkoutDir: '/tmp/w'],
             expectedServicesSize: 2,
             before: { Map test ->
-                def file = SSH.escape('wordpress-app.zip')
                 execRemoteFile """
 if ! which unzip; then
 sudo DEBIAN_FRONTEND=noninteractive apt-get update
@@ -63,8 +61,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y unzip
 fi
 mkdir -p /tmp/wordpress-app
 cd /tmp/wordpress-app
-cat > ${file}
-unzip $file
+cat > wordpress-app.zip
+unzip wordpress-app.zip
 """, wordpressZip.openStream()
             },
             after: { Map test -> remoteCommand """
@@ -86,7 +84,7 @@ rm -r /tmp/wordpress-app
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "git", group: 'wordpress-app' with {
-    remote url: "git@github.com:devent/wordpress-app-test.git"
+    remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     credentials "ssh", key: "$robobeeKey"
     property << "checkout_directory=\$checkoutDir"
 }
@@ -99,6 +97,32 @@ rm -rf "${test.scriptVars.checkoutDir}"
             expected: { Map args ->
                 assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
                 assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "git_ssh_tag"() {
+        def test = [
+            name: "git_ssh_tag",
+            script: """
+service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "git", group: 'wordpress-app' with {
+    remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
+    checkout tag: "st"
+    credentials "ssh", key: "$robobeeKey"
+    property << "checkout_directory=\$checkoutDir"
+}
+""",
+            scriptVars: [checkoutDir: '/tmp/w'],
+            expectedServicesSize: 2,
+            after: { Map test -> remoteCommand """
+rm -rf "${test.scriptVars.checkoutDir}"
+""" },
+            expected: { Map args ->
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment-yaml.st').absolutePath), "${args.test.name}_mysql_deployment_yaml_st_expected.txt"
+                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment-yaml.st').absolutePath), "${args.test.name}_wordpress_deployment_yaml_st_expected.txt"
             },
         ]
         doTest test

@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.repo.git.linux.internal.linux
 
 import org.apache.commons.io.IOUtils
+import org.stringtemplate.v4.ST
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials
@@ -57,19 +58,28 @@ abstract class GitRepo_Linux extends ScriptBase {
         def c = setupCredentials vars
         def path = toPath repo.repo.remote.uri
         try {
+            def gitCommand = new ST("""\
+git clone <if(checkout.branch)>--branch <checkout.branch><elseif(checkout.tag)>--branch <checkout.tag><endif> --depth 1 ${path} .""")
+                    .add("checkout", repo.repo.checkout).render()
             shell """
+${c.script}
+setup
 mkdir -p "${dir}"
 cd "${dir}"
-$c
-git clone ${path} .
+$gitCommand
 """ call()
+            return dir
         } catch (e) {
             shell """
 rm -r "${dir}"
 """ call()
             throw e
+        } finally {
+            shell """
+${c.script}
+cleanup
+""" call()
         }
-        return dir
     }
 
     String toPath(URI uri) {
@@ -85,34 +95,56 @@ rm -r "${dir}"
     def setupCredentials(Map vars) {
         RepoHost repo = vars.repo
         Credentials credentials = repo.repo.credentials
+        Map ret = [:]
         if (credentials) {
-            def c = "credentials${credentials.type.capitalize()}"(vars)
-            return c
-        } else {
-            return ''
+            ret = "credentials${credentials.type.capitalize()}"(vars)
         }
+        if (!ret.script) {
+            ret.script = """\
+function setup() {
+    true
+}
+function cleanup() {
+    true
+}
+"""
+        }
+        return ret
     }
 
-    def credentialsSsh(Map vars) {
+    Map credentialsSsh(Map vars) {
         RepoHost repo = vars.repo
         Credentials credentials = repo.repo.credentials
         log.info 'Setup credentials {}', credentials
-        File file = new File(vars.dir, "id_rsa")
+        Map ret = [:]
+        ret.idRsaFile = createTmpFile()
+        ret.knownHostsFile = createTmpFile()
+        ret.sshWrapper = createTmpFile()
         File tmp = File.createTempFile("id_rsa", null)
         IOUtils.copy credentials.key.toURL().openStream(), new FileOutputStream(tmp)
         try {
-            copy src: tmp, dest: file call()
+            copy src: tmp, dest: ret.idRsaFile call()
         } finally {
             tmp.delete()
         }
-        """
-cat <<EOF > ssh-wrapper
+        ret.script = """\
+function setup() {
+    cat <<"EOF" > "${ret.sshWrapper}"
 #!/bin/bash
-ssh -i "${file}" \$1 \$2
+ssh-keyscan ${repo.repo.remote.uri.host} > "${ret.knownHostsFile}"
+ssh -o UserKnownHostsFile="${ret.knownHostsFile}" -i "${ret.idRsaFile}" \$1 \$2
 EOF
+    chmod +x "${ret.sshWrapper}"
+    export GIT_SSH="${ret.sshWrapper}"
+}
 
-export GIT_SSH=ssh-wrapper
+function cleanup() {
+    rm ${ret.idRsaFile}
+    rm ${ret.knownHostsFile}
+    rm ${ret.sshWrapper}
+}
 """
+        return ret
     }
 
     @Override
