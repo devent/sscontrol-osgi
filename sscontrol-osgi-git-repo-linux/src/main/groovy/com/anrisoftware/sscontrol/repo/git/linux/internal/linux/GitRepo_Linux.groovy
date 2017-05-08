@@ -58,6 +58,7 @@ abstract class GitRepo_Linux extends ScriptBase {
         def path = toPath repo.repo.remote.uri
         try {
             shell """
+mkdir -p "${dir}"
 cd "${dir}"
 $c
 git clone ${path} .

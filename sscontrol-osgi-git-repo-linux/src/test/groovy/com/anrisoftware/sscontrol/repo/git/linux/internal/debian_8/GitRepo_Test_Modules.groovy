@@ -15,6 +15,7 @@ import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
@@ -46,6 +47,7 @@ class GitRepo_Test_Modules {
             new HostServicesModule(),
             new ShellCmdModule(),
             new SshShellModule(),
+            new StModule(),
             new CmdImplModule(),
             new CmdModule(),
             new ScpModule(),
