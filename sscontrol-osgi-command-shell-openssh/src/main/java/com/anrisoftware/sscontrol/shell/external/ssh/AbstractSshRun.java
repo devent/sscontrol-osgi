@@ -71,7 +71,7 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
 
     /**
      * Setups the remote before executing a command.
-     * 
+     *
      * @throws CommandExecException
      */
     protected void setupRemote() throws CommandExecException {
@@ -87,13 +87,23 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
         if (key == null) {
             return;
         }
+        File tmp = null;
         try {
-            File tmp = File.createTempFile("robobee", null);
+            tmp = File.createTempFile("robobee", null);
+            copySshKey(key, tmp);
+            args.put(SSH_KEY_ARG, tmp);
+        } catch (IOException e) {
+            throw new SetupSshKeyException(e, key);
+        }
+    }
+
+    private void copySshKey(URI key, File tmp) throws SetupSshKeyException {
+        try {
             IOUtils.copy(key.toURL().openStream(), new FileOutputStream(tmp));
             tmp.setReadable(false, false);
             tmp.setReadable(true, true);
-            args.put(SSH_KEY_ARG, tmp);
         } catch (IOException e) {
+            tmp.delete();
             throw new SetupSshKeyException(e, key);
         }
     }
