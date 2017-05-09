@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.types.ssh.external;
 
+import java.io.File;
 import java.net.URI;
 
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
@@ -34,6 +35,11 @@ public interface SshHost extends TargetHost {
      * Returns the private SSH key.
      */
     URI getKey();
+
+    /**
+     * Returns the socket file of a control master for multiplexing.
+     */
+    File getSocket();
 
     SystemInfo getSystem();
 }

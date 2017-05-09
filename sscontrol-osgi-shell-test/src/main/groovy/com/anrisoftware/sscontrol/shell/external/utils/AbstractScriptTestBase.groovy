@@ -254,10 +254,11 @@ abstract class AbstractScriptTestBase {
         injector
     }
 
-    Threads createThreads() {
+    Threads createThreads(String name="script") {
         PropertiesThreads threads = threadsFactory.create()
         threads.setProperties threadsProperties.get()
-        threads.setName("script")
+        threads.setName(name)
         threads
     }
+
 }

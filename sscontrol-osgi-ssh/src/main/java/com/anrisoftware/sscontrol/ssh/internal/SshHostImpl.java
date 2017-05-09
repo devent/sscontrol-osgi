@@ -16,15 +16,17 @@
 package com.anrisoftware.sscontrol.ssh.internal;
 
 import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.commons.lang3.Validate.notNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -32,6 +34,8 @@ import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultSystemInfoFactory;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  *
@@ -49,65 +53,41 @@ public class SshHostImpl implements SshHost {
      */
     public interface SshHostImplFactory {
 
-        SshHostImpl create();
+        SshHost create();
 
+        SshHost create(Map<String, Object> args);
     }
 
     private transient DefaultSystemInfoFactory systemFactory;
 
-    private String host;
+    private final String host;
 
-    private String user;
+    private final String user;
 
-    private Integer port;
+    private final Integer port;
 
-    private URI key;
+    private final URI key;
 
-    private SystemInfo system;
+    private final SystemInfo system;
 
-    @Inject
+    private final File socket;
+
+    @AssistedInject
     SshHostImpl(DefaultSystemInfoFactory systemFactory) {
+        this(systemFactory, new HashMap<>());
+    }
+
+    @AssistedInject
+    SshHostImpl(DefaultSystemInfoFactory systemFactory,
+            @Assisted Map<String, Object> args) {
         this.systemFactory = systemFactory;
-        this.system = systemFactory.create(new HashMap<String, Object>());
-    }
-
-    public void host(String host) {
-        Map<String, Object> args = new HashMap<>();
-        host(args, host);
-    }
-
-    public void host(Map<String, Object> args, String host) {
-        Map<String, Object> a = parseHostUserPort(args, host);
-        host(a);
-    }
-
-    public void host(Map<String, Object> args) {
-        Object v;
-        v = args.get("host");
-        notNull(v, "host=null");
-        Map<String, Object> a = parseHostUserPort(args, v.toString());
-        v = a.get("host");
-        this.host = v.toString();
-        v = a.get("user");
-        if (v != null) {
-            this.user = v.toString();
-        }
-        v = a.get("port");
-        if (v != null) {
-            this.port = (Integer) a.get("port");
-        }
-        v = a.get("key");
-        if (v != null) {
-            this.key = ToURI.toURI(v.toString());
-        }
-        v = a.get("system");
-        if (v != null) {
-            if (v instanceof SystemInfo) {
-                this.system = (SystemInfo) v;
-            } else {
-                this.system = systemFactory.parse(v.toString());
-            }
-        }
+        Map<String, Object> a = splitHost(args);
+        this.host = parseHost(a);
+        this.user = parseUser(a);
+        this.port = parsePort(a);
+        this.key = parseKey(args);
+        this.system = parseSystem(args);
+        this.socket = parseSocket(args);
     }
 
     @Override
@@ -136,20 +116,23 @@ public class SshHostImpl implements SshHost {
     }
 
     @Override
+    public File getSocket() {
+        return socket;
+    }
+
+    @Override
     public String getHostAddress() throws UnknownHostException {
         return InetAddress.getByName(host).getHostAddress();
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("user", user)
-                .append("host", host).append("port", port).append("key", key)
-                .append("system", system).toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
-    private Map<String, Object> parseHostUserPort(Map<String, Object> args,
-            String host) {
+    private Map<String, Object> splitHost(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
+        String host = parseHost(args);
         String[] userHostPort = split(host, "@");
         switch (userHostPort.length) {
         case 1:
@@ -167,6 +150,52 @@ public class SshHostImpl implements SshHost {
             break;
         }
         return a;
+    }
+
+    private String parseHost(Map<String, Object> args) {
+        Object v = args.get("host");
+        assertThat("host=null", v, notNullValue());
+        assertThat("host=empty", v.toString(), not(isEmptyString()));
+        return v.toString();
+    }
+
+    private String parseUser(Map<String, Object> args) {
+        Object v = args.get("user");
+        return v != null ? v.toString() : null;
+    }
+
+    private Integer parsePort(Map<String, Object> args) {
+        Object v = args.get("port");
+        return (Integer) v;
+    }
+
+    private URI parseKey(Map<String, Object> args) {
+        Object v = args.get("key");
+        return v != null ? ToURI.toURI(v) : null;
+    }
+
+    private SystemInfo parseSystem(Map<String, Object> args) {
+        Object v = args.get("system");
+        if (v == null) {
+            return systemFactory.create(new HashMap<String, Object>());
+        }
+        if (v instanceof SystemInfo) {
+            return (SystemInfo) v;
+        } else {
+            return systemFactory.parse(v.toString());
+        }
+    }
+
+    private File parseSocket(Map<String, Object> args) {
+        Object v = args.get("socket");
+        if (v == null) {
+            return null;
+        }
+        if (v instanceof File) {
+            return (File) v;
+        } else {
+            return new File(v.toString());
+        }
     }
 
 }

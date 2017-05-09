@@ -468,6 +468,28 @@ service "ssh" with {
         doServiceTest test
     }
 
+    @Test
+    void "ssh_socket_arg"() {
+        def test = [
+            name: "ssh_socket_arg",
+            input: """
+service "ssh" with {
+    host "192.168.0.2", socket: "/tmp/socket"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('ssh').size() == 1
+                Ssh ssh = services.getServices('ssh')[0] as Ssh
+                assert ssh.group == 'default'
+                assert ssh.hosts.size() == 1
+                SshHost host = ssh.hosts[0]
+                assert host.host == "192.168.0.2"
+                assert host.socket == new File("/tmp/socket")
+            },
+        ]
+        doServiceTest test
+    }
+
     void doServiceTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()

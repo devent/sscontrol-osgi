@@ -18,11 +18,6 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.facts;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,10 +123,6 @@ public class FactsImpl implements Facts {
         args.put("remoteSrc", false);
         args.put("remoteDest", true);
         args.put(LOG_ARG, log);
-        args.put(SSH_USER_ARG, host.getUser());
-        args.put(SSH_HOST, host.getHost());
-        args.put(SSH_PORT_ARG, host.getPort());
-        args.put(SSH_KEY_ARG, host.getKey());
     }
 
 }
