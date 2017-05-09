@@ -53,6 +53,8 @@ public interface Cmd {
 
     static final String SSH_ARG = "sshArgs";
 
+    static final String SSH_EXTERNAL_CONTROL_PATH_ARG = "sshExternalControlPath";
+
     static final String ENV_ARG = "env";
 
     static final String SUDO_ENV_ARG = "sudoEnv";
@@ -77,36 +79,36 @@ public interface Cmd {
      *
      *            <li>{@code runCommands} optionally, set to the
      *            {@link RunCommands} to record the command.
-     * 
+     *
      *            <li>{@code privileged} optionally, set to {@code true} to run
      *            the code with privileged rights.
      *
      *            <li>{@code shell} optionally, sets the shell that is used to
      *            execute the command on the host. The shell must be installed
      *            on the host system. For example, {@code bash -s}.
-     * 
+     *
      *            <li>{@code chdir} optionally, sets the work directory of the
      *            command. If not set, the working directory is the user home
      *            directory of the ssh user.
-     * 
+     *
      *            <li>{@code env} optionally, sets the {@link Map} of
      *            environment variables to set for the command.
-     * 
+     *
      *            <li>{@code debugLevel} optionally, sets the {@link Integer} of
      *            the debugging level.
-     * 
+     *
      *            <li>{@code sshUser} optionally, sets the ssh user to connect
      *            to the host system. The user must be available on the host and
      *            the client must be allowed to login. Normally, that means that
      *            public key must be added to the host user's
      *            {@code authorized_keys} file. Per default the current user is
      *            used.
-     * 
+     *
      *            <li>{@code sshHost} sets the remote host.
-     * 
+     *
      *            <li>{@code sshPort} optionally, sets the {@link Integer} port
      *            number of the ssh server.
-     * 
+     *
      *            <li>{@code sshArgs} optionally, sets the ssh arguments and
      *            options.
      *
@@ -149,7 +151,7 @@ public interface Cmd {
      *            <li>{@code exitCode} optionally, set the success exit code of
      *            the process;
      *            </ul>
-     * 
+     *
      * @param parent
      *            the parent script.
      *

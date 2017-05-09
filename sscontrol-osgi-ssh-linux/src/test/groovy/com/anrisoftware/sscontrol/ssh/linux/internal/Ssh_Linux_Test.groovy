@@ -18,6 +18,8 @@ package com.anrisoftware.sscontrol.ssh.linux.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import java.util.concurrent.Future
+
 import javax.inject.Inject
 
 import org.junit.Before
@@ -25,6 +27,11 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.globalpom.exec.external.command.CommandLineFactory
+import com.anrisoftware.globalpom.exec.external.core.CommandExec
+import com.anrisoftware.globalpom.exec.external.core.CommandExecFactory
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask
+import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLine
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
@@ -36,9 +43,9 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
@@ -52,7 +59,7 @@ import com.google.inject.AbstractModule
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -67,7 +74,10 @@ class Ssh_Linux_Test extends AbstractScriptTestBase {
     Ssh_Linux_Factory sshLinuxFactory
 
     @Inject
-    CmdRunCaller cmdRunCaller
+    CommandLineFactory commandLineFactory
+
+    @Inject
+    CommandExecFactory commandExecFactory
 
     static Map expectedResources = [:]
 
@@ -83,6 +93,30 @@ service "ssh", host: "localhost"
                 def targets = services.targets.getHosts 'default'
                 assert targets[0].system.name == 'debian'
                 assert targets[0].system.version == '8'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "socket"() {
+        def threads = createThreads("test")
+        def socketFile = File.createTempFile("robobee", ".socket")
+        socketFile.delete()
+        DefaultCommandLine line = commandLineFactory.create("ssh").add("-o \"ControlMaster=yes\" -o \"ControlPath=$socketFile\" -o \"ControlPersist=60\" localhost")
+        CommandExec exec = commandExecFactory.create()
+        exec.setThreads threads
+        Future task = exec.exec line
+        ProcessTask process = task.get()
+        def test = [
+            name: "socket",
+            input: """
+service "ssh", host: "localhost", socket: "$socketFile"
+""",
+            expected: { Map args ->
+                HostServices services = args.services
+                def targets = services.targets.getHosts 'default'
+                assert targets[0].socket == socketFile
             },
         ]
         doTest test
@@ -142,6 +176,7 @@ service "ssh", host: "localhost"
             new StringsModule(),
             new TemplateResModule(),
             new SystemNameMappingsModule(),
+            new StModule(),
             new AbstractModule() {
 
                 @Override

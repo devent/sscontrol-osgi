@@ -26,6 +26,7 @@ import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONNECTION_TIMEO
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_MASTER_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PERSIST_DURATION_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_EXTERNAL_CONTROL_PATH_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SUDO_ENV_ARG;
@@ -139,6 +140,8 @@ class CmdArgsImpl implements CmdArgs {
         List<String> options = new ArrayList<String>();
         args.put("sshDefaultOptions", options);
         SshOptions sshOptions = sshOptionsFactory.create(args, options);
+        sshOptions.addOption(SSH_EXTERNAL_CONTROL_PATH_ARG,
+                "ssh_external_control_path_option");
         sshOptions.addDefaultOptions();
         sshOptions.addDebug();
         if (args.useSshMaster()) {

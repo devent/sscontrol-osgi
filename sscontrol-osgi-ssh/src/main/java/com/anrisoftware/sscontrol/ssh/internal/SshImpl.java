@@ -69,9 +69,9 @@ public class SshImpl implements Ssh {
 
     private final List<SshHost> hosts;
 
-    private final SshImplLogger log;
+    private transient SshImplLogger log;
 
-    private final SshHostImplFactory sshHostFactory;
+    private transient SshHostImplFactory hostFactory;
 
     private DebugLogging debug;
 
@@ -83,13 +83,13 @@ public class SshImpl implements Ssh {
 
     @AssistedInject
     SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
-            SshHostImplFactory sshHostFactory,
+            SshHostImplFactory hostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
         this.hosts = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
-        this.sshHostFactory = sshHostFactory;
+        this.hostFactory = hostFactory;
         this.defaultKey = null;
         parseArgs(args);
     }
@@ -243,13 +243,12 @@ public class SshImpl implements Ssh {
         }
     }
 
-    private void addHost(Map<String, Object> a) {
-        Object v = a.get("system");
+    private void addHost(Map<String, Object> args) {
+        Object v = args.get("system");
         if (v == null) {
-            a.put("system", system);
+            args.put("system", system);
         }
-        SshHost host = sshHostFactory.create();
-        invokeMethod(host, "host", a);
+        SshHost host = hostFactory.create(args);
         this.hosts.add(host);
         this.targets.add(host);
         log.hostAdded(this, host);
