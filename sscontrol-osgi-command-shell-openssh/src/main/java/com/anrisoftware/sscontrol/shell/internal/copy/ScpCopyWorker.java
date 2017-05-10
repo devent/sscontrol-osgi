@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.copy;
 
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_EXTERNAL_CONTROL_PATH_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
@@ -45,7 +46,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -53,7 +54,7 @@ import com.google.inject.assistedinject.Assisted;
 public class ScpCopyWorker implements Copy {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -116,6 +117,7 @@ public class ScpCopyWorker implements Copy {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+        args.put(SSH_EXTERNAL_CONTROL_PATH_ARG, host.getSocket());
         assertThat("src=null", args.get(SRC_ARG), is(notNullValue()));
         String src = args.get(SRC_ARG).toString();
         args.put(SRC_ARG, new File(src));
