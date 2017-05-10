@@ -16,9 +16,8 @@
 package com.anrisoftware.sscontrol.ssh.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.CmdExecHelper.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-
-import java.util.concurrent.Future
 
 import javax.inject.Inject
 
@@ -27,15 +26,11 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.globalpom.exec.external.command.CommandLineFactory
-import com.anrisoftware.globalpom.exec.external.core.CommandExec
-import com.anrisoftware.globalpom.exec.external.core.CommandExecFactory
-import com.anrisoftware.globalpom.exec.external.core.ProcessTask
-import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLine
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdExecHelperModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
@@ -73,12 +68,6 @@ class Ssh_Linux_Test extends AbstractScriptTestBase {
     @Inject
     Ssh_Linux_Factory sshLinuxFactory
 
-    @Inject
-    CommandLineFactory commandLineFactory
-
-    @Inject
-    CommandExecFactory commandExecFactory
-
     static Map expectedResources = [:]
 
     @Test
@@ -100,14 +89,7 @@ service "ssh", host: "localhost"
 
     @Test
     void "socket"() {
-        def threads = createThreads("test")
-        def socketFile = File.createTempFile("robobee", ".socket")
-        socketFile.delete()
-        DefaultCommandLine line = commandLineFactory.create("ssh").add("-o \"ControlMaster=yes\" -o \"ControlPath=$socketFile\" -o \"ControlPersist=60\" localhost")
-        CommandExec exec = commandExecFactory.create()
-        exec.setThreads threads
-        Future task = exec.exec line
-        ProcessTask process = task.get()
+        def socketFile = createSshSocket injector, host: "localhost"
         def test = [
             name: "socket",
             input: """
@@ -177,6 +159,7 @@ service "ssh", host: "localhost", socket: "$socketFile"
             new TemplateResModule(),
             new SystemNameMappingsModule(),
             new StModule(),
+            new CmdExecHelperModule(),
             new AbstractModule() {
 
                 @Override
