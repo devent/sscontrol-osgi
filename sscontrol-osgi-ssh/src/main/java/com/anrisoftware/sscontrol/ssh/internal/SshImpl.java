@@ -81,6 +81,8 @@ public class SshImpl implements Ssh {
 
     private URI defaultKey;
 
+    private Object socket;
+
     @AssistedInject
     SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
             SshHostImplFactory hostFactory,
@@ -237,6 +239,10 @@ public class SshImpl implements Ssh {
         if (v != null) {
             this.defaultKey = ToURI.toURI(v);
         }
+        v = args.get("socket");
+        if (v != null) {
+            this.socket = v;
+        }
         v = args.get("host");
         if (v != null) {
             host(args);
@@ -247,6 +253,10 @@ public class SshImpl implements Ssh {
         Object v = args.get("system");
         if (v == null) {
             args.put("system", system);
+        }
+        v = args.get("socket");
+        if (v == null) {
+            args.put("socket", socket);
         }
         SshHost host = hostFactory.create(args);
         this.hosts.add(host);
