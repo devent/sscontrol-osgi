@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_EXTERNAL_CONTROL_PATH_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
@@ -41,7 +42,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -102,6 +103,7 @@ public class ScpImpl implements Scp {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+        args.put(SSH_EXTERNAL_CONTROL_PATH_ARG, host.getSocket());
     }
 
 }
