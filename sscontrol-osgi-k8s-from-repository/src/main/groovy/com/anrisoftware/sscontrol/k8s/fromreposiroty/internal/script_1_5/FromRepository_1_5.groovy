@@ -81,7 +81,15 @@ class FromRepository_1_5 extends ScriptBase {
         FromRepository service = this.service
         createCmd findFilesFactory, chdir: dir, suffix: kubectlFilesPatterns call() each {
             if (!StringUtils.isBlank(it)) {
-                cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+                try {
+                    cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+                } catch (e) {
+                    File tmp = File.createTempFile(it, null)
+                    fetch src: "$dir/$it", dest: tmp call()
+                    def s = FileUtils.readFileToString(tmp, charset)
+                    tmp.delete()
+                    throw new ApplyManifestException(e, dir, it, s)
+                }
             }
         }
     }
