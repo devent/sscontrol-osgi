@@ -40,9 +40,9 @@ class Docker_1_12_Upstream_Debian_8 extends ScriptBase {
     Object run() {
         shell """
 curl -fsSL $repositoryKey | sudo apt-key add -
-sudo add-apt-repository "deb $repository $systemName-$distributionName main"
+sudo bash -c 'echo "deb [arch=amd64] $repository $distributionName stable" > /etc/apt/sources.list.d/docker.list'
 """ call()
-        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install docker-engine=$dockerVersion" with { //
+        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install $dockerPackage=$dockerVersion" with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
@@ -52,6 +52,10 @@ sudo add-apt-repository "deb $repository $systemName-$distributionName main"
 
     String getRepositoryKey() {
         properties.getProperty 'repository_key', defaultProperties
+    }
+
+    String getDockerPackage() {
+        properties.getProperty 'docker_package', defaultProperties
     }
 
     String getDockerVersion() {

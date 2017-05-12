@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Docker_Debian_8_Test extends AbstractTest_Docker_Debian_8 {
+class Docker_Debian_8_Test extends AbstractScriptTest {
 
     @Test
     void "basic"() {

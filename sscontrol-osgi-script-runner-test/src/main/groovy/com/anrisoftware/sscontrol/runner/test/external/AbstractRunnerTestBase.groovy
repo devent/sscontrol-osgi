@@ -55,6 +55,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
 
+    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
+
     @Inject
     ParserImplFactory parserFactory
 

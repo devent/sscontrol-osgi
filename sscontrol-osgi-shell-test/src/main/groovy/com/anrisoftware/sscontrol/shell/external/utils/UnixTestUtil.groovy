@@ -82,6 +82,7 @@ class UnixTestUtil {
         def user = System.getProperty('user.name')
         String str = FileUtils.readFileToString file
         str = str.replaceAll(/junit\d+/, 'junit')
+        str = str.replaceAll(/robobee\d+/, 'robobee')
         str = str.replaceAll(/replace\d+/, 'replace')
         str = str.replaceAll(/random\d+/, 'random')
         str = str.replaceAll(/id_rsa\d+/, 'id_rsa')

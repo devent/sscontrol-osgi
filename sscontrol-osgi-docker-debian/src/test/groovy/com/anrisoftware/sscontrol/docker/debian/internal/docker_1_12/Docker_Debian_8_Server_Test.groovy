@@ -22,6 +22,9 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -31,43 +34,48 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Docker_Debian_8_Andrea_Master_Local_Test extends AbstractTest_Docker_Debian_8 {
+class Docker_Debian_8_Server_Test extends AbstractRunnerDebianTest {
+
+    static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
     @Test
-    void "andrea_master_local"() {
+    void "debian_8_server_docker"() {
         def test = [
-            name: "andrea_master_local",
-            input: """
-service "ssh", group: "master", key: "${robobeeKey}" with {
-    host "robobee@andrea-master-local"
-}
-service "ssh", group: "nodes", key: "${robobeeKey}" with {
-    host "robobee@andrea-node-0-local"
-}
-targets['all'].eachWithIndex { host, i ->
-    service "docker", target: host with {
-        //registry mirror: 'emlenovo.muellerpublic.de', ca: '$muellerpublicCertCaPem'
-    }
-}
+            name: "debian_8_server_docker",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+service "docker"
 """,
+            scriptVars: [:],
+            expectedServicesSize: 2,
+            before: { Map test -> },
+            after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
+                assertStringResource Docker_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
             },
         ]
         doTest test
     }
 
+    def tearDownServer(Map args) {
+        remoteCommand """
+"""
+    }
+
     @Before
     void beforeMethod() {
-        assumeTrue isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-0-local'
-        ])
+        assumeTrue new File(robobeeSocket).exists()
+        assumeTrue testHostAvailable
+    }
+
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {
     }
 
-    Map getScriptEnv(Map args) {
-        emptyScriptEnv
+    def setupServiceScript(Map args, HostServiceScript script) {
+        return script
     }
 }
