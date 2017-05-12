@@ -70,6 +70,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         File dir = folder.newFolder()
         test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars
         createDummyCommands dir
+        assert test.script : "test.script=null"
         if (test.script instanceof URL) {
             IOUtils.copy test.script.openStream(), new FileOutputStream(scriptFile)
         } else {
