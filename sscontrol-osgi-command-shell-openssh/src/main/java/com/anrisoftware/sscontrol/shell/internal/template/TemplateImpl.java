@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.template;
 
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_EXTERNAL_CONTROL_PATH_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
@@ -138,6 +139,7 @@ public class TemplateImpl implements Template {
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT_ARG, host.getPort());
         args.put(SSH_KEY_ARG, host.getKey());
+        args.put(SSH_EXTERNAL_CONTROL_PATH_ARG, host.getSocket());
     }
 
     private void parseArgs() {
