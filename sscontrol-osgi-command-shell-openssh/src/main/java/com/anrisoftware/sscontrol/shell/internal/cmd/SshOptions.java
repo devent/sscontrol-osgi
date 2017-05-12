@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.PropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -46,7 +46,7 @@ import com.google.inject.assistedinject.Assisted;
 class SshOptions {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -94,7 +94,8 @@ class SshOptions {
     }
 
     public void addOption(String name, String option) {
-        if (!args.containsKey(name)) {
+        Object v = args.get(name);
+        if (v == null) {
             return;
         }
         String o = parseTemplate(args, group, p.getProperty(option));
