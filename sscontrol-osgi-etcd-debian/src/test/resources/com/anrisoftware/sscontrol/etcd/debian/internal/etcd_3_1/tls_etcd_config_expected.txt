@@ -40,8 +40,8 @@ ETCD_ADVERTISE_CLIENT_URLS="https://etcd-0.muellerpublic.de:2379"
 #ETCD_PROXY_READ_TIMEOUT="0"
 #
 #[security]
-ETCD_CERT_FILE="/tmp/junit/junit/etc/etcd/ssl/ectd_cert.pem"
-ETCD_KEY_FILE="/tmp/junit/junit/etc/etcd/ssl/ectd_key.pem"
+ETCD_CERT_FILE="/tmp/junit/junit/etc/etcd/ssl/etcd_cert.pem"
+ETCD_KEY_FILE="/tmp/junit/junit/etc/etcd/ssl/etcd_key.pem"
 #ETCD_CLIENT_CERT_AUTH="false"
 #ETCD_TRUSTED_CA_FILE=""
 #ETCD_AUTO_TLS="false"
