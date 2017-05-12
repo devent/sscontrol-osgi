@@ -38,6 +38,7 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
@@ -139,6 +140,7 @@ abstract class AbstractTestSshd_Debian_8 extends AbstractScriptTestBase {
             new TokensTemplateModule(),
             new TemplateResModule(),
             new SystemNameMappingsModule(),
+            new StModule(),
             new AbstractModule() {
 
                 @Override
