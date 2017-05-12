@@ -127,7 +127,8 @@ mkdir -p '$dropin'
                 log.debug 'Kernel is upgraded but not used, not starting docker.'
                 enableSystemdService 'docker'
                 shell privileged: true, """
-rm -rf /var/lib/docker/aufs
+umount $dockerAufsDirectory; true
+rm -rf $dockerAufsDirectory; true
 """ call()
             }
         } else {
@@ -173,6 +174,10 @@ rm -rf /var/lib/docker/aufs
 
     String getKernelFullVersion() {
         properties.getProperty 'kernel_full_version', defaultProperties
+    }
+
+    File getDockerAufsDirectory() {
+        getFileProperty 'docker_aufs_directory', base, defaultProperties
     }
 
     @Override
