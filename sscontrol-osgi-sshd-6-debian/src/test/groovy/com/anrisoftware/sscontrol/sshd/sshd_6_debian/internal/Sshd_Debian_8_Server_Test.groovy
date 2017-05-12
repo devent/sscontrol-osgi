@@ -54,7 +54,7 @@ service "sshd"
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {
