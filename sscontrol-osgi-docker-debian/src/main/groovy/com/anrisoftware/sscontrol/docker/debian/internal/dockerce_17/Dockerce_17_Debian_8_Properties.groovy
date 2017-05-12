@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12;
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * <i>Docker CE 17 Debian 8</i> properties provider from
+ * {@code "/dockerce_17_debian_8.properties"}.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface Docker_1_12_Upstream_Debian_8_Factory
-        extends HostServiceScriptService {
+class Dockerce_17_Debian_8_Properties extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = Dockerce_17_Debian_8_Properties.class.getResource("/dockerce_17_debian_8.properties")
+
+    Dockerce_17_Debian_8_Properties() {
+        super(Dockerce_17_Debian_8_Properties.class, RESOURCE)
+    }
 }

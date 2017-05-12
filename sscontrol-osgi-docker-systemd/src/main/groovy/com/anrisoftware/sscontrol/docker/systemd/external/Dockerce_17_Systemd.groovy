@@ -29,13 +29,13 @@ import com.anrisoftware.sscontrol.tls.external.Tls
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Docker 1.12 service using Systemd.
+ * Configures the Docker CE 17 service using Systemd.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class Docker_1_12_Systemd extends ScriptBase {
+abstract class Dockerce_17_Systemd extends ScriptBase {
 
     TemplateResource mirrorTemplate
 
@@ -43,7 +43,7 @@ abstract class Docker_1_12_Systemd extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Docker_1_12_Systemd_Templates')
+        def templates = templatesFactory.create('Dockerce_17_Systemd_Templates')
         this.dockerdTemplate = templates.getResource('dockerd_config')
         this.mirrorTemplate = templates.getResource('mirror_config')
     }

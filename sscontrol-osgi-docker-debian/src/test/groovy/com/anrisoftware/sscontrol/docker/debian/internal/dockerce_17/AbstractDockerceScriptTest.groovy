@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -26,6 +26,8 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17.Dockerce_17_Debian_8_Factory
+import com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17.Dockerce_17_Debian_8_Module
 import com.anrisoftware.sscontrol.docker.internal.DockerModule
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -58,11 +60,11 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractScriptTest extends AbstractScriptTestBase {
+abstract class AbstractDockerceScriptTest extends AbstractScriptTestBase {
 
-    static final URL certCaPem = AbstractScriptTest.class.getResource('cert_ca.txt')
+    static final URL certCaPem = AbstractDockerceScriptTest.class.getResource('cert_ca.txt')
 
-    static final URL muellerpublicCertCaPem = AbstractScriptTest.class.getResource('muellerpublic_de_ca_cert.pem')
+    static final URL muellerpublicCertCaPem = AbstractDockerceScriptTest.class.getResource('muellerpublic_de_ca_cert.pem')
 
     @Inject
     SshImplFactory sshFactory
@@ -74,7 +76,7 @@ abstract class AbstractScriptTest extends AbstractScriptTestBase {
     DockerImplFactory serviceFactory
 
     @Inject
-    Docker_1_12_Debian_8_Factory scriptFactory
+    Dockerce_17_Debian_8_Factory scriptFactory
 
     String getServiceName() {
         'docker'
@@ -120,7 +122,7 @@ abstract class AbstractScriptTest extends AbstractScriptTestBase {
             new SshModule(),
             new SshPreModule(),
             new DockerModule(),
-            new Docker_1_12_Debian_8_Module(),
+            new Dockerce_17_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

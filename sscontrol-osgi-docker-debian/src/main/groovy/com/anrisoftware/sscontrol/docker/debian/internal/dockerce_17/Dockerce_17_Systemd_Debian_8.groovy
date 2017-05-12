@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.docker.systemd.external.Docker_1_12_Systemd
+import com.anrisoftware.sscontrol.docker.systemd.external.Dockerce_17_Systemd
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Docker 1.12 service using Systemd and Debian 8.
+ * Configures the Docker CE 17 service using Systemd and Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Docker_1_12_Systemd_Debian_8 extends Docker_1_12_Systemd {
+class Dockerce_17_Systemd_Debian_8 extends Dockerce_17_Systemd {
 
     @Inject
-    Docker_1_12_Debian_8_Properties debianPropertiesProvider
+    Dockerce_17_Debian_8_Properties debianPropertiesProvider
 
     @Override
     Object run() {
