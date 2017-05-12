@@ -17,8 +17,6 @@ package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import javax.inject.Inject
 
-import org.joda.time.Duration
-
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
@@ -38,20 +36,37 @@ class Dockerce_17_Upstream_Debian_8 extends ScriptBase {
 
     @Override
     Object run() {
+        if (upgradeKernel) {
+            installKernel()
+        }
+        installDocker()
+    }
+
+    def installKernel() {
+        if (check("uname -a | grep '$kernelFullVersion'")) {
+            return
+        }
+        shell privileged: true, timeout: timeoutLong, """
+echo "deb ${kernelRepository} ${distributionName}-backports main" > $backportsListFile
+apt-get update && apt-get -y install -t ${distributionName}-backports $kernelPackage=$kernelVersion
+""" with { sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+    }
+
+    def installDocker() {
         shell """
-curl -fsSL $repositoryKey | sudo apt-key add -
-sudo bash -c 'echo "deb [arch=amd64] $repository $distributionName stable" > /etc/apt/sources.list.d/docker.list'
+curl -fsSL $dockerRepositoryKey | sudo apt-key add -
+sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable" > $dockerListFile'
 """ call()
-        shell privileged: true, timeout: aptgetTimeout, "apt-get update && apt-get -y install $dockerPackage=$dockerVersion" with { //
+        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install $dockerPackage=$dockerVersion" with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
-    String getRepository() {
-        properties.getProperty 'repository', defaultProperties
+    String getDockerRepository() {
+        properties.getProperty 'docker_repository', defaultProperties
     }
 
-    String getRepositoryKey() {
-        properties.getProperty 'repository_key', defaultProperties
+    String getDockerRepositoryKey() {
+        properties.getProperty 'docker_repository_key', defaultProperties
     }
 
     String getDockerPackage() {
@@ -62,8 +77,32 @@ sudo bash -c 'echo "deb [arch=amd64] $repository $distributionName stable" > /et
         properties.getProperty 'docker_version', defaultProperties
     }
 
-    Duration getAptgetTimeout() {
-        properties.getDurationProperty 'apt_get_timeout', defaultProperties
+    boolean getUpgradeKernel() {
+        properties.getBooleanProperty 'upgrade_kernel', defaultProperties
+    }
+
+    String getKernelRepository() {
+        properties.getProperty 'kernel_repository', defaultProperties
+    }
+
+    String getKernelPackage() {
+        properties.getProperty 'kernel_package', defaultProperties
+    }
+
+    String getKernelVersion() {
+        properties.getProperty 'kernel_version', defaultProperties
+    }
+
+    String getKernelFullVersion() {
+        properties.getProperty 'kernel_full_version', defaultProperties
+    }
+
+    File getBackportsListFile() {
+        getFileProperty 'backports_list_file', base, defaultProperties
+    }
+
+    File getDockerListFile() {
+        getFileProperty 'docker_list_file', base, defaultProperties
     }
 
     @Override

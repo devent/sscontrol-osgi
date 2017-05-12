@@ -119,7 +119,20 @@ mkdir -p '$dropin'
     }
 
     def startServices() {
-        startEnableSystemdService 'docker'
+        if (upgradeKernel) {
+            if (check("uname -a | grep '$kernelFullVersion'")) {
+                log.debug 'Kernel is upgraded, starting docker.'
+                startEnableSystemdService 'docker'
+            } else {
+                log.debug 'Kernel is upgraded but not used, not starting docker.'
+                enableSystemdService 'docker'
+                shell privileged: true, """
+rm -rf /var/lib/docker/aufs
+""" call()
+            }
+        } else {
+            startEnableSystemdService 'docker'
+        }
     }
 
     File getSystemdDropinDir() {
@@ -152,6 +165,14 @@ mkdir -p '$dropin'
 
     def getDefaultMirrorPort() {
         properties.getProperty 'default_mirror_port', defaultProperties
+    }
+
+    boolean getUpgradeKernel() {
+        properties.getBooleanProperty 'upgrade_kernel', defaultProperties
+    }
+
+    String getKernelFullVersion() {
+        properties.getProperty 'kernel_full_version', defaultProperties
     }
 
     @Override

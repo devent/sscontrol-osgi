@@ -52,6 +52,7 @@ service "docker"
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
                 assertStringResource Dockerce_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
+                assertStringResource Dockerce_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
             },
         ]
         doTest test

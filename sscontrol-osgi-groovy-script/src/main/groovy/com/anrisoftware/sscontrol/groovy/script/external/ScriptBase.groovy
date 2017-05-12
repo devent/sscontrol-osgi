@@ -338,6 +338,28 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Check a status of a command.
+     * @param command the command which status is checked, for example
+     * <code>uname -a | grep '4.0.0'</code>
+     */
+    boolean check(String command) {
+        check([command: command])
+    }
+
+    /**
+     * Check a status of a command.
+     * @param args <i>command</i> the command which status is checked, for example
+     * <code>uname -a | grep '4.0.0'</code>
+     */
+    boolean check(Map args) {
+        assertThat "command=null", args.command, not(isEmptyOrNullString())
+        def a = new HashMap(args)
+        a.exitCodes = [0, 1] as int[]
+        def r = shell a call()
+        return r.exitValue == 0
+    }
+
+    /**
      * Facts command.
      */
     Facts facts() {
@@ -390,6 +412,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         log.info 'Starting {}.', services
         services.each {
             shell privileged: true, "systemctl start $it && systemctl status" call()
+        }
+    }
+
+    /**
+     * Enable the specified service.
+     */
+    def enableSystemdService(String service) {
+        enableSystemdService([service])
+    }
+
+    /**
+     * Enable the specified services.
+     */
+    def enableSystemdService(List services) {
+        log.info 'Enabling {}.', services
+        services.each {
+            shell privileged: true, "systemctl enable $it" call()
         }
     }
 
