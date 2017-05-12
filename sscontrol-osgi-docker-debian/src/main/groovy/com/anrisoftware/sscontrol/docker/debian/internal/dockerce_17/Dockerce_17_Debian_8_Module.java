@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12;
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17;
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
@@ -25,21 +25,21 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class Docker_1_12_Debian_8_Module extends AbstractModule {
+public class Dockerce_17_Debian_8_Module extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, Docker_1_12_Debian_8.class)
-                .build(Docker_1_12_Debian_8_Factory.class));
+                .implement(HostServiceScript.class, Dockerce_17_Debian_8.class)
+                .build(Dockerce_17_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        Docker_1_12_Systemd_Debian_8.class)
-                .build(Docker_1_12_Systemd_Debian_8_Factory.class));
+                        Dockerce_17_Systemd_Debian_8.class)
+                .build(Dockerce_17_Systemd_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        Docker_1_12_Upstream_Debian_8.class)
-                .build(Docker_1_12_Upstream_Debian_8_Factory.class));
+                        Dockerce_17_Upstream_Debian_8.class)
+                .build(Dockerce_17_Upstream_Debian_8_Factory.class));
     }
 
 }

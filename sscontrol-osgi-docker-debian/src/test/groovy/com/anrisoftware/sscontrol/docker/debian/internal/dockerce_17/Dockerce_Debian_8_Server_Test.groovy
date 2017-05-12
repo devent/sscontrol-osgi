@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -34,7 +34,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Docker_Debian_8_Server_Test extends AbstractRunnerDebianTest {
+class Dockerce_Debian_8_Server_Test extends AbstractDockerceDebianRunnerTest {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
@@ -51,7 +51,7 @@ service "docker"
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource Docker_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
+                assertStringResource Dockerce_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
             },
         ]
         doTest test

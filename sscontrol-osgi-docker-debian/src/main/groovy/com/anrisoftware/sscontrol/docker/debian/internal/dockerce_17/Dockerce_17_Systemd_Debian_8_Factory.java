@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12;
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17;
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
@@ -23,6 +23,6 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Docker_1_12_Systemd_Debian_8_Factory
+public interface Dockerce_17_Systemd_Debian_8_Factory
         extends HostServiceScriptService {
 }

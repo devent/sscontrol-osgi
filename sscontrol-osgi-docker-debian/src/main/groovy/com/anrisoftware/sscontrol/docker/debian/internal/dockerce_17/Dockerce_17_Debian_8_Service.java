@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12;
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -40,14 +40,14 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Docker_1_12_Debian_8_Service implements HostServiceScriptService {
+public class Dockerce_17_Debian_8_Service implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Docker_1_12_Debian_8_Factory scriptFactory;
+    private Dockerce_17_Debian_8_Factory scriptFactory;
 
     public String getSystemName() {
         return SYSTEM_NAME;
@@ -66,7 +66,7 @@ public class Docker_1_12_Debian_8_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new Docker_1_12_Debian_8_Module()).injectMembers(this);
+        createInjector(new Dockerce_17_Debian_8_Module()).injectMembers(this);
     }
 
 }

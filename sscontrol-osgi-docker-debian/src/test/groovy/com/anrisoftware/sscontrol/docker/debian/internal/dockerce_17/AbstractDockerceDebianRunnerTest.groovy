@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17.Dockerce_17_Debian_8_Factory
 import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -37,7 +38,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractRunnerDebianTest extends AbstractRunnerTestBase {
+abstract class AbstractDockerceDebianRunnerTest extends AbstractRunnerTestBase {
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -55,7 +56,7 @@ abstract class AbstractRunnerDebianTest extends AbstractRunnerTestBase {
     DockerImplFactory serviceFactory
 
     @Inject
-    Docker_1_12_Debian_8_Factory scriptFactory
+    Dockerce_17_Debian_8_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -74,7 +75,7 @@ abstract class AbstractRunnerDebianTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll DockerModules.getAdditionalModules()
+        modules.addAll DockerceModules.getAdditionalModules()
         modules
     }
 

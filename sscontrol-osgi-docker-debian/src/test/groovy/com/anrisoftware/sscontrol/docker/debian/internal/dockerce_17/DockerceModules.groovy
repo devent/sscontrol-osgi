@@ -1,9 +1,10 @@
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17.Dockerce_17_Debian_8_Module
 import com.anrisoftware.sscontrol.docker.internal.DockerModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -32,7 +33,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class DockerModules {
+class DockerceModules {
 
     /**
      * Returns the needed modules.
@@ -42,7 +43,7 @@ class DockerModules {
             new SshModule(),
             new SshPreModule(),
             new DockerModule(),
-            new Docker_1_12_Debian_8_Module(),
+            new Dockerce_17_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

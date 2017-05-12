@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.debian.internal.docker_1_12
+package com.anrisoftware.sscontrol.docker.debian.internal.dockerce_17
 
 import javax.inject.Inject
 
@@ -25,16 +25,16 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * Installs Docker 1.12 from the upstream repository for Debian 8.
+ * Installs Docker CE 17 from the upstream repository for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Docker_1_12_Upstream_Debian_8 extends ScriptBase {
+class Dockerce_17_Upstream_Debian_8 extends ScriptBase {
 
     @Inject
-    Docker_1_12_Debian_8_Properties debianPropertiesProvider
+    Dockerce_17_Debian_8_Properties debianPropertiesProvider
 
     @Override
     Object run() {
