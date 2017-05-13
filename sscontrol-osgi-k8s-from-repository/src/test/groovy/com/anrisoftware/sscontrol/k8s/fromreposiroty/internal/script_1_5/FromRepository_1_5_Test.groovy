@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FromRepository_1_5_Test extends Abstract_1_5_Test {
+class FromRepository_1_5_Test extends AbstractFromRepositoryScriptTest {
 
     @Test
     void "yaml_files"() {
