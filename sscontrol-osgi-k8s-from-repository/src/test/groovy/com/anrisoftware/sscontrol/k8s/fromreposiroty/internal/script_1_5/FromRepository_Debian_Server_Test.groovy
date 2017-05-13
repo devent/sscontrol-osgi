@@ -38,7 +38,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FromRepository_Debian_Server_Test extends Abstract_FromRepository_Runner_Debian_Test {
+class FromRepository_Debian_Server_Test extends AbstractFromRepositoryRunnerTest {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 

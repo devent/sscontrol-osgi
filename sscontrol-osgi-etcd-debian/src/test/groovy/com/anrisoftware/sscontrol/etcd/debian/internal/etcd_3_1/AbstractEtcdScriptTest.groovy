@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
+package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -22,10 +22,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
-import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
@@ -36,46 +33,43 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
+abstract class AbstractEtcdScriptTest extends AbstractScriptTestBase {
 
-    static final URL kubectlCommand = Abstract_1_5_Test.class.getResource('kubectl_command.txt')
+    static final URL certCaPem = AbstractEtcdScriptTest.class.getResource('cert_ca.txt')
 
-    static final URL idRsa = Abstract_1_5_Test.class.getResource('id_rsa.txt')
+    static final URL certCertPem = AbstractEtcdScriptTest.class.getResource('cert_cert.txt')
 
-    static final URL certCaPem = Abstract_1_5_Test.class.getResource('cert_ca.txt')
+    static final URL certKeyPem = AbstractEtcdScriptTest.class.getResource('cert_key.txt')
 
-    static final URL certCertPem = Abstract_1_5_Test.class.getResource('cert_cert.txt')
+    static final Map andreaLocalEtcdCerts = [
+        ca: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
+        etcd_0_cert: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
+        etcd_0_key: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
+        etcd_1_cert: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
+        etcd_1_key: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem'),
+    ]
 
-    static final URL certKeyPem = Abstract_1_5_Test.class.getResource('cert_key.txt')
+    static final URL grepActiveCommand = AbstractEtcdScriptTest.class.getResource('grep_active_command.txt')
 
     @Inject
     SshImplFactory sshFactory
 
     @Inject
-    K8sClusterImplFactory clusterFactory
+    EtcdImplFactory serviceFactory
 
     @Inject
-    GitRepoImplFactory gitFactory
-
-    @Inject
-    GitRepo_Debian_8_Factory gitScriptFactory
-
-    @Inject
-    FromRepositoryImplFactory serviceFactory
-
-    @Inject
-    FromRepository_1_5_Factory scriptFactory
+    Etcd_3_1_Debian_8_Factory scriptFactory
 
     String getServiceName() {
-        'from-repository'
+        'etcd'
     }
 
     String getScriptServiceName() {
-        'from-repository/linux/0'
+        'etcd/debian/8'
     }
 
     void createDummyCommands(File dir) {
-        createIdCommand dir
+        createCommand grepActiveCommand, dir, 'grep'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -85,27 +79,27 @@ abstract class Abstract_1_5_Test extends AbstractScriptTestBase {
             'rm',
             'cp',
             'apt-get',
+            'systemctl',
+            'which',
+            'id',
+            'sha256sum',
             'mv',
             'basename',
-            'git',
-            'find',
+            'wget',
+            'useradd',
+            'tar',
+            'gpg'
         ]
-        def binDir = new File(dir, '/usr/local/bin')
-        binDir.mkdirs()
-        createCommand kubectlCommand, binDir, 'kubectl'
     }
 
     HostServices putServices(HostServices services) {
+        services.putAvailableService 'etcd', serviceFactory
+        services.putAvailableScriptService 'etcd/debian/8', scriptFactory
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
-        services.putAvailableService 'from-repository', serviceFactory
-        services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
     }
 
     List getAdditionalModules() {
-        FromRepository_1_5_Modules.getAdditionalModules()
+        EtcdModules.getAdditionalModules()
     }
 
     @Before

@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_Test extends AbstractTestEtcd_3_1_Debian_8 {
+class Etcd_3_1_Debian_8_Test extends AbstractEtcdScriptTest {
 
     @Test
     void "basic"() {

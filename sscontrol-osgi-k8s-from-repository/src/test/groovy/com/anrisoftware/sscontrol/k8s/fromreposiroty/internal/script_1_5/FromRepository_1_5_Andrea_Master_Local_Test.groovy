@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class FromRepository_1_5_Andrea_Master_Local_Test extends Abstract_FromRepository_Runner_Debian_Test {
+class FromRepository_1_5_Andrea_Master_Local_Test extends AbstractFromRepositoryRunnerTest {
 
     @Test
     void "andrea-local"() {

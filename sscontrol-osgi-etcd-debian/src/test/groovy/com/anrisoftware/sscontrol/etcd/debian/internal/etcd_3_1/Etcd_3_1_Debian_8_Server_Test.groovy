@@ -31,16 +31,17 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Etcd_3_1_Debian_8_Server_Test extends AbstractTestEtcd_3_1_Debian_8 {
+class Etcd_3_1_Debian_8_Server_Test extends AbstractEtcdRunnerTest {
 
     @Test
-    void "etcd_script_basic"() {
+    void "etcd_script_basic_server"() {
         def test = [
-            name: "etcd_script_basic",
-            input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            name: "etcd_script_basic_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
 service "etcd", member: "default"
 """,
+            expectedServicesSize: 2,
             expected: { Map args ->
                 assertStringResource Etcd_3_1_Debian_8_Server_Test, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
                 assertStringResource Etcd_3_1_Debian_8_Server_Test, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
@@ -50,8 +51,42 @@ service "etcd", member: "default"
         doTest test
     }
 
+    @Test
+    void "etcd_tls_peers_server"() {
+        def test = [
+            name: "etcd_tls_peers_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+def host = targets['all'][0]
+def i = 0
+service "etcd", target: host, member: "etcd-\${i}" with {
+    debug "debug", level: 1
+    bind "https://\${host.hostAddress}:2379"
+    advertise "https://robobee-test:2379"
+    tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
+    authentication "cert", ca: certs.ca
+    peer state: "new", advertise: "https://robobee-test:2380", listen: "https://\${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
+        cluster << "etcd-0=https://robobee-test:2380"
+        tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
+        authentication "cert", ca: certs.ca
+    }
+}
+""",
+            scriptVars: ["certs": andreaLocalEtcdCerts],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                assertStringResource Etcd_3_1_Debian_8_Server_Test, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
+                assertStringResource Etcd_3_1_Debian_8_Server_Test, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
+                assertStringResource Etcd_3_1_Debian_8_Server_Test, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
+                assertStringResource Etcd_3_1_Debian_8_Server_Test, checkRemoteFilesPrivileged('/etc/etcd/ssl'), "${args.test.name}_ssl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void beforeMethod() {
+        new File(robobeeSocket).exists()
         assumeTrue testHostAvailable
     }
 

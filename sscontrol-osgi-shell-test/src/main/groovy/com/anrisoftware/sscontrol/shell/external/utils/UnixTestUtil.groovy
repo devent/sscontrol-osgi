@@ -127,6 +127,12 @@ class UnixTestUtil {
         s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d+:\\d+', 'date'
     }
 
+    static String checkRemoteFilesPrivileged(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        def s = remoteCommand "sudo ls -l $dir", host, port, user, key
+        s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d{4}', 'date'
+        s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d+:\\d+', 'date'
+    }
+
     static String remoteCommand(String cmd, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Plain(
                 new SSH(host, port, user, key))
