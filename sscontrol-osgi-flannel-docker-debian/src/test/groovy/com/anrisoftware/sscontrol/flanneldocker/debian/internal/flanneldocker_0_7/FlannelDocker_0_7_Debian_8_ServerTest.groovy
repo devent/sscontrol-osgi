@@ -31,18 +31,51 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FlannelDocker_0_7_Debian_8_ServerTest extends AbstractTest_FlannelDocker_Debian_8 {
+class FlannelDocker_0_7_Debian_8_ServerTest extends AbstractFlannelDockerRunnerTest {
 
     @Test
-    void "flannel_script_basic"() {
+    void "flannel_basic_server"() {
         def test = [
-            name: "flannel_script_basic",
-            input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            name: "flannel_basic_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
 service "flannel-docker" with {
     etcd "http://127.0.0.1:2379"
 }
 """,
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/flanneld.service'), "${args.test.name}_flanneld_service_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/tmpfiles.d/flannel.conf'), "${args.test.name}_flannel_tmpfiles_conf_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/lib/systemd/system/docker.service'), "${args.test.name}_docker_service_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/sysconfig/flanneld'), "${args.test.name}_flanneld_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/docker.service.d/10_flannel.conf'), "${args.test.name}_flannel_docker_conf_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/local/bin/flannel*'), "${args.test.name}_local_bin_expected.txt"
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, checkRemoteFiles('/usr/libexec/flannel'), "${args.test.name}_libexec_flannel_expected.txt"
+                def s = checkRemoteFiles('/run/flannel')
+                s = s.replaceAll('\\d{2,3}', 'n')
+                assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, s, "${args.test.name}_run_flannel_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "flannel_tls_server"() {
+        def test = [
+            name: "flannel_tls_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+def etcd_host = targets['all'][0]
+service "flannel-docker" with {
+    etcd "https://\${etcd_host.hostAddress}:2379" with {
+        tls certs
+    }
+}
+""",
+            scriptVars: ["certs": andreaLocalEtcdCerts],
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 assertStringResource FlannelDocker_0_7_Debian_8_ServerTest, readRemoteFile('/etc/systemd/system/flanneld.service'), "${args.test.name}_flanneld_service_expected.txt"
@@ -62,6 +95,7 @@ service "flannel-docker" with {
 
     @Before
     void beforeMethod() {
+        new File(robobeeSocket).exists()
         assumeTrue testHostAvailable
     }
 
@@ -69,6 +103,6 @@ service "flannel-docker" with {
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv args
     }
 }

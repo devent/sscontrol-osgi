@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FlannelDocker_0_7_Debian_8_Test extends AbstractTest_FlannelDocker_Debian_8 {
+class FlannelDocker_0_7_Debian_8_Test extends AbstractFlannelDockerScriptTest {
 
     @Test
     void "basic"() {

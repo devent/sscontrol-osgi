@@ -18,7 +18,7 @@ sudo cp "<parent.certsDir>/<parent.service.etcd.tls.certName>" .
 <if(parent.service.etcd&&parent.service.etcd.tls.key)>
 sudo cp "<parent.certsDir>/<parent.service.etcd.tls.keyName>" .
 <endif>
-sudo chown $SSH_USER.$SSH_USER -R "$tmp/*"
+sudo chown $SSH_USER.$SSH_USER -R "$tmp"/*
 chmod o-rwx "$tmp"
 >>
 

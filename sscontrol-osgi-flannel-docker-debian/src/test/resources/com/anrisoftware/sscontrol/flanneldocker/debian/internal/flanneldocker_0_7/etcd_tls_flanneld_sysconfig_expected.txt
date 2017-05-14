@@ -7,9 +7,9 @@
 FLANNEL_ETCD_ENDPOINTS="https://127.0.0.1:2379"
 
 # etcd certificates.
-FLANNELD_ETCD_KEYFILE="/tmp/junit/junit/etc/flanneld/ssl/ectd_key.pem"
-FLANNELD_ETCD_CERTFILE="/tmp/junit/junit/etc/flanneld/ssl/ectd_cert.pem"
-FLANNELD_ETCD_CAFILE="/tmp/junit/junit/etc/flanneld/ssl/ectd_ca.pem"
+FLANNELD_ETCD_KEYFILE="/tmp/junit/junit/etc/flanneld/ssl/etcd_key.pem"
+FLANNELD_ETCD_CERTFILE="/tmp/junit/junit/etc/flanneld/ssl/etcd_cert.pem"
+FLANNELD_ETCD_CAFILE="/tmp/junit/junit/etc/flanneld/ssl/etcd_ca.pem"
 
 # etcd config key.  This is the configuration key that flannel queries
 # For address range assignment
