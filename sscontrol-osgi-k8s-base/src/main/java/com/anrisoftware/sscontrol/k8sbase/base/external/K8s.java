@@ -77,4 +77,18 @@ public interface K8s extends HostService {
      * Returns labels for the node.
      */
     Map<String, Label> getLabels();
+
+    /**
+     * <pre>
+     * label key: "muellerpublic.de/some", value: "foo"
+     * </pre>
+     */
+    void label(Map<String, Object> args);
+
+    /**
+     * <pre>
+     * label << 'name=value'
+     * </pre>
+     */
+    List<String> getLabel();
 }

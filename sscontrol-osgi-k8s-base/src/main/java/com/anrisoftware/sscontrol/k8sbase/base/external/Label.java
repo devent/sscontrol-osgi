@@ -8,4 +8,7 @@ package com.anrisoftware.sscontrol.k8sbase.base.external;
  */
 public interface Label {
 
+    String getKey();
+
+    String getValue();
 }

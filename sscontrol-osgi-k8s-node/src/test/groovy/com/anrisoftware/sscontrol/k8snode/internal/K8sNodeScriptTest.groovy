@@ -189,6 +189,30 @@ service "k8s-node" with {
         doTest test
     }
 
+    @Test
+    void "labels"() {
+        def test = [
+            name: 'labels',
+            script: '''
+service "k8s-node" with {
+    label << "muellerpublic.de/usage=apps"
+    label key: "muellerpublic.de/some", value: "foo"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('k8s-node').size() == 1
+                K8sNode s = services.getServices('k8s-node')[0]
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.labels.size() == 2
+                assert s.labels['muellerpublic.de/usage'].value == 'apps'
+                assert s.labels['muellerpublic.de/some'].value == 'foo'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()

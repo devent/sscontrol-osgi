@@ -16,11 +16,8 @@
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
+import static org.apache.commons.lang3.StringUtils.split;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +41,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.LabelImpl.LabelImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -98,6 +96,9 @@ public class K8sImpl implements K8s {
     private Tls tls;
 
     private String containerRuntime;
+
+    @Inject
+    private transient LabelImplFactory labelFactory;
 
     private final Map<String, Label> labels;
 
@@ -277,20 +278,26 @@ public class K8sImpl implements K8s {
         return kubelet;
     }
 
-    /**
-     * <pre>
-     * label key: "muellerpublic.de/some", value: "foo"
-     * </pre>
-     */
-    public void label(Map<String, String> args) {
-        Object v = args.get("key");
-        assertThat("key=null", v, notNullValue());
-        String key = v.toString();
-        assertThat("key=null", key, not(isEmptyString()));
-        v = args.get("key");
-        assertThat("key=null", v, notNullValue());
-        String key = v.toString();
-        assertThat("key=null", key, not(isEmptyString()));
+    @Override
+    public void label(Map<String, Object> args) {
+        Label label = labelFactory.create(args);
+        log.labelAdded(this, label);
+        labels.put(label.getKey(), label);
+    }
+
+    @Override
+    public List<String> getLabel() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                String[] s = split(property, "=");
+                Map<String, Object> args = new HashMap<>();
+                args.put("key", s[0]);
+                args.put("value", s[1]);
+                label(args);
+            }
+        });
     }
 
     @Override
@@ -356,6 +363,11 @@ public class K8sImpl implements K8s {
     @Override
     public String getContainerRuntime() {
         return containerRuntime;
+    }
+
+    @Override
+    public Map<String, Label> getLabels() {
+        return labels;
     }
 
     @Override

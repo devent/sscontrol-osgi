@@ -25,6 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode;
@@ -243,6 +244,21 @@ public class K8sNodeImpl implements K8sNode {
     @Override
     public String getContainerRuntime() {
         return k8s.getContainerRuntime();
+    }
+
+    @Override
+    public Map<String, Label> getLabels() {
+        return k8s.getLabels();
+    }
+
+    @Override
+    public void label(Map<String, Object> args) {
+        k8s.label(args);
+    }
+
+    @Override
+    public List<String> getLabel() {
+        return k8s.getLabel();
     }
 
     @Override
