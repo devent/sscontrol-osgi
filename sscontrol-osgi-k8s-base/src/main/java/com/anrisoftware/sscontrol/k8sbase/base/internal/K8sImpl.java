@@ -17,6 +17,10 @@ package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +39,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
@@ -94,6 +99,8 @@ public class K8sImpl implements K8s {
 
     private String containerRuntime;
 
+    private final Map<String, Label> labels;
+
     @Inject
     K8sImpl(K8sImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
@@ -111,6 +118,7 @@ public class K8sImpl implements K8s {
         this.kubelet = kubeletFactory.create();
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
+        this.labels = new HashMap<>();
         parseArgs(args);
     }
 
@@ -269,6 +277,22 @@ public class K8sImpl implements K8s {
         return kubelet;
     }
 
+    /**
+     * <pre>
+     * label key: "muellerpublic.de/some", value: "foo"
+     * </pre>
+     */
+    public void label(Map<String, String> args) {
+        Object v = args.get("key");
+        assertThat("key=null", v, notNullValue());
+        String key = v.toString();
+        assertThat("key=null", key, not(isEmptyString()));
+        v = args.get("key");
+        assertThat("key=null", v, notNullValue());
+        String key = v.toString();
+        assertThat("key=null", key, not(isEmptyString()));
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -279,6 +303,7 @@ public class K8sImpl implements K8s {
         return getTargets().get(0);
     }
 
+    @Override
     public void addTargets(List<TargetHost> list) {
         this.targets.addAll(list);
     }

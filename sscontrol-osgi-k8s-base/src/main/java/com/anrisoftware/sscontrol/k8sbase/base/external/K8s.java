@@ -73,4 +73,8 @@ public interface K8s extends HostService {
 
     Kubelet kubelet(Map<String, Object> args);
 
+    /**
+     * Returns labels for the node.
+     */
+    Map<String, Label> getLabels();
 }
