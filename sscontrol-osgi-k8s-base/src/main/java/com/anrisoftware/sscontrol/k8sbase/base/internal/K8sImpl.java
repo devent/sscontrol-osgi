@@ -16,8 +16,11 @@
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.split;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -39,9 +44,11 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.LabelImpl.LabelImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.TaintImpl.TaintImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -103,6 +110,11 @@ public class K8sImpl implements K8s {
     private final Map<String, Label> labels;
 
     @Inject
+    private transient TaintImplFactory taintFactory;
+
+    private final Map<String, Taint> taints;
+
+    @Inject
     K8sImpl(K8sImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
             HostPropertiesService propertiesService,
@@ -120,6 +132,7 @@ public class K8sImpl implements K8s {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
         this.labels = new HashMap<>();
+        this.taints = new HashMap<>();
         parseArgs(args);
     }
 
@@ -301,6 +314,37 @@ public class K8sImpl implements K8s {
     }
 
     @Override
+    public void taint(Map<String, Object> args) {
+        Taint taint = taintFactory.create(args);
+        log.taintAdded(this, taint);
+        taints.put(taint.getKey(), taint);
+    }
+
+    private static final Pattern TAINT_PATTERN = Pattern
+            .compile("^(?<key>.*)(:?=(?<value>.*)(:?:(?<effect>.*)))");
+
+    @Override
+    public List<String> getTaint() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                Matcher m = TAINT_PATTERN.matcher(property);
+                assertThat(format("taint matches %s", TAINT_PATTERN),
+                        m.matches(), equalTo(true));
+                String key = m.group("key");
+                String value = m.group("value");
+                String effect = m.group("effect");
+                Map<String, Object> args = new HashMap<>();
+                args.put("key", key);
+                args.put("value", value);
+                args.put("effect", effect);
+                taint(args);
+            }
+        });
+    }
+
+    @Override
     public DebugLogging getDebugLogging() {
         return debug;
     }
@@ -368,6 +412,11 @@ public class K8sImpl implements K8s {
     @Override
     public Map<String, Label> getLabels() {
         return labels;
+    }
+
+    @Override
+    public Map<String, Taint> getTaints() {
+        return taints;
     }
 
     @Override

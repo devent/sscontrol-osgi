@@ -91,4 +91,23 @@ public interface K8s extends HostService {
      * </pre>
      */
     List<String> getLabel();
+
+    /**
+     * Returns taints for the node.
+     */
+    Map<String, Taint> getTaints();
+
+    /**
+     * <pre>
+     * taint key: "extra", value: "foo", effect: "aaa"
+     * </pre>
+     */
+    void taint(Map<String, Object> args);
+
+    /**
+     * <pre>
+     * taint << "dedicated=mail:NoSchedule"
+     * </pre>
+     */
+    List<String> getTaint();
 }

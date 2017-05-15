@@ -20,6 +20,7 @@ import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.c
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.kubeletSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.labelAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.pluginAdded;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.taintAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
@@ -29,6 +30,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
@@ -52,7 +54,9 @@ final class K8sImplLogger extends AbstractLogger {
 
         kubeletSet("Kubelet {} set for {}"),
 
-        labelAdded("Label {} added to {}");
+        labelAdded("Label {} added to {}"),
+
+        taintAdded("Taint {} added to {}");
 
         private String name;
 
@@ -95,5 +99,9 @@ final class K8sImplLogger extends AbstractLogger {
 
     void labelAdded(K8sImpl k8s, Label label) {
         debug(labelAdded, label, k8s);
+    }
+
+    void taintAdded(K8sImpl k8s, Taint taint) {
+        debug(taintAdded, taint, k8s);
     }
 }

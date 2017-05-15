@@ -213,6 +213,33 @@ service "k8s-node" with {
         doTest test
     }
 
+    @Test
+    void "taints"() {
+        def test = [
+            name: 'taints',
+            script: '''
+service "k8s-node" with {
+    taint << "node.alpha.kubernetes.io/ismaster=:NoSchedule"
+    taint << "dedicated=mail:NoSchedule"
+    taint key: "extra", value: "foo", effect: "aaa"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('k8s-node').size() == 1
+                K8sNode s = services.getServices('k8s-node')[0]
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.taints.size() == 3
+                assert s.taints['node.alpha.kubernetes.io/ismaster'].value == ''
+                assert s.taints['node.alpha.kubernetes.io/ismaster'].effect == 'NoSchedule'
+                assert s.taints['extra'].value == 'foo'
+                assert s.taints['extra'].effect == 'aaa'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
