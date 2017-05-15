@@ -388,8 +388,8 @@ service "k8s-master" with {
                 assert s.targets.size() == 0
                 assert s.cluster.serviceRange == null
                 assert s.labels.size() == 2
-                assert s.labels['muellerpublic.de/usage'] == 'apps'
-                assert s.labels['muellerpublic.de/some'] == 'foo'
+                assert s.labels['muellerpublic.de/usage'].value == 'apps'
+                assert s.labels['muellerpublic.de/some'].value == 'foo'
             },
         ]
         doTest test

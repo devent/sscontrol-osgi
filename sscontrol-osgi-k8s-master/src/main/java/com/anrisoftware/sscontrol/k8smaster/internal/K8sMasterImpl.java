@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Account;
@@ -334,6 +335,16 @@ public class K8sMasterImpl implements K8sMaster {
     }
 
     @Override
+    public void label(Map<String, Object> args) {
+        k8s.label(args);
+    }
+
+    @Override
+    public List<String> getLabel() {
+        return k8s.getLabel();
+    }
+
+    @Override
     public DebugLogging getDebugLogging() {
         return k8s.getDebugLogging();
     }
@@ -425,6 +436,11 @@ public class K8sMasterImpl implements K8sMaster {
     @Override
     public Account getAccount() {
         return account;
+    }
+
+    @Override
+    public Map<String, Label> getLabels() {
+        return k8s.getLabels();
     }
 
     @Override

@@ -15,7 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -49,12 +53,28 @@ public class LabelImpl implements Label {
 
     private String value;
 
-    private final LabelImplLogger log;
-
     @Inject
-    LabelImpl(LabelImplLogger log, @Assisted Map<String, Object> args) {
-        this.log = log;
+    LabelImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
+    }
+
+    public void setKey(String key) {
+        assertThat("key=null", key, not(isEmptyString()));
+        this.key = key;
+    }
+
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -63,33 +83,12 @@ public class LabelImpl implements Label {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("service");
+        Object v = args.get("key");
+        assertThat("key=null", v, notNullValue());
+        setKey(v.toString());
+        v = args.get("value");
         if (v != null) {
-            setServiceRange(v.toString());
-        }
-        v = args.get("advertise");
-        if (v != null) {
-            setAdvertiseAddress(v);
-        }
-        v = args.get("hostname");
-        if (v != null) {
-            setHostnameOverride(v.toString());
-        }
-        v = args.get("pod");
-        if (v != null) {
-            setPodRange(v.toString());
-        }
-        v = args.get("dns");
-        if (v != null) {
-            setDnsAddress(v.toString());
-        }
-        v = args.get("api");
-        if (v != null) {
-            if (v instanceof List) {
-                addAllApiServer((List<?>) v);
-            } else {
-                addApiServer(v);
-            }
+            setValue(v.toString());
         }
     }
 
