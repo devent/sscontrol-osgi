@@ -22,6 +22,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.CalicoPluginImpl.CalicoPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl.EtcdPluginImplFactory;
@@ -29,6 +30,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl.Flanne
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.LabelImpl.LabelImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.internal.TaintImpl.TaintImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -56,6 +58,9 @@ public class K8sModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Label.class, LabelImpl.class)
                 .build(LabelImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Taint.class, TaintImpl.class)
+                .build(TaintImplFactory.class));
         bindPlugins();
     }
 

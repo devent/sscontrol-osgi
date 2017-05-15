@@ -1,14 +1,16 @@
 package com.anrisoftware.sscontrol.k8sbase.base.external;
 
 /**
- * Node label.
+ * Node taint.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Label {
+public interface Taint {
 
     String getKey();
 
     String getValue();
+
+    String getEffect();
 }
