@@ -1,0 +1,4 @@
+update
+-y install curl apt-transport-https ca-certificates software-properties-common
+update
+-y install docker-ce=17.03.1~ce-0~debian-jessie

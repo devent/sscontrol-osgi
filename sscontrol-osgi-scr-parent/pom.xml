@@ -50,6 +50,9 @@
         <module>../sscontrol-osgi-hostname-systemd</module>
         <module>../sscontrol-osgi-hosts</module>
         <module>../sscontrol-osgi-hosts-linux</module>
+        <module>../sscontrol-osgi-icinga</module>
+        <module>../sscontrol-osgi-icinga-debian</module>
+        <module>../sscontrol-osgi-icinga-systemd</module>
         <module>../sscontrol-osgi-k8s-base</module>
         <module>../sscontrol-osgi-k8s-base-upstream</module>
         <module>../sscontrol-osgi-k8s-cluster</module>

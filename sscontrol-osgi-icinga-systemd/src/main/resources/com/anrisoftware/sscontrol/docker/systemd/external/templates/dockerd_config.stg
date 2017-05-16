@@ -1,0 +1,6 @@
+dockerdConfig(parent, vars) ::= <<
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// <parent.dockerVariables;separator=" ">
+
+>>
