@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt;
+package com.anrisoftware.sscontrol.rkt.service.external;
 
-import com.anrisoftware.sscontrol.rkt.debian.internal.rkt.RktDummy.RktDummyFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostService;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
+ * Rkt service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public class RktDummyModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, RktDummy.class)
-                .build(RktDummyFactory.class));
-    }
+public interface RktService extends HostServiceService {
 
 }
