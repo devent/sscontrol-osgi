@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8;
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8;
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Rkt_Debian_Factory extends HostServiceScriptService {
+public interface Rkt_Upstream_Debian_Factory extends HostServiceScriptService {
 }
