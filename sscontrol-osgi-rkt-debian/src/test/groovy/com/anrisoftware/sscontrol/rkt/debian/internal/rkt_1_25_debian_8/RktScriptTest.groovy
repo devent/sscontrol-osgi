@@ -17,9 +17,7 @@ package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
 
-import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -31,38 +29,25 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Rkt_Debian_Andrea_Master_Local_Test extends AbstractRktScriptTest {
+class RktScriptTest extends AbstractRktScriptTest {
 
     @Test
-    void "andrea_master_local"() {
+    void "rkt"() {
         def test = [
-            name: "andrea_master_local",
+            name: "rkt",
             input: """
-service "ssh" with {
-    host "robobee@andrea-master-local", key: "$robobeeKey"
-    host "robobee@andrea-node-0-local", key: "$robobeeKey"
-}
-service "rkt", version: "1.25"
+service "ssh", host: "localhost"
+service "rkt", version: "1.26"
 """,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource RktScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource RktScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource RktScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
             },
         ]
         doTest test
-    }
-
-    @Before
-    void beforeMethod() {
-        assumeTrue isHostAvailable([
-            'andrea-master-local',
-            'andrea-node-0-local'
-        ])
-    }
-
-    void createDummyCommands(File dir) {
-    }
-
-    Map getScriptEnv(Map args) {
-        emptyScriptEnv
     }
 }

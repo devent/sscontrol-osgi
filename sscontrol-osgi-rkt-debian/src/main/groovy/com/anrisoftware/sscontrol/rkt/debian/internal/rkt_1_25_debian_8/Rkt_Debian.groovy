@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * rkt 1.25 for Debian 8.
+ * rkt 1.26 for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -54,8 +54,7 @@ class Rkt_Debian extends ScriptBase {
 
     void installPackages() {
         log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+        installAptPackages()
     }
 
     @Override

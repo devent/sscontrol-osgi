@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.rkt.deb.external.Rkt_Deb_Upstream
 import groovy.util.logging.Slf4j
 
 /**
- * Installs rkt 1.25 from the upstream sources for Debian 8.
+ * Installs rkt 1.26 from the upstream sources for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
