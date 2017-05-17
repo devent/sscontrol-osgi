@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -29,25 +31,35 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Rkt_Debian_Test extends AbstractTest_Rkt_Debian {
+class RktServerTest extends AbstractRktRunnerTest {
 
     @Test
-    void "rkt_defaults"() {
+    void "rkt_server"() {
         def test = [
-            name: "rkt_defaults",
-            input: """
-service "ssh", host: "localhost"
-service "rkt", version: "1.25"
+            name: "rkt_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+service "rkt", version: "1.26"
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource Rkt_Debian_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Rkt_Debian_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Rkt_Debian_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertStringResource RktServerTest, checkRemoteFiles('/usr/bin/rkt*'), "${args.test.name}_bin_expected.txt"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void beforeMethod() {
+        new File(robobeeSocket).exists()
+        assumeTrue testHostAvailable
+    }
+
+    void createDummyCommands(File dir) {
+    }
+
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
     }
 }

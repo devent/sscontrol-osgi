@@ -109,11 +109,11 @@ public class RunScriptImpl implements RunScript {
 
     private HostServiceScript createScript(String name, HostService s,
             TargetHost host, Map<String, Object> vars) throws AppException {
-        ScriptInfo system = getSystemScriptName(host, name);
+        ScriptInfo info = getSystemScriptName(host, s.getName());
         HostServiceScriptService service = services
-                .getAvailableScriptService(system);
+                .getAvailableScriptService(info);
         if (service == null) {
-            log.scriptNotFound(name, system);
+            log.scriptNotFound(name, info);
             service = services
                     .getAvailableScriptService(getLinuxScriptName(name));
         }

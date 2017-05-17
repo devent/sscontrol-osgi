@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8;
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * rkt 1.25 for debian 8 properties provider from
+ * rkt 1.26 for debian 8 properties provider from
  * {@code "/rkt_1_25_debian_8.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
@@ -26,9 +26,9 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
  */
 class Rkt_Debian_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Rkt_Debian_Properties.class.getResource("/rkt_1_25_debian_8.properties");
+    private static final URL RESOURCE = Rkt_Debian_Properties.class.getResource("/rkt_1_25_debian_8.properties")
 
     Rkt_Debian_Properties() {
-        super(Rkt_Debian_Properties.class, RESOURCE);
+        super(Rkt_Debian_Properties.class, RESOURCE)
     }
 }

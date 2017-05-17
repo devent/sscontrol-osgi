@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.rkt.debian.internal.systemd.Rkt_Systemd
 import groovy.util.logging.Slf4j
 
 /**
- * rkt 1.25 using systemd and Debian 8.
+ * rkt 1.26 using systemd and Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

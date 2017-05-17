@@ -4,6 +4,6 @@
 mkdir -p /var/lib/robobee/tmp
 chown 1000 /var/lib/robobee/tmp
 chmod o-rwx /var/lib/robobee/tmp
-dpkg -i rkt_1.25.0-1_amd64.deb
+dpkg -i rkt_1.26.0-1_amd64.deb
 /bin/bash -s
 /bin/bash -s
