@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.rkt.debian.internal.rkt.RktDummy.RktDummyFactory
-import com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8.Rkt_Debian_Factory
+import com.anrisoftware.sscontrol.rkt.service.internal.RktImpl.RktImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -53,7 +52,7 @@ abstract class AbstractRktRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    RktDummyFactory rktDummyFactory
+    RktImplFactory rktFactory
 
     @Inject
     Rkt_Debian_Factory scriptFactory
@@ -66,7 +65,7 @@ abstract class AbstractRktRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'rkt', rktDummyFactory
+        services.putAvailableService 'rkt', rktFactory
         services.putAvailableScriptService 'rkt-1.26/debian/8', scriptFactory
         return services
     }

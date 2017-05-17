@@ -12,35 +12,20 @@
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-rkt-debian</artifactId>
+    <artifactId>sscontrol-osgi-rkt</artifactId>
+    <name>sscontrol-osgi - rkt</name>
+    <description>Rkt service.</description>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - rkt-debian</name>
-    <description>Installs rkt for Debian GNU/Linux systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.rkt.debian</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.rkt.service</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
-
         <!-- test dependencies -->
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpom-groovytestutils</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-shell-test</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-command-shell-openssh</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -52,54 +37,43 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-ssh</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-ssh-linux</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-script-runner-test</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-script-runner</artifactId>
+            <artifactId>sscontrol-osgi-services-properties</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
 
-        <!-- own bundles -->
+        <!-- own bundles dependencies -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-groovy-script</artifactId>
+            <artifactId>sscontrol-osgi-types-ssh</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-rkt</artifactId>
+            <artifactId>sscontrol-osgi-types-host</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-rkt-deb</artifactId>
+            <artifactId>sscontrol-osgi-debug</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
 
         <!-- compile dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-log</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-core</artifactId>
+            <type>bundle</type>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -113,14 +87,28 @@
             <artifactId>guice-assistedinject</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <_include>osgi.bnd</_include>
+                        <Export-Package>!${project.custom.bundle.namespace.internal}.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
+                        <Private-Package>${project.custom.bundle.namespace.internal}.*</Private-Package>
+                        <Import-Package>!com.google.inject.internal.asm.util,*</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
