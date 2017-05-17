@@ -51,7 +51,7 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
         createKubeletService()
         createKubeletConfig()
         createKubeletManifests()
-        createRkt()
+        createHostRkt()
         createFlannelCni()
         createWorkerKubeconfig()
         startServices()
