@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.rkt.deb.external.Rkt_Deb_Upstream
+import com.anrisoftware.sscontrol.rkt.debian.internal.systemd.Rkt_Systemd
 
 import groovy.util.logging.Slf4j
 
 /**
- * Installs rkt 1.26 from the upstream sources for Debian 8.
+ * rkt 1.26 using systemd and Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Rkt_Upstream_Debian extends Rkt_Deb_Upstream {
+class Rkt_Systemd_Debian extends Rkt_Systemd {
 
     @Inject
     Rkt_Debian_Properties debianPropertiesProvider
 
     @Override
     Object run() {
-        installRkt()
     }
 
     @Override

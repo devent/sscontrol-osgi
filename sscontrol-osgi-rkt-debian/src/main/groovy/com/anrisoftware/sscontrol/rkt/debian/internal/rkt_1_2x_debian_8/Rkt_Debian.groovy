@@ -13,29 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.rkt.debian.internal.systemd.Rkt_Systemd
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
 import groovy.util.logging.Slf4j
 
 /**
- * rkt 1.26 using systemd and Debian 8.
+ * rkt 1.26 for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Rkt_Systemd_Debian extends Rkt_Systemd {
+class Rkt_Debian extends ScriptBase {
 
     @Inject
     Rkt_Debian_Properties debianPropertiesProvider
 
+    Rkt_Systemd_Debian systemd
+
+    @Inject
+    Rkt_Upstream_Debian_Factory upstreamFactory
+
     @Override
-    Object run() {
+    def run() {
+        systemd.stopServices()
+        installPackages()
+        upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        systemd.startServices()
+    }
+
+    @Inject
+    def setSystemdFactory(Rkt_Systemd_Debian_Factory systemdFactory) {
+        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
+    void installPackages() {
+        log.info "Installing packages {}.", packages
+        installAptPackages()
     }
 
     @Override

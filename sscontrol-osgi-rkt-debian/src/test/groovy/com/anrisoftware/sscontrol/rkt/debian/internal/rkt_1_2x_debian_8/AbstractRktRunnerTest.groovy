@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -22,6 +22,7 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.rkt.debian.internal.rkt.RktDummy.RktDummyFactory
+import com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8.Rkt_Debian_Factory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase

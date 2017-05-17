@@ -1,10 +1,11 @@
-package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_25_debian_8
+package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.rkt.debian.internal.rkt.RktDummyModule
+import com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8.Rkt_Debian_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
