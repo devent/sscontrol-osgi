@@ -40,7 +40,7 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Rkt_1_25_Debian_8_Service implements HostServiceScriptService {
+public class Rkt_1_26_Debian_8_Service implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
