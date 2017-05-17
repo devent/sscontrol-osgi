@@ -229,7 +229,7 @@ systemctl daemon-reload
         template privileged: true, resource: kubeletConfigTemplate, name: 'kubeletConfig', dest: "$sysConfigDir/kubelet", vars: [:] call()
     }
 
-    def createRkt() {
+    def createHostRkt() {
         log.info 'Create host-rkt.'
         def dir = binDir
         shell privileged: true, "mkdir -p $dir" call()
