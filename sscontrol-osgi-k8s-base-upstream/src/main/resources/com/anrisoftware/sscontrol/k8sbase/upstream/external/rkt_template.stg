@@ -14,6 +14,6 @@ hostRkt(parent, vars) ::= <<
 # https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
 #
 # <parent.binDir>/host-rkt
-exec nsenter -m -u -i -n -p -t 1 -- /usr/bin/rkt "\$@"
+exec nsenter -m -u -i -n -p -t 1 -- /usr/bin/rkt "$@"
 
 >>
