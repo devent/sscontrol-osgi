@@ -23,8 +23,6 @@ RKT_RUN_ARGS="--uuid-file-save=<parent.kubeletUuidFile> \
   --mount volume=var-lib-rkt,target=/var/lib/rkt \
   --volume stage,kind=host,source=/tmp \
   --mount volume=stage,target=/tmp \
-  --volume var-log,kind=host,source=/var/log \
-  --mount volume=var-log,target=/var/log \
   <if(parent.havePluginCalico)>--volume cni-bin,kind=host,source=/opt/cni/bin --mount volume=cni-bin,target=/opt/cni/bin<endif>"
 
 >>

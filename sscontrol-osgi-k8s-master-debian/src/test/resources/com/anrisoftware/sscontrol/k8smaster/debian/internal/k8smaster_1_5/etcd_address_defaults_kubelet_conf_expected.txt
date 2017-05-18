@@ -22,6 +22,4 @@ RKT_RUN_ARGS="--uuid-file-save=/tmp/junit/junit/var/run/kubelet-pod.uuid \
   --mount volume=var-lib-rkt,target=/var/lib/rkt \
   --volume stage,kind=host,source=/tmp \
   --mount volume=stage,target=/tmp \
-  --volume var-log,kind=host,source=/var/log \
-  --mount volume=var-log,target=/var/log \
 "
