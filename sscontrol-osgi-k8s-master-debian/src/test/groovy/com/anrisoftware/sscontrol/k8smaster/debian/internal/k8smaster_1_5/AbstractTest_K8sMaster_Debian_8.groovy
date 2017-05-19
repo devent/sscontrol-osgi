@@ -40,7 +40,6 @@ import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImplModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.shell.internal.st.StModule
@@ -71,9 +70,6 @@ abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
 
     @Inject
     SshImplFactory sshFactory
-
-    @Inject
-    CmdRunCaller cmdRunCaller
 
     @Inject
     K8sMasterImplFactory serviceFactory
