@@ -13,4 +13,4 @@
 # https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
 #
 # /tmp/junit/junit/usr/local/bin/host-rkt
-exec nsenter -m -u -i -n -p -t 1 -- /usr/bin/rkt "\$@"
+exec nsenter -m -u -i -n -p -t 1 -- /usr/bin/rkt "$@"
