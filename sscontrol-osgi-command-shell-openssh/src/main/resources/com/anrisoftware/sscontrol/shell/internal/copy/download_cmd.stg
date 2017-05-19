@@ -36,9 +36,11 @@ if [ -f "$DEST_FILE" ]; then
     <if(args.sig)>checkSigFile<endif>
     if [[ $? != 0 ]]; then
         downloadCheckFile
+        exit $?
     fi
 else
     downloadCheckFile
+    exit $?
 fi
 >>
 
@@ -81,25 +83,25 @@ return $ret
 
 md5(args) ::= <<
 if ! echo "<args.hash> $SRC_NAME" | md5sum -c - >/dev/null; then
-exit 1
+return 1
 fi
 >>
 
 sha(args) ::= <<
 if ! echo "<args.hash> $SRC_NAME" | sha1sum -c - >/dev/null; then
-exit 1
+return 1
 fi
 >>
 
 sha1(args) ::= <<
 if ! echo "<args.hash> $SRC_NAME" | sha1sum -c - >/dev/null; then
-exit 1
+return 1
 fi
 >>
 
 sha256(args) ::= <<
 if ! echo "<args.hash> $SRC_NAME" | sha256sum -c - >/dev/null; then
-exit 1
+return 1
 fi
 >>
 
