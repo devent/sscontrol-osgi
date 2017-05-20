@@ -21,6 +21,7 @@ ExecStart=/tmp/junit/junit/usr/local/bin/kubelet-wrapper \
   --allow-privileged=true \
   --pod-manifest-path=/tmp/junit/junit/etc/kubernetes/manifests \
   --hostname-override=${ADVERTISE_IP} \
+  --node-labels=${NODE_LABELS} \
   --cluster_dns=${DNS_SERVICE_IP} \
   --cluster_domain=cluster.local \
   --tls-cert-file=/tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_cert.pem \

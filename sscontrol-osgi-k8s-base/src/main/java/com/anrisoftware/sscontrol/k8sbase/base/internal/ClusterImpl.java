@@ -48,6 +48,8 @@ public class ClusterImpl implements Cluster {
 
     }
 
+    private String name;
+
     private String serviceRange;
 
     private Object advertiseAddress;
@@ -76,6 +78,15 @@ public class ClusterImpl implements Cluster {
         this.log = log;
         this.apiServers = new ArrayList<>();
         parseArgs(args);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public void setAdvertiseAddress(Object advertise) {
@@ -166,7 +177,11 @@ public class ClusterImpl implements Cluster {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("service");
+        Object v = args.get("name");
+        if (v != null) {
+            setName(v.toString());
+        }
+        v = args.get("service");
         if (v != null) {
             setServiceRange(v.toString());
         }

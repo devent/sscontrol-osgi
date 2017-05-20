@@ -4,4 +4,5 @@ apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml
-taint nodes 127.0.0.1 node.alpha.kubernetes.io/ismaster=:NoSchedule
+-o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0
+taint --overwrite nodes /tmp/junit/junit/kubectl -o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0 node.alpha.kubernetes.io/ismaster=:NoSchedule
