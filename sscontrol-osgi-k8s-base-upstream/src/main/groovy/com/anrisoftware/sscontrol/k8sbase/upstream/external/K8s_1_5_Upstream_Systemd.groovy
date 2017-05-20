@@ -332,7 +332,7 @@ kubectl taint --overwrite nodes \$node <vars.taint.key>=<vars.value>:<vars.taint
             log.info 'Apply label {} for {}.', label, service
             shell vars: [label: label], st: """
 node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
-kubectl label --overwrite nodes \$node <label.key>=<label.value>
+kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
 """ call()
         }
     }
