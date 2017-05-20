@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,8 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
+import com.anrisoftware.sscontrol.k8sbase.base.external.NodeFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
@@ -47,6 +50,7 @@ import com.anrisoftware.sscontrol.k8smaster.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthorizationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.Binding;
 import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster;
+import com.anrisoftware.sscontrol.k8smaster.external.UnknownHostForTargetException;
 import com.anrisoftware.sscontrol.k8smaster.internal.AccountImpl.AccountImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
@@ -54,6 +58,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -98,10 +103,12 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final K8s k8s;
 
+    private transient NodeFactory nodeFactory;
+
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, K8sImplFactory k8sFactory,
             BindingImplFactory bindingFactory,
-            AccountImplFactory accountFactory,
+            AccountImplFactory accountFactory, NodeFactory nodeFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.k8s = (K8s) k8sFactory.create(args);
@@ -112,6 +119,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.bindingFactory = bindingFactory;
         this.accountFactory = accountFactory;
         this.account = accountFactory.create();
+        this.nodeFactory = nodeFactory;
+        parseArgs(args);
     }
 
     /**
@@ -460,9 +469,47 @@ public class K8sMasterImpl implements K8sMaster {
     }
 
     @Override
+    public void addNode(Node node) {
+        k8s.addNode(node);
+    }
+
+    @Override
+    public List<Node> getNodes() {
+        return k8s.getNodes();
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets()).toString();
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+        parseTargets(args);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
+        Object v = args.get("targets");
+        if (v != null) {
+            List<TargetHost> targets = (List<TargetHost>) v;
+            for (TargetHost host : targets) {
+                if (host instanceof SshHost) {
+                    try {
+                        addHostNode(host);
+                    } catch (UnknownHostException e) {
+                        throw new UnknownHostForTargetException(e, host);
+                    }
+                }
+            }
+        }
+    }
+
+    private void addHostNode(TargetHost host) throws UnknownHostException {
+        SshHost ssh = (SshHost) host;
+        Map<String, Object> a = new HashMap<>();
+        a.put("name", ssh.getHostAddress());
+        addNode(nodeFactory.create(a));
     }
 
 }

@@ -21,6 +21,9 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.base.external.Label
+import com.anrisoftware.sscontrol.k8sbase.base.external.Taint
+import com.anrisoftware.sscontrol.k8sbase.base.external.TaintFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
@@ -55,6 +58,9 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
     AddressesFactory addressesFactory
 
     @Inject
+    TaintFactory taintFactory
+
+    @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def attr = [renderers: [new UriBase64Renderer()]]
         def templates = templatesFactory.create('K8s_1_5_Upstream_Systemd_Templates', attr)
@@ -86,6 +92,9 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
         if (service.tls.ca) {
             service.tls.caName = defaultKubernetesTlsCaName
+        }
+        if (!registerSchedulable) {
+            service.taints << ismasterNoScheduleTaint
         }
     }
 
@@ -301,6 +310,37 @@ systemctl daemon-reload
         log.info 'Start Calico.'
         shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
         shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
+    }
+
+    def applyTaints() {
+        K8s service = service
+        log.info 'Apply taints for {}.', service
+        println service.taints
+        service.taints.each { String key, Taint taint ->
+            shell vars: [taint: taint, value: taint.value?taint.value:''], st: """
+kubectl taint nodes <parent.service.nodes.name;separator=","> <vars.taint.key>=<vars.value>:<vars.taint.effect>
+""" call()
+        }
+    }
+
+    def applyLabels() {
+        K8s service = service
+        log.info 'Apply labels for {}.', service
+        service.labels.each { String key, Label label ->
+            shell """
+kubectl label nodes ${target.host} ${label.key}=${label.value}
+""" call()
+        }
+    }
+
+    /**
+     * Returns the taint to mark a node as the master node and forbid the
+     * scheduling of pods.
+     */
+    Map getIsmasterNoScheduleTaint() {
+        def key = properties.getProperty('taint_key_ismaster', defaultProperties)
+        def effect = properties.getProperty('taint_effect_ismaster', defaultProperties)
+        [key: taintFactory.create(key: key, value: null, effect: effect)]
     }
 
     def getDefaultLogLevel() {

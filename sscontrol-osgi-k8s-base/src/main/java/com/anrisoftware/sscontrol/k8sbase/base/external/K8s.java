@@ -47,6 +47,13 @@ public interface K8s extends HostService {
 
     List<String> getProperty();
 
+    void addNode(Node node);
+
+    /**
+     * Returns the list of nodes of this Kubernetes service.
+     */
+    List<Node> getNodes();
+
     void target(Map<String, Object> args);
 
     void debug(Map<String, Object> args, String name);
@@ -110,4 +117,5 @@ public interface K8s extends HostService {
      * </pre>
      */
     List<String> getTaint();
+
 }
