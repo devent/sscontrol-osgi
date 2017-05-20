@@ -4,3 +4,4 @@ apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/calico.yaml
+taint nodes 127.0.0.1 node.alpha.kubernetes.io/ismaster=:NoSchedule

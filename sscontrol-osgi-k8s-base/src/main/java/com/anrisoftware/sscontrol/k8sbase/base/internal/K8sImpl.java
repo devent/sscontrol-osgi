@@ -42,13 +42,14 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
+import com.anrisoftware.sscontrol.k8sbase.base.external.LabelFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
+import com.anrisoftware.sscontrol.k8sbase.base.external.TaintFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.LabelImpl.LabelImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.TaintImpl.TaintImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -105,14 +106,16 @@ public class K8sImpl implements K8s {
     private String containerRuntime;
 
     @Inject
-    private transient LabelImplFactory labelFactory;
+    private transient LabelFactory labelFactory;
 
     private final Map<String, Label> labels;
 
     @Inject
-    private transient TaintImplFactory taintFactory;
+    private transient TaintFactory taintFactory;
 
     private final Map<String, Taint> taints;
+
+    private final List<Node> nodes;
 
     @Inject
     K8sImpl(K8sImplLogger log, ClusterImplFactory clusterFactory,
@@ -133,6 +136,7 @@ public class K8sImpl implements K8s {
         this.tls = tlsFactory.create();
         this.labels = new HashMap<>();
         this.taints = new HashMap<>();
+        this.nodes = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -420,25 +424,48 @@ public class K8sImpl implements K8s {
     }
 
     @Override
+    public void addNode(Node node) {
+        this.nodes.add(node);
+        log.nodeAdded(this, node);
+    }
+
+    @Override
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("targets");
-        if (v != null) {
-            addTargets((List<TargetHost>) v);
-        }
-        v = args.get("runtime");
-        if (v != null) {
-            setContainerRuntime(v.toString());
-        }
+        parseTargets(args);
+        parseRuntime(args);
+        parseCluster(args);
+    }
+
+    private void parseCluster(Map<String, Object> args) {
         Object clusterAdvertise = args.get("advertise");
         Object clusterApi = args.get("api");
         if (clusterAdvertise != null || clusterApi != null) {
             this.cluster = clusterFactory.create(args);
+        }
+    }
+
+    private void parseRuntime(Map<String, Object> args) {
+        Object v = args.get("runtime");
+        if (v != null) {
+            setContainerRuntime(v.toString());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
+        Object v = args.get("targets");
+        if (v != null) {
+            addTargets((List<TargetHost>) v);
         }
     }
 

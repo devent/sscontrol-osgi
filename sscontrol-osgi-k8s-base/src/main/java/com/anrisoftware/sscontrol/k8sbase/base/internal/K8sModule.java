@@ -20,17 +20,19 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
+import com.anrisoftware.sscontrol.k8sbase.base.external.LabelFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
+import com.anrisoftware.sscontrol.k8sbase.base.external.NodeFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
+import com.anrisoftware.sscontrol.k8sbase.base.external.TaintFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.CalicoPluginImpl.CalicoPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl.EtcdPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.FlannelPluginImpl.FlannelPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.LabelImpl.LabelImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.internal.TaintImpl.TaintImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -57,10 +59,12 @@ public class K8sModule extends AbstractModule {
                 .build(KubeletImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Label.class, LabelImpl.class)
-                .build(LabelImplFactory.class));
+                .build(LabelFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Taint.class, TaintImpl.class)
-                .build(TaintImplFactory.class));
+                .build(TaintFactory.class));
+        install(new FactoryModuleBuilder().implement(Node.class, NodeImpl.class)
+                .build(NodeFactory.class));
         bindPlugins();
     }
 

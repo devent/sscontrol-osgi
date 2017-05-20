@@ -37,18 +37,6 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class TaintImpl implements Taint {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface TaintImplFactory {
-
-        Taint create(@Assisted Map<String, Object> args);
-
-    }
-
     private String key;
 
     private String value;

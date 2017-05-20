@@ -63,6 +63,8 @@ class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Sys
         startServices()
         startAddons()
         startCalico()
+        applyTaints()
+        applyLabels()
     }
 
     @Override

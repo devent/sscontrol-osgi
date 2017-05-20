@@ -18,7 +18,6 @@ package com.anrisoftware.sscontrol.k8sbase.base.internal;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.Map;
 
@@ -26,43 +25,32 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Node label.
+ * The Kubernetes node.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class LabelImpl implements Label {
+public class NodeImpl implements Node {
 
-    private String key;
-
-    private String value;
+    private String name;
 
     @Inject
-    LabelImpl(@Assisted Map<String, Object> args) {
+    NodeImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
     }
 
-    public void setKey(String key) {
-        assertThat("key=null", key, not(isEmptyString()));
-        this.key = key;
+    public void setName(String name) {
+        assertThat("name=null", name, not(isEmptyString()));
+        this.name = name;
     }
 
     @Override
-    public String getKey() {
-        return key;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -71,12 +59,9 @@ public class LabelImpl implements Label {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("key");
-        assertThat("key=null", v, notNullValue());
-        setKey(v.toString());
-        v = args.get("value");
+        Object v = args.get("name");
         if (v != null) {
-            setValue(v.toString());
+            setName(v.toString());
         }
     }
 
