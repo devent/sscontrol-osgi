@@ -12,7 +12,6 @@ ExecStartPre=/bin/mkdir -p <parent.containersLogDir>
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
 ExecStart=<parent.binDir>/kubelet-wrapper \
   --api-servers=${K8S_APISERVERS} \
-  --register-schedulable=<parent.registerSchedulable> \
   --cni-conf-dir=<parent.cniNetDir> \
   --network-plugin=cni \
   --container-runtime=${CONTAINER_RUNTIME} \
@@ -22,6 +21,7 @@ ExecStart=<parent.binDir>/kubelet-wrapper \
   --allow-privileged=true \
   --pod-manifest-path=<parent.manifestsDir> \
   --hostname-override=${ADVERTISE_IP} \
+  --register-with-taints=${NODE_TAINTS} \
   --node-labels=${NODE_LABELS} \
   --cluster_dns=${DNS_SERVICE_IP} \
   --cluster_domain=cluster.local<if(parent.kubeconfigFile)> \

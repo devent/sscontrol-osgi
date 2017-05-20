@@ -19,9 +19,9 @@ spec:
       - name: autoscaler
         image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64:1.0.0
         resources:
-            requests:
-                cpu: "20m"
-                memory: "10Mi"
+          requests:
+            cpu: "20m"
+            memory: "10Mi"
         command:
           - /cluster-proportional-autoscaler
           - --namespace=kube-system
@@ -31,3 +31,7 @@ spec:
           - --default-params={"linear":{"coresPerReplica":256,"nodesPerReplica":16,"min":1}}
           - --logtostderr=true
           - --v=2
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal

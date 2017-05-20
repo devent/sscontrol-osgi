@@ -94,7 +94,8 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
             service.tls.caName = defaultKubernetesTlsCaName
         }
         if (!registerSchedulable) {
-            service.taints << ismasterNoScheduleTaint
+            def taint = ismasterNoScheduleTaint
+            service.taints << ["${taint.key}": taint]
         }
     }
 
@@ -329,9 +330,9 @@ kubectl taint --overwrite nodes \$node <vars.taint.key>=<vars.value>:<vars.taint
         log.info 'Apply labels for {}.', service
         service.labels.each { String key, Label label ->
             log.info 'Apply label {} for {}.', label, service
-            shell """
+            shell vars: [label: label], st: """
 node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
-kubectl label --overwrite nodes \$node ${label.key}=${label.value}
+kubectl label --overwrite nodes \$node <label.key>=<label.value>
 """ call()
         }
     }
@@ -340,10 +341,10 @@ kubectl label --overwrite nodes \$node ${label.key}=${label.value}
      * Returns the taint to mark a node as the master node and forbid the
      * scheduling of pods.
      */
-    Map getIsmasterNoScheduleTaint() {
+    Taint getIsmasterNoScheduleTaint() {
         def key = properties.getProperty('taint_key_ismaster', defaultProperties)
         def effect = properties.getProperty('taint_effect_ismaster', defaultProperties)
-        [key: taintFactory.create(key: key, value: null, effect: effect)]
+        return taintFactory.create(key: key, value: null, effect: effect)
     }
 
     /**
@@ -355,6 +356,20 @@ kubectl label --overwrite nodes \$node ${label.key}=${label.value}
         def name = service.cluster.name
         def label = robobeeLabelNamespace
         ["${label}/node=${name}"]
+    }
+
+    /**
+     * Returns node taints to be set after the node was registered.
+     * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --register-with-taints []api.Taint</a>
+     */
+    List getNodeTaints() {
+        if (registerSchedulable) {
+            return []
+        }
+        Taint taint = ismasterNoScheduleTaint
+        return [
+            "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
+        ]
     }
 
     def getDefaultLogLevel() {
@@ -645,6 +660,14 @@ kubectl label --overwrite nodes \$node ${label.key}=${label.value}
 
     boolean getRegisterNode() {
         properties.getBooleanProperty 'register_node', defaultProperties
+    }
+
+    /**
+     * Returns true if we allow DNS pods on the master. If true, a toleration
+     * for the master taint will be added to the DNS deployment.
+     */
+    boolean getAllowDnsOnMaster() {
+        properties.getBooleanProperty 'allow_dns_on_master', defaultProperties
     }
 
     File getKubeconfigFile() {
