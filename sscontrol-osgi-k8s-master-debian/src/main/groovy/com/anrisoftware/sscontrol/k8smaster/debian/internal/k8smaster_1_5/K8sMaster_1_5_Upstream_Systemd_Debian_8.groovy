@@ -20,6 +20,7 @@ import static com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8smaster.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Systemd
 
 import groovy.util.logging.Slf4j
@@ -65,6 +66,14 @@ class K8sMaster_1_5_Upstream_Systemd_Debian_8 extends K8sMaster_1_5_Upstream_Sys
         startCalico()
         applyTaints()
         applyLabels()
+    }
+
+    def setupClusterDefaults() {
+        super.setupClusterDefaults()
+        K8sMaster service = service
+        if (!service.cluster.name) {
+            service.cluster.name = 'master'
+        }
     }
 
     @Override

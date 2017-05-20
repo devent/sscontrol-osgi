@@ -38,7 +38,7 @@ class K8sMaster_Debian_8_Test extends AbstractTest_K8sMaster_Debian_8 {
             input: """
 service "ssh", host: "localhost"
 service "ssh", host: "etcd-0", group: "etcd"
-service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
+service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     authentication "cert", ca: "$certCaPem"
     plugin "etcd", target: "etcd"
@@ -175,6 +175,29 @@ service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] wi
                 File gen = args.test.generatedDir
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMaster_Debian_8_Test, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "taints_labels"() {
+        def test = [
+            name: "taints_labels",
+            input: """
+service "ssh", host: "localhost"
+service "ssh", host: "etcd-0", group: "etcd"
+service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
+    taint << "dedicated=mail:NoSchedule"
+    label << "robobeerun.com/dns=true"
+    label << "robobeerun.com/dashboard=true"
+}
+""",
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMaster_Debian_8_Test, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

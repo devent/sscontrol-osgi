@@ -67,13 +67,14 @@ class K8sScriptTest {
             name: 'cluster args',
             input: """
 service "k8s-master" with {
-    cluster advertise: '192.168.0.1', hostname: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', dns: '10.3.0.10', api: 'http://localhost:8080'
+    cluster name: 'master-0', advertise: '192.168.0.1', hostname: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', dns: '10.3.0.10', api: 'http://localhost:8080'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-master').size() == 1
                 K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
+                assert s.cluster.name == 'master-0'
                 assert s.cluster.advertiseAddress == '192.168.0.1'
                 assert s.cluster.serviceRange == '10.3.0.0/24'
                 assert s.cluster.podRange == '10.2.0.0/16'

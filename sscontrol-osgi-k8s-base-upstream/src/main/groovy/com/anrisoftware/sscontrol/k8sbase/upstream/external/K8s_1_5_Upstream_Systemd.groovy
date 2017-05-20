@@ -315,10 +315,11 @@ systemctl daemon-reload
     def applyTaints() {
         K8s service = service
         log.info 'Apply taints for {}.', service
-        println service.taints
         service.taints.each { String key, Taint taint ->
+            log.info 'Apply taint {} for {}.', taint, service
             shell vars: [taint: taint, value: taint.value?taint.value:''], st: """
-kubectl taint nodes <parent.service.nodes.name;separator=","> <vars.taint.key>=<vars.value>:<vars.taint.effect>
+node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
+kubectl taint --overwrite nodes \$node <vars.taint.key>=<vars.value>:<vars.taint.effect>
 """ call()
         }
     }
@@ -327,8 +328,10 @@ kubectl taint nodes <parent.service.nodes.name;separator=","> <vars.taint.key>=<
         K8s service = service
         log.info 'Apply labels for {}.', service
         service.labels.each { String key, Label label ->
+            log.info 'Apply label {} for {}.', label, service
             shell """
-kubectl label nodes ${target.host} ${label.key}=${label.value}
+node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
+kubectl label --overwrite nodes \$node ${label.key}=${label.value}
 """ call()
         }
     }
@@ -341,6 +344,17 @@ kubectl label nodes ${target.host} ${label.key}=${label.value}
         def key = properties.getProperty('taint_key_ismaster', defaultProperties)
         def effect = properties.getProperty('taint_effect_ismaster', defaultProperties)
         [key: taintFactory.create(key: key, value: null, effect: effect)]
+    }
+
+    /**
+     * Returns node labels to be set after the node was registered.
+     * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --node-labels mapStringString</a>
+     */
+    List getNodeLabels() {
+        K8s service = service
+        def name = service.cluster.name
+        def label = robobeeLabelNamespace
+        ["${label}/node=${name}"]
     }
 
     def getDefaultLogLevel() {
@@ -644,6 +658,10 @@ kubectl label nodes ${target.host} ${label.key}=${label.value}
         } else {
             return null
         }
+    }
+
+    String getRobobeeLabelNamespace() {
+        properties.getProperty 'robobee_label_namespace', defaultProperties
     }
 
     @Override

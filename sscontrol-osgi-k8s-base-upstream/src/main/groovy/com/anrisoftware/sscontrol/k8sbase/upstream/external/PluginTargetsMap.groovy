@@ -46,6 +46,9 @@ class PluginTargetsMap extends HashMap {
 
     Object get(Object key) {
         Plugin plugin = service.plugins[key]
+        if (!plugin) {
+            return []
+        }
         if (plugin.targets) {
             return getSshTargets(plugin, key)
         }

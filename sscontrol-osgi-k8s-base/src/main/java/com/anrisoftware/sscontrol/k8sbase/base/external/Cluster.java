@@ -27,6 +27,11 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
  */
 public interface Cluster {
 
+    /**
+     * Returns the name of the cluster.
+     */
+    String getName();
+
     String getPodRange();
 
     String getServiceRange();

@@ -447,9 +447,10 @@ public class K8sImpl implements K8s {
     }
 
     private void parseCluster(Map<String, Object> args) {
-        Object clusterAdvertise = args.get("advertise");
-        Object clusterApi = args.get("api");
-        if (clusterAdvertise != null || clusterApi != null) {
+        Object name = args.get("name");
+        Object advertise = args.get("advertise");
+        Object api = args.get("api");
+        if (name != null || advertise != null || api != null) {
             this.cluster = clusterFactory.create(args);
         }
     }
