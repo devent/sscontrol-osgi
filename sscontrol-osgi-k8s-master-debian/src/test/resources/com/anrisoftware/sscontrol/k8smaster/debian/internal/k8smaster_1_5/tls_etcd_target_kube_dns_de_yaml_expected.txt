@@ -135,3 +135,7 @@ spec:
         - containerPort: 8080
           protocol: TCP
       dnsPolicy: Default
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal

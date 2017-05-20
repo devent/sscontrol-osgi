@@ -15,6 +15,7 @@ CALICO_OPTS="<if(parent.havePluginCalico)>--volume cni-bin,kind=host,source=/opt
 KUBELET_IMAGE_TAG=<parent.kubernetesVersion>
 KUBELET_IMAGE_URL=<parent.hypercubeImageRepo>
 NODE_LABELS=<parent.nodeLabels;separator=",">
+NODE_TAINTS=<parent.nodeTaints;separator=",">
 RKT_RUN_ARGS="--uuid-file-save=<parent.kubeletUuidFile> \
   --volume dns,kind=host,source=/etc/resolv.conf \
   --mount volume=dns,target=/etc/resolv.conf \

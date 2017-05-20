@@ -356,6 +356,12 @@ spec:
         - containerPort: 8080
           protocol: TCP
       dnsPolicy: Default
+<if(parent.allowDnsOnMaster)>
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
+<endif>
 
 >>
 
@@ -381,9 +387,9 @@ spec:
       - name: autoscaler
         image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64:1.0.0
         resources:
-            requests:
-                cpu: "20m"
-                memory: "10Mi"
+          requests:
+            cpu: "20m"
+            memory: "10Mi"
         command:
           - /cluster-proportional-autoscaler
           - --namespace=kube-system
@@ -393,6 +399,12 @@ spec:
           - --default-params={"linear":{"coresPerReplica":256,"nodesPerReplica":16,"min":1}}
           - --logtostderr=true
           - --v=2
+<if(parent.allowDnsOnMaster)>
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
+<endif>
 
 >>
 
@@ -548,6 +560,12 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
+<if(parent.allowDnsOnMaster)>
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
+<endif>
 
 >>
 

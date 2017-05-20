@@ -37,3 +37,7 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
