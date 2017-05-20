@@ -670,6 +670,24 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
         properties.getBooleanProperty 'allow_dns_on_master', defaultProperties
     }
 
+    /**
+     * Returns true if we allow Calico node pods on the master. If true, a 
+     * toleration for the master taint will be added to the Calico node 
+     * DaemonSet.
+     */
+    boolean getAllowCalicoNodeOnMaster() {
+        properties.getBooleanProperty 'allow_calico_node_on_master', defaultProperties
+    }
+
+    /**
+     * Returns true if we allow Calico Policy-Controller pods on the master.
+     * If true, a toleration for the master taint will be added to the
+     * Calico Policy-Controller Deployment.
+     */
+    boolean getAllowCalicoPolicyControllerOnMaster() {
+        properties.getBooleanProperty 'allow_calico_policy_controller_on_master', defaultProperties
+    }
+
     File getKubeconfigFile() {
         null
     }
