@@ -3,11 +3,11 @@ apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
--o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0
-taint --overwrite nodes /tmp/junit/junit/kubectl -o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0 dedicated=mail:NoSchedule
--o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0
-taint --overwrite nodes /tmp/junit/junit/kubectl -o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=robobeerun.com/node=master-0 node.alpha.kubernetes.io/ismaster=:NoSchedule
--o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
-label --overwrite nodes /tmp/junit/junit/kubectl -o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dashboard=true
--o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
-label --overwrite nodes /tmp/junit/junit/kubectl -o custom-columns=NAME:.metadata.name --no-headers get nodes --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dns=true
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0
+taint --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0 dedicated=mail:NoSchedule
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0
+taint --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0 node.alpha.kubernetes.io/ismaster=:NoSchedule
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
+label --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dashboard=true
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
+label --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dns=true
