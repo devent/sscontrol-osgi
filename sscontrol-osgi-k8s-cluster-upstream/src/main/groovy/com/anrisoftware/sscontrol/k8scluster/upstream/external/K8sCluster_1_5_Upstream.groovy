@@ -207,7 +207,7 @@ chmod o-rx $certsDir
     }
 
     File getKubectlCmd() {
-        getFileProperty 'kubectl_cmd', binDir, defaultProperties
+        getFileProperty 'kubectl_cmd', binDir
     }
 
     @Override

@@ -829,11 +829,13 @@ mktemp -d
      * is returned, otherwise the file property will always be under the
      * specified parent directory.
      */
-    public File getFileProperty(String key, File parent,
-            ContextProperties defaults, boolean useAbsolute=true) {
+    public File getFileProperty(String key,
+            File parent=base,
+            ContextProperties defaults=defaultProperties,
+            boolean useAbsolute=true) {
         File file
         if (useAbsolute) {
-            file = properties.getFileProperty key, defaults
+            file = properties.getFileProperty key, base, defaults
             if (!file.absolute) {
                 file = properties.getFileProperty key, parent, defaults
             }

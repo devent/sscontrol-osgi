@@ -98,11 +98,11 @@ sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable"
     }
 
     File getBackportsListFile() {
-        getFileProperty 'backports_list_file', base, defaultProperties
+        getFileProperty 'backports_list_file'
     }
 
     File getDockerListFile() {
-        getFileProperty 'docker_list_file', base, defaultProperties
+        getFileProperty 'docker_list_file'
     }
 
     @Override

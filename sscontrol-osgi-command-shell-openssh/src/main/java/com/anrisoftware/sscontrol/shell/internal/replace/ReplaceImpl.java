@@ -97,6 +97,14 @@ public class ReplaceImpl implements Replace {
         line(args);
     }
 
+    /**
+     * <pre>
+     * replace with {
+     *     line search: "s/search/replace/" // or
+     *     line search: "search", replace: "replace"
+     * }
+     * </pre>
+     */
     public void line(Map<String, Object> args) {
         ReplaceLine line = lineFactory.create(args);
         log.lineAdded(this, line);
