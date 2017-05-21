@@ -362,6 +362,17 @@ spec:
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
 <endif>
+      affinity:
+        nodeAffinity:
+<if(parent.requireDnsNodeLabel)>
+          requiredDuringSchedulingIgnoredDuringExecution:
+<else>
+          preferredDuringSchedulingIgnoredDuringExecution:
+<endif>
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: <parent.dnsNodeLabelKey>
+                operator: Exists
 
 >>
 
@@ -405,6 +416,17 @@ spec:
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
 <endif>
+      affinity:
+        nodeAffinity:
+<if(parent.requireDnsNodeLabel)>
+          requiredDuringSchedulingIgnoredDuringExecution:
+<else>
+          preferredDuringSchedulingIgnoredDuringExecution:
+<endif>
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: <parent.dnsNodeLabelKey>
+                operator: Exists
 
 >>
 
@@ -566,6 +588,17 @@ spec:
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
 <endif>
+      affinity:
+        nodeAffinity:
+<if(parent.requireDashboardNodeLabel)>
+          requiredDuringSchedulingIgnoredDuringExecution:
+<else>
+          preferredDuringSchedulingIgnoredDuringExecution:
+<endif>
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: <parent.dashboardNodeLabelKey>
+                operator: Exists
 
 >>
 
@@ -903,5 +936,16 @@ spec:
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
 <endif>
+      affinity:
+        nodeAffinity:
+<if(parent.requireCalicoPolicyControllerNodeLabel)>
+          requiredDuringSchedulingIgnoredDuringExecution:
+<else>
+          preferredDuringSchedulingIgnoredDuringExecution:
+<endif>
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: <parent.calicoPolicyControllerNodeLabelKey>
+                operator: Exists
 
 >>

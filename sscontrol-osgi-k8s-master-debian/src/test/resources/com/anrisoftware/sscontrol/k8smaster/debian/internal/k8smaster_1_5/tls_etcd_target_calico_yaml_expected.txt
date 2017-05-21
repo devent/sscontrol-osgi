@@ -202,6 +202,10 @@ spec:
         - name: etcd-certs
           secret:
             secretName: calico-etcd-secrets
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
 
 ---
 
@@ -280,3 +284,14 @@ spec:
         - name: etcd-certs
           secret:
             secretName: calico-etcd-secrets
+      tolerations:
+      - effect: NoSchedule
+        key: node.alpha.kubernetes.io/ismaster
+        operator: Equal
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: robobeerun.com/calico
+                operator: Exists

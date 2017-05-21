@@ -139,3 +139,10 @@ spec:
       - effect: NoSchedule
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: robobeerun.com/dns
+                operator: Exists
