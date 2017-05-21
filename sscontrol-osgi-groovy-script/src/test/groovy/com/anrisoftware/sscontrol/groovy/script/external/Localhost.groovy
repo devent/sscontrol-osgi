@@ -57,4 +57,9 @@ class Localhost implements SshHost {
     SystemInfo getSystem() {
         return null
     }
+
+    @Override
+    File getSocket() {
+        return null
+    }
 }

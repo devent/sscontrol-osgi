@@ -74,7 +74,7 @@ public class SshHostImpl implements SshHost {
 
     @AssistedInject
     SshHostImpl(DefaultSystemInfoFactory systemFactory) {
-        this(systemFactory, new HashMap<>());
+        this(systemFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject
