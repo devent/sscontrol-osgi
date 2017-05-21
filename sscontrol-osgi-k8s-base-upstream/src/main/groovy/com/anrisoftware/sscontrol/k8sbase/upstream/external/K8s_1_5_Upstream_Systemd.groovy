@@ -196,6 +196,18 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         }
     }
 
+    /**
+     * Set some additional kernel parameter.
+     */
+    def setupKernelParameter() {
+        log.info 'Setup max_map_count.'
+        shell privileged: true, "sysctl -w vm.max_map_count=$maxMapCount"
+        replace privileged: true, dest: sysctlFile with {
+            line "s/#?vm.max_map_count=\\d*/vm.max_map_count=$maxMapCount/"
+            it
+        } call()
+    }
+
     def createDirectories() {
         log.info 'Create k8s-master directories.'
         def dirs = [
@@ -752,6 +764,14 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
 
     String getRobobeeLabelNamespace() {
         properties.getProperty 'robobee_label_namespace', defaultProperties
+    }
+
+    long getMaxMapCount() {
+        properties.getNumberProperty 'max_map_count', defaultProperties
+    }
+
+    File getSysctlFile() {
+        getFileProperty 'sysctl_file'
     }
 
     @Override

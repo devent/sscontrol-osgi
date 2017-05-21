@@ -1,3 +1,5 @@
+/tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
 /var/lib/robobee/tmp/robobee.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_ca.pem
 /var/lib/robobee/tmp/robobee.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_cert.pem
 /var/lib/robobee/tmp/robobee.tmp /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_key.pem

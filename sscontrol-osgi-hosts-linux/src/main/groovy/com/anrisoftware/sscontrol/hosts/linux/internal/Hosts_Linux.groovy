@@ -44,7 +44,7 @@ class Hosts_Linux extends ScriptBase {
 
     @Override
     def run() {
-        replace dest: configFile, privileged: true with {
+        replace privileged: true, dest: configFile with {
             service.hosts.each { Host h ->
                 def address = h.address
                 def host = h.host

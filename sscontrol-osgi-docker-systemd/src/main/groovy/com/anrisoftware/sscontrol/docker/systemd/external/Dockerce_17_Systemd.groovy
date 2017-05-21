@@ -177,7 +177,7 @@ rm -rf $dockerAufsDirectory; true
     }
 
     File getDockerAufsDirectory() {
-        getFileProperty 'docker_aufs_directory', base, defaultProperties
+        getFileProperty 'docker_aufs_directory'
     }
 
     @Override
