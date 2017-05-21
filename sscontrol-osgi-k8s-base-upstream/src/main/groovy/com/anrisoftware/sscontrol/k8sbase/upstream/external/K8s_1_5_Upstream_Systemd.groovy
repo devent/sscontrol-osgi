@@ -671,6 +671,38 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
     }
 
     /**
+     * Returns true if we require a particular node label for DNS pods.
+     */
+    boolean getRequireDnsNodeLabel() {
+        properties.getBooleanProperty 'require_dns_node_label', defaultProperties
+    }
+
+    /**
+     * Returns the node label for DNS pods.
+     */
+    String getDnsNodeLabelKey() {
+        def ns = robobeeLabelNamespace
+        def key = properties.getProperty 'dns_node_label_key', defaultProperties
+        "$ns/$key"
+    }
+
+    /**
+     * Returns true if we require a particular node label for Dashboard pods.
+     */
+    boolean getRequireDashboardNodeLabel() {
+        properties.getBooleanProperty 'require_dashboard_node_label', defaultProperties
+    }
+
+    /**
+     * Returns the node label for Dashboard pods.
+     */
+    String getDashboardNodeLabelKey() {
+        def ns = robobeeLabelNamespace
+        def key = properties.getProperty 'dashboard_node_label_key', defaultProperties
+        "$ns/$key"
+    }
+
+    /**
      * Returns true if we allow Calico node pods on the master. If true, a 
      * toleration for the master taint will be added to the Calico node 
      * DaemonSet.
@@ -686,6 +718,23 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
      */
     boolean getAllowCalicoPolicyControllerOnMaster() {
         properties.getBooleanProperty 'allow_calico_policy_controller_on_master', defaultProperties
+    }
+
+    /**
+     * Returns true if we require a particular node label for 
+     * Calico Policy-Controller pods.
+     */
+    boolean getRequireCalicoPolicyControllerNodeLabel() {
+        properties.getBooleanProperty 'require_calico_policy_controller_node_label', defaultProperties
+    }
+
+    /**
+     * Returns the node label for Calico Policy-Controller pods.
+     */
+    String getCalicoPolicyControllerNodeLabelKey() {
+        def ns = robobeeLabelNamespace
+        def key = properties.getProperty 'calico_policy_controller_node_label_key', defaultProperties
+        "$ns/$key"
     }
 
     File getKubeconfigFile() {

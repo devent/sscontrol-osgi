@@ -311,7 +311,9 @@ public class K8sImpl implements K8s {
                 String[] s = split(property, "=");
                 Map<String, Object> args = new HashMap<>();
                 args.put("key", s[0]);
-                args.put("value", s[1]);
+                if (s.length > 1) {
+                    args.put("value", s[1]);
+                }
                 label(args);
             }
         });
