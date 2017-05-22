@@ -67,8 +67,8 @@ class IcingaScriptTest {
 service "icinga"
 """,
             expected: { HostServices services ->
-                assert services.getServices('docker').size() == 1
-                Icinga s = services.getServices('docker')[0]
+                assert services.getServices('icinga').size() == 1
+                Icinga s = services.getServices('icinga')[0]
                 assert s != null
             },
         ]
@@ -80,15 +80,32 @@ service "icinga"
         def test = [
             name: 'ido-mysql plugin',
             input: """
-service "docker" with {
-    groups << 'memory'
+service "icinga" with {
+    plugin << 'ido-mysql'
+    config << '''
+library "db_ido_mysql"
+
+object IdoMysqlConnection "mysql-ido" {
+  host = "127.0.0.1"
+  port = 3306
+  user = "icinga"
+  password = "icinga"
+  database = "icinga"
+
+  cleanup = {
+    downtimehistory_age = 48h
+    contactnotifications_age = 31d
+  }
+}'''
 }
 """,
             expected: { HostServices services ->
-                assert services.getServices('docker').size() == 1
-                Icinga s = services.getServices('docker')[0]
-                assert s.cgroups.size() == 1
-                assert s.cgroups[0] == "memory"
+                assert services.getServices('icinga').size() == 1
+                Icinga s = services.getServices('icinga')[0]
+                assert s.plugins.size() == 1
+                assert s.plugins[0].name == "ido-mysql"
+                assert s.configs.size() == 1
+                assert s.configs[0] =~ /.*library.*/
             },
         ]
         doTest test

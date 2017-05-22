@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
-import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -40,24 +39,20 @@ public class IdoMysqlPluginImpl implements Plugin {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface IdoMysqlPluginImplFactory extends PluginFactory{
+    public interface IdoMysqlPluginImplFactory extends PluginFactory {
 
     }
-
-    private final PluginImplLogger log;
 
     private String name;
 
     @AssistedInject
-    IdoMysqlPluginImpl(PluginImplLogger log, TlsFactory tlsFactory)
-            throws URISyntaxException {
-        this(log, tlsFactory, new HashMap<String, Object>());
+    IdoMysqlPluginImpl() throws URISyntaxException {
+        this(new HashMap<String, Object>());
     }
 
     @AssistedInject
-    IdoMysqlPluginImpl(PluginImplLogger log, TlsFactory tlsFactory,
-            @Assisted Map<String, Object> args) throws URISyntaxException {
-        this.log = log;
+    IdoMysqlPluginImpl(@Assisted Map<String, Object> args)
+            throws URISyntaxException {
         parseArgs(args);
     }
 

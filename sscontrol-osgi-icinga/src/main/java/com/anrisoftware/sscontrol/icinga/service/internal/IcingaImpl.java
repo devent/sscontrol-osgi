@@ -19,6 +19,7 @@ import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyU
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,8 @@ public class IcingaImpl implements Icinga {
 
     private final List<Plugin> plugins;
 
+    private final List<String> configs;
+
     @Inject
     private transient Map<String, PluginFactory> pluginFactories;
 
@@ -71,6 +74,7 @@ public class IcingaImpl implements Icinga {
         this.targets = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.plugins = new ArrayList<>();
+        this.configs = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -91,6 +95,32 @@ public class IcingaImpl implements Icinga {
 
     /**
      * <pre>
+     * plugin << "ido-mysql"
+     * </pre>
+     */
+    public List<String> getPlugin() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                plugin(property);
+            }
+        });
+    }
+
+    /**
+     * <pre>
+     * plugin 'ido-mysql'
+     * </pre>
+     */
+    public Plugin plugin(String name) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("name", name);
+        return plugin(args);
+    }
+
+    /**
+     * <pre>
      * plugin name: 'ido-mysql'
      * </pre>
      */
@@ -101,6 +131,44 @@ public class IcingaImpl implements Icinga {
         log.pluginAdded(this, plugin);
         plugins.add(plugin);
         return plugin;
+    }
+
+    /**
+     * <pre>
+     * config << "icinga-config"
+     * </pre>
+     */
+    public List<String> getConfig() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                config(property);
+            }
+        });
+    }
+
+    /**
+     * <pre>
+     * config 'icinga-config'
+     * </pre>
+     */
+    public void config(String name) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("text", name);
+        config(args);
+    }
+
+    /**
+     * <pre>
+     * config text: 'ido-mysql'
+     * </pre>
+     */
+    public void config(Map<String, Object> args) {
+        Object v = args.get("text");
+        String text = v.toString();
+        configs.add(text);
+        log.configAdded(this, text);
     }
 
     @Override
@@ -129,12 +197,16 @@ public class IcingaImpl implements Icinga {
     }
 
     @Override
+    public List<String> getConfigs() {
+        return configs;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
     }
 
