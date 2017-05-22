@@ -28,4 +28,6 @@ import com.anrisoftware.sscontrol.types.host.external.HostService;
 public interface Icinga extends HostService {
 
     List<Plugin> getPlugins();
+
+    List<String> getConfigs();
 }

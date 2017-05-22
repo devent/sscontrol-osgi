@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.icinga.service.internal;
 
+import static com.anrisoftware.sscontrol.icinga.service.internal.IcingaImplLogger.m.configAdded;
 import static com.anrisoftware.sscontrol.icinga.service.internal.IcingaImplLogger.m.pluginAdded;
 
 import javax.inject.Singleton;
@@ -33,7 +34,9 @@ final class IcingaImplLogger extends AbstractLogger {
 
     enum m {
 
-        pluginAdded("Cgroup {} added to {}");
+        pluginAdded("Plugin {} added to {}"),
+
+        configAdded("Config {} added to {}");
 
         private String name;
 
@@ -56,5 +59,9 @@ final class IcingaImplLogger extends AbstractLogger {
 
     void pluginAdded(IcingaImpl icinga, Plugin plugin) {
         debug(pluginAdded, plugin, icinga);
+    }
+
+    void configAdded(IcingaImpl icinga, String text) {
+        debug(configAdded, text, icinga);
     }
 }
