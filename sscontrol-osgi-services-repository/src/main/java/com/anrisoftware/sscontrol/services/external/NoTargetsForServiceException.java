@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.services.external;
 
 import com.anrisoftware.sscontrol.types.app.external.AppException;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
  * 
@@ -26,9 +27,11 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 @SuppressWarnings("serial")
 public class NoTargetsForServiceException extends AppException {
 
-    public NoTargetsForServiceException(AssertionError e, String name) {
+    public NoTargetsForServiceException(AssertionError e,
+            HostServiceService service, String target) {
         super("No targets", e);
-        addContextValue("name", name);
+        addContextValue("target", target);
+        addContextValue("service", service);
     }
 
 }

@@ -126,8 +126,11 @@ class FromRepository_1_5 extends ScriptBase {
             def targetdir = new File(tmpdir, targetdirName)
             targetdir.eachFileMatch FileType.FILES, ~/(?m)^.*\.${parser.templateName}$/, {
                 log.debug 'Parse template {}/{}', dir, it.name
-                def s = parser.parseFile(targetdir, it.name, args, charset)
+                if (!parser.isKubeFile(it.name)) {
+                    return
+                }
                 def parsedFileName = parser.getFilename it.name
+                def s = parser.parseFile(targetdir, it.name, args, charset)
                 def tmpdest = File.createTempFile('robobee', null)
                 try {
                     FileUtils.write tmpdest, s, charset

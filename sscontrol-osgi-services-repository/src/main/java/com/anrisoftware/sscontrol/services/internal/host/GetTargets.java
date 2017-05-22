@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.anrisoftware.sscontrol.services.external.NoTargetsForServiceException;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.HostTargets;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.host.external.TargetHostService;
@@ -49,7 +50,8 @@ public class GetTargets<HostType extends TargetHost, TargetType extends TargetHo
     }
 
     @SuppressWarnings("unchecked")
-    public List<HostType> parseTarget(HostTargets<HostType, TargetType> targets,
+    public List<HostType> parseTarget(HostServiceService service,
+            HostTargets<HostType, TargetType> targets,
             Map<String, Object> args) {
         Object object = args.get(argName);
         if (hostType.isInstance(object)) {
@@ -57,36 +59,37 @@ public class GetTargets<HostType extends TargetHost, TargetType extends TargetHo
         }
         if (targetType.isInstance(object)) {
             TargetType t = (TargetType) object;
-            return getTargets(targets, t);
+            return getTargets(service, targets, t);
         }
         if (object != null) {
             String name = object.toString();
-            return getTargets(targets, name);
+            return getTargets(service, targets, name);
         } else {
-            return getDefaultTargets(targets);
+            return getDefaultTargets(service, targets);
         }
     }
 
-    public List<HostType> getDefaultTargets(
+    public List<HostType> getDefaultTargets(HostServiceService service,
             HostTargets<HostType, TargetType> targets) {
-        return getTargets(targets, DEFAULT_TARGETS_NAME);
+        return getTargets(service, targets, DEFAULT_TARGETS_NAME);
     }
 
-    public List<HostType> getTargets(HostTargets<HostType, TargetType> targets,
-            TargetType target) {
+    public List<HostType> getTargets(HostServiceService service,
+            HostTargets<HostType, TargetType> targets, TargetType target) {
         try {
             return targets.getHosts(target);
         } catch (AssertionError e) {
-            throw new NoTargetsForServiceException(e, target.getGroup());
+            throw new NoTargetsForServiceException(e, service,
+                    target.getGroup());
         }
     }
 
-    public List<HostType> getTargets(HostTargets<HostType, TargetType> targets,
-            String name) {
+    public List<HostType> getTargets(HostServiceService service,
+            HostTargets<HostType, TargetType> targets, String name) {
         try {
             return targets.getHosts(name);
         } catch (AssertionError e) {
-            throw new NoTargetsForServiceException(e, name);
+            throw new NoTargetsForServiceException(e, service, name);
         }
     }
 

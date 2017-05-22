@@ -98,7 +98,7 @@ public class GitRepoImpl implements GitRepo {
         this.hostFactory = hostFactory;
         this.remoteFactory = remoteFactory;
         this.checkoutFactory = checkoutFactory;
-        this.checkout = checkoutFactory.create(new HashMap<>());
+        this.checkout = checkoutFactory.create(new HashMap<String, Object>());
         parseArgs(args);
     }
 
