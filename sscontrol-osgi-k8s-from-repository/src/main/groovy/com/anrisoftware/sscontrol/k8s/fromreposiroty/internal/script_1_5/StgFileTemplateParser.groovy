@@ -26,6 +26,11 @@ class StgFileTemplateParser extends AbstractTemplateParser {
     }
 
     @Override
+    public boolean getNeedCopyRepo() {
+        return true;
+    }
+
+    @Override
     String getTemplateName() {
         TEMPLATE_NAME
     }

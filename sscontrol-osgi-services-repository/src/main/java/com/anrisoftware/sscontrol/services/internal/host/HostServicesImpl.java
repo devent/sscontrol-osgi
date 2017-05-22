@@ -124,7 +124,7 @@ public class HostServicesImpl implements HostServices {
                 ClusterHost.class, Cluster.class, "cluster") {
 
             @Override
-            public List<ClusterHost> getTargets(
+            public List<ClusterHost> getTargets(HostServiceService service,
                     HostTargets<ClusterHost, Cluster> targets, String name) {
                 try {
                     return targets.getHosts(name);
@@ -138,7 +138,7 @@ public class HostServicesImpl implements HostServices {
                 Repo.class, "repo") {
 
             @Override
-            public List<RepoHost> getTargets(
+            public List<RepoHost> getTargets(HostServiceService service,
                     HostTargets<RepoHost, Repo> targets, String name) {
                 try {
                     return targets.getHosts(name);
@@ -185,7 +185,7 @@ public class HostServicesImpl implements HostServices {
      * </pre>
      */
     public List<SshHost> targets(String name) {
-        return getTargets.getTargets(targets, name);
+        return getTargets.getTargets(null, targets, name);
     }
 
     /**
@@ -197,7 +197,7 @@ public class HostServicesImpl implements HostServices {
      * </pre>
      */
     public List<ClusterHost> clusters(String name) {
-        return getClusters.getTargets(clusters, name);
+        return getClusters.getTargets(null, clusters, name);
     }
 
     /**
@@ -209,7 +209,7 @@ public class HostServicesImpl implements HostServices {
      * </pre>
      */
     public List<RepoHost> repos(String name) {
-        return getRepos.getTargets(repos, name);
+        return getRepos.getTargets(null, repos, name);
     }
 
     @SuppressWarnings("unchecked")
@@ -339,14 +339,17 @@ public class HostServicesImpl implements HostServices {
     private Map<String, Object> parseArgs(HostServiceService service,
             Map<String, Object> args) {
         Map<String, Object> result = new HashMap<>(args);
+        List<SshHost> t;
+        List<ClusterHost> c;
+        List<RepoHost> r;
         if (!(service instanceof TargetServiceService)) {
-            List<SshHost> t = getTargets.parseTarget(targets, args);
+            t = getTargets.parseTarget(service, targets, args);
             result.put("targets", t);
             log.targetsInjected(this, service.getName(), t);
-            List<ClusterHost> c = getClusters.parseTarget(clusters, args);
+            c = getClusters.parseTarget(service, clusters, args);
             result.put("clusters", c);
             log.clustersInjected(this, service.getName(), c);
-            List<RepoHost> r = getRepos.parseTarget(repos, args);
+            r = getRepos.parseTarget(service, repos, args);
             result.put("repos", r);
             log.reposInjected(this, service.getName(), r);
         }

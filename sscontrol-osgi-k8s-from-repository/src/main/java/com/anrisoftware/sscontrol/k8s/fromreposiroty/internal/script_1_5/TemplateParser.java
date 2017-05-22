@@ -17,6 +17,8 @@ public interface TemplateParser {
 
     String getTemplateName();
 
+    boolean isKubeFile(String fileName);
+
     /**
      * Returns the target file name.
      */

@@ -9,6 +9,14 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 abstract class AbstractTemplateParser implements TemplateParser {
 
     @Override
+    boolean isKubeFile(String fileName) {
+        String[] split = fileName.split(/\./)
+        def name = split[-2]
+        def m = (name =~ /(.*)-(\w*)/)
+        m.find()
+    }
+
+    @Override
     String getFilename(String fileName) {
         String[] split = fileName.split(/\./)
         def name = split[-2]
