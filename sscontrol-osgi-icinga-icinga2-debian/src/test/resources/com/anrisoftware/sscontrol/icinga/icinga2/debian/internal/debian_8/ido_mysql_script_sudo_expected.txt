@@ -4,4 +4,7 @@ bash -c echo "deb https://packages.icinga.com/debian icinga-jessie main" > /tmp/
 /bin/bash -s
 bash -c echo "deb http://deb.debian.org/debian jessie-backports main" > /tmp/junit/junit/etc/apt/sources.list.d/backports.list
 /bin/bash -s
+apt-key add -
+bash -c echo "deb https://packages.icinga.com/debian icinga-jessie main" > /tmp/junit/junit/etc/apt/sources.list.d/icinga.list
+/bin/bash -s
 /bin/bash -s

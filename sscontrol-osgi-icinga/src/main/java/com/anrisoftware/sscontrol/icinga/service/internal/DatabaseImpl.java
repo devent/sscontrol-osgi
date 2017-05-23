@@ -72,9 +72,17 @@ public class DatabaseImpl implements Database {
         }
     }
 
+    public void setHost(String host) {
+        this.host = host;
+    }
+
     @Override
     public String getHost() {
         return host;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
@@ -82,9 +90,17 @@ public class DatabaseImpl implements Database {
         return user;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     @Override
