@@ -18,8 +18,10 @@ package com.anrisoftware.sscontrol.icinga.service.internal;
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.icinga.service.external.Database;
+import com.anrisoftware.sscontrol.icinga.service.external.Feature;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
 import com.anrisoftware.sscontrol.icinga.service.internal.DatabaseImpl.DatabaseImplFactory;
+import com.anrisoftware.sscontrol.icinga.service.internal.FeatureImpl.FeatureImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.IcingaImpl.IcingaImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.IdoMysqlPluginImpl.IdoMysqlPluginImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
@@ -43,6 +45,9 @@ public class IcingaModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Database.class, DatabaseImpl.class)
                 .build(DatabaseImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Feature.class, FeatureImpl.class)
+                .build(FeatureImplFactory.class));
         installPlugins();
     }
 

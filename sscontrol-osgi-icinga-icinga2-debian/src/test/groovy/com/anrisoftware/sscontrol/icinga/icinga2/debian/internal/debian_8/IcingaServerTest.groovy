@@ -56,19 +56,64 @@ service "icinga", version: "2"
     }
 
     @Test
+    void "api_server"() {
+        def test = [
+            name: "api_server",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+def mysql = [user: "icinga", database: "icinga", password: "icinga"]
+service "icinga", version: "2" with {
+    plugin 'api'
+    config << [name: 'api-users', script: """
+object ApiUser "web2" {
+  password = "bea11beb7b810ea9ce6ea" // Change this!
+  permissions = [ "actions/*", "objects/modify/hosts", "objects/modify/services", "objects/modify/icingaapplication" ]
+}
+"""]
+}
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
+            expectedServicesSize: 2,
+            before: { Map test -> },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
+                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "ido_mysql_server"() {
         def test = [
             name: "ido_mysql_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 def mysql = [user: "icinga", database: "icinga", password: "icinga"]
 service "icinga", version: "2" with {
     plugin 'ido-mysql' with {
         database mysql
     }
+    feature << [name: 'ido-mysql', script: """
+library "db_ido_mysql"
+
+object IdoMysqlConnection "mysql-ido" {
+    host = "127.0.0.1"
+    port = 3306
+    user = "$mysql.user"
+    password = "$mysql.password"
+    database = "$mysql.database"
+
+    cleanup = {
+        downtimehistory_age = 48h
+        contactnotifications_age = 31d
+    }
 }
-""",
-            scriptVars: [:],
+"""]
+}
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },

@@ -17,8 +17,11 @@ package com.anrisoftware.sscontrol.icinga.icinga2.script.external
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
+
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.icinga.service.external.Feature
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga
 
 import groovy.util.logging.Slf4j
@@ -40,12 +43,32 @@ abstract class Icinga_2 extends ScriptBase {
         Icinga service = service
     }
 
-    def stopServices() {
-        stopSystemdService 'icinga2'
+    def configureFeatures() {
+        log.info "Configure features for {}.", service
+        Icinga service = service
+        service.features.each { Feature feature ->
+            log.debug "Configure feature {}.", feature
+            def file = getFeatureFile feature
+            def tmp = File.createTempFile("robobee", ".feature")
+            try {
+                FileUtils.write tmp, feature.script, charset
+                copy privileged: true, src: tmp, dest: file call()
+            } finally {
+                if (tmp) {
+                    tmp.delete()
+                }
+            }
+        }
     }
 
-    def startServices() {
-        startEnableSystemdService 'icinga2'
+    File getFeaturesAvailableDir() {
+        getFileProperty "features_available_dir", base, defaultProperties
+    }
+
+    File getFeatureFile(Feature feature) {
+        def name = feature.name
+        name = name.replaceAll(/-/, "_")
+        getFileProperty "feature_${name}_file", featuresAvailableDir, defaultProperties
     }
 
     @Override
