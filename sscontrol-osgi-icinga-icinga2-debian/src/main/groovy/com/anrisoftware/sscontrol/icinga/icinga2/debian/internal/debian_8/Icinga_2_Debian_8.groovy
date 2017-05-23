@@ -17,11 +17,8 @@ package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8
 
 import javax.inject.Inject
 
-import org.joda.time.Duration
-import org.stringtemplate.v4.ST
-
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.icinga.icinga2.script.external.Icinga_2
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga
 
 import groovy.util.logging.Slf4j
@@ -33,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Icinga_2_Debian_8 extends ScriptBase {
+class Icinga_2_Debian_8 extends Icinga_2 {
 
     @Inject
     Icinga_2_Debian_8_Properties debianPropertiesProvider
@@ -48,54 +45,15 @@ class Icinga_2_Debian_8 extends ScriptBase {
     @Override
     def run() {
         setupDefaults()
+        stopServices()
         upstream.run()
-        updateGrub()
+        startServices()
     }
 
     def setupDefaults() {
+        super.setupDefaults()
         log.info "Setup defaults for {}.", service
         Icinga service = service
-        if (service.cgroups.size() == 0) {
-            service.cgroups.addAll(defaultCgroups)
-        }
-    }
-
-    def updateGrub() {
-        log.info "Update Grub for cgroups."
-        def b = [
-            cgroupsCmdLine,
-            swapAccountCmdLine
-        ]
-        replace privileged: true, dest: grubConfigFile with {
-            line "s/(?m)^GRUB_CMDLINE_LINUX=\".*\"/GRUB_CMDLINE_LINUX=\"${b.join(' ')}\"/"
-            it
-        }()
-        shell privileged: true, "update-grub" call()
-    }
-
-    String getCgroupsCmdLine() {
-        Icinga service = service
-        if (service.cgroups.size() == 0) {
-            return ''
-        } else {
-            return new ST('cgroup_enable=<cgroups;separator=",">').add('cgroups', service.cgroups).render()
-        }
-    }
-
-    String getSwapAccountCmdLine() {
-        'swapaccount=1'
-    }
-
-    List getDefaultCgroups() {
-        properties.getListProperty 'default_cgroups', defaultProperties
-    }
-
-    File getGrubConfigFile() {
-        properties.getFileProperty 'grub_config_file', base, defaultProperties
-    }
-
-    Duration getAptgetTimeout() {
-        properties.getDurationProperty 'apt_get_timeout', defaultProperties
     }
 
     @Override

@@ -22,7 +22,6 @@ import static org.junit.Assume.*
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -34,25 +33,23 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Icinga_2_Debian_8_Server_Test extends AbstractIcingaDebianRunnerTest {
-
-    static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
+class IcingaServerTest extends AbstractIcingaDebianRunnerTest {
 
     @Test
-    void "debian_8_server_docker"() {
+    void "basic_server"() {
         def test = [
-            name: "debian_8_server_docker",
+            name: "basic_server",
             script: """
 service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
-service "docker"
+service "icinga", version: "2"
 """,
             scriptVars: [:],
             expectedServicesSize: 2,
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource Icinga_2_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
-                assertStringResource Icinga_2_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+                assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
+                assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
             },
         ]
         doTest test

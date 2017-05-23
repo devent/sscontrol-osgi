@@ -477,16 +477,42 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Checks if the apt-packages are installed. Per default checks the
+     * Checks if the specified apt packages with a specific version are
+     * installed.
+     */
+    boolean checkAptPackagesVersion(List packages) {
+        assertThat "package=null", packages[0], hasKey('package')
+        assertThat "version=null", packages[0], hasKey('version')
+        def failed = packages.find { Map m ->
+            !checkAptPackage(m)
+        }
+        return failed == null
+    }
+
+    /**
+     * Checks if the apt package is installed. Per default checks the
      * packages from the profile property {@code packages}.
      */
-    boolean checkAptPackage(def packages=packages, def timeout=timeoutShort) {
-        log.info "Check installed packages {}.", packages
-        def ret = shell exitCodes: [0, 1] as int[], timeout: timeout, new ST("""
+    boolean checkAptPackage(Map args) {
+        log.info "Check installed packages {}.", args
+        assertThat "args.package=null", args, hasKey('package')
+        args.timeout = args.timeout ? args.timeout : timeoutShort
+        def ret = shell exitCodes: [0, 1] as int[], timeout: args.timeout,
+        vars: args <<
+        [nameInstalled: grepAptPackageNameInstalled] <<
+        [versionInstalled: getGrepAptPackageVersionInstalled(args.version)],
+        st: '''
 set -e
 export LANG=en_US.UTF-8
-<packages:{f|dpkg -s <f> | grep '$grepAptPackageInstalled' 1>/dev/null};separator="\\n">
-""").add("packages", packages).render() call()
+s=$(dpkg -s "<vars.package>")
+echo $s | grep '<vars.nameInstalled>' 1>/dev/null
+i_check=$?
+<if(vars.version)>
+echo $s | grep '<vars.versionInstalled>' 1>/dev/null
+v_check=$?
+<endif>
+! (( $i_check || $v_check ))
+''' call()
         return ret.exitValue == 0
     }
 
@@ -497,6 +523,16 @@ export LANG=en_US.UTF-8
     void installAptPackages(def packages=packages, def timeout=timeoutLong) {
         log.info "Installing packages {}.", packages
         shell privileged: true, timeout: timeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+    }
+
+    /**
+     * Installs the specified backports packages via apt-get. Per default
+     * installs the packages from the profile property {@code packages}.
+     */
+    void installAptBackportsPackages(def packages=packages, def timeout=timeoutLong) {
+        log.info "Installing packages {}.", packages
+        shell privileged: true, timeout: timeout, "apt-get update && apt-get -y -t ${distributionName}-backports install ${packages.join(' ')}" with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
@@ -558,7 +594,7 @@ export LANG=en_US.UTF-8
 
     /**
      * Adds the apt packages repository.
-     * 
+     *
      * @param args
      * <ul>
      * <li>key: repository key;
@@ -567,7 +603,7 @@ export LANG=en_US.UTF-8
      * <li>comp: repository component;
      * <li>file: repository list file;
      * </ul>
-     * 
+     *
      * @see #getAptPackagesRepositoryKey()
      * @see #getAptPackagesRepository()
      * @see #getAptPackagesRepositoryComponent()
@@ -581,6 +617,31 @@ export LANG=en_US.UTF-8
         args.file = args.file ? args.file : aptPackagesRepositoryListFile
         shell """
 curl -fsSL ${args.key} | sudo apt-key add -
+sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
+    }
+
+    /**
+     * Adds the apt backports repository.
+     *
+     * @param args
+     * <ul>
+     * <li>url: repository URL;
+     * <li>name: distribution name;
+     * <li>comp: repository component;
+     * <li>file: repository list file;
+     * </ul>
+     *
+     * @see #getAptBackportsRepository()
+     * @see #getAptBackportsRepositoryComponent()
+     * @see #getAptBackportsRepositoryListFile()
+     */
+    def addAptBackportsRepository(Map args=[:]) {
+        args.url = args.url ? args.url : aptBackportsRepositoryUrl
+        args.name = args.name ? args.name : "$distributionName-backports"
+        args.comp = args.comp ? args.comp : aptBackportsRepositoryComponent
+        args.file = args.file ? args.file : aptBackportsRepositoryListFile
+        shell """
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 """ call()
     }
@@ -632,13 +693,55 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * example {@code "main"}
      *
      * <ul>
-     * <li>profile property {@code apt_packages_pepository_component}</li>
+     * <li>profile property {@code apt_packages_repository_component}</li>
      * </ul>
      *
      * @see #getDefaultProperties()
      */
     String getAptPackagesRepositoryComponent() {
-        properties.getProperty "apt_packages_pepository_component", defaultProperties
+        properties.getProperty "apt_packages_repository_component", defaultProperties
+    }
+
+    /**
+     * Returns the backports repository base URL, for
+     * example {@code "http://deb.debian.org/debian"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_url}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptBackportsRepositoryUrl() {
+        properties.getProperty "apt_backports_repository_url", defaultProperties
+    }
+
+    /**
+     * Returns the backports repository list file, for
+     * example {@code "/etc/apt/sources.list.d/backports.list"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_list_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getAptBackportsRepositoryListFile() {
+        getFileProperty "apt_backports_repository_list_file", base, defaultProperties
+    }
+
+    /**
+     * Returns the backports repository component, for
+     * example {@code "main"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_component}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptBackportsRepositoryComponent() {
+        properties.getProperty "apt_backports_repository_component", defaultProperties
     }
 
     /**
@@ -888,8 +991,13 @@ mktemp -d
         properties.getDurationProperty('command_timeout_very_long', defaultProperties)
     }
 
-    String getGrepAptPackageInstalled() {
-        properties.getProperty 'grep_apt_package_installed', defaultProperties
+    String getGrepAptPackageNameInstalled() {
+        properties.getProperty 'grep_apt_package_name_installed', defaultProperties
+    }
+
+    String getGrepAptPackageVersionInstalled(String version) {
+        def s = properties.getProperty 'grep_apt_package_version_installed', defaultProperties
+        new ST(s).add('version', version).render()
     }
 
     public void putState(String name, Object state) {
