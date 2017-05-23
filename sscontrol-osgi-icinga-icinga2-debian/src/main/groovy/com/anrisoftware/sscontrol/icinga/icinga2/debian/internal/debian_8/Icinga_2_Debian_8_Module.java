@@ -15,9 +15,12 @@
  */
 package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8;
 
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  *
@@ -36,6 +39,17 @@ public class Icinga_2_Debian_8_Module extends AbstractModule {
                 .implement(HostServiceScript.class,
                         Icinga_2_Upstream_Debian_8.class)
                 .build(Icinga_2_Upstream_Debian_8_Factory.class));
+        installPlugins();
     }
 
+    private void installPlugins() {
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class,
+                        IdoMysqlPlugin_Upstream_Debian_8.class)
+                .build(IdoMysqlPlugin_Upstream_Debian_8_Factory.class));
+        MapBinder<String, PluginHostServiceScriptService> mapbinder = newMapBinder(
+                binder(), String.class, PluginHostServiceScriptService.class);
+        mapbinder.addBinding("ido-mysql")
+                .to(IdoMysqlPlugin_Upstream_Debian_8_Factory.class);
+    }
 }

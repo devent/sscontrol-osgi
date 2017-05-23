@@ -69,13 +69,17 @@ public class IdoMysqlPluginImpl implements IdoMysqlPlugin {
 
     public void database(Map<String, Object> args) {
         Database db = databaseFactory.create(args);
-        this.database = db;
-        log.databaseSet(this, db);
+        setDatabase(db);
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setDatabase(Database database) {
+        this.database = database;
+        log.databaseSet(this, database);
     }
 
     @Override

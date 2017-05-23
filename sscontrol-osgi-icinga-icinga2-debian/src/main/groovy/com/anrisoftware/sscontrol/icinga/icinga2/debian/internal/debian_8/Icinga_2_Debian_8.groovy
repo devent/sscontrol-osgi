@@ -20,6 +20,7 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.icinga.icinga2.script.external.Icinga_2
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga
+import com.anrisoftware.sscontrol.icinga.service.external.Plugin
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +36,9 @@ class Icinga_2_Debian_8 extends Icinga_2 {
     @Inject
     Icinga_2_Debian_8_Properties debianPropertiesProvider
 
+    @Inject
+    Map<String, PluginHostServiceScriptService> pluginServices
+
     Icinga_2_Upstream_Debian_8 upstream
 
     @Inject
@@ -47,6 +51,7 @@ class Icinga_2_Debian_8 extends Icinga_2 {
         setupDefaults()
         stopServices()
         upstream.run()
+        runPlugins()
         startServices()
     }
 
@@ -54,6 +59,16 @@ class Icinga_2_Debian_8 extends Icinga_2 {
         super.setupDefaults()
         log.info "Setup defaults for {}.", service
         Icinga service = service
+    }
+
+    def runPlugins() {
+        log.info "Setup plugins for {}.", service
+        Icinga service = service
+        service.plugins.each { Plugin plugin ->
+            def pluginService = pluginServices[plugin.name]
+            def p = pluginService.create(scriptsRepository, service, target, threads, scriptEnv)
+            p.run()
+        }
     }
 
     @Override

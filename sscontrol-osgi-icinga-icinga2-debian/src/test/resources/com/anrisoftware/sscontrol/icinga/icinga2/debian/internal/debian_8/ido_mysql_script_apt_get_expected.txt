@@ -2,3 +2,5 @@ update
 -y install icinga2=2.6.3-1~debmon8+1
 update
 -y -t jessie-backports install nagios-plugins=2.2-3~bpo8+1
+update
+-y install icinga2-ido-mysql=2.6.3-1~debmon8+1
