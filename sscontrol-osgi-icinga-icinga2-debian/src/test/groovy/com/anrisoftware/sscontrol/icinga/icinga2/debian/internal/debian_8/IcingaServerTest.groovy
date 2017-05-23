@@ -55,6 +55,28 @@ service "icinga", version: "2"
         doTest test
     }
 
+    @Test
+    void "ido_mysql_server"() {
+        def test = [
+            name: "ido_mysql_server",
+            script: """
+service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+service "icinga", version: "2" with {
+    plugin << "ido-mysql"
+}
+""",
+            scriptVars: [:],
+            expectedServicesSize: 2,
+            before: { Map test -> },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
+                assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     def tearDownServer(Map args) {
         remoteCommand """
 """

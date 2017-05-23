@@ -77,6 +77,7 @@ abstract class AbstractIcingaScriptTest extends AbstractScriptTestBase {
     }
 
     void createDummyCommands(File dir) {
+        createCommand exit1Command, dir, 'dpkg'
         createEchoCommands dir, [
             'mkdir',
             'chown',

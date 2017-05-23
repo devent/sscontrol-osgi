@@ -1,5 +1,0 @@
-list-unit-files --type=service
-stop docker
-start docker
-status docker
-enable docker
