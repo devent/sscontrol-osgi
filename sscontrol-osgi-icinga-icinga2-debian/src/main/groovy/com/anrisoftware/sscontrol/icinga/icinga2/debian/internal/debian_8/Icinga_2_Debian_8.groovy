@@ -49,10 +49,12 @@ class Icinga_2_Debian_8 extends Icinga_2 {
     @Override
     def run() {
         setupDefaults()
-        stopServices()
+        upstream.stopServices()
         upstream.run()
-        runPlugins()
-        startServices()
+        def plugins = installPlugins()
+        configureFeatures()
+        enablePlugins(plugins)
+        upstream.startServices()
     }
 
     def setupDefaults() {
@@ -61,13 +63,25 @@ class Icinga_2_Debian_8 extends Icinga_2 {
         Icinga service = service
     }
 
-    def runPlugins() {
-        log.info "Setup plugins for {}.", service
+    List<Map> installPlugins() {
+        log.info "Create plugins for {}.", service
         Icinga service = service
-        service.plugins.each { Plugin plugin ->
+        service.plugins.inject([]) { List result, Plugin plugin ->
             def pluginService = pluginServices[plugin.name]
             def p = pluginService.create(scriptsRepository, service, target, threads, scriptEnv)
-            p.run()
+            p.setupDefaults plugin
+            p.installPlugin plugin
+            p.configurePlugin plugin
+            result << [plugin: plugin, script: p]
+        }
+    }
+
+    def enablePlugins(List<Map> plugins) {
+        log.info "Enable plugins for {}.", service
+        plugins.each { Map map ->
+            def plugin = map.plugin
+            def script = map.script
+            script.enablePlugin plugin
         }
     }
 

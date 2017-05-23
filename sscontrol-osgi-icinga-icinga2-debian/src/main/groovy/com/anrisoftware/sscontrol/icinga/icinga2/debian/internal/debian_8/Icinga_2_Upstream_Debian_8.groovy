@@ -66,6 +66,14 @@ class Icinga_2_Upstream_Debian_8 extends ScriptBase {
         })
     }
 
+    def stopServices() {
+        stopSystemdService 'icinga2'
+    }
+
+    def startServices() {
+        startEnableSystemdService 'icinga2'
+    }
+
     String getIcingaPackage() {
         properties.getProperty "icinga_package", defaultProperties
     }

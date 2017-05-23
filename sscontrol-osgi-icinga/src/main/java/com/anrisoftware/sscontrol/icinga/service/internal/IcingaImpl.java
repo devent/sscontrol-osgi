@@ -28,12 +28,16 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.icinga.service.external.Feature;
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga;
 import com.anrisoftware.sscontrol.icinga.service.external.IcingaService;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
+import com.anrisoftware.sscontrol.icinga.service.internal.FeatureImpl.FeatureImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -63,12 +67,15 @@ public class IcingaImpl implements Icinga {
 
     private final List<Plugin> plugins;
 
-    private final List<String> configs;
+    private final List<Feature> features;
 
     private String version;
 
     @Inject
     private transient Map<String, PluginFactory> pluginFactories;
+
+    @Inject
+    private transient FeatureImplFactory featureFactory;
 
     @Inject
     IcingaImpl(IcingaImplLogger log, HostPropertiesService propertiesService,
@@ -77,7 +84,7 @@ public class IcingaImpl implements Icinga {
         this.targets = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         this.plugins = new ArrayList<>();
-        this.configs = new ArrayList<>();
+        this.features = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -138,40 +145,30 @@ public class IcingaImpl implements Icinga {
 
     /**
      * <pre>
-     * config << "icinga-config"
+     * feature << [name: 'ido-mysql', script: """..."""]
      * </pre>
      */
-    public List<String> getConfig() {
-        return stringListStatement(new ListProperty() {
+    public List<Map<String, Object>> getFeature() {
+        return GeneticListPropertyUtil
+                .<Map<String, Object>>geneticListStatement(
+                        new GeneticListProperty<Map<String, Object>>() {
 
-            @Override
-            public void add(String property) {
-                config(property);
-            }
-        });
+                            @Override
+                            public void add(Map<String, Object> property) {
+                                feature(property);
+                            }
+                        });
     }
 
     /**
      * <pre>
-     * config 'icinga-config'
+     * feature name: 'ido-mysql', script: """..."""
      * </pre>
      */
-    public void config(String name) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("text", name);
-        config(args);
-    }
-
-    /**
-     * <pre>
-     * config text: 'ido-mysql'
-     * </pre>
-     */
-    public void config(Map<String, Object> args) {
-        Object v = args.get("text");
-        String text = v.toString();
-        configs.add(text);
-        log.configAdded(this, text);
+    public void feature(Map<String, Object> args) {
+        Feature feature = featureFactory.create(args);
+        features.add(feature);
+        log.featureAdded(this, feature);
     }
 
     @Override
@@ -205,8 +202,8 @@ public class IcingaImpl implements Icinga {
     }
 
     @Override
-    public List<String> getConfigs() {
-        return configs;
+    public List<Feature> getFeatures() {
+        return features;
     }
 
     @Override

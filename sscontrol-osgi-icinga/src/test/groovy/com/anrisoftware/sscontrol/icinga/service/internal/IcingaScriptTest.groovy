@@ -111,9 +111,9 @@ object IdoMysqlConnection "mysql-ido" {
                 assert s.plugins[0].database.user == "icinga"
                 assert s.plugins[0].database.password == "icinga"
                 assert s.plugins[0].database.database == "icinga"
-                assert s.configs.size() == 1
-                assert s.configs[0] =~ /.*library.*/
-                assert s.configs[0] =~ /.*password = "icinga".*/
+                assert s.features.size() == 1
+                assert s.features[0] =~ /.*library.*/
+                assert s.features[0] =~ /.*password = "icinga".*/
             },
         ]
         doTest test
