@@ -15,13 +15,14 @@
  */
 package com.anrisoftware.sscontrol.icinga.service.internal;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
+import com.anrisoftware.sscontrol.icinga.service.external.Database;
+import com.anrisoftware.sscontrol.icinga.service.external.IdoMysqlPlugin;
+import com.anrisoftware.sscontrol.icinga.service.internal.DatabaseImpl.DatabaseImplFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -31,7 +32,7 @@ import com.google.inject.assistedinject.AssistedInject;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class IdoMysqlPluginImpl implements Plugin {
+public class IdoMysqlPluginImpl implements IdoMysqlPlugin {
 
     /**
      *
@@ -43,21 +44,33 @@ public class IdoMysqlPluginImpl implements Plugin {
 
     }
 
-    private String name;
+    private final String name;
+
+    private Database database;
+
+    private transient DatabaseImplFactory databaseFactory;
+
+    private transient IdoMysqlPluginImplLogger log;
 
     @AssistedInject
-    IdoMysqlPluginImpl() throws URISyntaxException {
-        this(new HashMap<String, Object>());
+    IdoMysqlPluginImpl(IdoMysqlPluginImplLogger log,
+            DatabaseImplFactory databaseFactory) {
+        this(new HashMap<String, Object>(), log, databaseFactory);
     }
 
     @AssistedInject
-    IdoMysqlPluginImpl(@Assisted Map<String, Object> args)
-            throws URISyntaxException {
-        parseArgs(args);
+    IdoMysqlPluginImpl(@Assisted Map<String, Object> args,
+            IdoMysqlPluginImplLogger log, DatabaseImplFactory databaseFactory) {
+        this.log = log;
+        this.databaseFactory = databaseFactory;
+        Object v = args.get("name");
+        this.name = v.toString();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void database(Map<String, Object> args) {
+        Database db = databaseFactory.create(args);
+        this.database = db;
+        log.databaseSet(this, db);
     }
 
     @Override
@@ -66,13 +79,13 @@ public class IdoMysqlPluginImpl implements Plugin {
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    public Database getDatabase() {
+        return database;
     }
 
-    private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("name");
-        setName(v.toString());
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

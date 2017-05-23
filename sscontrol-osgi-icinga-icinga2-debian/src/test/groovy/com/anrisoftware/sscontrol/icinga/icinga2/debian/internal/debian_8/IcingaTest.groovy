@@ -33,9 +33,9 @@ import groovy.util.logging.Slf4j
 class IcingaTest extends AbstractIcingaScriptTest {
 
     @Test
-    void "basic"() {
+    void "basic_script"() {
         def test = [
-            name: "basic",
+            name: "basic_script",
             input: """
 service "ssh", host: "localhost"
 service "icinga", version: "2"
@@ -46,23 +46,22 @@ service "icinga", version: "2"
                 File gen = args.test.generatedDir
                 assertFileResource IcingaTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource IcingaTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource IcingaTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource IcingaTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource IcingaTest, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
-                assertFileResource IcingaTest, new File(gen, '/etc/systemd/system/docker.service.d'), "00_dockerd_opts.conf", "${args.test.name}_dockerd_opts_conf_expected.txt"
             },
         ]
         doTest test
     }
 
     @Test
-    void "mirror_localhost"() {
+    void "ido_mysql_script"() {
         def test = [
-            name: "mirror_localhost",
+            name: "ido_mysql_script",
             input: """
 service "ssh", host: "localhost"
-service "docker" with {
-    registry mirror: 'localhost'
+def mysql = [user: "icinga", database: "icinga", password: "icinga"]
+service "icinga", version: "2" with {
+    plugin 'ido-mysql' with {
+        database mysql
+    }
 }
 """,
             generatedDir: folder.newFolder(),
@@ -71,33 +70,6 @@ service "docker" with {
                 File gen = args.test.generatedDir
                 assertFileResource IcingaTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource IcingaTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource IcingaTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource IcingaTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource IcingaTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource IcingaTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "mirror_localhost_ca"() {
-        def test = [
-            name: "mirror_localhost_ca",
-            input: """
-service "ssh", host: "localhost"
-service "docker" with {
-    registry mirror: 'localhost', ca: '$certCaPem'
-}
-""",
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource IcingaTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource IcingaTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource IcingaTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
-                assertFileResource IcingaTest, new File(dir, '/etc/docker/certs.d/localhost:5000'), "ca.crt", "cert_ca.txt"
             },
         ]
         doTest test

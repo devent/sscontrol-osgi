@@ -79,33 +79,41 @@ service "icinga", version: "2"
     void "ido-mysql plugin"() {
         def test = [
             name: 'ido-mysql plugin',
-            input: """
+            input: '''
+def mysql = [user: "icinga", database: "icinga", password: "icinga"]
 service "icinga", version: "2" with {
-    plugin << 'ido-mysql'
-    config << '''
+    plugin 'ido-mysql' with {
+        database mysql
+    }
+
+    config << """
 library "db_ido_mysql"
 
 object IdoMysqlConnection "mysql-ido" {
-  host = "127.0.0.1"
-  port = 3306
-  user = "icinga"
-  password = "icinga"
-  database = "icinga"
+    host = "127.0.0.1"
+    port = 3306
+    user = "$mysql.user"
+    password = "$mysql.password"
+    database = "$mysql.database"
 
-  cleanup = {
-    downtimehistory_age = 48h
-    contactnotifications_age = 31d
-  }
-}'''
+    cleanup = {
+        downtimehistory_age = 48h
+        contactnotifications_age = 31d
+    }
+}"""
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('icinga').size() == 1
                 Icinga s = services.getServices('icinga')[0]
                 assert s.plugins.size() == 1
                 assert s.plugins[0].name == "ido-mysql"
+                assert s.plugins[0].database.user == "icinga"
+                assert s.plugins[0].database.password == "icinga"
+                assert s.plugins[0].database.database == "icinga"
                 assert s.configs.size() == 1
                 assert s.configs[0] =~ /.*library.*/
+                assert s.configs[0] =~ /.*password = "icinga".*/
             },
         ]
         doTest test
@@ -114,7 +122,7 @@ object IdoMysqlConnection "mysql-ido" {
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
-        services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+        services.targets.addTarget([getGroup: { 'default' }, getHosts: { []}] as Ssh)
         services.putAvailableService 'icinga', serviceFactory
         Eval.me 'service', services, test.input as String
         Closure expected = test.expected
