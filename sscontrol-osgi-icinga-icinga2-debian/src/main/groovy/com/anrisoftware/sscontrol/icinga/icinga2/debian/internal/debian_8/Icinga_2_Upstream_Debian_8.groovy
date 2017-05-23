@@ -37,11 +37,33 @@ class Icinga_2_Upstream_Debian_8 extends ScriptBase {
     @Override
     Object run() {
         installIcinga()
+        installNagiosPlugins()
     }
 
     def installIcinga() {
+        def packages = [
+            [package: icingaPackage, version: icingaVersion],
+        ]
+        if (checkAptPackagesVersion(packages)) {
+            return
+        }
         addAptPackagesRepository([name: "icinga-${distributionName}"])
-        installAptPackages("$icingaPackage=$icingaVersion")
+        installAptPackages(packages.inject([]) { result, map ->
+            result << "${map.package}=${map.version}"
+        })
+    }
+
+    def installNagiosPlugins() {
+        def packages = [
+            [package: "nagios-plugins", version: nagiosPluginsVersion],
+        ]
+        if (checkAptPackage(packages)) {
+            return
+        }
+        addAptBackportsRepository()
+        installAptBackportsPackages(packages.inject([]) { result, map ->
+            result << "${map.package}=${map.version}"
+        })
     }
 
     String getIcingaPackage() {
@@ -50,6 +72,10 @@ class Icinga_2_Upstream_Debian_8 extends ScriptBase {
 
     String getIcingaVersion() {
         properties.getProperty "icinga_version", defaultProperties
+    }
+
+    String getNagiosPluginsVersion() {
+        properties.getProperty "nagios_plugins_version", defaultProperties
     }
 
     @Override

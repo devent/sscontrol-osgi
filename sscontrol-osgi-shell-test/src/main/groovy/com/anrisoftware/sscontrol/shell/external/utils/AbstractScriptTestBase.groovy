@@ -143,6 +143,7 @@ abstract class AbstractScriptTestBase {
         def scriptEnv = getScriptEnv(dir: dir, test: test)
         services.getServices().each { String name ->
             List<HostService> service = services.getServices(name)
+            log.debug 'Service name {} loads services {}', name, service
             service.eachWithIndex { HostService s, int i ->
                 if (s.name == serviceName) {
                     setupHostService s, dir: dir

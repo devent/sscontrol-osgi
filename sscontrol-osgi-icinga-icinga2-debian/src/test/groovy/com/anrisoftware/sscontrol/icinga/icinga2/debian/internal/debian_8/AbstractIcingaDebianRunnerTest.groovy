@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.docker.internal.DockerImpl.DockerImplFactory
-import com.anrisoftware.sscontrol.icinga.debian.internal.icinga_2.Icinga_2_Debian_8_Factory
+import com.anrisoftware.sscontrol.icinga.service.internal.IcingaImpl.IcingaImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -53,7 +52,7 @@ abstract class AbstractIcingaDebianRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    DockerImplFactory serviceFactory
+    IcingaImplFactory serviceFactory
 
     @Inject
     Icinga_2_Debian_8_Factory scriptFactory
@@ -66,8 +65,8 @@ abstract class AbstractIcingaDebianRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'docker', serviceFactory
-        services.putAvailableScriptService 'docker/debian/8', scriptFactory
+        services.putAvailableService 'icinga', serviceFactory
+        services.putAvailableScriptService 'icinga-2/debian/8', scriptFactory
         return services
     }
 

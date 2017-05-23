@@ -69,7 +69,7 @@ abstract class AbstractIcingaScriptTest extends AbstractScriptTestBase {
     Icinga_2_Debian_8_Factory scriptFactory
 
     String getServiceName() {
-        'icinga'
+        'icinga-2'
     }
 
     String getScriptServiceName() {
