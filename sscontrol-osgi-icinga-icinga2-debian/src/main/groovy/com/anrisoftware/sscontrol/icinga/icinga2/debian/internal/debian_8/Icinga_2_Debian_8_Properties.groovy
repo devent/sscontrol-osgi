@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.icinga.service.external;
+package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Icinga service.
+ * Icinga 2 Debian 8 properties provider from
+ * {@code "/icinga_2_debian_8.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface Icinga extends HostService {
+class Icinga_2_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    /**
-     * Returns the version of the service.
-     */
-    String getVersion();
+    private static final URL RESOURCE = Icinga_2_Debian_8_Properties.class.getResource("/icinga_2_debian_8.properties")
 
-    List<Plugin> getPlugins();
-
-    List<String> getConfigs();
+    Icinga_2_Debian_8_Properties() {
+        super(Icinga_2_Debian_8_Properties.class, RESOURCE)
+    }
 }

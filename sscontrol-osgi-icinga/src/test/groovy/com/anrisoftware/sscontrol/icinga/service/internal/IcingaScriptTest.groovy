@@ -64,12 +64,12 @@ class IcingaScriptTest {
         def test = [
             name: 'service',
             input: """
-service "icinga"
+service "icinga", version: "2"
 """,
             expected: { HostServices services ->
                 assert services.getServices('icinga').size() == 1
                 Icinga s = services.getServices('icinga')[0]
-                assert s != null
+                assert s.name == 'icinga-2'
             },
         ]
         doTest test
@@ -80,7 +80,7 @@ service "icinga"
         def test = [
             name: 'ido-mysql plugin',
             input: """
-service "icinga" with {
+service "icinga", version: "2" with {
     plugin << 'ido-mysql'
     config << '''
 library "db_ido_mysql"
