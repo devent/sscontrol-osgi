@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.icinga.service.internal;
 
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
+import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +64,8 @@ public class IcingaImpl implements Icinga {
     private final List<Plugin> plugins;
 
     private final List<String> configs;
+
+    private String version;
 
     @Inject
     private transient Map<String, PluginFactory> pluginFactories;
@@ -188,7 +191,12 @@ public class IcingaImpl implements Icinga {
 
     @Override
     public String getName() {
-        return "docker";
+        return format("icinga-%s", version);
+    }
+
+    @Override
+    public String getVersion() {
+        return version;
     }
 
     @Override
@@ -208,6 +216,12 @@ public class IcingaImpl implements Icinga {
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parseVersion(args);
+    }
+
+    private void parseVersion(Map<String, Object> args) {
+        Object v = args.get("version");
+        this.version = v.toString();
     }
 
 }

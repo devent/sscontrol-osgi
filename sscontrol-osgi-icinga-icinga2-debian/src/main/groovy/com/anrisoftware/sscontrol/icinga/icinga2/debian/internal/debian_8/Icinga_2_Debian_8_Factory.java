@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.icinga.service.external;
+package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Icinga service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface Icinga extends HostService {
-
-    /**
-     * Returns the version of the service.
-     */
-    String getVersion();
-
-    List<Plugin> getPlugins();
-
-    List<String> getConfigs();
+public interface Icinga_2_Debian_8_Factory extends HostServiceScriptService {
 }

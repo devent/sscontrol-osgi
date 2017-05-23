@@ -45,7 +45,7 @@ public class IcingaServiceImpl implements IcingaService {
 
     @Override
     public String getName() {
-        return "docker";
+        return "icinga";
     }
 
     @Override

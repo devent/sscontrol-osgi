@@ -557,6 +557,91 @@ export LANG=en_US.UTF-8
     }
 
     /**
+     * Adds the apt packages repository.
+     * 
+     * @param args
+     * <ul>
+     * <li>key: repository key;
+     * <li>url: repository URL;
+     * <li>name: distribution name;
+     * <li>comp: repository component;
+     * <li>file: repository list file;
+     * </ul>
+     * 
+     * @see #getAptPackagesRepositoryKey()
+     * @see #getAptPackagesRepository()
+     * @see #getAptPackagesRepositoryComponent()
+     * @see #getAptPackagesRepositoryListFile()
+     */
+    def addAptPackagesRepository(Map args=[:]) {
+        args.key = args.key ? args.key : aptPackagesRepositoryKey
+        args.url = args.url ? args.url : aptPackagesRepositoryUrl
+        args.name = args.name ? args.name : distributionName
+        args.comp = args.comp ? args.comp : aptPackagesRepositoryComponent
+        args.file = args.file ? args.file : aptPackagesRepositoryListFile
+        shell """
+curl -fsSL ${args.key} | sudo apt-key add -
+sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
+    }
+
+    /**
+     * Returns the packages repository apt-key, for
+     * example {@code "https://packages.icinga.com/icinga.key"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_repository_key}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptPackagesRepositoryKey() {
+        properties.getProperty "apt_packages_repository_key", defaultProperties
+    }
+
+    /**
+     * Returns the packages repository base URL, for
+     * example {@code "https://packages.icinga.com/debian"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_pepository_url}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptPackagesRepositoryUrl() {
+        properties.getProperty "apt_packages_pepository_url", defaultProperties
+    }
+
+    /**
+     * Returns the packages repository, for
+     * example {@code "/etc/apt/sources.list.d/icinga.list"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_repository_list_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getAptPackagesRepositoryListFile() {
+        getFileProperty "apt_packages_repository_list_file", base, defaultProperties
+    }
+
+    /**
+     * Returns the packages repository component, for
+     * example {@code "main"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_pepository_component}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getAptPackagesRepositoryComponent() {
+        properties.getProperty "apt_packages_pepository_component", defaultProperties
+    }
+
+    /**
      * Finds and creates the script.
      */
     HostServiceScript createScript(String name, SystemInfo system=target.system) {
