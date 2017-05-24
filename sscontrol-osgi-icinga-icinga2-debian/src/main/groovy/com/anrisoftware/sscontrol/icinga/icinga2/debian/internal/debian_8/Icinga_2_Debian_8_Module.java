@@ -51,10 +51,16 @@ public class Icinga_2_Debian_8_Module extends AbstractModule {
                 .implement(HostServiceScript.class,
                         GenericPlugin_Upstream_Debian_8.class)
                 .build(GenericPlugin_Upstream_Debian_8_Factory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class,
+                        ApiPlugin_Upstream_Debian_8.class)
+                .build(ApiPlugin_Upstream_Debian_8_Factory.class));
         MapBinder<String, PluginHostServiceScriptService> mapbinder = newMapBinder(
                 binder(), String.class, PluginHostServiceScriptService.class);
         mapbinder.addBinding("generic")
                 .to(GenericPlugin_Upstream_Debian_8_Factory.class);
+        mapbinder.addBinding("api")
+                .to(ApiPlugin_Upstream_Debian_8_Factory.class);
         mapbinder.addBinding("ido-mysql")
                 .to(IdoMysqlPlugin_Upstream_Debian_8_Factory.class);
     }

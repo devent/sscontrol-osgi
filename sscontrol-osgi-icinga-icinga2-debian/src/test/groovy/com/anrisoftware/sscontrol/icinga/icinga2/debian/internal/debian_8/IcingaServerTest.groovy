@@ -64,9 +64,9 @@ service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 def mysql = [user: "icinga", database: "icinga", password: "icinga"]
 service "icinga", version: "2" with {
     plugin 'api'
-    config << [name: 'api-users', script: """
-object ApiUser "web2" {
-  password = "bea11beb7b810ea9ce6ea" // Change this!
+    config << [name: 'api-users-icingaweb2', script: """\
+object ApiUser "icingaweb2" {
+  password = "1234" // Change this!
   permissions = [ "actions/*", "objects/modify/hosts", "objects/modify/services", "objects/modify/icingaapplication" ]
 }
 """]
@@ -77,8 +77,10 @@ object ApiUser "web2" {
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
-                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+                String s = readPrivilegedRemoteFile(new File('/etc/icinga2/conf.d', 'api-users.conf').absolutePath)
+                s = s.replaceAll(/password = ".*?"/, 'password = "pass"')
+                assertStringResource IcingaServerTest, s, "${args.test.name}_api_users_conf_expected.txt"
+                assertStringResource IcingaServerTest, readPrivilegedRemoteFile(new File('/etc/icinga2/conf.d', 'api-users-icingaweb2.conf').absolutePath), "${args.test.name}_api_users_icingaweb2_conf_expected.txt"
             },
         ]
         doTest test

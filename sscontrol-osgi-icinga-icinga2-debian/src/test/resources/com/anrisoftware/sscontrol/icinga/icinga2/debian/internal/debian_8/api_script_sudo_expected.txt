@@ -6,3 +6,4 @@ bash -c echo "deb http://deb.debian.org/debian jessie-backports main" > /tmp/jun
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
