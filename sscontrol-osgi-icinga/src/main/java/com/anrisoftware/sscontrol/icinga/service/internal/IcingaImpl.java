@@ -28,10 +28,12 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.icinga.service.external.Config;
 import com.anrisoftware.sscontrol.icinga.service.external.Feature;
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga;
 import com.anrisoftware.sscontrol.icinga.service.external.IcingaService;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
+import com.anrisoftware.sscontrol.icinga.service.internal.ConfigImpl.ConfigImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.FeatureImpl.FeatureImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
@@ -69,6 +71,8 @@ public class IcingaImpl implements Icinga {
 
     private final List<Feature> features;
 
+    private final List<Config> configs;
+
     private String version;
 
     @Inject
@@ -78,6 +82,9 @@ public class IcingaImpl implements Icinga {
     private transient FeatureImplFactory featureFactory;
 
     @Inject
+    private transient ConfigImplFactory configFactory;
+
+    @Inject
     IcingaImpl(IcingaImplLogger log, HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
@@ -85,6 +92,7 @@ public class IcingaImpl implements Icinga {
         this.serviceProperties = propertiesService.create();
         this.plugins = new ArrayList<>();
         this.features = new ArrayList<>();
+        this.configs = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -178,6 +186,34 @@ public class IcingaImpl implements Icinga {
         log.featureAdded(this, feature);
     }
 
+    /**
+     * <pre>
+     * config << [name: 'api-users', script: """..."""]
+     * </pre>
+     */
+    public List<Map<String, Object>> getConfig() {
+        return GeneticListPropertyUtil
+                .<Map<String, Object>>geneticListStatement(
+                        new GeneticListProperty<Map<String, Object>>() {
+
+                            @Override
+                            public void add(Map<String, Object> property) {
+                                config(property);
+                            }
+                        });
+    }
+
+    /**
+     * <pre>
+     * config name: 'api-users', script: """..."""
+     * </pre>
+     */
+    public void config(Map<String, Object> args) {
+        Config config = configFactory.create(args);
+        configs.add(config);
+        log.configAdded(this, config);
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -211,6 +247,11 @@ public class IcingaImpl implements Icinga {
     @Override
     public List<Feature> getFeatures() {
         return features;
+    }
+
+    @Override
+    public List<Config> getConfigs() {
+        return configs;
     }
 
     @Override

@@ -15,12 +15,14 @@
  */
 package com.anrisoftware.sscontrol.icinga.service.internal;
 
+import static com.anrisoftware.sscontrol.icinga.service.internal.IcingaImplLogger.m.configAdded;
 import static com.anrisoftware.sscontrol.icinga.service.internal.IcingaImplLogger.m.featureAdded;
 import static com.anrisoftware.sscontrol.icinga.service.internal.IcingaImplLogger.m.pluginAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.icinga.service.external.Config;
 import com.anrisoftware.sscontrol.icinga.service.external.Feature;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
 
@@ -37,7 +39,9 @@ final class IcingaImplLogger extends AbstractLogger {
 
         pluginAdded("Plugin {} added to {}"),
 
-        featureAdded("Feature {} added to {}");
+        featureAdded("Feature {} added to {}"),
+
+        configAdded("Config {} added to {}"),;
 
         private String name;
 
@@ -64,5 +68,9 @@ final class IcingaImplLogger extends AbstractLogger {
 
     void featureAdded(IcingaImpl icinga, Feature feature) {
         debug(featureAdded, feature, icinga);
+    }
+
+    void configAdded(IcingaImpl icinga, Config config) {
+        debug(configAdded, config, icinga);
     }
 }
