@@ -92,12 +92,12 @@ object ApiUser "icingaweb2" {
             name: "ido_mysql_server",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-def mysql = [user: "icinga", database: "icinga", password: "icinga"]
+def mysql = [user: "icinga", password: "icinga", database: "icinga", adminUser: "icinga-adm", adminPassword: "icinga"]
 service "icinga", version: "2" with {
     plugin 'ido-mysql' with {
         database mysql
     }
-    feature << [name: 'ido-mysql', script: """
+    feature << [name: 'ido-mysql', script: """\
 library "db_ido_mysql"
 
 object IdoMysqlConnection "mysql-ido" {
@@ -120,8 +120,7 @@ object IdoMysqlConnection "mysql-ido" {
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
-                //assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+                assertStringResource IcingaServerTest, readPrivilegedRemoteFile(new File('/etc/icinga2/features-available', 'ido-mysql.conf').absolutePath), "${args.test.name}_ido_mysql_conf_expected.txt"
             },
         ]
         doTest test

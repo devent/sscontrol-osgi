@@ -18,6 +18,8 @@ package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.icinga.icinga2.debian.external.debian_8.SetupDatabaseException
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin
 
@@ -35,11 +37,17 @@ class IdoMysqlPlugin_Upstream_Debian_8 extends AbstractPlugin_Upstream_Debian_8 
     @Inject
     Icinga_2_Debian_8_Properties debianPropertiesProvider
 
+    TemplateResource mysqlTemplate
+
+    @Inject
+    void loadTemplates(TemplatesFactory factory) {
+        def templates = factory.create('IdoMysqlPlugin_Upstream_Debian_8_Templates')
+        this.mysqlTemplate = templates.getResource('mysql_cmd')
+    }
+
     def configurePlugin(Plugin plugin) {
         log.info "Configure plugin {}.", plugin
-        def ret = shell checkExitCodes: false, errString: true, vars: [plugin: plugin], st: """
-mysql -u<vars.plugin.database.user> -p<vars.plugin.database.password> <vars.plugin.database.database> \\< /usr/share/icinga2-ido-mysql/schema/mysql.sql
-""" call()
+        def ret = shell checkExitCodes: false, errString: true, vars: [plugin: plugin], resource: mysqlTemplate, name: 'setupMysql' call()
         if (ret.exitValue != 0) {
             if (ret.err =~ /ERROR 1060/) {
                 log.debug "Already configured plugin {}.", plugin
@@ -55,6 +63,10 @@ mysql -u<vars.plugin.database.user> -p<vars.plugin.database.password> <vars.plug
 
     String getPluginVersion() {
         properties.getProperty "ido_mysql_plugin_version", defaultProperties
+    }
+
+    File getIdoMysqlSchemaScriptFile() {
+        getFileProperty "ido_mysql_schema_script_file", base, defaultProperties
     }
 
     @Override
