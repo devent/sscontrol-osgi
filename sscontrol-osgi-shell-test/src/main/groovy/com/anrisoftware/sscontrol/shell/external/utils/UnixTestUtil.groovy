@@ -111,6 +111,10 @@ class UnixTestUtil {
         remoteCommand "cat $file", host, port, user, key
     }
 
+    static String readPrivilegedRemoteFile(String file, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
+        remoteCommand "sudo cat $file", host, port, user, key
+    }
+
     static def execRemoteFile(String script, InputStream fileStream, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Safe(
                 new SSH(host, port, user, key))
