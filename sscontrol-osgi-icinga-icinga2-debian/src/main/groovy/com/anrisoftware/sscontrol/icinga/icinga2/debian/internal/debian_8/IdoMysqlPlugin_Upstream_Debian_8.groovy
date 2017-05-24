@@ -18,7 +18,6 @@ package com.anrisoftware.sscontrol.icinga.icinga2.debian.internal.debian_8
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.icinga.icinga2.debian.external.debian_8.SetupDatabaseException
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin
 
@@ -31,32 +30,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class IdoMysqlPlugin_Upstream_Debian_8 extends ScriptBase {
+class IdoMysqlPlugin_Upstream_Debian_8 extends AbstractPlugin_Upstream_Debian_8 {
 
     @Inject
     Icinga_2_Debian_8_Properties debianPropertiesProvider
-
-    @Override
-    Object run() {
-    }
-
-    def setupDefaults(Plugin plugin) {
-        log.info "Setup defaults for {}", plugin
-    }
-
-    def installPlugin(Plugin plugin) {
-        log.info "Install plugin {}.", plugin
-        def packages = [
-            [package: pluginPackage, version: pluginVersion],
-        ]
-        if (checkAptPackagesVersion(packages)) {
-            return
-        }
-        addAptPackagesRepository([name: "icinga-${distributionName}"])
-        installAptPackages(packages.inject([]) { result, map ->
-            result << "${map.package}=${map.version}"
-        })
-    }
 
     def configurePlugin(Plugin plugin) {
         log.info "Configure plugin {}.", plugin
@@ -70,13 +47,6 @@ mysql -u<vars.plugin.database.user> -p<vars.plugin.database.password> <vars.plug
             }
             throw new SetupDatabaseException(plugin, ret)
         }
-    }
-
-    def enablePlugin(Plugin plugin) {
-        log.info "Enable plugin {}.", plugin
-        shell privileged: true, """
-icinga2 feature enable ido-mysql
-""" call()
     }
 
     String getPluginPackage() {

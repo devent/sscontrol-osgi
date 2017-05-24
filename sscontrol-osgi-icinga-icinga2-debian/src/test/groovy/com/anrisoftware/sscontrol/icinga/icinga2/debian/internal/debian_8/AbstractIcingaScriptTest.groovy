@@ -99,6 +99,7 @@ abstract class AbstractIcingaScriptTest extends AbstractScriptTestBase {
             'gpg',
             'update-grub',
             'grep',
+            'icinga2',
         ]
     }
 

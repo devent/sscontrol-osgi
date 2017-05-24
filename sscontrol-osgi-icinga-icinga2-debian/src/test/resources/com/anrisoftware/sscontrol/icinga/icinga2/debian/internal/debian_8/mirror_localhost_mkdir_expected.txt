@@ -1,5 +1,0 @@
--p /tmp/junit/junit/etc/systemd/system/docker.service.d
--p /var/lib/robobee/tmp
--p /var/lib/robobee/tmp
--p /var/lib/robobee/tmp
--p /var/lib/robobee/tmp
