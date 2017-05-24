@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
+import static org.apache.commons.io.FilenameUtils.*
 import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -24,6 +25,7 @@ import java.util.concurrent.ExecutorService
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
@@ -539,16 +541,43 @@ v_check=$?
     /**
      * Copies the resource by temporarily saving it locally.
      * <pre>
-     * copyResource src: src, dest: dest call()
+     * copyResource src: src, dest: dest
      * </pre>
      */
     def copyResource(Map args) {
         URL src = args.src.toURL()
         log.info 'Upload {} to {}', args.src, args.dest
-        File file = File.createTempFile 'robobee', null
-        IOUtils.copy src.openStream(), new FileOutputStream(file)
-        assertThat "resource>0 for $args", file.size(), greaterThan(0l)
-        copy privileged: args.privileged, src: file, dest: args.dest
+        File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
+        try {
+            IOUtils.copy src.openStream(), new FileOutputStream(file)
+            assertThat "resource>0 for $args", file.size(), greaterThan(0l)
+            Map a = new HashMap(args)
+            a.src = file
+            copy a call()
+        } finally {
+            file.delete()
+        }
+    }
+
+    /**
+     * Copies the resource by temporarily saving it locally.
+     * <pre>
+     * copyString str: string, dest: dest
+     * </pre>
+     */
+    def copyString(Map args) {
+        String str = args.str.toString()
+        log.info 'Upload string to {}', args.dest
+        File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
+        try {
+            FileUtils.write file, str, charset
+            assertThat "string>0 for $args", file.size(), greaterThan(0l)
+            Map a = new HashMap(args)
+            a.src = file
+            copy a call()
+        } finally {
+            file.delete()
+        }
     }
 
     /**

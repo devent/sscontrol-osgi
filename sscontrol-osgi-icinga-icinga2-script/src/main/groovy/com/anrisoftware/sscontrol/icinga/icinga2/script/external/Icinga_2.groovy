@@ -17,10 +17,9 @@ package com.anrisoftware.sscontrol.icinga.icinga2.script.external
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FileUtils
-
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.icinga.service.external.Config
 import com.anrisoftware.sscontrol.icinga.service.external.Feature
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin
@@ -51,16 +50,23 @@ abstract class Icinga_2 extends ScriptBase {
         service.features.each { Feature feature ->
             log.debug "Configure feature {}.", feature
             def file = getFeatureFile feature
-            def tmp = File.createTempFile("robobee", ".feature")
-            try {
-                FileUtils.write tmp, feature.script, charset
-                copy privileged: true, src: tmp, dest: file call()
-            } finally {
-                if (tmp) {
-                    tmp.delete()
-                }
-            }
+            copyString privileged: true, str: feature.script, dest: file
         }
+    }
+
+    def configureConf() {
+        log.info "Configure configs for {}.", service
+        Icinga service = service
+        service.configs.each { Config config ->
+            log.debug "Configure config {}.", config
+            def file = getConfFile config
+            copyString privileged: true, str: config.script, dest: file
+        }
+        shell privileged: true, """
+cd $confDir
+chown root.nagios *.conf
+chmod g=r,o-r *.conf
+""" call()
     }
 
     List<Map> installPlugins() {
@@ -96,8 +102,16 @@ abstract class Icinga_2 extends ScriptBase {
 
     File getFeatureFile(Feature feature) {
         def name = feature.name
-        name = name.replaceAll(/-/, "_")
-        getFileProperty "feature_${name}_file", featuresAvailableDir, defaultProperties
+        new File("${name}.conf", featuresAvailableDir)
+    }
+
+    File getConfDir() {
+        getFileProperty "conf_dir", base, defaultProperties
+    }
+
+    File getConfFile(Config config) {
+        def name = config.name
+        new File("${name}.conf", confDir)
     }
 
     @Override
