@@ -15,4 +15,9 @@ public interface Database {
     String getPassword();
 
     String getDatabase();
+
+    String getAdminUser();
+
+    String getAdminPassword();
+
 }

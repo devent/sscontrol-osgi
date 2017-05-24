@@ -52,6 +52,10 @@ public class DatabaseImpl implements Database {
 
     private String database;
 
+    private String adminUser;
+
+    private String adminPassword;
+
     @Inject
     DatabaseImpl(@Assisted Map<String, Object> args) {
         Object v = args.get("host");
@@ -69,6 +73,14 @@ public class DatabaseImpl implements Database {
         v = args.get("database");
         if (v != null) {
             this.database = v.toString();
+        }
+        v = args.get("adminUser");
+        if (v != null) {
+            this.adminUser = v.toString();
+        }
+        v = args.get("adminPassword");
+        if (v != null) {
+            this.adminPassword = v.toString();
         }
     }
 
@@ -106,6 +118,24 @@ public class DatabaseImpl implements Database {
     @Override
     public String getDatabase() {
         return database;
+    }
+
+    public void setAdminUser(String adminUser) {
+        this.adminUser = adminUser;
+    }
+
+    @Override
+    public String getAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    @Override
+    public String getAdminPassword() {
+        return adminPassword;
     }
 
     @Override

@@ -17,5 +17,7 @@ public class SetupDatabaseException extends AppException {
         super("Error setup database");
         addContextValue("plugin", plugin);
         addContextValue("task", task);
+        addContextValue("error", task.getErr());
+        addContextValue("exit-value", task.getExitValue());
     }
 }
