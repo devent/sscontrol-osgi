@@ -53,6 +53,7 @@ class Icinga_2_Debian_8 extends Icinga_2 {
         upstream.run()
         def plugins = installPlugins()
         configureFeatures()
+        configureConf()
         enablePlugins(plugins)
         upstream.startServices()
     }
