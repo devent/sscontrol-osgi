@@ -52,6 +52,34 @@ service "icinga", version: "2"
     }
 
     @Test
+    void "api_script"() {
+        def test = [
+            name: "api_script",
+            input: '''
+service "ssh", host: "localhost"
+service "icinga", version: "2" with {
+    plugin 'api'
+    config << [name: 'api-users', script: """
+object ApiUser "web2" {
+  password = "bea11beb7b810ea9ce6ea" // Change this!
+  permissions = [ "actions/*", "objects/modify/hosts", "objects/modify/services", "objects/modify/icingaapplication" ]
+}
+"""]
+}
+''',
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource IcingaTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource IcingaTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource IcingaTest, dir, "icinga2.out", "${args.test.name}_icinga2_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "ido_mysql_script"() {
         def test = [
             name: "ido_mysql_script",

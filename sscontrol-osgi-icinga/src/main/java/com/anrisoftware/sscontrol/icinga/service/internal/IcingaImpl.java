@@ -149,7 +149,6 @@ public class IcingaImpl implements Icinga {
         PluginFactory factory = pluginFactories.get(name);
         if (factory == null) {
             name = "generic";
-            a.put("name", name);
             factory = pluginFactories.get(name);
         }
         Plugin plugin = factory.create(a);

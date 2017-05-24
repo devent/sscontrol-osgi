@@ -23,6 +23,8 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.icinga.service.external.Feature
 import com.anrisoftware.sscontrol.icinga.service.external.Icinga
+import com.anrisoftware.sscontrol.icinga.service.external.Plugin
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
@@ -60,6 +62,33 @@ abstract class Icinga_2 extends ScriptBase {
             }
         }
     }
+
+    List<Map> installPlugins() {
+        log.info "Create plugins for {}.", service
+        Icinga service = service
+        service.plugins.inject([]) { List result, Plugin plugin ->
+            def pluginService = pluginServices[plugin.name]
+            if (!pluginService) {
+                pluginService = pluginServices['generic']
+            }
+            def p = pluginService.create(scriptsRepository, service, target, threads, scriptEnv)
+            p.setupDefaults plugin
+            p.installPlugin plugin
+            p.configurePlugin plugin
+            result << [plugin: plugin, script: p]
+        }
+    }
+
+    def enablePlugins(List<Map> plugins) {
+        log.info "Enable plugins for {}.", service
+        plugins.each { Map map ->
+            def plugin = map.plugin
+            def script = map.script
+            script.enablePlugin plugin
+        }
+    }
+
+    abstract Map<String, HostServiceScriptService> getPluginServices()
 
     File getFeaturesAvailableDir() {
         getFileProperty "features_available_dir", base, defaultProperties
