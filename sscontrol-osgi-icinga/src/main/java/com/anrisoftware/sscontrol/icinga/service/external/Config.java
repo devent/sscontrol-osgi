@@ -15,26 +15,15 @@
  */
 package com.anrisoftware.sscontrol.icinga.service.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
-
 /**
- * Icinga service.
+ * Icinga feature configuration.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface Icinga extends HostService {
+public interface Config {
 
-    /**
-     * Returns the version of the service.
-     */
-    String getVersion();
+    String getName();
 
-    List<Plugin> getPlugins();
-
-    List<Feature> getFeatures();
-
-    List<Config> getConfigs();
+    String getScript();
 }
