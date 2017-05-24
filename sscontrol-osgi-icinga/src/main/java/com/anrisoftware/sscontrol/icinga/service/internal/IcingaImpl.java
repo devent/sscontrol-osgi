@@ -135,9 +135,16 @@ public class IcingaImpl implements Icinga {
      * </pre>
      */
     public Plugin plugin(Map<String, Object> args) {
-        Object v = args.get("name");
+        Map<String, Object> a = new HashMap<>(args);
+        Object v = a.get("name");
         String name = v.toString();
-        Plugin plugin = pluginFactories.get(name).create(args);
+        PluginFactory factory = pluginFactories.get(name);
+        if (factory == null) {
+            name = "generic";
+            a.put("name", name);
+            factory = pluginFactories.get(name);
+        }
+        Plugin plugin = factory.create(a);
         log.pluginAdded(this, plugin);
         plugins.add(plugin);
         return plugin;

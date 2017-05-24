@@ -22,6 +22,7 @@ import com.anrisoftware.sscontrol.icinga.service.external.Feature;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
 import com.anrisoftware.sscontrol.icinga.service.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.FeatureImpl.FeatureImplFactory;
+import com.anrisoftware.sscontrol.icinga.service.internal.GenericPluginImpl.GenericPluginImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.IcingaImpl.IcingaImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.IdoMysqlPluginImpl.IdoMysqlPluginImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
@@ -53,10 +54,14 @@ public class IcingaModule extends AbstractModule {
 
     private void installPlugins() {
         install(new FactoryModuleBuilder()
+                .implement(Plugin.class, GenericPluginImpl.class)
+                .build(GenericPluginImplFactory.class));
+        install(new FactoryModuleBuilder()
                 .implement(Plugin.class, IdoMysqlPluginImpl.class)
                 .build(IdoMysqlPluginImplFactory.class));
         MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
                 String.class, PluginFactory.class);
+        mapbinder.addBinding("generic").to(IdoMysqlPluginImplFactory.class);
         mapbinder.addBinding("ido-mysql").to(IdoMysqlPluginImplFactory.class);
     }
 }
