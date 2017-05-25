@@ -238,7 +238,7 @@ public class GitRepoImpl implements GitRepo {
 
     @Override
     public String getName() {
-        return "git";
+        return "repo-git";
     }
 
     @Override

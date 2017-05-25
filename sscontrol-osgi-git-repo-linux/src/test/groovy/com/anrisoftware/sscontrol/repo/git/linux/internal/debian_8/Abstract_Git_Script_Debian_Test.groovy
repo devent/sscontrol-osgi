@@ -51,11 +51,11 @@ abstract class Abstract_Git_Script_Debian_Test extends AbstractScriptTestBase {
     GitRepo_Debian_8_Factory scriptFactory
 
     String getServiceName() {
-        'git'
+        'repo-git'
     }
 
     String getScriptServiceName() {
-        'git/debian/8'
+        'repo-git/debian/8'
     }
 
     void createDummyCommands(File dir) {
@@ -79,8 +79,8 @@ abstract class Abstract_Git_Script_Debian_Test extends AbstractScriptTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'git', serviceFactory
-        services.putAvailableScriptService 'git/debian/8', scriptFactory
+        services.putAvailableService 'repo-git', serviceFactory
+        services.putAvailableScriptService 'repo-git/debian/8', scriptFactory
     }
 
     List getAdditionalModules() {

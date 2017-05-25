@@ -46,7 +46,7 @@ class GitRepo_Debian_Server_Test extends Abstract_Git_Runner_Debian_Test {
             name: "git_file",
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=\$checkoutDir"
 }
@@ -83,7 +83,7 @@ rm -r /tmp/wordpress-app
             name: "git_file",
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     credentials "ssh", key: "$robobeeKey"
     property << "checkout_directory=\$checkoutDir"
@@ -108,7 +108,7 @@ rm -rf "${test.scriptVars.checkoutDir}"
             name: "git_ssh_tag",
             script: """
 service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     checkout tag: "st"
     credentials "ssh", key: "$robobeeKey"

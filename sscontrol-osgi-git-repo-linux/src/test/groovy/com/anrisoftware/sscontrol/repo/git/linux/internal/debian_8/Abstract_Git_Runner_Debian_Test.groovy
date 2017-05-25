@@ -67,8 +67,8 @@ abstract class Abstract_Git_Runner_Debian_Test extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
+        services.putAvailableService 'repo-git', gitFactory
+        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
         return services
     }
 

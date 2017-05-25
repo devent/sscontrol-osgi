@@ -37,7 +37,7 @@ class GitRepo_Debian_Test extends Abstract_Git_Script_Debian_Test {
             name: "git_ssh",
             input: """
 service "ssh", host: "localhost"
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git://git@github.com/user/wordpress-app"
     credentials "ssh", key: "${idRsa}"
 }
@@ -64,7 +64,7 @@ service "git", group: 'wordpress-app' with {
             name: "git_file",
             input: """
 service "ssh", host: "localhost"
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "/user/wordpress-app.git"
 }
 """,
