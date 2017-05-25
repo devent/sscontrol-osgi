@@ -88,7 +88,8 @@ abstract class AbstractEtcdScriptTest extends AbstractScriptTestBase {
             'wget',
             'useradd',
             'tar',
-            'gpg'
+            'gpg',
+            'dpkg'
         ]
     }
 

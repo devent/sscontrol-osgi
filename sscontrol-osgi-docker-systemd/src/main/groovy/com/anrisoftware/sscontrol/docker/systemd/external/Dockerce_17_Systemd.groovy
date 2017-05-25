@@ -109,7 +109,7 @@ mkdir -p '$dropin'
             if (tls.ca) {
                 log.info 'Deploy mirror certificates for {}.', it
                 shell privileged: true, "mkdir -p '$dir'" call()
-                copyResource privileged: true, src: tls.ca, dest: "$dir/${tls.caName}" call()
+                copyResource privileged: true, src: tls.ca, dest: "$dir/${tls.caName}"
             }
         }
     }

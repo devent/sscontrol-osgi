@@ -496,10 +496,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * packages from the profile property {@code packages}.
      */
     boolean checkAptPackages(List packages=packages) {
-        def found = packages.find {
-            !checkAptPackage([package: it])
+        def found = packages.findAll {
+            checkAptPackage([package: it])
         }
-        return found == null
+        return found.size() == packages.size()
     }
 
     /**
