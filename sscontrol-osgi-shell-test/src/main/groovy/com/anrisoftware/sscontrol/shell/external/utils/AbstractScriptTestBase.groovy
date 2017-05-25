@@ -127,6 +127,20 @@ abstract class AbstractScriptTestBase {
         assumeTrue localTests != true
     }
 
+    /**
+     * Runs the test.
+     * 
+     * @param test the Map containing arguments for the test.
+     * <ul>
+     * <li>input: the input script to run.
+     * <li>pretest: a Closure that is run before the test. The following 
+     * arguments are passed to the closure. 0. the test arguments them self.
+     * <li>scriptVars: script variables.
+     * <li>expected: a Closure that is run after the test. The following 
+     * arguments are passed to the closure. 0. the test arguments them self,
+     * 1. the services and 2. the working directory.
+     * </ul>
+     */
     void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
         test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars

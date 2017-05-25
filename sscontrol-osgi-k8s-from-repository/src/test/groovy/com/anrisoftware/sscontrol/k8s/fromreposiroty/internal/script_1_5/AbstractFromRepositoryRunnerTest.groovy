@@ -99,8 +99,8 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
-        services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
+        services.putAvailableService 'repo-git', gitFactory
+        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
         services.putAvailableService 'from-repository', serviceFactory
         services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
         return services

@@ -57,7 +57,7 @@ service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=\$checkoutDir"
 }
@@ -85,7 +85,7 @@ service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     credentials "ssh", key: "$robobeeKey"
     property << "checkout_directory=\$checkoutDir"
@@ -114,7 +114,7 @@ service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=\$checkoutDir"
 }
@@ -142,7 +142,7 @@ service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     checkout tag: "st"
     credentials "ssh", key: "$robobeeKey"
@@ -172,7 +172,7 @@ service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
 }
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=\$checkoutDir"
 }
