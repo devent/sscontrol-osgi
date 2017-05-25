@@ -492,8 +492,18 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Checks if the apt package is installed. Per default checks the
+     * Checks if the apt packages are installed. Per default checks the
      * packages from the profile property {@code packages}.
+     */
+    boolean checkAptPackages(List packages=packages) {
+        def found = packages.find {
+            !checkAptPackage([package: it])
+        }
+        return found == null
+    }
+
+    /**
+     * Checks if the apt package is installed.
      */
     boolean checkAptPackage(Map args) {
         log.info "Check installed packages {}.", args
@@ -512,6 +522,8 @@ i_check=$?
 <if(vars.version)>
 echo $s | grep '<vars.versionInstalled>' 1>/dev/null
 v_check=$?
+<else>
+v_check=0
 <endif>
 ! (( $i_check || $v_check ))
 ''' call()

@@ -90,7 +90,7 @@ class FromRepositoryScriptTest {
             name: 'cluster',
             script: """
 service "k8s-cluster"
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "git://git@github.com:devent/wordpress-app.git"
     credentials "ssh", key: "id_rsa"
 }
@@ -118,7 +118,7 @@ service "from-repository", repo: "wordpress-app"
             name: 'vars',
             script: """
 service "k8s-cluster"
-service "git", group: "wordpress-app" with {
+service "repo-git", group: "wordpress-app" with {
     remote url: "git://git@github.com:devent/wordpress-app.git"
     credentials "ssh", key: "id_rsa"
 }

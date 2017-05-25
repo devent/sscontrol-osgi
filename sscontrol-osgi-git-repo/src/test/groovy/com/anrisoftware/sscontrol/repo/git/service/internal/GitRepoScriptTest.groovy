@@ -66,14 +66,14 @@ class GitRepoScriptTest {
         def test = [
             name: 'git_url',
             input: """
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "/devent/wordpress-app"
 }
 """,
             expected: { HostServices services ->
-                assert services.getServices('git').size() == 1
-                GitRepo s = services.getServices('git')[0] as GitRepo
-                assert s.name == 'git'
+                assert services.getServices('repo-git').size() == 1
+                GitRepo s = services.getServices('repo-git')[0] as GitRepo
+                assert s.name == 'repo-git'
                 assert s.group == 'wordpress-app'
                 assert s.remote.uri.toString() == 'file:/devent/wordpress-app'
             },
@@ -86,15 +86,15 @@ service "git", group: 'wordpress-app' with {
         def test = [
             name: 'git_url',
             input: """
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git://git@github.com/devent/wordpress-app"
     credentials "ssh", key: "id_rsa.pub"
 }
 """,
             expected: { HostServices services ->
-                assert services.getServices('git').size() == 1
-                GitRepo s = services.getServices('git')[0] as GitRepo
-                assert s.name == 'git'
+                assert services.getServices('repo-git').size() == 1
+                GitRepo s = services.getServices('repo-git')[0] as GitRepo
+                assert s.name == 'repo-git'
                 assert s.group == 'wordpress-app'
                 assert s.remote.uri.toString() == 'git://git@github.com/devent/wordpress-app'
                 assert s.credentials.type == 'ssh'
@@ -109,14 +109,14 @@ service "git", group: 'wordpress-app' with {
         def test = [
             name: 'git_scp',
             input: """
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git@github.com:devent/wordpress-app-test.git"
 }
 """,
             expected: { HostServices services ->
-                assert services.getServices('git').size() == 1
-                GitRepo s = services.getServices('git')[0] as GitRepo
-                assert s.name == 'git'
+                assert services.getServices('repo-git').size() == 1
+                GitRepo s = services.getServices('repo-git')[0] as GitRepo
+                assert s.name == 'repo-git'
                 assert s.group == 'wordpress-app'
                 assert s.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app-test.git'
             },
@@ -129,15 +129,15 @@ service "git", group: 'wordpress-app' with {
         def test = [
             name: 'git_scp_tag',
             input: """
-service "git", group: 'wordpress-app' with {
+service "repo-git", group: 'wordpress-app' with {
     remote url: "git@github.com:devent/wordpress-app-test.git"
     checkout branch: "master", tag: "yaml", commit: "e9edddc2e2a59ecb5526febf5044828e7fedd914"
 }
 """,
             expected: { HostServices services ->
-                assert services.getServices('git').size() == 1
-                GitRepo s = services.getServices('git')[0] as GitRepo
-                assert s.name == 'git'
+                assert services.getServices('repo-git').size() == 1
+                GitRepo s = services.getServices('repo-git')[0] as GitRepo
+                assert s.name == 'repo-git'
                 assert s.group == 'wordpress-app'
                 assert s.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app-test.git'
                 assert s.checkout.branch == 'master'
@@ -152,7 +152,7 @@ service "git", group: 'wordpress-app' with {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
         services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-        services.putAvailableService 'git', serviceFactory
+        services.putAvailableService 'repo-git', serviceFactory
         Eval.me 'service', services, test.input as String
         Closure expected = test.expected
         expected services
