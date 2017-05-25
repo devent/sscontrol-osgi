@@ -85,14 +85,14 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-git-repo</artifactId>
+            <artifactId>sscontrol-osgi-repo-git</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-git-repo-linux</artifactId>
+            <artifactId>sscontrol-osgi-repo-git-linux</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>

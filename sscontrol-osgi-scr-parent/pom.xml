@@ -40,8 +40,6 @@
         <module>../sscontrol-osgi-flannel-docker-debian</module>
         <module>../sscontrol-osgi-flannel-docker-systemd</module>
         <module>../sscontrol-osgi-flannel-docker-upstream</module>
-        <module>../sscontrol-osgi-git-repo</module>
-        <module>../sscontrol-osgi-git-repo-linux</module>
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
@@ -68,6 +66,8 @@
         <module>../sscontrol-osgi-rkt</module>
         <module>../sscontrol-osgi-rkt-deb</module>
         <module>../sscontrol-osgi-rkt-debian</module>
+        <module>../sscontrol-osgi-repo-git</module>
+        <module>../sscontrol-osgi-repo-git-linux</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-script-runner-test</module>
         <module>../sscontrol-osgi-services-properties</module>

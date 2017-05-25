@@ -12,8 +12,8 @@
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-git-repo</artifactId>
-    <name>sscontrol-osgi - git-repo</name>
+    <artifactId>sscontrol-osgi-repo-git</artifactId>
+    <name>sscontrol-osgi - repo-git</name>
     <packaging>bundle</packaging>
 
     <properties>
