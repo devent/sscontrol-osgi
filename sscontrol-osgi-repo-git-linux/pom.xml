@@ -12,9 +12,9 @@
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-git-repo-linux</artifactId>
+    <artifactId>sscontrol-osgi-repo-git-linux</artifactId>
     <packaging>bundle</packaging>
-    <name>sscontrol-osgi - git-repo-linux</name>
+    <name>sscontrol-osgi - repo-git-linux</name>
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.repo.git.linux</project.custom.bundle.namespace>
@@ -87,7 +87,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-git-repo</artifactId>
+            <artifactId>sscontrol-osgi-repo-git</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
