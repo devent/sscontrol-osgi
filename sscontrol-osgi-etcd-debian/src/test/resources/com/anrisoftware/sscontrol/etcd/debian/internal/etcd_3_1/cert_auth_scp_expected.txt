@@ -1,3 +1,3 @@
 -C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/systemd/system/etcd.service user@localhost:/var/lib/robobee/tmp/etcd.service
 -C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/etcd/etcd.conf user@localhost:/var/lib/robobee/tmp/etcd.conf
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobee.tmp user@localhost:/var/lib/robobee/tmp/robobee.tmp
+-C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeetcd_ca user@localhost:/var/lib/robobee/tmp/robobeeetcd_ca

@@ -174,7 +174,7 @@ chmod o-rx '$certsdir'
     }
 
     def uploadTls(String name, Tls tls) {
-        log.info 'Uploads etcd $name certificates.'
+        log.info 'Uploads etcd {} certificates.', name
         def certsdir = certsDir
         Etcd service = service
         [
@@ -198,7 +198,7 @@ chmod o-rx '$certsdir'
             ],
         ].each {
             if (it.src) {
-                copyResource it call()
+                copyResource it
             }
         }
     }
@@ -241,7 +241,7 @@ chmod o-rx '$certsdir'
                 ],
             ].each {
                 if (it.src) {
-                    copyResource it call()
+                    copyResource it
                 }
             }
         }

@@ -98,7 +98,7 @@ chmod o-rx '$certsdir'
             ],
         ].each {
             if (it.src) {
-                copyResource it call()
+                copyResource it
             }
         }
     }
