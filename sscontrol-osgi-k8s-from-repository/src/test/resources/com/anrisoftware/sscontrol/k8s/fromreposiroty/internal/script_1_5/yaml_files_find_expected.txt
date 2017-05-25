@@ -1,1 +1,0 @@
-. -name *.yaml ! -name *.yml ! -name *.json

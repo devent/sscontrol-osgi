@@ -88,18 +88,16 @@ abstract class AbstractFromRepositoryScriptTest extends AbstractScriptTestBase {
             'mv',
             'basename',
             'git',
-            'find',
+            'find'
         ]
-        def binDir = new File(dir, '/usr/local/bin')
-        binDir.mkdirs()
-        createCommand kubectlCommand, binDir, 'kubectl'
+        createCommand kubectlCommand, dir, 'kubectl'
     }
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'git', gitFactory
-        services.putAvailableScriptService 'git/debian/8', gitScriptFactory
+        services.putAvailableService 'repo-git', gitFactory
+        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
         services.putAvailableService 'from-repository', serviceFactory
         services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
     }

@@ -627,7 +627,7 @@ v_check=0
             ].each {
                 if (it.src) {
                     log.debug 'Upload {} TLS', it.name
-                    copyResource it call()
+                    copyResource it
                 }
             }
         }
