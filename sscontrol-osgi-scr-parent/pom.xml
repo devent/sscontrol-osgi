@@ -63,6 +63,8 @@
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-k8s-node-debian</module>
         <module>../sscontrol-osgi-k8s-node-upstream</module>
+        <module>../sscontrol-osgi-registry-docker</module>
+        <module>../sscontrol-osgi-registry-docker-linux</module>
         <module>../sscontrol-osgi-rkt</module>
         <module>../sscontrol-osgi-rkt-deb</module>
         <module>../sscontrol-osgi-rkt-debian</module>
@@ -82,6 +84,7 @@
         <module>../sscontrol-osgi-types-host</module>
         <module>../sscontrol-osgi-types-misc</module>
         <module>../sscontrol-osgi-types-parser</module>
+        <module>../sscontrol-osgi-types-registry</module>
         <module>../sscontrol-osgi-types-repo</module>
         <module>../sscontrol-osgi-types-run</module>
         <module>../sscontrol-osgi-types-ssh</module>
