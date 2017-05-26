@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.globalpom.core.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.google.inject.assistedinject.Assisted;
@@ -58,11 +57,10 @@ public class TlsImpl implements Tls {
 
     @AssistedInject
     TlsImpl(@Assisted Map<String, Object> args, ToURIFactory touri) {
-        ToURI uri = touri.create();
         Object v = args.get("ca");
         if (v != null) {
             assertThat("ca=null", v.toString(), not(equalTo("null")));
-            this.ca = uri.convert(v);
+            this.ca = touri.create(v).convert();
         } else {
             this.ca = null;
         }
@@ -73,7 +71,7 @@ public class TlsImpl implements Tls {
         v = args.get("cert");
         if (v != null) {
             assertThat("cert=null", v.toString(), not(equalTo("null")));
-            this.cert = uri.convert(v);
+            this.cert = touri.create(v).convert();
         } else {
             this.cert = null;
         }
@@ -84,7 +82,7 @@ public class TlsImpl implements Tls {
         v = args.get("key");
         if (v != null) {
             assertThat("key=null", v.toString(), not(equalTo("null")));
-            this.key = uri.convert(v);
+            this.key = touri.create(v).convert();
         } else {
             this.key = null;
         }
@@ -103,6 +101,7 @@ public class TlsImpl implements Tls {
         return ca;
     }
 
+    @Override
     public void setCaName(String caName) {
         this.caName = caName;
     }
@@ -121,6 +120,7 @@ public class TlsImpl implements Tls {
         return cert;
     }
 
+    @Override
     public void setCertName(String certName) {
         this.certName = certName;
     }
@@ -139,6 +139,7 @@ public class TlsImpl implements Tls {
         return key;
     }
 
+    @Override
     public void setKeyName(String keyName) {
         this.keyName = keyName;
     }

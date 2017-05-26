@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.globalpom.core.resources.ToURIFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.k8smaster.external.BasicAuthentication;
@@ -54,10 +53,9 @@ public class BasicAuthenticationImpl implements BasicAuthentication {
     @Inject
     BasicAuthenticationImpl(ToURIFactory touri,
             @Assisted Map<String, Object> args) {
-        ToURI uri = touri.create();
         Object v = args.get("file");
         if (v != null) {
-            this.file = uri.convert(v);
+            this.file = touri.create(v).convert();
         } else {
             this.file = null;
         }

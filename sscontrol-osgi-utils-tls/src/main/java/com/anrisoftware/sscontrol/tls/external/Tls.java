@@ -53,4 +53,10 @@ public interface Tls {
     String getCertName();
 
     String getKeyName();
+
+    void setCaName(String caName);
+
+    void setCertName(String certName);
+
+    void setKeyName(String keyName);
 }

@@ -73,7 +73,7 @@ public class RemoteImpl implements Remote {
 
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("url");
-        setUri(ToURI.toURI(v));
+        setUri(ToURI.toURI(v).withScp().convert());
     }
 
 }

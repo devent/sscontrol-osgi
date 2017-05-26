@@ -72,7 +72,7 @@ public class SshCredentialsImpl extends AbstractCredentials
 
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("key");
-        setKey(ToURI.toURI(v));
+        setKey(ToURI.toURI(v).convert());
     }
 
 }

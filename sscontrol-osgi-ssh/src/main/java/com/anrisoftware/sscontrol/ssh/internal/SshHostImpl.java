@@ -171,7 +171,7 @@ public class SshHostImpl implements SshHost {
 
     private URI parseKey(Map<String, Object> args) {
         Object v = args.get("key");
-        return v != null ? ToURI.toURI(v) : null;
+        return v != null ? ToURI.toURI(v).convert() : null;
     }
 
     private SystemInfo parseSystem(Map<String, Object> args) {
