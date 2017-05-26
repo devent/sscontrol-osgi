@@ -237,7 +237,7 @@ public class SshImpl implements Ssh {
         }
         v = args.get("key");
         if (v != null) {
-            this.defaultKey = ToURI.toURI(v);
+            this.defaultKey = ToURI.toURI(v).convert();
         }
         v = args.get("socket");
         if (v != null) {

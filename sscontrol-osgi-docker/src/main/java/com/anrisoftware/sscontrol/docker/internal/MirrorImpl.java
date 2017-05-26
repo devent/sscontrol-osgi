@@ -107,7 +107,7 @@ public class MirrorImpl implements Mirror {
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("host");
         if (v != null) {
-            setHost(ToURI.toURI(v, ""));
+            setHost(ToURI.toURI(v).withScheme("").convert());
         }
         v = args.get("ca");
         if (v != null) {
