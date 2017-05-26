@@ -15,25 +15,25 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.registry.docker.service.external.Client;
+import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
+import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Client certificates.
+ * Docker image registry.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class ClientImpl implements Client {
+public class RegistryImpl implements Registry {
 
     /**
      *
@@ -41,63 +41,42 @@ public class ClientImpl implements Client {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface ClientImplFactory {
+    public interface RegistryImplFactory {
 
-        Client create(Map<String, Object> args);
+        Host create(Map<String, Object> args);
 
     }
+
+    private Integer port;
+
+    private transient RegistryImplLogger log;
 
     private transient TlsFactory tlsFactory;
 
-    private Tls tls;
+    private Tls client;
 
     @Inject
-    ClientImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
+    RegistryImpl(RegistryImplLogger log, TlsFactory tlsFactory,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
         this.tlsFactory = tlsFactory;
-        this.tls = tlsFactory.create();
+        this.client = tlsFactory.create();
         parseArgs(args);
     }
 
-    @Override
-    public URI getCa() {
-        return tls.getCa();
+    public void setPort(int port) {
+        this.port = port;
+        log.portSet(this, port);
     }
 
     @Override
-    public URI getCert() {
-        return tls.getCert();
+    public Integer getPort() {
+        return port;
     }
 
     @Override
-    public URI getKey() {
-        return tls.getKey();
-    }
-
-    @Override
-    public String getCaName() {
-        return tls.getCaName();
-    }
-
-    @Override
-    public String getCertName() {
-        return tls.getCertName();
-    }
-
-    @Override
-    public String getKeyName() {
-        return tls.getKeyName();
-    }
-
-    public void setCaName(String caName) {
-        tls.setCaName(caName);
-    }
-
-    public void setCertName(String certName) {
-        tls.setCertName(certName);
-    }
-
-    public void setKeyName(String keyName) {
-        tls.setKeyName(keyName);
+    public Tls getClient() {
+        return client;
     }
 
     @Override
@@ -106,7 +85,14 @@ public class ClientImpl implements Client {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        this.tls = tlsFactory.create(args);
+        Object v = args.get("port");
+        if (v != null) {
+            setPort((int) v);
+        }
+        if (args.containsKey("ca") || args.containsKey("cert")
+                || args.containsKey("key")) {
+            this.client = tlsFactory.create(args);
+        }
     }
 
 }

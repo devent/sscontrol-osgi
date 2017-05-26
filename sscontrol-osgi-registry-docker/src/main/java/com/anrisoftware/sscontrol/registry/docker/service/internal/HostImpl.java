@@ -24,6 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
+import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -46,24 +48,36 @@ public class HostImpl implements Host {
 
     }
 
-    private URI uri;
+    private URI address;
 
     private transient HostImplLogger log;
 
+    private transient TlsFactory tlsFactory;
+
+    private Tls client;
+
     @Inject
-    HostImpl(HostImplLogger log, @Assisted Map<String, Object> args) {
+    HostImpl(HostImplLogger log, TlsFactory tlsFactory,
+            @Assisted Map<String, Object> args) {
         this.log = log;
+        this.tlsFactory = tlsFactory;
+        this.client = tlsFactory.create();
         parseArgs(args);
     }
 
-    public void setUri(URI uri) {
-        this.uri = uri;
-        log.uriSet(this, uri);
+    public void setAddress(URI address) {
+        this.address = address;
+        log.addressSet(this, address);
     }
 
     @Override
-    public URI getUri() {
-        return uri;
+    public URI getAddress() {
+        return address;
+    }
+
+    @Override
+    public Tls getClient() {
+        return client;
     }
 
     @Override
@@ -72,8 +86,12 @@ public class HostImpl implements Host {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("url");
-        setUri(ToURI.toURI(v).convert());
+        Object v = args.get("address");
+        setAddress(ToURI.toURI(v).convert());
+        if (args.containsKey("ca") || args.containsKey("cert")
+                || args.containsKey("key")) {
+            this.client = tlsFactory.create(args);
+        }
     }
 
 }

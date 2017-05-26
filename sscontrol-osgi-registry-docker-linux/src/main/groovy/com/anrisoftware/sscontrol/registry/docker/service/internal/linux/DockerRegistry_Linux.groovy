@@ -43,7 +43,7 @@ abstract class DockerRegistry_Linux extends ScriptBase {
     File dockerBuild(Map vars) {
         DockerRegistry service = vars.service
         DockerRegistryHost repo = vars.repo
-        log.info 'Builds {}', service
+        log.info 'Build docker image for {}', service
     }
 
     def setupCredentials(Map vars) {

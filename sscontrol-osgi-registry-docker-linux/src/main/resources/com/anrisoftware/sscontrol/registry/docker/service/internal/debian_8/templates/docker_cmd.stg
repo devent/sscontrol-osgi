@@ -1,0 +1,48 @@
+dockerBuild(parent, vars) ::= <<
+<setupDockerHost(parent, vars)>
+set export DOCKER_CERT_PATH=~/.docker, copy client certificates.
+set export DOCKER_TLS_VERIFY=1
+docker login -p password -u user
+docker build -t host:5000/registry/name:version
+
+>>
+
+setupDockerHost(parent, vars) ::= <<
+<if(vars.service.host)>
+<if(vars.service.host.uri)>
+export DOCKER_HOST="<vars.service.host.uri>"
+<endif>
+<endif>
+>>
+
+setCredentials(parent, vars) ::= <<
+<parent.kubectlCmd> config set-credentials <vars.cluster.cluster.group>-<vars.cluster.credentials.name> <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
+
+>>
+
+setContext(parent, vars) ::= <<
+<parent.kubectlCmd> config set-context <vars.cluster.context.name> --cluster=<vars.cluster.cluster.group> --user=<vars.cluster.cluster.group>-<vars.cluster.credentials.name>
+
+>>
+
+kubeCa(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.ca)>--certificate-authority=<vars.certsDir>/<vars.tls.caName><endif><endif>
+%>
+
+kubeCert(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.cert)>--client-certificate=<vars.certsDir>/<vars.tls.certName><endif><endif>
+%>
+
+kubeKey(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.key)>--client-key=<vars.certsDir>/<vars.tls.keyName><endif><endif>
+%>
+
+kubectlCmd(parent, vars) ::= <<
+<setupKubectl(parent, vars)>
+<parent.kubectlCmd> <vars.args>
+
+>>
+
+clusterServer(parent, vars) ::= <%
+<vars.cluster.proto>://<vars.cluster.host>:<vars.cluster.port>
+%>

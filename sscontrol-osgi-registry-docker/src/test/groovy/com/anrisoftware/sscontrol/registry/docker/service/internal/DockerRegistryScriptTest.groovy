@@ -68,10 +68,9 @@ class DockerRegistryScriptTest {
             name: 'client_certs',
             input: """
 service "registry-docker", group: "default" with {
-    name: "registry"
-    host url: "localhost:5000"
+    host address: "docker:2376", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    registry port: 5000, ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     credentials "user", name: "devent", password: "xx"
-    client ca: "ca.pem", cert: "cert.pem", key: "key.pem"
 }
 """,
             expected: { HostServices services ->
@@ -79,9 +78,11 @@ service "registry-docker", group: "default" with {
                 DockerRegistry s = services.getServices('registry-docker')[0]
                 assert s.name == 'registry-docker'
                 assert s.group == 'default'
-                assert s.host.uri.toString() == 'localhost:5000'
+                assert s.host.address.toString() == 'docker:2376'
+                assert s.host.client.ca.toString() == 'file:ca.pem'
+                assert s.registry.port == 5000
+                assert s.registry.client.ca.toString() == 'file:ca.pem'
                 assert s.credentials.type == 'user'
-                assert s.client.ca.toString() == 'file:ca.pem'
             },
         ]
         doTest test
