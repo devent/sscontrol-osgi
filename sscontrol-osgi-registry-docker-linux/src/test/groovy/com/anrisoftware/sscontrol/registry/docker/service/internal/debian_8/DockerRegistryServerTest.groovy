@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
+package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -34,11 +34,11 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class GitRepo_Debian_Server_Test extends Abstract_Git_Runner_Debian_Test {
+class DockerRegistryServerTest extends AbstractDockerRegistryRunnerTest {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
-    static final URL wordpressZip = GitRepo_Debian_Server_Test.class.getResource('wordpress-app.zip')
+    static final URL wordpressZip = DockerRegistryServerTest.class.getResource('wordpress-app.zip')
 
     @Test
     void "git_file"() {
@@ -70,8 +70,8 @@ rm -rf "${test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """ },
             expected: { Map args ->
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
             },
         ]
         doTest test
@@ -95,8 +95,8 @@ service "repo-git", group: 'wordpress-app' with {
 rm -rf "${test.scriptVars.checkoutDir}"
 """ },
             expected: { Map args ->
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_yaml_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_yaml_expected.txt"
             },
         ]
         doTest test
@@ -121,8 +121,8 @@ service "repo-git", group: 'wordpress-app' with {
 rm -rf "${test.scriptVars.checkoutDir}"
 """ },
             expected: { Map args ->
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment-yaml.st').absolutePath), "${args.test.name}_mysql_deployment_yaml_st_expected.txt"
-                assertStringResource GitRepo_Debian_Server_Test, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment-yaml.st').absolutePath), "${args.test.name}_wordpress_deployment_yaml_st_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'mysql-deployment-yaml.st').absolutePath), "${args.test.name}_mysql_deployment_yaml_st_expected.txt"
+                assertStringResource DockerRegistryServerTest, readRemoteFile(new File(args.test.scriptVars.checkoutDir, 'wordpress-deployment-yaml.st').absolutePath), "${args.test.name}_wordpress_deployment_yaml_st_expected.txt"
             },
         ]
         doTest test
