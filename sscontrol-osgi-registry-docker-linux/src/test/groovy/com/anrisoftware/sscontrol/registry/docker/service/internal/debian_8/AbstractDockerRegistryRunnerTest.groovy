@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
+package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -37,9 +38,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class Abstract_Git_Runner_Debian_Test extends AbstractRunnerTestBase {
+abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
 
-    static final URL idRsa = Abstract_Git_Runner_Debian_Test.class.getResource('id_rsa.txt')
+    static final URL idRsa = AbstractDockerRegistryRunnerTest.class.getResource('id_rsa.txt')
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -57,7 +58,7 @@ abstract class Abstract_Git_Runner_Debian_Test extends AbstractRunnerTestBase {
     GitRepoImplFactory gitFactory
 
     @Inject
-    GitRepo_Debian_8_Factory gitScriptFactory
+    DockerRegistry_Debian_8_Factory gitScriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -76,7 +77,7 @@ abstract class Abstract_Git_Runner_Debian_Test extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll GitRepo_Test_Modules.getAdditionalModules()
+        modules.addAll DockerRegistryTestModules.getAdditionalModules()
         modules
     }
 

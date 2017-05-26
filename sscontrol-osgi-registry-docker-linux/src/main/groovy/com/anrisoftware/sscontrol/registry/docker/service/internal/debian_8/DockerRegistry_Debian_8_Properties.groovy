@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8;
+package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * <i>Git-Repo</i> properties provider from
+ * {@code "/git_repo_debian_8.properties"}.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public class GitRepo_Debian_8_Module extends AbstractModule {
+class DockerRegistry_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, GitRepo_Debian_8.class)
-                .build(GitRepo_Debian_8_Factory.class));
+    private static final URL RESOURCE = DockerRegistry_Debian_8_Properties.class.getResource("/git_repo_debian_8.properties")
+
+    DockerRegistry_Debian_8_Properties() {
+        super(DockerRegistry_Debian_8_Properties.class, RESOURCE)
     }
-
 }

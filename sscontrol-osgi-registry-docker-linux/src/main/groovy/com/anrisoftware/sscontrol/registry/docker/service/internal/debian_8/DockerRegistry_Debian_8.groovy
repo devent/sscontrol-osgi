@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
+package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.repo.git.linux.internal.linux.GitRepo_Linux
+import com.anrisoftware.sscontrol.registry.docker.service.internal.linux.DockerRegistry_Linux
 
 import groovy.util.logging.Slf4j
 
 /**
- * <i>Git</i> code repository service for Debian 8.
+ * <i>Docker</i> registry service for Debian 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class GitRepo_Debian_8 extends GitRepo_Linux {
+class DockerRegistry_Debian_8 extends DockerRegistry_Linux {
 
     @Inject
-    GitRepo_Debian_8_Properties debianPropertiesProvider
+    DockerRegistry_Debian_8_Properties debianPropertiesProvider
 
     @Override
     def run() {

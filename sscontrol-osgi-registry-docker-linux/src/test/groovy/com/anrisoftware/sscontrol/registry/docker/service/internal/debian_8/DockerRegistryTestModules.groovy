@@ -1,9 +1,10 @@
-package com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8
+package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Module
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -30,7 +31,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class GitRepo_Test_Modules {
+class DockerRegistryTestModules {
 
     /**
      * Returns the needed modules.
@@ -40,7 +41,7 @@ class GitRepo_Test_Modules {
             new SshModule(),
             new SshPreModule(),
             new GitRepoModule(),
-            new GitRepo_Debian_8_Module(),
+            new DockerRegistry_Debian_8_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
