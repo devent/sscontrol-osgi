@@ -15,26 +15,24 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
-import static com.anrisoftware.sscontrol.registry.docker.service.internal.HostImplLogger.m.addressSet;
-
-import java.net.URI;
+import static com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImplLogger.m.portSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link HostImpl}.
+ * Logging for {@link RegistryImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class HostImplLogger extends AbstractLogger {
+final class RegistryImplLogger extends AbstractLogger {
 
     enum m {
 
-        addressSet("Address {} set for {}");
+        portSet("Port {} set for {}");
 
         private String name;
 
@@ -49,13 +47,13 @@ final class HostImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link HostImpl}.
+     * Sets the context of the logger to {@link RegistryImpl}.
      */
-    public HostImplLogger() {
-        super(HostImpl.class);
+    public RegistryImplLogger() {
+        super(RegistryImpl.class);
     }
 
-    void addressSet(HostImpl remote, URI uri) {
-        debug(addressSet, uri, remote);
+    void portSet(RegistryImpl remote, int port) {
+        debug(portSet, port, remote);
     }
 }

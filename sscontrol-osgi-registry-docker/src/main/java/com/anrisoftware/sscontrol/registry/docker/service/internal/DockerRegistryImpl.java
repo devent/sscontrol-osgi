@@ -30,14 +30,14 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.registry.docker.service.external.Client;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials;
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistry;
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistryHost;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
-import com.anrisoftware.sscontrol.registry.docker.service.internal.ClientImpl.ClientImplFactory;
+import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryHostImpl.DockerRegistryHostImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.HostImpl.HostImplFactory;
+import com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
@@ -45,6 +45,8 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.google.inject.assistedinject.Assisted;
+
+import ch.qos.logback.core.net.server.Client;
 
 /**
  * <i>Git</i> code repository service.
@@ -73,7 +75,7 @@ public class DockerRegistryImpl implements DockerRegistry {
 
     private final List<TargetHost> targets;
 
-    private transient DockerRegistryHostImplFactory registryFactory;
+    private transient DockerRegistryHostImplFactory registryHostFactory;
 
     private Credentials credentials;
 
@@ -83,22 +85,22 @@ public class DockerRegistryImpl implements DockerRegistry {
 
     private transient HostImplFactory hostFactory;
 
-    private transient ClientImplFactory clientFactory;
+    private transient RegistryImplFactory registryFactory;
 
-    private Client client;
+    private Registry registry;
 
     @Inject
     DockerRegistryImpl(DockerRegistryImplLogger log,
             HostPropertiesService propertiesService,
-            DockerRegistryHostImplFactory registryFactory,
-            HostImplFactory hostFactory, ClientImplFactory clientFactory,
+            DockerRegistryHostImplFactory registryHostFactory,
+            HostImplFactory hostFactory, RegistryImplFactory registryFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
-        this.registryFactory = registryFactory;
+        this.registryHostFactory = registryHostFactory;
         this.hostFactory = hostFactory;
-        this.clientFactory = clientFactory;
+        this.registryFactory = registryFactory;
         parseArgs(args);
     }
 
@@ -209,12 +211,12 @@ public class DockerRegistryImpl implements DockerRegistry {
 
     /**
      * <pre>
-     * client ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * registry port: 5000, ca: "ca.pem", cert: "cert.pem", key: "key.pem"
      * </pre>
      */
-    public void client(Map<String, Object> args) {
-        Client c = clientFactory.create(args);
-        this.client = c;
+    public void registry(Map<String, Object> args) {
+        Client c = registryFactory.create(args);
+        this.registry = c;
         log.clientSet(this, c);
     }
 
@@ -258,8 +260,8 @@ public class DockerRegistryImpl implements DockerRegistry {
     }
 
     @Override
-    public Client getClient() {
-        return client;
+    public Registry getRegistry() {
+        return registry;
     }
 
     @Override
@@ -267,7 +269,7 @@ public class DockerRegistryImpl implements DockerRegistry {
         List<RegistryHost> list = new ArrayList<>();
         for (TargetHost ssh : targets) {
             DockerRegistryHost host;
-            host = registryFactory.create(this, ssh);
+            host = registryHostFactory.create(this, ssh);
             list.add(host);
         }
         return Collections.unmodifiableList(list);

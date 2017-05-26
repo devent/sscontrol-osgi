@@ -15,19 +15,27 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.external;
 
-import com.anrisoftware.sscontrol.types.registry.external.Registry;
-
 /**
  * <i>Docker</i> registry service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DockerRegistry extends Registry {
+public interface DockerRegistry
+        extends com.anrisoftware.sscontrol.types.registry.external.Registry {
 
+    /**
+     * Returns the docker host.
+     */
     Host getHost();
 
-    Credentials getCredentials();
+    /**
+     * Returns the docker registry.
+     */
+    Registry getRegistry();
 
-    Client getClient();
+    /**
+     * Returns the docker registry credentials.
+     */
+    Credentials getCredentials();
 }
