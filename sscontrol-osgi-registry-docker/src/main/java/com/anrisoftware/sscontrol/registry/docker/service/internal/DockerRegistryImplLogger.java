@@ -15,16 +15,16 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
-import static com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImplLogger.m.clientSet;
 import static com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImplLogger.m.credentialsSet;
 import static com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImplLogger.m.hostSet;
+import static com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImplLogger.m.registrySet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.registry.docker.service.external.Client;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
+import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 
 /**
  * Logging for {@link DockerRegistryImpl}.
@@ -41,7 +41,7 @@ final class DockerRegistryImplLogger extends AbstractLogger {
 
         credentialsSet("Credentials {} set for {}"),
 
-        clientSet("Client {} set for {}");
+        registrySet("Registry {} set for {}");
 
         private String name;
 
@@ -70,8 +70,8 @@ final class DockerRegistryImplLogger extends AbstractLogger {
         debug(hostSet, remote, registry);
     }
 
-    void clientSet(DockerRegistryImpl registry, Client c) {
-        debug(clientSet, c, registry);
+    void registrySet(DockerRegistryImpl docker, Registry registry) {
+        debug(registrySet, registry, docker);
     }
 
 }

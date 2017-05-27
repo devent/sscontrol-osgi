@@ -18,30 +18,43 @@ package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.registry.docker.service.internal.linux.DockerRegistry_Linux
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
 import groovy.util.logging.Slf4j
 
 /**
- * <i>Docker</i> registry service for Debian 8.
+ * To test docker builds.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class DockerRegistry_Debian_8 extends DockerRegistry_Linux {
+class FromSourceBuildMock extends ScriptBase {
+
+    /**
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    interface FromSourceBuildMockFactory extends HostServiceScriptService {
+    }
 
     @Inject
-    DockerRegistry_Debian_8_Properties debianPropertiesProvider
+    DockerRegistry_Debian_8_Factory dockerFactory
 
     @Override
     def run() {
-        super.run()
+        def docker = dockerFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+        println docker
+        println dockerFactory
+        def vars = [:]
+        docker.dockerBuild vars
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
     }
 
     @Override

@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
-import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -55,7 +54,7 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    GitRepoImplFactory gitFactory
+    DockerRegistryImplFactory dockerFactory
 
     @Inject
     DockerRegistry_Debian_8_Factory gitScriptFactory
@@ -68,8 +67,8 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'repo-git', gitFactory
-        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
+        services.putAvailableService 'registry-docker', dockerFactory
+        services.putAvailableScriptService 'registry-docker/debian/8', gitScriptFactory
         return services
     }
 

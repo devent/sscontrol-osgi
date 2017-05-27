@@ -129,14 +129,14 @@ abstract class AbstractScriptTestBase {
 
     /**
      * Runs the test.
-     * 
+     *
      * @param test the Map containing arguments for the test.
      * <ul>
      * <li>input: the input script to run.
-     * <li>pretest: a Closure that is run before the test. The following 
+     * <li>pretest: a Closure that is run before the test. The following
      * arguments are passed to the closure. 0. the test arguments them self.
      * <li>scriptVars: script variables.
-     * <li>expected: a Closure that is run after the test. The following 
+     * <li>expected: a Closure that is run after the test. The following
      * arguments are passed to the closure. 0. the test arguments them self,
      * 1. the services and 2. the working directory.
      * </ul>
@@ -165,7 +165,7 @@ abstract class AbstractScriptTestBase {
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
                         HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads, scriptEnv)
-                        setupServiceScript script, test: test, dir: dir, service: s
+                        script = setupServiceScript script, test: test, dir: dir, service: s
                         script.run()
                     }
                 }
@@ -194,9 +194,15 @@ abstract class AbstractScriptTestBase {
     }
 
     def setupHostService(Map args, HostService service) {
+        return service
     }
 
     def setupServiceScript(Map args, HostServiceScript script) {
+        if (args.setupServiceScript) {
+            return args.setupServiceScript(args, script)
+        } else {
+            return script
+        }
     }
 
     Map getScriptEnv(Map args) {

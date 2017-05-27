@@ -30,7 +30,7 @@ public class DockerRegistry_Debian_8_Module extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, DockerRegistry_Debian_8.class)
+                .implement(HostServiceScript.class, FromSourceBuildMock.class)
                 .build(DockerRegistry_Debian_8_Factory.class));
     }
 

@@ -46,8 +46,6 @@ import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.Lis
 import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.google.inject.assistedinject.Assisted;
 
-import ch.qos.logback.core.net.server.Client;
-
 /**
  * <i>Git</i> code repository service.
  *
@@ -215,9 +213,9 @@ public class DockerRegistryImpl implements DockerRegistry {
      * </pre>
      */
     public void registry(Map<String, Object> args) {
-        Client c = registryFactory.create(args);
-        this.registry = c;
-        log.clientSet(this, c);
+        Registry registry = registryFactory.create(args);
+        this.registry = registry;
+        log.registrySet(this, registry);
     }
 
     @Override

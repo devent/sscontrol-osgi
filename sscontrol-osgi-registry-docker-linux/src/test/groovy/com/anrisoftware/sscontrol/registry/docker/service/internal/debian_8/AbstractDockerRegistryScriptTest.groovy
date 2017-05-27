@@ -22,10 +22,9 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
-import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
+import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
+import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.FromSourceBuildMock.FromSourceBuildMockFactory
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
@@ -43,20 +42,20 @@ abstract class AbstractDockerRegistryScriptTest extends AbstractScriptTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    CmdRunCaller cmdRunCaller
-
-    @Inject
-    GitRepoImplFactory serviceFactory
+    DockerRegistryImplFactory serviceFactory
 
     @Inject
     DockerRegistry_Debian_8_Factory scriptFactory
 
+    @Inject
+    FromSourceBuildMockFactory buildMockFactory
+
     String getServiceName() {
-        'repo-git'
+        'registry-docker'
     }
 
     String getScriptServiceName() {
-        'repo-git/debian/8'
+        'registry-docker/debian/8'
     }
 
     void createDummyCommands(File dir) {
@@ -80,8 +79,8 @@ abstract class AbstractDockerRegistryScriptTest extends AbstractScriptTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'repo-git', serviceFactory
-        services.putAvailableScriptService 'repo-git/debian/8', scriptFactory
+        services.putAvailableService 'registry-docker', serviceFactory
+        services.putAvailableScriptService 'registry-docker/debian/8', scriptFactory
     }
 
     List getAdditionalModules() {
