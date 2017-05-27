@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
@@ -43,7 +42,7 @@ public class RegistryImpl implements Registry {
      */
     public interface RegistryImplFactory {
 
-        Host create(Map<String, Object> args);
+        Registry create(Map<String, Object> args);
 
     }
 

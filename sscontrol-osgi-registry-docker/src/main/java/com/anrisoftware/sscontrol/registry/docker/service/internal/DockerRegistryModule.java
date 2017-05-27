@@ -17,14 +17,14 @@ package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
-import com.anrisoftware.sscontrol.registry.docker.service.external.Client;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials;
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistryHost;
 import com.anrisoftware.sscontrol.registry.docker.service.external.Host;
-import com.anrisoftware.sscontrol.registry.docker.service.internal.ClientImpl.ClientImplFactory;
+import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryHostImpl.DockerRegistryHostImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.HostImpl.HostImplFactory;
+import com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.UserCredentialsImpl.UserCredentialsImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
@@ -51,8 +51,8 @@ public class DockerRegistryModule extends AbstractModule {
                         DockerRegistryHostImpl.class)
                 .build(DockerRegistryHostImplFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(Client.class, ClientImpl.class)
-                .build(ClientImplFactory.class));
+                .implement(Registry.class, RegistryImpl.class)
+                .build(RegistryImplFactory.class));
         bindCredentials();
     }
 

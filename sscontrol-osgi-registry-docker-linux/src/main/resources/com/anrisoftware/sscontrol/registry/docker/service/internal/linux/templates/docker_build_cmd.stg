@@ -1,0 +1,12 @@
+dockerBuild(parent, vars) ::= <<
+<setupDocker(parent, vars)>
+docker build -t <dockerTag(parent, vars)>
+
+>>
+
+dockerBuild(parent, vars) ::= <%
+<if(vars.dockerHost)>
+<vars.dockerHost>/
+<endif>
+registry/name:version
+%>

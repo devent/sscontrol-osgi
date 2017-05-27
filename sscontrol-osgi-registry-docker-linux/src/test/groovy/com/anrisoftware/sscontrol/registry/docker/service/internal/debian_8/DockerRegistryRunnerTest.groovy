@@ -20,6 +20,8 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -32,16 +34,20 @@ import groovy.util.logging.Slf4j
 class DockerRegistryRunnerTest extends AbstractDockerRegistryScriptTest {
 
     @Test
-    void "git_ssh"() {
+    void "docker_tls_runner"() {
         def test = [
-            name: "git_ssh",
+            name: "docker_tls_runner",
             input: """
 service "ssh", host: "localhost"
-service "repo-git", group: 'wordpress-app' with {
-    remote url: "git://git@github.com/user/wordpress-app"
-    credentials "ssh", key: "${idRsa}"
+service "registry-docker", group: "default" with {
+    host address: "docker:2376", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    registry port: 5000, ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+    credentials "user", name: "devent", password: "xx"
 }
 """,
+            setupServiceScript: { Map args, HostServiceScript script ->
+                buildMockFactory.create(script.scriptsRepository, script.service, script.target, threads, script.scriptEnv)
+            },
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -52,26 +58,6 @@ service "repo-git", group: 'wordpress-app' with {
                 assertFileResource DockerRegistryRunnerTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource DockerRegistryRunnerTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource DockerRegistryRunnerTest, dir, "cat.out", "${args.test.name}_cat_expected.txt"
-                assertFileResource DockerRegistryRunnerTest, dir, "git.out", "${args.test.name}_git_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "git_file"() {
-        def test = [
-            name: "git_file",
-            input: """
-service "ssh", host: "localhost"
-service "repo-git", group: 'wordpress-app' with {
-    remote url: "/user/wordpress-app.git"
-}
-""",
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
                 assertFileResource DockerRegistryRunnerTest, dir, "git.out", "${args.test.name}_git_expected.txt"
             },
         ]

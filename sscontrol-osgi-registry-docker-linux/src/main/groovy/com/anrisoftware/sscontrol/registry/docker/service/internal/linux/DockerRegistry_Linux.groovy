@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal.linux
 
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistry
@@ -31,19 +33,21 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class DockerRegistry_Linux extends ScriptBase {
 
+    @Inject
+    TemplatesProvider templatesProvider
+
     @Override
     def run() {
         DockerRegistry service = this.service
-        getState "git-${service.group}-dir", dir
     }
 
     /**
      * Builds the docker image.
      */
-    File dockerBuild(Map vars) {
+    def dockerBuild(Map vars) {
         DockerRegistry service = vars.service
-        DockerRegistryHost repo = vars.repo
-        log.info 'Build docker image for {}', service
+        log.info 'Build docker image for {}', vars
+        shell resource: templatesProvider.get().getResource("docker_build_cmd"), name: "dockerBuild" call()
     }
 
     def setupCredentials(Map vars) {
