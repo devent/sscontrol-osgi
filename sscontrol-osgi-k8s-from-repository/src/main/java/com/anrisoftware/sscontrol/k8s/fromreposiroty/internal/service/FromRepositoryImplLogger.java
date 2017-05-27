@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service;
 
 import static com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImplLogger.m.clustersAdded;
+import static com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImplLogger.m.registriesAdded;
 import static com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImplLogger.m.reposAdded;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
@@ -39,7 +41,9 @@ final class FromRepositoryImplLogger extends AbstractLogger {
 
         clustersAdded("Clusters {} added to {}"),
 
-        reposAdded("Repositories {} added to {}");
+        reposAdded("Repositories {} added to {}"),
+
+        registriesAdded("Repositories {} added to {}");
 
         private String name;
 
@@ -66,5 +70,9 @@ final class FromRepositoryImplLogger extends AbstractLogger {
 
     void reposAdded(FromRepositoryImpl from, List<RepoHost> list) {
         debug(reposAdded, list, from);
+    }
+
+    void registriesAdded(FromRepositoryImpl from, List<RegistryHost> list) {
+        debug(registriesAdded, list, from);
     }
 }

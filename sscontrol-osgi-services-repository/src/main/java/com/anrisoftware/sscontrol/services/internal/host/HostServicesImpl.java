@@ -45,6 +45,10 @@ import com.anrisoftware.sscontrol.types.host.external.HostServicesService;
 import com.anrisoftware.sscontrol.types.host.external.HostTargets;
 import com.anrisoftware.sscontrol.types.host.external.PreHostService;
 import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
+import com.anrisoftware.sscontrol.types.registry.external.Registries;
+import com.anrisoftware.sscontrol.types.registry.external.RegistriesService;
+import com.anrisoftware.sscontrol.types.registry.external.Registry;
+import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.Repo;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 import com.anrisoftware.sscontrol.types.repo.external.Repos;
@@ -55,7 +59,6 @@ import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService;
 import com.anrisoftware.sscontrol.types.ssh.external.Targets;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultScriptInfoFactory;
-import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Host services repository.
@@ -91,9 +94,13 @@ public class HostServicesImpl implements HostServices {
 
     private final Repos repos;
 
+    private final Registries registries;
+
     private final GetTargets<SshHost, Ssh> getTargets;
 
     private final GetTargets<ClusterHost, Cluster> getClusters;
+
+    private final GetTargets<RegistryHost, Registry> getRegistries;
 
     @Inject
     private HostServicesImplLogger log;
@@ -103,13 +110,15 @@ public class HostServicesImpl implements HostServices {
     @Inject
     private DefaultScriptInfoFactory scriptInfoFactory;
 
-    @AssistedInject
+    @Inject
     HostServicesImpl(TargetsService targetsService,
             ClustersService clustersService, ReposService reposService,
+            RegistriesService registriesService,
             ScriptsMapFactory scriptsMapFactory) {
         this.targets = targetsService.create();
         this.clusters = clustersService.create();
         this.repos = reposService.create();
+        this.registries = registriesService.create();
         this.availableServices = synchronizedMap(
                 new HashMap<String, HostServiceService>());
         this.availablePreServices = synchronizedMap(
@@ -148,6 +157,20 @@ public class HostServicesImpl implements HostServices {
             }
 
         };
+        this.getRegistries = new GetTargets<RegistryHost, Registry>(
+                RegistryHost.class, Registry.class, "registry") {
+
+            @Override
+            public List<RegistryHost> getTargets(HostServiceService service,
+                    HostTargets<RegistryHost, Registry> targets, String name) {
+                try {
+                    return targets.getHosts(name);
+                } catch (AssertionError e) {
+                    return Collections.emptyList();
+                }
+            }
+
+        };
     }
 
     /**
@@ -172,6 +195,7 @@ public class HostServicesImpl implements HostServices {
         getTargets.setupTargets(targets, hostService);
         getClusters.setupTargets(clusters, hostService);
         getRepos.setupTargets(repos, hostService);
+        getRegistries.setupTargets(registries, hostService);
         addService(name, hostService);
         return hostService;
     }
@@ -210,6 +234,18 @@ public class HostServicesImpl implements HostServices {
      */
     public List<RepoHost> repos(String name) {
         return getRepos.getTargets(null, repos, name);
+    }
+
+    /**
+     * Returns the image registries with the specified group name.
+     *
+     * <pre>
+     * registries "wordpress-app" each {
+     * }
+     * </pre>
+     */
+    public List<RegistryHost> registries(String name) {
+        return getRegistries.getTargets(null, registries, name);
     }
 
     @SuppressWarnings("unchecked")
@@ -328,6 +364,17 @@ public class HostServicesImpl implements HostServices {
     }
 
     @Override
+    public void putState(String name, Object state) {
+        states.put(name, state);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getState(String name) {
+        return (T) states.get(name);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("available service", getAvailableServices())
@@ -342,6 +389,7 @@ public class HostServicesImpl implements HostServices {
         List<SshHost> t;
         List<ClusterHost> c;
         List<RepoHost> r;
+        List<RegistryHost> g;
         if (!(service instanceof TargetServiceService)) {
             t = getTargets.parseTarget(service, targets, args);
             result.put("targets", t);
@@ -352,6 +400,9 @@ public class HostServicesImpl implements HostServices {
             r = getRepos.parseTarget(service, repos, args);
             result.put("repos", r);
             log.reposInjected(this, service.getName(), r);
+            g = getRegistries.parseTarget(service, registries, args);
+            result.put("registries", g);
+            log.registriesInjected(this, service.getName(), g);
         }
         return unmodifiableMap(result);
     }
@@ -361,17 +412,6 @@ public class HostServicesImpl implements HostServices {
             throw new NullPointerException(
                     format("Service '%s' not found.", name));
         }
-    }
-
-    @Override
-    public void putState(String name, Object state) {
-        states.put(name, state);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T getState(String name) {
-        return (T) states.get(name);
     }
 
 }

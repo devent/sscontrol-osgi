@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 import com.google.inject.assistedinject.Assisted;
 
@@ -67,6 +68,8 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final List<RepoHost> repos;
 
+    private final List<RegistryHost> registries;
+
     private final Map<String, Object> vars;
 
     @Inject
@@ -78,6 +81,7 @@ public class FromRepositoryImpl implements FromRepository {
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
         this.repos = new ArrayList<>();
+        this.registries = new ArrayList<>();
         this.vars = new HashMap<>();
         parseArgs(args);
     }
@@ -153,6 +157,22 @@ public class FromRepositoryImpl implements FromRepository {
     }
 
     @Override
+    public RegistryHost getRegistry() {
+        return getRegistries().get(0);
+    }
+
+    @Override
+    public void addRegistries(List<RegistryHost> list) {
+        this.registries.addAll(list);
+        log.registriesAdded(this, list);
+    }
+
+    @Override
+    public List<RegistryHost> getRegistries() {
+        return Collections.unmodifiableList(registries);
+    }
+
+    @Override
     public HostServiceProperties getServiceProperties() {
         return serviceProperties;
     }
@@ -167,13 +187,14 @@ public class FromRepositoryImpl implements FromRepository {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets())
                 .append("clusters", getClusters()).append("repos", getRepos())
-                .toString();
+                .append("registries", getRegistries()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
         parseTargets(args);
         parseClusters(args);
         parseRepos(args);
+        parseRegistries(args);
     }
 
     @SuppressWarnings("unchecked")
@@ -195,6 +216,13 @@ public class FromRepositoryImpl implements FromRepository {
         Object v = args.get("repos");
         assertThat("repos=null", v, notNullValue());
         addRepos((List<RepoHost>) v);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseRegistries(Map<String, Object> args) {
+        Object v = args.get("registries");
+        assertThat("registries=null", v, notNullValue());
+        addRegistries((List<RegistryHost>) v);
     }
 
 }

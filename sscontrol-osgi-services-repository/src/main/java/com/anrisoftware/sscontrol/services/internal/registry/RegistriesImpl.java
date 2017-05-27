@@ -13,38 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromreposiroty.external;
+package com.anrisoftware.sscontrol.services.internal.registry;
 
-import java.util.List;
-import java.util.Map;
+import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
+import com.anrisoftware.sscontrol.services.internal.targets.AbstractTargetsImpl;
+import com.anrisoftware.sscontrol.types.registry.external.Registries;
+import com.anrisoftware.sscontrol.types.registry.external.RegistriesService;
+import com.anrisoftware.sscontrol.types.registry.external.Registry;
 import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
-import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
- * From repository service.
+ * Image registries targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface FromRepository extends ClusterService {
+public class RegistriesImpl extends AbstractTargetsImpl<RegistryHost, Registry>
+        implements Registries {
 
     /**
-     * Returns template variables.
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
      */
-    Map<String, Object> getVars();
+    public interface RegistriesImplFactory extends RegistriesService {
 
-    void addRepos(List<RepoHost> list);
+    }
 
-    RepoHost getRepo();
-
-    List<RepoHost> getRepos();
-
-    RegistryHost getRegistry();
-
-    void addRegistries(List<RegistryHost> list);
-
-    List<RegistryHost> getRegistries();
-
+    @Inject
+    RegistriesImpl() {
+    }
 }
