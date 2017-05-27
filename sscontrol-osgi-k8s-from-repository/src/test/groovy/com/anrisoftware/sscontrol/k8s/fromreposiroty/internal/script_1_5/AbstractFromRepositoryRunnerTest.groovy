@@ -24,6 +24,8 @@ import org.junit.Before
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
+import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
+import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -59,6 +61,12 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         ],
     ]
 
+    static final URL wordpressZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app.zip')
+
+    static final URL wordpressStZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-st.zip')
+
+    static final URL wordpressStgZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-stg.zip')
+
     @Inject
     RunScriptImplFactory runnerFactory
 
@@ -84,6 +92,12 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
     GitRepo_Debian_8_Factory gitScriptFactory
 
     @Inject
+    DockerRegistryImplFactory dockerFactory
+
+    @Inject
+    DockerRegistry_Debian_8_Factory dockerScriptFactory
+
+    @Inject
     FromRepositoryImplFactory serviceFactory
 
     @Inject
@@ -101,6 +115,8 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
         services.putAvailableService 'repo-git', gitFactory
         services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
+        services.putAvailableService 'registry-docker', dockerFactory
+        services.putAvailableScriptService 'registry-docker/debian/8', dockerScriptFactory
         services.putAvailableService 'from-repository', serviceFactory
         services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
         return services
@@ -110,7 +126,7 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll FromRepository_1_5_Modules.getAdditionalModules()
+        modules.addAll FromRepositoryTestModules.getAdditionalModules()
         modules
     }
 

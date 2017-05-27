@@ -49,7 +49,7 @@ public class FindFilesImpl implements FindFiles {
 
     private final Object log
 
-    private final Collection suffix
+    private final Collection patterns
 
     @Inject
     private ShellFactory shellFactory
@@ -64,11 +64,30 @@ public class FindFilesImpl implements FindFiles {
         this.parent = parent
         this.threads = threads
         this.log = log
-        this.suffix = parseSuffix(args)
+        this.patterns = []
+        def c = parseSuffix(args)
+        if (c) {
+            this.patterns.addAll c
+        }
+        c = parsePatterns(args)
+        if (c) {
+            this.patterns.addAll parsePatterns(args)
+        }
     }
 
     private Collection parseSuffix(Map<String, Object> args) {
         Object v = args.get(SUFFIX_ARG)
+        if (v != null) {
+            Collection c = v
+            return c.inject([]){ list, value ->
+                list << "\\*.$value"
+            }
+        }
+        return null
+    }
+
+    private Collection parsePatterns(Map<String, Object> args) {
+        Object v = args.get(PATTERNS_ARG)
         if (v != null) {
             return v
         }
@@ -88,8 +107,8 @@ public class FindFilesImpl implements FindFiles {
     private List<String> runCmd() {
         def a = new HashMap(args)
         a.outString = true
-        a.vars = [patterns: suffix]
-        a.st = "find . -type f <\\u005C>( <vars.patterns:{p|-name <\\u005C>*.<p>};separator=\" -or \"> <\\u005C>)"
+        a.vars = [patterns: patterns]
+        a.st = "find . -type f <\\u005C>( <vars.patterns:{p|-name <p>};separator=\" -or \"> <\\u005C>)"
         Shell shell = shellFactory.create(a, host, parent, threads, log)
         def process = shell.call()
         def files = process.out.split(/\n/)
