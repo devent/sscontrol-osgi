@@ -29,12 +29,21 @@ public interface FindFiles {
 
     /**
      * A collection of file endings to search for, for example
-     * 
+     *
      * <pre>
      * findFiles suffix: ['yaml', 'yml', 'json']
      * </pre>
      */
     static final String SUFFIX_ARG = "suffix";
+
+    /**
+     * A collection of patterns to search for, for example
+     *
+     * <pre>
+     * findFiles suffix: ['\\*.yaml', '\\*.yml', '\\*.json']
+     * </pre>
+     */
+    static final String PATTERNS_ARG = "patterns";
 
     /**
      * Finds the files.

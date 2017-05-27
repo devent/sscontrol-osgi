@@ -38,15 +38,15 @@ abstract class DockerRegistry_Linux extends ScriptBase {
 
     @Override
     def run() {
-        DockerRegistry service = this.service
     }
 
     /**
      * Builds the docker image.
      */
     def dockerBuild(Map vars) {
-        DockerRegistry service = vars.service
-        log.info 'Build docker image for {}', vars
+        String name = service.registry
+        DockerRegistry docker = findService 'registry-docker', name
+        log.info 'Build docker image for registry {}, service {}, docker {}', name, service, docker
         shell resource: templatesProvider.get().getResource("docker_build_cmd"), name: "dockerBuild" call()
     }
 

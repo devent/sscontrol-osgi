@@ -38,15 +38,15 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FromRepository_Debian_Server_Test extends AbstractFromRepositoryRunnerTest {
+class FromRepositoryManifestsServerTest extends AbstractFromRepositoryRunnerTest {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
-    static final URL wordpressZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app.zip')
+    static final URL wordpressZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app.zip')
 
-    static final URL wordpressStZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app-st.zip')
+    static final URL wordpressStZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-st.zip')
 
-    static final URL wordpressStgZip = FromRepository_Debian_Server_Test.class.getResource('wordpress-app-stg.zip')
+    static final URL wordpressStgZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-stg.zip')
 
     @Test
     void "yaml_files_server"() {
@@ -70,7 +70,7 @@ service "from-repository", repo: "wordpress-app" with {
             before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
@@ -99,7 +99,7 @@ service "from-repository", repo: "wordpress-app" with {
             before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
@@ -127,7 +127,7 @@ service "from-repository", repo: "wordpress-app" with {
             before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
@@ -157,7 +157,7 @@ service "from-repository", repo: "wordpress-app" with {
             before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
@@ -185,7 +185,7 @@ service "from-repository", repo: "wordpress-app" with {
             before: { Map test -> setupServer test: test, zipArchive: wordpressStgZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepository_Debian_Server_Test, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

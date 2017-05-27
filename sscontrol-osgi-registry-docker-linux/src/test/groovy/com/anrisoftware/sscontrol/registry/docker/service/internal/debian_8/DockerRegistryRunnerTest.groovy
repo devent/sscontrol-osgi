@@ -20,8 +20,6 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
-
 import groovy.util.logging.Slf4j
 
 /**
@@ -37,18 +35,19 @@ class DockerRegistryRunnerTest extends AbstractDockerRegistryScriptTest {
     void "docker_tls_runner"() {
         def test = [
             name: "docker_tls_runner",
-            input: """
+            script: """
 service "ssh", host: "localhost"
+service "repo-git", group: 'wordpress-app' with {
+    remote url: "/user/wordpress-app.git"
+}
 service "registry-docker", group: "default" with {
     host address: "docker:2376", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     registry port: 5000, ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     credentials "user", name: "devent", password: "xx"
 }
 """,
-            setupServiceScript: { Map args, HostServiceScript script ->
-                buildMockFactory.create(script.scriptsRepository, script.service, script.target, threads, script.scriptEnv)
-            },
             generatedDir: folder.newFolder(),
+            expectedServicesSize: 3,
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir

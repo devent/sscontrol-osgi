@@ -48,6 +48,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo
 import com.anrisoftware.sscontrol.types.host.external.TargetHost
@@ -822,6 +823,16 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
     public <T extends HostServiceScriptService> T findScriptService(String name, String systemName) {
         String scriptName = "$name/${systemName}"
         scriptsRepository.getAvailableScriptService scriptName
+    }
+
+    /**
+     * Finds the service.
+     */
+    public List findService(String name, String group) {
+        def services = scriptsRepository.getAvailableService name
+        services.findAll { HostServiceService s ->
+            s.hasProperty('group') && (s.group == group)
+        }
     }
 
     /**

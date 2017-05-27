@@ -67,11 +67,22 @@ class FromRepository_1_5 extends ScriptBase {
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         try {
+            buildDocker(dir)
             kubeTemplateFiles(dir, cluster)
             kubeFiles(dir, cluster)
         } finally {
             shell "rm -rf $dir" call()
         }
+    }
+
+    def buildDocker(File dir) {
+        def files = createCmd findFilesFactory, chdir: dir, patterns: dockerfileFilesPatterns call()
+        if (files.size() == 0) {
+            return
+        }
+        def script = createScript 'registry-docker'
+        def vars = [:]
+        script.dockerBuild vars
     }
 
     /**
@@ -170,6 +181,10 @@ class FromRepository_1_5 extends ScriptBase {
 
     List getKubectlFilesPatterns() {
         properties.getListProperty 'kubectl_files_patterns', defaultProperties
+    }
+
+    List getDockerfileFilesPatterns () {
+        properties.getListProperty 'dockerfiles_files_patterns', defaultProperties
     }
 
     @Override

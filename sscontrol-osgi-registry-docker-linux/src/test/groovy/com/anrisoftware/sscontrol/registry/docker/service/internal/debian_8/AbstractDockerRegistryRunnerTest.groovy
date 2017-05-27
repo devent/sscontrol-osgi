@@ -22,6 +22,10 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
+import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Module
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
+import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -57,7 +61,13 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
     DockerRegistryImplFactory dockerFactory
 
     @Inject
-    DockerRegistry_Debian_8_Factory gitScriptFactory
+    DockerRegistry_Debian_8_Factory dockerScriptFactory
+
+    @Inject
+    GitRepoImplFactory gitFactory
+
+    @Inject
+    GitRepo_Debian_8_Factory gitScriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -68,7 +78,9 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'registry-docker', dockerFactory
-        services.putAvailableScriptService 'registry-docker/debian/8', gitScriptFactory
+        services.putAvailableScriptService 'registry-docker/debian/8', dockerScriptFactory
+        services.putAvailableService 'repo-git', gitFactory
+        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
         return services
     }
 
@@ -76,6 +88,8 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
+        modules << new GitRepoModule()
+        modules << new GitRepo_Debian_8_Module()
         modules.addAll DockerRegistryTestModules.getAdditionalModules()
         modules
     }

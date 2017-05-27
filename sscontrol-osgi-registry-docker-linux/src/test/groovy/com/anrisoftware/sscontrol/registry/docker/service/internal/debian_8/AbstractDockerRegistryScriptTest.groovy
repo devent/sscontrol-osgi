@@ -18,45 +18,13 @@ package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import javax.inject.Inject
-
-import org.junit.Before
-
-import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
-import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.FromSourceBuildMock.FromSourceBuildMockFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServices
-
 /**
  *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractDockerRegistryScriptTest extends AbstractScriptTestBase {
-
-    static final URL idRsa = AbstractDockerRegistryScriptTest.class.getResource('id_rsa.txt')
-
-    @Inject
-    SshImplFactory sshFactory
-
-    @Inject
-    DockerRegistryImplFactory serviceFactory
-
-    @Inject
-    DockerRegistry_Debian_8_Factory scriptFactory
-
-    @Inject
-    FromSourceBuildMockFactory buildMockFactory
-
-    String getServiceName() {
-        'registry-docker'
-    }
-
-    String getScriptServiceName() {
-        'registry-docker/debian/8'
-    }
+abstract class AbstractDockerRegistryScriptTest extends AbstractDockerRegistryRunnerTest {
 
     void createDummyCommands(File dir) {
         createIdCommand dir
@@ -74,24 +42,7 @@ abstract class AbstractDockerRegistryScriptTest extends AbstractScriptTestBase {
             'cat',
             'git',
             'dpkg',
+            'git',
         ]
-    }
-
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'registry-docker', serviceFactory
-        services.putAvailableScriptService 'registry-docker/debian/8', scriptFactory
-    }
-
-    List getAdditionalModules() {
-        DockerRegistryTestModules.getAdditionalModules()
-    }
-
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
     }
 }
