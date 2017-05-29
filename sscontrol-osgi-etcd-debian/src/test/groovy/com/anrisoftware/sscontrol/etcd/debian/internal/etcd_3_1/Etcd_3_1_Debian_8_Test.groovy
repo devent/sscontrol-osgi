@@ -36,10 +36,11 @@ class Etcd_3_1_Debian_8_Test extends AbstractEtcdScriptTest {
     void "basic"() {
         def test = [
             name: "basic",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "etcd", member: "default"
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -60,8 +61,8 @@ service "etcd", member: "default"
     void "tls"() {
         def test = [
             name: "tls",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "etcd", member: "default" with {
     bind "http://localhost:2379"
     bind "https://etcd-0.muellerpublic.de:2379"
@@ -69,6 +70,7 @@ service "etcd", member: "default" with {
     tls cert: '$certCertPem', key: '$certKeyPem'
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -86,12 +88,13 @@ service "etcd", member: "default" with {
     void "cert_auth"() {
         def test = [
             name: "cert_auth",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "etcd", member: "default" with {
     authentication "cert", ca: "$certCaPem"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -109,8 +112,8 @@ service "etcd", member: "default" with {
     void "static_peer"() {
         def test = [
             name: "static_peer",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "etcd", member: "infra0" with {
     peer state: "new", advertise: "https://10.0.1.10:2380", listen: "https://10.0.1.10:2380", token: "etcd-cluster-1" with {
         cluster << "infra0=https://10.0.1.10:2380"
@@ -121,6 +124,7 @@ service "etcd", member: "infra0" with {
     }
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -138,5 +142,6 @@ service "etcd", member: "infra0" with {
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }

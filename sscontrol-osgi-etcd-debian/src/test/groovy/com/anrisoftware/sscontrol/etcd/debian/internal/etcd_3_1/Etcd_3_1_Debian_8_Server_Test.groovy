@@ -86,7 +86,7 @@ service "etcd", target: host, member: "etcd-\${i}" with {
 
     @Before
     void beforeMethod() {
-        new File(robobeeSocket).exists()
+        checkRobobeeSocket()
         assumeTrue testHostAvailable
     }
 
