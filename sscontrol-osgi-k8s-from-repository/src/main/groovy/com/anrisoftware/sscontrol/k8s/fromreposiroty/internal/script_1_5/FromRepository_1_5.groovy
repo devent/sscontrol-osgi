@@ -62,7 +62,7 @@ class FromRepository_1_5 extends ScriptBase {
 
     @Override
     def run() {
-        FromRepository service = this.service
+        FromRepository service = service
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
@@ -76,13 +76,22 @@ class FromRepository_1_5 extends ScriptBase {
     }
 
     def buildDocker(File dir) {
+        FromRepository service = service
         def files = createCmd findFilesFactory, chdir: dir, patterns: dockerfileFilesPatterns call()
         if (files.size() == 0) {
             return
         }
         def script = createScript 'registry-docker'
         def vars = [:]
-        script.dockerBuild vars
+        vars.repo = service.repo.repo
+        vars.dir = dir
+        vars = script.setupDockerDefaults vars
+        vars = script.deployDockerConfig vars
+        files.each { String file ->
+            Map v = new HashMap(vars)
+            v.dockerFile = file
+            script.dockerBuild v
+        }
     }
 
     /**

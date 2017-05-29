@@ -2,28 +2,29 @@ setupDocker(parent, vars) ::= <<
 <setupConfigDir(parent, vars)>
 <setupDockerHost(parent, vars)>
 <setupTlsVerify(parent, vars)>
-<if(vars.service.credentials)><credentials_(vars.service.credentials.type)(parent, vars)><endif>
+<if(vars.service.credentials)><({credentials_<vars.service.credentials.type>})(parent, vars)><endif>
 >>
 
 setupConfigDir(parent, vars) ::= <<
-mkdir -p "<vars.configDir>"
-export DOCKER_CONFIG="<vars.configDir>"
+export DOCKER_CONFIG="<vars.dockerDir>"
 >>
 
 setupDockerHost(parent, vars) ::= <<
-<if(vars.service.host)>
-<if(vars.service.host.address)>
+<if(vars.service.host)><if(vars.service.host.address)>
 export DOCKER_HOST="<vars.service.host.address>"
-<endif>
-<endif>
->>
-
-setupTlsVerify(parent, vars) ::= <<
-<if(vars.service.host.tls)><if(vars.service.host.tls.ca)>
-export DOCKER_TLS_VERIFY=1
 <endif><endif>
 >>
 
+setupTlsVerify(parent, vars) ::= <<
+<if(vars.service.host)><if(vars.service.host.tls)><if(vars.service.host.tls.ca)>
+export DOCKER_TLS_VERIFY=1
+<endif><endif><endif>
+>>
+
+credentials(parent, vars, name) ::= <%
+<(name)(parent, vars)>
+%>
+
 credentials_user(parent, vars) ::= <<
-docker login -u <vars.service.credentials.user> -p <vars.service.credentials.password>
+sudo -u <vars.user> docker login -u "<vars.service.credentials.user>" -p "<vars.service.credentials.password>"
 >>

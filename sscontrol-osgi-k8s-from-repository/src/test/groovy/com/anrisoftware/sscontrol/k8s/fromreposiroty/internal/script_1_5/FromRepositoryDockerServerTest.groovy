@@ -54,10 +54,10 @@ service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=$checkoutDir"
 }
-service "registry-docker", group: "wordpress-app" with {
-    credentials "user", name: "user", password: "xx"
+service "registry-docker", group: "erwin82" with {
+    credentials "user", name: "erwin82", password: "blaue sonne"
 }
-service "from-repository", repo: "wordpress-app", registry: "wordpress-app" with {
+service "from-repository", repo: "wordpress-app", registry: "erwin82" with {
     property << "kubectl_cmd=/tmp/kubectl"
     property << "docker_cmd=/tmp/docker"
 }
