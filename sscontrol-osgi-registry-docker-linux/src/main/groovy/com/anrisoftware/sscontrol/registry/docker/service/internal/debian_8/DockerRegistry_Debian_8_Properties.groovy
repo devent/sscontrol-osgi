@@ -18,15 +18,15 @@ package com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * <i>Git-Repo</i> properties provider from
- * {@code "/git_repo_debian_8.properties"}.
+ * <i>Docker</i> properties provider from
+ * {@code "/docker_registry_debian_8.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class DockerRegistry_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = DockerRegistry_Debian_8_Properties.class.getResource("/git_repo_debian_8.properties")
+    private static final URL RESOURCE = DockerRegistry_Debian_8_Properties.class.getResource("/docker_registry_debian_8.properties")
 
     DockerRegistry_Debian_8_Properties() {
         super(DockerRegistry_Debian_8_Properties.class, RESOURCE)
