@@ -52,13 +52,15 @@ service "rkt", version: "1.26"
 
     @Before
     void beforeMethod() {
-        new File(robobeeSocket).exists()
+        checkRobobeeSocket()
         assumeTrue testHostAvailable
     }
 
+    @Override
     void createDummyCommands(File dir) {
     }
 
+    @Override
     Map getScriptEnv(Map args) {
         getEmptyScriptEnv args
     }

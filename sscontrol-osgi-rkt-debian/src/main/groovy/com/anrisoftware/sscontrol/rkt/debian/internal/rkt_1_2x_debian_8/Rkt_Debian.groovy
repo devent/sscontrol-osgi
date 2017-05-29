@@ -42,7 +42,7 @@ class Rkt_Debian extends ScriptBase {
     @Override
     def run() {
         systemd.stopServices()
-        installPackages()
+        checkAptPackages() ? false : installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
     }
@@ -50,11 +50,6 @@ class Rkt_Debian extends ScriptBase {
     @Inject
     def setSystemdFactory(Rkt_Systemd_Debian_Factory systemdFactory) {
         this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
-    void installPackages() {
-        log.info "Installing packages {}.", packages
-        installAptPackages()
     }
 
     @Override
