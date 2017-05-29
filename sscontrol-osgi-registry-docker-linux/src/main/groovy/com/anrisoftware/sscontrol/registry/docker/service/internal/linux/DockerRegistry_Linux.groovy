@@ -21,6 +21,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistry
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistryHost
+import com.anrisoftware.sscontrol.types.registry.external.RegistryHost
 
 import groovy.util.logging.Slf4j
 
@@ -44,10 +45,16 @@ abstract class DockerRegistry_Linux extends ScriptBase {
      * Builds the docker image.
      */
     def dockerBuild(Map vars) {
-        List registries = service.registries
-        DockerRegistry docker = findService 'registry-docker', name
-        log.info 'Build docker image for registry {}, service {}, docker {}', name, service, docker
-        shell resource: templatesProvider.get().getResource("docker_build_cmd"), name: "dockerBuild" call()
+        Map v = new HashMap(vars)
+        RegistryHost registry = service.registry
+        DockerRegistry docker = registry.registry
+        log.info 'Build docker image for service {}, docker {}', service, docker
+        setupDefault docker
+        v.service = docker
+        shell vars: v, resource: templatesProvider.get().getResource("docker_build_cmd"), name: "dockerBuild" call()
+    }
+
+    def setupDefault(DockerRegistry docker) {
     }
 
     def setupCredentials(Map vars) {

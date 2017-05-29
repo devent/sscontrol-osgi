@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.registry.docker.service.external;
 
+import java.net.URI;
+
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
@@ -9,6 +11,8 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
  * @version 1.0
  */
 public interface Registry {
+
+    URI getAddress();
 
     Integer getPort();
 

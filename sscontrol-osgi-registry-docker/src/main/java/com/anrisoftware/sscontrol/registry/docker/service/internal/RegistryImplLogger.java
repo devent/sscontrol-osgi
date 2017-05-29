@@ -15,7 +15,10 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
+import static com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImplLogger.m.addressSet;
 import static com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImplLogger.m.portSet;
+
+import java.net.URI;
 
 import javax.inject.Singleton;
 
@@ -32,7 +35,9 @@ final class RegistryImplLogger extends AbstractLogger {
 
     enum m {
 
-        portSet("Port {} set for {}");
+        portSet("Port {} set for {}"),
+
+        addressSet("Address {} set for {}");
 
         private String name;
 
@@ -55,5 +60,9 @@ final class RegistryImplLogger extends AbstractLogger {
 
     void portSet(RegistryImpl remote, int port) {
         debug(portSet, port, remote);
+    }
+
+    void addressSet(RegistryImpl registry, URI address) {
+        debug(addressSet, address, registry);
     }
 }

@@ -4,9 +4,9 @@ docker build -t <dockerTag(parent, vars)>
 
 >>
 
-dockerBuild(parent, vars) ::= <%
-<if(vars.dockerHost)>
-<vars.dockerHost>/
+dockerTag(parent, vars) ::= <%
+<if(vars.service.registry.address)>
+<vars.service.registry.address>/
 <endif>
 registry/name:version
 %>
