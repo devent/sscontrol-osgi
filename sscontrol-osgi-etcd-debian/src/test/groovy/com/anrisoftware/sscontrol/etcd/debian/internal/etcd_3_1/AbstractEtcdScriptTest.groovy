@@ -18,22 +18,13 @@ package com.anrisoftware.sscontrol.etcd.debian.internal.etcd_3_1
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import javax.inject.Inject
-
-import org.junit.Before
-
-import com.anrisoftware.sscontrol.etcd.internal.EtcdImpl.EtcdImplFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServices
-
 /**
  *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractEtcdScriptTest extends AbstractScriptTestBase {
+abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
 
     static final URL certCaPem = AbstractEtcdScriptTest.class.getResource('cert_ca.txt')
 
@@ -51,25 +42,11 @@ abstract class AbstractEtcdScriptTest extends AbstractScriptTestBase {
 
     static final URL grepActiveCommand = AbstractEtcdScriptTest.class.getResource('grep_active_command.txt')
 
-    @Inject
-    SshImplFactory sshFactory
-
-    @Inject
-    EtcdImplFactory serviceFactory
-
-    @Inject
-    Etcd_3_1_Debian_8_Factory scriptFactory
-
-    String getServiceName() {
-        'etcd'
-    }
-
-    String getScriptServiceName() {
-        'etcd/debian/8'
-    }
-
+    @Override
     void createDummyCommands(File dir) {
+        createDebianJessieCatCommand dir
         createCommand grepActiveCommand, dir, 'grep'
+        createCommand exit1Command, dir, 'dpkg'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -91,23 +68,5 @@ abstract class AbstractEtcdScriptTest extends AbstractScriptTestBase {
             'gpg',
             'dpkg'
         ]
-    }
-
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'etcd', serviceFactory
-        services.putAvailableScriptService 'etcd/debian/8', scriptFactory
-        services.putAvailableService 'ssh', sshFactory
-    }
-
-    List getAdditionalModules() {
-        EtcdModules.getAdditionalModules()
-    }
-
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
     }
 }
