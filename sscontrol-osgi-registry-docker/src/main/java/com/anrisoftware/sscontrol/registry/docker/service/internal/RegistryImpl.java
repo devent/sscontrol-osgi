@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.registry.docker.service.internal;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -46,6 +47,8 @@ public class RegistryImpl implements Registry {
 
     }
 
+    private URI address;
+
     private Integer port;
 
     private transient RegistryImplLogger log;
@@ -61,6 +64,16 @@ public class RegistryImpl implements Registry {
         this.tlsFactory = tlsFactory;
         this.client = tlsFactory.create();
         parseArgs(args);
+    }
+
+    public void setAddress(URI address) {
+        this.address = address;
+        log.addressSet(this, address);
+    }
+
+    @Override
+    public URI getAddress() {
+        return address;
     }
 
     public void setPort(int port) {

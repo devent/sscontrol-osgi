@@ -2,7 +2,7 @@ setupDocker(parent, vars) ::= <<
 <setupConfigDir(parent, vars)>
 <setupDockerHost(parent, vars)>
 <setupTlsVerify(parent, vars)>
-<if(vars.credentials)><credentials_(vars.credentials.type)(parent, vars)><endif>
+<if(vars.service.credentials)><credentials_(vars.service.credentials.type)(parent, vars)><endif>
 >>
 
 setupConfigDir(parent, vars) ::= <<
@@ -12,18 +12,18 @@ export DOCKER_CONFIG="<vars.configDir>"
 
 setupDockerHost(parent, vars) ::= <<
 <if(vars.service.host)>
-<if(vars.service.host.uri)>
-export DOCKER_HOST="<vars.service.host.uri>"
+<if(vars.service.host.address)>
+export DOCKER_HOST="<vars.service.host.address>"
 <endif>
 <endif>
 >>
 
 setupTlsVerify(parent, vars) ::= <<
-<if(vars.tls)><if(vars.tls.ca)>
+<if(vars.service.host.tls)><if(vars.service.host.tls.ca)>
 export DOCKER_TLS_VERIFY=1
 <endif><endif>
 >>
 
 credentials_user(parent, vars) ::= <<
-docker login -u <vars.credentials.user> -p <vars.credentials.password>
+docker login -u <vars.service.credentials.user> -p <vars.service.credentials.password>
 >>
