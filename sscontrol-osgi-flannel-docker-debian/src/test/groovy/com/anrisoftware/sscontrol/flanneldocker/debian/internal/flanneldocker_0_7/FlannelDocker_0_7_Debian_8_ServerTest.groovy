@@ -63,7 +63,7 @@ service "flannel-docker" with {
 
     @Before
     void beforeMethod() {
-        new File(robobeeSocket).exists()
+        checkRobobeeSocket()
         assumeTrue testHostAvailable
     }
 

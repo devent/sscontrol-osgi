@@ -47,7 +47,7 @@ class FlannelDocker_0_7_Debian_8 extends ScriptBase {
     @Override
     def run() {
         systemd.stopServices()
-        installAptPackages()
+        checkAptPackages() ? false : installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
