@@ -36,12 +36,13 @@ class FlannelDocker_0_7_Debian_8_Test extends AbstractFlannelDockerScriptTest {
     void "basic"() {
         def test = [
             name: "basic",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "flannel-docker" with {
     etcd "http://127.0.0.1:2379"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -64,12 +65,13 @@ service "flannel-docker" with {
     void "multiple_endpoints"() {
         def test = [
             name: "multiple_endpoints",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "flannel-docker" with {
     etcd endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -85,12 +87,13 @@ service "flannel-docker" with {
     void "address_multiple_endpoints"() {
         def test = [
             name: "address_multiple_endpoints",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "flannel-docker" with {
     etcd address: "https://etcd-1:2379", endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -106,14 +109,15 @@ service "flannel-docker" with {
     void "etcd_tls"() {
         def test = [
             name: "etcd_tls",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "flannel-docker" with {
     etcd "https://127.0.0.1:2379" with {
         tls ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
     }
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -131,5 +135,6 @@ service "flannel-docker" with {
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }

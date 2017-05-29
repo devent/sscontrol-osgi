@@ -18,22 +18,13 @@ package com.anrisoftware.sscontrol.flanneldocker.debian.internal.flanneldocker_0
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import javax.inject.Inject
-
-import org.junit.Before
-
-import com.anrisoftware.sscontrol.flanneldocker.internal.FlannelDockerImpl.FlannelDockerImplFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServices
-
 /**
  *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractFlannelDockerScriptTest extends AbstractScriptTestBase {
+abstract class AbstractFlannelDockerScriptTest extends AbstractFlannelDockerRunnerTest {
 
     static final URL certCaPem = AbstractFlannelDockerScriptTest.class.getResource('cert_ca.txt')
 
@@ -47,24 +38,10 @@ abstract class AbstractFlannelDockerScriptTest extends AbstractScriptTestBase {
         key: AbstractFlannelDockerScriptTest.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
     ]
 
-    @Inject
-    SshImplFactory sshFactory
-
-    @Inject
-    FlannelDockerImplFactory serviceFactory
-
-    @Inject
-    FlannelDocker_0_7_Debian_8_Factory scriptFactory
-
-    String getServiceName() {
-        'flannel-docker'
-    }
-
-    String getScriptServiceName() {
-        'flannel-docker/debian/8'
-    }
-
+    @Override
     void createDummyCommands(File dir) {
+        createDebianJessieCatCommand dir
+        createCommand exit1Command, dir, 'dpkg'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -89,23 +66,5 @@ abstract class AbstractFlannelDockerScriptTest extends AbstractScriptTestBase {
             'grep',
             'mktemp',
         ]
-    }
-
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'flannel-docker', serviceFactory
-        services.putAvailableScriptService 'flannel-docker/debian/8', scriptFactory
-        services.putAvailableService 'ssh', sshFactory
-    }
-
-    List getAdditionalModules() {
-        FlannelDockerModules.getAdditionalModules()
-    }
-
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
     }
 }
