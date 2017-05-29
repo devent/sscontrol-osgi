@@ -91,6 +91,7 @@ class FromRepository_1_5 extends ScriptBase {
             Map v = new HashMap(vars)
             v.dockerFile = file
             script.dockerBuild v
+            script.dockerPush v
         }
     }
 

@@ -1,0 +1,6 @@
+dockerPush(parent, vars) ::= <<
+<setupDocker(parent, vars)>
+cd "<vars.dir>"
+sudo -u <vars.user> docker push <dockerTag(parent, vars)>
+
+>>

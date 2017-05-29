@@ -1,13 +1,6 @@
 dockerBuild(parent, vars) ::= <<
 <setupDocker(parent, vars)>
 cd "<vars.dir>"
-sudo -u <vars.user> docker build -q -t <dockerTag(parent, vars)> -f <vars.dockerFile> .
+sudo -u <vars.user> docker build -t <dockerTag(parent, vars)> -f <vars.dockerFile> .
 
 >>
-
-dockerTag(parent, vars) ::= <%
-<if(vars.service.registry)><if(vars.service.registry.address)>
-<vars.service.registry.address>/
-<endif><endif>
-<vars.registryName><vars.name>:<vars.version>
-%>
