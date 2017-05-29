@@ -110,7 +110,28 @@ chmod o-rwx "${vars.dockerDir}"
         v.version = getVersion(vars.repo)
         v.user = getDockerBuildUser(docker)
         v.registryName = getRegistryName(docker)
-        shell vars: v, resource: templatesProvider.get().getResource("docker_build_cmd"), name: "dockerBuild" call()
+        shell timeout: timeoutVeryLong, vars: v,
+        resource: templatesProvider.get().getResource("docker_build_cmd"),
+        name: "dockerBuild" call()
+        return v
+    }
+
+    /**
+     * Pushs the docker image.
+     */
+    Map dockerPush(Map vars) {
+        Map v = new HashMap(vars)
+        RegistryHost registry = service.registry
+        DockerRegistry docker = registry.registry
+        log.info 'Push docker image for service {}, docker {}', service, docker
+        v.service = docker
+        v.name = vars.repo.group
+        v.version = getVersion(vars.repo)
+        v.user = getDockerBuildUser(docker)
+        v.registryName = getRegistryName(docker)
+        shell timeout: timeoutVeryLong, vars: v,
+        resource: templatesProvider.get().getResource("docker_push_cmd"),
+        name: "dockerPush" call()
         return v
     }
 

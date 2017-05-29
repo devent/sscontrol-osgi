@@ -21,6 +21,16 @@ export DOCKER_TLS_VERIFY=1
 <endif><endif><endif>
 >>
 
+/*
+*  Docker image tag [REGISTRY_HOST[:REGISTRY_PORT]/]NAME:TAG
+*/
+dockerTag(parent, vars) ::= <%
+<if(vars.service.registry)><if(vars.service.registry.address)>
+<vars.service.registry.address>/
+<endif><endif>
+<vars.registryName><vars.name>:<vars.version>
+%>
+
 credentials(parent, vars, name) ::= <%
 <(name)(parent, vars)>
 %>
