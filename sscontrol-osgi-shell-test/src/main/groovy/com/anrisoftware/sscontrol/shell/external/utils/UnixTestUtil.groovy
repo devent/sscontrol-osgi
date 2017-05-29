@@ -43,7 +43,7 @@ class UnixTestUtil {
         return createCommand(echoCommand, dir, name)
     }
 
-    static String createDebianJessieCatCommand(File dir, String name) {
+    static String createDebianJessieCatCommand(File dir, String name='cat') {
         return createCommand(debianJessieCatCommand, dir, name)
     }
 

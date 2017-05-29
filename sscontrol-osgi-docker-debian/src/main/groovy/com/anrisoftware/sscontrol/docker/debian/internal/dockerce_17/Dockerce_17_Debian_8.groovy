@@ -58,7 +58,7 @@ class Dockerce_17_Debian_8 extends ScriptBase {
         systemd.createDockerdConfig()
         systemd.createRegistryMirrorConfig()
         systemd.deployMirrorCerts()
-        installAptPackages()
+        checkAptPackages() ? false : installAptPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
         updateGrub()

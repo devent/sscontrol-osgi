@@ -1,5 +1,5 @@
 /var/lib/robobee/tmp/00_dockerd_opts.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/00_dockerd_opts.conf
 /var/lib/robobee/tmp/10_mirror.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/10_mirror.conf
-/var/lib/robobee/tmp/robobee.tmp /tmp/junit/junit/etc/docker/certs.d/localhost:5000/ca.crt
+/var/lib/robobee/tmp/robobeeca /tmp/junit/junit/etc/docker/certs.d/localhost:5000/ca.crt
 /tmp/junit/junit/etc/default/grub /var/lib/robobee/tmp
 /var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/default/grub

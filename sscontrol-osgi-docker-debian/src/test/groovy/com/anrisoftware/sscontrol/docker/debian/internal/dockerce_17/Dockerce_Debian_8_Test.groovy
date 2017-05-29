@@ -36,10 +36,11 @@ class Dockerce_Debian_8_Test extends AbstractDockerceScriptTest {
     void "basic"() {
         def test = [
             name: "basic",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker"
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -59,12 +60,13 @@ service "docker"
     void "mirror_localhost"() {
         def test = [
             name: "mirror_localhost",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker" with {
     registry mirror: 'localhost'
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -84,12 +86,13 @@ service "docker" with {
     void "mirror_localhost_ca"() {
         def test = [
             name: "mirror_localhost_ca",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker" with {
     registry mirror: 'localhost', ca: '$certCaPem'
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -106,5 +109,6 @@ service "docker" with {
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
