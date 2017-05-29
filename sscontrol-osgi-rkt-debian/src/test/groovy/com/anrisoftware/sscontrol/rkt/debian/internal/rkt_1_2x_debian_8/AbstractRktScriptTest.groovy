@@ -18,42 +18,20 @@ package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import javax.inject.Inject
-
-import org.junit.Before
-
-import com.anrisoftware.sscontrol.rkt.service.internal.RktImpl.RktImplFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServices
-
 /**
  *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractRktScriptTest extends AbstractScriptTestBase {
+abstract class AbstractRktScriptTest extends AbstractRktRunnerTest {
 
-    @Inject
-    SshImplFactory sshFactory
+    static final URL dpkgCustomCommand = AbstractRktScriptTest.class.getResource('dpkg_custom_command.txt')
 
-    @Inject
-    RktImplFactory rktFactory
-
-    @Inject
-    Rkt_Debian_Factory scriptFactory
-
-    String getServiceName() {
-        'rkt-1.26'
-    }
-
-    String getScriptServiceName() {
-        'rkt-1.26/debian/8'
-    }
-
+    @Override
     void createDummyCommands(File dir) {
-        createIdCommand dir
+        createCommand dpkgCustomCommand, dir, 'dpkg'
+        createDebianJessieCatCommand dir
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -64,6 +42,7 @@ abstract class AbstractRktScriptTest extends AbstractScriptTestBase {
             'cp',
             'systemctl',
             'which',
+            'id',
             'mv',
             'basename',
             'wget',
@@ -72,25 +51,6 @@ abstract class AbstractRktScriptTest extends AbstractScriptTestBase {
             'grep',
             'apt-get',
             'gpg',
-            'dpkg',
         ]
-    }
-
-    HostServices putServices(HostServices services) {
-        services.putAvailableService 'ssh', sshFactory
-        services.putAvailableService 'rkt', rktFactory
-        services.putAvailableScriptService 'rkt-1.26/debian/8', scriptFactory
-    }
-
-    List getAdditionalModules() {
-        RktModules.getAdditionalModules()
-    }
-
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
     }
 }

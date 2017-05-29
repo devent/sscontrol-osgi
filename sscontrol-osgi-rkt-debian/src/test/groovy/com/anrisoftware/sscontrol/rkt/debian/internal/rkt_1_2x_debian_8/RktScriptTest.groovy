@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.rkt.debian.internal.rkt_1_2x_debian_8
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -35,8 +36,9 @@ class RktScriptTest extends AbstractRktScriptTest {
     void "rkt_defaults"() {
         def test = [
             name: "rkt_defaults",
-            input: """
-service "ssh", host: "localhost"
+            expectedServicesSize: 2,
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "rkt", version: "1.26"
 """,
             generatedDir: folder.newFolder(),
@@ -49,5 +51,11 @@ service "rkt", version: "1.26"
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
