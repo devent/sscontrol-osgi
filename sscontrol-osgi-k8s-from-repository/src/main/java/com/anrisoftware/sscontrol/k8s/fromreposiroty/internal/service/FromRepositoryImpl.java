@@ -158,7 +158,12 @@ public class FromRepositoryImpl implements FromRepository {
 
     @Override
     public RegistryHost getRegistry() {
-        return getRegistries().get(0);
+        List<RegistryHost> r = getRegistries();
+        if (r.size() > 0) {
+            return r.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
