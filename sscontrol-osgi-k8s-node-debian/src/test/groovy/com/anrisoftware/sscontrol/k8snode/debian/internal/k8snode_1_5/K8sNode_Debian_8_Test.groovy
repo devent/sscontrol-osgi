@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -29,14 +30,14 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sNode_Debian_8_Test extends AbstractTest_K8sNode_Debian_8 {
+class K8sNode_Debian_8_Test extends AbstractNodeScriptTest {
 
     @Test
     void "tls_api_host"() {
         def test = [
             name: "tls_api_host",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'https://192.168.0.100' with {
     plugin "flannel"
     plugin "calico"
@@ -46,6 +47,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
     }
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -72,9 +74,9 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
     void "tls_api_target"() {
         def test = [
             name: "tls_api_target",
-            input: """
+            script: """
 service "ssh", group: "master" with {
-    host "master.robobee.test"
+    host "master.robobee.test", socket: "$localhostSocket"
 }
 service "ssh", group: "nodes" with {
     host "localhost"
@@ -88,6 +90,7 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
     }
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -98,5 +101,11 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
