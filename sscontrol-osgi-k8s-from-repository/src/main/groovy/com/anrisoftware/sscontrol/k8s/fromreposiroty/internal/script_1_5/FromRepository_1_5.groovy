@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
@@ -63,10 +66,10 @@ class FromRepository_1_5 extends ScriptBase {
     @Override
     def run() {
         FromRepository service = service
-        assertThat "service=null for name=$name, system=$system", scriptService, notNullValue()
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
+        assertThat "checkout-dir=null for $service", dir, notNullValue()
         try {
             buildDocker(dir)
             kubeTemplateFiles(dir, cluster)
