@@ -235,12 +235,6 @@ abstract class K8sMaster_1_5_Upstream_Systemd extends K8s_1_5_Upstream_Systemd {
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
             shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
         }
-        if (deployHeapster) {
-            log.info 'Start heapster.'
-            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-de.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-svc.yaml'] call()
-        }
         if (deployKubeDashboard) {
             log.info 'Start heapster.'
             shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()

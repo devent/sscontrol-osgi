@@ -295,16 +295,6 @@ systemctl daemon-reload
         }
     }
 
-    def startHeapsterAddon() {
-        K8s service = service
-        if (deployHeapster) {
-            log.info 'Start heapster.'
-            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-de.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'heapster-svc.yaml'] call()
-        }
-    }
-
     def startKubeDashboardAddon() {
         K8s service = service
         if (deployKubeDashboard) {
@@ -715,8 +705,8 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
     }
 
     /**
-     * Returns true if we allow Calico node pods on the master. If true, a 
-     * toleration for the master taint will be added to the Calico node 
+     * Returns true if we allow Calico node pods on the master. If true, a
+     * toleration for the master taint will be added to the Calico node
      * DaemonSet.
      */
     boolean getAllowCalicoNodeOnMaster() {
@@ -733,7 +723,7 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
     }
 
     /**
-     * Returns true if we require a particular node label for 
+     * Returns true if we require a particular node label for
      * Calico Policy-Controller pods.
      */
     boolean getRequireCalicoPolicyControllerNodeLabel() {
