@@ -38,7 +38,10 @@ class K8sNode_Debian_8_Test extends AbstractNodeScriptTest {
             name: "tls_api_host",
             script: """
 service "ssh", host: "localhost", socket: "$localhostSocket"
-service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'https://192.168.0.100' with {
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+}
+service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'https://192.168.0.100', cluster: "default" with {
     plugin "flannel"
     plugin "calico"
     kubelet.with {
@@ -47,7 +50,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
     }
 }
 """,
-            expectedServicesSize: 2,
+            expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir

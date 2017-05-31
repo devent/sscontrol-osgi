@@ -18,11 +18,7 @@ package com.anrisoftware.sscontrol.k8skubectl.linux.external
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-import java.nio.charset.StandardCharsets
-
 import javax.inject.Inject
-
-import org.apache.commons.io.IOUtils
 
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
@@ -116,7 +112,7 @@ chmod o-rx $certsDir
         assertThat "service!=null", service, notNullValue()
         assertThat "host!=null", host, notNullValue()
         Credentials c = host.credentials
-        setupCredentials c
+        setupHost host
         Map v = new HashMap(vars)
         v.service = service
         v.cluster = host
@@ -135,25 +131,21 @@ chmod o-rx $certsDir
      *
      * @param vars
      * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>service: the ClusterService.
-     * <li>host: the ClusterHost.
-     * @return the created kubeconfig file.
+     * <li>cluster: the ClusterHost.
      */
-    File uploadKubeconfig(Map vars) {
+    def uploadKubeconfig(Map vars) {
         log.info 'Uploads kubeconfig for {}.', vars
-        ClusterService service = vars.service
         ClusterHost host = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "service!=null", service, notNullValue()
-        assertThat "host!=null", host, notNullValue()
-        Credentials c = setupCredentials host.credentials
+        assertThat "cluster!=null", host, notNullValue()
+        setupHost host
+        Credentials c = host.credentials
         Map v = new HashMap(vars)
         v.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
         v.resource = kubeconfTemplate
         v.name = 'kubectlConf'
         v.dest = vars.kubeconfigFile
         template v call()
-        return v.dest
     }
 
     /**
@@ -162,22 +154,17 @@ chmod o-rx $certsDir
      * @param vars
      * <ul>
      * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>service: the ClusterService.
-     * <li>host: the ClusterHost.
+     * <li>cluster: the ClusterHost.
      * <li>args: kubectl arguments.
      * </ul>
      */
     def runKubectlKubeconfig(Map vars) {
         log.info 'Run kubectl with {}', vars
-        ClusterService service = vars.service
         ClusterHost host = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "service!=null", service, notNullValue()
-        assertThat "host!=null", host, notNullValue()
+        assertThat "cluster!=null", host, notNullValue()
         Credentials c = host.credentials
-        setupCredentials c
         Map v = new HashMap(vars)
-        v.service = service
         v.cluster = host
         v.credentials = c
         def args = new HashMap(vars)
@@ -190,7 +177,7 @@ chmod o-rx $certsDir
     /**
      * Setups the credentials.
      */
-    Credentials setupCredentials(ClusterHost host) {
+    def setupHost(ClusterHost host) {
         Credentials c = host.credentials
         if (!host.proto) {
             if (c.hasProperty('tls') && c.tls.ca) {
@@ -218,7 +205,6 @@ chmod o-rx $certsDir
                 tls.caName = defaultCredentialsTlsCaName
             }
         }
-        return c
     }
 
     /**
@@ -228,13 +214,13 @@ chmod o-rx $certsDir
         def renderer = new UriBase64Renderer()
         def map = [:]
         if (tls.cert) {
-            map << [cert: renderer.toString(IOUtils.toString(tls.cert, StandardCharsets.UTF_8))]
+            map << [cert: renderer.toString(tls.cert, "base64", null)]
         }
         if (tls.key) {
-            map << [key: renderer.toString(IOUtils.toString(tls.key, StandardCharsets.UTF_8))]
+            map << [key: renderer.toString(tls.key, "base64", null)]
         }
         if (tls.ca) {
-            map << [ca: renderer.toString(IOUtils.toString(tls.ca, StandardCharsets.UTF_8))]
+            map << [ca: renderer.toString(tls.ca, "base64", null)]
         }
     }
 

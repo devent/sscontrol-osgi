@@ -30,8 +30,7 @@ public class K8sNode_1_5_Debian_8_Module extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        K8sNode_1_5_Debian_8.class)
+                .implement(HostServiceScript.class, K8sNode_1_5_Debian_8.class)
                 .build(K8sNode_1_5_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
@@ -39,8 +38,12 @@ public class K8sNode_1_5_Debian_8_Module extends AbstractModule {
                 .build(K8sNode_1_5_Upstream_Systemd_Debian_8_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        Kubectl_1_5_Upstream_Debian_8.class)
-                .build(Kubectl_1_5_Upstream_Debian_8_Factory.class));
+                        Kubectl_1_5_Upstream_Linux.class)
+                .build(Kubectl_1_5_Upstream_Linux_Factory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class,
+                        Kubectl_1_6_Cluster_Debian.class)
+                .build(Kubectl_1_6_Cluster_Debian_Factory.class));
     }
 
 }

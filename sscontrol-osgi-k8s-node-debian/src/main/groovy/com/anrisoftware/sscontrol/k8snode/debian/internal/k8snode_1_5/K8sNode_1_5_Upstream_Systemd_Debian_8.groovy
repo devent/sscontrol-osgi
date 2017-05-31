@@ -20,6 +20,7 @@ import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8s
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_6_Cluster_Linux
 import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Systemd
 
 import groovy.util.logging.Slf4j
@@ -36,6 +37,8 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
 
     @Inject
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
+
+    Kubectl_1_6_Cluster_Debian kubectlClusterLinux
 
     @Override
     Object run() {
@@ -58,6 +61,11 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
         applyTaints()
     }
 
+    @Inject
+    void setKubectlClusterLinuxFactory(Kubectl_1_6_Cluster_Debian_Factory factory) {
+        this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
@@ -76,5 +84,10 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
     @Override
     String getSystemVersion() {
         SYSTEM_VERSION
+    }
+
+    @Override
+    Kubectl_1_6_Cluster_Linux getKubectlCluster() {
+        kubectlClusterLinux
     }
 }

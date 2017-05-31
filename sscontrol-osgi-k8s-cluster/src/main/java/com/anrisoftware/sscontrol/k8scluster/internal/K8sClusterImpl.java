@@ -42,7 +42,6 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
-import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
@@ -54,16 +53,6 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class K8sClusterImpl implements K8sCluster {
-
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface K8sClusterImplFactory extends HostServiceService {
-
-    }
 
     private final K8sClusterImplLogger log;
 

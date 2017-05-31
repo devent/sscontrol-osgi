@@ -27,8 +27,8 @@ import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
@@ -77,7 +77,7 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
     CmdRunCaller cmdRunCaller
 
     @Inject
-    K8sClusterImplFactory serviceFactory
+    K8sClusterFactory serviceFactory
 
     @Inject
     K8sCluster_1_5_Linux_Factory scriptFactory

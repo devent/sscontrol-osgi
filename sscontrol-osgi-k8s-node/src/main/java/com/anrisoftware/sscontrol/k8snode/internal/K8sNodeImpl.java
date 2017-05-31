@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode;
 import com.anrisoftware.sscontrol.k8snode.external.K8sNodeService;
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -286,6 +287,16 @@ public class K8sNodeImpl implements K8sNode {
     @Override
     public List<Node> getNodes() {
         return k8s.getNodes();
+    }
+
+    @Override
+    public ClusterHost getClusterHost() {
+        return k8s.getClusterHost();
+    }
+
+    @Override
+    public List<ClusterHost> getClusterHosts() {
+        return k8s.getClusterHosts();
     }
 
     @Override

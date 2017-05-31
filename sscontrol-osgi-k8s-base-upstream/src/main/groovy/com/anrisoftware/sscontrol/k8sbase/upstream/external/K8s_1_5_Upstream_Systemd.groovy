@@ -24,6 +24,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.external.TaintFactory
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
@@ -59,6 +60,9 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     @Inject
     TaintFactory taintFactory
+
+    @Inject
+    K8sClusterFactory clusterFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -318,10 +322,20 @@ systemctl daemon-reload
     def applyTaints() {
         K8s service = service
         log.info 'Apply taints for {}.', service
-        service.taints.each { String key, Taint taint ->
-            log.info 'Apply taint {} for {}.', taint, service
-            shell vars: [taint: taint, value: taint.value?taint.value:''],
-            resource: clusterCmds, name: 'applyTains' call()
+        def vars = [:]
+        vars.cluster = service.clusterHost
+        vars.kubeconfigFile = createTmpFile()
+        try {
+            kubectlCluster.uploadKubeconfig(vars)
+            service.taints.each { String key, Taint taint ->
+                log.info 'Apply taint {} for {}.', taint, service
+                def v = new HashMap(vars)
+                def node = service.cluster.name
+                v.args = "taint --overwrite nodes $node ${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
+                kubectlCluster.runKubectlKubeconfig v
+            }
+        } finally {
+            deleteTmpFile vars.kubeconfigFile
         }
     }
 
@@ -371,6 +385,8 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
             "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
         ]
     }
+
+    abstract Kubectl_1_6_Cluster_Linux getKubectlCluster()
 
     def getDefaultLogLevel() {
         properties.getNumberProperty('default_log_level', defaultProperties).intValue()

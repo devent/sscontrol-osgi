@@ -28,7 +28,7 @@ import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -58,7 +58,7 @@ import groovy.util.logging.Slf4j
 class K8sClusterScriptTest {
 
     @Inject
-    K8sClusterImplFactory serviceFactory
+    K8sClusterFactory serviceFactory
 
     @Inject
     HostServicesImplFactory servicesFactory

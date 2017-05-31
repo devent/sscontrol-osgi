@@ -27,6 +27,8 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 abstract class AbstractNodeScriptTest extends AbstractNodeRunnerTest {
 
     void createDummyCommands(File dir) {
+        createDebianJessieCatCommand dir
+        createCommand exit1Command, dir, 'dpkg'
         createIdCommand dir
         createEchoCommands dir, [
             'mkdir',

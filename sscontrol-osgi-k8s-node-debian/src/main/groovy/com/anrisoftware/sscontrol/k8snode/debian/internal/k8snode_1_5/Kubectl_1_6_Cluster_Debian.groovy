@@ -15,29 +15,30 @@
  */
 package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 
+import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8sNode_1_5_Debian_8_Service.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_6_Cluster_Linux
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Node 1.5 service from the upstream sources
- * for Debian 8.
+ * Configures the K8s-Cluster 1.5 service from the upstream sources for
+ * GNU/Linux.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Kubectl_1_5_Upstream_Debian_8 extends Kubectl_1_5_Upstream {
+class Kubectl_1_6_Cluster_Debian extends Kubectl_1_6_Cluster_Linux {
 
     @Inject
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
 
     @Override
     Object run() {
-        installKubernetes()
     }
 
     @Override
@@ -48,5 +49,15 @@ class Kubectl_1_5_Upstream_Debian_8 extends Kubectl_1_5_Upstream {
     @Override
     def getLog() {
         log
+    }
+
+    @Override
+    String getSystemName() {
+        SYSTEM_NAME
+    }
+
+    @Override
+    String getSystemVersion() {
+        SYSTEM_VERSION
     }
 }

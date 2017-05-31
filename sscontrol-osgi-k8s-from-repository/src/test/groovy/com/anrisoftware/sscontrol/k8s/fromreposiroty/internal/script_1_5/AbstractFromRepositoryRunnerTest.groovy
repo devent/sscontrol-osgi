@@ -22,7 +22,7 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
 import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
@@ -80,7 +80,7 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    K8sClusterImplFactory clusterFactory
+    K8sClusterFactory clusterFactory
 
     @Inject
     K8sCluster_1_5_Linux_Factory cluster_1_5_Factory

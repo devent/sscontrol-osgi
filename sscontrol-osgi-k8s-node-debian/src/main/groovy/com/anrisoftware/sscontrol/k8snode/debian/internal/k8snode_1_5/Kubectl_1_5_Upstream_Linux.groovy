@@ -15,40 +15,30 @@
  */
 package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5
 
+import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8sNode_1_5_Debian_8_Service.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> 6 service for Debian 8.
+ * Installs kubectl from the upstream sources for GNU/Linux.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sNode_1_5_Debian_8 extends ScriptBase {
+class Kubectl_1_5_Upstream_Linux extends Kubectl_1_5_Upstream {
 
     @Inject
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider
 
-    @Inject
-    K8sNode_1_5_Upstream_Systemd_Debian_8_Factory upstreamSystemdFactory
-
-    Kubectl_1_5_Upstream_Linux kubectlUpstreamLinux
-
     @Override
-    def run() {
-        checkAptPackages() ? false : installAptPackages()
-        upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        kubectlUpstreamLinux.run()
-    }
-
-    @Inject
-    void setKubectlUpstreamLinuxFactory(Kubectl_1_5_Upstream_Linux_Factory factory) {
-        this.kubectlUpstreamLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    Object run() {
+        installKubectl()
     }
 
     @Override
@@ -59,5 +49,15 @@ class K8sNode_1_5_Debian_8 extends ScriptBase {
     @Override
     def getLog() {
         log
+    }
+
+    @Override
+    String getSystemName() {
+        SYSTEM_NAME
+    }
+
+    @Override
+    String getSystemVersion() {
+        SYSTEM_VERSION
     }
 }
