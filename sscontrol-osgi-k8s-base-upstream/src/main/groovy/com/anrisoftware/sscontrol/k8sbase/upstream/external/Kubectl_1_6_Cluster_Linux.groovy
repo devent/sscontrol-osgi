@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5;
+package com.anrisoftware.sscontrol.k8sbase.upstream.external
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux
+
+import groovy.util.logging.Slf4j
 
 /**
+ * Configures the K8s-Cluster 1.5 service from the upstream sources for
+ * GNU/Linux.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface Kubectl_1_5_Upstream_Debian_8_Factory
-        extends HostServiceScriptService {
+@Slf4j
+abstract class Kubectl_1_6_Cluster_Linux extends Kubectl_1_6_Linux {
+
+    @Override
+    Object run() {
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

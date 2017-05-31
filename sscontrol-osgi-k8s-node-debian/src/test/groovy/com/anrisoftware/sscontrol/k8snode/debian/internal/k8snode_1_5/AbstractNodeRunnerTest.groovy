@@ -21,6 +21,8 @@ import javax.inject.Inject
 
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeImpl.K8sNodeImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -64,6 +66,12 @@ abstract class AbstractNodeRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
+    K8sClusterFactory clusterFactory
+
+    @Inject
+    K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
+
+    @Inject
     K8sNodeImplFactory serviceFactory
 
     @Inject
@@ -77,6 +85,8 @@ abstract class AbstractNodeRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableService 'k8s-cluster', clusterFactory
+        services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
         services.putAvailableService 'k8s-node', serviceFactory
         services.putAvailableScriptService 'k8s-node/debian/8', scriptFactory
         return services

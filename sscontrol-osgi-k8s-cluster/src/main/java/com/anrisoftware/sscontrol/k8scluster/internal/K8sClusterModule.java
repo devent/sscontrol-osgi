@@ -20,13 +20,13 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 import com.anrisoftware.sscontrol.k8scluster.external.Cluster;
 import com.anrisoftware.sscontrol.k8scluster.external.Context;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsFactory;
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsAnonImpl.CredentialsAnonImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.CredentialsCertImpl.CredentialsCertImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
@@ -45,7 +45,7 @@ public class K8sClusterModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, K8sClusterImpl.class)
-                .build(K8sClusterImplFactory.class));
+                .build(K8sClusterFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Cluster.class, ClusterImpl.class)
                 .build(ClusterImplFactory.class));

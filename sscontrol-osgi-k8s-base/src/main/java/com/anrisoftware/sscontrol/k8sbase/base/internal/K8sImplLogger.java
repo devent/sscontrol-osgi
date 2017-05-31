@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8sbase.base.internal;
 
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.allowPrivilegedSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.clusterHostsAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.clusterSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.kubeletSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.labelAdded;
@@ -23,6 +24,8 @@ import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.n
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.pluginAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.taintAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImplLogger.m.tlsSet;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -34,6 +37,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 
 /**
  * Logging for {@link K8sImpl}.
@@ -60,7 +64,9 @@ final class K8sImplLogger extends AbstractLogger {
 
         taintAdded("Taint {} added to {}"),
 
-        nodeAdded("Node {} added to {}");
+        nodeAdded("Node {} added to {}"),
+
+        clusterHostsAdded("Cluster hosts added to {}: {}");
 
         private String name;
 
@@ -111,5 +117,9 @@ final class K8sImplLogger extends AbstractLogger {
 
     void nodeAdded(K8sImpl k8s, Node node) {
         debug(nodeAdded, node, k8s);
+    }
+
+    void clusterHostsAdded(K8sImpl k8s, List<ClusterHost> list) {
+        debug(clusterHostsAdded, list, k8s);
     }
 }

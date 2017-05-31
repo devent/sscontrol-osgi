@@ -28,7 +28,10 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Kubectl_1_5_Upstream extends ScriptBase {
 
-    def installKubernetes() {
+    /**
+     * Downloads and installs kubectl.
+     */
+    def installKubectl() {
         log.info 'Installs kubectl.'
         copy src: archive, hash: archiveHash, dest: binDir, direct: true, privileged: true, timeout: timeoutLong call()
         shell privileged: true, "chown root.root '$binDir/kubectl'; chmod +x '$binDir/kubectl';" call()

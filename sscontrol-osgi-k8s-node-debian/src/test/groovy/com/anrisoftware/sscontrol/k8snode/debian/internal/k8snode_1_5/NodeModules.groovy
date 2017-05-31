@@ -6,6 +6,9 @@ import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateMod
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.K8s_1_5_Upstream_Module
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -48,6 +51,9 @@ class NodeModules {
             new K8sNode_1_5_Debian_8_Module(),
             new K8sNode_1_5_Upstream_Module(),
             new K8s_1_5_Upstream_Module(),
+            new K8sClusterModule(),
+            new K8sCluster_1_5_Linux_Module(),
+            new Kubectl_1_6_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

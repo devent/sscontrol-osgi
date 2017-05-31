@@ -37,7 +37,7 @@ class Kubectl_1_5_Upstream_Debian_8 extends Kubectl_1_5_Upstream {
 
     @Override
     Object run() {
-        installKubernetes()
+        installKubectl()
     }
 
     @Override

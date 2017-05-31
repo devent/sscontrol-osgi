@@ -46,13 +46,13 @@ class K8sCluster_1_5_Linux extends ScriptBase {
     }
 
     @Inject
-    void setKubectlUpstreamLinuxFactory(Kubectl_1_5_Upstream_Linux_Factory kubectlUpstreamLinuxFactory) {
-        this.kubectlUpstreamLinux = kubectlUpstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    void setKubectlUpstreamLinuxFactory(Kubectl_1_5_Upstream_Linux_Factory factory) {
+        this.kubectlUpstreamLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Inject
-    void setKubectlClusterLinuxFactory(Kubectl_1_6_Cluster_Linux_Factory kubectlClusterLinuxFactory) {
-        this.kubectlClusterLinux = kubectlClusterLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    void setKubectlClusterLinuxFactory(Kubectl_1_6_Cluster_Linux_Factory factory) {
+        this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override

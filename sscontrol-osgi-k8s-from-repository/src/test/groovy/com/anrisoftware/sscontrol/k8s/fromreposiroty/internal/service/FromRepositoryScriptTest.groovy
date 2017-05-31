@@ -32,8 +32,8 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
@@ -71,7 +71,7 @@ class FromRepositoryScriptTest {
     RobobeeScriptFactory robobeeScriptFactory
 
     @Inject
-    K8sClusterImplFactory clusterFactory
+    K8sClusterFactory clusterFactory
 
     @Inject
     FromRepositoryImplFactory serviceFactory

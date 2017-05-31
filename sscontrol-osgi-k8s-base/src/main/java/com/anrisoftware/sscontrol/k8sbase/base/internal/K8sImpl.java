@@ -52,6 +52,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.ClusterImpl.ClusterImplF
 import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -117,6 +118,8 @@ public class K8sImpl implements K8s {
 
     private final List<Node> nodes;
 
+    private final List<ClusterHost> clusterHosts;
+
     @Inject
     K8sImpl(K8sImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
@@ -137,6 +140,7 @@ public class K8sImpl implements K8s {
         this.labels = new HashMap<>();
         this.taints = new HashMap<>();
         this.nodes = new ArrayList<>();
+        this.clusterHosts = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -437,6 +441,21 @@ public class K8sImpl implements K8s {
     }
 
     @Override
+    public ClusterHost getClusterHost() {
+        return getClusterHosts().get(0);
+    }
+
+    public void addClusterHosts(List<ClusterHost> list) {
+        this.clusterHosts.addAll(list);
+        log.clusterHostsAdded(this, list);
+    }
+
+    @Override
+    public List<ClusterHost> getClusterHosts() {
+        return Collections.unmodifiableList(clusterHosts);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
@@ -446,6 +465,7 @@ public class K8sImpl implements K8s {
         parseTargets(args);
         parseRuntime(args);
         parseCluster(args);
+        parseClusters(args);
     }
 
     private void parseCluster(Map<String, Object> args) {
@@ -469,6 +489,14 @@ public class K8sImpl implements K8s {
         Object v = args.get("targets");
         if (v != null) {
             addTargets((List<TargetHost>) v);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseClusters(Map<String, Object> args) {
+        Object v = args.get("clusters");
+        if (v != null) {
+            addClusterHosts((List<ClusterHost>) v);
         }
     }
 

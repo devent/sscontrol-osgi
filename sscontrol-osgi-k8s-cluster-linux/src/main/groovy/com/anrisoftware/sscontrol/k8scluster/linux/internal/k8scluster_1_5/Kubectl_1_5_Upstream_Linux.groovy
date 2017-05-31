@@ -38,7 +38,7 @@ class Kubectl_1_5_Upstream_Linux extends Kubectl_1_5_Upstream {
 
     @Override
     Object run() {
-        installKubernetes()
+        installKubectl()
     }
 
     @Override

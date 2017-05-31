@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -74,6 +75,10 @@ public interface K8s extends HostService {
     Kubelet kubelet(Map<String, Object> args);
 
     void addNode(Node node);
+
+    ClusterHost getClusterHost();
+
+    List<ClusterHost> getClusterHosts();
 
     /**
      * Returns the list of nodes of this Kubernetes service.

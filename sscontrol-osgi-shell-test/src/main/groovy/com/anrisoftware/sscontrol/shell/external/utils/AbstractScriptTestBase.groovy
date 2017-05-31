@@ -233,7 +233,12 @@ abstract class AbstractScriptTestBase {
             switch (a.cmdName) {
                 case 'template':
                     def split = StringUtils.split(a.dest.toString(), File.separator)
-                    def name = split[3..split.length-1].join(File.separator)
+                    def name
+                    if (split.length > 3) {
+                        name = split[3..split.length-1].join(File.separator)
+                    } else {
+                        name = split[-1]
+                    }
                     assert args.test.generatedDir != null : "generatedDir must be set in test case"
                     file = new File(args.test.generatedDir, name)
                     break
