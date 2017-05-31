@@ -1,0 +1,33 @@
+/*
+* Creates kube-admin kubeconfig.
+*/
+kubectlConf(parent, vars) ::= <<
+current-context: admin-context
+apiVersion: v1
+clusters:
+- cluster:
+    api-version: v1
+    server: <vars.cluster.proto>://<vars.cluster.host>:<vars.cluster.port>
+<if(vars.certs.ca)>
+    certificate-authority-data: <vars.certs.ca>
+<endif>
+  name: <vars.cluster.cluster.group>
+contexts:
+- context:
+    cluster: <vars.cluster.cluster.group>
+    user: kube-admin
+  name: admin-context
+kind: Config
+preferences:
+  colors: true
+users:
+- name: kube-admin
+  user:
+<if(vars.certs.cert)>
+    client-certificate-data: <vars.certs.cert>
+<endif>
+<if(vars.certs.key)>
+    client-key-data: <vars.certs.key>
+<endif>
+
+>>

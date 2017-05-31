@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Label;
+import com.anrisoftware.sscontrol.k8sbase.base.external.Node;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sImpl.K8sImplFactory;
@@ -275,6 +276,16 @@ public class K8sNodeImpl implements K8sNode {
     @Override
     public List<String> getTaint() {
         return k8s.getTaint();
+    }
+
+    @Override
+    public void addNode(Node node) {
+        k8s.addNode(node);
+    }
+
+    @Override
+    public List<Node> getNodes() {
+        return k8s.getNodes();
     }
 
     @Override

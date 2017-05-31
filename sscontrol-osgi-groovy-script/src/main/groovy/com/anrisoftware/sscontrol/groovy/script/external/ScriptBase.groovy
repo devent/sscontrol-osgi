@@ -334,6 +334,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * Template command.
+     * <p>
+     * <pre>
+     * template base: 'Base_Templates', resource: 'foo_template', name: 'foo', vars: [:], dest: '/etc/config' call()
+     * template resource: fooTemplateResource, name: 'foo', vars: [:], dest: '/etc/config' call()
+     * </pre>
+     * </p>
      */
     Template template(Map args) {
         def a = setupArgs(args, 'template')
@@ -343,7 +349,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     /**
      * Check a status of a command.
      * @param command the command which status is checked, for example
-     * <code>uname -a | grep '4.0.0'</code>
+     * <code>"uname -a | grep '4.0.0'"</code>
      */
     boolean check(String command) {
         check([command: command])
@@ -1025,6 +1031,17 @@ mktemp -d
             file = new File(ret.out[0..-2])
         }
         file
+    }
+
+    /**
+     * Deletes the temporary file.
+     */
+    void deleteTmpFile(File file) {
+        if (createTmpFileCallback) {
+            file.isFile() ? file.delete() : file.deleteDir()
+        } else {
+            shell "rm -rf ${file.absolutePath}" call()
+        }
     }
 
     Duration getTimeoutShort() {

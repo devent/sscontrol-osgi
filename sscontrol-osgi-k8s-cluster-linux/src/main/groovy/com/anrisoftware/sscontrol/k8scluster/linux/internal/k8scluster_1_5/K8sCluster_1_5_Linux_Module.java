@@ -34,8 +34,12 @@ public class K8sCluster_1_5_Linux_Module extends AbstractModule {
                 .build(K8sCluster_1_5_Linux_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        K8sCluster_1_5_Upstream_Linux.class)
-                .build(K8sCluster_1_5_Upstream_Linux_Factory.class));
+                        Kubectl_1_6_Cluster_Linux.class)
+                .build(Kubectl_1_6_Cluster_Linux_Factory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class,
+                        Kubectl_1_5_Upstream_Linux.class)
+                .build(Kubectl_1_5_Upstream_Linux_Factory.class));
     }
 
 }

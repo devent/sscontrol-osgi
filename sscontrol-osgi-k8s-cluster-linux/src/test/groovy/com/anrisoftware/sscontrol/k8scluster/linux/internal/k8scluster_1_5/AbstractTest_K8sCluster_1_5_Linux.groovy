@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterImpl.K8sClusterImplFactory
-import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
@@ -92,6 +92,8 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
 
     void createDummyCommands(File dir) {
         createIdCommand dir
+        createDebianJessieCatCommand dir
+        createCommand exit1Command, dir, 'dpkg'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -129,7 +131,7 @@ abstract class AbstractTest_K8sCluster_1_5_Linux extends AbstractScriptTestBase 
             new SshPreModule(),
             new K8sModule(),
             new K8sClusterModule(),
-            new K8sCluster_1_5_Upstream_Module(),
+            new Kubectl_1_6_Linux_Module(),
             new K8sCluster_1_5_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),

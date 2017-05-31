@@ -50,6 +50,7 @@ abstract class AbstractNodeScriptTest extends AbstractNodeRunnerTest {
             'sleep',
             'docker',
             'cat',
+            'kubectl',
         ]
     }
 

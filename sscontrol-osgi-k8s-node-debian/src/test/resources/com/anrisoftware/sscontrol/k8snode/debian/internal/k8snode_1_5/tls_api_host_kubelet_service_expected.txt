@@ -20,7 +20,6 @@ ExecStart=/tmp/junit/junit/usr/local/bin/kubelet-wrapper \
   --allow-privileged=true \
   --pod-manifest-path=/tmp/junit/junit/etc/kubernetes/manifests \
   --hostname-override=${ADVERTISE_IP} \
-  --register-with-taints=${NODE_TAINTS} \
   --node-labels=${NODE_LABELS} \
   --cluster_dns=${DNS_SERVICE_IP} \
   --cluster_domain=cluster.local \

@@ -233,6 +233,8 @@ service "k8s-node" with {
                 assert s.taints.size() == 3
                 assert s.taints['node.alpha.kubernetes.io/ismaster'].value == ''
                 assert s.taints['node.alpha.kubernetes.io/ismaster'].effect == 'NoSchedule'
+                assert s.taints['dedicated'].value == 'mail'
+                assert s.taints['dedicated'].effect == 'NoSchedule'
                 assert s.taints['extra'].value == 'foo'
                 assert s.taints['extra'].effect == 'aaa'
             },

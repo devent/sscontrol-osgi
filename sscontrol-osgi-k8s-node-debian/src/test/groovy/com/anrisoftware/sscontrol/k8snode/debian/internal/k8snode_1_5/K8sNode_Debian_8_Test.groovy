@@ -103,6 +103,36 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
         doTest test
     }
 
+    @Test
+    void "taints"() {
+        def test = [
+            name: "taints",
+            script: """
+service "ssh", group: "master" with {
+    host "master.robobee.test", socket: "$localhostSocket"
+}
+service "ssh", group: "nodes" with {
+    host "localhost"
+}
+service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
+    plugin "flannel"
+    plugin "calico"
+    taint << "muellerpublic.de/dedicated=mail:NoSchedule"
+}
+""",
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
+                assertFileResource K8sNode_Debian_8_Test, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
+                assertFileResource K8sNode_Debian_8_Test, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE

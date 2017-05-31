@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.external;
 
-import java.util.List;
-
 /**
  * <i>K8s-Cluster</i> service.
  *
@@ -29,7 +27,5 @@ public interface K8sCluster
     Cluster getCluster();
 
     Context getContext();
-
-    List<Credentials> getCredentials();
 
 }

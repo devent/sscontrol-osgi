@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
+import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 
 /**
  * Parses the name host and port for the credentials.

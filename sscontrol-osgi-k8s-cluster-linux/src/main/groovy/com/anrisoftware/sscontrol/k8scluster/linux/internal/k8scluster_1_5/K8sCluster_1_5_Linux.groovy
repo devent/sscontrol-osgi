@@ -34,17 +34,25 @@ class K8sCluster_1_5_Linux extends ScriptBase {
     @Inject
     K8sCluster_1_5_Linux_Properties linuxPropertiesProvider
 
-    K8sCluster_1_5_Upstream_Linux upstreamLinux
+    Kubectl_1_6_Cluster_Linux kubectlClusterLinux
+
+    Kubectl_1_5_Upstream_Linux kubectlUpstreamLinux
 
     @Override
     def run() {
-        installAptPackages()
-        upstreamLinux.run()
+        checkAptPackages() ? false : installAptPackages()
+        kubectlClusterLinux.run()
+        kubectlUpstreamLinux.run()
     }
 
     @Inject
-    def injectUpstreamLinuxFactory(K8sCluster_1_5_Upstream_Linux_Factory upstreamLinuxFactory) {
-        this.upstreamLinux = upstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    void setKubectlUpstreamLinuxFactory(Kubectl_1_5_Upstream_Linux_Factory kubectlUpstreamLinuxFactory) {
+        this.kubectlUpstreamLinux = kubectlUpstreamLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
+    @Inject
+    void setKubectlClusterLinuxFactory(Kubectl_1_6_Cluster_Linux_Factory kubectlClusterLinuxFactory) {
+        this.kubectlClusterLinux = kubectlClusterLinuxFactory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
@@ -53,11 +61,11 @@ class K8sCluster_1_5_Linux extends ScriptBase {
     }
 
     def runKubectl(Map vars) {
-        upstreamLinux.runKubectl vars
+        kubectlClusterLinux.runKubectl vars
     }
 
     def uploadCertificates(Map vars) {
-        upstreamLinux.uploadCertificates(vars)
+        kubectlClusterLinux.uploadCertificates(vars)
     }
 
     @Override
