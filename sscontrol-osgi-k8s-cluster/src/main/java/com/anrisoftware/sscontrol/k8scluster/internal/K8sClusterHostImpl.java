@@ -23,11 +23,11 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8scluster.external.Context;
-import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
-import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCert;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
+import com.anrisoftware.sscontrol.types.cluster.external.CredentialsCert;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.google.inject.assistedinject.Assisted;
 
@@ -63,8 +63,8 @@ public class K8sClusterHostImpl implements K8sClusterHost {
 
     @Inject
     K8sClusterHostImpl(@Assisted K8sCluster cluster,
-            @Assisted TargetHost target,
-            @Assisted Credentials credentials, @Assisted Context context) {
+            @Assisted TargetHost target, @Assisted Credentials credentials,
+            @Assisted Context context) {
         this.cluster = cluster;
         this.host = target.getHost();
         this.port = target.getPort();
@@ -75,6 +75,11 @@ public class K8sClusterHostImpl implements K8sClusterHost {
     @Override
     public K8sCluster getCluster() {
         return cluster;
+    }
+
+    @Override
+    public String getClusterName() {
+        return cluster.getCluster().getName();
     }
 
     @Override
@@ -132,4 +137,5 @@ public class K8sClusterHostImpl implements K8sClusterHost {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
 }

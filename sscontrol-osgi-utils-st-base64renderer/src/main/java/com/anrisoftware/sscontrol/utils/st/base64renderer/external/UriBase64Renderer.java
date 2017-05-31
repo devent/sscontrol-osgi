@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.utils.st.base64renderer.external;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.commons.codec.binary.Base64;
@@ -51,7 +52,7 @@ public class UriBase64Renderer implements AttributeRenderer {
     }
 
     private String toBase64(URI uri) throws IOException {
-        String str = IOUtils.toString(uri);
+        String str = IOUtils.toString(uri, StandardCharsets.UTF_8);
         byte[] encodedBytes = Base64.encodeBase64(str.getBytes());
         String encoded = new String(encodedBytes);
         return encoded.replaceAll("\n", "");

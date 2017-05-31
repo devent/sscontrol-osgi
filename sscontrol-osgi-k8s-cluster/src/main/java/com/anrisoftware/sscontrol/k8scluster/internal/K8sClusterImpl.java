@@ -32,7 +32,6 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.k8scluster.external.Cluster;
 import com.anrisoftware.sscontrol.k8scluster.external.Context;
-import com.anrisoftware.sscontrol.k8scluster.external.Credentials;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
@@ -40,6 +39,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.ClusterImpl.ClusterImplFac
 import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;

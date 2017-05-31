@@ -49,7 +49,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     TemplateResource flannelCniTemplate
 
-    TemplateResource addonsCmd
+    TemplateResource clusterCmds
 
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
@@ -69,7 +69,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         this.manifestsTemplate = templates.getResource('manifests_template')
         this.rktTemplate = templates.getResource('rkt_template')
         this.flannelCniTemplate = templates.getResource('flannel_cni_template')
-        this.addonsCmd = templates.getResource('addons_cmd')
+        this.clusterCmds = templates.getResource('cluster_cmds')
     }
 
     def setupMiscDefaults() {
@@ -288,10 +288,10 @@ systemctl daemon-reload
         K8s service = service
         if (deployKubeDns) {
             log.info 'Start kube-dns.'
-            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
+            shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
+            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
+            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
+            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
         }
     }
 
@@ -299,9 +299,9 @@ systemctl daemon-reload
         K8s service = service
         if (deployKubeDashboard) {
             log.info 'Start dashboard.'
-            shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
-            shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
+            shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
+            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
+            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
         }
     }
 
@@ -311,8 +311,8 @@ systemctl daemon-reload
             return
         }
         log.info 'Start Calico.'
-        shell resource: addonsCmd, name: 'waitApi', timeout: timeoutVeryLong call()
-        shell privileged: true, resource: addonsCmd, name: 'startCalico' call()
+        shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
+        shell privileged: true, resource: clusterCmds, name: 'startCalico' call()
     }
 
     def applyTaints() {
@@ -320,10 +320,8 @@ systemctl daemon-reload
         log.info 'Apply taints for {}.', service
         service.taints.each { String key, Taint taint ->
             log.info 'Apply taint {} for {}.', taint, service
-            shell vars: [taint: taint, value: taint.value?taint.value:''], st: """
-node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
-kubectl taint --overwrite nodes \$node <vars.taint.key>=<vars.value>:<vars.taint.effect>
-""" call()
+            shell vars: [taint: taint, value: taint.value?taint.value:''],
+            resource: clusterCmds, name: 'applyTains' call()
         }
     }
 

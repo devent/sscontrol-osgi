@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.types.cluster.external;
 
+import java.util.List;
+
 import com.anrisoftware.sscontrol.types.host.external.TargetHostService;
 
 /**
@@ -24,5 +26,7 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHostService;
  * @since 1.0
  */
 public interface Cluster extends TargetHostService<ClusterHost> {
+
+    List<Credentials> getCredentials();
 
 }

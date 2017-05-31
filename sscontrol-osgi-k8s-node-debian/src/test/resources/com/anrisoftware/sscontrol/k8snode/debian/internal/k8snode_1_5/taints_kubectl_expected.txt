@@ -1,0 +1,3 @@
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=andrea-cluster
+get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=andrea-cluster
+taint --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=andrea-cluster muellerpublic.de/dedicated=mail:NoSchedule

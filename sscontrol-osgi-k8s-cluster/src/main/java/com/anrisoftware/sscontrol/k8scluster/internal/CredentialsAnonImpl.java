@@ -19,8 +19,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.anrisoftware.sscontrol.k8scluster.external.CredentialsAnon;
 import com.anrisoftware.sscontrol.k8scluster.external.CredentialsCertFactory;
+import com.anrisoftware.sscontrol.types.cluster.external.CredentialsAnon;
 import com.google.inject.assistedinject.Assisted;
 
 /**

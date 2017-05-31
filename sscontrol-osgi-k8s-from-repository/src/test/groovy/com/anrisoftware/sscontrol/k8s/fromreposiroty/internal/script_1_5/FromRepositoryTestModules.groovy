@@ -9,7 +9,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
-import com.anrisoftware.sscontrol.k8scluster.upstream.external.K8sCluster_1_5_Upstream_Module
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryModule
 import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Module
 import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Module
@@ -53,7 +53,7 @@ class FromRepositoryTestModules {
             new SshPreModule(),
             new K8sModule(),
             new K8sClusterModule(),
-            new K8sCluster_1_5_Upstream_Module(),
+            new Kubectl_1_6_Linux_Module(),
             new K8sCluster_1_5_Linux_Module(),
             new FromRepositoryModule(),
             new FromRepository_1_5_Module(),
