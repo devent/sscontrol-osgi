@@ -204,6 +204,9 @@ spec:
             secretName: calico-etcd-secrets
       tolerations:
       - effect: NoSchedule
+        key: robobeerun.com/dedicated
+        operator: Equal
+      - effect: NoSchedule
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal
 

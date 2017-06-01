@@ -52,6 +52,8 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
 
     TemplateResource clusterCmds
 
+    TemplateResource addonsCmd
+
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
 
@@ -74,6 +76,7 @@ abstract class K8s_1_5_Upstream_Systemd extends ScriptBase {
         this.rktTemplate = templates.getResource('rkt_template')
         this.flannelCniTemplate = templates.getResource('flannel_cni_template')
         this.clusterCmds = templates.getResource('cluster_cmds')
+        this.addonsCmd = templates.getResource('addons_cmd')
     }
 
     def setupMiscDefaults() {
@@ -389,12 +392,6 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
      */
     List getNodeTaints() {
         def list = []
-        if (!registerSchedulable) {
-            Taint taint = ismasterNoScheduleTaint
-            list << [
-                taintString(taint)
-            ]
-        }
         K8s service = service
         service.taints.each { String key, Taint taint ->
             list << [
@@ -408,6 +405,9 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
         "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
     }
 
+    /**
+     * Returns the run kubectl for the cluster.
+     */
     abstract Kubectl_1_6_Cluster_Linux getKubectlCluster()
 
     def getDefaultLogLevel() {

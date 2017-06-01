@@ -28,6 +28,8 @@ import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateMod
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.upstream.external.K8s_1_5_Upstream_Module
+import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterModule
 import com.anrisoftware.sscontrol.k8smaster.internal.K8sMasterImpl.K8sMasterImplFactory
 import com.anrisoftware.sscontrol.k8smaster.upstream.external.K8sMaster_1_5_Upstream_Module
@@ -126,6 +128,8 @@ abstract class AbstractTest_K8sMaster_Debian_8 extends AbstractScriptTestBase {
             new K8sMaster_1_5_Debian_8_Module(),
             new K8sMaster_1_5_Upstream_Module(),
             new K8s_1_5_Upstream_Module(),
+            new K8sClusterModule(),
+            new Kubectl_1_6_Linux_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
