@@ -3,11 +3,12 @@ apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-svc.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dns-autoscaler-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-de.yaml
 apply -f /tmp/junit/junit/srv/kubernetes/manifests/kube-dashboard-svc.yaml
-get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0
-taint --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0 dedicated=mail:NoSchedule
-get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0
-taint --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=robobeerun.com/node=master-0 node.alpha.kubernetes.io/ismaster=:NoSchedule
-get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
-label --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dashboard=true
-get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>
-label --overwrite nodes /tmp/junit/junit/kubectl get nodes -o custom-columns=NAME:.metadata.name --no-headers --selector=<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name> robobeerun.com/dns=true
+--kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=master-0
+--kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=master-0
+--kubeconfig=/tmp/junit/junit.tmp taint --overwrite nodes dedicated=mail:NoSchedule
+--kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=master-0
+--kubeconfig=/tmp/junit/junit.tmp taint --overwrite nodes node.alpha.kubernetes.io/ismaster=:NoSchedule
+--kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=master-0
+--kubeconfig=/tmp/junit/junit.tmp label --overwrite nodes robobeerun.com/dashboard=true
+--kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=master-0
+--kubeconfig=/tmp/junit/junit.tmp label --overwrite nodes robobeerun.com/dns=true

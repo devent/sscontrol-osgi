@@ -19,17 +19,31 @@ done
 >>
 
 /*
-* Applies the tain on the node.
+* Applies the taint on the node.
 *
 * parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.kubeconfigFile: the kubeconfig file path.
 * vars.node: the node name.
-* vars.tain: the tain.
+* vars.tain: the taint.
 */
 applyTaintCmd(parent, vars) ::= <<
 node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
 <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> taint --overwrite nodes $node <vars.taint>
+>>
+
+/*
+* Applies the label on the node.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.kubeconfigFile: the kubeconfig file path.
+* vars.node: the node name.
+* vars.label: the label.
+*/
+applyLabelCmd(parent, vars) ::= <<
+node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> label --overwrite nodes $node <vars.label>
 >>
 
 setupKubectl(parent, vars) ::= <<

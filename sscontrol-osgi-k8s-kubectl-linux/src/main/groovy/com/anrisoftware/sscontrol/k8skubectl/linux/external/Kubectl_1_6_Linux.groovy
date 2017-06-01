@@ -192,11 +192,12 @@ chmod o-rx $certsDir
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeReadyCmd'
+        v.timeout = timeoutLong
         shell v call()
     }
 
     /**
-     * Applies the tain on the node.
+     * Applies the taint on the node.
      *
      * @param vars
      * <ul>
@@ -207,7 +208,7 @@ chmod o-rx $certsDir
      * </ul>
      */
     def applyTaintNode(Map vars, String node, def taint) {
-        log.info 'Wait for node {} with {}', node, vars
+        log.info 'Apply taint {} for node {} with {}', taint, node, vars
         ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
         assertThat "cluster!=null", cluster, notNullValue()
@@ -217,6 +218,31 @@ chmod o-rx $certsDir
         v.vars.taint = "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
         v.resource = kubectlTemplate
         v.name = 'applyTaintCmd'
+        shell v call()
+    }
+
+    /**
+     * Applies the label on the node.
+     *
+     * @param vars
+     * <ul>
+     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
+     * <li>cluster: the ClusterHost.
+     * <li>node: the node name.
+     * <li>label: the Label.
+     * </ul>
+     */
+    def applyLabelNode(Map vars, String node, def label) {
+        log.info 'Apply label {} for node {} with {}', label, node, vars
+        ClusterHost cluster = vars.cluster
+        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
+        assertThat "cluster!=null", cluster, notNullValue()
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.node = node
+        v.vars.label = "${label.key}=${label.value?label.value:''}"
+        v.resource = kubectlTemplate
+        v.name = 'applyLabelCmd'
         shell v call()
     }
 

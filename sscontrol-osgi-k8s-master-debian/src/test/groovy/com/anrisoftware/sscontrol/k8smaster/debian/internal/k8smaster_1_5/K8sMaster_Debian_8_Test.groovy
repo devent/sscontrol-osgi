@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.debian.internal.k8smaster_1_5
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -29,15 +30,15 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMaster_Debian_8_Test extends AbstractTest_K8sMaster_Debian_8 {
+class K8sMaster_Debian_8_Test extends AbstractMasterScriptTest {
 
     @Test
     void "tls_etcd_target"() {
         def test = [
             name: "tls_etcd_target",
-            input: """
-service "ssh", host: "localhost"
-service "ssh", host: "etcd-0", group: "etcd"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
+service "ssh", host: "etcd-0", socket: "$localhostSocket", group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
     authentication "cert", ca: "$certCaPem"
@@ -49,6 +50,7 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     }
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -84,12 +86,13 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     void "etcd_address_defaults"() {
         def test = [
             name: "etcd_address_defaults",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "etcd", address: "etcd"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -109,12 +112,13 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     void "etcd_addresses"() {
         def test = [
             name: "etcd_addresses",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "etcd", address: "https://etcd-0:2379,https://etcd-1:2379"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -132,8 +136,8 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     void "etcd_tls"() {
         def test = [
             name: "etcd_tls",
-            input: """
-service "ssh", host: "localhost"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "etcd", address: "etcd" with {
         tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
@@ -141,6 +145,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     plugin "calico"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -161,14 +166,15 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
     void "advertise_target"() {
         def test = [
             name: "advertise_target",
-            input: """
-service "ssh", host: "localhost"
-service "ssh", host: "localhost", group: "master"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
+service "ssh", host: "localhost", socket: "$localhostSocket", group: "master"
 service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] with {
     plugin "etcd", address: "etcd"
     plugin "calico"
 }
 """,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -184,15 +190,19 @@ service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] wi
     void "taints_labels"() {
         def test = [
             name: "taints_labels",
-            input: """
-service "ssh", host: "localhost"
-service "ssh", host: "etcd-0", group: "etcd"
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
+service "ssh", host: "etcd-0", socket: "$localhostSocket", group: "etcd"
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
+}
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     taint << "dedicated=mail:NoSchedule"
     label << "robobeerun.com/dns=true"
     label << "robobeerun.com/dashboard=true"
 }
 """,
+            expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -201,5 +211,11 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
             },
         ]
         doTest test
+    }
+
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
