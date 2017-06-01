@@ -442,7 +442,11 @@ public class K8sImpl implements K8s {
 
     @Override
     public ClusterHost getClusterHost() {
-        return getClusterHosts().get(0);
+        if (getClusterHosts().size() > 0) {
+            return getClusterHosts().get(0);
+        } else {
+            return null;
+        }
     }
 
     public void addClusterHosts(List<ClusterHost> list) {

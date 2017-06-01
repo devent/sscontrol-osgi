@@ -38,9 +38,6 @@ class K8sNode_Debian_8_Test extends AbstractNodeScriptTest {
             name: "tls_api_host",
             script: """
 service "ssh", host: "localhost", socket: "$localhostSocket"
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
-}
 service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'https://192.168.0.100', cluster: "default" with {
     plugin "flannel"
     plugin "calico"
@@ -50,7 +47,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
     }
 }
 """,
-            expectedServicesSize: 3,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -117,13 +114,16 @@ service "ssh", group: "master" with {
 service "ssh", group: "nodes" with {
     host "localhost"
 }
+service "k8s-cluster", target: "master" with {
+    credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
+}
 service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
     plugin "flannel"
     plugin "calico"
-    taint << "muellerpublic.de/dedicated=mail:NoSchedule"
+    taint << "robobeerun.com/dedicated=:NoSchedule"
 }
 """,
-            expectedServicesSize: 2,
+            expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir

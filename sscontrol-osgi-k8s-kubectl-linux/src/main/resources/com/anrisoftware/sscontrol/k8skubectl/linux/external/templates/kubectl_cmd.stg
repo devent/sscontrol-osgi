@@ -1,5 +1,35 @@
 kubectlKubeconfigCmd(parent, vars) ::= <<
-<parent.kubectlCmd> --kubeconfig=<parent.kubeconfigFile> <vars.args>
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> <vars.args>
+>>
+
+/*
+* Waits until the node is ready.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.kubeconfigFile: the kubeconfig file path.
+* vars.node: the node name.
+*/
+waitNodeReadyCmd(parent, vars) ::= <<
+echo "Waiting for node..."
+until <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>|grep "Ready"
+do
+    sleep 5
+done
+>>
+
+/*
+* Applies the tain on the node.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.kubeconfigFile: the kubeconfig file path.
+* vars.node: the node name.
+* vars.tain: the tain.
+*/
+applyTaintCmd(parent, vars) ::= <<
+node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> taint --overwrite nodes $node <vars.taint>
 >>
 
 setupKubectl(parent, vars) ::= <<
