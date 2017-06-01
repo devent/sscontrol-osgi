@@ -53,6 +53,9 @@ apt-get update && apt-get -y install -t ${distributionName}-backports $kernelPac
     }
 
     def installDocker() {
+        if (checkAptPackage(package: dockerPackage, version: dockerVersion)) {
+            return
+        }
         shell """
 curl -fsSL $dockerRepositoryKey | sudo apt-key add -
 sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable" > $dockerListFile'
