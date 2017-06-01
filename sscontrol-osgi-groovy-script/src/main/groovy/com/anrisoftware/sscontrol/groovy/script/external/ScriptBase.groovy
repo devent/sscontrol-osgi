@@ -511,6 +511,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * Checks if the apt package is installed.
+     * <ul>
+     * <li>package: the package name.
+     * <li>version: optional, the package version.
+     * </ul>
      */
     boolean checkAptPackage(Map args) {
         log.info "Check installed packages {}.", args
@@ -1008,7 +1012,9 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
             file = createTmpFileCallback(args)
         } else {
             def ret = shell outString: true, """
-mktemp
+file=\$(mktemp)
+chmod o-rw \$file
+echo \$file
 """ call()
             file = new File(ret.out[0..-2])
         }
@@ -1026,7 +1032,9 @@ mktemp
             file.mkdirs()
         } else {
             def ret = shell outString: true, """
-mktemp -d
+file=\$(mktemp -d)
+chmod o-rwx \$file
+echo \$file
 """ call()
             file = new File(ret.out[0..-2])
         }
