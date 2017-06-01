@@ -135,11 +135,11 @@ chmod o-rx $certsDir
      */
     def uploadKubeconfig(Map vars) {
         log.info 'Uploads kubeconfig for {}.', vars
-        ClusterHost host = vars.cluster
+        ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", host, notNullValue()
-        setupHost host
-        Credentials c = host.credentials
+        assertThat "cluster!=null", cluster, notNullValue()
+        setupHost cluster
+        Credentials c = cluster.credentials
         Map v = new HashMap(vars)
         v.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
         v.resource = kubeconfTemplate
