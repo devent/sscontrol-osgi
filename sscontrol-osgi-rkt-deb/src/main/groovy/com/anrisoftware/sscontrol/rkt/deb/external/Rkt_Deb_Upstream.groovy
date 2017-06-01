@@ -34,6 +34,9 @@ abstract class Rkt_Deb_Upstream extends ScriptBase {
 
     def installRkt() {
         log.info 'Installs rkt.'
+        if (checkAptPackage(package: rktPackage, version: rktVersion)) {
+            return
+        }
         copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true, timeout: timeoutLong call()
         def archiveFile = FilenameUtils.getName(archive.toString())
         def archiveName = getBaseName(getBaseName(archive.toString()))
@@ -41,6 +44,14 @@ abstract class Rkt_Deb_Upstream extends ScriptBase {
 cd /tmp
 sudo dpkg -i "$archiveFile"
 """ call()
+    }
+
+    String getRktPackage() {
+        properties.getProperty 'rkt_package', defaultProperties
+    }
+
+    String getRktVersion() {
+        properties.getProperty 'rkt_version', defaultProperties
     }
 
     @Override
