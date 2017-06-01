@@ -141,7 +141,9 @@ chmod o-rx $certsDir
         setupHost cluster
         Credentials c = cluster.credentials
         Map v = new HashMap(vars)
-        v.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
+        v.vars = new HashMap(vars)
+        v.vars.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
+        println v.vars.certs
         v.resource = kubeconfTemplate
         v.name = 'kubectlConf'
         v.dest = vars.kubeconfigFile
@@ -160,18 +162,62 @@ chmod o-rx $certsDir
      */
     def runKubectlKubeconfig(Map vars) {
         log.info 'Run kubectl with {}', vars
-        ClusterHost host = vars.cluster
+        ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", host, notNullValue()
-        Credentials c = host.credentials
+        assertThat "cluster!=null", cluster, notNullValue()
         Map v = new HashMap(vars)
-        v.cluster = host
-        v.credentials = c
-        def args = new HashMap(vars)
-        args.resource = kubectlTemplate
-        args.name = 'kubectlKubeconfigCmd'
-        args.vars = v
-        shell args call()
+        v.vars = new HashMap(vars)
+        v.resource = kubectlTemplate
+        v.name = 'kubectlKubeconfigCmd'
+        shell v call()
+    }
+
+    /**
+     * Runs kubectl with a kubeconfig file.
+     *
+     * @param vars
+     * <ul>
+     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
+     * <li>cluster: the ClusterHost.
+     * <li>args: kubectl arguments.
+     * </ul>
+     */
+    def waitNodeReady(Map vars, String node) {
+        log.info 'Wait for node {} with {}', node, vars
+        ClusterHost cluster = vars.cluster
+        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
+        assertThat "cluster!=null", cluster, notNullValue()
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.node = node
+        v.resource = kubectlTemplate
+        v.name = 'waitNodeReadyCmd'
+        shell v call()
+    }
+
+    /**
+     * Applies the tain on the node.
+     *
+     * @param vars
+     * <ul>
+     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
+     * <li>cluster: the ClusterHost.
+     * <li>node: the node name.
+     * <li>taint: the Taint.
+     * </ul>
+     */
+    def applyTaintNode(Map vars, String node, def taint) {
+        log.info 'Wait for node {} with {}', node, vars
+        ClusterHost cluster = vars.cluster
+        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
+        assertThat "cluster!=null", cluster, notNullValue()
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.node = node
+        v.vars.taint = "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
+        v.resource = kubectlTemplate
+        v.name = 'applyTaintCmd'
+        shell v call()
     }
 
     /**
@@ -222,6 +268,7 @@ chmod o-rx $certsDir
         if (tls.ca) {
             map << [ca: renderer.toString(tls.ca, "base64", null)]
         }
+        return map
     }
 
     String getClusterCertsDir(String name) {
@@ -284,6 +331,10 @@ chmod o-rx $certsDir
 
     File getKubectlCmd() {
         getFileProperty 'kubectl_cmd', binDir
+    }
+
+    String getRobobeeLabelNode() {
+        properties.getProperty 'robobee_label_node', defaultProperties
     }
 
     @Override

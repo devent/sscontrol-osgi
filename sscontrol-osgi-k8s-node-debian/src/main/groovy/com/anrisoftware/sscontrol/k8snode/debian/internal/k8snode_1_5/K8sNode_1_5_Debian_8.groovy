@@ -42,8 +42,8 @@ class K8sNode_1_5_Debian_8 extends ScriptBase {
     @Override
     def run() {
         checkAptPackages() ? false : installAptPackages()
-        upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         kubectlUpstreamLinux.run()
+        upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
     @Inject

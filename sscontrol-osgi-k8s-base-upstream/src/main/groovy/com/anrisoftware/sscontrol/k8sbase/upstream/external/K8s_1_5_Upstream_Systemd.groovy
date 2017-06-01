@@ -321,18 +321,23 @@ systemctl daemon-reload
 
     def applyTaints() {
         K8s service = service
+        if (service.taints.isEmpty()) {
+            return
+        }
+        if (!service.clusterHost) {
+            return
+        }
         log.info 'Apply taints for {}.', service
+        def node = service.cluster.name
         def vars = [:]
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = createTmpFile()
         try {
             kubectlCluster.uploadKubeconfig(vars)
+            kubectlCluster.waitNodeReady vars, node
             service.taints.each { String key, Taint taint ->
                 log.info 'Apply taint {} for {}.', taint, service
-                def v = new HashMap(vars)
-                def node = service.cluster.name
-                v.args = "taint --overwrite nodes $node ${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
-                kubectlCluster.runKubectlKubeconfig v
+                kubectlCluster.applyTaintNode vars, node, taint
             }
         } finally {
             deleteTmpFile vars.kubeconfigFile
@@ -341,6 +346,12 @@ systemctl daemon-reload
 
     def applyLabels() {
         K8s service = service
+        if (service.labels.isEmpty()) {
+            return
+        }
+        if (!service.clusterHost) {
+            return
+        }
         log.info 'Apply labels for {}.', service
         service.labels.each { String key, Label label ->
             log.info 'Apply label {} for {}.', label, service
