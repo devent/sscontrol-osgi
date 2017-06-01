@@ -846,8 +846,11 @@ spec:
         - name: etcd-certs
           secret:
             secretName: calico-etcd-secrets
-<if(parent.allowCalicoNodeOnMaster)>
       tolerations:
+      - effect: <parent.robobeeDedicatedTaintEffect>
+        key: <parent.robobeeDedicatedTaintKey>
+        operator: Equal
+<if(parent.allowCalicoNodeOnMaster)>
       - effect: NoSchedule
         key: node.alpha.kubernetes.io/ismaster
         operator: Equal

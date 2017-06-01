@@ -770,6 +770,14 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
         properties.getProperty 'robobee_label_namespace', defaultProperties
     }
 
+    String getRobobeeDedicatedTaintEffect() {
+        properties.getProperty 'robobee_dedicated_taint_effect', defaultProperties
+    }
+
+    String getRobobeeDedicatedTaintKey() {
+        properties.getProperty 'robobee_dedicated_taint_key', defaultProperties
+    }
+
     long getMaxMapCount() {
         properties.getNumberProperty 'max_map_count', defaultProperties
     }
