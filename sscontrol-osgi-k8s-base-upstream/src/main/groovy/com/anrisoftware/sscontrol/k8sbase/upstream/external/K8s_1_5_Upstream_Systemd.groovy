@@ -388,13 +388,24 @@ kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
      * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --register-with-taints []api.Taint</a>
      */
     List getNodeTaints() {
-        if (registerSchedulable) {
-            return []
+        def list = []
+        if (!registerSchedulable) {
+            Taint taint = ismasterNoScheduleTaint
+            list << [
+                taintString(taint)
+            ]
         }
-        Taint taint = ismasterNoScheduleTaint
-        return [
-            "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
-        ]
+        K8s service = service
+        service.taints.each { String key, Taint taint ->
+            list << [
+                taintString(taint)
+            ]
+        }
+        return list
+    }
+
+    String taintString(Taint taint) {
+        "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
     }
 
     abstract Kubectl_1_6_Cluster_Linux getKubectlCluster()

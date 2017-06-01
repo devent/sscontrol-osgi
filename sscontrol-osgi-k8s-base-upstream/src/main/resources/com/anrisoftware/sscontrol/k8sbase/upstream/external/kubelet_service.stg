@@ -20,9 +20,12 @@ ExecStart=<parent.binDir>/kubelet-wrapper \
   --register-node=<parent.registerNode> \
   --allow-privileged=true \
   --pod-manifest-path=<parent.manifestsDir> \
-  --hostname-override=${ADVERTISE_IP} <\u005C><if(parent.nodeTaints)>
-  --register-with-taints=${NODE_TAINTS} <\u005C><\n><endif><if(parent.nodeLabels)>
-  --node-labels=${NODE_LABELS} <\u005C><\n><endif>
+  --hostname-override=${ADVERTISE_IP} <\u005C>
+<if(parent.nodeTaints)>
+  --register-with-taints=${NODE_TAINTS} <\u005C>
+<endif><if(parent.nodeLabels)>
+  --node-labels=${NODE_LABELS} <\u005C>
+<endif>
   --cluster_dns=${DNS_SERVICE_IP} \
   --cluster_domain=cluster.local<if(parent.kubeconfigFile)> \
   --kubeconfig=<parent.kubeconfigFile><endif><if(parent.service.kubelet.tls.cert)> \
