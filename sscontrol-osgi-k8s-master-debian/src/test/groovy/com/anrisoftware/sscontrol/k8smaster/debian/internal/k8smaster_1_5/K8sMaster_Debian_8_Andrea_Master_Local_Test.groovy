@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractTest_K8sMaster_Debian_8 {
+class K8sMaster_Debian_8_Andrea_Master_Local_Test extends AbstractMasterScriptTest {
 
     @Test
     void "andrea_master_local"() {
@@ -77,14 +77,14 @@ service "k8s-master", name: "andrea-cluster", target: "master", advertise: targe
 
     static final Map andreaLocalCerts = [
         k8s: [
-            ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
-            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
+            ca: AbstractMasterScriptTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
+            cert: AbstractMasterScriptTest.class.getResource('andrea_local_k8smaster_robobee_test_cert.pem'),
+            key: AbstractMasterScriptTest.class.getResource('andrea_local_k8smaster_robobee_test_key_insecure.pem'),
         ],
         etcd: [
-            ca: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_ca_cert.pem'),
-            cert: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
-            key: AbstractTest_K8sMaster_Debian_8.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
+            ca: AbstractMasterScriptTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
+            cert: AbstractMasterScriptTest.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
+            key: AbstractMasterScriptTest.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
         ]
     ]
 

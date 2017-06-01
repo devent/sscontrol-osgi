@@ -319,7 +319,7 @@ systemctl daemon-reload
         }
         log.info 'Start Calico.'
         shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
-        shell privileged: true, resource: clusterCmds, name: 'startCalico' call()
+        shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'calico.yaml'] call()
     }
 
     def applyTaints() {
@@ -356,12 +356,19 @@ systemctl daemon-reload
             return
         }
         log.info 'Apply labels for {}.', service
-        service.labels.each { String key, Label label ->
-            log.info 'Apply label {} for {}.', label, service
-            shell vars: [label: label], st: """
-node=\$(kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selector="<parent.robobeeLabelNamespace>/node=<parent.service.cluster.name>")
-kubectl label --overwrite nodes \$node <vars.label.key>=<vars.label.value>
-""" call()
+        def node = service.cluster.name
+        def vars = [:]
+        vars.cluster = service.clusterHost
+        vars.kubeconfigFile = createTmpFile()
+        try {
+            kubectlCluster.uploadKubeconfig(vars)
+            kubectlCluster.waitNodeReady vars, node
+            service.labels.each { String key, Label label ->
+                log.info 'Apply label {} for {}.', label, service
+                kubectlCluster.applyLabelNode vars, node, label
+            }
+        } finally {
+            deleteTmpFile vars.kubeconfigFile
         }
     }
 
