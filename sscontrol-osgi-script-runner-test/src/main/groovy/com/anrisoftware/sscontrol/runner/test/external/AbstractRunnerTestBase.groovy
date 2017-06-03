@@ -26,12 +26,6 @@ import org.apache.commons.io.IOUtils
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.parser.groovy.internal.ParserModule
-import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
-import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.command.shell.internal.facts.FactsModule
@@ -43,6 +37,12 @@ import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.parser.groovy.internal.ParserModule
+import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 
@@ -81,6 +81,53 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
     @Inject
     HostServicesImplFactory servicesFactory
 
+    /**
+     * <p>
+     * Runs the test.
+     * </p>
+     * <p>
+     * Example.
+     * </p>
+     * <p>
+     * <pre>
+     * &#64;Test
+     * void "shell_scripts"() {
+     *     def test = [
+     *         name: "shell_scripts",
+     *         script: """
+     * service "ssh", host: "localhost"
+     * service "shell" with {
+     *     script "echo Hello"
+     *     script &lt;&lt; "echo Hello"
+     * }
+     * """,
+     *         expectedServicesSize: 2,
+     *         generatedDir: folder.newFolder(),
+     *         expected: { Map args -&gt;
+     *             File dir = args.dir
+     *             File gen = args.test.generatedDir
+     *             assertFileResource ShellScriptTest, dir, "dpkg.out", "${args.test.name}_dpkg_expected.txt"
+     *         },
+     *     ]
+     *     doTest test
+     * }
+     * </pre>
+     * </p>
+     *
+     * @param test the Map containing arguments for the test.
+     * <ul>
+     * <li>script: the input script to run.
+     * <li>before: a Closure that is run before the test. The following
+     * arguments are passed to the closure. 0. the test arguments them self.
+     * <li>after: a Closure that is run after the test. The following
+     * arguments are passed to the closure. 0. the test arguments them self.
+     * <li>scriptVars: script variables.
+     * <li>expectedServicesSize: the expected services.
+     * <li>expected: a Closure that is run after the test. The following
+     * arguments are passed to the closure. 0. the test arguments them self,
+     * 1. the services and 2. the working directory.
+     * </ul>
+     */
     void doTest(Map test, int k=0) {
         log.info '\n######### {}. case: {}', k, test
         File parent = folder.newFolder()
