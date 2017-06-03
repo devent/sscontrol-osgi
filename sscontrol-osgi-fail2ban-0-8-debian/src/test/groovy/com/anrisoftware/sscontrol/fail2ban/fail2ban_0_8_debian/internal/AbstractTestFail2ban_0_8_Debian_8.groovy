@@ -26,24 +26,25 @@ import org.junit.Before
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
+import com.anrisoftware.sscontrol.command.shell.external.Cmd
+import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
+import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.command.shell.internal.facts.FactsModule
+import com.anrisoftware.sscontrol.command.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.command.shell.internal.replace.ReplaceModule
+import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImpl
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdRunCaller
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
+import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
+import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banModule
 import com.anrisoftware.sscontrol.fail2ban.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
-import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
-import com.anrisoftware.sscontrol.shell.internal.facts.FactsModule
-import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
-import com.anrisoftware.sscontrol.shell.internal.replace.ReplaceModule
-import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellCmdModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshShellModule
-import com.anrisoftware.sscontrol.shell.internal.template.TemplateModule
-import com.anrisoftware.sscontrol.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
@@ -133,6 +134,7 @@ abstract class AbstractTestFail2ban_0_8_Debian_8 extends AbstractScriptTestBase 
             new TokensTemplateModule(),
             new TemplateResModule(),
             new SystemNameMappingsModule(),
+            new StModule(),
             new AbstractModule() {
 
                 @Override

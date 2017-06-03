@@ -48,7 +48,7 @@ public class ScriptImpl implements Script {
 
     @Inject
     ScriptImpl(@Assisted Map<String, Object> args) {
-        this.vars = new HashMap<String, Object>(args);
+        this.vars = new HashMap<>(args);
     }
 
     @Override

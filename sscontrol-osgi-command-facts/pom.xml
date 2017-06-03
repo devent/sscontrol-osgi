@@ -18,7 +18,7 @@
     <description>Defines the public interfaces for the facts command.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.facts</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.facts</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

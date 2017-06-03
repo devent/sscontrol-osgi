@@ -18,7 +18,7 @@
     <description>Defines the public interfaces for the replace command.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.replace</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.replace</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

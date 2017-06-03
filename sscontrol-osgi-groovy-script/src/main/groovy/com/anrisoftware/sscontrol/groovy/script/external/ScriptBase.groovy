@@ -32,16 +32,16 @@ import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.copy.external.Copy
-import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
-import com.anrisoftware.sscontrol.facts.external.Facts
-import com.anrisoftware.sscontrol.facts.external.Facts.FactsFactory
-import com.anrisoftware.sscontrol.fetch.external.Fetch
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
-import com.anrisoftware.sscontrol.replace.external.Replace
-import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
-import com.anrisoftware.sscontrol.shell.external.Shell
-import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.command.copy.external.Copy
+import com.anrisoftware.sscontrol.command.copy.external.Copy.CopyFactory
+import com.anrisoftware.sscontrol.command.facts.external.Facts
+import com.anrisoftware.sscontrol.command.facts.external.Facts.FactsFactory
+import com.anrisoftware.sscontrol.command.fetch.external.Fetch
+import com.anrisoftware.sscontrol.command.fetch.external.Fetch.FetchFactory
+import com.anrisoftware.sscontrol.command.replace.external.Replace
+import com.anrisoftware.sscontrol.command.replace.external.Replace.ReplaceFactory
+import com.anrisoftware.sscontrol.command.shell.external.Shell
+import com.anrisoftware.sscontrol.command.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.template.external.Template
 import com.anrisoftware.sscontrol.template.external.Template.TemplateFactory
 import com.anrisoftware.sscontrol.types.host.external.HostService
