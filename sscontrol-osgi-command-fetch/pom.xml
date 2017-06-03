@@ -18,7 +18,7 @@
     <description>Defines the public interfaces for the fetch command.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.fetch</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.fetch</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>

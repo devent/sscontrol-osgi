@@ -33,7 +33,6 @@ import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostSe
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
-import com.anrisoftware.sscontrol.shell.external.Script as ShellScript
 import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.internal.ShellModule
 import com.anrisoftware.sscontrol.shell.internal.ShellImpl.ShellImplFactory
@@ -78,7 +77,7 @@ service "shell" with {
                 Shell s = services.getServices('shell')[0]
                 assert s.name == 'shell'
                 assert s.scripts.size() == 2
-                ShellScript script = s.scripts[0]
+                com.anrisoftware.sscontrol.shell.external.Script script = s.scripts[0]
                 assert script.vars.command =~ /echo.*/
             },
         ]
@@ -100,7 +99,7 @@ service "shell", privileged: true with {
                 Shell s = services.getServices('shell')[0]
                 assert s.name == 'shell'
                 assert s.scripts.size() == 2
-                ShellScript script = s.scripts[0]
+                com.anrisoftware.sscontrol.shell.external.Script script = s.scripts[0]
                 assert script.vars.command =~ /echo.*/
                 assert script.vars.privileged == true
             },

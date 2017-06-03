@@ -42,9 +42,10 @@ class SshFactory implements Ssh {
                 getHost: { 'localhost' },
                 getUser: { System.getProperty('user.name') },
                 getPort: { 22 },
-                getKey: {
-                },
-                getHostAddress: { '127.0.0.1' }
+                getKey: { },
+                getHostAddress: { '127.0.0.1' },
+                getSocket: {
+                }
 
             ] as SshHost
         ]
@@ -59,8 +60,8 @@ class SshFactory implements Ssh {
                 getUser: { 'robobee' },
                 getPort: { 22 },
                 getKey: { UnixTestUtil.robobeeKey.toURI() },
-                getHostAddress: {
-                    InetAddress.getByName('robobee').getHostAddress()
+                getHostAddress: { InetAddress.getByName('robobee').getHostAddress() },
+                getSocket: {
                 }
             ] as SshHost
         ]

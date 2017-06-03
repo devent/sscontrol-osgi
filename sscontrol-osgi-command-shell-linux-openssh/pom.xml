@@ -16,7 +16,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.shell.linux.openssh</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.shell.linux.openssh</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
