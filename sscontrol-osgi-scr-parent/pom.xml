@@ -74,6 +74,8 @@
         <module>../sscontrol-osgi-script-runner-test</module>
         <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
+        <module>../sscontrol-osgi-shell-service</module>
+        <module>../sscontrol-osgi-shell-linux</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-ssh-linux</module>
         <module>../sscontrol-osgi-sshd</module>
