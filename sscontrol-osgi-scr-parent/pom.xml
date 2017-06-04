@@ -56,6 +56,7 @@
         <module>../sscontrol-osgi-k8s-cluster</module>
         <module>../sscontrol-osgi-k8s-cluster-linux</module>
         <module>../sscontrol-osgi-k8s-from-repository</module>
+        <module>../sscontrol-osgi-k8s-glusterfs-heketi</module>
         <module>../sscontrol-osgi-k8s-kubectl-linux</module>
         <module>../sscontrol-osgi-k8s-master</module>
         <module>../sscontrol-osgi-k8s-master-debian</module>
