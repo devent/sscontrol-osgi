@@ -116,7 +116,9 @@ class UnixTestUtil {
     }
 
     static String readRemoteFile(String file, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
-        remoteCommand "cat $file", host, port, user, key
+        def s = remoteCommand "cat $file", host, port, user, key
+        s = s.replaceAll 'tmp\\.[\\w\\d]*', 'tmp.tmp'
+        return s
     }
 
     static String readPrivilegedRemoteFile(String file, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
