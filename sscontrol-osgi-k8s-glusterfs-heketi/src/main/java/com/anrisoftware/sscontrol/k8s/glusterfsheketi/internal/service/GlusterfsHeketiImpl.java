@@ -40,6 +40,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 import com.google.inject.assistedinject.Assisted;
 
 import groovy.json.JsonSlurper;
@@ -70,6 +71,8 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private final List<ClusterHost> clusters;
 
+    private final List<RepoHost> repos;
+
     private Admin admin;
 
     private User user;
@@ -80,6 +83,10 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private transient UserImplFactory userFactory;
 
+    private String labelName;
+
+    private final Map<String, Object> vars;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostPropertiesService propertiesService,
@@ -89,11 +96,13 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
+        this.repos = new ArrayList<>();
         this.adminFactory = adminFactory;
         this.admin = adminFactory.create();
         this.userFactory = userFactory;
         this.user = userFactory.create();
         this.topology = new HashMap<>();
+        this.vars = new HashMap<>();
         parseArgs(args);
     }
 
@@ -150,6 +159,18 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         }
     }
 
+    /**
+     * <pre>
+     * vars << [heketi: [snapshot: [limit: 32]]]
+     * vars << [tolerations: [toleration: [key: 'robobeerun.com/dedicated', effect: 'NoSchedule']]]
+     * vars << [tolerations: [toleration: [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']]]
+     * </pre>
+     */
+    @Override
+    public Map<String, Object> getVars() {
+        return vars;
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -180,6 +201,22 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     }
 
     @Override
+    public RepoHost getRepo() {
+        return getRepos().get(0);
+    }
+
+    @Override
+    public void addRepos(List<RepoHost> list) {
+        this.repos.addAll(list);
+        log.reposAdded(this, list);
+    }
+
+    @Override
+    public List<RepoHost> getRepos() {
+        return Collections.unmodifiableList(repos);
+    }
+
+    @Override
     public HostServiceProperties getServiceProperties() {
         return serviceProperties;
     }
@@ -187,6 +224,15 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     @Override
     public String getName() {
         return "glusterfs-heketi";
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
+    @Override
+    public String getLabelName() {
+        return labelName;
     }
 
     @Override
@@ -212,12 +258,22 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets())
-                .append("clusters", getClusters()).toString();
+                .append("clusters", getClusters()).append("repos", getRepos())
+                .toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parseLabelNode(args);
         parseTargets(args);
         parseClusters(args);
+        parseRepos(args);
+    }
+
+    private void parseLabelNode(Map<String, Object> args) {
+        Object v = args.get("name");
+        if (v != null) {
+            setLabelName(v.toString());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -232,6 +288,13 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         Object v = args.get("clusters");
         assertThat("clusters=null", v, notNullValue());
         addClusters((List<ClusterHost>) v);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseRepos(Map<String, Object> args) {
+        Object v = args.get("repos");
+        assertThat("repos=null", v, notNullValue());
+        addRepos((List<RepoHost>) v);
     }
 
 }

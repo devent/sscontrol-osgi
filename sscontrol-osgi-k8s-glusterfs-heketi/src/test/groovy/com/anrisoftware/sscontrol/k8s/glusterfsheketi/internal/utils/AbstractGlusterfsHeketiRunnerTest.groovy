@@ -23,6 +23,7 @@ import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.FromRepository_1_5_Factory
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6.GlusterfsHeketi_1_6_Factory
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImpl.GlusterfsHeketiImplFactory
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
@@ -108,6 +109,9 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
     @Inject
     GlusterfsHeketiImplFactory glusterfsHeketiFactory
 
+    @Inject
+    GlusterfsHeketi_1_6_Factory glusterfsHeketi_1_6_Factory
+
     def getRunScriptFactory() {
         runnerFactory
     }
@@ -125,6 +129,7 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
         services.putAvailableService 'from-repository', fromRepositoryFactory
         services.putAvailableScriptService 'from-repository/linux/0', fromRepository_1_5_Factory
         services.putAvailableService 'glusterfs-heketi', glusterfsHeketiFactory
+        services.putAvailableScriptService 'glusterfs-heketi/linux/0', glusterfsHeketi_1_6_Factory
         return services
     }
 

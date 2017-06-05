@@ -15,9 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.external;
 
+import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
+import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
  * Glusterfs-Heketi service.
@@ -26,6 +28,17 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
  * @since 1.0
  */
 public interface GlusterfsHeketi extends ClusterService {
+
+    /**
+     * Returns the label name for which nodes glusterfs should be deployed. The
+     * node affinity will be set to <code>storagenode=name</core>
+     */
+    String getLabelName();
+
+    /**
+     * Returns variables to use in the manifests templates.
+     */
+    Map<String, Object> getVars();
 
     /**
      * Returns the secret for heketi administrator user. Heketi admin has access
@@ -43,5 +56,11 @@ public interface GlusterfsHeketi extends ClusterService {
      * Returns the cluster topology.
      */
     Map<String, Object> getTopology();
+
+    RepoHost getRepo();
+
+    void addRepos(List<RepoHost> list);
+
+    List<RepoHost> getRepos();
 
 }

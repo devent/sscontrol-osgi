@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_5;
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6
 
-import com.google.inject.AbstractModule;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * Kubernetes 1.6 properties provider from
+ * {@code "/glusterfs_heketi_1_6_linux.properties"}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public class FileTemplateModule extends AbstractModule {
+class GlusterfsHeketi_1_6_Properties extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
+    private static final URL RESOURCE = GlusterfsHeketi_1_6_Properties.class.getResource("/glusterfs_heketi_1_6_linux.properties")
+
+    GlusterfsHeketi_1_6_Properties() {
+        super(GlusterfsHeketi_1_6_Properties.class, RESOURCE)
     }
-
 }
