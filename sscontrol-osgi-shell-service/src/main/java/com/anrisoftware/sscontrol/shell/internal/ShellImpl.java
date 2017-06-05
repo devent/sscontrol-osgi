@@ -122,7 +122,18 @@ public class ShellImpl implements Shell {
     public void script(String command) {
         Map<String, Object> args = new HashMap<>(vars);
         args.put("command", command);
-        Script script = scriptFactory.create(args);
+        script(args);
+    }
+
+    /**
+     * <pre>
+     * script timeout: 'PT1H', command: "echo hello"
+     * </pre>
+     */
+    public void script(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(vars);
+        a.putAll(args);
+        Script script = scriptFactory.create(a);
         addScript(script);
     }
 

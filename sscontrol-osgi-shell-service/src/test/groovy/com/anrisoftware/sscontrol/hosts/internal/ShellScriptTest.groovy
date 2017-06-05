@@ -107,6 +107,29 @@ service "shell", privileged: true with {
         doTest test
     }
 
+    @Test
+    void "shell args"() {
+        def test = [
+            name: 'shell args',
+            input: """
+service "shell", privileged: true with {
+    script timeout: "PT10M", command: "echo Hello"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('shell').size() == 1
+                Shell s = services.getServices('shell')[0]
+                assert s.name == 'shell'
+                assert s.scripts.size() == 1
+                com.anrisoftware.sscontrol.shell.external.Script script = s.scripts[0]
+                assert script.vars.command =~ /echo.*/
+                assert script.vars.privileged == true
+                assert script.vars.timeout == 'PT10M'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
