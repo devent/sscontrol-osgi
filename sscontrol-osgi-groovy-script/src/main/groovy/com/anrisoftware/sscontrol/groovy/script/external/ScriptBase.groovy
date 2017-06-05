@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
+import com.anrisoftware.globalpom.core.durationformat.DurationFormat
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.command.copy.external.Copy
 import com.anrisoftware.sscontrol.command.copy.external.Copy.CopyFactory
@@ -1157,6 +1158,13 @@ echo \$file
         if (createTmpFileCallback) {
             args.cmdName = name
             a.tmpFile = createTmpFileCallback(args)
+        }
+        def v = args.timeout
+        if (v) {
+            if (!(v instanceof java.time.Duration)) {
+                v = DurationFormat.create().parse v.toString()
+                a.timeout = v
+            }
         }
         a.filesLocal = filesLocal
         return a
