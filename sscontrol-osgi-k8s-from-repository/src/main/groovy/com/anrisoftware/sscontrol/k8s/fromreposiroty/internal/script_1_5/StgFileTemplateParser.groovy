@@ -5,6 +5,9 @@ import java.nio.charset.Charset
 import org.apache.commons.io.FilenameUtils
 import org.stringtemplate.v4.STGroupFile
 
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.TemplateNotFoundException
+import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.TemplateParseException
+
 /**
  * Parses the group file via a ST4 template engine.
  *
@@ -19,10 +22,17 @@ class StgFileTemplateParser extends AbstractTemplateParser {
     String parseFile(File parentDirectory, String fileName, Map<String, Object> args, Charset encoding) {
         def st = new STGroupFile(new File(parentDirectory, fileName).absolutePath)
         def name = FilenameUtils.getBaseName fileName
-        def s = st.getInstanceOf(name)
-        s.add 'vars', args.vars
-        s.add 'parent', args.parent
-        return s.render()
+        try {
+            def s = st.getInstanceOf(name)
+            if (!s) {
+                throw new TemplateNotFoundException(parentDirectory, fileName, name)
+            }
+            s.add 'vars', args.vars
+            s.add 'parent', args.parent
+            return s.render()
+        } catch (e) {
+            throw new TemplateParseException(e, parentDirectory, fileName, name)
+        }
     }
 
     @Override

@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_5;
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6;
 
-import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6.FromRepository_1_5;
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -26,15 +23,5 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class FromRepository_1_5_Module
-        extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        FromRepository_1_5.class)
-                .build(GlusterfsHeketi_1_6_Factory.class));
-    }
-
+public interface GlusterfsHeketi_1_6_Factory extends HostServiceScriptService {
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_5;
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -44,9 +44,9 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class FromRepository_1_5_Service implements HostServiceScriptService {
+public class GlusterfsHeketi_1_6_Service implements HostServiceScriptService {
 
-    static final String SERVICE_NAME = "from-repository";
+    static final String SERVICE_NAME = "glusterfs-heketi";
 
     @Property(value = SERVICE_NAME)
     static final String SERVICE_NAME_PROPERTY = "service.name";
@@ -85,7 +85,7 @@ public class FromRepository_1_5_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new FromRepository_1_5_Module()).injectMembers(this);
+        createInjector(new GlusterfsHeketi_1_6_Module()).injectMembers(this);
     }
 
 }

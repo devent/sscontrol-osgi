@@ -60,7 +60,7 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final FromRepositoryImplLogger log;
 
-    private final HostServiceProperties serviceProperties;
+    private HostServiceProperties serviceProperties;
 
     private final List<TargetHost> targets;
 
@@ -177,6 +177,10 @@ public class FromRepositoryImpl implements FromRepository {
         return Collections.unmodifiableList(registries);
     }
 
+    public void setServiceProperties(HostServiceProperties serviceProperties) {
+        this.serviceProperties = serviceProperties;
+    }
+
     @Override
     public HostServiceProperties getServiceProperties() {
         return serviceProperties;
@@ -226,8 +230,9 @@ public class FromRepositoryImpl implements FromRepository {
     @SuppressWarnings("unchecked")
     private void parseRegistries(Map<String, Object> args) {
         Object v = args.get("registries");
-        assertThat("registries=null", v, notNullValue());
-        addRegistries((List<RegistryHost>) v);
+        if (v != null) {
+            addRegistries((List<RegistryHost>) v);
+        }
     }
 
 }

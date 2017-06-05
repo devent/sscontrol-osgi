@@ -19,6 +19,7 @@ import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.Find
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.FromRepository_1_5_Module
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryModule
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6.GlusterfsHeketi_1_6_Module
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
@@ -64,6 +65,7 @@ class GlusterfsHeketiTestModules {
             new DockerRegistryModule(),
             new DockerRegistry_Debian_8_Module(),
             new GlusterfsHeketiModule(),
+            new GlusterfsHeketi_1_6_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static org.junit.Assume.*
 
-import javax.inject.Inject
+import java.nio.charset.StandardCharsets
 
+import org.apache.commons.io.IOUtils
+import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.GlusterfsHeketi
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.utils.AbstractGlusterfsHeketiRunnerTest
-import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.jcabi.ssh.SSH
 
 import groovy.util.logging.Slf4j
 
@@ -36,28 +38,25 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class GlusterfsHeketiTest extends AbstractGlusterfsHeketiRunnerTest {
-
-    @Inject
-    RobobeeScriptFactory robobeeScriptFactory
+class GlusterfsHeketiServerTest extends AbstractGlusterfsHeketiRunnerTest {
 
     @Test
-    void "json topology"() {
+    void "json_topology_server"() {
         def test = [
-            name: 'json topology',
+            name: "json_topology_server",
             script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin'
+    credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
 }
 service "repo-git", group: "glusterfs-heketi" with {
+    credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
 service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
-    vars << [heketi: [snapshot: [limit: 32]]]
-    vars << [tolerations: [toleration: [key: 'robobeerun.com/dedicated', effect: 'NoSchedule']]]
-    vars << [tolerations: [toleration: [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']]]
+    property << "kubectl_cmd=/tmp/kubectl"
     topology parse: """
 {
   "clusters":[
@@ -124,35 +123,49 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
 """
 }
 ''',
-            before: { },
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('glusterfs-heketi').size() == 1
-                GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
-                assert s.cluster.clusterName == 'default'
-                assert s.repo.repo.group == "glusterfs-heketi"
-                assert s.labelName == 'glusterfs'
-                assert s.vars.size() == 2
-                assert s.admin.key == 'MySecret'
-                assert s.user.key == 'MyVolumeSecret'
-                assert s.topology.size() == 1
+            scriptVars: [robobeeKey: robobeeKey, robobeeSocket: robobeeSocket, certs: andreaLocalCerts],
+            expectedServicesSize: 4,
+            before: { setupServer test: it },
+            after: { tearDownServer test: it },
+            expected: { Map args ->
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
     }
 
-    void doTest(Map test) {
-        log.info '\n######### {} #########\ncase: {}', test.name, test
-        test.before(test)
-        def services = servicesFactory.create()
-        services.targets.addTarget SshFactory.localhost(injector)
-        putServices services
-        robobeeScriptFactory.create folder.newFile(), test.script, test.scriptVars, services call()
-        Closure expected = test.expected
-        expected services
+    def setupServer(Map args) {
+        def file = SSH.escape('wordpress-app.zip')
+        remoteCommand """
+echo "Create /tmp/kubectl."
+cat > /tmp/kubectl << 'EOL'
+${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
+EOL
+chmod +x /tmp/kubectl
+"""
     }
 
-    @Override
+    def tearDownServer(Map args) {
+        remoteCommand """
+rm /tmp/kubectl
+rm /tmp/kubectl.out
+"""
+    }
+
+    @Before
+    void beforeMethod() {
+        checkRobobeeSocket()
+        assumeTrue testHostAvailable
+    }
+
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
+    }
+
     void createDummyCommands(File dir) {
+    }
+
+    def setupServiceScript(Map args, HostServiceScript script) {
+        return script
     }
 }
