@@ -1,8 +1,0 @@
-config use-context default-system
-apply -f ./deploy-heketi-deployment.yaml
-config use-context default-system
-apply -f ./glusterfs-daemonset.yaml
-config use-context default-system
-apply -f ./heketi-deployment.yaml
-config use-context default-system
-apply -f ./heketi-service-account.yaml

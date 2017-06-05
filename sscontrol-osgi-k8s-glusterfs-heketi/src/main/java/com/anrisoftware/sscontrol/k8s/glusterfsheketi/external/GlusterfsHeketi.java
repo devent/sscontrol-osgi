@@ -30,6 +30,11 @@ import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 public interface GlusterfsHeketi extends ClusterService {
 
     /**
+     * Returns the namespace to use for creating resources.
+     */
+    String getNamespace();
+
+    /**
      * Returns the label name for which nodes glusterfs should be deployed. The
      * node affinity will be set to <code>storagenode=name</core>
      */

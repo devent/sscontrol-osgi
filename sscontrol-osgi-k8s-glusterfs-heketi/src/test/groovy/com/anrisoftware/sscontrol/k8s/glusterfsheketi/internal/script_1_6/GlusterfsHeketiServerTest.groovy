@@ -56,7 +56,7 @@ service "repo-git", group: "glusterfs-heketi" with {
 service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
-    property << "kubectl_cmd=/tmp/kubectl"
+    property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
     topology parse: """
 {
   "clusters":[
@@ -128,7 +128,7 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
             before: { setupServer test: it },
             after: { tearDownServer test: it },
             expected: { Map args ->
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
             },
         ]
         doTest test
@@ -137,18 +137,18 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
     def setupServer(Map args) {
         def file = SSH.escape('wordpress-app.zip')
         remoteCommand """
-echo "Create /tmp/kubectl."
-cat > /tmp/kubectl << 'EOL'
+echo "Create /tmp/gk-deploy."
+cat > /tmp/gk-deploy << 'EOL'
 ${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
-chmod +x /tmp/kubectl
+chmod +x /tmp/gk-deploy
 """
     }
 
     def tearDownServer(Map args) {
         remoteCommand """
-rm /tmp/kubectl
-rm /tmp/kubectl.out
+rm /tmp/gk-deploy
+rm /tmp/gk-deploy.out
 """
     }
 

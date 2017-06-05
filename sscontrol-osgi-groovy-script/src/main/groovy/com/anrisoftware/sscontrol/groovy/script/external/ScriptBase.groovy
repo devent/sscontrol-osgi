@@ -285,6 +285,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * Copy command.
+     * <p>
+     * <pre>
+     * copy dest: '/etc/config' call()
+     * </pre>
+     * </p>
      */
     Copy copy(Map args, String src) {
         def a = new HashMap(args)
@@ -799,24 +804,24 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
     /**
      * Finds and creates the script.
      */
-    HostServiceScript createScript(String name, SystemInfo system=target.system) {
+    HostServiceScript createScript(String name, HostService service, SystemInfo system=target.system) {
         def scriptService = findScriptService(name, system)
         assertThat "service=null for name=$name, system=$system", scriptService, notNullValue()
-        createScript scriptService
+        createScript scriptService, service
     }
 
     /**
      * Finds and creates the script.
      */
-    HostServiceScript createScript(String name, String systemName) {
+    HostServiceScript createScript(String name, HostService service, String systemName) {
         def scriptService = findScriptService(name, systemName)
-        createScript scriptService
+        createScript scriptService, service
     }
 
     /**
      * Finds and creates the script.
      */
-    HostServiceScript createScript(HostServiceScriptService scriptService) {
+    HostServiceScript createScript(HostServiceScriptService scriptService, HostService service) {
         scriptService.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
@@ -836,13 +841,20 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
     }
 
     /**
-     * Finds the service.
+     * Finds the registered service with the specified name and group.
      */
     public List findService(String name, String group) {
         def services = scriptsRepository.getAvailableService name
         services.findAll { HostServiceService s ->
             s.hasProperty('group') && (s.group == group)
         }
+    }
+
+    /**
+     * Finds available service with the specified name.
+     */
+    public <T extends HostServiceService> T findAvailableService(String name) {
+        scriptsRepository.getAvailableService name
     }
 
     /**
@@ -962,6 +974,10 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 
     File getBinDir() {
         properties.getFileProperty "bin_dir", base, defaultProperties
+    }
+
+    File getOptDir() {
+        properties.getFileProperty "opt_dir", base, defaultProperties
     }
 
     /**

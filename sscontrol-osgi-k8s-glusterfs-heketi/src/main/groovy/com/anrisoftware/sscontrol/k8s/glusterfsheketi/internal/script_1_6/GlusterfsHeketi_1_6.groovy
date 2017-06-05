@@ -15,15 +15,20 @@
  */
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6
 
+import static org.apache.commons.io.FilenameUtils.getBaseName
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
+
+import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.GlusterfsHeketi
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
+import groovy.json.JsonOutput
 import groovy.util.logging.Slf4j
 
 /**
@@ -43,6 +48,8 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
     @Override
     def run() {
         setupDefaults()
+        checkAptPackages() ?: installAptPackages()
+        installGlusterKubernetesDeploy()
         GlusterfsHeketi service = service
         def args = [:]
         args.targets = service.targets
@@ -52,11 +59,35 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         fromRepositoryService.vars << service.vars
         fromRepositoryService.serviceProperties = service.serviceProperties
         def fromRepository = createScript 'from-repository', fromRepositoryService
+        def glusterfsScript = this
+        fromRepository.metaClass.kubeFiles = {File dir, HostServiceScript cluster ->
+            def topologyFile = glusterfsScript.deployTopologyFile()
+            try {
+                shell timeout: timeoutMiddle, """\
+set -e
+echo 'Run with topology ${topologyFile}:'
+cat ${topologyFile}
+${glusterfsScript.glusterKubernetesDeployCommand} -g --yes \\
+-c kubectl \\
+-t $dir \\
+--admin-key ${glusterfsScript.service.admin.key} \\
+--user-key ${glusterfsScript.service.user.key} \\
+-n ${glusterfsScript.service.namespace} \\
+--daemonset-label ${glusterfsScript.service.labelName} \\
+${topologyFile}
+""" call()
+            } finally {
+                deleteTmpFile topologyFile as File
+            }
+        }
         fromRepository.run()
     }
 
     def setupDefaults() {
         GlusterfsHeketi service = service
+        if (!service.namespace) {
+            service.namespace = defaultNamespace
+        }
         def vars = service.vars
         if (!vars.heketi) {
             vars.heketi = [:]
@@ -88,9 +119,47 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         }
     }
 
+    def installGlusterKubernetesDeploy() {
+        log.info 'Installs gluster-kubernetes-deploy.'
+        def tmp = createTmpDir()
+        try {
+            copy src: archive, hash: archiveHash, dest: "$tmp", direct: true, timeout: timeoutLong call()
+            shell timeout: timeoutMiddle, """\
+set -e
+cd '$tmp'
+unzip "$archiveFile"
+sudo rm -rf '$optDir/gluster-kubernetes-master'
+sudo cp -r gluster-kubernetes-master '$optDir'
+""" call()
+        } finally {
+            deleteTmpFile tmp
+        }
+    }
+
+    /**
+     * Deploys the topology json file.
+     * @return the path of the file.
+     */
+    String deployTopologyFile() {
+        GlusterfsHeketi service = service
+        def topology = JsonOutput.toJson(service.topology)
+        def tmp = createTmpFile()
+        try {
+            copyString str: topology, dest: tmp
+            return tmp
+        }  catch (e) {
+            deleteTmpFile tmp
+            throw e
+        }
+    }
+
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
+    }
+
+    String getDefaultNamespace() {
+        properties.getProperty 'default_namespace', defaultProperties
     }
 
     String getHeketiImageName() {
@@ -111,6 +180,26 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
 
     String getGlusterImageVersion() {
         properties.getProperty 'default_gluster_image_version', defaultProperties
+    }
+
+    URI getArchive() {
+        properties.getURIProperty 'gluster_kubernetes_deploy_archive', defaultProperties
+    }
+
+    String getArchiveFile() {
+        FilenameUtils.getName(archive.toString())
+    }
+
+    String getArchiveName() {
+        getBaseName(getBaseName(archive.toString()))
+    }
+
+    String getArchiveHash() {
+        properties.getProperty 'gluster_kubernetes_deploy_archive_hash', defaultProperties
+    }
+
+    File getGlusterKubernetesDeployCommand() {
+        getFileProperty 'gluster_kubernetes_deploy_command', optDir, defaultProperties
     }
 
     @Override

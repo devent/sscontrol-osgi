@@ -87,6 +87,8 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private final Map<String, Object> vars;
 
+    private String namespace;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostPropertiesService propertiesService,
@@ -254,6 +256,15 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         topology.putAll(map);
     }
 
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -263,10 +274,18 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parseNamespace(args);
         parseLabelNode(args);
         parseTargets(args);
         parseClusters(args);
         parseRepos(args);
+    }
+
+    private void parseNamespace(Map<String, Object> args) {
+        Object v = args.get("namespace");
+        if (v != null) {
+            setNamespace(v.toString());
+        }
     }
 
     private void parseLabelNode(Map<String, Object> args) {
