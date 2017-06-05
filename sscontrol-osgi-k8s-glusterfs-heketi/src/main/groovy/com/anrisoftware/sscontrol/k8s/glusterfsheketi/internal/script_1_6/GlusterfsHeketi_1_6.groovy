@@ -23,7 +23,8 @@ import javax.inject.Inject
 import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.external.Templates
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.GlusterfsHeketi
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
@@ -43,12 +44,22 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
     @Inject
     GlusterfsHeketi_1_6_Properties debianPropertiesProvider
 
-    Templates templates
+    TemplateResource installResource
+
+    TemplateResource gkdeployResource
+
+    @Inject
+    def setTemplates(TemplatesFactory factory) {
+        def t = factory.create 'GlusterfsHeketi_1_6_Templates'
+        this.installResource = t.getResource 'install'
+        this.gkdeployResource = t.getResource 'gkdeploy'
+    }
 
     @Override
     def run() {
         setupDefaults()
         checkAptPackages() ?: installAptPackages()
+        installHeketi()
         installGlusterKubernetesDeploy()
         GlusterfsHeketi service = service
         def args = [:]
@@ -61,24 +72,7 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         def fromRepository = createScript 'from-repository', fromRepositoryService
         def glusterfsScript = this
         fromRepository.metaClass.kubeFiles = {File dir, HostServiceScript cluster ->
-            def topologyFile = glusterfsScript.deployTopologyFile()
-            try {
-                shell timeout: timeoutMiddle, """\
-set -e
-echo 'Run with topology ${topologyFile}:'
-cat ${topologyFile}
-${glusterfsScript.glusterKubernetesDeployCommand} -g --yes \\
--c kubectl \\
--t $dir \\
---admin-key ${glusterfsScript.service.admin.key} \\
---user-key ${glusterfsScript.service.user.key} \\
--n ${glusterfsScript.service.namespace} \\
---daemonset-label ${glusterfsScript.service.labelName} \\
-${topologyFile}
-""" call()
-            } finally {
-                deleteTmpFile topologyFile as File
-            }
+            deployGlusterfsHeketi dir, cluster, glusterfsScript
         }
         fromRepository.run()
     }
@@ -119,20 +113,36 @@ ${topologyFile}
         }
     }
 
+    def installHeketi() {
+        log.info 'Installs Heketi.'
+        GlusterfsHeketi service = this.service
+        copy src: heketiArchive, hash: heketiArchiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
+        shell resource: installResource, name: 'installHeketiCmd' call()
+    }
+
     def installGlusterKubernetesDeploy() {
         log.info 'Installs gluster-kubernetes-deploy.'
         def tmp = createTmpDir()
         try {
-            copy src: archive, hash: archiveHash, dest: "$tmp", direct: true, timeout: timeoutLong call()
-            shell timeout: timeoutMiddle, """\
-set -e
-cd '$tmp'
-unzip "$archiveFile"
-sudo rm -rf '$optDir/gluster-kubernetes-master'
-sudo cp -r gluster-kubernetes-master '$optDir'
-""" call()
+            copy src: glusterKubernetesDeployArchive, hash: glusterKubernetesDeployArchiveHash, dest: "$tmp", direct: true, timeout: timeoutLong call()
+            shell timeout: timeoutMiddle, resource: installResource, name: 'installGlusterKubernetesDeployCmd',
+            vars: [parentDir: tmp] call()
         } finally {
             deleteTmpFile tmp
+        }
+    }
+
+    def deployGlusterfsHeketi(File dir, HostServiceScript cluster, GlusterfsHeketi_1_6 glusterfsScript) {
+        def topologyFile = glusterfsScript.deployTopologyFile()
+        try {
+            shell timeout: timeoutMiddle, resource: gkdeployResource, name: 'gkdeployCmd',
+            vars: [
+                glusterfsScript: glusterfsScript,
+                templatesDir: dir,
+                topologyFile: topologyFile
+            ] call()
+        } finally {
+            deleteTmpFile topologyFile as File
         }
     }
 
@@ -182,24 +192,32 @@ sudo cp -r gluster-kubernetes-master '$optDir'
         properties.getProperty 'default_gluster_image_version', defaultProperties
     }
 
-    URI getArchive() {
+    URI getGlusterKubernetesDeployArchive() {
         properties.getURIProperty 'gluster_kubernetes_deploy_archive', defaultProperties
     }
 
-    String getArchiveFile() {
-        FilenameUtils.getName(archive.toString())
+    String getGlusterKubernetesDeployArchiveFile() {
+        FilenameUtils.getName(glusterKubernetesDeployArchive.toString())
     }
 
-    String getArchiveName() {
-        getBaseName(getBaseName(archive.toString()))
+    String getGlusterKubernetesDeployArchiveName() {
+        getBaseName(getBaseName(glusterKubernetesDeployArchive.toString()))
     }
 
-    String getArchiveHash() {
+    String getGlusterKubernetesDeployArchiveHash() {
         properties.getProperty 'gluster_kubernetes_deploy_archive_hash', defaultProperties
     }
 
     File getGlusterKubernetesDeployCommand() {
         getFileProperty 'gluster_kubernetes_deploy_command', optDir, defaultProperties
+    }
+
+    String getHeketiArchive() {
+        properties.getProperty 'heketi_archive', defaultProperties
+    }
+
+    URI getHeketiArchiveHash() {
+        properties.getURIProperty 'heketi_archive_hash', defaultProperties
     }
 
     @Override

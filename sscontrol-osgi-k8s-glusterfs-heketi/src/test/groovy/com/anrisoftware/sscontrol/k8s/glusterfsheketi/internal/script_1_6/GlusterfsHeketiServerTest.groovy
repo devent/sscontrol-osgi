@@ -128,6 +128,7 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
             before: { setupServer test: it },
             after: { tearDownServer test: it },
             expected: { Map args ->
+                assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
                 assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
             },
         ]
