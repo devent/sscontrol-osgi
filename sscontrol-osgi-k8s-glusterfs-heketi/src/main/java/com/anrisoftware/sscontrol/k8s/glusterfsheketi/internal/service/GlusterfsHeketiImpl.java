@@ -73,6 +73,8 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private final List<RepoHost> repos;
 
+    private String nodes;
+
     private Admin admin;
 
     private User user;
@@ -265,6 +267,16 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         return namespace;
     }
 
+    public void setNodes(String nodes) {
+        this.nodes = nodes;
+        log.nodesSet(this, nodes);
+    }
+
+    @Override
+    public String getNodes() {
+        return nodes;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -274,11 +286,19 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parseNodes(args);
         parseNamespace(args);
         parseLabelNode(args);
         parseTargets(args);
         parseClusters(args);
         parseRepos(args);
+    }
+
+    private void parseNodes(Map<String, Object> args) {
+        Object v = args.get("nodes");
+        if (v != null) {
+            setNodes(v.toString());
+        }
     }
 
     private void parseNamespace(Map<String, Object> args) {

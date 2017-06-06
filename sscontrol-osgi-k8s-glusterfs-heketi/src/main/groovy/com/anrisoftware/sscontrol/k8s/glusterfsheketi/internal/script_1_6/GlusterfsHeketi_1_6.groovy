@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6
 
 import static org.apache.commons.io.FilenameUtils.getBaseName
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
@@ -59,22 +60,10 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
     def run() {
         setupDefaults()
         checkAptPackages() ?: installAptPackages()
+        installPackagesNodes()
         installHeketi()
         installGlusterKubernetesDeploy()
-        GlusterfsHeketi service = service
-        def args = [:]
-        args.targets = service.targets
-        args.clusters = service.clusters
-        args.repos = service.repos
-        def fromRepositoryService = findAvailableService 'from-repository' create args
-        fromRepositoryService.vars << service.vars
-        fromRepositoryService.serviceProperties = service.serviceProperties
-        def fromRepository = createScript 'from-repository', fromRepositoryService
-        def glusterfsScript = this
-        fromRepository.metaClass.kubeFiles = {File dir, HostServiceScript cluster ->
-            deployGlusterfsHeketi dir, cluster, glusterfsScript
-        }
-        fromRepository.run()
+        installGlusterfsHeketi()
     }
 
     def setupDefaults() {
@@ -111,6 +100,60 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
                 }
             }
         }
+    }
+
+    /**
+     * Installs needed packages on the nodes.
+     */
+    def installPackagesNodes() {
+        GlusterfsHeketi service = service
+        def nodes = service.nodes
+        def list = findService 'ssh', service.nodes
+        assertThat "nodes=0", list.size(), greaterThan(0)
+        list.each { ssh ->
+            ssh.targets.each { target ->
+                if (nodeBackportsPackages.size() > 0) {
+                    log.debug 'Install backport packages for node {}', target
+                    if (!checkAptPackage(target: target, package: nodeBackportsPackages)) {
+                        addAptBackportsRepository target: target
+                        installAptBackportsPackages target: target, packages: nodeBackportsPackages
+                    }
+                }
+                if (nodePackages.size() > 0) {
+                    log.debug 'Install packages for node {}', target
+                    if (!checkAptPackage(target: target, package: nodePackages)) {
+                        installAptPackages target: target, packages: nodePackages
+                    }
+                }
+                if (nodeKernelModules.size() > 0) {
+                    log.debug 'Setup kernel modules for node {}', target
+                    shell target: target, privileged: true, st: """
+<parent.nodeKernelModules:{m|modprobe <m>};separator="\\n">
+""" call()
+                    replace privileged: true, dest: '/etc/modules' with {
+                        line "s/(?m)^#?dm_thin_pool/dm_thin_pool/"
+                        it
+                    }()
+                }
+            }
+        }
+    }
+
+    def installGlusterfsHeketi() {
+        GlusterfsHeketi service = service
+        def args = [:]
+        args.targets = service.targets
+        args.clusters = service.clusters
+        args.repos = service.repos
+        def fromRepositoryService = findAvailableService 'from-repository' create args
+        fromRepositoryService.vars << service.vars
+        fromRepositoryService.serviceProperties = service.serviceProperties
+        def fromRepository = createScript 'from-repository', fromRepositoryService
+        def glusterfsScript = this
+        fromRepository.metaClass.kubeFiles = {File dir, HostServiceScript cluster ->
+            deployGlusterfsHeketi dir, cluster, glusterfsScript
+        }
+        fromRepository.run()
     }
 
     def installHeketi() {
@@ -194,6 +237,18 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
 
     URI getGlusterKubernetesDeployArchive() {
         properties.getURIProperty 'gluster_kubernetes_deploy_archive', defaultProperties
+    }
+
+    List getNodeBackportsPackages() {
+        properties.getListProperty "node_backports_packages", defaultProperties
+    }
+
+    List getNodePackages() {
+        properties.getListProperty "node_packages", defaultProperties
+    }
+
+    List getNodeKernelModules() {
+        properties.getListProperty "node_kernel_modules", defaultProperties
     }
 
     String getGlusterKubernetesDeployArchiveFile() {

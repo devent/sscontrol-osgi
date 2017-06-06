@@ -314,6 +314,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * Replace command.
+     * <pre>
+     * replace privileged: true, dest: '/etc/config' with {
+     * line "s&sol;(?m)^foo.*&sol;foo=bar&sol;"
+     *        it
+     *    }()
+     * </pre>
      */
     Replace replace(Map args, String search) {
         def a = new HashMap(args)
@@ -509,8 +515,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * packages from the profile property {@code packages}.
      */
     boolean checkAptPackages(List packages=packages) {
+        checkAptPackages(packages: packages)
+    }
+
+    /**
+     * Checks if the apt packages are installed. Per default checks the
+     * packages from the profile property {@code packages}.
+     */
+    boolean checkAptPackages(Map args) {
+        List packages = args.packages
         def found = packages.findAll {
-            checkAptPackage([package: it])
+            def a = new HashMap(args)
+            a.package = it
+            checkAptPackage a
         }
         return found.size() == packages.size()
     }
@@ -525,12 +542,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     boolean checkAptPackage(Map args) {
         log.info "Check installed packages {}.", args
         assertThat "args.package=null", args, hasKey('package')
-        args.timeout = args.timeout ? args.timeout : timeoutShort
-        def ret = shell exitCodes: [0, 1] as int[], timeout: args.timeout,
-        vars: args <<
-        [nameInstalled: grepAptPackageNameInstalled] <<
-        [versionInstalled: getGrepAptPackageVersionInstalled(args.version)],
-        st: '''
+        def a = new HashMap(args)
+        a.timeout = args.timeout ? args.timeout : timeoutShort
+        a.exitCodes = [0, 1] as int[]
+        a.vars = args <<
+                [nameInstalled: grepAptPackageNameInstalled] <<
+                [versionInstalled: getGrepAptPackageVersionInstalled(args.version)]
+        a.st = '''
 set -e
 export LANG=en_US.UTF-8
 s=$(dpkg -s "<vars.package>")
@@ -543,7 +561,8 @@ v_check=$?
 v_check=0
 <endif>
 ! (( $i_check || $v_check ))
-''' call()
+'''
+        def ret = shell a call()
         return ret.exitValue == 0
     }
 
@@ -552,8 +571,22 @@ v_check=0
      * packages from the profile property {@code packages}.
      */
     void installAptPackages(def packages=packages, def timeout=timeoutLong) {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: timeout, "apt-get update && apt-get -y install ${packages.join(' ')}" with { //
+        installAptPackages packages: packages, timeout: timeout
+    }
+
+    /**
+     * Installs the specified packages via apt-get. Per default installs the
+     * packages from the profile property {@code packages}.
+     */
+    void installAptPackages(Map args) {
+        log.info "Installing packages {}.", args
+        def a = new HashMap(args)
+        a.timeout = a.timeout ? a.timeout : timeoutLong
+        a.privileged = true
+        a.command = """
+apt-get update && apt-get -y install ${args.packages.join(' ')}
+"""
+        shell a with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
@@ -562,9 +595,77 @@ v_check=0
      * installs the packages from the profile property {@code packages}.
      */
     void installAptBackportsPackages(def packages=packages, def timeout=timeoutLong) {
-        log.info "Installing packages {}.", packages
-        shell privileged: true, timeout: timeout, "apt-get update && apt-get -y -t ${distributionName}-backports install ${packages.join(' ')}" with { //
+        installAptBackportsPackages packages: packages, timeout: timeout
+    }
+
+    /**
+     * Installs the specified backports packages via apt-get. Per default
+     * installs the packages from the profile property {@code packages}.
+     */
+    void installAptBackportsPackages(Map args) {
+        log.info "Installing packages {}.", args
+        def a = new HashMap(args)
+        a.timeout = a.timeout ? a.timeout : timeoutLong
+        a.privileged = true
+        a.command = """
+apt-get update && apt-get -y -t ${distributionName}-backports install ${args.packages.join(' ')}
+"""
+        shell a with { //
             sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+    }
+
+    /**
+     * Adds the apt packages repository.
+     *
+     * @param args
+     * <ul>
+     * <li>key: repository key;
+     * <li>url: repository URL;
+     * <li>name: distribution name;
+     * <li>comp: repository component;
+     * <li>file: repository list file;
+     * </ul>
+     *
+     * @see #getAptPackagesRepositoryKey()
+     * @see #getAptPackagesRepository()
+     * @see #getAptPackagesRepositoryComponent()
+     * @see #getAptPackagesRepositoryListFile()
+     */
+    def addAptPackagesRepository(Map args=[:]) {
+        args.key = args.key ? args.key : aptPackagesRepositoryKey
+        args.url = args.url ? args.url : aptPackagesRepositoryUrl
+        args.name = args.name ? args.name : distributionName
+        args.comp = args.comp ? args.comp : aptPackagesRepositoryComponent
+        args.file = args.file ? args.file : aptPackagesRepositoryListFile
+        shell """
+curl -fsSL ${args.key} | sudo apt-key add -
+sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
+    }
+
+    /**
+     * Adds the apt backports repository.
+     *
+     * @param args
+     * <ul>
+     * <li>url: repository URL;
+     * <li>name: distribution name;
+     * <li>comp: repository component;
+     * <li>file: repository list file;
+     * </ul>
+     *
+     * @see #getAptBackportsRepository()
+     * @see #getAptBackportsRepositoryComponent()
+     * @see #getAptBackportsRepositoryListFile()
+     */
+    def addAptBackportsRepository(Map args=[:]) {
+        args.url = args.url ? args.url : aptBackportsRepositoryUrl
+        args.name = args.name ? args.name : "$distributionName-backports"
+        args.comp = args.comp ? args.comp : aptBackportsRepositoryComponent
+        args.file = args.file ? args.file : aptBackportsRepositoryListFile
+        shell """
+sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
     }
 
     /**
@@ -648,60 +749,6 @@ v_check=0
                 }
             }
         }
-    }
-
-    /**
-     * Adds the apt packages repository.
-     *
-     * @param args
-     * <ul>
-     * <li>key: repository key;
-     * <li>url: repository URL;
-     * <li>name: distribution name;
-     * <li>comp: repository component;
-     * <li>file: repository list file;
-     * </ul>
-     *
-     * @see #getAptPackagesRepositoryKey()
-     * @see #getAptPackagesRepository()
-     * @see #getAptPackagesRepositoryComponent()
-     * @see #getAptPackagesRepositoryListFile()
-     */
-    def addAptPackagesRepository(Map args=[:]) {
-        args.key = args.key ? args.key : aptPackagesRepositoryKey
-        args.url = args.url ? args.url : aptPackagesRepositoryUrl
-        args.name = args.name ? args.name : distributionName
-        args.comp = args.comp ? args.comp : aptPackagesRepositoryComponent
-        args.file = args.file ? args.file : aptPackagesRepositoryListFile
-        shell """
-curl -fsSL ${args.key} | sudo apt-key add -
-sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
-""" call()
-    }
-
-    /**
-     * Adds the apt backports repository.
-     *
-     * @param args
-     * <ul>
-     * <li>url: repository URL;
-     * <li>name: distribution name;
-     * <li>comp: repository component;
-     * <li>file: repository list file;
-     * </ul>
-     *
-     * @see #getAptBackportsRepository()
-     * @see #getAptBackportsRepositoryComponent()
-     * @see #getAptBackportsRepositoryListFile()
-     */
-    def addAptBackportsRepository(Map args=[:]) {
-        args.url = args.url ? args.url : aptBackportsRepositoryUrl
-        args.name = args.name ? args.name : "$distributionName-backports"
-        args.comp = args.comp ? args.comp : aptBackportsRepositoryComponent
-        args.file = args.file ? args.file : aptBackportsRepositoryListFile
-        shell """
-sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
-""" call()
     }
 
     /**
@@ -845,8 +892,8 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * Finds the registered service with the specified name and group.
      */
     public List findService(String name, String group) {
-        def services = scriptsRepository.getAvailableService name
-        services.findAll { HostServiceService s ->
+        def services = scriptsRepository.getServices name
+        services.findAll { HostService s ->
             s.hasProperty('group') && (s.group == group)
         }
     }
