@@ -26,9 +26,9 @@ import org.apache.commons.lang3.StringUtils
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.Templates
 import com.anrisoftware.resources.templates.external.TemplatesFactory
+import com.anrisoftware.sscontrol.command.shell.linux.openssh.external.find.FindFilesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
-import com.anrisoftware.sscontrol.command.shell.linux.openssh.external.find.FindFilesFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
@@ -66,6 +66,7 @@ class FromRepository_1_5 extends ScriptBase {
     @Override
     def run() {
         FromRepository service = service
+        assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
