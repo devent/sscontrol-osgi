@@ -9,6 +9,21 @@ gkdeployCmd(parent, vars) ::= <<
 set -e
 echo 'Run with topology <vars.topologyFile>:'
 cat <vars.topologyFile>
+
+set +e
+ret=$(<vars.glusterfsScript.glusterKubernetesDeployCommand> -g --yes \\
+-c kubectl \\
+-t <vars.templatesDir> \\
+--admin-key <vars.glusterfsScript.service.admin.key> \\
+--user-key <vars.glusterfsScript.service.user.key> \\
+-n <vars.glusterfsScript.service.namespace> \\
+--daemonset-label <vars.glusterfsScript.service.labelName> \\
+<vars.topologyFile>)
+
+set -e
+echo $ret
+
+if echo "$ret" | grep "Please destroy existing setup and try again.">/dev/null; then
 <vars.glusterfsScript.glusterKubernetesDeployCommand> -g --yes \\
 -c kubectl \\
 -t <vars.templatesDir> \\
@@ -16,6 +31,8 @@ cat <vars.topologyFile>
 --user-key <vars.glusterfsScript.service.user.key> \\
 -n <vars.glusterfsScript.service.namespace> \\
 --daemonset-label <vars.glusterfsScript.service.labelName> \\
+--load \\
 <vars.topologyFile>
+fi
 
 >>
