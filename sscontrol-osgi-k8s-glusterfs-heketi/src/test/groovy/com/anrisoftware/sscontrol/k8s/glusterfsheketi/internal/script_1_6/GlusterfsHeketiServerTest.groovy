@@ -53,9 +53,13 @@ service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs" with {
+service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
+    vars << [tolerations: [
+        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
+        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+    ]]
     property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
     topology parse: """
 {
