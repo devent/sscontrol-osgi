@@ -16,6 +16,8 @@
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service;
 
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.clustersAdded;
+import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.nodesAdded;
+import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.nodesSet;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.registriesAdded;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.reposAdded;
 
@@ -43,7 +45,11 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
 
         reposAdded("Repositories {} added to {}"),
 
-        registriesAdded("Repositories {} added to {}");
+        registriesAdded("Repositories {} added to {}"),
+
+        nodesSet("Nodes group {} added to {}"),
+
+        nodesAdded("Nodes added to {}: {}");
 
         private String name;
 
@@ -64,15 +70,23 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
         super(GlusterfsHeketiImpl.class);
     }
 
-    void clustersAdded(GlusterfsHeketiImpl from, List<ClusterHost> list) {
-        debug(clustersAdded, list, from);
+    void clustersAdded(GlusterfsHeketiImpl g, List<ClusterHost> list) {
+        debug(clustersAdded, list, g);
     }
 
-    void reposAdded(GlusterfsHeketiImpl from, List<RepoHost> list) {
-        debug(reposAdded, list, from);
+    void reposAdded(GlusterfsHeketiImpl g, List<RepoHost> list) {
+        debug(reposAdded, list, g);
     }
 
-    void registriesAdded(GlusterfsHeketiImpl from, List<RegistryHost> list) {
-        debug(registriesAdded, list, from);
+    void registriesAdded(GlusterfsHeketiImpl g, List<RegistryHost> list) {
+        debug(registriesAdded, list, g);
+    }
+
+    void nodesSet(GlusterfsHeketiImpl glusterfs, String group) {
+        debug(nodesSet, group, glusterfs);
+    }
+
+    void nodesAdded(GlusterfsHeketiImpl g, List<String> nodes) {
+        debug(nodesAdded, g, nodes);
     }
 }

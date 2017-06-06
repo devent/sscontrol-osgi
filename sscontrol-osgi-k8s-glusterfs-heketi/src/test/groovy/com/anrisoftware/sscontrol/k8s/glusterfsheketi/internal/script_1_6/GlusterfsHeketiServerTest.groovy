@@ -53,7 +53,7 @@ service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
+service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     vars << [tolerations: [
@@ -134,6 +134,7 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
             expected: { Map args ->
                 assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
                 assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/etc', 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
             },
         ]
         doTest test

@@ -52,12 +52,14 @@ service "k8s-cluster" with {
 service "repo-git", group: "glusterfs-heketi" with {
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs" with {
+service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     vars << [heketi: [snapshot: [limit: 32]]]
-    vars << [tolerations: [toleration: [key: 'robobeerun.com/dedicated', effect: 'NoSchedule']]]
-    vars << [tolerations: [toleration: [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']]]
+    vars << [tolerations: [
+        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
+        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+    ]]
     topology parse: """
 {
   "clusters":[
@@ -130,6 +132,7 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
                 assert services.getServices('glusterfs-heketi').size() == 1
                 GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
                 assert s.cluster.clusterName == 'default'
+                assert s.nodes == 'default'
                 assert s.repo.repo.group == "glusterfs-heketi"
                 assert s.labelName == 'glusterfs'
                 assert s.vars.size() == 2

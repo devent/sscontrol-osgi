@@ -62,6 +62,11 @@ public interface GlusterfsHeketi extends ClusterService {
      */
     Map<String, Object> getTopology();
 
+    /**
+     * Returns the glusterfs nodes group name.
+     */
+    String getNodes();
+
     RepoHost getRepo();
 
     void addRepos(List<RepoHost> list);

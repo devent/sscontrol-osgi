@@ -46,10 +46,10 @@ class Dockerce_17_Upstream_Debian_8 extends ScriptBase {
         if (check("uname -a | grep '$kernelFullVersion'")) {
             return
         }
-        shell privileged: true, timeout: timeoutLong, """
-echo "deb ${kernelRepository} ${distributionName}-backports main" > $backportsListFile
-apt-get update && apt-get -y install -t ${distributionName}-backports $kernelPackage=$kernelVersion
-""" with { sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+        addAptBackportsRepository()
+        installAptBackportsPackages([
+            "$kernelPackage=$kernelVersion"
+        ])
     }
 
     def installDocker() {
@@ -84,10 +84,6 @@ sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable"
         properties.getBooleanProperty 'upgrade_kernel', defaultProperties
     }
 
-    String getKernelRepository() {
-        properties.getProperty 'kernel_repository', defaultProperties
-    }
-
     String getKernelPackage() {
         properties.getProperty 'kernel_package', defaultProperties
     }
@@ -98,10 +94,6 @@ sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable"
 
     String getKernelFullVersion() {
         properties.getProperty 'kernel_full_version', defaultProperties
-    }
-
-    File getBackportsListFile() {
-        getFileProperty 'backports_list_file'
     }
 
     File getDockerListFile() {
