@@ -233,7 +233,7 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         def tmp = createTmpFile target: target
         try {
             template target: target, resource: storageClassResource, name: 'storageClass', dest: tmp, vars: [:] call()
-            shell target: target, "kubectl apply -f $tmp" call()
+            shell target: target, "${kubectlCmd} apply -f $tmp" call()
         } finally {
             deleteTmpFile file: tmp, target: target
         }
@@ -318,6 +318,10 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
 
     boolean getDefaultStorageClassIsDefault() {
         properties.getBooleanProperty 'default_storage_class_is_default', defaultProperties
+    }
+
+    File getKubectlCmd() {
+        getFileProperty 'kubectl_command'
     }
 
     @Override
