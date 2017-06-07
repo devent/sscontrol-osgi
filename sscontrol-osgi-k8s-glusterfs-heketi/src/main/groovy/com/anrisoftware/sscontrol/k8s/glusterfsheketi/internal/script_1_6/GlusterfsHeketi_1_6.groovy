@@ -49,11 +49,14 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
 
     TemplateResource gkdeployResource
 
+    TemplateResource storageClassResource
+
     @Inject
     def setTemplates(TemplatesFactory factory) {
         def t = factory.create 'GlusterfsHeketi_1_6_Templates'
         this.installResource = t.getResource 'install'
         this.gkdeployResource = t.getResource 'gkdeploy'
+        this.storageClassResource = t.getResource 'storage_class'
     }
 
     @Override
@@ -64,12 +67,19 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         installHeketi()
         installGlusterKubernetesDeploy()
         installGlusterfsHeketi()
+        deployStorageClass()
     }
 
     def setupDefaults() {
         GlusterfsHeketi service = service
         if (!service.namespace) {
             service.namespace = defaultNamespace
+        }
+        if (!service.storage.name) {
+            service.storage.name = defaultStorageClassName
+        }
+        if (service.storage.isDefault == null) {
+            service.storage.isDefault = defaultStorageClassIsDefault
         }
         def vars = service.vars
         if (!vars.heketi) {
@@ -206,6 +216,29 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         }
     }
 
+    /**
+     * Deploys the StorageClass for heketi.
+     */
+    def deployStorageClass() {
+        GlusterfsHeketi service = service
+        if (!deployDefaultStorageClass) {
+            return
+        }
+        def target = service.cluster.cluster.target
+        def ret = shell outString: true, target: target, resource: installResource, name: 'getHeketiAddress', vars: [:] call()
+        def address = ret.out[0..-2]
+        if (!service.storage.restAddress) {
+            service.storage.restAddress = address
+        }
+        def tmp = createTmpFile target: target
+        try {
+            template target: target, resource: storageClassResource, name: 'storageClass', dest: tmp, vars: [:] call()
+            shell target: target, "kubectl apply -f $tmp" call()
+        } finally {
+            deleteTmpFile file: tmp, target: target
+        }
+    }
+
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
@@ -273,6 +306,18 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
 
     URI getHeketiArchiveHash() {
         properties.getURIProperty 'heketi_archive_hash', defaultProperties
+    }
+
+    boolean getDeployDefaultStorageClass() {
+        properties.getBooleanProperty 'deploy_default_storage_class', defaultProperties
+    }
+
+    String getDefaultStorageClassName() {
+        properties.getProperty 'default_storage_class_name', defaultProperties
+    }
+
+    boolean getDefaultStorageClassIsDefault() {
+        properties.getBooleanProperty 'default_storage_class_is_default', defaultProperties
     }
 
     @Override

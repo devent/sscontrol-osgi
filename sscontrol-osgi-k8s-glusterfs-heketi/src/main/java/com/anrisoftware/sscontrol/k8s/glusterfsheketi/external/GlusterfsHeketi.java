@@ -73,4 +73,6 @@ public interface GlusterfsHeketi extends ClusterService {
 
     List<RepoHost> getRepos();
 
+    Storage getStorage();
+
 }

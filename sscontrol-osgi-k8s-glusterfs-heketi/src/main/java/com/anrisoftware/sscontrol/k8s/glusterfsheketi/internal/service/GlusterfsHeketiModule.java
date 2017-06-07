@@ -16,9 +16,11 @@
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service;
 
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.Admin;
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.Storage;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.User;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.AdminImpl.AdminImplFactory;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImpl.GlusterfsHeketiImplFactory;
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.StorageImpl.StorageImplFactory;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.UserImpl.UserImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
@@ -40,6 +42,9 @@ public class GlusterfsHeketiModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Admin.class, AdminImpl.class)
                 .build(AdminImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Storage.class, StorageImpl.class)
+                .build(StorageImplFactory.class));
     }
 
 }

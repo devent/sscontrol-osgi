@@ -1075,11 +1075,14 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
         if (createTmpFileCallback) {
             file = createTmpFileCallback(args)
         } else {
-            def ret = shell outString: true, """
+            def a = new HashMap(args)
+            a.outString = true
+            a.command = """
 file=\$(mktemp)
 chmod o-rw \$file
 echo \$file
-""" call()
+"""
+            def ret = shell a call()
             file = new File(ret.out[0..-2])
         }
         file
@@ -1095,11 +1098,14 @@ echo \$file
             file.delete()
             file.mkdirs()
         } else {
-            def ret = shell outString: true, """
+            def a = new HashMap(args)
+            a.outString = true
+            a.command = """
 file=\$(mktemp -d)
 chmod o-rwx \$file
 echo \$file
-""" call()
+"""
+            def ret = shell a call()
             file = new File(ret.out[0..-2])
         }
         file
@@ -1109,10 +1115,20 @@ echo \$file
      * Deletes the temporary file.
      */
     void deleteTmpFile(File file) {
+        deleteTmpFile file: file
+    }
+
+    /**
+     * Deletes the temporary file.
+     */
+    void deleteTmpFile(Map args) {
+        File file = args.file
         if (createTmpFileCallback) {
             file.isFile() ? file.delete() : file.deleteDir()
         } else {
-            shell "rm -rf ${file.absolutePath}" call()
+            def a = new HashMap(args)
+            a.command = "rm -rf ${file.absolutePath}"
+            shell a call()
         }
     }
 

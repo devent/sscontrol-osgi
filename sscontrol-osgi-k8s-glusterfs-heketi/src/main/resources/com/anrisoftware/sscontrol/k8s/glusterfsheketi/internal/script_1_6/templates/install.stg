@@ -16,3 +16,8 @@ sudo rm -rf '<parent.optDir>/gluster-kubernetes-master'
 sudo cp -r gluster-kubernetes-master '<parent.optDir>'
 
 >>
+
+getHeketiAddress(parent, vars) ::= <<
+set -e
+kubectl -n<parent.service.namespace> get ep | egrep "heketi\s" | awk '{print $2}'
+>>
