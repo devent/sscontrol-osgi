@@ -225,9 +225,9 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
             return
         }
         def target = service.cluster.cluster.target
-        def ret = shell outString: true, target: target, resource: installResource, name: 'getHeketiAddress', vars: [:] call()
-        def address = ret.out[0..-2]
         if (!service.storage.restAddress) {
+            def ret = shell outString: true, target: target, resource: installResource, name: 'getHeketiAddress', vars: [:] call()
+            def address = ret.out[0..-2]
             service.storage.restAddress = address
         }
         def tmp = createTmpFile target: target

@@ -93,7 +93,9 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private String namespace;
 
-    private final Storage storage;
+    private Storage storage;
+
+    private transient StorageImplFactory storageFactory;
 
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
@@ -112,6 +114,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         this.user = userFactory.create();
         this.topology = new HashMap<>();
         this.vars = new HashMap<>();
+        this.storageFactory = storageFactory;
         this.storage = storageFactory.create();
         parseArgs(args);
     }
@@ -179,6 +182,16 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     @Override
     public Map<String, Object> getVars() {
         return vars;
+    }
+
+    /**
+     * <pre>
+     * storage address: "10.2.35.3:8080"
+     * </pre>
+     */
+    public void storage(Map<String, Object> args) {
+        this.storage = storageFactory.create(args);
+        log.storageSet(this, storage);
     }
 
     @Override
