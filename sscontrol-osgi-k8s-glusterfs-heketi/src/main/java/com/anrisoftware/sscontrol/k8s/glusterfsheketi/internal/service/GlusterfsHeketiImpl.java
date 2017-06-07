@@ -31,8 +31,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.Admin;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.GlusterfsHeketi;
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.Storage;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.User;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.AdminImpl.AdminImplFactory;
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.StorageImpl.StorageImplFactory;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.UserImpl.UserImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -91,10 +93,13 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private String namespace;
 
+    private final Storage storage;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostPropertiesService propertiesService,
             AdminImplFactory adminFactory, UserImplFactory userFactory,
+            StorageImplFactory storageFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
@@ -107,6 +112,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         this.user = userFactory.create();
         this.topology = new HashMap<>();
         this.vars = new HashMap<>();
+        this.storage = storageFactory.create();
         parseArgs(args);
     }
 
@@ -275,6 +281,11 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     @Override
     public String getNodes() {
         return nodes;
+    }
+
+    @Override
+    public Storage getStorage() {
+        return storage;
     }
 
     @Override

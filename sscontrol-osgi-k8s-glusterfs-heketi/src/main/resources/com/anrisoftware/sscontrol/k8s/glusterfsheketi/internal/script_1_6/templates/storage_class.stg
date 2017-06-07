@@ -1,0 +1,16 @@
+/*
+*/
+storageClass(parent, vars) ::= <<
+apiVersion: storage.k8s.io/v1beta1
+kind: StorageClass
+metadata:
+  name: <parent.service.storage.name>
+  annotations:
+    storageclass.beta.kubernetes.io/is-default-class: "<parent.service.storage.isDefault>"
+provisioner: kubernetes.io/glusterfs
+parameters:
+  resturl: "http://<parent.service.storage.restAddress>"
+  restuser: "<parent.service.storage.restUser>"
+  restuserkey: "<parent.service.storage.restKey>"
+
+>>
