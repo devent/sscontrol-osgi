@@ -67,6 +67,10 @@ public class StorageImpl implements Storage {
         if (v != null) {
             this.name = v.toString();
         }
+        v = args.get("address");
+        if (v != null) {
+            this.restAddress = v.toString();
+        }
     }
 
     public void setName(String name) {

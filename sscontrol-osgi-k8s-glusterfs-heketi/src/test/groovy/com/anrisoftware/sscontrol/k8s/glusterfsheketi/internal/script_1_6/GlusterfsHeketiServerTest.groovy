@@ -27,7 +27,6 @@ import org.junit.Test
 
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.utils.AbstractGlusterfsHeketiRunnerTest
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
-import com.jcabi.ssh.SSH
 
 import groovy.util.logging.Slf4j
 
@@ -56,6 +55,7 @@ service "repo-git", group: "glusterfs-heketi" with {
 service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
+    storage address: "10.2.35.3:8080"
     vars << [tolerations: [
         [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
         [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
@@ -141,7 +141,6 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
     }
 
     def setupServer(Map args) {
-        def file = SSH.escape('wordpress-app.zip')
         remoteCommand """
 echo "Create /tmp/gk-deploy."
 cat > /tmp/gk-deploy << 'EOL'

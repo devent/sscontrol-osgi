@@ -20,12 +20,14 @@ import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.Gl
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.nodesSet;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.registriesAdded;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.reposAdded;
+import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImplLogger.m.storageSet;
 
 import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.external.Storage;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
@@ -49,7 +51,9 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
 
         nodesSet("Nodes group {} added to {}"),
 
-        nodesAdded("Nodes added to {}: {}");
+        nodesAdded("Nodes added to {}: {}"),
+
+        storageSet("Storage {} set for {}");
 
         private String name;
 
@@ -88,5 +92,9 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
 
     void nodesAdded(GlusterfsHeketiImpl g, List<String> nodes) {
         debug(nodesAdded, g, nodes);
+    }
+
+    void storageSet(GlusterfsHeketiImpl g, Storage storage) {
+        debug(storageSet, storage, g);
     }
 }
