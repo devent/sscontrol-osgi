@@ -61,6 +61,7 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
         [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
     ]]
     property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
+    property << "kubectl_command=/tmp/kubectl"
     topology parse: """
 {
   "clusters":[
@@ -134,6 +135,7 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
             expected: { Map args ->
                 assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
                 assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
                 assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/etc', 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
             },
         ]
@@ -142,11 +144,19 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 
     def setupServer(Map args) {
         remoteCommand """
+rm /tmp/gk-deploy
+rm /tmp/gk-deploy.out
+rm /tmp/kubectl
+rm /tmp/kubectl.out
+
 echo "Create /tmp/gk-deploy."
 cat > /tmp/gk-deploy << 'EOL'
 ${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
 chmod +x /tmp/gk-deploy
+
+cp /tmp/gk-deploy /tmp/kubectl
+chmod +x /tmp/kubectl
 """
     }
 
@@ -154,6 +164,8 @@ chmod +x /tmp/gk-deploy
         remoteCommand """
 rm /tmp/gk-deploy
 rm /tmp/gk-deploy.out
+rm /tmp/kubectl
+rm /tmp/kubectl.out
 """
     }
 
