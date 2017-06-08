@@ -13,11 +13,9 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 @SuppressWarnings("serial")
 public class TemplateNotFoundException extends AppException {
 
-    public TemplateNotFoundException(File parentDirectory, String fileName,
-            String name) {
+    public TemplateNotFoundException(File parentDirectory, String fileName) {
         super("Template not found");
         addContextValue("parent-directory", parentDirectory);
         addContextValue("file-name", fileName);
-        addContextValue("name", name);
     }
 }

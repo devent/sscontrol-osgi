@@ -14,10 +14,9 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 public class TemplateParseException extends AppException {
 
     public TemplateParseException(Throwable cause, File parentDirectory,
-            String fileName, String name) {
+            String fileName) {
         super("Error parsing template", cause);
         addContextValue("parent-directory", parentDirectory);
         addContextValue("file-name", fileName);
-        addContextValue("name", name);
     }
 }

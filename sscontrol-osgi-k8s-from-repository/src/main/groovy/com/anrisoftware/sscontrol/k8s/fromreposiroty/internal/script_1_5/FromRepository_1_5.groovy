@@ -72,8 +72,8 @@ class FromRepository_1_5 extends ScriptBase {
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         assertThat "checkout-dir=null for $service", dir, notNullValue()
         try {
+            parseTemplateFiles(dir, cluster)
             buildDocker(dir)
-            kubeTemplateFiles(dir, cluster)
             kubeFiles(dir, cluster)
         } finally {
             shell "rm -rf $dir" call()
@@ -123,24 +123,23 @@ class FromRepository_1_5 extends ScriptBase {
         }
     }
 
-    /**
-     * Parse template files.
-     */
-    def kubeTemplateFiles(File dir, HostServiceScript cluster) {
+    def parseTemplateFiles(File dir, HostServiceScript cluster) {
+        FromRepository service = this.service
+        def args = [parent: this, vars: service.vars]
+        findTemplateFiles dir, { String pattern, String fileName ->
+            def parser = templateParsers[pattern]
+            copyRepoAndParse dir, fileName, args, parser
+            return true
+        }
+    }
+
+    def findTemplateFiles(File dir, def callback) {
         FromRepository service = this.service
         shell "rm -rf $dir/.git" call()
         def files = createCmd findFilesFactory, chdir: dir, suffix: templateParsers.keySet() call()
-        def args = [parent: this, vars: service.vars]
-        templateParsers.keySet().each { pattern ->
-            files.findAll { it =~ /(?m)\.${pattern}$/ }.any {
-                def parser = templateParsers[pattern]
-                if (parser.needCopyRepo) {
-                    copyRepoAndParse dir, it, args, parser
-                    return true
-                } else {
-                    parseTemplate dir, it, args, parser
-                    return false
-                }
+        templateParsers.keySet().each { String pattern ->
+            files.findAll { it =~ /(?m)\.${pattern}$/ }.any { String fileName ->
+                return callback(pattern, fileName)
             }
         }
     }
@@ -167,25 +166,6 @@ class FromRepository_1_5 extends ScriptBase {
                 } finally {
                     tmpdest.delete()
                 }
-            }
-        } finally {
-            tmpdir.deleteDir()
-        }
-    }
-
-    def parseTemplate(File dir, String fileName, Map args, TemplateParser parser) {
-        log.info 'Parse template {}/{}', dir, fileName
-        def tmpdir = File.createTempDir('robobee', null)
-        try {
-            fetch src: "$dir/$fileName", dest: "$tmpdir/$fileName" call()
-            def s = parser.parseFile(tmpdir, fileName, args, charset)
-            def parsedFileName = parser.getFilename fileName
-            def tmpdest = File.createTempFile('robobee', null)
-            try {
-                FileUtils.write tmpdest, s, charset
-                copy src: tmpdest, dest: "$dir/$parsedFileName" call()
-            } finally {
-                tmpdest.delete()
             }
         } finally {
             tmpdir.deleteDir()

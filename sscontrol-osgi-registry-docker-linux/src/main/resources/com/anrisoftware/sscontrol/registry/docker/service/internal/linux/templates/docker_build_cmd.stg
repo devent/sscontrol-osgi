@@ -1,6 +1,6 @@
 dockerBuild(parent, vars) ::= <<
 <setupDocker(parent, vars)>
 cd "<vars.dir>"
-sudo -u <vars.user> docker build -t <dockerTag(parent, vars)> -f <vars.dockerFile> .
+sudo -u <vars.user> <parent.dockerCommand> build -t <dockerTag(parent, vars)> -f <vars.dockerFile> .
 
 >>

@@ -36,5 +36,5 @@ credentials(parent, vars, name) ::= <%
 %>
 
 credentials_user(parent, vars) ::= <<
-sudo -u <vars.user> docker login -u "<vars.service.credentials.user>" -p "<vars.service.credentials.password>"
+sudo -u <vars.user> <parent.dockerCommand> login -u "<vars.service.credentials.user>" -p "<vars.service.credentials.password>"
 >>

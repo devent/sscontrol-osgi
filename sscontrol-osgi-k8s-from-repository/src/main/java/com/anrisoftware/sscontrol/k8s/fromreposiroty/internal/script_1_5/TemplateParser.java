@@ -15,8 +15,14 @@ public interface TemplateParser {
     String parseFile(File parentDirectory, String fileName,
             Map<String, Object> args, Charset encoding);
 
+    /**
+     * Returns the template name.
+     */
     String getTemplateName();
 
+    /**
+     * Checks if the file with the specified name is a Kubernetes manifest.
+     */
     boolean isKubeFile(String fileName);
 
     /**
@@ -24,5 +30,4 @@ public interface TemplateParser {
      */
     String getFilename(String fileName);
 
-    boolean getNeedCopyRepo();
 }
