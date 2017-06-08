@@ -22,7 +22,6 @@ import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistry
 import com.anrisoftware.sscontrol.registry.docker.service.external.DockerRegistryHost
 import com.anrisoftware.sscontrol.types.host.external.HostService
-import com.anrisoftware.sscontrol.types.registry.external.RegistryHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 
 import groovy.util.logging.Slf4j
@@ -47,21 +46,20 @@ abstract class DockerRegistry_Linux extends ScriptBase {
      * Setups the docker defaults.
      */
     Map setupDockerDefaults(Map vars) {
+        DockerRegistry service = this.service
         Map v = new HashMap(vars)
-        RegistryHost registry = service.registry
-        DockerRegistry docker = registry.registry
-        log.info 'Setups docker defaults for service {}, docker {}', service, docker
-        if (docker.registry && !docker.registry.port) {
-            docker.registry.port = defaultRegistryPort
+        log.info 'Setups service defaults for {}', service
+        if (service.registry && !service.registry.port) {
+            service.registry.port = defaultRegistryPort
         }
-        if (docker.host && docker.host.client.ca) {
-            docker.host.client.caName = defaultClientCaName
+        if (service.host && service.host.client.ca) {
+            service.host.client.caName = defaultClientCaName
         }
-        if (docker.host && docker.host.client.cert) {
-            docker.host.client.certName = defaultClientCertName
+        if (service.host && service.host.client.cert) {
+            service.host.client.certName = defaultClientCertName
         }
-        if (docker.host && docker.host.client.key) {
-            docker.host.client.keyName = defaultClientKeyName
+        if (service.host && service.host.client.key) {
+            service.host.client.keyName = defaultClientKeyName
         }
         return v
     }
@@ -70,11 +68,10 @@ abstract class DockerRegistry_Linux extends ScriptBase {
      * Deploys the docker configuration and certificates to the server.
      */
     Map deployDockerConfig(Map vars) {
+        DockerRegistry service = this.service
         Map v = new HashMap(vars)
-        RegistryHost registry = service.registry
-        DockerRegistry docker = registry.registry
-        log.info 'Deploy docker configuration for service {}, docker {}', service, docker
-        vars.dockerDir = getDockerDir(docker)
+        log.info 'Deploy docker configuration for {}', service
+        vars.dockerDir = getDockerDir(service)
         shell privileged: true, """
 mkdir -p "${vars.dockerDir}"
 chown \${SSH_USER}.\${SSH_USER} "${vars.dockerDir}"
@@ -84,15 +81,14 @@ chmod o-rwx "${vars.dockerDir}"
     }
 
     def deployClientCerts(Map vars) {
-        RegistryHost registry = service.registry
-        DockerRegistry docker = registry.registry
-        if (!docker.host) {
+        DockerRegistry service = this.service
+        if (!service.host) {
             return
         }
-        log.info 'Deploy docker host certificates for service {}, docker {}', service, docker
+        log.info 'Deploy docker host certificates for {}', service
         def a = [:]
         a.dest = vars.dockerDir
-        a.tls = docker.host.client
+        a.tls = service.host.client
         a.name = 'docker-tls'
         uploadTlsCerts a
     }
@@ -101,15 +97,14 @@ chmod o-rwx "${vars.dockerDir}"
      * Builds the docker image.
      */
     Map dockerBuild(Map vars) {
+        DockerRegistry service = this.service
         Map v = new HashMap(vars)
-        RegistryHost registry = service.registry
-        DockerRegistry docker = registry.registry
-        log.info 'Build docker image for service {}, docker {}', service, docker
-        v.service = docker
+        log.info 'Build docker image for {}', service
+        v.service = service
         v.name = vars.repo.group
         v.version = getVersion(vars.repo)
-        v.user = getDockerBuildUser(docker)
-        v.registryName = getRegistryName(docker)
+        v.user = getDockerBuildUser(service)
+        v.registryName = getRegistryName(service)
         shell timeout: timeoutVeryLong, vars: v,
         resource: templatesProvider.get().getResource("docker_build_cmd"),
         name: "dockerBuild" call()
@@ -120,15 +115,14 @@ chmod o-rwx "${vars.dockerDir}"
      * Pushs the docker image.
      */
     Map dockerPush(Map vars) {
+        DockerRegistry service = this.service
         Map v = new HashMap(vars)
-        RegistryHost registry = service.registry
-        DockerRegistry docker = registry.registry
-        log.info 'Push docker image for service {}, docker {}', service, docker
-        v.service = docker
+        log.info 'Push docker image for {}', service
+        v.service = service
         v.name = vars.repo.group
         v.version = getVersion(vars.repo)
-        v.user = getDockerBuildUser(docker)
-        v.registryName = getRegistryName(docker)
+        v.user = getDockerBuildUser(service)
+        v.registryName = getRegistryName(service)
         shell timeout: timeoutVeryLong, vars: v,
         resource: templatesProvider.get().getResource("docker_push_cmd"),
         name: "dockerPush" call()
@@ -214,6 +208,10 @@ chmod o-rwx "${vars.dockerDir}"
 
     def getDefaultDockerBuildUser() {
         properties.getProperty 'default_docker_build_user', defaultProperties
+    }
+
+    File getDockerCommand() {
+        getFileProperty 'docker_command'
     }
 
     @Override
