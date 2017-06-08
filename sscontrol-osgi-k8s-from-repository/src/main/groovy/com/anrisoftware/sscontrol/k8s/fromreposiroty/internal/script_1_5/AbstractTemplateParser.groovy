@@ -36,16 +36,35 @@ abstract class AbstractTemplateParser implements TemplateParser {
     boolean isKubeFile(String fileName) {
         String[] split = fileName.split(/\./)
         def name = split[-2]
-        def m = (name =~ /(.*)-(\w*)/)
-        m.find()
+        def match = false
+        if (!match) {
+            match = (name =~ /(.*)-(\w*)/).find()
+        }
+        if (!match) {
+            match = (name =~ /Dockerfile.*/).find()
+        }
+        return match
     }
 
     @Override
     String getFilename(String fileName) {
         String[] split = fileName.split(/\./)
         def name = split[-2]
+        def match = false
         def m = (name =~ /(.*)-(\w*)/)
-        m.find()
-        "${m.group(1)}.${m.group(2)}"
+        match = m.find()
+        if (match) {
+            return "${m.group(1)}.${m.group(2)}"
+        }
+        m = (name =~ /(Dockerfile)\.?(.*)/)
+        match = m.find()
+        if (match) {
+            if (m.groupCount() == 3) {
+                return "${m.group(1)}.${m.group(2)}"
+            }
+            if (m.groupCount() == 2) {
+                return m.group(1)
+            }
+        }
     }
 }

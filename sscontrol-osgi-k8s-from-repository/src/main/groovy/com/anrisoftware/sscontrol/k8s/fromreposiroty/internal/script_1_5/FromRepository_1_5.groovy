@@ -86,10 +86,20 @@ class FromRepository_1_5 extends ScriptBase {
             return
         }
         def files = createCmd findFilesFactory, chdir: dir, patterns: dockerfileFilesPatterns call()
+        def templatesPatterns = templateParsers.keySet()
+        files = files.findAll { String file ->
+            for (String pattern : templatesPatterns) {
+                if (file.endsWith(".$pattern")) {
+                    return false
+                }
+            }
+            return true
+        }
         if (files.size() == 0) {
             return
         }
-        def script = createScript 'registry-docker'
+        def s = findService 'registry-docker', service.registry.registry.group
+        def script = createScript 'registry-docker', s[0]
         def vars = [:]
         vars.repo = service.repo.repo
         vars.dir = dir

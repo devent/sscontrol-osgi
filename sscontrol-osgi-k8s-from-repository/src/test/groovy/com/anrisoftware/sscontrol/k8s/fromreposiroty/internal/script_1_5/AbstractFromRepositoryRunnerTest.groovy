@@ -17,8 +17,11 @@ package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
+import java.nio.charset.StandardCharsets
+
 import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
@@ -66,6 +69,10 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
     static final URL wordpressStZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-st.zip')
 
     static final URL wordpressStgZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-stg.zip')
+
+    static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('kubectl_command.txt').openStream(), StandardCharsets.UTF_8) }
+
+    static final def DOCKER_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('docker_command.txt').openStream(), StandardCharsets.UTF_8) }
 
     @Inject
     RunScriptImplFactory runnerFactory
