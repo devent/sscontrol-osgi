@@ -1,9 +1,6 @@
 package com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5
 
-import java.nio.charset.Charset
-
-import org.apache.commons.io.FilenameUtils
-import org.stringtemplate.v4.ST
+import org.stringtemplate.v4.STGroup
 import org.stringtemplate.v4.STGroupFile
 
 /**
@@ -12,21 +9,13 @@ import org.stringtemplate.v4.STGroupFile
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class StgFileTemplateParser extends AbstractTemplateParser {
+class StgFileTemplateParser extends AbstractSTTemplateParser {
 
     public static String TEMPLATE_NAME = 'stg'
 
-    def loadTemplate(File parentDirectory, String fileName, Map<String, Object> args, Charset encoding) {
-        def st = new STGroupFile(new File(parentDirectory, fileName).absolutePath)
-        def name = FilenameUtils.getBaseName fileName
-        return st.getInstanceOf(name)
-    }
-
-    String parseTemplate(def template, File parentDirectory, String fileName, Map<String, Object> args, Charset encoding) {
-        ST s = template
-        s.add 'vars', args.vars
-        s.add 'parent', args.parent
-        return s.render()
+    @Override
+    STGroup loadGroup(File parentDirectory, String fileName) {
+        new STGroupFile(new File(parentDirectory, fileName).absolutePath)
     }
 
     @Override
