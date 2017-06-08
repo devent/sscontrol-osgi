@@ -19,14 +19,10 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
-import java.nio.charset.StandardCharsets
-
-import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
-import com.jcabi.ssh.SSH
 
 import groovy.util.logging.Slf4j
 
@@ -56,10 +52,10 @@ service "repo-git", group: "wordpress-app" with {
 }
 service "registry-docker", group: "erwin82" with {
     credentials "user", name: "erwin82", password: "blaue sonne"
+    property << "docker_command=/tmp/docker"
 }
 service "from-repository", repo: "wordpress-app", registry: "erwin82" with {
     property << "kubectl_cmd=/tmp/kubectl"
-    property << "docker_cmd=/tmp/docker"
 }
 ''',
             scriptVars: [
@@ -72,23 +68,64 @@ service "from-repository", repo: "wordpress-app", registry: "erwin82" with {
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
                 assertStringResource FromRepositoryDockerServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryDockerServerTest, readRemoteFile(new File('/tmp', 'docker.out').absolutePath), "${args.test.name}_docker_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "docker_build_stg_server"() {
+        def test = [
+            name: "docker_build_stg_server",
+            script: '''
+service "ssh" with {
+    host "robobee@robobee-test", socket: robobeeSocket
+}
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
+}
+service "repo-git", group: "wordpress-app" with {
+    remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=$checkoutDir"
+}
+service "registry-docker", group: "erwin82" with {
+    credentials "user", name: "erwin82", password: "blaue sonne"
+    property << "docker_command=/tmp/docker"
+}
+service "from-repository", repo: "wordpress-app", registry: "erwin82" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
+            expectedServicesSize: 5,
+            before: { Map test -> setupServer test: test, zipArchive: getClass().getResource('wordpress-app-docker-stg.zip') },
+            after: { Map test -> tearDownServer test: test },
+            expected: { Map args ->
+                assertStringResource FromRepositoryDockerServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryDockerServerTest, readRemoteFile(new File('/tmp', 'docker.out').absolutePath), "${args.test.name}_docker_expected.txt"
             },
         ]
         doTest test
     }
 
     def setupServer(Map args) {
-        def file = SSH.escape('wordpress-app.zip')
+        tearDownServer args
+        def file = 'wordpress-app.zip'
         execRemoteFile """
 echo "Create /tmp/kubectl."
 cat > /tmp/kubectl << 'EOL'
-${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
+${KUBECTL_COMMAND()}
 EOL
 chmod +x /tmp/kubectl
 
 echo "Create /tmp/docker."
 cat > /tmp/docker << 'EOL'
-${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
+${DOCKER_COMMAND()}
 EOL
 chmod +x /tmp/docker
 
@@ -115,6 +152,8 @@ unzip $file
         remoteCommand """
 rm /tmp/kubectl
 rm /tmp/kubectl.out
+rm /tmp/docker
+sudo rm /tmp/docker.out
 rm -rf "${args.test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """
