@@ -88,6 +88,9 @@ class FromRepository_1_5 extends ScriptBase {
         def files = createCmd findFilesFactory, chdir: dir, patterns: dockerfileFilesPatterns call()
         def templatesPatterns = templateParsers.keySet()
         files = files.findAll { String file ->
+            if (file.empty) {
+                return false
+            }
             for (String pattern : templatesPatterns) {
                 if (file.endsWith(".$pattern")) {
                     return false
