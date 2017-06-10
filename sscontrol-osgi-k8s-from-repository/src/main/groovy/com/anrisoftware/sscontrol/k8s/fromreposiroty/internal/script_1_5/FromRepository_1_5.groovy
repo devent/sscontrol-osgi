@@ -175,6 +175,7 @@ class FromRepository_1_5 extends ScriptBase {
                 def tmpdest = File.createTempFile('robobee', null)
                 try {
                     FileUtils.write tmpdest, s, charset
+                    log.trace 'Upload parsed file {} for {}: \n``{}\'\'', this, tmpdest, s
                     copy src: tmpdest, dest: "$dir/$parsedFileName" call()
                 } finally {
                     tmpdest.delete()
