@@ -76,6 +76,7 @@ public class ShellImpl implements Shell {
         this.serviceProperties = propertiesService.create();
         this.scriptFactory = scriptFactory;
         this.vars = new HashMap<>(args);
+        parseArgs(args);
     }
 
     @Override
@@ -127,6 +128,17 @@ public class ShellImpl implements Shell {
 
     /**
      * <pre>
+     * script timeout: 'PT1H', "echo hello"
+     * </pre>
+     */
+    public void script(Map<String, Object> args, String command) {
+        Map<String, Object> a = new HashMap<>(args);
+        a.put("command", command);
+        script(a);
+    }
+
+    /**
+     * <pre>
      * script timeout: 'PT1H', command: "echo hello"
      * </pre>
      */
@@ -168,4 +180,18 @@ public class ShellImpl implements Shell {
                 .append("hosts", scripts).append("targets", targets).toString();
     }
 
+    private void parseArgs(Map<String, Object> args) {
+        if (vars.containsKey("target")) {
+            vars.remove("target");
+        }
+        parseTargets(args);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
+        Object v = args.get("targets");
+        if (v != null) {
+            targets.addAll((List<TargetHost>) v);
+        }
+    }
 }
