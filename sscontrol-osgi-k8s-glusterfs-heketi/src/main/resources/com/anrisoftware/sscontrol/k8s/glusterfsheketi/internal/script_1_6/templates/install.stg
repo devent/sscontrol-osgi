@@ -11,9 +11,14 @@ sudo chmod +x '<parent.binDir>/heketi-cli'
 installGlusterKubernetesDeployCmd(parent, vars) ::= <<
 set -e
 cd '<vars.parentDir>'
-unzip "<parent.glusterKubernetesDeployArchiveFile>"
-sudo rm -rf '<parent.optDir>/gluster-kubernetes-master'
-sudo cp -r gluster-kubernetes-master '<parent.optDir>'
+file="<parent.glusterKubernetesDeployArchiveFile>"
+name="${file%.*}"
+archive=$(basename "<parent.glusterKubernetesDeployArchive>")
+tag="${archive%.*}"
+unzip "$file"
+mv "${name}-${tag}" "${name}"
+sudo rm -rf '<parent.optDir>/${name}'
+sudo cp -r "${name}" '<parent.optDir>'
 
 >>
 

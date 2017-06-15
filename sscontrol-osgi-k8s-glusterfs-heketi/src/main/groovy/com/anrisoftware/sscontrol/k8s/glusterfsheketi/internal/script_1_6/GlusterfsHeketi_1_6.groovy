@@ -21,8 +21,6 @@ import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
-import org.apache.commons.io.FilenameUtils
-
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
@@ -177,7 +175,8 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
         log.info 'Installs gluster-kubernetes-deploy.'
         def tmp = createTmpDir()
         try {
-            copy src: glusterKubernetesDeployArchive, hash: glusterKubernetesDeployArchiveHash, dest: "$tmp", direct: true, timeout: timeoutLong call()
+            def name = glusterKubernetesDeployArchiveFile
+            copy src: glusterKubernetesDeployArchive, hash: glusterKubernetesDeployArchiveHash, dest: "$tmp/$name", direct: true, timeout: timeoutLong call()
             shell timeout: timeoutMiddle, resource: installResource, name: 'installGlusterKubernetesDeployCmd',
             vars: [parentDir: tmp] call()
         } finally {
@@ -285,7 +284,7 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
     }
 
     String getGlusterKubernetesDeployArchiveFile() {
-        FilenameUtils.getName(glusterKubernetesDeployArchive.toString())
+        properties.getProperty "gluster_kubernetes_deploy_archive_file", defaultProperties
     }
 
     String getGlusterKubernetesDeployArchiveName() {
