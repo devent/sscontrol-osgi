@@ -7,6 +7,8 @@ metadata:
   name: <parent.service.storage.name>
   annotations:
     storageclass.beta.kubernetes.io/is-default-class: "<parent.service.storage.isDefault>"
+  labels:
+    robobeerun.com/group: glusterfs-heketi
 provisioner: kubernetes.io/glusterfs
 parameters:
   resturl: "http://<parent.service.storage.restAddress>"
