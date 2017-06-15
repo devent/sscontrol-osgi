@@ -80,34 +80,16 @@ class GlusterfsHeketi_1_6 extends ScriptBase {
             service.storage.isDefault = defaultStorageClassIsDefault
         }
         def vars = service.vars
-        if (!vars.heketi) {
-            vars.heketi = [:]
-            if (!vars.heketi.image) {
-                vars.heketi.image = [:]
-                if (!vars.heketi.image.name) {
-                    vars.heketi.image.name = heketiImageName
-                }
-                if (!vars.heketi.image.version) {
-                    vars.heketi.image.version = heketiImageVersion
-                }
-            }
-            if (!vars.heketi.snapshot) {
-                vars.heketi.snapshot = [:]
-                if (!vars.heketi.snapshot.limit) {
-                    vars.heketi.snapshot.limit = heketiSnapshotLimit
-                }
-            }
-            if (!vars.gluster) {
-                vars.gluster = [:]
-                vars.gluster.image = [:]
-                if (!vars.gluster.image.name) {
-                    vars.gluster.image.name = glusterImageName
-                }
-                if (!vars.gluster.image.version) {
-                    vars.gluster.image.version = glusterImageVersion
-                }
-            }
-        }
+        vars.heketi = vars.heketi ?: [:]
+        vars.heketi.image = vars.heketi.image ?: [:]
+        vars.heketi.image.name = vars.heketi.image.name ?: heketiImageName
+        vars.heketi.image.version = vars.heketi.image.version ?: heketiImageVersion
+        vars.heketi.snapshot = vars.heketi.snapshot ?: [:]
+        vars.heketi.snapshot.limit = vars.heketi.snapshot.limit ?: heketiSnapshotLimit
+        vars.gluster = vars.gluster ?: [:]
+        vars.gluster.image = vars.gluster.image ?: [:]
+        vars.gluster.image.name = vars.gluster.image.name ?: glusterImageName
+        vars.gluster.image.version = vars.gluster.image.version ?: glusterImageVersion
     }
 
     /**
