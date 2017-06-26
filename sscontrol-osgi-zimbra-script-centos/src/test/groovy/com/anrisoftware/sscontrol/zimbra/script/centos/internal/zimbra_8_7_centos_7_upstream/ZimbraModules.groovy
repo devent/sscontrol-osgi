@@ -20,6 +20,7 @@ import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.centos.external.CentosUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.anrisoftware.sscontrol.zimbra.service.internal.ZimbraModule
 import com.google.inject.AbstractModule
@@ -41,6 +42,7 @@ class ZimbraModules {
             new SshPreModule(),
             new ZimbraModule(),
             new Zimbra_Script_Module(),
+            new CentosUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

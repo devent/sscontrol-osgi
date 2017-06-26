@@ -21,6 +21,8 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
+import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -36,14 +38,21 @@ class Zimbra_Upstream extends ScriptBase {
     @Inject
     Zimbra_Properties propertiesProvider
 
+    CentosUtils centos
+
     @Override
     Object run() {
         removePostfix()
-        downloadZimbra()
+        installZimbra()
+    }
+
+    @Inject
+    void setCentosFactory(Centos_7_UtilsFactory factory) {
+        this.centos = factory.create(this)
     }
 
     def removePostfix() {
-        if (!checkYumPackage(package: 'postfix')) {
+        if (!centos.checkPackage(package: 'postfix')) {
             return
         }
         log.info 'Removes postfix from system.'
@@ -77,6 +86,7 @@ cd $archiveName
     }
 
     def startInstallation(File dir) {
+        log.info 'Start installation of Zimbra.'
     }
 
     @Override

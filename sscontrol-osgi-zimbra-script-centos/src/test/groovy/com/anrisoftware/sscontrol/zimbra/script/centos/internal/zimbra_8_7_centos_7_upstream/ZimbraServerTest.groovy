@@ -53,7 +53,7 @@ service "zimbra", version: "8.7"
     @Before
     void beforeMethod() {
         assumeTrue "$zimbraSocket available", new File(zimbraSocket).exists()
-        assumeTrue testHostAvailable
+        //assumeTrue zimbraHostAvailable
     }
 
     @Override

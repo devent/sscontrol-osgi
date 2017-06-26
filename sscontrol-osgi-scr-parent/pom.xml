@@ -91,6 +91,8 @@
         <module>../sscontrol-osgi-types-repo</module>
         <module>../sscontrol-osgi-types-run</module>
         <module>../sscontrol-osgi-types-ssh</module>
+        <module>../sscontrol-osgi-utils-centos</module>
+        <module>../sscontrol-osgi-utils-debian</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-tls</module>
