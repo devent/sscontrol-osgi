@@ -19,6 +19,8 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
+import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -37,9 +39,16 @@ class Zimbra_Script extends ScriptBase {
     @Inject
     Zimbra_Upstream_Factory upstreamFactory
 
+    CentosUtils centos
+
+    @Inject
+    void setCentosFactory(Centos_7_UtilsFactory factory) {
+        this.centos = factory.create(this)
+    }
+
     @Override
     def run() {
-        checkAptPackages() ? false : installAptPackages()
+        centos.checkPackages() ? false : centos.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
