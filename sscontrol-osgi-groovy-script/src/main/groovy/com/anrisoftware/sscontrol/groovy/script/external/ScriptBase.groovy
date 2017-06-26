@@ -669,6 +669,37 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
     }
 
     /**
+     * Checks if the yum package is installed.
+     * <ul>
+     * <li>package: the package name.
+     * <li>version: optional, the package version.
+     * </ul>
+     */
+    boolean checkYumPackage(Map args) {
+        log.info "Check installed packages {}.", args
+        assertThat "args.package=null", args, hasKey('package')
+        def a = new HashMap(args)
+        a.timeout = args.timeout ? args.timeout : timeoutShort
+        a.exitCodes = [0, 1] as int[]
+        a.vars = args
+        a.st = '''
+set -e
+export LANG=en_US.UTF-8
+s=$(yum list installed "<vars.package>")
+i_check=$?
+<if(vars.version)>
+echo "$s" | grep '<vars.version>' 1>/dev/null
+v_check=$?
+<else>
+v_check=0
+<endif>
+! (( $i_check || $v_check ))
+'''
+        def ret = shell a call()
+        return ret.exitValue == 0
+    }
+
+    /**
      * Copies the resource by temporarily saving it locally.
      * <pre>
      * copyResource src: src, dest: dest
@@ -1002,6 +1033,10 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 
     URI getArchive() {
         properties.getURIProperty 'archive', defaultProperties
+    }
+
+    String getArchiveHash() {
+        properties.getProperty 'archive_hash', defaultProperties
     }
 
     String getArchiveSig() {
