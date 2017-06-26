@@ -94,6 +94,8 @@
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-tls</module>
+        <module>../sscontrol-osgi-zimbra-script-centos</module>
+        <module>../sscontrol-osgi-zimbra-service</module>
     </modules>
 
     <dependencies>
