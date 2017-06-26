@@ -1,0 +1,15 @@
+#!/bin/bash
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+
+if [[ "$1" == "list" ]]; then
+  if [[ "$2" == "installed" ]]; then
+    if [[ "$3" == "postfix" ]]; then
+        echo "Return 0"
+        exit 0
+    fi
+  fi
+fi
+
+exit 1
