@@ -63,26 +63,25 @@ yum remove -y postfix
 
     def installZimbra() {
         log.info 'Installs Zimbra.'
-        def tmp = createTmpDir()
+        def dir = downloadZimbra()
         try {
-            def dir = downloadZimbra tmp
             startInstallation dir
         } finally {
-            deleteTmpFile tmp
+            shell "rm -rf $dir" call()
         }
     }
 
-    def downloadZimbra(File dir) {
+    File downloadZimbra() {
         log.info 'Downloads Zimbra.'
+        def dir = '/tmp'
         copy src: archive, hash: archiveHash, dest: dir, direct: true, timeout: timeoutLong call()
         def archiveFile = getName(archive.toString())
         def archiveName = getBaseName(archive.toString())
         shell timeout: timeoutMiddle, """\
 cd "$dir"
 tar xf $archiveFile
-cd $archiveName
 """ call()
-        return archiveName
+        return new File(dir, archiveName)
     }
 
     def startInstallation(File dir) {
