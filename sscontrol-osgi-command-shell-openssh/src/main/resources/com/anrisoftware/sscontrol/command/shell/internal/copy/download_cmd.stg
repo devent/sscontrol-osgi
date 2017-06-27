@@ -106,10 +106,10 @@ fi
 >>
 
 wgetCmd(args, name, src) ::= <<
-wget -nv -O "<name>" "<src>"
+set -e && wget -nv -O "<name>" "<src>"
 >>
 
 curlCmd(args, name, src) ::= <<
-curl "<src>"
+set -e && curl "<src>"
 >>
 
