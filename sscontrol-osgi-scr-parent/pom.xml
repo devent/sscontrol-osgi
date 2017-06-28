@@ -94,6 +94,7 @@
         <module>../sscontrol-osgi-utils-centos</module>
         <module>../sscontrol-osgi-utils-debian</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
+        <module>../sscontrol-osgi-utils-st-durationrenderer</module>
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-tls</module>
         <module>../sscontrol-osgi-zimbra-script-centos</module>

@@ -33,8 +33,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.sscontrol.command.shell.internal.ssh.DurationAttributeFormat;
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.PropertiesProvider;
+import com.anrisoftware.sscontrol.utils.st.durationrenderer.external.DurationAttributeFormat;
 import com.google.inject.assistedinject.Assisted;
 
 /**

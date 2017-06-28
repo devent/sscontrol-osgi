@@ -25,6 +25,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
 import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
+import com.anrisoftware.sscontrol.utils.st.durationrenderer.external.DurationAttributeFormat
 
 import groovy.util.logging.Slf4j
 
@@ -57,7 +58,10 @@ class Zimbra_Upstream extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Zimbra_Upstream_Templates')
+        def attr = [renderers: [
+                new DurationAttributeFormat()
+            ]]
+        def templates = templatesFactory.create('Zimbra_Upstream_Templates', attr)
         this.zimbraInstallExpectTemplate = templates.getResource('zimbra_install_expect')
     }
 
