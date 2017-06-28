@@ -45,7 +45,7 @@ if {\$force_conservative} {
 # -Don
 
 exp_internal 1
-set timeout -1
+set timeout <parent.timeoutShort;format="seconds">
 spawn ./install.sh
 match_max 100000
 expect -exact "Do you agree with the terms of the software license agreement? \[N\] " 
@@ -78,11 +78,13 @@ expect -exact "Install zimbra-drive \[Y\] "
 send -- "y\r" 
 expect -exact "The system will be modified.  Continue? \[N\] " 
 send -- "y\r" 
+set timeout <parent.timeoutLong;format="seconds">
 expect -exact "Address unconfigured (**) items  (? - help) " 
 send -- "7\r" 
+set timeout <parent.timeoutLong;format="seconds">
 expect -exact "Select, or 'r' for previous menu \[r\] " 
 send -- "4\r" 
-expect -re "Password for admin@.*? <\u005C><\u005C><\u005C>(min 6 characters<\u005C><\u005C><\u005C>): <\u005C><\u005C><\u005C>[.*?<\u005C><\u005C><\u005C>] $" 
+expect -re "Password for admin@.*? <\u005C><\u005C><\u005C><\u005C><\u005C>(min 6 characters<\u005C><\u005C><\u005C><\u005C><\u005C>): <\u005C><\u005C><\u005C><\u005C><\u005C>[.*?<\u005C><\u005C><\u005C><\u005C><\u005C>] $" 
 send -- "d8yyqfgq\r" 
 expect -exact "Select, or 'r' for previous menu \[r\] " 
 send -- "r\r" 
@@ -90,7 +92,7 @@ expect -exact "Select from menu, or press 'a' to apply config (? - help) "
 send -- "a\r" 
 expect -exact "Save configuration data to a file? \[Yes\] " 
 send -- "\r" 
-expect -re "Save config in file: <\u005C><\u005C><\u005C>[.*?<\u005C><\u005C><\u005C>] " 
+expect -re "Save config in file: <\u005C><\u005C><\u005C><\u005C><\u005C>[.*?<\u005C><\u005C><\u005C><\u005C><\u005C>] " 
 send -- "\r" 
 expect -exact "The system will be modified - continue? \[No\] " 
 send -- "y\r" 
