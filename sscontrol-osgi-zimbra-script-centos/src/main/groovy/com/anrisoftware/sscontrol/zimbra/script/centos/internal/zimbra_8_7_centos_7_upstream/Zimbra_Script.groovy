@@ -18,6 +18,8 @@ package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_cent
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
 import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
@@ -41,15 +43,54 @@ class Zimbra_Script extends ScriptBase {
 
     CentosUtils centos
 
+    TemplateResource zimbraFirewallTemplate
+
     @Inject
     void setCentosFactory(Centos_7_UtilsFactory factory) {
         this.centos = factory.create(this)
+    }
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('Zimbra_Script_Templates')
+        this.zimbraFirewallTemplate = templates.getResource('zimbra_firewall_template')
     }
 
     @Override
     def run() {
         centos.checkPackages() ? false : centos.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        configureFirewall()
+    }
+
+    def configureFirewall() {
+        log.info 'Start installation of Zimbra.'
+        shell privileged: true,
+        resource: zimbraFirewallTemplate, name: 'configureFirewall' call()
+    }
+
+    boolean getAllowHttp() {
+        properties.getBooleanProperty 'allow_http', defaultProperties
+    }
+
+    boolean getAllowHttps() {
+        properties.getBooleanProperty 'allow_https', defaultProperties
+    }
+
+    boolean getAllowSmtp() {
+        properties.getBooleanProperty 'allow_smtp', defaultProperties
+    }
+
+    boolean getAllowImap() {
+        properties.getBooleanProperty 'allow_imap', defaultProperties
+    }
+
+    boolean getAllowImaps() {
+        properties.getBooleanProperty 'allow_imaps', defaultProperties
+    }
+
+    boolean getAllowAdminConsole() {
+        properties.getBooleanProperty 'allow_admin_console', defaultProperties
     }
 
     @Override

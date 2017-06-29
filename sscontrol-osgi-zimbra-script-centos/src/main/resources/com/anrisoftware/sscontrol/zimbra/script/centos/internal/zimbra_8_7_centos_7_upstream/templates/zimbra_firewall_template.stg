@@ -1,0 +1,35 @@
+delimiters "%", "%"
+configureFirewall(parent, vars) ::= <<
+set -x
+
+cat <<'EOF' > /etc/firewalld/services/zimbra-admin-console.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Zimbra Administration Console</short>
+  <description>Default Zimbra Administration Console HTTP port.</description>
+  <port protocol="tcp" port="7071"/>
+  <port protocol="udp" port="7071"/>
+</service>
+EOF
+
+%if(parent.allowHttp)%
+firewall-cmd --zone=public --permanent --add-service=http
+%endif%
+%if(parent.allowHttps)%
+firewall-cmd --zone=public --permanent --add-service=https
+%endif%
+%if(parent.allowSmtp)%
+firewall-cmd --zone=public --permanent --add-service=smtp
+%endif%
+%if(parent.allowImap)%
+firewall-cmd --zone=public --permanent --add-service=imap
+%endif%
+%if(parent.allowImaps)%
+firewall-cmd --zone=public --permanent --add-service=imaps
+%endif%
+firewall-cmd --reload
+%if(parent.allowAdminConsole)%
+firewall-cmd --zone=public --permanent --add-service=zimbra-admin-console
+firewall-cmd --reload
+%endif%
+>>
