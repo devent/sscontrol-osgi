@@ -20,6 +20,8 @@ import static org.apache.commons.io.FilenameUtils.*
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
 import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
@@ -38,6 +40,8 @@ class Zimbra_Upstream extends ScriptBase {
     @Inject
     Zimbra_Properties propertiesProvider
 
+    TemplateResource zimbraInstallExpectTemplate
+
     CentosUtils centos
 
     @Override
@@ -49,6 +53,12 @@ class Zimbra_Upstream extends ScriptBase {
     @Inject
     void setCentosFactory(Centos_7_UtilsFactory factory) {
         this.centos = factory.create(this)
+    }
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('Zimbra_Upstream_Templates')
+        this.zimbraInstallExpectTemplate = templates.getResource('zimbra_install_expect')
     }
 
     def removePostfix() {
@@ -86,6 +96,9 @@ tar xf $archiveFile
 
     def startInstallation(File dir) {
         log.info 'Start installation of Zimbra.'
+        shell privileged: true, timeout: timeoutLong,
+        vars: [zimbraDir: dir],
+        resource: zimbraInstallExpectTemplate, name: 'installZimbra' call()
     }
 
     @Override
