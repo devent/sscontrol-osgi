@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_centos_7_upstream
 
+import static org.apache.commons.io.FilenameUtils.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -59,6 +61,17 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         centos.checkPackage(package: 'unzip') ?: centos.installPackages(packages: 'unzip')
         startSystemdService 'docker'
         shell privileged: true, resource: certbotDockerTemplate, name: 'createCertbot' call()
+        def archive = certbotZimbraArchive
+        copy src: archive, dest: '/tmp', direct: true, timeout: timeoutMiddle call()
+        def archiveFile = getName(archive.toString())
+        def archiveName = getBaseName(archive.toString())
+        shell """cd /tmp
+            if [ -d 'certbot-zimbra-${archiveName}' ]; then rm -rf 'certbot-zimbra-${archiveName}'; fi
+            unzip $archiveFile""" call()
+    }
+
+    URI getCertbotZimbraArchive() {
+        properties.getURIProperty 'certbot_zimbra_archive', defaultProperties
     }
 
     @Override
