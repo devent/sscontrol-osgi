@@ -1,0 +1,12 @@
+delimiters "%", "%"
+createCertbot(parent, vars) ::= <<
+set -e
+cat <<'EOF' > /usr/local/bin/certbot
+docker run -it --rm -p 443:443 -p 80:80 --name certbot \
+            -v "/etc/letsencrypt:/etc/letsencrypt" \
+            -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
+            --privileged \
+            certbot/certbot certonly "$@"
+EOF
+chmod +x /usr/local/bin/certbot
+>>
