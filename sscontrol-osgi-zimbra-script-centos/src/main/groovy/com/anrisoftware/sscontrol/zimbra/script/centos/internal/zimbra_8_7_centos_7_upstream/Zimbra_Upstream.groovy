@@ -57,10 +57,8 @@ class Zimbra_Upstream extends ScriptBase {
     }
 
     @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def attr = [renderers: [
-                new DurationAttributeFormat()
-            ]]
+    void loadTemplates(TemplatesFactory templatesFactory, DurationAttributeFormat durationAttributeFormat) {
+        def attr = [renderers: [durationAttributeFormat]]
         def templates = templatesFactory.create('Zimbra_Upstream_Templates', attr)
         this.zimbraInstallExpectTemplate = templates.getResource('zimbra_install_expect')
     }
