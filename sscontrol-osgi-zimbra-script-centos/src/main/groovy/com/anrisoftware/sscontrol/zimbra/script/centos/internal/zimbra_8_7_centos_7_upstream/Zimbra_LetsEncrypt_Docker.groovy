@@ -27,26 +27,20 @@ import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * rkt 1.26 for Debian 8.
+ * Uses docker to install certbot to create LetsEncrypt certificates for Zimbra.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Zimbra_Script extends ScriptBase {
+class Zimbra_LetsEncrypt_Docker extends ScriptBase {
 
     @Inject
     Zimbra_Properties propertiesProvider
 
-    @Inject
-    Zimbra_Upstream_Factory upstreamFactory
-
-    @Inject
-    Zimbra_LetsEncrypt_Docker_Factory letsEncryptDockerFactory
-
     CentosUtils centos
 
-    TemplateResource zimbraFirewallTemplate
+    TemplateResource certbotDockerTemplate
 
     @Inject
     void setCentosFactory(Centos_7_UtilsFactory factory) {
@@ -55,52 +49,16 @@ class Zimbra_Script extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Zimbra_Script_Templates')
-        this.zimbraFirewallTemplate = templates.getResource('zimbra_firewall_template')
+        def templates = templatesFactory.create('Zimbra_LetsEncrypt_Docker_Templates')
+        this.certbotDockerTemplate = templates.getResource('certbot_docker_template')
     }
 
     @Override
     def run() {
-        centos.checkPackages() ? false : centos.installPackages()
-        upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        configureFirewall()
-        if (useLetsEncrypt) {
-            letsEncryptDockerFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        }
-    }
-
-    def configureFirewall() {
-        log.info 'Start installation of Zimbra.'
-        shell privileged: true,
-        resource: zimbraFirewallTemplate, name: 'configureFirewall' call()
-    }
-
-    boolean getAllowHttp() {
-        properties.getBooleanProperty 'allow_http', defaultProperties
-    }
-
-    boolean getAllowHttps() {
-        properties.getBooleanProperty 'allow_https', defaultProperties
-    }
-
-    boolean getAllowSmtp() {
-        properties.getBooleanProperty 'allow_smtp', defaultProperties
-    }
-
-    boolean getAllowImap() {
-        properties.getBooleanProperty 'allow_imap', defaultProperties
-    }
-
-    boolean getAllowImaps() {
-        properties.getBooleanProperty 'allow_imaps', defaultProperties
-    }
-
-    boolean getAllowAdminConsole() {
-        properties.getBooleanProperty 'allow_admin_console', defaultProperties
-    }
-
-    boolean getUseLetsEncrypt() {
-        properties.getBooleanProperty 'use_letsencrypt', defaultProperties
+        centos.checkPackage(package: 'docker') ?: centos.installPackages(packages: 'docker')
+        centos.checkPackage(package: 'unzip') ?: centos.installPackages(packages: 'unzip')
+        startSystemdService 'docker'
+        shell privileged: true, resource: certbotDockerTemplate, name: 'createCertbot' call()
     }
 
     @Override
