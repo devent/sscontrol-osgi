@@ -1,0 +1,4 @@
+returnZimbraVersion(parent, vars) ::= <<
+sudo -i -u zimbra zmcontrol -v
+
+>>

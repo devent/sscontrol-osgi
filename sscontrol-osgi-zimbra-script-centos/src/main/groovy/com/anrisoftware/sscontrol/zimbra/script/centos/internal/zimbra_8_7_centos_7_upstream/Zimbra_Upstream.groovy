@@ -43,12 +43,17 @@ class Zimbra_Upstream extends ScriptBase {
 
     TemplateResource zimbraInstallExpectTemplate
 
+    TemplateResource zimbraInstallCheckTemplate
+
     CentosUtils centos
 
     @Override
     Object run() {
         removePostfix()
-        installZimbra()
+        def version = installedZimbraVersion
+        if (!version) {
+            installZimbra()
+        }
     }
 
     @Inject
@@ -61,6 +66,7 @@ class Zimbra_Upstream extends ScriptBase {
         def attr = [renderers: [durationAttributeFormat]]
         def templates = templatesFactory.create('Zimbra_Upstream_Templates', attr)
         this.zimbraInstallExpectTemplate = templates.getResource('zimbra_install_expect')
+        this.zimbraInstallCheckTemplate = templates.getResource('zimbra_install_check')
     }
 
     def removePostfix() {
@@ -71,6 +77,16 @@ class Zimbra_Upstream extends ScriptBase {
         shell privileged: true, """\
 yum remove -y postfix
 """ call()
+    }
+
+    def getInstalledZimbraVersion() {
+        try {
+            def ret = shell privileged: true, outString: true,
+            resource: zimbraInstallCheckTemplate, name: 'returnZimbraVersion' call()
+            return ret.out
+        } catch (e) {
+            return false
+        }
     }
 
     def installZimbra() {
