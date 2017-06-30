@@ -20,6 +20,10 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import javax.inject.Inject
+
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -35,8 +39,16 @@ abstract class CentosUtils {
 
     final HostServiceScript script
 
+    TemplateResource commandsTemplate
+
     protected CentosUtils(HostServiceScript script) {
         this.script = script
+    }
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('CentosUtils')
+        this.commandsTemplate = templates.getResource('centos_7_commands')
     }
 
     /**
@@ -47,6 +59,10 @@ abstract class CentosUtils {
     /**
      * Checks if the specified yum packages with a specific version are
      * installed.
+     * @param packages the List of map entries of
+     * <code>
+     * [package: package, version: version]
+     * </code>
      */
     boolean checkPackagesVersion(List packages) {
         assertThat "package=null", packages[0], hasKey('package')
@@ -93,29 +109,22 @@ abstract class CentosUtils {
         a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
         a.vars = args
-        a.st = '''
-set -e
-export LANG=en_US.UTF-8
-s=$(yum list installed "<vars.package>")
-i_check=$?
-<if(vars.version)>
-echo "$s" | grep '<vars.version>' 1>/dev/null
-v_check=$?
-<else>
-v_check=0
-<endif>
-! (( $i_check || $v_check ))
-'''
+        a.resource = commandsTemplate
+        a.name = 'checkPackage'
         def ret = script.shell a call()
         return ret.exitValue == 0
     }
 
     /**
-     * Installs the specified packages via yum. Per default installs the
-     * packages from the profile property {@code packages}.
+     * Installs the specified packages via yum
+     * @param packages the List of packages to install. Defaults to the
+     * profile property {@code packages}.
+     * @param checkInstalled set to true to check if the packages are
+     * already installed. Defaults to true.
+     * @param timeout the timeout Duration. Defaults to {@code timeoutLong}.
      */
-    void installPackages(def packages=script.packages, def timeout=script.timeoutLong) {
-        installPackages packages: packages, timeout: timeout
+    void installPackages(List packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
+        installPackages packages: packages, checkInstalled: checkInstalled, timeout: timeout
     }
 
     /**
@@ -124,12 +133,15 @@ v_check=0
      */
     void installPackages(Map args) {
         log.info "Installing packages {}.", args
+        List packages = args.packages
         def a = new HashMap(args)
         a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
-        a.command = """
-yum install -y ${args.packages.join(' ')}
-"""
-        script.shell a call()
+        a.resource = commandsTemplate
+        a.name = 'installPackage'
+        packages.each {
+            Map b = [vars: [package: it, checkInstalled: a.checkInstalled]] << a
+            script.shell b call()
+        }
     }
 }
