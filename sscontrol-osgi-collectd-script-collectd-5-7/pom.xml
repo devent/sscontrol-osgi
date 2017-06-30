@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-hostname-systemd</artifactId>
+            <artifactId>sscontrol-osgi-collectd-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
