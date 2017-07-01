@@ -45,6 +45,8 @@ class Zimbra_Upstream extends ScriptBase {
 
     TemplateResource zimbraInstallCheckTemplate
 
+    TemplateResource zimbraUpdateExpectTemplate
+
     CentosUtils centos
 
     @Override
@@ -53,6 +55,8 @@ class Zimbra_Upstream extends ScriptBase {
         def version = installedZimbraVersion
         if (!version) {
             installZimbra()
+        } else {
+            updateZimbra()
         }
     }
 
@@ -67,6 +71,7 @@ class Zimbra_Upstream extends ScriptBase {
         def templates = templatesFactory.create('Zimbra_Upstream_Templates', attr)
         this.zimbraInstallExpectTemplate = templates.getResource('zimbra_install_expect')
         this.zimbraInstallCheckTemplate = templates.getResource('zimbra_install_check')
+        this.zimbraUpdateExpectTemplate = templates.getResource('zimbra_update_expect')
     }
 
     def removePostfix() {
@@ -117,6 +122,22 @@ tar xf $archiveFile
         shell privileged: true, timeout: timeoutLong,
         vars: [zimbraDir: dir],
         resource: zimbraInstallExpectTemplate, name: 'installZimbra' call()
+    }
+
+    def updateZimbra() {
+        log.info 'Start update of Zimbra.'
+        def dir = downloadZimbra()
+        try {
+            startUpdate dir
+        } finally {
+            shell "rm -rf $dir" call()
+        }
+    }
+
+    def startUpdate(File dir) {
+        shell privileged: true, timeout: timeoutLong,
+        vars: [zimbraDir: dir],
+        resource: zimbraUpdateExpectTemplate, name: 'updateZimbra' call()
     }
 
     @Override
