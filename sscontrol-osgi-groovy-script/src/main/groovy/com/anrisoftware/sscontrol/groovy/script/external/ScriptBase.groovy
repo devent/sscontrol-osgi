@@ -997,7 +997,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getConfigFile() {
-        properties.getFileProperty "config_file", configDir, defaultProperties
+        def file = getFileProperty "config_file", configDir
     }
 
     URI getArchive() {
@@ -1042,7 +1042,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getConfigDir() {
-        def dir = properties.getFileProperty "config_dir", base, defaultProperties
+        getFileProperty "config_dir"
     }
 
     /**

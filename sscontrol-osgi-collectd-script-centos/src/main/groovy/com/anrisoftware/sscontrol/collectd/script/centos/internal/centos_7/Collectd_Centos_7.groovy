@@ -46,6 +46,7 @@ class Collectd_Centos_7 extends Collectd_Centos {
     @Override
     def run() {
         installPackages()
+        collectd.deployConfiguration()
     }
 
     @Override
