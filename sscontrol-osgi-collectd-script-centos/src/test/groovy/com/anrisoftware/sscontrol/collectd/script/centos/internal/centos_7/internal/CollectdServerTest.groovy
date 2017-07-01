@@ -34,13 +34,32 @@ import groovy.util.logging.Slf4j
 class CollectdServerTest extends AbstractCollectdRunnerTest {
 
     @Test
-    void "zimbra_server"() {
+    void "collectd_server"() {
         def test = [
-            name: "zimbra_server",
-            script: """
-service "ssh", host: "robobee@mail.robobee.test", socket: "$zimbraSocket"
-service "zimbra", version: "8.7"
-""",
+            name: "collectd_server",
+            script: '''
+service "ssh", host: "robobee@192.168.56.230", socket: collectdSocket
+service "collectd", version: "5.7" with {
+    config name: "99-write-graphite", script: """
+LoadPlugin "write_graphite"
+<Plugin "write_graphite">
+<Node "graphite">
+  Host "graphite"
+  Port "2003"
+  Prefix "collectd."
+  #Postfix ""
+  Protocol "tcp"
+  LogSendErrors true
+  EscapeCharacter "_"
+  SeparateInstances true
+  StoreRates true
+  AlwaysAppendDS false
+</Node>
+</Plugin>
+"""
+}
+''',
+            scriptVars: [collectdSocket: collectdSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -52,7 +71,7 @@ service "zimbra", version: "8.7"
 
     @Before
     void beforeMethod() {
-        assumeTrue "$zimbraSocket available", new File(zimbraSocket).exists()
+        assumeTrue "$collectdSocket available", new File(collectdSocket).exists()
         //assumeTrue zimbraHostAvailable
     }
 

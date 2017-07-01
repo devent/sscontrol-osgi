@@ -40,6 +40,8 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  */
 abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
 
+    static final String collectdSocket = '/tmp/robobee@192.168.56.230:22'
+
     @Inject
     RunScriptImplFactory runnerFactory
 
