@@ -38,7 +38,8 @@ abstract class Collectd_5_7 extends ScriptBase {
     def deployConfiguration() {
         Collectd service = this.service
         replace privileged: true, dest: configFile with {
-            line "s|(?m)^${collectdIncludeLineSearch}|${collectdIncludeLineReplace}|"
+            line "s~(?m)^${collectdIncludeLineSearch}~${collectdIncludeLineReplace}~"
+            line "s~(?m)^#?FQDNLookup.*~FQDNLookup ${fqdnLookup}~"
             it
         }()
         service.configs.each { Config config ->
@@ -58,6 +59,10 @@ abstract class Collectd_5_7 extends ScriptBase {
 
     String getCollectdIncludeLineReplace() {
         properties.getProperty 'collectd_include_line_replace', defaultProperties
+    }
+
+    boolean getFqdnLookup() {
+        properties.getProperty 'collectd_fqdn_lookup', defaultProperties
     }
 
     @Override

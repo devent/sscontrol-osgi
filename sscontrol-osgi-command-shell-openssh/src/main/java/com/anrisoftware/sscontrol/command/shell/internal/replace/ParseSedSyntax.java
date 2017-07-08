@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -33,7 +33,7 @@ import com.google.inject.assistedinject.Assisted;
 public class ParseSedSyntax {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0

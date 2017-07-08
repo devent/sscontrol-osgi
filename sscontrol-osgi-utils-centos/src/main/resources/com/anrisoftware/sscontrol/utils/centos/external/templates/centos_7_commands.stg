@@ -44,7 +44,7 @@ function check_package() {
     ! (( \$i_check || \$v_check ))
 }
 
-check_package && \
+check_package || \
 <endif>
 yum install -y <vars.package>
 >>

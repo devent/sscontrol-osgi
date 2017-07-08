@@ -45,8 +45,14 @@ class Collectd_Centos_7 extends Collectd_Centos {
 
     @Override
     def run() {
+        stopSystemdService collectdService
         installPackages()
         collectd.deployConfiguration()
+        startEnableSystemdService collectdService
+    }
+
+    String getCollectdService() {
+        properties.getProperty 'collectd_service', defaultProperties
     }
 
     @Override
