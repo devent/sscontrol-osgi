@@ -49,6 +49,8 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
             'useradd',
             'tar',
             'grep',
+            'make',
+            'semodule'
         ]
     }
 }

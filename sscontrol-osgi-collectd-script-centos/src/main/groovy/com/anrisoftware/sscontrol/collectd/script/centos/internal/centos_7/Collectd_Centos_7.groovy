@@ -48,6 +48,7 @@ class Collectd_Centos_7 extends Collectd_Centos {
         stopSystemdService collectdService
         installPackages()
         collectd.deployConfiguration()
+        collectd.configureSELinux()
         startEnableSystemdService collectdService
     }
 
