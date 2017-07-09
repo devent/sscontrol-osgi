@@ -20,6 +20,8 @@ import static com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.collectd.script.collect_5_7.external.Collectd_5_7
 
 import groovy.util.logging.Slf4j
@@ -35,6 +37,28 @@ class Collectd_5_7_Centos_7 extends Collectd_5_7 {
 
     @Inject
     Collectd_Centos_7_Properties propertiesProvider
+
+    TemplateResource collectdRulesTemplate
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('Collectd_5_7_Centos_7_Templates')
+        this.collectdRulesTemplate = templates.getResource('collectd_rules')
+    }
+
+    def configureSELinux() {
+        log.info 'Configure SELinux rules.'
+        def tmp = createTmpDir()
+        try {
+            template resource: collectdRulesTemplate, name: 'collectdRules', vars: [:], dest: "$tmp/collectd_t.te" call()
+            shell privileged: true, sudoChdir: tmp, """
+make -f /usr/share/selinux/devel/Makefile
+semodule -i "collectd_t.pp"
+""" call()
+        } finally {
+            deleteTmpFile privileged: true, file: tmp
+        }
+    }
 
     @Override
     ContextProperties getDefaultProperties() {
