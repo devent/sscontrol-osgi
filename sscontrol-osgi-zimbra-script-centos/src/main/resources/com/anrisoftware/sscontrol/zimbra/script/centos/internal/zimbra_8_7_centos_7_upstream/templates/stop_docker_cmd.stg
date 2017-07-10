@@ -1,0 +1,5 @@
+stopDockerCmd(parent, vars) ::= <<
+set -e
+containers=\$(docker ps|wc -l)
+echo -n \$containers
+>>
