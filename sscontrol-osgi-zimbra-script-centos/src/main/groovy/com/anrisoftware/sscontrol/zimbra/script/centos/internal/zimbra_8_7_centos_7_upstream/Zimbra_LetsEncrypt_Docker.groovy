@@ -48,6 +48,8 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
 
     TemplateResource certbotZimbraExpect
 
+    TemplateResource stopDockerCmd
+
     @Inject
     void setCentosFactory(Centos_7_UtilsFactory factory) {
         this.centos = factory.create(this)
@@ -59,6 +61,7 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         def templates = templatesFactory.create('Zimbra_LetsEncrypt_Docker_Templates', attr)
         this.certbotDockerTemplate = templates.getResource('certbot_docker_template')
         this.certbotZimbraExpect = templates.getResource('certbot_zimbra_expect')
+        this.stopDockerCmd = templates.getResource('stop_docker_cmd')
     }
 
     @Override
@@ -72,6 +75,7 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
             setupCert certbotZimbraDir
         } finally {
             shell "rm -rf ${certbotZimbraDir}" call()
+            stopDocker()
         }
     }
 
@@ -87,6 +91,14 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         log.info 'Start docker for certbot.'
         centos.installPackages(packages: ['docker', 'unzip'])
         startSystemdService 'docker'
+    }
+
+    def stopDocker() {
+        def ret = shell outString: true, privileged: true, resource: stopDockerCmd, name: "stopDockerCmd" call()
+        int count = Integer.valueOf ret.out
+        if (count == 1) {
+            stopSystemdService 'docker'
+        }
     }
 
     File downloadCertbotzimbra() {
