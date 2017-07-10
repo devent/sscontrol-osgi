@@ -29,8 +29,10 @@ import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.zimbra.service.external.Domain;
 import com.anrisoftware.sscontrol.zimbra.service.external.Zimbra;
 import com.anrisoftware.sscontrol.zimbra.service.external.ZimbraService;
+import com.anrisoftware.sscontrol.zimbra.service.internal.DomainImpl.DomainImplFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -57,11 +59,18 @@ public class ZimbraImpl implements Zimbra {
 
     private String version;
 
+    private Domain domain;
+
+    private transient DomainImplFactory domainFactory;
+
     @AssistedInject
     ZimbraImpl(HostPropertiesService propertiesService,
+            DomainImplFactory domainFactory,
             @Assisted Map<String, Object> args) {
         this.targets = new ArrayList<TargetHost>();
         this.serviceProperties = propertiesService.create();
+        this.domainFactory = domainFactory;
+        this.domain = domainFactory.create();
         parseArgs(args);
     }
 
@@ -90,6 +99,15 @@ public class ZimbraImpl implements Zimbra {
         });
     }
 
+    /**
+     * <pre>
+     * domain email: "admin@domain"
+     * </pre>
+     */
+    public void domain(Map<String, Object> args) {
+        this.domain = domainFactory.create(args);
+    }
+
     @Override
     public HostServiceProperties getServiceProperties() {
         return serviceProperties;
@@ -102,6 +120,11 @@ public class ZimbraImpl implements Zimbra {
     @Override
     public String getVersion() {
         return version;
+    }
+
+    @Override
+    public Domain getDomain() {
+        return domain;
     }
 
     @Override

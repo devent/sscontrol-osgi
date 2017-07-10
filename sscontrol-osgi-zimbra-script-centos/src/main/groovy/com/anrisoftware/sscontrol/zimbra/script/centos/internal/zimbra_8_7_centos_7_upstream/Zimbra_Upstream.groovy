@@ -56,7 +56,9 @@ class Zimbra_Upstream extends ScriptBase {
         if (!version) {
             installZimbra()
         } else {
-            updateZimbra()
+            if (autoUpdateZimbra) {
+                updateZimbra()
+            }
         }
     }
 
@@ -138,6 +140,10 @@ tar xf $archiveFile
         shell privileged: true, timeout: timeoutLong,
         vars: [zimbraDir: dir],
         resource: zimbraUpdateExpectTemplate, name: 'updateZimbra' call()
+    }
+
+    boolean getAutoUpdateZimbra() {
+        properties.getBooleanProperty 'auto_update_zimbra', defaultProperties
     }
 
     @Override
