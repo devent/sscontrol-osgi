@@ -18,6 +18,7 @@
     <modules>
         <module>../sscontrol-osgi-collectd-script-collectd-5-7</module>
         <module>../sscontrol-osgi-collectd-script-centos</module>
+        <module>../sscontrol-osgi-collectd-script-debian</module>
         <module>../sscontrol-osgi-collectd-service</module>
         <module>../sscontrol-osgi-command-copy</module>
         <module>../sscontrol-osgi-command-facts</module>

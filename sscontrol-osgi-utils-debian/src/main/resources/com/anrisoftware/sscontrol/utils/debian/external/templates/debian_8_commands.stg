@@ -1,0 +1,53 @@
+/*
+ * Checks if the package is installed.
+ * Mandatory:
+ * vars.package
+ * Optional:
+ * vars.version
+ */
+checkPackage(parent, vars) ::= <<
+set -e
+export LANG=en_US.UTF-8
+s=$(dpkg -s "<vars.package>")
+echo $s | grep '<vars.nameInstalled>' 1>/dev/null
+i_check=$?
+<if(vars.version)>
+echo $s | grep '<vars.versionInstalled>' 1>/dev/null
+v_check=$?
+<else>
+v_check=0
+<endif>
+! (( $i_check || $v_check ))
+
+>>
+
+/*
+ * Installs the package.
+ * Mandatory:
+ * vars.package
+ * vars.checkInstalled
+ * Optional:
+ * vars.version
+ */
+installPackage(parent, vars) ::= <<
+set -e
+<if(vars.checkInstalled)>
+function check_package() {
+    export LANG=en_US.UTF-8
+    s=\$(dpkg -s "<vars.package>")
+    echo \$s | grep '<vars.nameInstalled>' 1>/dev/null
+    i_check=\$?
+    <if(vars.version)>
+    echo \$s | grep '<vars.versionInstalled>' 1>/dev/null
+    v_check=\$?
+    <else>
+    v_check=0
+    <endif>
+    ! (( \$i_check || \$v_check ))
+}
+
+check_package || \
+<endif>
+export DEBIAN_FRONTEND=noninteractive
+apt-get -y install <if(vars.backport)>-t <vars.backport><endif> <vars.package>
+>>

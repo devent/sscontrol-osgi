@@ -20,6 +20,10 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import javax.inject.Inject
+
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -35,8 +39,16 @@ abstract class DebianUtils {
 
     final HostServiceScript script
 
+    TemplateResource commandsTemplate
+
     protected DebianUtils(HostServiceScript script) {
         this.script = script
+    }
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('DebianUtils')
+        this.commandsTemplate = templates.getResource('debian_8_commands')
     }
 
     /**
@@ -48,11 +60,11 @@ abstract class DebianUtils {
      * Checks if the specified apt packages with a specific version are
      * installed.
      */
-    boolean checkAptPackagesVersion(List packages) {
+    boolean checkPackagesVersion(List packages) {
         assertThat "package=null", packages[0], hasKey('package')
         assertThat "version=null", packages[0], hasKey('version')
         def failed = packages.find { Map m ->
-            !checkAptPackage(m)
+            !checkPackage(m)
         }
         return failed == null
     }
@@ -61,20 +73,20 @@ abstract class DebianUtils {
      * Checks if the apt packages are installed. Per default checks the
      * packages from the profile property {@code packages}.
      */
-    boolean checkAptPackages(List packages=packages) {
-        checkAptPackages(packages: packages)
+    boolean checkPackages(List packages=packages) {
+        checkPackages(packages: packages)
     }
 
     /**
      * Checks if the apt packages are installed. Per default checks the
      * packages from the profile property {@code packages}.
      */
-    boolean checkAptPackages(Map args) {
+    boolean checkPackages(Map args) {
         List packages = args.packages
         def found = packages.findAll {
             def a = new HashMap(args)
             a.package = it
-            checkAptPackage a
+            checkPackage a
         }
         return found.size() == packages.size()
     }
@@ -86,79 +98,61 @@ abstract class DebianUtils {
      * <li>version: optional, the package version.
      * </ul>
      */
-    boolean checkAptPackage(Map args) {
+    boolean checkPackage(Map args) {
         log.info "Check installed packages {}.", args
         assertThat "args.package=null", args, hasKey('package')
         def a = new HashMap(args)
-        a.timeout = args.timeout ? args.timeout : timeoutShort
+        a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
         a.vars = args <<
-                [nameInstalled: grepAptPackageNameInstalled] <<
-                [versionInstalled: getGrepAptPackageVersionInstalled(args.version)]
-        a.st = '''
-set -e
-export LANG=en_US.UTF-8
-s=$(dpkg -s "<vars.package>")
-echo $s | grep '<vars.nameInstalled>' 1>/dev/null
-i_check=$?
-<if(vars.version)>
-echo $s | grep '<vars.versionInstalled>' 1>/dev/null
-v_check=$?
-<else>
-v_check=0
-<endif>
-! (( $i_check || $v_check ))
-'''
-        def ret = shell a call()
+                [nameInstalled: grepPackageNameInstalled] <<
+                [versionInstalled: getGrepPackageVersionInstalled(args.version)]
+        a.resource = commandsTemplate
+        a.name = 'checkPackage'
+        def ret = script.shell a call()
         return ret.exitValue == 0
     }
 
     /**
-     * Installs the specified packages via apt-get. Per default installs the
-     * packages from the profile property {@code packages}.
+     * Installs the specified packages via apt
+     * @param packages the List of packages to install. Defaults to the
+     * profile property {@code packages}.
+     * @param checkInstalled set to true to check if the packages are
+     * already installed. Defaults to true.
+     * @param timeout the timeout Duration. Defaults to {@code timeoutLong}.
      */
-    void installAptPackages(def packages=packages, def timeout=timeoutLong) {
-        installAptPackages packages: packages, timeout: timeout
+    void installPackages(List packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
+        installPackages packages: packages, checkInstalled: checkInstalled, timeout: timeout
     }
 
     /**
-     * Installs the specified packages via apt-get. Per default installs the
+     * Installs the specified packages via apt. Per default installs the
      * packages from the profile property {@code packages}.
      */
-    void installAptPackages(Map args) {
+    void installPackages(Map args) {
         log.info "Installing packages {}.", args
+        List packages = args.packages
         def a = new HashMap(args)
-        a.timeout = a.timeout ? a.timeout : timeoutLong
+        a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
-        a.command = """
-apt-get update && apt-get -y install ${args.packages.join(' ')}
-"""
-        script.shell a with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+        a.resource = commandsTemplate
+        a.name = 'installPackage'
+        packages.each {
+            Map b = [vars: [package: it, checkInstalled: a.checkInstalled]] << a
+            script.shell b call()
+        }
     }
 
     /**
      * Installs the specified backports packages via apt-get. Per default
      * installs the packages from the profile property {@code packages}.
      */
-    void installAptBackportsPackages(def packages=packages, def timeout=timeoutLong) {
-        installAptBackportsPackages packages: packages, timeout: timeout
-    }
-
-    /**
-     * Installs the specified backports packages via apt-get. Per default
-     * installs the packages from the profile property {@code packages}.
-     */
-    void installAptBackportsPackages(Map args) {
-        log.info "Installing packages {}.", args
-        def a = new HashMap(args)
-        a.timeout = a.timeout ? a.timeout : timeoutLong
-        a.privileged = true
-        a.command = """
-apt-get update && apt-get -y -t ${distributionName}-backports install ${args.packages.join(' ')}
-"""
-        script.shell a with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+    void installBackportsPackages(def packages=script.packages, def timeout=script.timeoutLong) {
+        def args = [:]
+        args.packages = packages
+        args.timeout = timeout
+        args.backport = "${script.distributionName}-backports"
+        installBackportsPackages args
     }
 
     /**
@@ -173,17 +167,17 @@ apt-get update && apt-get -y -t ${distributionName}-backports install ${args.pac
      * <li>file: repository list file;
      * </ul>
      *
-     * @see #getAptPackagesRepositoryKey()
-     * @see #getAptPackagesRepository()
-     * @see #getAptPackagesRepositoryComponent()
-     * @see #getAptPackagesRepositoryListFile()
+     * @see #getPackagesRepositoryKey()
+     * @see #getPackagesRepository()
+     * @see #getPackagesRepositoryComponent()
+     * @see #getPackagesRepositoryListFile()
      */
-    def addAptPackagesRepository(Map args=[:]) {
-        args.key = args.key ? args.key : aptPackagesRepositoryKey
-        args.url = args.url ? args.url : aptPackagesRepositoryUrl
-        args.name = args.name ? args.name : distributionName
-        args.comp = args.comp ? args.comp : aptPackagesRepositoryComponent
-        args.file = args.file ? args.file : aptPackagesRepositoryListFile
+    def addPackagesRepository(Map args=[:]) {
+        args.key = args.key ? args.key : packagesRepositoryKey
+        args.url = args.url ? args.url : packagesRepositoryUrl
+        args.name = args.name ? args.name : script.distributionName
+        args.comp = args.comp ? args.comp : packagesRepositoryComponent
+        args.file = args.file ? args.file : packagesRepositoryListFile
         script.shell """
 curl -fsSL ${args.key} | sudo apt-key add -
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
@@ -201,49 +195,18 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * <li>file: repository list file;
      * </ul>
      *
-     * @see #getAptBackportsRepository()
-     * @see #getAptBackportsRepositoryComponent()
-     * @see #getAptBackportsRepositoryListFile()
+     * @see #getBackportsRepository()
+     * @see #getBackportsRepositoryComponent()
+     * @see #getBackportsRepositoryListFile()
      */
-    def addAptBackportsRepository(Map args=[:]) {
-        args.url = args.url ? args.url : aptBackportsRepositoryUrl
-        args.name = args.name ? args.name : "$distributionName-backports"
-        args.comp = args.comp ? args.comp : aptBackportsRepositoryComponent
-        args.file = args.file ? args.file : aptBackportsRepositoryListFile
+    def addBackportsRepository(Map args=[:]) {
+        args.url = args.url ? args.url : backportsRepositoryUrl
+        args.name = args.name ? args.name : "${script.distributionName}-backports"
+        args.comp = args.comp ? args.comp : backportsRepositoryComponent
+        args.file = args.file ? args.file : backportsRepositoryListFile
         script.shell """
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 """ call()
-    }
-
-    /**
-     * Checks if the yum package is installed.
-     * <ul>
-     * <li>package: the package name.
-     * <li>version: optional, the package version.
-     * </ul>
-     */
-    boolean checkYumPackage(Map args) {
-        log.info "Check installed packages {}.", args
-        assertThat "args.package=null", args, hasKey('package')
-        def a = new HashMap(args)
-        a.timeout = args.timeout ? args.timeout : timeoutShort
-        a.exitCodes = [0, 1] as int[]
-        a.vars = args
-        a.st = '''
-set -e
-export LANG=en_US.UTF-8
-s=$(yum list installed "<vars.package>")
-i_check=$?
-<if(vars.version)>
-echo "$s" | grep '<vars.version>' 1>/dev/null
-v_check=$?
-<else>
-v_check=0
-<endif>
-! (( $i_check || $v_check ))
-'''
-        def ret = script.shell a call()
-        return ret.exitValue == 0
     }
 
     /**
@@ -256,7 +219,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    String getAptPackagesRepositoryKey() {
+    String getPackagesRepositoryKey() {
         script.properties.getProperty "apt_packages_repository_key", defaultProperties
     }
 
@@ -270,7 +233,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    String getAptPackagesRepositoryUrl() {
+    String getPackagesRepositoryUrl() {
         script.properties.getProperty "apt_packages_pepository_url", defaultProperties
     }
 
@@ -284,7 +247,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    File getAptPackagesRepositoryListFile() {
+    File getPackagesRepositoryListFile() {
         script.getFileProperty "apt_packages_repository_list_file", script.base, defaultProperties
     }
 
@@ -298,7 +261,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    String getAptPackagesRepositoryComponent() {
+    String getPackagesRepositoryComponent() {
         script.properties.getProperty "apt_packages_repository_component", defaultProperties
     }
 
@@ -312,7 +275,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    String getAptBackportsRepositoryUrl() {
+    String getBackportsRepositoryUrl() {
         script.properties.getProperty "apt_backports_repository_url", defaultProperties
     }
 
@@ -326,7 +289,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    File getAptBackportsRepositoryListFile() {
+    File getBackportsRepositoryListFile() {
         script.getFileProperty "apt_backports_repository_list_file", script.base, defaultProperties
     }
 
@@ -340,7 +303,7 @@ v_check=0
      *
      * @see #getDefaultProperties()
      */
-    String getAptBackportsRepositoryComponent() {
+    String getBackportsRepositoryComponent() {
         script.properties.getProperty "apt_backports_repository_component", defaultProperties
     }
 }
