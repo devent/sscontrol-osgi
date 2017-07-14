@@ -23,6 +23,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.AbstractModule
 
@@ -44,6 +45,7 @@ class CollectdModules {
             new CollectdModule(),
             new Collectd_Debian_8_Module(),
             new DebianUtilsModule(),
+            new SystemdUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

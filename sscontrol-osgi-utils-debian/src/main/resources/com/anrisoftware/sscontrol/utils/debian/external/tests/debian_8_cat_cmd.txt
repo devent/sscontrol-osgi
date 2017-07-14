@@ -1,0 +1,24 @@
+#!/bin/bash
+
+/bin/cat <<EOF
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="8"
+VERSION="8 (jessie)"
+ID=debian
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+EOF
+
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+if [ "$#" -gt 0 ]; then
+    cmd=($1)
+    cmd=${cmd[0]}
+    if command -v -- "$cmd">/dev/null; then
+       $@
+    fi
+fi

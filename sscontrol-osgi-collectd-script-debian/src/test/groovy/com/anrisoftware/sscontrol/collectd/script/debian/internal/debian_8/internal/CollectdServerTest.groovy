@@ -38,7 +38,7 @@ class CollectdServerTest extends AbstractCollectdRunnerTest {
         def test = [
             name: "collectd_server",
             script: '''
-service "ssh", host: "robobee@192.168.56.230", socket: collectdSocket
+service "ssh", host: "robobee@robobee-test", socket: collectdSocket
 service "collectd", version: "5.7" with {
     config name: "99-write-graphite", script: """
 LoadPlugin "write_graphite"

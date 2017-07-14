@@ -1,0 +1,28 @@
+reloadCmd(parent, vars) ::= <<
+set -e
+systemctl daemon-reload
+>>
+
+stopCmd(parent, vars) ::= <<
+set -e
+<vars.services:{s|if <findService(parent, vars, s)>; then systemctl stop <s>; fi};separator="\n">
+>>
+
+startCmd(parent, vars) ::= <<
+set -e
+<vars.services:{s|systemctl start <s> && systemctl status <s>};separator="\n">
+>>
+
+restartCmd(parent, vars) ::= <<
+set -e
+<vars.services:{s|systemctl restart <s> && systemctl status <s>};separator="\n">
+>>
+
+enableCmd(parent, vars) ::= <<
+set -e
+<vars.services:{s|systemctl enable <s>};separator="\n">
+>>
+
+findService(parent, vars, service) ::= <<
+systemctl list-units | grep <service>
+>>
