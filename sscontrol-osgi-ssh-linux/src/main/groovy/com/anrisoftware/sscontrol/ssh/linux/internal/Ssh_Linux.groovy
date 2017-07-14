@@ -46,6 +46,7 @@ class Ssh_Linux extends ScriptBase {
     def run() {
         Ssh ssh = service
         def facts = facts()()
+        target.system.system = facts.system.system
         target.system.name = facts.system.name
         target.system.version = facts.system.version
     }

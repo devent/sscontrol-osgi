@@ -92,7 +92,7 @@ public abstract class AbstractSystemInfo implements SystemInfo {
         if (obj == this) {
             return true;
         }
-        if (obj.getClass() != getClass()) {
+        if (!(obj instanceof SystemInfo)) {
             return false;
         }
         SystemInfo rhs = (SystemInfo) obj;

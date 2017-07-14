@@ -12,7 +12,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsProperties;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -21,7 +21,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
 public class ScriptsMap extends HashMap<ScriptInfo, HostServiceScriptService> {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -43,9 +43,9 @@ public class ScriptsMap extends HashMap<ScriptInfo, HostServiceScriptService> {
     public HostServiceScriptService get(Object key) {
         HostServiceScriptService s = super.get(key);
         ScriptInfo info = (ScriptInfo) key;
-        String system = info.getSystem();
-        String name = mappingsProperties.getMapping(system);
-        if (system == null && name == null) {
+        String name = info.getName();
+        String system = mappingsProperties.getMapping(name);
+        if (name == null && system == null) {
             s = findScriptService(info.getService());
         }
         if (s == null) {

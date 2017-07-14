@@ -26,8 +26,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.Collectd_Centos_7_Factory;
-import com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.Collectd_Centos_7_Module;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
@@ -44,9 +42,9 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 @Service(HostServiceScriptService.class)
 public class Collectd_Centos_7_Service implements HostServiceScriptService {
 
-    static final String SYSTEM_VERSION = "8";
+    static final String SYSTEM_VERSION = "7";
 
-    static final String SYSTEM_NAME = "debian";
+    static final String SYSTEM_NAME = "centos";
 
     @Inject
     private Collectd_Centos_7_Factory scriptFactory;
