@@ -63,7 +63,7 @@ public abstract class AbstractScriptInfo extends AbstractSystemInfo
         if (obj == this) {
             return true;
         }
-        if (obj.getClass() != getClass()) {
+        if (!(obj instanceof ScriptInfo)) {
             return false;
         }
         ScriptInfo rhs = (ScriptInfo) obj;
