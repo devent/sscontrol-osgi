@@ -19,6 +19,8 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.repo.git.linux.internal.linux.GitRepo_Linux
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_8_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -34,11 +36,16 @@ class GitRepo_Debian_8 extends GitRepo_Linux {
     @Inject
     GitRepo_Debian_8_Properties debianPropertiesProvider
 
+    DebianUtils debian
+
+    @Inject
+    void setDebianFactory(Debian_8_UtilsFactory factory) {
+        this.debian = factory.create(this)
+    }
+
     @Override
     def run() {
-        if (!checkAptPackages()) {
-            installAptPackages()
-        }
+        debian.installPackages()
         super.run()
     }
 
