@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.inte
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_8_TestUtils.*
 
 /**
  *
@@ -28,6 +29,7 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
 
     @Override
     void createDummyCommands(File dir) {
+        createCommand catCommand, dir, 'cat'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -46,7 +48,8 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
             'tar',
             'grep',
             'make',
-            'apt-get'
+            'apt-get',
+            'dpkg',
         ]
     }
 }

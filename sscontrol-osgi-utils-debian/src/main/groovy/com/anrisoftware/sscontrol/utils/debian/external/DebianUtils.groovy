@@ -20,10 +20,7 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-import javax.inject.Inject
-
 import com.anrisoftware.resources.templates.external.TemplateResource
-import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -39,22 +36,19 @@ abstract class DebianUtils {
 
     final HostServiceScript script
 
-    TemplateResource commandsTemplate
-
     protected DebianUtils(HostServiceScript script) {
         this.script = script
-    }
-
-    @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('DebianUtils')
-        this.commandsTemplate = templates.getResource('debian_8_commands')
     }
 
     /**
      * Returns the default {@link Properties} for the service.
      */
     abstract Properties getDefaultProperties()
+
+    /**
+     * Returns Debian {@link TemplateResource}.
+     */
+    abstract TemplateResource getCommandsTemplate()
 
     /**
      * Checks if the specified apt packages with a specific version are
@@ -147,12 +141,13 @@ abstract class DebianUtils {
      * Installs the specified backports packages via apt-get. Per default
      * installs the packages from the profile property {@code packages}.
      */
-    void installBackportsPackages(def packages=script.packages, def timeout=script.timeoutLong) {
+    void installBackportsPackages(def packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
         def args = [:]
         args.packages = packages
         args.timeout = timeout
         args.backport = "${script.distributionName}-backports"
-        installBackportsPackages args
+        args.checkInstalled = checkInstalled
+        installPackages args
     }
 
     /**

@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8
+package com.anrisoftware.sscontrol.utils.systemd.external;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Collectd Debian 8 properties provider from
- * {@code "/collectd_debian_8.properties"}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Collectd_Debian_8_Properties extends AbstractContextPropertiesProvider {
+public class SystemdUtilsModule extends AbstractModule {
 
-    private static final URL RESOURCE = Collectd_Debian_8_Properties.class.getResource("/collectd_debian_8.properties")
-
-    Collectd_Debian_8_Properties() {
-        super(Collectd_Debian_8_Properties.class, RESOURCE)
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(SystemdUtils.class, SystemdUtils.class)
+                .build(SystemdUtilsFactory.class));
     }
+
 }

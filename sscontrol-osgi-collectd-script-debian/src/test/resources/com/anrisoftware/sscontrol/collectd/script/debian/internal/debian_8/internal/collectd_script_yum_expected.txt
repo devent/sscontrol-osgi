@@ -1,6 +1,0 @@
-list installed epel-release
-install -y epel-release
-list installed selinux-policy-devel
-install -y selinux-policy-devel
-list installed collectd
-install -y collectd
