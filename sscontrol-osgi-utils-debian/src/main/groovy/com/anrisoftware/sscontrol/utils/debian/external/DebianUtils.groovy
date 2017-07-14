@@ -116,7 +116,7 @@ abstract class DebianUtils {
      * @param timeout the timeout Duration. Defaults to {@code timeoutLong}.
      */
     void installPackages(List packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
-        installPackages packages: packages, checkInstalled: checkInstalled, timeout: timeout
+        installPackages packages: packages, timeout: timeout, vars: [checkInstalled: checkInstalled]
     }
 
     /**
@@ -127,12 +127,14 @@ abstract class DebianUtils {
         log.info "Installing packages {}.", args
         List packages = args.packages
         def a = new HashMap(args)
+        a.vars = args.vars ? new HashMap(args.vars) : [:]
         a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
         a.resource = commandsTemplate
         a.name = 'installPackage'
         packages.each {
-            Map b = [vars: [package: it, checkInstalled: a.checkInstalled]] << a
+            Map b = new HashMap(a)
+            b.vars.package = it
             script.shell b call()
         }
     }
@@ -145,8 +147,9 @@ abstract class DebianUtils {
         def args = [:]
         args.packages = packages
         args.timeout = timeout
-        args.backport = "${script.distributionName}-backports"
-        args.checkInstalled = checkInstalled
+        args.vars = [:]
+        args.vars.backport = "${script.distributionName}-backports"
+        args.vars.checkInstalled = checkInstalled
         installPackages args
     }
 
