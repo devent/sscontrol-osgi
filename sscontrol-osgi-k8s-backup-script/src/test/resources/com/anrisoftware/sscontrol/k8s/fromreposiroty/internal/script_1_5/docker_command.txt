@@ -1,0 +1,4 @@
+#!/bin/bash
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
