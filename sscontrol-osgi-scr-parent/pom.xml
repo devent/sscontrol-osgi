@@ -55,6 +55,8 @@
         <module>../sscontrol-osgi-icinga</module>
         <module>../sscontrol-osgi-icinga-icinga2-debian</module>
         <module>../sscontrol-osgi-icinga-icinga2-script</module>
+        <module>../sscontrol-osgi-k8s-backup-script</module>
+        <module>../sscontrol-osgi-k8s-backup-service</module>
         <module>../sscontrol-osgi-k8s-base</module>
         <module>../sscontrol-osgi-k8s-base-upstream</module>
         <module>../sscontrol-osgi-k8s-cluster</module>
