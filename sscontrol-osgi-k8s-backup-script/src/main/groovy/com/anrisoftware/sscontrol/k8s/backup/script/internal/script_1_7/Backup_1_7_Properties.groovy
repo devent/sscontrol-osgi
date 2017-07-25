@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
 
-import com.google.inject.AbstractModule;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * Backup service for Kubernetes 1.7 properties provider from
+ * {@code "/backup_1_7_linux.properties"}.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public class FileTemplateModule extends AbstractModule {
+class Backup_1_7_Properties extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
+    private static final URL RESOURCE = Backup_1_7_Properties.class.getResource("/backup_1_7_linux.properties")
+
+    Backup_1_7_Properties() {
+        super(Backup_1_7_Properties.class, RESOURCE)
     }
-
 }

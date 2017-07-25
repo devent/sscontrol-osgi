@@ -1,4 +1,0 @@
-login -u erwin82 -p blaue sonne
-build -t erwin82/wordpress-app:master -f ./Dockerfile .
-login -u erwin82 -p blaue sonne
-push erwin82/wordpress-app:master
