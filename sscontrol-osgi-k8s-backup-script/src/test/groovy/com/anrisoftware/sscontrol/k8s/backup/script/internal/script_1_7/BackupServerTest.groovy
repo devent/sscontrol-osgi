@@ -70,7 +70,7 @@ service "backup" with {
     def setupServer(Map args) {
         tearDownServer args
         def file = 'wordpress-app.zip'
-        execRemoteFile """
+        remoteCommand """
 echo "Create /tmp/kubectl."
 cat > /tmp/kubectl << 'EOL'
 ${KUBECTL_COMMAND()}
@@ -80,17 +80,14 @@ chmod +x /tmp/kubectl
 echo "Create ${args.test.scriptVars.backupDir}."
 rm -rf "${args.test.scriptVars.backupDir}"
 mkdir -p "${args.test.scriptVars.backupDir}"
-""", args.zipArchive.openStream()
+"""
     }
 
     def tearDownServer(Map args) {
         remoteCommand """
 rm /tmp/kubectl
 rm /tmp/kubectl.out
-rm /tmp/docker
-sudo rm /tmp/docker.out
-rm -rf "${args.test.scriptVars.checkoutDir}"
-rm -r /tmp/wordpress-app
+rm -rf "${args.test.scriptVars.backupDir}"
 """
     }
 
