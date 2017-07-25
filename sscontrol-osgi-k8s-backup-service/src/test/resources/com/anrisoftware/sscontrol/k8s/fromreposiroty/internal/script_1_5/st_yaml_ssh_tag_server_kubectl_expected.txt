@@ -1,4 +1,0 @@
-config use-context default-system
-apply -f ./mysql-deployment.yaml
-config use-context default-system
-apply -f ./wordpress-deployment.yaml

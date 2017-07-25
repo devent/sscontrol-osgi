@@ -1,8 +1,0 @@
-config use-context default-system
-config set-cluster default --server=http://robobee-test:8080
-config set-credentials default-default-admin --client-certificate=/var/robobee/certs/default/client_cert.pem --client-key=/var/robobee/certs/default/client_key.pem
-config set-context default-system --cluster=default --user=default-default-admin
-config use-context default-system
-apply -f ./mysql-deployment.yaml
-config use-context default-system
-apply -f ./wordpress-deployment.yaml

@@ -77,12 +77,12 @@ class BackupServiceTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "cluster"() {
+    void "backup_service"() {
         def test = [
-            name: 'cluster',
+            name: 'backup_service',
             script: """
 service "k8s-cluster"
-service "backup" {
+service "backup" with {
     service namespace: "wordpress", name: "db"
     destination dir: "/mnt/backup"
 }
@@ -91,8 +91,11 @@ service "backup" {
             expected: { HostServices services ->
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
-                assert s.repo.repo.remote.uri.toString() == 'git://git@github.com:devent/wordpress-app.git'
-                assert s.repo.repo.credentials.type == 'ssh'
+                assert s.service.namespace == 'wordpress'
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.service.name == 'db'
+                assert s.destination.dest.toString() == 'file:/mnt/backup'
             },
         ]
         doTest test
@@ -100,7 +103,6 @@ service "backup" {
 
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
-        test.before(test)
         def services = servicesFactory.create()
         services.targets.addTarget SshFactory.localhost(injector)
         services.putAvailableService 'k8s-cluster', clusterFactory

@@ -16,17 +16,17 @@
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
 import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.clustersAdded;
-import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.registriesAdded;
-import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.reposAdded;
+import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.destinationSet;
+import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.serviceSet;
 
 import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
-import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
  * Logging for {@link BackupImpl}.
@@ -41,9 +41,9 @@ final class BackupImplLogger extends AbstractLogger {
 
         clustersAdded("Clusters {} added to {}"),
 
-        reposAdded("Repositories {} added to {}"),
+        serviceSet("Service {} set for {}"),
 
-        registriesAdded("Repositories {} added to {}");
+        destinationSet("Destination {} set for {}");
 
         private String name;
 
@@ -68,11 +68,11 @@ final class BackupImplLogger extends AbstractLogger {
         debug(clustersAdded, list, from);
     }
 
-    void reposAdded(BackupImpl from, List<RepoHost> list) {
-        debug(reposAdded, list, from);
+    void serviceSet(BackupImpl backup, Service service) {
+        debug(serviceSet, service, backup);
     }
 
-    void registriesAdded(BackupImpl from, List<RegistryHost> list) {
-        debug(registriesAdded, list, from);
+    void destinationSet(BackupImpl backup, Destination dest) {
+        debug(destinationSet, dest, backup);
     }
 }
