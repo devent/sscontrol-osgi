@@ -20,6 +20,7 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import java.lang.invoke.MethodHandleImpl.BindCaller.T
 import java.nio.charset.Charset
 import java.util.concurrent.ExecutorService
 
@@ -796,6 +797,14 @@ echo \$file
 
     public <T> T getState(String name) {
         return (T) scriptsRepository.getState(name)
+    }
+
+    public <T> Map<String, T> getStates() {
+        new HashMap<String, T>() {
+                    T get(Object key) {
+                        return getState(key)
+                    }
+                }
     }
 
     /**

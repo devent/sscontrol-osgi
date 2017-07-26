@@ -36,9 +36,9 @@ import groovy.util.logging.Slf4j
 class BackupServerTest extends AbstractBackupRunnerTest {
 
     @Test
-    void "backup_service"() {
+    void "backup_service_server"() {
         def test = [
-            name: "backup_service",
+            name: "backup_service_server",
             script: '''
 service "ssh" with {
     host "robobee@robobee-test", socket: robobeeSocket

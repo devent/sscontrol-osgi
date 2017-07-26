@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterScript
 
 import groovy.util.logging.Slf4j
 
@@ -29,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sCluster_1_5_Linux extends ScriptBase {
+class K8sCluster_1_5_Linux extends ScriptBase implements K8sClusterScript {
 
     @Inject
     K8sCluster_1_5_Linux_Properties linuxPropertiesProvider
@@ -60,11 +61,13 @@ class K8sCluster_1_5_Linux extends ScriptBase {
         linuxPropertiesProvider.get()
     }
 
-    def runKubectl(Map vars) {
+    @Override
+    void runKubectl(Map<String, Object> vars) {
         kubectlClusterLinux.runKubectl vars
     }
 
-    def uploadCertificates(Map vars) {
+    @Override
+    void uploadCertificates(Map<String, Object> vars) {
         kubectlClusterLinux.uploadCertificates(vars)
     }
 

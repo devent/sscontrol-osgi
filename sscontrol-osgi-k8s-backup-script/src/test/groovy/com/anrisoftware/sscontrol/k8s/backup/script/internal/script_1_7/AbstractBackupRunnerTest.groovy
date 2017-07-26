@@ -77,9 +77,6 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
     K8sClusterFactory clusterFactory
 
     @Inject
-    K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
-
-    @Inject
     BackupImplFactory serviceFactory
 
     @Inject
@@ -94,7 +91,6 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
         services.putAvailableService 'backup', serviceFactory
         services.putAvailableScriptService 'backup/linux/0', scriptFactory
         return services
