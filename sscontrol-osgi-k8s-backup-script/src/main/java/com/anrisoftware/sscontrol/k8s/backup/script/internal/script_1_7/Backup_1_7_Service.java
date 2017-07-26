@@ -46,7 +46,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
 @Service(HostServiceScriptService.class)
 public class Backup_1_7_Service implements HostServiceScriptService {
 
-    static final String SERVICE_NAME = "from-repository";
+    static final String SERVICE_NAME = "backup";
 
     @Property(value = SERVICE_NAME)
     static final String SERVICE_NAME_PROPERTY = "service.name";

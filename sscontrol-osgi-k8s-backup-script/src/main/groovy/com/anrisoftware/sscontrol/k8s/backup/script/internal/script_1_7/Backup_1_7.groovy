@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
@@ -22,12 +23,14 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterScript
 
 import groovy.util.logging.Slf4j
 
 /**
- * Backup service for Kubernetes 1.x.
+ * Backup service for Kubernetes 1.7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -36,10 +39,12 @@ import groovy.util.logging.Slf4j
 class Backup_1_7 extends ScriptBase {
 
     @Inject
-    Backup_1_7_Properties debianPropertiesProvider
+    Backup_1_7_Properties propertiesProvider
 
     @Inject
-    HostServiceScriptService k8sCluster_1_5_Linux_Service
+    K8sClusterFactory clusterFactory
+
+    def templates
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -48,11 +53,17 @@ class Backup_1_7 extends ScriptBase {
 
     @Override
     def run() {
+        Backup service = service
+        assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
+        K8sClusterScript cluster = clusterFactory.create(scriptsRepository, service, target, threads, scriptEnv)
+        def dir = createTmpDir()
+        cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
+        cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
+        propertiesProvider.get()
     }
 
     List getKubectlFilesPatterns() {

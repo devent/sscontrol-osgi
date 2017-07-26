@@ -164,7 +164,7 @@ public class BackupImpl implements Backup {
 
     @Override
     public String getName() {
-        return "from-repository";
+        return "backup";
     }
 
     @Override
