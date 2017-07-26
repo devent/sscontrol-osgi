@@ -113,22 +113,29 @@ public class RunScriptImpl implements RunScript {
         HostServiceScriptService service = services
                 .getAvailableScriptService(info);
         if (service == null) {
-            log.scriptNotFound(name, info);
-            service = services
-                    .getAvailableScriptService(getLinuxScriptName(name));
+            ScriptInfo i = getLinuxScriptName(name);
+            service = services.getAvailableScriptService(i);
+            if (service == null) {
+                log.scriptNotFound(name, info);
+            }
         }
+        return createScript(name, s, host, vars, service);
+    }
+
+    private HostServiceScript createScript(String name, HostService s,
+            TargetHost host, Map<String, Object> vars,
+            HostServiceScriptService service) {
         HostServiceScript script = emptyServiceScript;
         if (service == null) {
             return script;
-        } else {
-            script = service.create(services, s, host, threads, vars);
-            PreHostService preService = services.getAvailablePreService(name);
-            if (preService != null) {
-                PreHost pre = preService.create();
-                pre.configureServiceScript(script);
-            }
-            return script;
         }
+        script = service.create(services, s, host, threads, vars);
+        PreHostService preService = services.getAvailablePreService(name);
+        if (preService != null) {
+            PreHost pre = preService.create();
+            pre.configureServiceScript(script);
+        }
+        return script;
     }
 
     private ScriptInfo getLinuxScriptName(String name) {
