@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.k8s.backup.service.external;
 
-import java.net.URI;
-
 /**
  * Backup destination.
  *
@@ -10,5 +8,5 @@ import java.net.URI;
  */
 public interface Destination {
 
-    URI getDest();
+    String getType();
 }

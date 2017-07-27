@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.DestinationImpl.DestinationImplFactory;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
@@ -75,7 +75,7 @@ public class BackupImpl implements Backup {
     private transient ServiceImplFactory serviceFactory;
 
     @Inject
-    private transient DestinationImplFactory destinationFactory;
+    private transient DirDestinationImplFactory dirDestinationFactory;
 
     @Inject
     BackupImpl(BackupImplLogger log, HostPropertiesService propertiesService,
@@ -119,9 +119,13 @@ public class BackupImpl implements Backup {
      * </pre>
      */
     public void destination(Map<String, Object> args) {
-        Destination destination = destinationFactory.create(args);
-        log.destinationSet(this, destination);
-        this.destination = destination;
+        Object v = args.get("dir");
+        Destination dest;
+        if (v != null) {
+            dest = dirDestinationFactory.create(args);
+            log.destinationSet(this, dest);
+            this.destination = dest;
+        }
     }
 
     @Override

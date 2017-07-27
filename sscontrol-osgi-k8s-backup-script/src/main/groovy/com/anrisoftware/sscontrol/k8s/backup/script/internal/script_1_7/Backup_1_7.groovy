@@ -56,9 +56,11 @@ class Backup_1_7 extends ScriptBase {
         Backup service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         K8sClusterScript cluster = clusterFactory.create(scriptsRepository, service, target, threads, scriptEnv)
-        def dir = createTmpDir()
+        def type = service.destination.type
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
-        cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+        String namespace = service.service.namespace
+        String name = service.service.name
+        cluster.runKubectl chdir: "/tmp", service: service, cluster: service.cluster, args: "apply -f $it"
     }
 
     @Override
