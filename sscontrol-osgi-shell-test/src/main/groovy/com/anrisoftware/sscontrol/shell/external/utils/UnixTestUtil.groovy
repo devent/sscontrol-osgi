@@ -16,14 +16,13 @@
 package com.anrisoftware.sscontrol.shell.external.utils
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static org.junit.Assume.*
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
 import com.jcabi.ssh.SSH
 import com.jcabi.ssh.Shell
-
-import groovy.transform.CompileStatic
 
 
 /**
@@ -32,8 +31,18 @@ import groovy.transform.CompileStatic
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@CompileStatic
 class UnixTestUtil {
+
+    static void assumeSocketExists(def socket) {
+        assumeSocketsExists([socket])
+    }
+
+    static void assumeSocketsExists(List sockets) {
+        (0..<sockets.size()).each { int i ->
+            def socket = new File(sockets[i])
+            assumeTrue "${socket} exists", socket.exists()
+        }
+    }
 
     static void createEchoCommands(File dir, List<String> names) {
         names.each { createEchoCommand dir, it }

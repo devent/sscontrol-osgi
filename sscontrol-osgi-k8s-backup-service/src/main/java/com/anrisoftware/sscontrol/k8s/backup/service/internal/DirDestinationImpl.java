@@ -27,12 +27,12 @@ import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Backup destination.
+ * Local directory backup destination.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class DestinationImpl implements Destination {
+public class DirDestinationImpl implements Destination {
 
     /**
      *
@@ -40,7 +40,7 @@ public class DestinationImpl implements Destination {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface DestinationImplFactory {
+    public interface DirDestinationImplFactory {
 
         Destination create(Map<String, Object> args);
 
@@ -49,15 +49,19 @@ public class DestinationImpl implements Destination {
     private URI dest;
 
     @Inject
-    DestinationImpl(@Assisted Map<String, Object> args) {
+    DirDestinationImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
+    }
+
+    @Override
+    public String getType() {
+        return "dir";
     }
 
     public void setDest(URI dest) {
         this.dest = dest;
     }
 
-    @Override
     public URI getDest() {
         return dest;
     }
