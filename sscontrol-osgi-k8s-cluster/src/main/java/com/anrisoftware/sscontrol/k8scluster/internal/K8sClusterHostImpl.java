@@ -16,6 +16,8 @@
 package com.anrisoftware.sscontrol.k8scluster.internal;
 
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
@@ -131,6 +133,11 @@ public class K8sClusterHostImpl implements K8sClusterHost {
             return certs.getTls();
         }
         return null;
+    }
+
+    @Override
+    public URI getUrl() throws URISyntaxException {
+        return new URI(proto, null, host, port, null, null, null);
     }
 
     @Override
