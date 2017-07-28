@@ -94,6 +94,8 @@ rm -rf "${args.test.scriptVars.backupDir}"
     @Before
     void beforeMethod() {
         assumeTrue testHostAvailable
+        assumeSocketExists robobeeSocket
+        assumeSocketExists '/tmp/robobee@andrea-master-0.muellerpublic.de:22'
     }
 
     Map getScriptEnv(Map args) {
