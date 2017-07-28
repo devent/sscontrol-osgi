@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.types.cluster.external;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
 /**
@@ -30,4 +33,6 @@ public interface ClusterHost extends TargetHost {
     Credentials getCredentials();
 
     String getClusterName();
+
+    URI getUrl() throws URISyntaxException;
 }

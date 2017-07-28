@@ -83,17 +83,31 @@ public abstract class AbstractCredentials implements Credentials {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("name");
-        assertThat("name=null", v, notNullValue());
-        setName(v.toString());
-        v = args.get("type");
-        assertThat("type=null", v, notNullValue());
-        assertThat(String.format("type=%s", getType()), v.toString(),
-                equalToIgnoringCase(getType()));
+        parseType(args);
+        parseName(args);
+        parsePort(args);
+    }
+
+    private void parsePort(Map<String, Object> args) {
+        Object v;
         v = args.get("port");
         if (v != null) {
             setPort((Integer) v);
         }
+    }
+
+    private void parseName(Map<String, Object> args) {
+        Object v = args.get("name");
+        if (v != null) {
+            setName(v.toString());
+        }
+    }
+
+    private void parseType(Map<String, Object> args) {
+        Object v = args.get("type");
+        assertThat("type=null", v, notNullValue());
+        assertThat(String.format("type=%s", getType()), v.toString(),
+                equalToIgnoringCase(getType()));
     }
 
 }
