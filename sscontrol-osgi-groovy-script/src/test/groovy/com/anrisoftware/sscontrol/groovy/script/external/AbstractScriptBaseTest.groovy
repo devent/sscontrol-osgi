@@ -58,6 +58,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImpl
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -151,6 +152,7 @@ class AbstractScriptBaseTest {
                 new DefaultCommandLineModule(),
                 new ScriptCommandModule(),
                 new ScriptProcessModule(),
+                new StModule(),
                 new STDefaultPropertiesModule(),
                 new STWorkerModule(),
                 new TemplatesDefaultMapsModule(),
