@@ -866,7 +866,7 @@ echo \$file
         }
         def v = args.timeout
         if (v) {
-            if (!(v instanceof java.time.Duration)) {
+            if (!(v instanceof Duration)) {
                 v = DurationFormat.create().parse v.toString()
                 a.timeout = v
             }
