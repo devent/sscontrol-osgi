@@ -179,7 +179,7 @@
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
             <version>2.4.1</version>
-            <classifier>bundle</classifier>
+            <type>bundle</type>
         </dependency>
     </dependencies>
 
