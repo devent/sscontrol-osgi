@@ -50,8 +50,8 @@
         <module>../sscontrol-osgi-hostname-script-debian</module>
         <module>../sscontrol-osgi-hostname-script-systemd</module>
         <module>../sscontrol-osgi-hostname-service</module>
-        <module>../sscontrol-osgi-hosts</module>
-        <module>../sscontrol-osgi-hosts-linux</module>
+        <module>../sscontrol-osgi-hosts-script-linux</module>
+        <module>../sscontrol-osgi-hosts-service</module>
         <module>../sscontrol-osgi-icinga</module>
         <module>../sscontrol-osgi-icinga-icinga2-debian</module>
         <module>../sscontrol-osgi-icinga-icinga2-script</module>
