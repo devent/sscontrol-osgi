@@ -68,7 +68,7 @@ LoadPlugin "write_graphite"
                 assertFileResource CollectdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource CollectdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource CollectdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource CollectdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                //assertFileResource CollectdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
             },
         ]
         doTest test
