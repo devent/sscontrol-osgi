@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
@@ -188,6 +189,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
             new FactsModule(),
             new TokensTemplateModule(),
             new TemplateResModule(),
+            new StModule(),
         ]
     }
 }

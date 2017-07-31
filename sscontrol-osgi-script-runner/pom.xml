@@ -37,14 +37,14 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-hostname-debian</artifactId>
+            <artifactId>sscontrol-osgi-hostname-script-debian</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-hosts-linux</artifactId>
+            <artifactId>sscontrol-osgi-hosts-script-linux</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
