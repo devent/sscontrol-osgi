@@ -23,18 +23,13 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
-import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
-import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
 import groovy.util.logging.Slf4j
-import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
-import io.fabric8.kubernetes.client.ConfigBuilder
-import io.fabric8.kubernetes.client.KubernetesClient
 
 /**
  * Backup service for Kubernetes 1.7.
@@ -51,8 +46,7 @@ class Backup_1_7 extends ScriptBase {
     @Inject
     K8sClusterFactory clusterFactory
 
-    @Inject
-    UriBase64Renderer uriBase64Renderer
+    Deployment deployment
 
     def templates
 
@@ -61,45 +55,34 @@ class Backup_1_7 extends ScriptBase {
         this.templates = templatesFactory.create('MonitoringClusterHeapsterInfluxdbGrafana_1_5_Templates')
     }
 
+    @Inject
+    void setDeploymentFactory(DeploymentFactory factory) {
+        this.deployment = factory.create(service)
+    }
+
     @Override
     def run() {
         Backup service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
-        def type = service.destination.type
-        def replicas = getReplicas()
-    }
-
-    int getReplicas() {
-        Backup service = service
-        String namespace = service.service.namespace
-        String name = service.service.name
-        K8sClusterHost host = service.cluster
-        setupHost host
-        def config = buildConfig host.url, host.credentials
-        try  {
-            KubernetesClient client = new AutoAdaptableKubernetesClient(config)
-            println client.pods().list()
-        } catch (Exception e) {
-            e.printStackTrace()
-        }
-        return 0
-    }
-
-    def buildConfig(URI hostUrl, Credentials credentials) {
-        def config = new ConfigBuilder().withMasterUrl(hostUrl.toString())
-        if (credentials.hasProperty('tls')) {
-            Tls tls = credentials.tls
-            if (tls.ca) {
-                config.withCaCertData uriBase64Renderer.toString(tls.ca, "base64", null)
-            }
-            if (tls.cert) {
-                config.withClientCertData uriBase64Renderer.toString(tls.cert, "base64", null)
-            }
-            if (tls.key) {
-                config.withClientKeyData uriBase64Renderer.toString(tls.key, "base64", null)
+        setupHost service.cluster
+        deployment.with {
+            createClient()
+            def type = service.destination.type
+            def rsyncDeploy = getDeployment "rsync-${service.service.name}"
+            def serviceDeploy = getDeployment service.service.name
+            def oldScale = serviceDeploy.get().spec.replicas
+            scaleDeployment rsyncDeploy, 1
+            def rsyncService = createPublicService rsyncDeploy
+            def rsyncPort = rsyncService.spec.ports[0].nodePort
+            println rsyncPort
+            try {
+                //    scaleDeployment serviceDeploy, 0
+            } finally {
+                deleteService rsyncService
+                scaleDeployment serviceDeploy, oldScale
+                scaleDeployment rsyncDeploy, 0
             }
         }
-        return config.build()
     }
 
     /**
@@ -121,6 +104,7 @@ class Backup_1_7 extends ScriptBase {
                 host.port = defaultServerPortUnsecured
             }
         }
+        return host
     }
 
     @Override
