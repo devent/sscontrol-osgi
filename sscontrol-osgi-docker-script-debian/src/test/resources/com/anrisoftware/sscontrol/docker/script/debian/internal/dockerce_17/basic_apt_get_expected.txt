@@ -1,0 +1,7 @@
+-y install curl
+-y install apt-transport-https
+-y install ca-certificates
+-y install software-properties-common
+-y install -t jessie-backports linux-image-amd64=4.9+80~bpo8+1
+update
+-y install docker-ce=17.03.1~ce-0~debian-jessie

@@ -31,6 +31,7 @@ v_check=0
  */
 installPackage(parent, vars) ::= <<
 set -e
+export DEBIAN_FRONTEND=noninteractive
 <if(vars.checkInstalled)>
 function check_package() {
     export LANG=en_US.UTF-8
@@ -48,6 +49,6 @@ function check_package() {
 
 check_package || \
 <endif>
-export DEBIAN_FRONTEND=noninteractive
 apt-get -y install <if(vars.backport)>-t <vars.backport><endif> <vars.package>
+
 >>
