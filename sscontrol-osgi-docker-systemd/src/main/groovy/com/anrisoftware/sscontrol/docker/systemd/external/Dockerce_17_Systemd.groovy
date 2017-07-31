@@ -25,6 +25,8 @@ import com.anrisoftware.sscontrol.docker.external.Docker
 import com.anrisoftware.sscontrol.docker.external.Mirror
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.tls.external.Tls
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -41,11 +43,18 @@ abstract class Dockerce_17_Systemd extends ScriptBase {
 
     TemplateResource dockerdTemplate
 
+    SystemdUtils systemd
+
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('Dockerce_17_Systemd_Templates')
         this.dockerdTemplate = templates.getResource('dockerd_config')
         this.mirrorTemplate = templates.getResource('mirror_config')
+    }
+
+    @Inject
+    void setSystemdUtilsFactory(SystemdUtilsFactory factory) {
+        this.systemd = factory.create(this)
     }
 
     def setupDefaults() {
@@ -115,26 +124,30 @@ mkdir -p '$dropin'
     }
 
     def stopServices() {
-        stopSystemdService 'docker'
+        systemd.stopService 'docker'
     }
 
     def startServices() {
-        if (upgradeKernel) {
-            if (check("uname -a | grep '$kernelFullVersion'")) {
-                log.debug 'Kernel is upgraded, starting docker.'
-                startEnableSystemdService 'docker'
-            } else {
-                log.debug 'Kernel is upgraded but not used, not starting docker.'
-                enableSystemdService 'docker'
-                shell privileged: true, """
+        if (!upgradeKernel) {
+            log.debug 'Enabling docker.'
+            systemd.startService 'docker'
+            systemd.enableService 'docker'
+            return
+        }
+        if (check("uname -a | grep '$kernelFullVersion'")) {
+            log.debug 'Kernel is upgraded, starting docker.'
+            systemd.startService 'docker'
+            systemd.enableService 'docker'
+        } else {
+            log.debug 'Kernel is upgraded but not used, not starting docker.'
+            systemd.enableService 'docker'
+            shell privileged: true, """
 umount $dockerAufsDirectory; true
 rm -rf $dockerAufsDirectory; true
 """ call()
-            }
-        } else {
-            startEnableSystemdService 'docker'
         }
     }
+
 
     File getSystemdDropinDir() {
         properties.getFileProperty 'systemd_dropin_dir', base, defaultProperties

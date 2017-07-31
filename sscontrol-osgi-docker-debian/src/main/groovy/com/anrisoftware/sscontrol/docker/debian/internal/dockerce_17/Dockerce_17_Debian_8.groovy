@@ -24,6 +24,8 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.docker.external.Docker
 import com.anrisoftware.sscontrol.docker.systemd.external.Dockerce_17_Systemd
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_8_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -49,6 +51,13 @@ class Dockerce_17_Debian_8 extends ScriptBase {
     @Inject
     Dockerce_17_Upstream_Debian_8_Factory upstreamFactory
 
+    DebianUtils debian
+
+    @Inject
+    void setDebianUtilsFactory(Debian_8_UtilsFactory factory) {
+        this.debian = factory.create(this)
+    }
+
     @Override
     def run() {
         setupDefaults()
@@ -58,7 +67,7 @@ class Dockerce_17_Debian_8 extends ScriptBase {
         systemd.createDockerdConfig()
         systemd.createRegistryMirrorConfig()
         systemd.deployMirrorCerts()
-        checkAptPackages() ? false : installAptPackages()
+        debian.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
         updateGrub()
