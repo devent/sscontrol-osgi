@@ -30,6 +30,8 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
     @Override
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, 'cat'
+        createCommand exit1Command, dir, 'dpkg'
+        createCommand exit1Command, dir, 'grep'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -46,10 +48,8 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
             'wget',
             'useradd',
             'tar',
-            'grep',
             'make',
             'apt-get',
-            'dpkg',
         ]
     }
 }
