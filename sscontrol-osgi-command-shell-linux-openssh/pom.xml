@@ -43,6 +43,12 @@
             <type>bundle</type>
         </dependency>
 
+        <!-- compile dependencies -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
