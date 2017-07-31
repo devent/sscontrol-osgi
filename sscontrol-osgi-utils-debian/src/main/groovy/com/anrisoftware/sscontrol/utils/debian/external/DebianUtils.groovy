@@ -20,6 +20,8 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import org.stringtemplate.v4.ST
+
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -303,5 +305,14 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      */
     String getBackportsRepositoryComponent() {
         script.properties.getProperty "apt_backports_repository_component", defaultProperties
+    }
+
+    String getGrepPackageNameInstalled() {
+        script.properties.getProperty 'grep_apt_package_name_installed', defaultProperties
+    }
+
+    String getGrepPackageVersionInstalled(String version) {
+        def s = script.properties.getProperty 'grep_apt_package_version_installed', defaultProperties
+        new ST(s).add('version', version).render()
     }
 }

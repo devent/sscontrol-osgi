@@ -782,15 +782,6 @@ echo \$file
         properties.getDurationProperty('command_timeout_very_long', defaultProperties)
     }
 
-    String getGrepAptPackageNameInstalled() {
-        properties.getProperty 'grep_apt_package_name_installed', defaultProperties
-    }
-
-    String getGrepAptPackageVersionInstalled(String version) {
-        def s = properties.getProperty 'grep_apt_package_version_installed', defaultProperties
-        new ST(s).add('version', version).render()
-    }
-
     public void putState(String name, Object state) {
         scriptsRepository.putState(name, state)
     }
