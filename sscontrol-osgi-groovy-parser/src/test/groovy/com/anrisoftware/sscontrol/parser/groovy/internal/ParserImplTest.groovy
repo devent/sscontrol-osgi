@@ -25,10 +25,10 @@ import org.junit.Test
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
-import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnameModule
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreModule
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
