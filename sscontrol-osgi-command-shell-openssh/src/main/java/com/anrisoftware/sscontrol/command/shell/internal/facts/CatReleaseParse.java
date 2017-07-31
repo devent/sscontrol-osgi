@@ -71,7 +71,7 @@ public class CatReleaseParse implements Callable<SystemInfo> {
             }
             switch (value[0]) {
             case "ID":
-                args.put("name", value[1]);
+                args.put("name", parseName(value[1]));
                 break;
             case "VERSION_ID":
                 args.put("version", value[1].replaceAll("\"", ""));
@@ -81,5 +81,10 @@ public class CatReleaseParse implements Callable<SystemInfo> {
             }
         }
         return systemFactory.create(args);
+    }
+
+    private String parseName(String string) {
+        String name = string.replaceAll("\"", "");
+        return name;
     }
 }
