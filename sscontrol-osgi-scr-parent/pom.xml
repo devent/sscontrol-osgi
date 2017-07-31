@@ -47,9 +47,9 @@
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
-        <module>../sscontrol-osgi-hostname</module>
-        <module>../sscontrol-osgi-hostname-debian</module>
-        <module>../sscontrol-osgi-hostname-systemd</module>
+        <module>../sscontrol-osgi-hostname-script-debian</module>
+        <module>../sscontrol-osgi-hostname-script-systemd</module>
+        <module>../sscontrol-osgi-hostname-service</module>
         <module>../sscontrol-osgi-hosts</module>
         <module>../sscontrol-osgi-hosts-linux</module>
         <module>../sscontrol-osgi-icinga</module>
