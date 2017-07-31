@@ -23,12 +23,12 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Factory
-import com.anrisoftware.sscontrol.hostname.debian.internal.debian_8.Hostname_Debian_8_Module
-import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnamePreModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
-import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Module
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnameModule
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreModule
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.internal.SshModule
