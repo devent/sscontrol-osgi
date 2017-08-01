@@ -65,7 +65,7 @@ class Deployment {
     def scaleDeployment(HasMetadataOperation deploy, int replicas) {
         deploy.scale replicas, true
         if (replicas > 0) {
-            deploy.waitUntilReady 5, TimeUnit.MINUTES
+            deploy.waitUntilReady 15, TimeUnit.MINUTES
         }
     }
 
@@ -77,7 +77,7 @@ class Deployment {
                 .withName("${name}-public")
                 .endMetadata()
                 .withNewSpec()
-                .withSelector([app: "rsync-mariadb"])
+                .withSelector([app: name])
                 .withType("NodePort")
                 .addNewPort().withPort(2222)
                 .withNewTargetPort().withIntVal(2222)
