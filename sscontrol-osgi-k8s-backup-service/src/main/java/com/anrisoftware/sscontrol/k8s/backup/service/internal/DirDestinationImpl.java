@@ -24,8 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Ssh;
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.SshImpl.SshImplFactory;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -54,17 +54,17 @@ public class DirDestinationImpl implements Destination {
     private DirDestinationImplLogger log;
 
     @Inject
-    private transient SshImplFactory sshFactory;
+    private transient ClientImplFactory sshFactory;
 
-    private Ssh ssh;
+    private Client ssh;
 
     @Inject
     DirDestinationImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
     }
 
-    public Ssh ssh(Map<String, Object> args) {
-        Ssh ssh = sshFactory.create(args);
+    public Client ssh(Map<String, Object> args) {
+        Client ssh = sshFactory.create(args);
         log.sshSet(this, ssh);
         this.ssh = ssh;
         return ssh;
@@ -84,7 +84,7 @@ public class DirDestinationImpl implements Destination {
     }
 
     @Override
-    public Ssh getSsh() {
+    public Client getSsh() {
         return ssh;
     }
 

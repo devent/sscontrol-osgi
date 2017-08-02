@@ -34,4 +34,9 @@ public interface Backup extends ClusterService {
      * Returns the backup destination.
      */
     Destination getDestination();
+
+    /**
+     * Returns the backup client.
+     */
+    Client getClient();
 }

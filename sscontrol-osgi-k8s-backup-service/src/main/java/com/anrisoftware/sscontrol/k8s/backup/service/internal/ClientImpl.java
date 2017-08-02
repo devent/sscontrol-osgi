@@ -15,22 +15,24 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Ssh;
+import com.anrisoftware.globalpom.core.resources.ToURI;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Ssh client.
+ * Backup client.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshImpl implements Ssh {
+public class ClientImpl implements Client {
 
     /**
      *
@@ -38,17 +40,28 @@ public class SshImpl implements Ssh {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface SshImplFactory {
+    public interface ClientImplFactory {
 
-        Ssh create(Map<String, Object> args);
+        Client create(Map<String, Object> args);
 
     }
+
+    private URI key;
 
     private String config;
 
     @Inject
-    SshImpl(@Assisted Map<String, Object> args) {
+    ClientImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
+    }
+
+    public void setKey(URI key) {
+        this.key = key;
+    }
+
+    @Override
+    public URI getKey() {
+        return key;
     }
 
     public void setConfig(String config) {
@@ -67,12 +80,20 @@ public class SshImpl implements Ssh {
 
     private void parseArgs(Map<String, Object> args) {
         parseConfig(args);
+        parseKey(args);
     }
 
     private void parseConfig(Map<String, Object> args) {
         Object v = args.get("config");
         if (v != null) {
             setConfig(v.toString());
+        }
+    }
+
+    private void parseKey(Map<String, Object> args) {
+        Object v = args.get("key");
+        if (v != null) {
+            setKey(ToURI.toURI(v).convert());
         }
     }
 

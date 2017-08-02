@@ -29,8 +29,10 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
@@ -76,6 +78,11 @@ public class BackupImpl implements Backup {
 
     @Inject
     private transient DirDestinationImplFactory dirDestinationFactory;
+
+    @Inject
+    private transient ClientImplFactory clientFactory;
+
+    private Client client;
 
     @Inject
     BackupImpl(BackupImplLogger log, HostPropertiesService propertiesService,
@@ -129,6 +136,18 @@ public class BackupImpl implements Backup {
         return dest;
     }
 
+    /**
+     * <pre>
+     * client key: "id_rsa", config: "..."
+     * </pre>
+     */
+    public Client client(Map<String, Object> args) {
+        Client client = clientFactory.create(args);
+        this.client = client;
+        log.clientSet(this, client);
+        return client;
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -180,6 +199,11 @@ public class BackupImpl implements Backup {
     @Override
     public Destination getDestination() {
         return destination;
+    }
+
+    @Override
+    public Client getClient() {
+        return client;
     }
 
     @Override

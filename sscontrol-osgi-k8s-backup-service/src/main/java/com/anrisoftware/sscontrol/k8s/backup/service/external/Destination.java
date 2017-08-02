@@ -25,5 +25,5 @@ public interface Destination {
 
     String getType();
 
-    Ssh getSsh();
+    Client getSsh();
 }

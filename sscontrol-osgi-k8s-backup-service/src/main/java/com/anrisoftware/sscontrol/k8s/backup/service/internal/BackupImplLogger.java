@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
+import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.clientSet;
 import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.clustersAdded;
 import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.destinationSet;
 import static com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImplLogger.m.serviceSet;
@@ -24,6 +25,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
@@ -43,7 +45,9 @@ final class BackupImplLogger extends AbstractLogger {
 
         serviceSet("Service {} set for {}"),
 
-        destinationSet("Destination {} set for {}");
+        destinationSet("Destination {} set for {}"),
+
+        clientSet("Client {} set for {}");
 
         private String name;
 
@@ -74,5 +78,9 @@ final class BackupImplLogger extends AbstractLogger {
 
     void destinationSet(BackupImpl backup, Destination dest) {
         debug(destinationSet, dest, backup);
+    }
+
+    void clientSet(BackupImpl backup, Client client) {
+        debug(clientSet, client, backup);
     }
 }
