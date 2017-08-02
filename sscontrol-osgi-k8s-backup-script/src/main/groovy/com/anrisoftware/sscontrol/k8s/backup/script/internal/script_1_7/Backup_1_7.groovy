@@ -24,6 +24,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory
+import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.RsyncClient.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -48,6 +49,8 @@ class Backup_1_7 extends ScriptBase {
 
     Deployment deployment
 
+    RsyncClient client
+
     def templates
 
     @Inject
@@ -58,6 +61,11 @@ class Backup_1_7 extends ScriptBase {
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
         this.deployment = factory.create(service)
+    }
+
+    @Inject
+    void setRsyncClientFactory(RsyncClientFactory factory) {
+        this.client = factory.create(service)
     }
 
     @Override
@@ -77,6 +85,7 @@ class Backup_1_7 extends ScriptBase {
             println rsyncPort
             try {
                 //    scaleDeployment serviceDeploy, 0
+                client.start()
             } finally {
                 deleteService rsyncService
                 scaleDeployment serviceDeploy, oldScale

@@ -27,6 +27,12 @@ import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation
  */
 class Deployment {
 
+    /**
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     interface DeploymentFactory {
 
         Deployment create(Backup service)
@@ -42,14 +48,14 @@ class Deployment {
     @Inject
     UriBase64Renderer uriBase64Renderer
 
-    NamespacedKubernetesClient client
+    NamespacedKubernetesClient k8sclient
 
     void createClient() {
         Backup service = service
         K8sClusterHost host = service.cluster
         try  {
             def config = buildConfig host.url, host.credentials
-            this.client = new AutoAdaptableKubernetesClient(config)
+            this.k8sclient = new AutoAdaptableKubernetesClient(config)
             log.createdClient host.url
         } catch (Exception e) {
             throw new CreateClientException(this, e)
@@ -60,7 +66,7 @@ class Deployment {
         Backup service = service
         String namespace = service.service.namespace
         try  {
-            return client.extensions().deployments().inNamespace(namespace).withName(name)
+            return k8sclient.extensions().deployments().inNamespace(namespace).withName(name)
         } catch (Exception e) {
             throw new StartRsyncDeploymentException(this, namespace, name, e)
         }
@@ -77,7 +83,7 @@ class Deployment {
     Service createPublicService(HasMetadataOperation deploy) {
         String namespace = deploy.get().metadata.namespace
         String name = deploy.get().metadata.name
-        client.services().inNamespace(namespace).createNew()
+        k8sclient.services().inNamespace(namespace).createNew()
                 .withNewMetadata()
                 .withName("${name}-public")
                 .endMetadata()
@@ -96,7 +102,7 @@ class Deployment {
     def deleteService(Service service) {
         String namespace = service.metadata.namespace
         String name = service.metadata.name
-        client.services().inNamespace(namespace).withName(name).delete()
+        k8sclient.services().inNamespace(namespace).withName(name).delete()
         log.deleteService namespace, name
     }
 
@@ -120,6 +126,6 @@ class Deployment {
     def waitDeploy(HasMetadataOperation deploy, int replicas, boolean ready) {
         String namespace = deploy.get().metadata.namespace
         String name = deploy.get().metadata.name
-        client.pods().inNamespace(namespace).withLabel("app", name).list().getItems()
+        k8sclient.pods().inNamespace(namespace).withLabel("app", name).list().getItems()
     }
 }
