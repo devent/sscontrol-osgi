@@ -118,14 +118,15 @@ public class BackupImpl implements Backup {
      * destination dir: "/mnt/backup"
      * </pre>
      */
-    public void destination(Map<String, Object> args) {
+    public Destination destination(Map<String, Object> args) {
         Object v = args.get("dir");
-        Destination dest;
+        Destination dest = null;
         if (v != null) {
             dest = dirDestinationFactory.create(args);
             log.destinationSet(this, dest);
             this.destination = dest;
         }
+        return dest;
     }
 
     @Override
