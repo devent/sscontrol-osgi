@@ -17,9 +17,11 @@ package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Ssh;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.SshImpl.SshImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -41,6 +43,8 @@ public class BackupModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Destination.class, DirDestinationImpl.class)
                 .build(DirDestinationImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Ssh.class, SshImpl.class)
+                .build(SshImplFactory.class));
     }
 
 }

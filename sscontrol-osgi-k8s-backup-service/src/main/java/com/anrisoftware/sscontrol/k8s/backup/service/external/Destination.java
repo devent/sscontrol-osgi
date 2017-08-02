@@ -24,4 +24,6 @@ package com.anrisoftware.sscontrol.k8s.backup.service.external;
 public interface Destination {
 
     String getType();
+
+    Ssh getSsh();
 }

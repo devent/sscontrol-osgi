@@ -15,26 +15,22 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.core.resources.ToURI;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Ssh;
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.SshImpl.SshImplFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Local directory backup destination.
+ * Ssh client.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class DirDestinationImpl implements Destination {
+public class SshImpl implements Ssh {
 
     /**
      *
@@ -42,50 +38,26 @@ public class DirDestinationImpl implements Destination {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface DirDestinationImplFactory {
+    public interface SshImplFactory {
 
-        Destination create(Map<String, Object> args);
+        Ssh create(Map<String, Object> args);
 
     }
 
-    private URI dest;
+    private String config;
 
     @Inject
-    private DirDestinationImplLogger log;
-
-    @Inject
-    private transient SshImplFactory sshFactory;
-
-    private Ssh ssh;
-
-    @Inject
-    DirDestinationImpl(@Assisted Map<String, Object> args) {
+    SshImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
     }
 
-    public Ssh ssh(Map<String, Object> args) {
-        Ssh ssh = sshFactory.create(args);
-        log.sshSet(this, ssh);
-        this.ssh = ssh;
-        return ssh;
+    public void setConfig(String config) {
+        this.config = config;
     }
 
     @Override
-    public String getType() {
-        return "dir";
-    }
-
-    public void setDest(URI dest) {
-        this.dest = dest;
-    }
-
-    public URI getDest() {
-        return dest;
-    }
-
-    @Override
-    public Ssh getSsh() {
-        return ssh;
+    public String getConfig() {
+        return config;
     }
 
     @Override
@@ -94,13 +66,13 @@ public class DirDestinationImpl implements Destination {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        parseName(args);
+        parseConfig(args);
     }
 
-    private void parseName(Map<String, Object> args) {
-        Object v = args.get("dir");
+    private void parseConfig(Map<String, Object> args) {
+        Object v = args.get("config");
         if (v != null) {
-            setDest(ToURI.toURI(v).convert());
+            setConfig(v.toString());
         }
     }
 
