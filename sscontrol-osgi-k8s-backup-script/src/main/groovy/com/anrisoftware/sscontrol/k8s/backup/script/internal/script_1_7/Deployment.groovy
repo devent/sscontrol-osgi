@@ -37,6 +37,9 @@ class Deployment {
     Backup service
 
     @Inject
+    DeploymentLogger log
+
+    @Inject
     UriBase64Renderer uriBase64Renderer
 
     NamespacedKubernetesClient client
@@ -47,6 +50,7 @@ class Deployment {
         try  {
             def config = buildConfig host.url, host.credentials
             this.client = new AutoAdaptableKubernetesClient(config)
+            log.createdClient host.url
         } catch (Exception e) {
             throw new CreateClientException(this, e)
         }
@@ -67,6 +71,7 @@ class Deployment {
         if (replicas > 0) {
             deploy.waitUntilReady 15, TimeUnit.MINUTES
         }
+        log.scaledDeployment deploy, replicas
     }
 
     Service createPublicService(HasMetadataOperation deploy) {
@@ -85,12 +90,14 @@ class Deployment {
                 .endPort()
                 .endSpec()
                 .done()
+        log.createPublicService namespace, name
     }
 
     def deleteService(Service service) {
         String namespace = service.metadata.namespace
         String name = service.metadata.name
         client.services().inNamespace(namespace).withName(name).delete()
+        log.deleteService namespace, name
     }
 
     def buildConfig(URI hostUrl, Credentials credentials) {
