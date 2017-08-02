@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinat
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Ssh;
+import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 
 /**
  * Logging for {@link BackupImpl}.
@@ -54,7 +54,7 @@ final class DirDestinationImplLogger extends AbstractLogger {
         super(BackupImpl.class);
     }
 
-    void sshSet(DirDestinationImpl dest, Ssh ssh) {
+    void sshSet(DirDestinationImpl dest, Client ssh) {
         debug(sshSet, ssh, dest);
     }
 }

@@ -77,15 +77,15 @@ class BackupServiceTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "dest_dir_config"() {
+    void "dest_dir_client"() {
         def test = [
-            name: 'dest_dir_config',
+            name: 'dest_dir_client',
             script: '''
 service "k8s-cluster"
 service "backup" with {
     service namespace: "wordpress", name: "db"
-    destination dir: "/mnt/backup" with {
-        ssh config: """
+    destination dir: "/mnt/backup"
+    client key: "id_rsa", config: """
 Host node
 Match User rsync
 Port 32420
@@ -93,7 +93,6 @@ User rsync
 IdentityFile rsyncssh_id_rsa
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
-    }
 }
 ''',
             scriptVars: [:],
@@ -105,7 +104,8 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert s.cluster.host == 'localhost'
                 assert s.service.name == 'db'
                 assert s.destination.dest.toString() == 'file:/mnt/backup'
-                assert s.destination.ssh.config =~ 'Host node'
+                assert s.client.config =~ 'Host node'
+                assert s.client.key.toString() == 'file:id_rsa'
             },
         ]
         doTest test
