@@ -1,4 +1,17 @@
 rsyncCmd(parent, vars) ::= <<
+set -e
 
+rsync_options=
+
+<if(vars.config)>
+config=$(mktemp)
+cat \<\<"EOF" > $config
+<vars.config>
+EOF
+
+rsync_options="-e 'ssh -F $config'"
+<endif>
+
+rsync -e 'ssh -F /tmp/config' -r -v -z <vars.source> .
 
 >>
