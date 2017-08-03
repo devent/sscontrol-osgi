@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7;
 
 import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory;
+import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.RsyncClient.RsyncClientFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -36,6 +37,9 @@ public class Backup_1_7_Module extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Deployment.class, Deployment.class)
                 .build(DeploymentFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(RsyncClient.class, RsyncClient.class)
+                .build(RsyncClientFactory.class));
     }
 
 }

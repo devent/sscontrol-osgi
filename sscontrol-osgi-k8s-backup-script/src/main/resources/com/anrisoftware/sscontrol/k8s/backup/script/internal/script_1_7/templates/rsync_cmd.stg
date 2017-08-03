@@ -1,17 +1,16 @@
 rsyncCmd(parent, vars) ::= <<
 set -e
 
-rsync_options=
-
 <if(vars.config)>
 config=$(mktemp)
-cat \<\<"EOF" > $config
+trap "{ rm -f $config; }" EXIT
+
+cat \<\<EOF > $config
+Host *
 <vars.config>
 EOF
-
-rsync_options="-e 'ssh -F $config'"
 <endif>
 
-rsync -e 'ssh -F /tmp/config' -r -v -z <vars.source> .
+rsync <if(vars.config)>-e "ssh -o StrictHostKeyChecking=no -F $config"<endif> -r -v -z <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
 
 >>

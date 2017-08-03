@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.*
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.RsyncClient.RsyncClientFactory
@@ -51,13 +50,6 @@ class Backup_1_7 extends ScriptBase {
 
     RsyncClient client
 
-    def templates
-
-    @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        this.templates = templatesFactory.create('MonitoringClusterHeapsterInfluxdbGrafana_1_5_Templates')
-    }
-
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
         this.deployment = factory.create(service)
@@ -65,7 +57,7 @@ class Backup_1_7 extends ScriptBase {
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
-        this.client = factory.create(service)
+        this.client = factory.create(this, service)
     }
 
     @Override
@@ -85,7 +77,7 @@ class Backup_1_7 extends ScriptBase {
             println rsyncPort
             try {
                 //    scaleDeployment serviceDeploy, 0
-                client.start()
+                client.start(port: rsyncPort)
             } finally {
                 deleteService rsyncService
                 scaleDeployment serviceDeploy, oldScale
