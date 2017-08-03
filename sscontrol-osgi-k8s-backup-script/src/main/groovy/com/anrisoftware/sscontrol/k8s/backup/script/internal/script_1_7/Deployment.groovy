@@ -83,7 +83,7 @@ class Deployment {
     Service createPublicService(HasMetadataOperation deploy) {
         String namespace = deploy.get().metadata.namespace
         String name = deploy.get().metadata.name
-        k8sclient.services().inNamespace(namespace).createNew()
+        def service = k8sclient.services().inNamespace(namespace).createNew()
                 .withNewMetadata()
                 .withName("${name}-public")
                 .endMetadata()
@@ -97,6 +97,7 @@ class Deployment {
                 .endSpec()
                 .done()
         log.createPublicService namespace, name
+        return service
     }
 
     def deleteService(Service service) {

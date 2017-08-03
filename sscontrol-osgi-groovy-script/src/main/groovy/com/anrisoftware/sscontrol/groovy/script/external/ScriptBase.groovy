@@ -30,7 +30,6 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
-import org.stringtemplate.v4.ST
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormat
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -263,6 +262,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * Shell command.
+     * <pre>
+     * shell resource: template, name: "rsyncCmd", vars: [:] call()
+     * shell st: "&lt;vars.patterns:{p|find &lt;p&gt;};separator="\n"&gt;", vars: [patterns: ["*.yaml", "*.json"]] call()
+     * </pre>
      */
     Shell shell(Map args) {
         def a = setupArgs(args, 'shell')
