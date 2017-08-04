@@ -47,7 +47,7 @@ class RsyncClient {
     void start(Map args) {
         def vars = [:]
         vars.rsync = [:]
-        vars.rsync.user = "rsync"
+        vars.rsync.user = "root"
         vars.rsync.host = service.cluster.cluster.target.host
         vars.rsync.port = args.port
         vars.rsync.key = script.createTmpFile()
