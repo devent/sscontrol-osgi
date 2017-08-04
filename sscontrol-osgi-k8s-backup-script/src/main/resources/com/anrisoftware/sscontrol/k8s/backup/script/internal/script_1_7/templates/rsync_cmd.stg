@@ -1,15 +1,32 @@
+/*
+ * Mandatory:
+ *
+ * vars.rsync.host
+ * vars.rsync.user
+ * vars.rsync.port
+ * vars.rsync.key
+ * vars.path
+ *
+ * Optional:
+ *
+ * vars.config
+ */
 rsyncCmd(parent, vars) ::= <<
 set -e
 
-<if(vars.config)>
 config=$(mktemp)
 trap "{ rm -f $config; }" EXIT
 
 cat \<\<EOF > $config
-Host *
+Host <vars.rsync.host>
+Match User <vars.rsync.user>
+Port <vars.rsync.port>
+IdentityFile <vars.rsync.key>
+<if(vars.proxy)>
+<if(vars.proxy.socket)>ProxyCommand ssh -o ControlMaster=auto -o ControlPath=<vars.proxy.socket> <vars.proxy.user>@%h nc %h %p<endif>
+<endif>
 <vars.config>
 EOF
-<endif>
 
 rsync <if(vars.config)>-e "ssh -o StrictHostKeyChecking=no -F $config"<endif> -r -v -z <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
 
