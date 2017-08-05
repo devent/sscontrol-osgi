@@ -50,7 +50,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -58,7 +58,7 @@ import com.google.inject.assistedinject.Assisted;
 public class DownloadCopyWorker implements Copy {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -110,7 +110,7 @@ public class DownloadCopyWorker implements Copy {
         try {
             cmdTemplate.invalidate();
             Map<String, Object> a = new HashMap<>(args);
-            a.put("tmp", linuxPropertiesProvider.getRemoteTempDir());
+            a.put("remoteTmp", linuxPropertiesProvider.getRemoteTempDir(args));
             a.put("withSudo", a.get("privileged"));
             a.put("privileged", null);
             String command = cmdTemplate.getText("downloadCmd", "args", a);

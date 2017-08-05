@@ -18,7 +18,10 @@
  */
 package com.anrisoftware.sscontrol.command.shell.internal.copy;
 
+import static com.anrisoftware.sscontrol.command.copy.external.Copy.REMOTE_TMP_ARGS;
+
 import java.net.URL;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -41,8 +44,13 @@ public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
         super(LinuxPropertiesProvider.class, res);
     }
 
-    public String getRemoteTempDir() {
-        return get().getProperty("remote_temp_directory");
+    public String getRemoteTempDir(Map<String, Object> args) {
+        Object v = args.get(REMOTE_TMP_ARGS);
+        if (v != null) {
+            return v.toString();
+        } else {
+            return get().getProperty("remote_temp_directory");
+        }
     }
 
 }

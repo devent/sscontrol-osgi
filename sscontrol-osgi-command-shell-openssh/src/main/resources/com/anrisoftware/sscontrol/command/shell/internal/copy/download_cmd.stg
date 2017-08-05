@@ -12,7 +12,7 @@ function checkSigFile() {
 
 function downloadCheckFile() {
     <setupRemoteTmp(args)>
-    cd '<args.tmp>'
+    cd '<args.remoteTmp>'
     downloadFile
     <if(args.hash)>checkHashFile<endif>
     <if(args.sig)>checkSigFile<endif>
@@ -45,9 +45,9 @@ fi
 >>
 
 setupRemoteTmp(args) ::= <<
-sudo mkdir -p '<args.tmp>'
-sudo chown $SSH_USER '<args.tmp>'
-sudo chmod o-rwx '<args.tmp>'
+sudo mkdir -p '<args.remoteTmp>'
+sudo chown $SSH_USER '<args.remoteTmp>'
+sudo chmod o-rwx '<args.remoteTmp>'
 >>
 
 downloadFile(args, name, src) ::= <<
@@ -59,7 +59,7 @@ fi
 >>
 
 copyFile(args) ::= <<
-cd '<args.tmp>'
+cd '<args.remoteTmp>'
 <if(args.withSudo)>
 sudo mv "$SRC_NAME" "<args.dest>"
 <else>

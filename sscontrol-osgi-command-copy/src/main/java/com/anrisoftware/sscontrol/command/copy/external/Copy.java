@@ -53,6 +53,8 @@ public interface Copy {
 
     static final String SIG_REMOTE_ARGS = "sigRemote";
 
+    static final String REMOTE_TMP_ARGS = "remoteTmp";
+
     /**
      * Factory to create the copy command.
      *
@@ -68,7 +70,7 @@ public interface Copy {
 
     /**
      * Executes the copy command.
-     * 
+     *
      * @throws AppException
      */
     ProcessTask call() throws AppException;

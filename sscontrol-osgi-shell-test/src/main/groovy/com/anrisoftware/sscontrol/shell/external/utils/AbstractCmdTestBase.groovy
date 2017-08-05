@@ -56,6 +56,7 @@ abstract class AbstractCmdTestBase {
         test.args["sudoEnv"] = [:]
         test.args["sudoEnv"]["PATH"] = "./"
         test.args["sudoChdir"] = tmp
+        test.args["remoteTmp"] = tmp
         def host = SshFactory.localhost(injector).hosts[0]
         def parent = this
         def cmd = createCmd test, tmp, k
