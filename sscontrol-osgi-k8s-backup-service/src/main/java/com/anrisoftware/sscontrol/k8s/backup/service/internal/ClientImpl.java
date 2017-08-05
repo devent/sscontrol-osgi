@@ -50,6 +50,8 @@ public class ClientImpl implements Client {
 
     private String config;
 
+    private Boolean proxy;
+
     @Inject
     ClientImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
@@ -73,6 +75,15 @@ public class ClientImpl implements Client {
         return config;
     }
 
+    public void setProxy(Boolean proxy) {
+        this.proxy = proxy;
+    }
+
+    @Override
+    public Boolean getProxy() {
+        return proxy;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -81,6 +92,17 @@ public class ClientImpl implements Client {
     private void parseArgs(Map<String, Object> args) {
         parseConfig(args);
         parseKey(args);
+        parseProxy(args);
+    }
+
+    private void parseProxy(Map<String, Object> args) {
+        Object v = args.get("proxy");
+        if (v != null) {
+            if (v instanceof Boolean) {
+                Boolean b = (Boolean) v;
+                setProxy(b);
+            }
+        }
     }
 
     private void parseConfig(Map<String, Object> args) {

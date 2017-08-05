@@ -19,4 +19,6 @@ public interface Client {
      * Returns the client configuration.
      */
     String getConfig();
+
+    Boolean getProxy();
 }

@@ -10,6 +10,8 @@
  * Optional:
  *
  * vars.config
+ * vars.proxy
+ * vars.proxy.socket
  */
 rsyncCmd(parent, vars) ::= <<
 set -e
@@ -28,6 +30,10 @@ IdentityFile <vars.rsync.key>
 <vars.config>
 EOF
 
-rsync <if(vars.config)>-e "ssh -o StrictHostKeyChecking=no -F $config"<endif> -r -v -z <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
+rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
 
 >>
+
+sshCommand(parent, vars) ::= <%
+-e "ssh -o StrictHostKeyChecking=no -F $config"
+%>
