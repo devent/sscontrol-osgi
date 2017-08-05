@@ -39,9 +39,9 @@ final class DeploymentLogger extends AbstractLogger {
 
         scaledDeployment("Deployment scaled to {}: {}"),
 
-        createPublicService("Public service {}-{} created."),
+        createPublicService("Public service {}/{} created."),
 
-        deleteService("Service {}-{} deleted.");
+        deleteService("Service {}/{} deleted.");
 
         private String name;
 

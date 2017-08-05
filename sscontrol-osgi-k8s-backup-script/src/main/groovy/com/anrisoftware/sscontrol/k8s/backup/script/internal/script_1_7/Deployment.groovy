@@ -5,7 +5,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.CreateClientException
-import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.StartRsyncDeploymentException
+import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.GetDeploymentsException
+import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.GetServicesException
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.tls.external.Tls
@@ -68,7 +69,15 @@ class Deployment {
         try  {
             return k8sclient.extensions().deployments().inNamespace(namespace).withName(name)
         } catch (Exception e) {
-            throw new StartRsyncDeploymentException(this, namespace, name, e)
+            throw new GetDeploymentsException(this, namespace, name, e)
+        }
+    }
+
+    def getService(String namespace, String name) {
+        try  {
+            return k8sclient.services().inNamespace(namespace).withName(name)
+        } catch (Exception e) {
+            throw new GetServicesException(this, namespace, name, e)
         }
     }
 
@@ -83,9 +92,14 @@ class Deployment {
     Service createPublicService(HasMetadataOperation deploy) {
         String namespace = deploy.get().metadata.namespace
         String name = deploy.get().metadata.name
-        def service = k8sclient.services().inNamespace(namespace).createNew()
+        String serviceName = "${name}-public"
+        def service = getService namespace, serviceName get()
+        if (service != null) {
+            return service
+        }
+        service = k8sclient.services().inNamespace(namespace).createNew()
                 .withNewMetadata()
-                .withName("${name}-public")
+                .withName(serviceName)
                 .endMetadata()
                 .withNewSpec()
                 .withSelector([app: name])
@@ -96,7 +110,7 @@ class Deployment {
                 .endPort()
                 .endSpec()
                 .done()
-        log.createPublicService namespace, name
+        log.createPublicService namespace, serviceName
         return service
     }
 

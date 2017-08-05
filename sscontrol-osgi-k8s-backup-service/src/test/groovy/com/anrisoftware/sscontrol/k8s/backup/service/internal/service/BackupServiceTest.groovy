@@ -86,11 +86,6 @@ service "backup" with {
     service namespace: "wordpress", name: "db"
     destination dir: "/mnt/backup"
     client key: "id_rsa", config: """
-Host node
-Match User rsync
-Port 32420
-User rsync
-IdentityFile rsyncssh_id_rsa
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
 }
@@ -104,8 +99,36 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert s.cluster.host == 'localhost'
                 assert s.service.name == 'db'
                 assert s.destination.dest.toString() == 'file:/mnt/backup'
-                assert s.client.config =~ 'Host node'
+                assert s.client.config =~ 'ProxyCommand'
                 assert s.client.key.toString() == 'file:id_rsa'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "dest_dir_proxy"() {
+        def test = [
+            name: 'dest_dir_proxy',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    service namespace: "wordpress", name: "db"
+    destination dir: "/mnt/backup"
+    client key: "id_rsa", proxy: true
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.service.namespace == 'wordpress'
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.service.name == 'db'
+                assert s.destination.dest.toString() == 'file:/mnt/backup'
+                assert s.client.key.toString() == 'file:id_rsa'
+                assert s.client.proxy == true
             },
         ]
         doTest test

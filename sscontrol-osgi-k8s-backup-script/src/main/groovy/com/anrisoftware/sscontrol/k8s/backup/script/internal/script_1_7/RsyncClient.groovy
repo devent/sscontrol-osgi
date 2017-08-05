@@ -48,11 +48,12 @@ class RsyncClient {
         def vars = [:]
         vars.rsync = [:]
         vars.rsync.user = "root"
-        vars.rsync.host = service.cluster.cluster.target.host
+        vars.rsync.host = service.cluster.host
         vars.rsync.port = args.port
         vars.rsync.key = script.createTmpFile()
         vars.config = parseConfig service.client.config, vars.rsync
         vars.path = "/data"
+        vars.proxy = getProxy()
         script.copyResource src: service.client.key, dest: vars.rsync.key
         try {
             script.shell resource: rsyncCmd, name: "rsyncCmd", vars: vars call()
@@ -62,6 +63,21 @@ class RsyncClient {
     }
 
     String parseConfig(String str, Map rsync) {
+        if (!service.client.config) {
+            return null
+        }
         new ST(str).add("rsync", rsync).render()
+    }
+
+    Map getProxy() {
+        if (!service.client.proxy) {
+            return null
+        }
+        def proxy = [:]
+        proxy.user = service.cluster.cluster.target.user
+        if (service.cluster.cluster.target.socket) {
+            proxy.socket = service.cluster.cluster.target.socket
+        }
+        return proxy
     }
 }
