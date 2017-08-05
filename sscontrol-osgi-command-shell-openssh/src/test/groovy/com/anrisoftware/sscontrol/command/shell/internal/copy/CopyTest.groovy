@@ -31,12 +31,12 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.command.copy.external.Copy.CopyFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -296,10 +296,7 @@ class CopyTest extends AbstractCmdTestBase {
             'md5sum',
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     @Test
@@ -322,10 +319,7 @@ class CopyTest extends AbstractCmdTestBase {
             'sha1sum',
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     @Test
@@ -348,10 +342,7 @@ class CopyTest extends AbstractCmdTestBase {
             'sha1sum',
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     @Test
@@ -374,10 +365,7 @@ class CopyTest extends AbstractCmdTestBase {
             'sha256sum',
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     @Test
@@ -405,10 +393,7 @@ class CopyTest extends AbstractCmdTestBase {
             'gpg', //
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     @Test
@@ -437,10 +422,7 @@ class CopyTest extends AbstractCmdTestBase {
             'gpg', //
         ]
         test.host = SshFactory.localhost(injector).hosts[0]
-        try {
-            doTest test, tmp
-        } catch (InvalidExitCodeException) {
-        }
+        doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {

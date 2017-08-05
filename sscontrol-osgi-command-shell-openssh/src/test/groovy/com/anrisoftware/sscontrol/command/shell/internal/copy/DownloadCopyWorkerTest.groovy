@@ -30,14 +30,13 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.DownloadCopyWorker.DownloadCopyWorkerFactory
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j

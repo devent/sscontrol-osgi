@@ -30,18 +30,16 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.sscontrol.command.shell.internal.replace.ParseSedSyntax
-import com.anrisoftware.sscontrol.command.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.command.replace.external.Replace.ReplaceFactory
-import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.command.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.command.shell.internal.replace.ParseSedSyntax.ParseSedSyntaxFactory
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.google.inject.Module
 
 import groovy.util.logging.Slf4j
@@ -65,15 +63,6 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
-
-    static Map expectedResources = [
-        args_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_search_replace_scp_expected.txt'),
-        args_privileged_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_scp_expected.txt'),
-        args_privileged_dest_search_replace_sudo: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_sudo_expected.txt'),
-        args_privileged_dest_search_replace_cp: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_cp_expected.txt'),
-        args_privileged_dest_search_replace_rm: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_rm_expected.txt'),
-        args_dest_sed_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_sed_replace_scp_expected.txt'),
-    ]
 
     @Test
     void "args_dest_search_replace"() {

@@ -1,4 +1,4 @@
-mkdir -p /var/lib/robobee/tmp
-chown ./id -u /var/lib/robobee/tmp
-chmod o-rwx /var/lib/robobee/tmp
+mkdir -p /tmp/junit/junit
+chown ./id -u /tmp/junit/junit
+chmod o-rwx /tmp/junit/junit
 mv ./basename http://server.com/aaa.txt /tmp
