@@ -56,7 +56,7 @@ class RsyncClient {
         vars.proxy = getProxy()
         script.copyResource src: service.client.key, dest: vars.rsync.key
         try {
-            script.shell resource: rsyncCmd, name: "rsyncCmd", vars: vars call()
+            script.shell timeout: service.client.timeout, resource: rsyncCmd, name: "rsyncCmd", vars: vars call()
         } finally {
             script.deleteTmpFile vars.rsync.key
         }

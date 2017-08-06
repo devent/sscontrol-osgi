@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.k8s.backup.service.external;
 
 import java.net.URI;
 
+import org.joda.time.Duration;
+
 /**
  * Backup client.
  *
@@ -21,4 +23,9 @@ public interface Client {
     String getConfig();
 
     Boolean getProxy();
+
+    /**
+     * Returns the backup timeout duration.
+     */
+    Duration getTimeout();
 }
