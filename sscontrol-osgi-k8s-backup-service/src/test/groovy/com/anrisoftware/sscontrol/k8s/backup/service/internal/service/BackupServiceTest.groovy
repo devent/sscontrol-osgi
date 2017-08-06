@@ -19,11 +19,14 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatModule
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
@@ -134,6 +137,50 @@ service "backup" with {
         doTest test
     }
 
+    @Test
+    void "timeout_duration"() {
+        def test = [
+            name: 'timeout_duration',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    client timeout: "PT1H"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.client.timeout == Duration.standardMinutes(60)
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "timeout_simple"() {
+        def test = [
+            name: 'timeout_simple',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    client timeout: "1h"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.client.timeout == Duration.standardMinutes(60)
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
@@ -169,6 +216,8 @@ service "backup" with {
                 new TlsModule(),
                 new RobobeeScriptModule(),
                 new SystemNameMappingsModule(),
+                new DurationFormatModule(),
+                new DurationSimpleFormatModule(),
                 new AbstractModule() {
 
                     @Override

@@ -62,6 +62,8 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
 
     static final String localhostSocket = "/tmp/${System.getProperty('user.name')}@localhost:22"
 
+    static final String robobeeLocalhostSocket = "/tmp/robobee@localhost:22"
+
     /**
      * Checks if #localhostSocket is available.
      */

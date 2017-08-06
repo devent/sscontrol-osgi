@@ -62,6 +62,7 @@ class Backup_1_7 extends ScriptBase {
 
     @Override
     def run() {
+        setupDefaults()
         Backup service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
@@ -74,15 +75,21 @@ class Backup_1_7 extends ScriptBase {
             scaleDeployment rsyncDeploy, 1
             def rsyncService = createPublicService rsyncDeploy
             def rsyncPort = rsyncService.spec.ports[0].nodePort
-            println rsyncPort
             try {
-                //    scaleDeployment serviceDeploy, 0
+                //scaleDeployment serviceDeploy, 0
                 client.start(port: rsyncPort)
             } finally {
                 deleteService rsyncService
                 scaleDeployment serviceDeploy, oldScale
                 scaleDeployment rsyncDeploy, 0
             }
+        }
+    }
+
+    def setupDefaults() {
+        Backup service = service
+        if (!service.client.timeout) {
+            service.client.timeout = timeoutLong
         }
     }
 

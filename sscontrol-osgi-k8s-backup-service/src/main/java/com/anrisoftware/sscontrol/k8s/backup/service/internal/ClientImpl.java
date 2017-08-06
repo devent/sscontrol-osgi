@@ -16,12 +16,17 @@
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.Duration;
 
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatFactory;
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatFactory;
+import com.anrisoftware.globalpom.core.durationsimpleformat.UnitMultiplier;
 import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 import com.google.inject.assistedinject.Assisted;
@@ -52,8 +57,18 @@ public class ClientImpl implements Client {
 
     private Boolean proxy;
 
+    private Duration timeout;
+
+    private transient DurationSimpleFormatFactory durationSimpleFormatFactory;
+
+    private transient DurationFormatFactory durationFormatFactory;
+
     @Inject
-    ClientImpl(@Assisted Map<String, Object> args) {
+    ClientImpl(@Assisted Map<String, Object> args,
+            DurationSimpleFormatFactory durationSimpleFormatFactory,
+            DurationFormatFactory durationFormatFactory) throws ParseException {
+        this.durationSimpleFormatFactory = durationSimpleFormatFactory;
+        this.durationFormatFactory = durationFormatFactory;
         parseArgs(args);
     }
 
@@ -84,15 +99,51 @@ public class ClientImpl implements Client {
         return proxy;
     }
 
+    public void setTimeout(Duration timeout) {
+        this.timeout = timeout;
+    }
+
+    @Override
+    public Duration getTimeout() {
+        return timeout;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    private void parseArgs(Map<String, Object> args) {
+    private void parseArgs(Map<String, Object> args) throws ParseException {
         parseConfig(args);
         parseKey(args);
         parseProxy(args);
+        parseTimeout(args);
+    }
+
+    private void parseTimeout(Map<String, Object> args) throws ParseException {
+        Object v = args.get("timeout");
+        if (v != null) {
+            if (v instanceof Duration) {
+                setTimeout((Duration) v);
+            } else {
+                try {
+                    parseSimpleTimeout(v.toString());
+                } catch (ParseException e) {
+                    parseDurationTimeout(v.toString());
+                }
+            }
+        }
+    }
+
+    private void parseDurationTimeout(String s) throws ParseException {
+        Duration duration = durationFormatFactory.create().parse(s);
+        setTimeout(duration);
+    }
+
+    private void parseSimpleTimeout(String s) throws ParseException {
+        long seconds = durationSimpleFormatFactory.create().parse(s,
+                UnitMultiplier.SECONDS);
+        setTimeout(Duration.standardSeconds(seconds));
     }
 
     private void parseProxy(Map<String, Object> args) {
