@@ -6,6 +6,7 @@
  * vars.rsync.port
  * vars.rsync.key
  * vars.path
+ * vars.dir
  *
  * Optional:
  *
@@ -30,7 +31,9 @@ IdentityFile <vars.rsync.key>
 <vars.config>
 EOF
 
-rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
+mkdir -p "<vars.dir>"
+cd "<vars.dir>"
+rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.arguments> <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
 
 >>
 
