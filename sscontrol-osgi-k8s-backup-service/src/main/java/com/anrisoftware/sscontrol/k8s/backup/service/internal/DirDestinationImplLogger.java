@@ -15,15 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
-import static com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImplLogger.m.sshSet;
+import java.io.File;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
 
 /**
- * Logging for {@link BackupImpl}.
+ * Logging for {@link DirDestinationImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
@@ -33,7 +32,9 @@ final class DirDestinationImplLogger extends AbstractLogger {
 
     enum m {
 
-        sshSet("Ssh {} set for {}");
+        destSet("Directory {} set for {}"),
+
+        argumentsSet("Arguments {} set for {}");
 
         private String name;
 
@@ -48,13 +49,17 @@ final class DirDestinationImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link BackupImpl}.
+     * Sets the context of the logger to {@link DirDestinationImpl}.
      */
     DirDestinationImplLogger() {
-        super(BackupImpl.class);
+        super(DirDestinationImpl.class);
     }
 
-    void sshSet(DirDestinationImpl dest, Client ssh) {
-        debug(sshSet, ssh, dest);
+    void dirSet(DirDestinationImpl dest, File dir) {
+        debug(m.destSet, dir, dest);
+    }
+
+    void argumentsSet(DirDestinationImpl dest, String arguments) {
+        debug(m.argumentsSet, arguments, dest);
     }
 }

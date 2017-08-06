@@ -15,17 +15,14 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
-import java.net.URI;
+import java.io.File;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -48,26 +45,17 @@ public class DirDestinationImpl implements Destination {
 
     }
 
-    private URI dest;
+    private transient DirDestinationImplLogger log;
+
+    private File dir;
+
+    private String arguments;
 
     @Inject
-    private DirDestinationImplLogger log;
-
-    @Inject
-    private transient ClientImplFactory sshFactory;
-
-    private Client ssh;
-
-    @Inject
-    DirDestinationImpl(@Assisted Map<String, Object> args) {
+    DirDestinationImpl(@Assisted Map<String, Object> args,
+            DirDestinationImplLogger log) {
+        this.log = log;
         parseArgs(args);
-    }
-
-    public Client ssh(Map<String, Object> args) {
-        Client ssh = sshFactory.create(args);
-        log.sshSet(this, ssh);
-        this.ssh = ssh;
-        return ssh;
     }
 
     @Override
@@ -75,17 +63,22 @@ public class DirDestinationImpl implements Destination {
         return "dir";
     }
 
-    public void setDest(URI dest) {
-        this.dest = dest;
+    public void setDir(File dir) {
+        this.dir = dir;
+        log.dirSet(this, dir);
     }
 
-    public URI getDest() {
-        return dest;
+    public File getDir() {
+        return dir;
     }
 
-    @Override
-    public Client getSsh() {
-        return ssh;
+    public void setArguments(String arguments) {
+        this.arguments = arguments;
+        log.argumentsSet(this, arguments);
+    }
+
+    public String getArguments() {
+        return arguments;
     }
 
     @Override
@@ -95,12 +88,20 @@ public class DirDestinationImpl implements Destination {
 
     private void parseArgs(Map<String, Object> args) {
         parseName(args);
+        parseArguments(args);
+    }
+
+    private void parseArguments(Map<String, Object> args) {
+        Object v = args.get("arguments");
+        if (v != null) {
+            setArguments(v.toString());
+        }
     }
 
     private void parseName(Map<String, Object> args) {
         Object v = args.get("dir");
         if (v != null) {
-            setDest(ToURI.toURI(v).convert());
+            setDir(new File(v.toString()));
         }
     }
 

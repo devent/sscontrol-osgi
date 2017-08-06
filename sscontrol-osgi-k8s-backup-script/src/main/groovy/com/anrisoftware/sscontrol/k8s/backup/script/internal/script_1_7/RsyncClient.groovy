@@ -51,12 +51,19 @@ class RsyncClient {
         vars.rsync.host = service.cluster.host
         vars.rsync.port = args.port
         vars.rsync.key = script.createTmpFile()
+        vars.rsync.arguments = service.destination.arguments
         vars.config = parseConfig service.client.config, vars.rsync
         vars.path = "/data"
         vars.proxy = getProxy()
+        vars.dir = service.destination.dir
         script.copyResource src: service.client.key, dest: vars.rsync.key
         try {
-            script.shell timeout: service.client.timeout, resource: rsyncCmd, name: "rsyncCmd", vars: vars call()
+            def a = [:]
+            a.timeout = service.client.timeout
+            a.resource = rsyncCmd
+            a.name = "rsyncCmd"
+            a.vars = vars
+            script.shell a call()
         } finally {
             script.deleteTmpFile vars.rsync.key
         }
