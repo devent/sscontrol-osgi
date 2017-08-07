@@ -84,7 +84,12 @@ class Deployment {
     def scaleDeployment(HasMetadataOperation deploy, int replicas) {
         deploy.scale replicas, true
         if (replicas > 0) {
-            deploy.waitUntilReady 15, TimeUnit.MINUTES
+            try {
+                deploy.waitUntilReady 15, TimeUnit.MINUTES
+            } catch (e) {
+                scaleDeployment deploy, 0
+                throw e
+            }
         }
         log.scaledDeployment deploy, replicas
     }
