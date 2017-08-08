@@ -1,12 +1,16 @@
 package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
 
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.CreateClientException
 import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.GetDeploymentsException
 import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.GetServicesException
+import com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7.WaitScalingZeroTimeoutException
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.tls.external.Tls
@@ -84,14 +88,42 @@ class Deployment {
     def scaleDeployment(HasMetadataOperation deploy, int replicas) {
         deploy.scale replicas, true
         if (replicas > 0) {
-            try {
-                deploy.waitUntilReady 15, TimeUnit.MINUTES
-            } catch (e) {
-                scaleDeployment deploy, 0
-                throw e
-            }
+            waitScaleUp deploy
+        } else {
+            waitScaleZero deploy
         }
         log.scaledDeployment deploy, replicas
+    }
+
+    def waitScaleUp(HasMetadataOperation deploy) {
+        try {
+            deploy.waitUntilReady 15, TimeUnit.MINUTES
+        } catch (e) {
+            scaleDeployment deploy, 0
+            throw e
+        }
+    }
+
+    def waitScaleZero(HasMetadataOperation deployOp) {
+        def deploy = deployOp.get()
+        def namespace = deploy.metadata.namespace
+        def name = deploy.metadata.name
+        def countDown = new CountDownLatch(1)
+        def waitTime = Duration.standardMinutes 5
+        Thread.start {
+            while (getPods(namespace, name).size() > 0) {
+                def pods = getPods(namespace, name)
+                Thread.sleep 1000
+            }
+            countDown.countDown()
+        }
+        if (!countDown.await(5, TimeUnit.MINUTES)) {
+            throw new WaitScalingZeroTimeoutException(deploy.metadata.namespace, deploy.metadata.name, waitTime)
+        }
+    }
+
+    def getPods(String namespace, String name) {
+        k8sclient.pods().inNamespace(namespace).withLabel("app", name).list().items
     }
 
     Service createPublicService(HasMetadataOperation deploy) {
