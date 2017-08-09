@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.service.external;
+package com.anrisoftware.sscontrol.k8s.restore.service.external;
+
+import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
- * Service for backup.
+ * Restore service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface Service {
-
-    /**
-     * Returns the namespace.
-     */
-    String getNamespace();
-
-    /**
-     * Returns the name.
-     */
-    String getName();
-
-    /**
-     * Returns the source for backup or <code>null</code>.
-     */
-    String getSource();
+public interface RestoreService extends HostServiceService {
 }

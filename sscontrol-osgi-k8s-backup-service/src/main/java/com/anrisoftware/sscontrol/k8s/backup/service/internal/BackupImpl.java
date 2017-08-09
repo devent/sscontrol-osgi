@@ -28,10 +28,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;

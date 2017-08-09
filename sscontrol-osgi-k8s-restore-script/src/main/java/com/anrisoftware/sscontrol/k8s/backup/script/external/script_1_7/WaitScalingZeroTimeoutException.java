@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.service.external;
+package com.anrisoftware.sscontrol.k8s.backup.script.external.script_1_7;
+
+import org.joda.time.Duration;
+
+import com.anrisoftware.sscontrol.types.app.external.AppException;
 
 /**
- * Backup destination.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Destination {
+@SuppressWarnings("serial")
+public class WaitScalingZeroTimeoutException extends AppException {
 
-    String getType();
-
+    public WaitScalingZeroTimeoutException(String namespace, String name,
+            Duration timeout) {
+        super("Scaling deployment to zero error");
+        addContextValue("namespace", namespace);
+        addContextValue("name", name);
+        addContextValue("timeout", timeout);
+    }
 }

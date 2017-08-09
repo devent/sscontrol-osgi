@@ -55,6 +55,7 @@
         <module>../sscontrol-osgi-icinga</module>
         <module>../sscontrol-osgi-icinga-icinga2-debian</module>
         <module>../sscontrol-osgi-icinga-icinga2-script</module>
+        <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
         <module>../sscontrol-osgi-k8s-base</module>
@@ -70,6 +71,8 @@
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-k8s-node-debian</module>
         <module>../sscontrol-osgi-k8s-node-upstream</module>
+        <module>../sscontrol-osgi-k8s-restore-script</module>
+        <module>../sscontrol-osgi-k8s-restore-service</module>
         <module>../sscontrol-osgi-registry-docker</module>
         <module>../sscontrol-osgi-registry-docker-linux</module>
         <module>../sscontrol-osgi-rkt</module>

@@ -25,9 +25,9 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 
 /**
