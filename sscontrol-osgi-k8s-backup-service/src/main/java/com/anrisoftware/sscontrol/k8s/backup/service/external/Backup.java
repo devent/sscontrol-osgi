@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.external;
 
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
 
 /**

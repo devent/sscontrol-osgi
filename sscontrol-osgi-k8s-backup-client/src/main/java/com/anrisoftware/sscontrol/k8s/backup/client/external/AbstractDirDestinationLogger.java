@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.service.internal;
+package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
 import java.io.File;
 
@@ -22,13 +22,13 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link DirDestinationImpl}.
+ * Logging for {@link AbstractDirDestination}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class DirDestinationImplLogger extends AbstractLogger {
+final public class AbstractDirDestinationLogger extends AbstractLogger {
 
     enum m {
 
@@ -49,17 +49,17 @@ final class DirDestinationImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link DirDestinationImpl}.
+     * Sets the context of the logger to {@link AbstractDirDestination}.
      */
-    DirDestinationImplLogger() {
-        super(DirDestinationImpl.class);
+    AbstractDirDestinationLogger() {
+        super(AbstractDirDestination.class);
     }
 
-    void dirSet(DirDestinationImpl dest, File dir) {
+    void dirSet(AbstractDirDestination dest, File dir) {
         debug(m.destSet, dir, dest);
     }
 
-    void argumentsSet(DirDestinationImpl dest, String arguments) {
+    void argumentsSet(AbstractDirDestination dest, String arguments) {
         debug(m.argumentsSet, arguments, dest);
     }
 }

@@ -13,34 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.service.external;
-
-import java.net.URI;
-
-import org.joda.time.Duration;
+package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
 /**
- * Backup client.
+ * Service for backup.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Client {
+public interface Service {
 
     /**
-     * Returns the private SSH key.
+     * Returns the namespace.
      */
-    URI getKey();
+    String getNamespace();
 
     /**
-     * Returns the client configuration.
+     * Returns the name.
      */
-    String getConfig();
-
-    Boolean getProxy();
+    String getName();
 
     /**
-     * Returns the backup timeout duration.
+     * Returns the source for backup or <code>null</code>.
      */
-    Duration getTimeout();
+    String getSource();
+
+    /**
+     * Returns the destination for restore or <code>null</code>.
+     */
+    String getDest();
 }

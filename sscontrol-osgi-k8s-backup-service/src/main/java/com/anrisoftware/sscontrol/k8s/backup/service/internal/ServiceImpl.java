@@ -15,16 +15,12 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractService;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -33,7 +29,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class ServiceImpl implements Service {
+public class ServiceImpl extends AbstractService {
 
     /**
      *
@@ -47,72 +43,10 @@ public class ServiceImpl implements Service {
 
     }
 
-    private String name;
-
-    private String namespace;
-
-    private String source;
-
     @Inject
     ServiceImpl(@Assisted Map<String, Object> args) {
-        parseArgs(args);
+        super(args);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-    @Override
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    @Override
-    public String getSource() {
-        return source;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    private void parseArgs(Map<String, Object> args) {
-        parseName(args);
-        parseNamespace(args);
-        parseSource(args);
-    }
-
-    private void parseSource(Map<String, Object> args) {
-        Object v = args.get("source");
-        if (v != null) {
-            setSource(v.toString());
-        }
-    }
-
-    private void parseName(Map<String, Object> args) {
-        Object v = args.get("name");
-        assertThat("name=null", v, notNullValue());
-        setName(v.toString());
-    }
-
-    private void parseNamespace(Map<String, Object> args) {
-        Object v = args.get("namespace");
-        assertThat("namespace=null", v, notNullValue());
-        setNamespace(v.toString());
-    }
 
 }

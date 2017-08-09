@@ -15,13 +15,13 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.service.internal;
 
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Destination;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Service;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
