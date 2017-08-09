@@ -110,6 +110,28 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
     }
 
     @Test
+    void "dest_service_source"() {
+        def test = [
+            name: 'dest_service_source',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    service namespace: "wordpress", name: "db", source: "/conf/config"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.service.namespace == 'wordpress'
+                assert s.service.name == 'db'
+                assert s.service.source == "/conf/config"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "dest_dir_proxy"() {
         def test = [
             name: 'dest_dir_proxy',

@@ -32,4 +32,9 @@ public interface Service {
      * Returns the name.
      */
     String getName();
+
+    /**
+     * Returns the source for backup or <code>null</code>.
+     */
+    String getSource();
 }
