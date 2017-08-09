@@ -51,6 +51,8 @@ public class ServiceImpl implements Service {
 
     private String namespace;
 
+    private String source;
+
     @Inject
     ServiceImpl(@Assisted Map<String, Object> args) {
         parseArgs(args);
@@ -74,6 +76,15 @@ public class ServiceImpl implements Service {
         return namespace;
     }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public String getSource() {
+        return source;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -82,6 +93,14 @@ public class ServiceImpl implements Service {
     private void parseArgs(Map<String, Object> args) {
         parseName(args);
         parseNamespace(args);
+        parseSource(args);
+    }
+
+    private void parseSource(Map<String, Object> args) {
+        Object v = args.get("source");
+        if (v != null) {
+            setSource(v.toString());
+        }
     }
 
     private void parseName(Map<String, Object> args) {

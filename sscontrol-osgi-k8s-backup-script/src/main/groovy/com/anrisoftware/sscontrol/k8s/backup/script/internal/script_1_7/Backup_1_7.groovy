@@ -91,6 +91,9 @@ class Backup_1_7 extends ScriptBase {
         if (!service.client.timeout) {
             service.client.timeout = timeoutLong
         }
+        if (!service.service.source) {
+            service.service.source = defaultServiceSource
+        }
     }
 
     /**
@@ -142,6 +145,10 @@ class Backup_1_7 extends ScriptBase {
 
     String getDefaultServerProtoSecured() {
         properties.getProperty 'default_server_proto_secured', defaultProperties
+    }
+
+    String getDefaultServiceSource() {
+        properties.getProperty 'default_service_source', defaultProperties
     }
 
     @Override
