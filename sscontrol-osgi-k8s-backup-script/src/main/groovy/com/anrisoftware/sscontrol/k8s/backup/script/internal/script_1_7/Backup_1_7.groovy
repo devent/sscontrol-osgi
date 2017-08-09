@@ -72,11 +72,7 @@ class Backup_1_7 extends ScriptBase {
             def rsyncDeploy = getDeployment "rsync-${service.service.name}"
             def serviceDeploy = getDeployment service.service.name
             def oldScale = serviceDeploy.get().spec.replicas
-            try {
-                scaleDeployment rsyncDeploy, 1
-            } catch (e) {
-                scaleDeployment rsyncDeploy, 1
-            }
+            scaleRsync rsyncDeploy, 1
             def rsyncService = createPublicService rsyncDeploy
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
@@ -117,6 +113,14 @@ class Backup_1_7 extends ScriptBase {
             }
         }
         return host
+    }
+
+    def scaleRsync(def rsyncDeploy, int replicas) {
+        try {
+            deployment.scaleDeployment rsyncDeploy, replicas
+        } catch (e) {
+            deployment.scaleDeployment rsyncDeploy, replicas
+        }
     }
 
     @Override
