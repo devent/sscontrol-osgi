@@ -101,7 +101,7 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
                 assert s.service.name == 'db'
-                assert s.destination.dest.toString() == 'file:/mnt/backup'
+                assert s.destination.dir.toString() == '/mnt/backup'
                 assert s.client.config =~ 'ProxyCommand'
                 assert s.client.key.toString() == 'file:id_rsa'
             },
@@ -151,7 +151,7 @@ service "backup" with {
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
                 assert s.service.name == 'db'
-                assert s.destination.dest.toString() == 'file:/mnt/backup'
+                assert s.destination.dir.toString() == '/mnt/backup'
                 assert s.client.key.toString() == 'file:id_rsa'
                 assert s.client.proxy == true
             },
