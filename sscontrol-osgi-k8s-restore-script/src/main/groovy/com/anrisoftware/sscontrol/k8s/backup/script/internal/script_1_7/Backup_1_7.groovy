@@ -22,9 +22,11 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory
-import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.RsyncClient.RsyncClientFactory
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
+import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
+import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
+import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
+import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
+import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -46,7 +48,7 @@ class Backup_1_7 extends ScriptBase {
     @Inject
     K8sClusterFactory clusterFactory
 
-    Deployment deployment
+    DeploymentImpl deployment
 
     RsyncClient client
 
@@ -63,7 +65,7 @@ class Backup_1_7 extends ScriptBase {
     @Override
     def run() {
         setupDefaults()
-        Backup service = service
+        Restore service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
         deployment.with {
@@ -87,7 +89,7 @@ class Backup_1_7 extends ScriptBase {
     }
 
     def setupDefaults() {
-        Backup service = service
+        Restore service = service
         if (!service.client.timeout) {
             service.client.timeout = timeoutLong
         }
