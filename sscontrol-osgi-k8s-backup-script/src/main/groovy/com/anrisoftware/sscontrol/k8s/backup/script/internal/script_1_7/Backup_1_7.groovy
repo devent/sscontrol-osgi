@@ -22,8 +22,10 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.Deployment.DeploymentFactory
-import com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7.RsyncClient.RsyncClientFactory
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
+import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
+import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
+import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -48,16 +50,18 @@ class Backup_1_7 extends ScriptBase {
 
     Deployment deployment
 
-    RsyncClient client
+    RsyncClient rsyncClient
 
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
-        this.deployment = factory.create(service)
+        Backup service = service
+        this.deployment = factory.create(service.cluster)
     }
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
-        this.client = factory.create(this, service)
+        Backup service = service
+        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.destination)
     }
 
     @Override
@@ -66,18 +70,19 @@ class Backup_1_7 extends ScriptBase {
         Backup service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
+        deployment = deployment.createClient()
         deployment.with {
             createClient()
             def type = service.destination.type
-            def rsyncDeploy = getDeployment "rsync-${service.service.name}"
-            def serviceDeploy = getDeployment service.service.name
+            def rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
+            def serviceDeploy = getDeployment service.service.namespace, service.service.name
             def oldScale = serviceDeploy.get().spec.replicas
             scaleRsync rsyncDeploy, 1
             def rsyncService = createPublicService rsyncDeploy
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                client.start(port: rsyncPort)
+                rsyncClient.start(port: rsyncPort)
             } finally {
                 deleteService rsyncService
                 scaleDeployment serviceDeploy, oldScale

@@ -23,9 +23,8 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory
+import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -77,7 +76,7 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
     K8sClusterFactory clusterFactory
 
     @Inject
-    BackupImplFactory serviceFactory
+    RestoreImplFactory serviceFactory
 
     @Inject
     Backup_1_7_Factory scriptFactory
@@ -100,7 +99,7 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll BackupTestModules.getAdditionalModules()
+        modules.addAll RestoreTestModules.getAdditionalModules()
         modules
     }
 

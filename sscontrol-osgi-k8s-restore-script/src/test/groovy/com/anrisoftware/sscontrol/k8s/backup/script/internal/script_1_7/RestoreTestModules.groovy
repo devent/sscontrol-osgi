@@ -32,8 +32,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8s.backup.client.internal.BackupClientModule
-import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupModule
+import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
@@ -54,7 +53,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class BackupTestModules {
+class RestoreTestModules {
 
     /**
      * Returns the needed modules.
@@ -67,9 +66,8 @@ class BackupTestModules {
             new K8sClusterModule(),
             new K8sCluster_1_5_Linux_Module(),
             new Kubectl_1_6_Linux_Module(),
-            new BackupModule(),
+            new RestoreModule(),
             new Backup_1_7_Module(),
-            new BackupClientModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
