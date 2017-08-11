@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -33,7 +33,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class RestoreServerTest extends AbstractBackupRunnerTest {
+class RestoreServerTest extends AbstractRestoreRunnerTest {
 
     @Test
     void "backup_service_server"() {

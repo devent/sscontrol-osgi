@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7.Restore_1_7_Module
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreModule
 import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
@@ -67,7 +68,7 @@ class RestoreTestModules {
             new K8sCluster_1_5_Linux_Module(),
             new Kubectl_1_6_Linux_Module(),
             new RestoreModule(),
-            new Backup_1_7_Module(),
+            new Restore_1_7_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

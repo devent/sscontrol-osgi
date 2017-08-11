@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -34,16 +34,16 @@ import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import groovy.util.logging.Slf4j
 
 /**
- * Backup service for Kubernetes 1.7.
+ * Restore service for Kubernetes 1.7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Backup_1_7 extends ScriptBase {
+class Restore_1_7 extends ScriptBase {
 
     @Inject
-    Backup_1_7_Properties propertiesProvider
+    Restore_1_7_Properties propertiesProvider
 
     @Inject
     K8sClusterFactory clusterFactory

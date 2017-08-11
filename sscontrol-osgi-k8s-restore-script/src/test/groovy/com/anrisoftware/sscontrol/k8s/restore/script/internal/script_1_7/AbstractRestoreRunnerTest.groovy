@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static java.nio.charset.StandardCharsets.*
@@ -23,6 +23,7 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7.Restore_1_7_Factory
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -40,25 +41,25 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
+abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
 
-    static final URL kubectlCommand = AbstractBackupRunnerTest.class.getResource('kubectl_command.txt')
+    static final URL kubectlCommand = AbstractRestoreRunnerTest.class.getResource('kubectl_command.txt')
 
-    static final URL certCaPem = AbstractBackupRunnerTest.class.getResource('cert_ca.txt')
+    static final URL certCaPem = AbstractRestoreRunnerTest.class.getResource('cert_ca.txt')
 
-    static final URL certCertPem = AbstractBackupRunnerTest.class.getResource('cert_cert.txt')
+    static final URL certCertPem = AbstractRestoreRunnerTest.class.getResource('cert_cert.txt')
 
-    static final URL certKeyPem = AbstractBackupRunnerTest.class.getResource('cert_key.txt')
+    static final URL certKeyPem = AbstractRestoreRunnerTest.class.getResource('cert_key.txt')
 
     static final Map andreaLocalCerts = [
         worker: [
-            ca: AbstractBackupRunnerTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractBackupRunnerTest.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
-            key: AbstractBackupRunnerTest.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
+            ca: AbstractRestoreRunnerTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
+            cert: AbstractRestoreRunnerTest.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
+            key: AbstractRestoreRunnerTest.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
         ],
     ]
 
-    static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractBackupRunnerTest.class.getResource('kubectl_command.txt').openStream(), UTF_8) }
+    static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractRestoreRunnerTest.class.getResource('kubectl_command.txt').openStream(), UTF_8) }
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -79,7 +80,7 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
     RestoreImplFactory serviceFactory
 
     @Inject
-    Backup_1_7_Factory scriptFactory
+    Restore_1_7_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
