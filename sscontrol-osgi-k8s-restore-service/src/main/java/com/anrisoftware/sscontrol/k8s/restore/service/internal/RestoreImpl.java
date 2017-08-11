@@ -111,7 +111,7 @@ public class RestoreImpl implements Restore {
 
     /**
      * <pre>
-     * service namespace: "wordpress", name: "db"
+     * service namespace: "wordpress", name: "db", target: "/conf/config"
      * </pre>
      */
     public void service(Map<String, Object> args) {
