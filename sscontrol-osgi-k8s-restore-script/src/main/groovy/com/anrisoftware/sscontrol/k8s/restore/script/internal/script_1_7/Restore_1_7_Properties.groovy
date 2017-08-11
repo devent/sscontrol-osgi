@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Backup service for Kubernetes 1.7 properties provider from
- * {@code "/backup_1_7_linux.properties"}.
+ * Restore service for Kubernetes 1.7 properties provider from
+ * {@code "/restore_1_7_linux.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Backup_1_7_Properties extends AbstractContextPropertiesProvider {
+class Restore_1_7_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Backup_1_7_Properties.class.getResource("/backup_1_7_linux.properties")
+    private static final URL RESOURCE = Restore_1_7_Properties.class.getResource("/restore_1_7_linux.properties")
 
-    Backup_1_7_Properties() {
-        super(Backup_1_7_Properties.class, RESOURCE)
+    Restore_1_7_Properties() {
+        super(Restore_1_7_Properties.class, RESOURCE)
     }
 }

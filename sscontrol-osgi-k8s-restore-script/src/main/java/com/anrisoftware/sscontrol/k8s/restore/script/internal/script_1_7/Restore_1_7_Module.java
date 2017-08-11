@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7.Restore_1_7;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -23,5 +26,13 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Backup_1_7_Factory extends HostServiceScriptService {
+public class Restore_1_7_Module extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, Restore_1_7.class)
+                .build(Restore_1_7_Factory.class));
+    }
+
 }
