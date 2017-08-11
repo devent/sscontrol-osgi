@@ -80,9 +80,9 @@ class RestoreServiceTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "dest_dir_client"() {
+    void "source_dir_client"() {
         def test = [
-            name: 'dest_dir_client',
+            name: 'source_dir_client',
             script: '''
 service "k8s-cluster"
 service "restore" with {
@@ -110,19 +110,19 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
     }
 
     @Test
-    void "dest_service_dest"() {
+    void "dest_service_target"() {
         def test = [
-            name: 'dest_service_dest',
+            name: 'dest_service_target',
             script: '''
 service "k8s-cluster"
-service "backup" with {
+service "restore" with {
     service namespace: "wordpress", name: "db", dest: "/conf/config"
 }
 ''',
             scriptVars: [:],
             expected: { HostServices services ->
-                assert services.getServices('backup').size() == 1
-                Restore s = services.getServices('backup')[0]
+                assert services.getServices('restore').size() == 1
+                Restore s = services.getServices('restore')[0]
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
                 assert s.service.dest == "/conf/config"
@@ -132,20 +132,20 @@ service "backup" with {
     }
 
     @Test
-    void "dest_dir_proxy"() {
+    void "source_dir_proxy"() {
         def test = [
-            name: 'dest_dir_proxy',
+            name: 'source_dir_proxy',
             script: '''
 service "k8s-cluster"
-service "backup" with {
+service "restore" with {
     service namespace: "wordpress", name: "db"
     client key: "id_rsa", proxy: true
 }
 ''',
             scriptVars: [:],
             expected: { HostServices services ->
-                assert services.getServices('backup').size() == 1
-                Restore s = services.getServices('backup')[0]
+                assert services.getServices('restore').size() == 1
+                Restore s = services.getServices('restore')[0]
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
                 assert s.target.host == 'localhost'
@@ -163,14 +163,14 @@ service "backup" with {
             name: 'timeout_duration',
             script: '''
 service "k8s-cluster"
-service "backup" with {
+service "restore" with {
     client timeout: "PT1H"
 }
 ''',
             scriptVars: [:],
             expected: { HostServices services ->
-                assert services.getServices('backup').size() == 1
-                Restore s = services.getServices('backup')[0]
+                assert services.getServices('restore').size() == 1
+                Restore s = services.getServices('restore')[0]
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
                 assert s.client.timeout == Duration.standardMinutes(60)
@@ -185,14 +185,14 @@ service "backup" with {
             name: 'timeout_simple',
             script: '''
 service "k8s-cluster"
-service "backup" with {
+service "restore" with {
     client timeout: "1h"
 }
 ''',
             scriptVars: [:],
             expected: { HostServices services ->
-                assert services.getServices('backup').size() == 1
-                Restore s = services.getServices('backup')[0]
+                assert services.getServices('restore').size() == 1
+                Restore s = services.getServices('restore')[0]
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
                 assert s.client.timeout == Duration.standardMinutes(60)
