@@ -24,13 +24,23 @@ import org.joda.time.Duration;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public class WaitScalingZeroTimeoutException extends BackupClientException {
+public class WaitScalingTimeoutException extends BackupClientException {
 
-    public WaitScalingZeroTimeoutException(String namespace, String name,
-            Duration timeout) {
-        super("Scaling deployment to zero error");
+    public WaitScalingTimeoutException(String namespace, String name,
+            int replicas, Duration timeout) {
+        super("Scaling deployment timeout");
         addContextValue("namespace", namespace);
         addContextValue("name", name);
+        addContextValue("replicas", replicas);
+        addContextValue("timeout", timeout);
+    }
+
+    public WaitScalingTimeoutException(Throwable cause, String namespace,
+            String name, int replicas, Duration timeout) {
+        super("Scaling deployment timeout", cause);
+        addContextValue("namespace", namespace);
+        addContextValue("name", name);
+        addContextValue("replicas", replicas);
         addContextValue("timeout", timeout);
     }
 }
