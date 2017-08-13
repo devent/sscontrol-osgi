@@ -21,7 +21,9 @@ public interface Deployment {
 
     void scaleDeployment(Object deploy, int replicas);
 
-    void waitScaleUp(Object deploy);
+    void scaleDeployment(Object deploy, int replicas, boolean deleteOnError);
+
+    void waitScaleUp(Object deploy, boolean deleteOnError);
 
     void waitScaleZero(Object deployOp);
 

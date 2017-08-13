@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentLogger
 import com.anrisoftware.sscontrol.k8s.backup.client.external.GetDeploymentsException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.GetServicesException
-import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingZeroTimeoutException
+import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingTimeoutException
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -109,10 +109,15 @@ class DeploymentImpl implements Deployment {
 
     @Override
     void scaleDeployment(Object deployOp, int replicas) {
+        scaleDeployment deployOp, replicas, true
+    }
+
+    @Override
+    void scaleDeployment(Object deployOp, int replicas, boolean deleteOnError) {
         deployOp = deployOp as HasMetadataOperation
         deployOp.scale replicas, true
         if (replicas > 0) {
-            waitScaleUp deployOp
+            waitScaleUp deployOp, deleteOnError
         } else {
             waitScaleZero deployOp
         }
@@ -120,13 +125,18 @@ class DeploymentImpl implements Deployment {
     }
 
     @Override
-    void waitScaleUp(Object deployOp) {
+    void waitScaleUp(Object deployOp, boolean deleteOnError) {
+        def waitTime = Duration.standardHours 1
         try {
             deployOp = deployOp as HasMetadataOperation
-            deployOp.waitUntilReady 15, TimeUnit.MINUTES
+            deployOp.waitUntilReady waitTime.standardSeconds, TimeUnit.SECONDS
         } catch (e) {
-            scaleDeployment deployOp, 0
-            throw e
+            def deploy = deployOp.get()
+            def ex = new WaitScalingTimeoutException(e, deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
+            if (deleteOnError) {
+                scaleDeployment deployOp, 0
+            }
+            throw ex
         }
     }
 
@@ -145,8 +155,8 @@ class DeploymentImpl implements Deployment {
             }
             countDown.countDown()
         }
-        if (!countDown.await(5, TimeUnit.MINUTES)) {
-            throw new WaitScalingZeroTimeoutException(deploy.metadata.namespace, deploy.metadata.name, waitTime)
+        if (!countDown.await(waitTime.standardSeconds, TimeUnit.SECONDS)) {
+            throw new WaitScalingTimeoutException(deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
         }
     }
 

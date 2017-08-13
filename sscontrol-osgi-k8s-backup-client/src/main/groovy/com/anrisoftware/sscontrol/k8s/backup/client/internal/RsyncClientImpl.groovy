@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.internal
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import org.stringtemplate.v4.ST
@@ -70,7 +73,10 @@ class RsyncClientImpl implements RsyncClient {
 
     @Override
     void start(Map args) {
-        def vars = [:]
+        assertThat "args.path!=null", args.path, notNullValue()
+        assertThat "args.dir!=null", args.dir, notNullValue()
+        assertThat "args.port!=null", args.port, notNullValue()
+        def vars = new HashMap(args)
         vars.rsync = [:]
         vars.rsync.user = "root"
         vars.rsync.host = cluster.host
