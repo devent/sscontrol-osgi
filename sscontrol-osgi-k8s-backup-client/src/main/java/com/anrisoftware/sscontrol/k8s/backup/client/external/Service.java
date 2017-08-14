@@ -39,7 +39,7 @@ public interface Service {
     String getSource();
 
     /**
-     * Returns the destination for restore or <code>null</code>.
+     * Returns the target for restore or <code>null</code>.
      */
-    String getDest();
+    String getTarget();
 }

@@ -36,7 +36,7 @@ public class AbstractService implements Service {
 
     private String source;
 
-    private String dest;
+    private String target;
 
     protected AbstractService(Map<String, Object> args) {
         parseArgs(args);
@@ -69,13 +69,13 @@ public class AbstractService implements Service {
         return source;
     }
 
-    public void setDest(String dest) {
-        this.dest = dest;
+    public void setTarget(String target) {
+        this.target = target;
     }
 
     @Override
-    public String getDest() {
-        return dest;
+    public String getTarget() {
+        return target;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AbstractService implements Service {
         parseName(args);
         parseNamespace(args);
         parseSource(args);
-        parseDest(args);
+        parseTarget(args);
     }
 
     private void parseSource(Map<String, Object> args) {
@@ -97,10 +97,10 @@ public class AbstractService implements Service {
         }
     }
 
-    private void parseDest(Map<String, Object> args) {
-        Object v = args.get("dest");
+    private void parseTarget(Map<String, Object> args) {
+        Object v = args.get("target");
         if (v != null) {
-            setDest(v.toString());
+            setTarget(v.toString());
         }
     }
 
