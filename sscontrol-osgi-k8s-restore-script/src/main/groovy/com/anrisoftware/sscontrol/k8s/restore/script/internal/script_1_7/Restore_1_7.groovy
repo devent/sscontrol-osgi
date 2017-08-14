@@ -54,12 +54,14 @@ class Restore_1_7 extends ScriptBase {
 
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
-        this.deployment = factory.create(service)
+        Restore service = service
+        this.deployment = factory.create(service.cluster)
     }
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
-        this.rsyncClient = factory.create(this, service)
+        Restore service = service
+        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.source)
     }
 
     @Override
@@ -68,22 +70,26 @@ class Restore_1_7 extends ScriptBase {
         Restore service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
+        deployment = deployment.createClient()
         deployment.with {
             createClient()
-            def type = service.destination.type
-            def rsyncDeploy = getDeployment "rsync-${service.service.name}"
-            def serviceDeploy = getDeployment service.service.name
+            def type = service.source.type
+            def rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
+            def serviceDeploy = getDeployment service.service.namespace, service.service.name
             def oldScale = serviceDeploy.get().spec.replicas
             scaleRsync rsyncDeploy, 1
             def rsyncService = createPublicService rsyncDeploy
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                rsyncClient.start(path: service.destination.dir, dir: service.source, port: rsyncPort)
+                rsyncClient.start(path: service.source.dir, dir: service.service.target, port: rsyncPort)
             } finally {
-                deleteService rsyncService
-                scaleDeployment serviceDeploy, oldScale
-                scaleDeployment rsyncDeploy, 0
+                try {
+                    scaleDeployment serviceDeploy, oldScale, false
+                } finally {
+                    deleteService rsyncService
+                    scaleDeployment rsyncDeploy, 0
+                }
             }
         }
     }
@@ -93,8 +99,8 @@ class Restore_1_7 extends ScriptBase {
         if (!service.client.timeout) {
             service.client.timeout = timeoutLong
         }
-        if (!service.service.source) {
-            service.service.source = defaultServiceSource
+        if (!service.service.target) {
+            service.service.target = defaultServiceTarget
         }
     }
 
@@ -149,8 +155,8 @@ class Restore_1_7 extends ScriptBase {
         properties.getProperty 'default_server_proto_secured', defaultProperties
     }
 
-    String getDefaultServiceSource() {
-        properties.getProperty 'default_service_source', defaultProperties
+    String getDefaultServiceTarget() {
+        properties.getProperty 'default_service_target', defaultProperties
     }
 
     @Override
