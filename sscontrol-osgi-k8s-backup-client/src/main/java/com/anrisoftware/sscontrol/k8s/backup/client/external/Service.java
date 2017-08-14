@@ -42,4 +42,9 @@ public interface Service {
      * Returns the target for restore or <code>null</code>.
      */
     String getTarget();
+
+    /**
+     * Returns the owner of the files or <code>null</code>.
+     */
+    String getChown();
 }

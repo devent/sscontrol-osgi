@@ -36,11 +36,14 @@ import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Rend
 import com.google.inject.assistedinject.Assisted
 import com.google.inject.assistedinject.AssistedInject
 
+import io.fabric8.kubernetes.api.model.Pod
 import io.fabric8.kubernetes.api.model.Service
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
 import io.fabric8.kubernetes.client.ConfigBuilder
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
+import io.fabric8.kubernetes.client.dsl.ExecWatch
 import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation
+import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl
 
 /**
  *
@@ -225,5 +228,13 @@ class DeploymentImpl implements Deployment {
         String namespace = deployOp.get().metadata.namespace
         String name = deployOp.get().metadata.name
         client.pods().inNamespace(namespace).withLabel("app", name).list().items
+    }
+
+    void execCommand(Object deployOp, String cmd) {
+        deployOp = deployOp as HasMetadataOperation
+        Pod pod = getPods(deployOp.namespace, deployOp.name)[0]
+        PodOperationsImpl podOp = client.pods().inNamespace(deployOp.namespace).withName(pod.metadata.name)
+        ExecWatch watch = podOp.redirectingInput().redirectingOutput().exec(cmd)
+        log.commandExecuted(deployOp, cmd)
     }
 }

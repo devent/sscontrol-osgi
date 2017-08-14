@@ -41,7 +41,9 @@ final class DeploymentLogger extends AbstractLogger {
 
         createPublicService("Public service {}/{} created."),
 
-        deleteService("Service {}/{} deleted.");
+        deleteService("Service {}/{} deleted."),
+
+        commandExecuted("Command executed for {}: {}");
 
         private String name;
 
@@ -77,5 +79,9 @@ final class DeploymentLogger extends AbstractLogger {
 
     void deleteService(String namespace, String name) {
         debug(m.deleteService, namespace, name);
+    }
+
+    void commandExecuted(Object deployOp, String cmd) {
+        debug(m.commandExecuted, cmd, deployOp);
     }
 }
