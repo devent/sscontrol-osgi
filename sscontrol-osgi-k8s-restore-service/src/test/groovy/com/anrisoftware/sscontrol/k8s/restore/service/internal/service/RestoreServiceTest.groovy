@@ -125,7 +125,7 @@ service "restore" with {
                 Restore s = services.getServices('restore')[0]
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
-                assert s.service.dest == "/conf/config"
+                assert s.service.target == "/conf/config"
             },
         ]
         doTest test
