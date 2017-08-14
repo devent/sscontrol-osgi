@@ -1,6 +1,7 @@
 /*
  * Mandatory:
  *
+ * vars.rsync.backup
  * vars.rsync.host
  * vars.rsync.user
  * vars.rsync.port
@@ -33,10 +34,18 @@ EOF
 
 mkdir -p "<vars.dir>"
 cd "<vars.dir>"
-rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.arguments> <vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
+rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.arguments> <sourceTarget(parent, vars)>
 
 >>
 
 sshCommand(parent, vars) ::= <%
 -e "ssh -o StrictHostKeyChecking=no -F $config"
+%>
+
+sourceTarget(parent, vars) ::= <%
+<if(vars.rsync.backup)>
+<vars.rsync.user>@<vars.rsync.host>:<vars.path>/\* .
+<else>
+./* <vars.rsync.user>@<vars.rsync.host>:<vars.path>
+<endif>
 %>
