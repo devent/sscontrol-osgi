@@ -73,11 +73,13 @@ class RsyncClientImpl implements RsyncClient {
 
     @Override
     void start(Map args) {
+        assertThat "args.backup!=null", args.backup, notNullValue()
         assertThat "args.path!=null", args.path, notNullValue()
         assertThat "args.dir!=null", args.dir, notNullValue()
         assertThat "args.port!=null", args.port, notNullValue()
         def vars = new HashMap(args)
         vars.rsync = [:]
+        vars.rsync.backup = args.backup
         vars.rsync.user = "root"
         vars.rsync.host = cluster.host
         vars.rsync.port = args.port

@@ -82,7 +82,7 @@ class Backup_1_7 extends ScriptBase {
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                rsyncClient.start(path: service.service.source, dir: service.destination.dir, port: rsyncPort)
+                rsyncClient.start(backup: true, path: service.service.source, dir: service.destination.dir, port: rsyncPort)
             } finally {
                 try {
                     scaleDeployment serviceDeploy, oldScale, false
