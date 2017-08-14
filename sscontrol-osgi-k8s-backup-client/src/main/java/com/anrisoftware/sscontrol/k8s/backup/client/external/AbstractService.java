@@ -38,6 +38,8 @@ public class AbstractService implements Service {
 
     private String target;
 
+    private String chown;
+
     protected AbstractService(Map<String, Object> args) {
         parseArgs(args);
     }
@@ -78,6 +80,15 @@ public class AbstractService implements Service {
         return target;
     }
 
+    public void setChown(String chown) {
+        this.chown = chown;
+    }
+
+    @Override
+    public String getChown() {
+        return chown;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -88,6 +99,14 @@ public class AbstractService implements Service {
         parseNamespace(args);
         parseSource(args);
         parseTarget(args);
+        parseChown(args);
+    }
+
+    private void parseChown(Map<String, Object> args) {
+        Object v = args.get("chown");
+        if (v != null) {
+            setChown(v.toString());
+        }
     }
 
     private void parseSource(Map<String, Object> args) {

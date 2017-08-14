@@ -82,7 +82,10 @@ class Restore_1_7 extends ScriptBase {
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                rsyncClient.start(path: service.source.dir, dir: service.service.target, port: rsyncPort)
+                rsyncClient.start(backup: false, dir: service.source.dir, path: service.service.target, port: rsyncPort)
+                if (service.service.chown) {
+                    execCommand rsyncDeploy, "sh -c 'chown ${service.service.chown} -R \"${service.service.target}\"'"
+                }
             } finally {
                 try {
                     scaleDeployment serviceDeploy, oldScale, false

@@ -86,9 +86,9 @@ class RsyncClientImpl implements RsyncClient {
         vars.rsync.key = script.createTmpFile()
         vars.rsync.arguments = destination.arguments
         vars.config = parseConfig client.config, vars.rsync
-        vars.path = service.source
+        vars.path = args.path
         vars.proxy = getProxy()
-        vars.dir = destination.dir
+        vars.dir = args.dir
         script.copyResource src: client.key, dest: vars.rsync.key
         try {
             def a = [:]

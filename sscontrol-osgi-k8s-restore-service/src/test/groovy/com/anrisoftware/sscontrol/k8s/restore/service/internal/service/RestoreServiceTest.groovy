@@ -116,7 +116,7 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
             script: '''
 service "k8s-cluster"
 service "restore" with {
-    service namespace: "wordpress", name: "db", dest: "/conf/config"
+    service namespace: "wordpress", name: "db", target: "/conf/config", chown: "33.33"
 }
 ''',
             scriptVars: [:],
@@ -126,6 +126,7 @@ service "restore" with {
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
                 assert s.service.target == "/conf/config"
+                assert s.service.chown == "33.33"
             },
         ]
         doTest test

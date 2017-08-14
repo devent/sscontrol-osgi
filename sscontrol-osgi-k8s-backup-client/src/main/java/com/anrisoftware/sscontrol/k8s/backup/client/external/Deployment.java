@@ -36,4 +36,6 @@ public interface Deployment {
     Object buildConfig(URI hostUrl, Credentials credentials);
 
     List<?> waitDeploy(Object deploy, int replicas, boolean ready);
+
+    void execCommand(Object deployOp, String cmd);
 }
