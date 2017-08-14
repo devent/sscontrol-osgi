@@ -76,16 +76,20 @@ class Backup_1_7 extends ScriptBase {
             def type = service.destination.type
             def rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
             def serviceDeploy = getDeployment service.service.namespace, service.service.name
-            def oldScale = serviceDeploy.get().spec.replicas
+            def oldScale = getReplicas serviceDeploy
             scaleRsync rsyncDeploy, 1
             def rsyncService = createPublicService rsyncDeploy
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
-                scaleDeployment serviceDeploy, 0
+                if (oldScale > 0) {
+                    scaleDeployment serviceDeploy, 0
+                }
                 rsyncClient.start(backup: true, path: service.service.source, dir: service.destination.dir, port: rsyncPort)
             } finally {
                 try {
-                    scaleDeployment serviceDeploy, oldScale, false
+                    if (oldScale > 0) {
+                        scaleDeployment serviceDeploy, oldScale, false
+                    }
                 } finally {
                     deleteService rsyncService
                     scaleDeployment rsyncDeploy, 0
@@ -102,6 +106,11 @@ class Backup_1_7 extends ScriptBase {
         if (!service.service.source) {
             service.service.source = defaultServiceSource
         }
+    }
+
+    int getReplicas(def deployOps) {
+        def deploy = deployOps.get()
+        deploy == null ? 0 : deploy.spec.replicas
     }
 
     /**
