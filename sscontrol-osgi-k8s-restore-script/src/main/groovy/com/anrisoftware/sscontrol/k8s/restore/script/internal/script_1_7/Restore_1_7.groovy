@@ -50,7 +50,7 @@ class Restore_1_7 extends ScriptBase {
 
     DeploymentImpl deployment
 
-    RsyncClient client
+    RsyncClient rsyncClient
 
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
@@ -59,7 +59,7 @@ class Restore_1_7 extends ScriptBase {
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
-        this.client = factory.create(this, service)
+        this.rsyncClient = factory.create(this, service)
     }
 
     @Override
@@ -79,7 +79,7 @@ class Restore_1_7 extends ScriptBase {
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                client.start(port: rsyncPort)
+                rsyncClient.start(path: service.destination.dir, dir: service.source, port: rsyncPort)
             } finally {
                 deleteService rsyncService
                 scaleDeployment serviceDeploy, oldScale
