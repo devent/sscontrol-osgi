@@ -13,24 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.client.external;
+package com.anrisoftware.sscontrol.k8s.backup.service.internal;
+
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractSource;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Source;
+import com.google.inject.assistedinject.Assisted;
 
 /**
- * Service for backup.
+ * Backup source.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Service {
+public class SourceImpl extends AbstractSource {
 
     /**
-     * Returns the namespace.
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
      */
-    String getNamespace();
+    public interface SourceImplFactory {
 
-    /**
-     * Returns the name.
-     */
-    String getName();
+        Source create(Map<String, Object> args);
+
+    }
+
+    @Inject
+    SourceImpl(@Assisted Map<String, Object> args) {
+        super(args);
+    }
+
 
 }
