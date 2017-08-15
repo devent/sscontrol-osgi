@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +32,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Source;
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl.DirDestinationImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
@@ -85,12 +88,18 @@ public class BackupImpl implements Backup {
     private Client client;
 
     @Inject
+    private transient SourceImplFactory sourceFactory;
+
+    private final List<Source> sources;
+
+    @Inject
     BackupImpl(BackupImplLogger log, HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
+        this.sources = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -146,6 +155,43 @@ public class BackupImpl implements Backup {
         this.client = client;
         log.clientSet(this, client);
         return client;
+    }
+
+    /**
+     * <pre>
+     * source "/data"
+     * </pre>
+     */
+    public Source source(String source) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("source", source);
+        return source(args);
+    }
+
+    /**
+     * <pre>
+     * source source: "/data"
+     * </pre>
+     */
+    public Source source(Map<String, Object> args) {
+        Source source = sourceFactory.create(args);
+        this.sources.add(source);
+        return source;
+    }
+
+    /**
+     * <pre>
+     * source << "/data"
+     * </pre>
+     */
+    public List<String> getSource() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                source(property);
+            }
+        });
     }
 
     @Override
@@ -204,6 +250,11 @@ public class BackupImpl implements Backup {
     @Override
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public List<Source> getSources() {
+        return sources;
     }
 
     @Override

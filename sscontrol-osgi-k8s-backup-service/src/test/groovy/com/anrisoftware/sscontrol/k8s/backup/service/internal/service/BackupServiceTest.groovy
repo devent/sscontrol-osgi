@@ -80,15 +80,13 @@ class BackupServiceTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "dest_dir_client"() {
+    void "client_config"() {
         def test = [
-            name: 'dest_dir_client',
+            name: 'client_config',
             script: '''
 service "k8s-cluster"
 service "backup" with {
-    service namespace: "wordpress", name: "db"
-    destination dir: "/mnt/backup"
-    client key: "id_rsa", config: """
+    client config: """
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
 }
@@ -97,26 +95,22 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
             expected: { HostServices services ->
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
-                assert s.service.namespace == 'wordpress'
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
-                assert s.service.name == 'db'
-                assert s.destination.dir.toString() == '/mnt/backup'
                 assert s.client.config =~ 'ProxyCommand'
-                assert s.client.key.toString() == 'file:id_rsa'
             },
         ]
         doTest test
     }
 
     @Test
-    void "dest_service_source"() {
+    void "service"() {
         def test = [
-            name: 'dest_service_source',
+            name: 'service',
             script: '''
 service "k8s-cluster"
 service "backup" with {
-    service namespace: "wordpress", name: "db", source: "/conf/config"
+    service namespace: "wordpress", name: "db"
 }
 ''',
             scriptVars: [:],
@@ -125,21 +119,18 @@ service "backup" with {
                 Backup s = services.getServices('backup')[0]
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
-                assert s.service.source == "/conf/config"
             },
         ]
         doTest test
     }
 
     @Test
-    void "dest_dir_proxy"() {
+    void "client"() {
         def test = [
             name: 'dest_dir_proxy',
             script: '''
 service "k8s-cluster"
 service "backup" with {
-    service namespace: "wordpress", name: "db"
-    destination dir: "/mnt/backup"
     client key: "id_rsa", proxy: true
 }
 ''',
@@ -147,11 +138,8 @@ service "backup" with {
             expected: { HostServices services ->
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
-                assert s.service.namespace == 'wordpress'
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
-                assert s.service.name == 'db'
-                assert s.destination.dir.toString() == '/mnt/backup'
                 assert s.client.key.toString() == 'file:id_rsa'
                 assert s.client.proxy == true
             },
@@ -198,6 +186,78 @@ service "backup" with {
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
                 assert s.client.timeout == Duration.standardMinutes(60)
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "destination_dir"() {
+        def test = [
+            name: 'destination_dir',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    destination arguments: "-c --delete", dir: "/mnt/backup"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.destination.type == 'dir'
+                assert s.destination.arguments == '-c --delete'
+                assert s.destination.dir == '/mnt/backup' as File
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "source"() {
+        def test = [
+            name: 'source',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    source "/data"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.sources.size() == 1
+                assert s.sources[0].source == '/data'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "sources"() {
+        def test = [
+            name: 'sources',
+            script: '''
+service "k8s-cluster"
+service "backup" with {
+    source << "/data"
+    source << "/html"
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('backup').size() == 1
+                Backup s = services.getServices('backup')[0]
+                assert s.target.host == 'localhost'
+                assert s.cluster.host == 'localhost'
+                assert s.sources.size() == 2
+                assert s.sources[0].source == '/data'
+                assert s.sources[1].source == '/html'
             },
         ]
         doTest test
