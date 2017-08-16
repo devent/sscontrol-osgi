@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentLogger
 import com.anrisoftware.sscontrol.k8s.backup.client.external.GetDeploymentsException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.GetServicesException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingTimeoutException
+import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingUnexpectedException
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -151,15 +152,26 @@ class DeploymentImpl implements Deployment {
         def name = deploy.metadata.name
         def countDown = new CountDownLatch(1)
         def waitTime = Duration.standardMinutes 5
+        def ex = null
         Thread.start {
-            while (getPods(namespace, name).size() > 0) {
-                def pods = getPods(namespace, name)
-                Thread.sleep 1000
+            try {
+                while (getPods(namespace, name).size() > 0) {
+                    def pods = getPods(namespace, name)
+                    Thread.sleep 1000
+                }
             }
-            countDown.countDown()
+            catch(e) {
+                ex = e
+            }
+            finally {
+                countDown.countDown()
+            }
         }
         if (!countDown.await(waitTime.standardSeconds, TimeUnit.SECONDS)) {
             throw new WaitScalingTimeoutException(deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
+        }
+        if (ex) {
+            throw new WaitScalingUnexpectedException(ex,deploy.metadata.namespace, deploy.metadata.name, 0)
         }
     }
 

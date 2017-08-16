@@ -32,8 +32,16 @@ IdentityFile <vars.rsync.key>
 <vars.config>
 EOF
 
+<if(vars.rsync.backup)>
 mkdir -p "<vars.dir>"
 cd "<vars.dir>"
+mkdir -p "./<vars.path>"
+cd "./<vars.path>"
+<else>
+cd "<vars.dir>"
+cd "./<vars.path>"
+<endif>
+
 rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.arguments> <sourceTarget(parent, vars)>
 
 >>
