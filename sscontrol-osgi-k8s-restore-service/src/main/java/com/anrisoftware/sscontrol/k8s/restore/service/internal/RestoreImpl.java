@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,15 +32,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Source;
 import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore;
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.DirSourceImpl.DirSourceImplFactory;
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.ServiceImpl.ServiceImplFactory;
+import com.anrisoftware.sscontrol.k8s.restore.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -71,18 +76,23 @@ public class RestoreImpl implements Restore {
 
     private Service service;
 
-    private Destination source;
+    private Destination origin;
 
     @Inject
     private transient ServiceImplFactory serviceFactory;
 
     @Inject
-    private transient DirSourceImplFactory dirSourceFactory;
+    private transient DirSourceImplFactory dirOriginFactory;
 
     @Inject
     private transient ClientImplFactory clientFactory;
 
     private Client client;
+
+    @Inject
+    private transient SourceImplFactory sourceFactory;
+
+    private final List<Source> sources;
 
     @Inject
     RestoreImpl(RestoreImplLogger log, HostPropertiesService propertiesService,
@@ -91,6 +101,7 @@ public class RestoreImpl implements Restore {
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
+        this.sources = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -111,7 +122,7 @@ public class RestoreImpl implements Restore {
 
     /**
      * <pre>
-     * service namespace: "wordpress", name: "db", target: "/conf/config"
+     * service namespace: "wordpress", name: "db"
      * </pre>
      */
     public void service(Map<String, Object> args) {
@@ -122,16 +133,16 @@ public class RestoreImpl implements Restore {
 
     /**
      * <pre>
-     * source dir: "/mnt/backup"
+     * origin dir: "/mnt/backup"
      * </pre>
      */
-    public Destination source(Map<String, Object> args) {
+    public Destination origin(Map<String, Object> args) {
         Object v = args.get("dir");
         Destination dest = null;
         if (v != null) {
-            dest = dirSourceFactory.create(args);
-            log.sourceSet(this, dest);
-            this.source = dest;
+            dest = dirOriginFactory.create(args);
+            log.originSet(this, dest);
+            this.origin = dest;
         }
         return dest;
     }
@@ -146,6 +157,44 @@ public class RestoreImpl implements Restore {
         this.client = client;
         log.clientSet(this, client);
         return client;
+    }
+
+    /**
+     * <pre>
+     * source "/data"
+     * </pre>
+     */
+    public Source source(String source) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("source", source);
+        return source(args);
+    }
+
+    /**
+     * <pre>
+     * source target: "/data", chown: "33.33"
+     * </pre>
+     */
+    public Source source(Map<String, Object> args) {
+        Source source = sourceFactory.create(args);
+        this.sources.add(source);
+        return source;
+    }
+
+    /**
+     * <pre>
+     * source << [target: "/data", chown: "33.33"]
+     * </pre>
+     */
+    public List<Map<String, Object>> getSource() {
+        return GeneticListPropertyUtil
+                .<Map<String, Object>>geneticListStatement(
+                        new GeneticListProperty<Map<String, Object>>() {
+                            @Override
+                            public void add(Map<String, Object> property) {
+                                source(property);
+                            }
+                        });
     }
 
     @Override
@@ -197,13 +246,18 @@ public class RestoreImpl implements Restore {
     }
 
     @Override
-    public Destination getSource() {
-        return source;
+    public Destination getOrigin() {
+        return origin;
     }
 
     @Override
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public List<Source> getSources() {
+        return sources;
     }
 
     @Override

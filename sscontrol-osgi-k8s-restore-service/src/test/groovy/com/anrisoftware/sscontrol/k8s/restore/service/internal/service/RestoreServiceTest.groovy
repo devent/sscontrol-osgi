@@ -87,7 +87,7 @@ class RestoreServiceTest {
 service "k8s-cluster"
 service "restore" with {
     service namespace: "wordpress", name: "db"
-    source dir: "/mnt/backup"
+    origin dir: "/mnt/backup"
     client key: "id_rsa", config: """
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
@@ -101,7 +101,7 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert s.service.name == 'db'
                 assert s.target.host == 'localhost'
                 assert s.cluster.host == 'localhost'
-                assert s.source.dir.toString() == '/mnt/backup'
+                assert s.origin.dir.toString() == '/mnt/backup'
                 assert s.client.config =~ 'ProxyCommand'
                 assert s.client.key.toString() == 'file:id_rsa'
             },
@@ -110,13 +110,13 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
     }
 
     @Test
-    void "dest_service_target"() {
+    void "service"() {
         def test = [
-            name: 'dest_service_target',
+            name: 'service',
             script: '''
 service "k8s-cluster"
 service "restore" with {
-    service namespace: "wordpress", name: "db", target: "/conf/config", chown: "33.33"
+    service namespace: "wordpress", name: "db"
 }
 ''',
             scriptVars: [:],
@@ -125,8 +125,31 @@ service "restore" with {
                 Restore s = services.getServices('restore')[0]
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
-                assert s.service.target == "/conf/config"
-                assert s.service.chown == "33.33"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "sources"() {
+        def test = [
+            name: 'sources',
+            script: '''
+service "k8s-cluster"
+service "restore" with {
+    source << [target: "/data", chown: "33.33"]
+    source << [target: "/html", chown: "33.2014"]
+}
+''',
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('restore').size() == 1
+                Restore s = services.getServices('restore')[0]
+                assert s.sources.size() == 2
+                assert s.sources[0].target == '/data'
+                assert s.sources[0].chown == '33.33'
+                assert s.sources[1].target == '/html'
+                assert s.sources[1].chown == '33.2014'
             },
         ]
         doTest test

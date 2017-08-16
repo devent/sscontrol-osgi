@@ -61,7 +61,7 @@ class Restore_1_7 extends ScriptBase {
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
         Restore service = service
-        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.source)
+        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.origin)
     }
 
     @Override
@@ -73,7 +73,7 @@ class Restore_1_7 extends ScriptBase {
         deployment = deployment.createClient()
         deployment.with {
             createClient()
-            def type = service.source.type
+            def type = service.origin.type
             def rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
             def serviceDeploy = getDeployment service.service.namespace, service.service.name
             def oldScale = serviceDeploy.get().spec.replicas
@@ -82,7 +82,7 @@ class Restore_1_7 extends ScriptBase {
             def rsyncPort = rsyncService.spec.ports[0].nodePort
             try {
                 scaleDeployment serviceDeploy, 0
-                rsyncClient.start(backup: false, dir: service.source.dir, path: service.service.target, port: rsyncPort)
+                rsyncClient.start(backup: false, dir: service.origin.dir, path: service.service.target, port: rsyncPort)
                 if (service.service.chown) {
                     execCommand rsyncDeploy, "sh -c 'chown ${service.service.chown} -R \"${service.service.target}\"'"
                 }
