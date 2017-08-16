@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
 import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Source
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -53,6 +54,9 @@ class Backup_1_7 extends ScriptBase {
     RsyncClient rsyncClient
 
     @Inject
+    BackupWorkerFactory backupWorkerFactory
+
+    @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
         Backup service = service
         this.deployment = factory.create(service.cluster)
@@ -71,28 +75,24 @@ class Backup_1_7 extends ScriptBase {
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
         deployment = deployment.createClient()
-        deployment.with {
-            createClient()
-            def type = service.destination.type
-            def rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
-            def serviceDeploy = getDeployment service.service.namespace, service.service.name
-            def oldScale = getReplicas serviceDeploy
-            scaleRsync rsyncDeploy, 1
-            def rsyncService = createPublicService rsyncDeploy
-            def rsyncPort = rsyncService.spec.ports[0].nodePort
+        def sources = service.sources
+        backupWorkerFactory.create(service, deployment).with {
+            init()
             try {
-                if (oldScale > 0) {
-                    scaleDeployment serviceDeploy, 0
+                before()
+                start { Map args ->
+                    println args
+                    println sources
+                    sources.each { Source source ->
+                        println source
+                        rsyncClient.start(backup: true, path: source.source, dir: service.destination.dir, port: args.rsyncPort)
+                    }
                 }
-                rsyncClient.start(backup: true, path: service.service.source, dir: service.destination.dir, port: rsyncPort)
             } finally {
                 try {
-                    if (oldScale > 0) {
-                        scaleDeployment serviceDeploy, oldScale, false
-                    }
+                    after()
                 } finally {
-                    deleteService rsyncService
-                    scaleDeployment rsyncDeploy, 0
+                    finally1()
                 }
             }
         }
@@ -103,14 +103,9 @@ class Backup_1_7 extends ScriptBase {
         if (!service.client.timeout) {
             service.client.timeout = timeoutLong
         }
-        if (!service.service.source) {
-            service.service.source = defaultServiceSource
+        if (service.sources.size() == 0) {
+            service.source defaultServiceSource
         }
-    }
-
-    int getReplicas(def deployOps) {
-        def deploy = deployOps.get()
-        deploy == null ? 0 : deploy.spec.replicas
     }
 
     /**
@@ -133,14 +128,6 @@ class Backup_1_7 extends ScriptBase {
             }
         }
         return host
-    }
-
-    def scaleRsync(def rsyncDeploy, int replicas) {
-        try {
-            deployment.scaleDeployment rsyncDeploy, replicas
-        } catch (e) {
-            deployment.scaleDeployment rsyncDeploy, replicas
-        }
     }
 
     @Override
