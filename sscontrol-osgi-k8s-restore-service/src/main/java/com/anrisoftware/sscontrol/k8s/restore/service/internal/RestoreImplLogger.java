@@ -76,7 +76,7 @@ final class RestoreImplLogger extends AbstractLogger {
         debug(serviceSet, service, backup);
     }
 
-    void sourceSet(RestoreImpl backup, Destination source) {
+    void originSet(RestoreImpl backup, Destination source) {
         debug(sourceSet, source, backup);
     }
 

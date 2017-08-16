@@ -15,9 +15,12 @@
  */
 package com.anrisoftware.sscontrol.k8s.restore.service.external;
 
+import java.util.List;
+
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Client;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Destination;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Service;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Source;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
 
 /**
@@ -34,12 +37,17 @@ public interface Restore extends ClusterService {
     Service getService();
 
     /**
-     * Returns the backup source.
+     * Returns the backup origin.
      */
-    Destination getSource();
+    Destination getOrigin();
 
     /**
      * Returns the backup client.
      */
     Client getClient();
+
+    /**
+     * Returns the backup targets.
+     */
+    List<Source> getSources();
 }
