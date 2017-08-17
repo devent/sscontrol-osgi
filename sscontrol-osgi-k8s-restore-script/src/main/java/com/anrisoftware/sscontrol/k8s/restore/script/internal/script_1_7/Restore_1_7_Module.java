@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7;
 
-import com.anrisoftware.sscontrol.k8s.restore.script.internal.script_1_7.Restore_1_7;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,6 +33,9 @@ public class Restore_1_7_Module extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, Restore_1_7.class)
                 .build(Restore_1_7_Factory.class));
+        install(new FactoryModuleBuilder()
+                .implement(BackupWorker.class, RestoreWorkerImpl.class)
+                .build(RestoreWorkerImplFactory.class));
     }
 
 }

@@ -1,12 +1,8 @@
-package com.anrisoftware.sscontrol.k8s.backup.script.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.backup.client.external
 
 import static org.hamcrest.Matchers.*
 
-import javax.inject.Inject
-
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
-import com.google.inject.assistedinject.Assisted
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
 
 /**
  *
@@ -14,15 +10,7 @@ import com.google.inject.assistedinject.Assisted
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class BackupWorker {
-
-    @Inject
-    @Assisted
-    Backup service
-
-    @Inject
-    @Assisted
-    Deployment d
+abstract class AbstractBackupWorker implements BackupWorker {
 
     def rsyncDeploy
 
@@ -34,8 +22,13 @@ class BackupWorker {
 
     Integer oldScale
 
+    abstract ClusterService getService()
+
+    abstract Deployment getDeploy()
+
+    @Override
     void init() {
-        d.with {
+        deploy.with {
             this.rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
             this.serviceDeploy = getDeployment service.service.namespace, service.service.name
             this.oldScale = getReplicas serviceDeploy
@@ -45,24 +38,28 @@ class BackupWorker {
         }
     }
 
+    @Override
     void before() {
         if (oldScale) {
-            d.scaleDeployment serviceDeploy, 0
+            deploy.scaleDeployment serviceDeploy, 0
         }
     }
 
-    void start(Closure client) {
+    @Override
+    void start(def client) {
         client(rsyncPort: rsyncPort)
     }
 
+    @Override
     void after() {
         if (oldScale) {
-            d.scaleDeployment serviceDeploy, oldScale, false
+            deploy.scaleDeployment serviceDeploy, oldScale, false
         }
     }
 
+    @Override
     void finally1() {
-        d.with {
+        deploy.with {
             deleteService rsyncService
             scaleDeployment rsyncDeploy, 0
         }
@@ -74,7 +71,7 @@ class BackupWorker {
     }
 
     def scaleRsync(def rsyncDeploy, int replicas) {
-        d.with {
+        deploy.with {
             try {
                 scaleDeployment rsyncDeploy, replicas
             } catch (e) {
