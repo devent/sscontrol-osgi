@@ -54,7 +54,7 @@ class Backup_1_7 extends ScriptBase {
     RsyncClient rsyncClient
 
     @Inject
-    BackupWorkerFactory backupWorkerFactory
+    BackupWorkerImplFactory backupWorkerFactory
 
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
@@ -81,10 +81,7 @@ class Backup_1_7 extends ScriptBase {
             try {
                 before()
                 start { Map args ->
-                    println args
-                    println sources
                     sources.each { Source source ->
-                        println source
                         rsyncClient.start(backup: true, path: source.source, dir: service.destination.dir, port: args.rsyncPort)
                     }
                 }
