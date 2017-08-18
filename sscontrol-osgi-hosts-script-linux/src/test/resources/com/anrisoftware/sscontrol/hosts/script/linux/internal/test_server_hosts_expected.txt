@@ -1,16 +1,10 @@
-#ROBOBEE_BEGIN
-127.0.0.1 localhost robobee-test
-#ROBOBEE_END
-
-#ROBOBEE_BEGIN
-192.168.56.120 andrea-master.muellerpublic.de andrea-master
-#ROBOBEE_END
-
+127.0.0.1	localhost
+127.0.1.1	robobee.test	robobee
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 #ROBOBEE_BEGIN
-127.0.0.1 robobee-test.muellerpublic.de robobee-test
+192.168.56.100 robobee-test.test robobee-test
 #ROBOBEE_END

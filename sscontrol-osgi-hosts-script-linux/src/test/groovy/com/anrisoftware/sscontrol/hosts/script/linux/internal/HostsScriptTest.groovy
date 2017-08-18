@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.hosts.script.linux.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.junit.Before
 import org.junit.Test
 
 import groovy.util.logging.Slf4j
@@ -29,34 +30,34 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_ServerTest extends AbstractTest_Hosts_Linux {
+class HostsScriptTest extends AbstractTestHosts {
 
     @Test
-    void "test_server"() {
-        if (!isHostAvailable('robobee-test')) {
-            return
-        }
+    void "explicit_list"() {
         def test = [
-            name: 'test_server',
+            name: "explicit_list",
             input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+service "ssh", host: "localhost"
 service "hosts" with {
-    ip '127.0.0.1', host: 'localhost', alias: 'robobee-test', on: 'address'
-    ip '192.168.56.120', host: 'andrea-master.muellerpublic.de', alias: 'andrea-master'
-    ip '127.0.0.1', host: 'robobee-test.muellerpublic.de', alias: 'robobee-test'
+    ip "192.168.0.52", host: "srv1.ubuntutest.com"
+    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
 }
 """,
             expected: { Map args ->
-                assertStringResource Hosts_Linux_ServerTest, readRemoteFile('/etc/hosts'), "${args.test.name}_hosts_expected.txt"
+                File dir = args.dir
+                assertFileResource HostsScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource HostsScriptTest, dir, "chown.out", "${args.test.name}_chown_expected.txt"
+                assertFileResource HostsScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource HostsScriptTest, dir, "rm.out", "${args.test.name}_rm_expected.txt"
+                assertFileResource HostsScriptTest, dir, "chown.out", "${args.test.name}_chown_expected.txt"
+                assertFileResource HostsScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
             },
         ]
         doTest test
     }
 
-    void createDummyCommands(File dir) {
-    }
-
-    Map getScriptEnv(Map args) {
-        emptyScriptEnv
+    @Before
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
     }
 }
