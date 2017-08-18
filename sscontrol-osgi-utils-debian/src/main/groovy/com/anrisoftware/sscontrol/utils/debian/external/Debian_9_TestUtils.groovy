@@ -15,20 +15,15 @@
  */
 package com.anrisoftware.sscontrol.utils.debian.external
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
-
 /**
- * Debian 8 properties provider from
- * {@code "/debian_8_utils.properties"}.
+ * Debian 8 test utilities.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Debian_8_Properties extends AbstractContextPropertiesProvider {
+class Debian_9_TestUtils {
 
-    private static final URL RESOURCE = Debian_8_Properties.class.getResource("/debian_8_utils.properties")
+    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
 
-    Debian_8_Properties() {
-        super(Debian_8_Properties.class, RESOURCE)
-    }
+    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
 }

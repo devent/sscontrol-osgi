@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import javax.inject.Inject
 
@@ -48,6 +49,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 
 /**
@@ -79,13 +81,16 @@ abstract class AbstractTestHostname extends AbstractScriptTestBase {
     }
 
     void createDummyCommands(File dir) {
+        createCommand grepCommand, dir, "grep"
         createEchoCommands dir, [
             'mkdir',
             'chown',
             'chmod',
             'sudo',
             'apt-get',
-            'hostnamectl'
+            'hostnamectl',
+            'id',
+            'dpkg',
         ]
     }
 
@@ -101,6 +106,7 @@ abstract class AbstractTestHostname extends AbstractScriptTestBase {
             new Hostname_Debian_9_Module(),
             new SshModule(),
             new SshPreModule(),
+            new DebianUtilsModule(),
             new DebugLoggingModule(),
             new StringsModule(),
             new HostServicesModule(),

@@ -28,22 +28,22 @@ import com.google.inject.assistedinject.Assisted
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Debian_8_Utils extends DebianUtils {
+class Debian_9_Utils extends DebianUtils {
 
     @Inject
-    Debian_8_Properties propertiesProvider
+    Debian_9_Properties propertiesProvider
 
     TemplateResource commandsTemplate
 
     @Inject
-    Debian_8_Utils(@Assisted HostServiceScript script) {
+    Debian_9_Utils(@Assisted HostServiceScript script) {
         super(script)
     }
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('DebianUtils')
-        this.commandsTemplate = templates.getResource('debian_8_commands')
+        this.commandsTemplate = templates.getResource('debian_9_commands')
     }
 
     @Override

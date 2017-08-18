@@ -36,9 +36,9 @@ import groovy.util.logging.Slf4j
 class HostnameServerTest extends AbstractTestHostname {
 
     @Test
-    void "hostname script"() {
+    void "hostname_server_fqdn"() {
         def test = [
-            name: "hostname_script_fqdn",
+            name: "hostname_server_fqdn",
             input: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "hostname" with {
