@@ -15,7 +15,11 @@
  */
 package com.anrisoftware.sscontrol.hostname.script.debian.external
 
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.hostname.script.systemd.external.Hostname_Systemd
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_Utils
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -28,6 +32,13 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Hostname_Debian extends Hostname_Systemd {
 
+    Debian_9_Utils debian
+
+    @Inject
+    void setDebianUtilsFactory(Debian_9_UtilsFactory factory) {
+        this.debian = factory.create this
+    }
+
     @Override
     def run() {
         installPackages()
@@ -36,8 +47,7 @@ abstract class Hostname_Debian extends Hostname_Systemd {
 
     void installPackages() {
         log.info "Installing packages {}.", packages
-        shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+        debian.installPackages()
     }
 
     @Override

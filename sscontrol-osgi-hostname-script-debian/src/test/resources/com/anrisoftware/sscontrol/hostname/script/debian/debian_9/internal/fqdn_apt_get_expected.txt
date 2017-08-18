@@ -1,1 +1,2 @@
--y install systemd dbus
+-y install dbus
+-y install systemd

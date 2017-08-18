@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_8_UtilsFactory
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ abstract class Collectd_Debian extends ScriptBase {
     DebianUtils debian
 
     @Inject
-    void setDebianFactory(Debian_8_UtilsFactory factory) {
+    void setDebianFactory(Debian_9_UtilsFactory factory) {
         this.debian = factory.create(this)
     }
 

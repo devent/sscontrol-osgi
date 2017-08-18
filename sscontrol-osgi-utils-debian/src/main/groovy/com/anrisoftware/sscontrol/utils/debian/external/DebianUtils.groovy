@@ -100,9 +100,9 @@ abstract class DebianUtils {
         def a = new HashMap(args)
         a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
-        a.vars = args <<
-                [nameInstalled: grepPackageNameInstalled] <<
-                [versionInstalled: getGrepPackageVersionInstalled(args.version)]
+        a.vars = new HashMap(args)
+        a.vars.nameInstalled = grepPackageNameInstalled
+        a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
         a.resource = commandsTemplate
         a.name = 'checkPackage'
         def ret = script.shell a call()
@@ -118,7 +118,7 @@ abstract class DebianUtils {
      * @param timeout the timeout Duration. Defaults to {@code timeoutLong}.
      */
     void installPackages(List packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
-        installPackages packages: packages, timeout: timeout, vars: [checkInstalled: checkInstalled]
+        installPackages packages: packages, timeout: timeout, checkInstalled: checkInstalled
     }
 
     /**
@@ -129,9 +129,11 @@ abstract class DebianUtils {
         log.info "Installing packages {}.", args
         List packages = args.packages
         def a = new HashMap(args)
-        a.vars = args.vars ? new HashMap(args.vars) : [:]
         a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
+        a.vars = new HashMap(args)
+        a.vars.nameInstalled = grepPackageNameInstalled
+        a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
         a.resource = commandsTemplate
         a.name = 'installPackage'
         packages.each {
