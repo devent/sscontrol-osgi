@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
@@ -278,7 +278,7 @@ service "k8s-node" with {
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.fail2ban.external.Fail2ban;
 import com.anrisoftware.sscontrol.fail2ban.external.Fail2banService;
 import com.anrisoftware.sscontrol.fail2ban.external.Jail;
 import com.anrisoftware.sscontrol.fail2ban.internal.JailImpl.JailImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -76,7 +76,7 @@ public class Fail2banImpl implements Fail2ban {
 
     @AssistedInject
     Fail2banImpl(Fail2banImplLogger log, JailImplFactory jailFactory,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.jailFactory = jailFactory;

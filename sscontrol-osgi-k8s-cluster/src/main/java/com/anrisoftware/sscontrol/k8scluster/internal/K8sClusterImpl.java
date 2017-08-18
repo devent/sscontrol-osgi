@@ -40,7 +40,7 @@ import com.anrisoftware.sscontrol.k8scluster.internal.ContextImpl.ContextImplFac
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -77,7 +77,7 @@ public class K8sClusterImpl implements K8sCluster {
 
     @Inject
     K8sClusterImpl(K8sClusterImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             ClusterImplFactory clusterFactory,
             ContextImplFactory contextFactory,
             K8sClusterHostImplFactory clusterHostFactory,

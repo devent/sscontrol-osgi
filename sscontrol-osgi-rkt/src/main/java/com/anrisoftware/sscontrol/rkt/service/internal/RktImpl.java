@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.rkt.service.external.Rkt;
 import com.anrisoftware.sscontrol.rkt.service.external.RktService;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -58,7 +58,7 @@ public class RktImpl implements Rkt {
     private String version;
 
     @AssistedInject
-    RktImpl(HostPropertiesService propertiesService,
+    RktImpl(HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.targets = new ArrayList<TargetHost>();
         this.serviceProperties = propertiesService.create();

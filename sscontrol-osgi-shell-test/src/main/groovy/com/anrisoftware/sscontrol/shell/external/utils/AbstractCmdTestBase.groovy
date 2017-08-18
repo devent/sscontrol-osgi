@@ -23,7 +23,7 @@ import org.junit.Before
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -77,7 +77,7 @@ abstract class AbstractCmdTestBase {
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }
                 )

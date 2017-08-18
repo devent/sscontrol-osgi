@@ -41,7 +41,7 @@ import com.anrisoftware.sscontrol.ssh.internal.SshModule
 import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
@@ -120,7 +120,7 @@ class ParserImplTest {
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

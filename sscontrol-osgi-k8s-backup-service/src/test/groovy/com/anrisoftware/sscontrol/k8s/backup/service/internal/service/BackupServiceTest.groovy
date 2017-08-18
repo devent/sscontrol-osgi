@@ -48,7 +48,7 @@ import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScriptModule
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
@@ -305,7 +305,7 @@ service "backup" with {
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 })
         injector.injectMembers(this)

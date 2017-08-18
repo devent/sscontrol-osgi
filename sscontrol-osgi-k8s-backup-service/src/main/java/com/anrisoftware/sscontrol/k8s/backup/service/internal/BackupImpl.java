@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -93,7 +93,7 @@ public class BackupImpl implements Backup {
     private final List<Source> sources;
 
     @Inject
-    BackupImpl(BackupImplLogger log, HostPropertiesService propertiesService,
+    BackupImpl(BackupImplLogger log, HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();

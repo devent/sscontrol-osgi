@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.service.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.service.external.HostnameService;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -55,7 +55,7 @@ public class HostnameImpl implements Hostname {
 
     @AssistedInject
     HostnameImpl(HostnameImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<TargetHost>();

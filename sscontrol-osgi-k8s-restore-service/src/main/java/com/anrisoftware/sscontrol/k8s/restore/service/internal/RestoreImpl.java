@@ -39,7 +39,7 @@ import com.anrisoftware.sscontrol.k8s.restore.service.internal.DirSourceImpl.Dir
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -95,7 +95,7 @@ public class RestoreImpl implements Restore {
     private final List<Source> sources;
 
     @Inject
-    RestoreImpl(RestoreImplLogger log, HostPropertiesService propertiesService,
+    RestoreImpl(RestoreImplLogger log, HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();

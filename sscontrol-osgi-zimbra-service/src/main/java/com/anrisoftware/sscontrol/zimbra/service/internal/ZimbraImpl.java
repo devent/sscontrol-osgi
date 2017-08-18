@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -64,7 +64,7 @@ public class ZimbraImpl implements Zimbra {
     private transient DomainImplFactory domainFactory;
 
     @AssistedInject
-    ZimbraImpl(HostPropertiesService propertiesService,
+    ZimbraImpl(HostServicePropertiesService propertiesService,
             DomainImplFactory domainFactory,
             @Assisted Map<String, Object> args) {
         this.targets = new ArrayList<TargetHost>();

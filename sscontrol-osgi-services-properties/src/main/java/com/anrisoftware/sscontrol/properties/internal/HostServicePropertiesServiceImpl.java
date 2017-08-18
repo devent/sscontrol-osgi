@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.properties.internal;
 
+import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
 
 import javax.inject.Inject;
@@ -27,10 +28,9 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
  * Properties service.
@@ -39,8 +39,9 @@ import com.google.inject.Guice;
  * @version 1.0
  */
 @Component
-@Service(HostPropertiesService.class)
-public class HostPropertiesServiceImpl implements HostPropertiesService {
+@Service(HostServicePropertiesService.class)
+public class HostServicePropertiesServiceImpl
+        implements HostServicePropertiesService {
 
     @Inject
     private HostServicePropertiesImplFactory factory;
@@ -55,14 +56,13 @@ public class HostPropertiesServiceImpl implements HostPropertiesService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new PropertiesModule(),
-                new AbstractModule() {
+        createInjector(new PropertiesModule(), new AbstractModule() {
 
-                    @Override
-                    protected void configure() {
-                        bind(TypedAllPropertiesFactory.class)
-                                .toProvider(of(typedAllPropertiesService));
-                    }
-                }).injectMembers(this);
+            @Override
+            protected void configure() {
+                bind(TypedAllPropertiesFactory.class)
+                        .toProvider(of(typedAllPropertiesService));
+            }
+        }).injectMembers(this);
     }
 }

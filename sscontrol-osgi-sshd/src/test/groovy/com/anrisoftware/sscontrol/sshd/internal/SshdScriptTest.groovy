@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.sshd.external.Sshd
 import com.anrisoftware.sscontrol.sshd.internal.SshdImpl.SshdImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
@@ -127,7 +127,7 @@ service "sshd" with {
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

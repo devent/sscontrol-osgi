@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.AdminImpl
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.StorageImpl.StorageImplFactory;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.UserImpl.UserImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -99,7 +99,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             AdminImplFactory adminFactory, UserImplFactory userFactory,
             StorageImplFactory storageFactory,
             @Assisted Map<String, Object> args) {

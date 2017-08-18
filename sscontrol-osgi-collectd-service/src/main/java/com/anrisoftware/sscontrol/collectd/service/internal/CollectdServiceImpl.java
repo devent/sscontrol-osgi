@@ -31,7 +31,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.collectd.service.external.Collectd;
 import com.anrisoftware.sscontrol.collectd.service.external.CollectdService;
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.HostServicesService;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
@@ -61,7 +61,7 @@ public class CollectdServiceImpl implements CollectdService {
     private TargetsService targetsService;
 
     @Reference
-    private HostPropertiesService hostPropertiesService;
+    private HostServicePropertiesService hostPropertiesService;
 
     @Inject
     private CollectdImplFactory serviceFactory;
@@ -85,7 +85,7 @@ public class CollectdServiceImpl implements CollectdService {
                 bind(HostServicesService.class)
                         .toProvider(of(hostServicesService));
                 bind(TargetsService.class).toProvider(of(targetsService));
-                bind(HostPropertiesService.class)
+                bind(HostServicePropertiesService.class)
                         .toProvider(of(hostPropertiesService));
             }
         }).injectMembers(this);

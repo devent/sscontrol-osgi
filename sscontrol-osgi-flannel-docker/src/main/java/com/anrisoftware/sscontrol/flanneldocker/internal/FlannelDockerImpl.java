@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.flanneldocker.external.Network;
 import com.anrisoftware.sscontrol.flanneldocker.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.internal.NetworkImpl.NetworkImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -96,7 +96,7 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     @Inject
     FlannelDockerImpl(FlannelDockerImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             EtcdImplFactory etcdFactory, NetworkImplFactory networkFactory,
             BindingImplFactory bindingFactory,
             @Assisted Map<String, Object> args) {

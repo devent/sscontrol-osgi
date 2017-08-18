@@ -33,7 +33,7 @@ import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplF
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
@@ -541,7 +541,7 @@ service "ssh", socket: "/tmp/socket" with {
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

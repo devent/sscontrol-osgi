@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.shell.external.utils
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
@@ -73,7 +73,7 @@ class SshFactory implements Ssh {
     def serviceProperties
 
     @Inject
-    SshFactory(HostPropertiesService propertiesService) {
+    SshFactory(HostServicePropertiesService propertiesService) {
         this.serviceProperties = propertiesService.create()
     }
 

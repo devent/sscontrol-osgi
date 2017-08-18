@@ -46,8 +46,8 @@ import com.anrisoftware.propertiesutils.StringToType;
 import com.anrisoftware.propertiesutils.TypedAllProperties;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.sscontrol.types.app.external.ArgumentInvalidException;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.google.inject.assistedinject.AssistedInject;
 
 import groovy.lang.GroovyObjectSupport;
@@ -69,7 +69,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
      * @version 1.0
      */
     public interface HostServicePropertiesImplFactory
-            extends HostPropertiesService {
+            extends HostServicePropertiesService {
 
     }
 

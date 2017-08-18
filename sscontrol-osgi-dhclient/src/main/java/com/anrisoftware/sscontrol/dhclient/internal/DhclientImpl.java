@@ -30,7 +30,7 @@ import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.google.inject.assistedinject.Assisted;
@@ -57,7 +57,7 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
 
     @SuppressWarnings("unchecked")
     @AssistedInject
-    DhclientImpl(HostPropertiesService propertiesService,
+    DhclientImpl(HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         super();
         this.targets = (List<TargetHost>) args.get("targets");
