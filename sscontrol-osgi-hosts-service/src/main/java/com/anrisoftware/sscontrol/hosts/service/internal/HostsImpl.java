@@ -32,8 +32,8 @@ import com.anrisoftware.sscontrol.hosts.service.external.Host;
 import com.anrisoftware.sscontrol.hosts.service.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.service.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.service.internal.HostImpl.HostImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
@@ -69,25 +69,25 @@ public class HostsImpl implements Hosts {
 
     @AssistedInject
     HostsImpl(HostsImplLogger log, HostImplFactory hostFactory,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.hostFactory = hostFactory;
-        this.targets = new ArrayList<TargetHost>();
-        this.hosts = new ArrayList<Host>();
+        this.targets = new ArrayList<>();
+        this.hosts = new ArrayList<>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }
 
     public void ip(Map<String, Object> args, String address) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
+        Map<String, Object> a = new HashMap<>(args);
         a.put("ip", address);
         ip(a);
     }
 
     public void ip(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
-        List<String> aliases = new ArrayList<String>();
+        Map<String, Object> a = new HashMap<>(args);
+        List<String> aliases = new ArrayList<>();
         a.put("address", a.get("ip"));
         a.put("aliases", aliases);
         Object v = a.get("alias");
