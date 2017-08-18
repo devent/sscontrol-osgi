@@ -30,34 +30,35 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Test extends AbstractTest_Hosts_Linux {
+class HostsServerTest extends AbstractTestHosts {
 
     @Test
-    void "explicit_list"() {
+    void "test_server"() {
         def test = [
-            name: "explicit_list",
-            input: """
-service "ssh", host: "localhost"
+            name: 'test_server',
+            input: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "hosts" with {
-    ip "192.168.0.52", host: "srv1.ubuntutest.com"
-    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
+    ip '192.168.56.100', host: 'robobee-test.test', alias: 'robobee-test'
 }
-""",
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
             expected: { Map args ->
-                File dir = args.dir
-                assertFileResource Hosts_Linux_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Hosts_Linux_Test, dir, "chown.out", "${args.test.name}_chown_expected.txt"
-                assertFileResource Hosts_Linux_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource Hosts_Linux_Test, dir, "rm.out", "${args.test.name}_rm_expected.txt"
-                assertFileResource Hosts_Linux_Test, dir, "chown.out", "${args.test.name}_chown_expected.txt"
-                assertFileResource Hosts_Linux_Test, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertStringResource HostsServerTest, readRemoteFile('/etc/hosts'), "${args.test.name}_hosts_expected.txt"
             },
         ]
         doTest test
     }
 
     @Before
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
+    void beforeMethod() {
+        checkRobobeeSocket()
+    }
+
+    void createDummyCommands(File dir) {
+    }
+
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
     }
 }

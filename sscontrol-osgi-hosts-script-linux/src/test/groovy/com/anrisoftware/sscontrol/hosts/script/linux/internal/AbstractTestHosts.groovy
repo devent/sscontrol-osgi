@@ -40,7 +40,6 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.hosts.script.linux.external.Hosts_Linux_Factory
-import com.anrisoftware.sscontrol.hosts.script.linux.internal.Hosts_Linux_Module
 import com.anrisoftware.sscontrol.hosts.service.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.service.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -62,7 +61,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-abstract class AbstractTest_Hosts_Linux extends AbstractScriptTestBase {
+abstract class AbstractTestHosts extends AbstractScriptTestBase {
 
     @Inject
     SshImplFactory sshFactory
@@ -81,7 +80,7 @@ abstract class AbstractTest_Hosts_Linux extends AbstractScriptTestBase {
     }
 
     String getScriptServiceName() {
-        'hosts/debian/8'
+        'hosts/linux/0'
     }
 
     void createDummyCommands(File dir) {
@@ -100,7 +99,7 @@ abstract class AbstractTest_Hosts_Linux extends AbstractScriptTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'hosts', hostsFactory
-        services.putAvailableScriptService 'hosts/debian/8', hostsLinuxFactory
+        services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
     }
 
     List getAdditionalModules() {

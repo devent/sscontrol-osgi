@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hosts_Linux_Andrea_Master_Local_Test extends AbstractTest_Hosts_Linux {
+class Hosts_Andrea_Master_Test extends AbstractTestHosts {
 
     @Test
     void "andrea_master_local_nodes"() {
