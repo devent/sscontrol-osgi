@@ -53,7 +53,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.internal.KubeletImpl.KubeletImplF
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -123,7 +123,7 @@ public class K8sImpl implements K8s {
     @Inject
     K8sImpl(K8sImplLogger log, ClusterImplFactory clusterFactory,
             Map<String, PluginFactory> pluginFactories,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             KubeletImplFactory kubeletFactory, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;

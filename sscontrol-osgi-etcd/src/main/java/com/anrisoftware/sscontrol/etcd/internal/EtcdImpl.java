@@ -43,7 +43,7 @@ import com.anrisoftware.sscontrol.etcd.external.Peer;
 import com.anrisoftware.sscontrol.etcd.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -99,7 +99,7 @@ public class EtcdImpl implements Etcd {
     private Peer peer;
 
     @Inject
-    EtcdImpl(EtcdImplLogger log, HostPropertiesService propertiesService,
+    EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
             BindingFactory bindingFactory, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;

@@ -31,7 +31,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.rkt.service.external.Rkt;
 import com.anrisoftware.sscontrol.rkt.service.external.RktService;
 import com.anrisoftware.sscontrol.rkt.service.internal.RktImpl.RktImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.HostServicesService;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
@@ -61,7 +61,7 @@ public class RktServiceImpl implements RktService {
     private TargetsService targetsService;
 
     @Reference
-    private HostPropertiesService hostPropertiesService;
+    private HostServicePropertiesService hostPropertiesService;
 
     @Inject
     private RktImplFactory hostnameFactory;
@@ -85,7 +85,7 @@ public class RktServiceImpl implements RktService {
                 bind(HostServicesService.class)
                         .toProvider(of(hostServicesService));
                 bind(TargetsService.class).toProvider(of(targetsService));
-                bind(HostPropertiesService.class)
+                bind(HostServicePropertiesService.class)
                         .toProvider(of(hostPropertiesService));
             }
         }).injectMembers(this);

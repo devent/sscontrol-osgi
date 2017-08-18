@@ -35,7 +35,7 @@ import com.anrisoftware.globalpom.core.resources.ToURI;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
@@ -84,7 +84,7 @@ public class SshImpl implements Ssh {
     private Object socket;
 
     @AssistedInject
-    SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
+    SshImpl(SshImplLogger log, HostServicePropertiesService propertiesService,
             SshHostImplFactory hostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;

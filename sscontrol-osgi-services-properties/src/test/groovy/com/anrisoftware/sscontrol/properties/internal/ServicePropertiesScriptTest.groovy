@@ -28,7 +28,7 @@ import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesStub.PropertiesStubFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesStub.PropertiesStubServiceImpl
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -94,7 +94,7 @@ dhclient
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                         install(new FactoryModuleBuilder().implement(PropertiesStub, PropertiesStub).build(PropertiesStubFactory));
                     }
                 })

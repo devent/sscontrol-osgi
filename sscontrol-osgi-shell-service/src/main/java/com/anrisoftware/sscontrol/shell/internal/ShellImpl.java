@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.shell.external.Script;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.ShellService;
 import com.anrisoftware.sscontrol.shell.internal.ScriptImpl.ScriptImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -67,7 +67,7 @@ public class ShellImpl implements Shell {
     private transient Map<String, Object> vars;
 
     @AssistedInject
-    ShellImpl(ShellImplLogger log, HostPropertiesService propertiesService,
+    ShellImpl(ShellImplLogger log, HostServicePropertiesService propertiesService,
             ScriptImplFactory scriptFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;

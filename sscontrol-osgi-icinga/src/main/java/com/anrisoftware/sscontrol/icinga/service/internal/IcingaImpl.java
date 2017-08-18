@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.icinga.service.external.IcingaService;
 import com.anrisoftware.sscontrol.icinga.service.external.Plugin;
 import com.anrisoftware.sscontrol.icinga.service.internal.ConfigImpl.ConfigImplFactory;
 import com.anrisoftware.sscontrol.icinga.service.internal.FeatureImpl.FeatureImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
@@ -85,7 +85,7 @@ public class IcingaImpl implements Icinga {
     private transient ConfigImplFactory configFactory;
 
     @Inject
-    IcingaImpl(IcingaImplLogger log, HostPropertiesService propertiesService,
+    IcingaImpl(IcingaImplLogger log, HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();

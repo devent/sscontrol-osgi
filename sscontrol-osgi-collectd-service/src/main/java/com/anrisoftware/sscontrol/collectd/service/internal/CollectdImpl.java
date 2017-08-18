@@ -31,7 +31,7 @@ import com.anrisoftware.sscontrol.collectd.service.external.Collectd;
 import com.anrisoftware.sscontrol.collectd.service.external.CollectdService;
 import com.anrisoftware.sscontrol.collectd.service.external.Config;
 import com.anrisoftware.sscontrol.collectd.service.internal.ConfigImpl.ConfigImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
@@ -67,7 +67,7 @@ public class CollectdImpl implements Collectd {
 
     @AssistedInject
     CollectdImpl(CollectdImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<TargetHost>();

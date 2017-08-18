@@ -19,7 +19,7 @@ import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyU
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService
@@ -74,7 +74,7 @@ class PropertiesStub implements HostService {
     HostServiceProperties serviceProperties
 
     @Inject
-    PropertiesStub(HostPropertiesService propertiesService, @Assisted Map<String, Object> args) {
+    PropertiesStub(HostServicePropertiesService propertiesService, @Assisted Map<String, Object> args) {
         this.serviceProperties = propertiesService.create()
     }
 

@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.repo.git.service.external.Remote;
 import com.anrisoftware.sscontrol.repo.git.service.internal.CheckoutImpl.CheckoutImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoHostImpl.GitRepoHostImplFactory;
 import com.anrisoftware.sscontrol.repo.git.service.internal.RemoteImpl.RemoteImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -88,7 +88,7 @@ public class GitRepoImpl implements GitRepo {
     private Checkout checkout;
 
     @Inject
-    GitRepoImpl(GitRepoImplLogger log, HostPropertiesService propertiesService,
+    GitRepoImpl(GitRepoImplLogger log, HostServicePropertiesService propertiesService,
             GitRepoHostImplFactory hostFactory, RemoteImplFactory remoteFactory,
             CheckoutImplFactory checkoutFactory,
             @Assisted Map<String, Object> args) {

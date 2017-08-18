@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.registry.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryHostImpl.DockerRegistryHostImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.HostImpl.HostImplFactory;
 import com.anrisoftware.sscontrol.registry.docker.service.internal.RegistryImpl.RegistryImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -89,7 +89,7 @@ public class DockerRegistryImpl implements DockerRegistry {
 
     @Inject
     DockerRegistryImpl(DockerRegistryImplLogger log,
-            HostPropertiesService propertiesService,
+            HostServicePropertiesService propertiesService,
             DockerRegistryHostImplFactory registryHostFactory,
             HostImplFactory hostFactory, RegistryImplFactory registryFactory,
             @Assisted Map<String, Object> args) {
