@@ -30,12 +30,12 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class HostsServerTest extends AbstractTestHosts {
+class Hosts_Debian_9_ServerTest extends AbstractTestHosts {
 
     @Test
-    void "test_server"() {
+    void "debian_9_test_server"() {
         def test = [
-            name: 'test_server',
+            name: 'debian_9_test_server',
             input: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "hosts" with {
@@ -44,7 +44,7 @@ service "hosts" with {
 ''',
             scriptVars: [robobeeSocket: robobeeSocket],
             expected: { Map args ->
-                assertStringResource HostsServerTest, readRemoteFile('/etc/hosts'), "${args.test.name}_hosts_expected.txt"
+                assertStringResource Hosts_Debian_9_ServerTest, readRemoteFile('/etc/hosts'), "${args.test.name}_hosts_expected.txt"
             },
         ]
         doTest test
