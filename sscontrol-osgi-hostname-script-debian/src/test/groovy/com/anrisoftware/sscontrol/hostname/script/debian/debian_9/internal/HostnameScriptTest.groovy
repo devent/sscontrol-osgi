@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.debian_8.internal
+package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Test extends AbstractTestHostname_Debian_8 {
+class HostnameScriptTest extends AbstractTestHostname {
 
     @Test
     void "short"() {
@@ -42,9 +42,9 @@ service "hostname", fqdn: "blog.muellerpublic.de"
 """,
             expected: { Map args ->
                 File dir = args.dir
-                assertFileResource Hostname_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Hostname_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Hostname_Debian_8_Test, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
             },
         ]
         doTest test
@@ -63,9 +63,9 @@ service "hostname" with {
 """,
             expected: { Map args ->
                 File dir = args.dir
-                assertFileResource Hostname_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Hostname_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Hostname_Debian_8_Test, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource HostnameScriptTest, dir, "hostnamectl.out", "${args.test.name}_hostnamectl_expected.txt"
             },
         ]
         doTest test

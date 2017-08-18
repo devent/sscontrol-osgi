@@ -58,26 +58,6 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
 
-    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
-
-    static final String localhostSocket = "/tmp/${System.getProperty('user.name')}@localhost:22"
-
-    static final String robobeeLocalhostSocket = "/tmp/robobee@localhost:22"
-
-    /**
-     * Checks if #localhostSocket is available.
-     */
-    void checkLocalhostSocket() {
-        assumeTrue "$localhostSocket available", new File(localhostSocket).exists()
-    }
-
-    /**
-     * Checks if #robobeeSocket is available.
-     */
-    void checkRobobeeSocket() {
-        assumeTrue "$robobeeSocket available", new File(robobeeSocket).exists()
-    }
-
     @Inject
     ParserImplFactory parserFactory
 

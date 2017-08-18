@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.debian_8.internal
+package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -33,7 +33,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Andrea_Master_Local_Test extends AbstractTestHostname_Debian_8 {
+class HostnameLocalTest extends AbstractTestHostname {
 
     @Test
     void "andrea_master_local_nodes"() {
@@ -65,7 +65,7 @@ targets['andrea-nodes'].eachWithIndex { host, i ->
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {

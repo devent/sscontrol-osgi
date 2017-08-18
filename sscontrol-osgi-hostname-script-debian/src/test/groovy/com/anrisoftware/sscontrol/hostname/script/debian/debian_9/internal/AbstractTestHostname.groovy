@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.debian_8.internal
+package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -24,14 +24,13 @@ import org.junit.Before
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.command.shell.external.Cmd
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.command.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.command.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.command.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImpl
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
@@ -39,8 +38,8 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Factory
-import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Module
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Factory
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Module
 import com.anrisoftware.sscontrol.hostname.service.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.service.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -50,7 +49,6 @@ import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 
 /**
  *
@@ -58,7 +56,7 @@ import com.google.inject.AbstractModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractTestHostname_Debian_8 extends AbstractScriptTestBase {
+abstract class AbstractTestHostname extends AbstractScriptTestBase {
 
     @Inject
     SshImplFactory sshFactory
@@ -70,14 +68,14 @@ abstract class AbstractTestHostname_Debian_8 extends AbstractScriptTestBase {
     HostnameImplFactory hostnameFactory
 
     @Inject
-    Hostname_Debian_8_Factory hostnameDebianFactory
+    Hostname_Debian_9_Factory hostnameDebianFactory
 
     String getServiceName() {
         'hostname'
     }
 
     String getScriptServiceName() {
-        'hostname/debian/8'
+        'hostname/debian/9'
     }
 
     void createDummyCommands(File dir) {
@@ -94,13 +92,13 @@ abstract class AbstractTestHostname_Debian_8 extends AbstractScriptTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableService 'hostname', hostnameFactory
-        services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
+        services.putAvailableScriptService 'hostname/debian/9', hostnameDebianFactory
     }
 
     List getAdditionalModules() {
         [
             new HostnameModule(),
-            new Hostname_Debian_8_Module(),
+            new Hostname_Debian_9_Module(),
             new SshModule(),
             new SshPreModule(),
             new DebugLoggingModule(),
@@ -119,13 +117,7 @@ abstract class AbstractTestHostname_Debian_8 extends AbstractScriptTestBase {
             new TemplateResModule(),
             new SystemNameMappingsModule(),
             new StModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                    bind Cmd to CmdImpl
-                }
-            }
+            new CmdImplModule()
         ]
     }
 

@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8;
+package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * <i>Hostname Debian 8</i> properties provider from
- * {@code "/hostname_debian_8.properties"}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Hostname_Debian_8_Properties extends AbstractContextPropertiesProvider {
-
-    private static final URL RESOURCE = Hostname_Debian_8_Properties.class.getResource("/hostname_debian_8.properties");
-
-    Hostname_Debian_8_Properties() {
-        super(Hostname_Debian_8_Properties.class, RESOURCE);
-    }
+public interface Hostname_Debian_9_Factory extends HostServiceScriptService {
 }
