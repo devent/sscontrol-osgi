@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8
+package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9
 
-import static com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Service.*
 import static com.google.inject.Guice.createInjector
 
 import javax.inject.Inject
@@ -28,16 +28,16 @@ import com.anrisoftware.sscontrol.hostname.script.debian.external.Hostname_Debia
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>hostname</i> on Debian 8 systems.
+ * Configures the hostname service on Debian 9 systems.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Hostname_Debian_8 extends Hostname_Debian {
+class Hostname_Debian_9 extends Hostname_Debian {
 
     @Inject
-    Hostname_Debian_8_Properties debianPropertiesProvider
+    Hostname_Debian_9_Properties debianPropertiesProvider
 
     @Activate
     void start() {

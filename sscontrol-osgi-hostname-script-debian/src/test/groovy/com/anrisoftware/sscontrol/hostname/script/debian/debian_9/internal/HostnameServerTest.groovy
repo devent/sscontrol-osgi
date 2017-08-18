@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.debian_8.internal
+package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -33,22 +33,22 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Server_Test extends AbstractTestHostname_Debian_8 {
+class HostnameServerTest extends AbstractTestHostname {
 
     @Test
     void "hostname script"() {
         def test = [
             name: "hostname_script_fqdn",
-            input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            input: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "hostname" with {
-    // Sets the hostname.
     set fqdn: "robobee-test.muellerpublic.de"
 }
-""",
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
             expected: { Map args ->
-                assertStringResource Hostname_Debian_8_Server_Test, readRemoteFile('/etc/hostname'), "${args.test.name}_hostname_expected.txt"
-                assertStringResource Hostname_Debian_8_Server_Test, remoteCommand('hostname -f'), "${args.test.name}_hostname_f_expected.txt"
+                assertStringResource HostnameServerTest, readRemoteFile('/etc/hostname'), "${args.test.name}_hostname_expected.txt"
+                assertStringResource HostnameServerTest, remoteCommand('hostname -f'), "${args.test.name}_hostname_f_expected.txt"
             },
         ]
         doTest test
@@ -56,11 +56,11 @@ service "hostname" with {
 
     @Before
     void beforeMethod() {
-        assumeTrue testHostAvailable
+        checkRobobeeSocket()
     }
 
     Map getScriptEnv(Map args) {
-        emptyScriptEnv
+        getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {

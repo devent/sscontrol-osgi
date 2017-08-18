@@ -49,8 +49,8 @@ import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplF
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -72,6 +72,12 @@ abstract class AbstractScriptTestBase {
 
     static final String LOCAL_PROFILE = 'project.custom.local.tests.enabled'
 
+    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
+
+    static final String localhostSocket = "/tmp/${System.getProperty('user.name')}@localhost:22"
+
+    static final String robobeeLocalhostSocket = "/tmp/robobee@localhost:22"
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
@@ -90,6 +96,20 @@ abstract class AbstractScriptTestBase {
     PropertiesThreadsFactory threadsFactory
 
     Threads threads
+
+    /**
+     * Checks if #localhostSocket is available.
+     */
+    void checkLocalhostSocket() {
+        assumeTrue "$localhostSocket available", new File(localhostSocket).exists()
+    }
+
+    /**
+     * Checks if #robobeeSocket is available.
+     */
+    void checkRobobeeSocket() {
+        assumeTrue "$robobeeSocket available", new File(robobeeSocket).exists()
+    }
 
     static boolean isTestHostAvailable() {
         return isHostAvailable('robobee-test')

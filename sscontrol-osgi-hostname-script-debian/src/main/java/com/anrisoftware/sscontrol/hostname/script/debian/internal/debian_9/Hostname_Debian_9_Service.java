@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8;
+package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -26,8 +26,8 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Factory;
-import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_8.Hostname_Debian_8_Module;
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Factory;
+import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Module;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
@@ -42,14 +42,14 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Hostname_Debian_8_Service implements HostServiceScriptService {
+public class Hostname_Debian_9_Service implements HostServiceScriptService {
 
-    static final String SYSTEM_VERSION = "8";
+    static final String SYSTEM_VERSION = "9";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Hostname_Debian_8_Factory scriptFactory;
+    private Hostname_Debian_9_Factory scriptFactory;
 
     public String getSystemName() {
         return SYSTEM_NAME;
@@ -68,7 +68,7 @@ public class Hostname_Debian_8_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new Hostname_Debian_8_Module()).injectMembers(this);
+        createInjector(new Hostname_Debian_9_Module()).injectMembers(this);
     }
 
 }
