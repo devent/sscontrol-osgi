@@ -36,10 +36,11 @@ class HostnameScriptTest extends AbstractTestHostname {
     void "short"() {
         def test = [
             name: "short",
-            input: """
-service "ssh", host: "localhost"
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "hostname", fqdn: "blog.muellerpublic.de"
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket],
             expected: { Map args ->
                 File dir = args.dir
                 assertFileResource HostnameScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
@@ -54,13 +55,14 @@ service "hostname", fqdn: "blog.muellerpublic.de"
     void "fqdn"() {
         def test = [
             name: "fqdn",
-            input: """
-service "ssh", host: "localhost"
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "hostname" with {
     // Sets the hostname.
     set fqdn: "blog.muellerpublic.de"
 }
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket],
             expected: { Map args ->
                 File dir = args.dir
                 assertFileResource HostnameScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
@@ -74,5 +76,6 @@ service "hostname" with {
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
