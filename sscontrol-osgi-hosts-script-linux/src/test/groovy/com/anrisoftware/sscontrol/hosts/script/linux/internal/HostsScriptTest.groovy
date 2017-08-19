@@ -36,13 +36,14 @@ class HostsScriptTest extends AbstractTestHosts {
     void "explicit_list"() {
         def test = [
             name: "explicit_list",
-            input: """
-service "ssh", host: "localhost"
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "hosts" with {
     ip "192.168.0.52", host: "srv1.ubuntutest.com"
     ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
 }
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket],
             expected: { Map args ->
                 File dir = args.dir
                 assertFileResource HostsScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
@@ -59,5 +60,6 @@ service "hosts" with {
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }
