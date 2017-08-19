@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external
+package com.anrisoftware.sscontrol.sshd.service.internal;
+
+import com.anrisoftware.sscontrol.sshd.service.internal.SshdImpl.SshdImplFactory;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Debian 9 test utilities.
+ *
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Debian_9_TestUtils {
+public class SshdModule extends AbstractModule {
 
-    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(HostService.class, SshdImpl.class)
+                .build(SshdImplFactory.class));
+    }
 
-    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
 }

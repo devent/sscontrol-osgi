@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external
+package com.anrisoftware.sscontrol.sshd.script.debian.sshd_6.external
+
+import com.anrisoftware.sscontrol.sshd.script.linux.sshd_6.external.Abstract_Sshd_6_Systemd
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+
+import groovy.util.logging.Slf4j
 
 /**
- * Debian 9 test utilities.
+ * Configures the <i>Sshd</i> 6.0 service for Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Debian_9_TestUtils {
+@Slf4j
+abstract class Sshd_6_Debian extends Abstract_Sshd_6_Systemd {
 
-    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
+    abstract DebianUtils getDebian()
 
-    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
+    void installPackages() {
+        debian.installPackages()
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

@@ -608,6 +608,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Returns the services of the service.
+     *
+     * <ul>
+     * <li>profile property {@code services}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getServices() {
+        properties.getListProperty "services", defaultProperties
+    }
+
+    /**
      * Returns the character set.
      *
      * <ul>

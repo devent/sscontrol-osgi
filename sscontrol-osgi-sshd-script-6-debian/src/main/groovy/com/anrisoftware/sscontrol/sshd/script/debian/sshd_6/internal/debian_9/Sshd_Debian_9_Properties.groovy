@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external
+package com.anrisoftware.sscontrol.sshd.script.debian.sshd_6.internal.debian_9;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Debian 9 test utilities.
+ * <i>Sshd Debian 9</i> properties provider from
+ * {@code "/sshd_debian_9.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Debian_9_TestUtils {
+class Sshd_Debian_9_Properties extends AbstractContextPropertiesProvider {
 
-    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
+    private static final URL RESOURCE = Sshd_Debian_9_Properties.class.getResource("/sshd_debian_9.properties");
 
-    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
+    Sshd_Debian_9_Properties() {
+        super(Sshd_Debian_9_Properties.class, RESOURCE);
+    }
 }
