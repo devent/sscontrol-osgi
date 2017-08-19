@@ -116,6 +116,7 @@ abstract class AbstractRunnerTestBase extends AbstractScriptTestBase {
         File parent = folder.newFolder()
         File scriptFile = new File(parent, "Script.groovy")
         File dir = folder.newFolder()
+        test.dir = dir
         test.scriptVars = test.scriptVars == null ? [:] : test.scriptVars
         createDummyCommands dir
         assert test.script : "test.script=null"

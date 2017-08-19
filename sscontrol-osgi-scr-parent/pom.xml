@@ -37,9 +37,9 @@
         <module>../sscontrol-osgi-etcd-debian</module>
         <module>../sscontrol-osgi-etcd-systemd</module>
         <module>../sscontrol-osgi-etcd-upstream</module>
-        <module>../sscontrol-osgi-fail2ban</module>
-        <module>../sscontrol-osgi-fail2ban-0-8</module>
-        <module>../sscontrol-osgi-fail2ban-0-8-debian</module>
+        <module>../sscontrol-osgi-fail2ban-service</module>
+        <module>../sscontrol-osgi-fail2ban-script-0-9</module>
+        <module>../sscontrol-osgi-fail2ban-script-debian</module>
         <module>../sscontrol-osgi-flannel-docker</module>
         <module>../sscontrol-osgi-flannel-docker-debian</module>
         <module>../sscontrol-osgi-flannel-docker-systemd</module>
