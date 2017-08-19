@@ -88,8 +88,8 @@
         <module>../sscontrol-osgi-shell-linux</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-ssh-linux</module>
-        <module>../sscontrol-osgi-sshd-script-6-linux</module>
-        <module>../sscontrol-osgi-sshd-script-6-debian</module>
+        <module>../sscontrol-osgi-sshd-script-openssh</module>
+        <module>../sscontrol-osgi-sshd-script-debian</module>
         <module>../sscontrol-osgi-sshd-service</module>
         <module>../sscontrol-osgi-types-app</module>
         <module>../sscontrol-osgi-types-cluster</module>
