@@ -1,6 +1,0 @@
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no user@localhost:/var/lib/robobee/tmp/sshd_config /tmp/replace.dest
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/replace.dest user@localhost:/var/lib/robobee/tmp/replace.dest
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no user@localhost:/var/lib/robobee/tmp/sshd_config /tmp/replace.dest
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/replace.dest user@localhost:/var/lib/robobee/tmp/replace.dest
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no user@localhost:/var/lib/robobee/tmp/sshd_config /tmp/replace.dest
--C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/replace.dest user@localhost:/var/lib/robobee/tmp/replace.dest

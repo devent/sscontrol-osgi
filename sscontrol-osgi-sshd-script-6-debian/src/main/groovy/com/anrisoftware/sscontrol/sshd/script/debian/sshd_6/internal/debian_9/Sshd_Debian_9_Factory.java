@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external
+package com.anrisoftware.sscontrol.sshd.script.debian.sshd_6.internal.debian_9;
+
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Debian 9 test utilities.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Debian_9_TestUtils {
-
-    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
-
-    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
+public interface Sshd_Debian_9_Factory extends HostServiceScriptService {
 }

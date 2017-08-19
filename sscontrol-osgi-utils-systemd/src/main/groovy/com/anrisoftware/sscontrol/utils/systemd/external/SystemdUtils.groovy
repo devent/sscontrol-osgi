@@ -63,15 +63,19 @@ class SystemdUtils {
 
     /**
      * Stop the specified service.
+     * @param service the service to stop. Defaults to the
+     * first entry from the profile property {@code services}.
      */
-    def stopService(String service) {
-        stopService([service])
+    def stopService(String service=script.services[0]) {
+        stopServices([service])
     }
 
     /**
      * Stop the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
      */
-    def stopService(List services) {
+    def stopServices(List services=script.services) {
         log.info 'Stopping {}.', services
         script.shell privileged: true,
         vars: [services: services],
@@ -80,15 +84,19 @@ class SystemdUtils {
 
     /**
      * Start the specified service.
+     * @param service the service to start. Defaults to the
+     * first entry from the profile property {@code services}.
      */
-    def startService(String service) {
+    def startService(String service=script.services[0]) {
         startService([service])
     }
 
     /**
      * Start the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
      */
-    def startService(List services) {
+    def startServices(List services=script.services) {
         log.info 'Starting {}.', services
         script.shell privileged: true,
         vars: [services: services],
@@ -97,15 +105,19 @@ class SystemdUtils {
 
     /**
      * Enable the specified service.
+     * @param service the service to start. Defaults to the
+     * first entry from the profile property {@code services}.
      */
-    def enableService(String service) {
+    def enableService(String service=script.services[0]) {
         enableService([service])
     }
 
     /**
      * Enable the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
      */
-    def enableService(List services) {
+    def enableServices(List services=script.services) {
         log.info 'Enabling {}.', services
         script.shell privileged: true,
         vars: [services: services],
@@ -114,15 +126,19 @@ class SystemdUtils {
 
     /**
      * Restart the specified service.
+     * @param service the service to start. Defaults to the
+     * first entry from the profile property {@code services}.
      */
-    def restartService(String service) {
+    def restartService(String service=script.services[0]) {
         restartService([service])
     }
 
     /**
      * Restart the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
      */
-    def restartService(List services) {
+    def restartServices(List services=script.services) {
         log.info 'Restarting {}.', services
         script.shell privileged: true,
         vars: [services: services],

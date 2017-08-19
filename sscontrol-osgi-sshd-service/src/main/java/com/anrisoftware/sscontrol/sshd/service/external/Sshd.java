@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external
+package com.anrisoftware.sscontrol.sshd.service.external;
+
+import java.util.List;
+
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 
 /**
- * Debian 9 test utilities.
+ * Sshd service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Debian_9_TestUtils {
+public interface Sshd extends HostService {
 
-    static final URL catCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_cat_cmd.txt')
+    DebugLogging getDebugLogging();
 
-    static final URL grepCommand = Debian_9_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/debian/external/tests/debian_9_grep_cmd.txt')
+    List<String> getUsers();
 }

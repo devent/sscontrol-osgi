@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9
-
-import static com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Service.*
+package com.anrisoftware.sscontrol.sshd.script.debian.sshd_6.internal.debian_9
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.hostname.script.debian.external.Hostname_Debian
+import com.anrisoftware.sscontrol.sshd.script.debian.sshd_6.external.Sshd_6_Debian
+import com.anrisoftware.sscontrol.sshd.service.external.Sshd
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the hostname service on Debian 9 systems.
+ * Configures the <i>Sshd</i> 6 service for Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Hostname_Debian_9 extends Hostname_Debian {
+class Sshd_Debian_9 extends Sshd_6_Debian {
 
     @Inject
-    Hostname_Debian_9_Properties debianPropertiesProvider
+    Sshd_Debian_9_Properties debianPropertiesProvider
 
     DebianUtils debian
 
@@ -46,22 +45,36 @@ class Hostname_Debian_9 extends Hostname_Debian {
     }
 
     @Override
+    def run() {
+        setupDefaults()
+        installPackages()
+        configureService()
+        restartService()
+    }
+
+    def setupDefaults() {
+        Sshd service = service
+        if (!service.debugLogging.modules['debug']) {
+            service.debug level: defaultLogLevel
+        }
+    }
+
+    def getDefaultLogLevel() {
+        defaultProperties.getNumberProperty('default_log_level').intValue()
+    }
+
+    @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
     }
 
     @Override
+    Sshd getService() {
+        super.getService();
+    }
+
+    @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

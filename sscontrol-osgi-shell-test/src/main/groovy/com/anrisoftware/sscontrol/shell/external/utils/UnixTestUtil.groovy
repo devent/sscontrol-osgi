@@ -52,14 +52,6 @@ class UnixTestUtil {
         return createCommand(echoCommand, dir, name)
     }
 
-    static String createDebianJessieCatCommand(File dir, String name='cat') {
-        return createCommand(debianJessieCatCommand, dir, name)
-    }
-
-    static String createDebianStretchCatCommand(File dir, String name='cat') {
-        return createCommand(debianStretchCatCommand, dir, name)
-    }
-
     static String createWhichCommand(File dir) {
         return createCommand(whichCommand, dir, 'which')
     }
@@ -169,10 +161,6 @@ class UnixTestUtil {
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
 
     static final URL exit1Command = UnixTestUtil.class.getResource('exit_1_command.txt')
-
-    static final URL debianJessieCatCommand = UnixTestUtil.class.getResource('debian_jessie_cat_cmd.txt')
-
-    static final URL debianStretchCatCommand = UnixTestUtil.class.getResource('debian_stretch_cat_cmd.txt')
 
     static final URL whichCommand = UnixTestUtil.class.getResource('which_cmd.txt')
 
