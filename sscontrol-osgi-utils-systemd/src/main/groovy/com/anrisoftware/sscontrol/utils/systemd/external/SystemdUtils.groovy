@@ -96,11 +96,26 @@ class SystemdUtils {
      * @param services the List of services to stop. Defaults to the
      * the profile property {@code services}.
      */
-    def startServices(List services=script.services) {
+    def startServices(List services=script.services, Map vars=[:]) {
         log.info 'Starting {}.', services
-        script.shell privileged: true,
-        vars: [services: services],
-        resource: cmdTemplate, name: "startCmd" call()
+        startServices services: services, vars: vars
+    }
+
+    /**
+     * Start the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
+     */
+    def startServices(Map args) {
+        log.info 'Starting {}.', args
+        Map a = new HashMap(args)
+        a.vars = a.vars == null ? [:] : a.vars
+        a.vars.services = args.services
+        a.timeout = args.timeout == null ? script.timeoutShort : args.timeout
+        a.privileged = true
+        a.resource = cmdTemplate
+        a.name = "startCmd"
+        script.shell a call()
     }
 
     /**
@@ -138,10 +153,25 @@ class SystemdUtils {
      * @param services the List of services to stop. Defaults to the
      * the profile property {@code services}.
      */
-    def restartServices(List services=script.services) {
+    def restartServices(List services=script.services, Map vars=[:]) {
         log.info 'Restarting {}.', services
-        script.shell privileged: true,
-        vars: [services: services],
-        resource: cmdTemplate, name: "restartCmd" call()
+        restartServices services: services, vars: vars
+    }
+
+    /**
+     * Restart the specified services.
+     * @param services the List of services to stop. Defaults to the
+     * the profile property {@code services}.
+     */
+    def restartServices(Map args) {
+        log.info 'Restarting {}.', args
+        Map a = new HashMap(args)
+        a.vars = a.vars == null ? [:] : a.vars
+        a.vars.services = args.services
+        a.timeout = args.timeout == null ? script.timeoutShort : args.timeout
+        a.privileged = true
+        a.resource = cmdTemplate
+        a.name = "restartCmd"
+        script.shell a call()
     }
 }
