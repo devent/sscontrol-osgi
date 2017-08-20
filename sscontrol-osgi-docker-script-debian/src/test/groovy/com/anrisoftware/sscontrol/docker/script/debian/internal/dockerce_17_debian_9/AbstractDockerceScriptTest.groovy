@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 /**
  *
@@ -24,15 +25,15 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractDockerceScriptTest extends AbstractDockerceDebianRunnerTest {
+abstract class AbstractDockerceScriptTest extends AbstractDockerceRunnerTest {
 
     static final URL certCaPem = AbstractDockerceScriptTest.class.getResource('cert_ca.txt')
 
     static final URL muellerpublicCertCaPem = AbstractDockerceScriptTest.class.getResource('muellerpublic_de_ca_cert.pem')
 
     void createDummyCommands(File dir) {
-        createCommand exit1Command, dir, 'dpkg'
-        createCommand exit1Command, dir, 'grep'
+        createCommand catCommand, dir, "cat"
+        createCommand grepCommand, dir, 'grep'
         createEchoCommands dir, [
             'cat',
             'mkdir',
@@ -54,6 +55,7 @@ abstract class AbstractDockerceScriptTest extends AbstractDockerceDebianRunnerTe
             'tar',
             'gpg',
             'update-grub',
+            'dpkg',
         ]
     }
 }

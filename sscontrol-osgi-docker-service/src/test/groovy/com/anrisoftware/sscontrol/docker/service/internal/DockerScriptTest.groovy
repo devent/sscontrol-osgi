@@ -27,20 +27,16 @@ import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.docker.service.external.Docker
 import com.anrisoftware.sscontrol.docker.service.external.Mirror
 import com.anrisoftware.sscontrol.docker.service.internal.DockerImpl.DockerImplFactory
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
-import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
@@ -188,13 +184,7 @@ service "docker" with {
                 new ResourcesModule(),
                 new TlsModule(),
                 new SystemNameMappingsModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                        bind TargetsService to TargetsImplFactory
-                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
-                    }
-                }).injectMembers(this)
+                new HostServicePropertiesServiceModule(),
+                ).injectMembers(this)
     }
 }

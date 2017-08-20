@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Dockerce_Debian_8_Test extends AbstractDockerceScriptTest {
+class DockerceScriptTest extends AbstractDockerceScriptTest {
 
     @Test
     void "basic"() {
@@ -45,12 +45,12 @@ service "docker"
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource Dockerce_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "00_dockerd_opts.conf", "${args.test.name}_dockerd_opts_conf_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource DockerceScriptTest, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "00_dockerd_opts.conf", "${args.test.name}_dockerd_opts_conf_expected.txt"
             },
         ]
         doTest test
@@ -71,12 +71,12 @@ service "docker" with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource Dockerce_Debian_8_Test, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
             },
         ]
         doTest test
@@ -97,10 +97,10 @@ service "docker" with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource Dockerce_Debian_8_Test, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
-                assertFileResource Dockerce_Debian_8_Test, new File(dir, '/etc/docker/certs.d/localhost:5000'), "ca.crt", "cert_ca.txt"
+                assertFileResource DockerceScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_mirror.conf", "${args.test.name}_mirror_conf_expected.txt"
+                assertFileResource DockerceScriptTest, new File(dir, '/etc/docker/certs.d/localhost:5000'), "ca.crt", "cert_ca.txt"
             },
         ]
         doTest test

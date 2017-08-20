@@ -124,21 +124,38 @@ abstract class DebianUtils {
     /**
      * Installs the specified packages via apt. Per default installs the
      * packages from the profile property {@code packages}.
+     * @param args
+     * <ul>
+     * <li>packages: the List of packages to install, optionally containing a tupel with the name and the version.
+     * <li>packages[].name: the package to install.
+     * <li>packages[].version: the package version to install.
+     * <li>timeout: the Duration timeout, defaults to timeoutLong.
+     * <li>checkInstalled: set to true to check if the package is already installed. Defaults to true.
+     * <li>update: set to true to first update the repositories. Defaults to false.
+     * </ul>
      */
     void installPackages(Map args) {
         log.info "Installing packages {}.", args
-        List packages = args.packages
+        def packages = args.packages
         def a = new HashMap(args)
         a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
         a.vars = new HashMap(args)
         a.vars.nameInstalled = grepPackageNameInstalled
         a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
+        a.vars.checkInstalled = a.vars.checkInstalled != null ? a.vars.checkInstalled : true
+        a.vars.update = a.vars.update != null ? a.vars.update : false
         a.resource = commandsTemplate
         a.name = 'installPackage'
         packages.each {
             Map b = new HashMap(a)
-            b.vars.package = it
+            if (it instanceof Map) {
+                b.vars.package = it.name
+                b.vars.version = it.version
+                b.vars.versionInstalled = getGrepPackageVersionInstalled(it.version)
+            } else {
+                b.vars.package = it
+            }
             script.shell b call()
         }
     }
@@ -314,6 +331,9 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
     }
 
     String getGrepPackageVersionInstalled(String version) {
+        if (version == null) {
+            return null
+        }
         def s = script.properties.getProperty 'grep_apt_package_version_installed', defaultProperties
         new ST(s).add('version', version).render()
     }

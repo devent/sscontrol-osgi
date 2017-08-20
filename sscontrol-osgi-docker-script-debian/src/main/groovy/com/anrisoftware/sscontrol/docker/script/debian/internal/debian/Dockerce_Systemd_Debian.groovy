@@ -13,65 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
-
-import javax.inject.Inject
+package com.anrisoftware.sscontrol.docker.script.debian.internal.debian
 
 import org.joda.time.Duration
 import org.stringtemplate.v4.ST
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.docker.script.systemd.external.Dockerce_17_Systemd
 import com.anrisoftware.sscontrol.docker.service.external.Docker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_8_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Docker CE 17 service for Debian 8.
+ * Configures the Docker CE service for Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Dockerce_17_Debian_8 extends ScriptBase {
+abstract class Dockerce_Systemd_Debian extends ScriptBase {
 
-    @Inject
-    Dockerce_17_Debian_8_Properties debianPropertiesProvider
+    abstract ScriptBase getDockerSystemd()
 
-    Dockerce_17_Systemd systemd
-
-    @Inject
-    def setSystemdFactory(Dockerce_17_Systemd_Debian_8_Factory systemdFactory) {
-        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
-    @Inject
-    Dockerce_17_Upstream_Debian_8_Factory upstreamFactory
-
-    DebianUtils debian
-
-    @Inject
-    void setDebianUtilsFactory(Debian_8_UtilsFactory factory) {
-        this.debian = factory.create(this)
-    }
-
-    @Override
-    def run() {
-        setupDefaults()
-        systemd.stopServices()
-        systemd.setupDefaults()
-        systemd.createDirectories()
-        systemd.createDockerdConfig()
-        systemd.createRegistryMirrorConfig()
-        systemd.deployMirrorCerts()
-        debian.installPackages()
-        upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemd.startServices()
-        updateGrub()
-    }
+    abstract DebianUtils getDebian()
 
     def setupDefaults() {
         log.info "Setup defaults for {}.", service
@@ -79,6 +43,16 @@ class Dockerce_17_Debian_8 extends ScriptBase {
         if (service.cgroups.size() == 0) {
             service.cgroups.addAll(defaultCgroups)
         }
+    }
+
+    def installKernel() {
+        if (check("uname -a | grep '$kernelFullVersion'")) {
+            return
+        }
+        debian.addBackportsRepository()
+        debian.installBackportsPackages([
+            "$kernelPackage=$kernelVersion"
+        ])
     }
 
     def updateGrub() {
@@ -104,7 +78,7 @@ class Dockerce_17_Debian_8 extends ScriptBase {
     }
 
     String getSwapAccountCmdLine() {
-        'swapaccount=1'
+        enableSwapaccount ? 'swapaccount=1' : ''
     }
 
     List getDefaultCgroups() {
@@ -119,9 +93,24 @@ class Dockerce_17_Debian_8 extends ScriptBase {
         properties.getDurationProperty 'apt_get_timeout', defaultProperties
     }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
+    boolean getUpgradeKernel() {
+        properties.getBooleanProperty 'upgrade_kernel', defaultProperties
+    }
+
+    String getKernelPackage() {
+        properties.getProperty 'kernel_package', defaultProperties
+    }
+
+    String getKernelVersion() {
+        properties.getProperty 'kernel_version', defaultProperties
+    }
+
+    String getKernelFullVersion() {
+        properties.getProperty 'kernel_full_version', defaultProperties
+    }
+
+    boolean getEnableSwapaccount() {
+        properties.getBooleanProperty 'enable_swapaccount', defaultProperties
     }
 
     @Override

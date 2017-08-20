@@ -13,52 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.debian_9
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_8_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Installs Docker CE 17 from the upstream repository for Debian 8.
+ * Installs Docker CE from the upstream repository for Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Dockerce_17_Upstream_Debian_8 extends ScriptBase {
+abstract class Dockerce_Upstream_Debian_9 extends ScriptBase {
 
-    @Inject
-    Dockerce_17_Debian_8_Properties debianPropertiesProvider
-
-    DebianUtils debian
-
-    @Inject
-    void setDebianUtilsFactory(Debian_8_UtilsFactory factory) {
-        this.debian = factory.create(this)
-    }
+    abstract DebianUtils getDebian()
 
     @Override
     Object run() {
-        if (upgradeKernel) {
-            installKernel()
-        }
         installDocker()
-    }
-
-    def installKernel() {
-        if (check("uname -a | grep '$kernelFullVersion'")) {
-            return
-        }
-        debian.addBackportsRepository()
-        debian.installBackportsPackages([
-            "$kernelPackage=$kernelVersion"
-        ])
     }
 
     def installDocker() {
@@ -69,8 +44,9 @@ class Dockerce_17_Upstream_Debian_8 extends ScriptBase {
 curl -fsSL $dockerRepositoryKey | sudo apt-key add -
 sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable" > $dockerListFile'
 """ call()
-        shell privileged: true, timeout: timeoutLong, "apt-get update && apt-get -y install $dockerPackage=$dockerVersion" with { //
-            sudoEnv "DEBIAN_FRONTEND=noninteractive" } call()
+        debian.installPackages(update: true, packages: [
+            [name: dockerPackage, version: dockerVersion]
+        ])
     }
 
     String getDockerRepository() {
@@ -89,29 +65,8 @@ sudo bash -c 'echo "deb [arch=amd64] $dockerRepository $distributionName stable"
         properties.getProperty 'docker_version', defaultProperties
     }
 
-    boolean getUpgradeKernel() {
-        properties.getBooleanProperty 'upgrade_kernel', defaultProperties
-    }
-
-    String getKernelPackage() {
-        properties.getProperty 'kernel_package', defaultProperties
-    }
-
-    String getKernelVersion() {
-        properties.getProperty 'kernel_version', defaultProperties
-    }
-
-    String getKernelFullVersion() {
-        properties.getProperty 'kernel_full_version', defaultProperties
-    }
-
     File getDockerListFile() {
         getFileProperty 'docker_list_file'
-    }
-
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
     }
 
     @Override

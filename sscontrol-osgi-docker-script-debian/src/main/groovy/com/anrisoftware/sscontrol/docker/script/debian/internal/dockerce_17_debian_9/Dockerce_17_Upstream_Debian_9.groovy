@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.docker.script.systemd.external.Dockerce_17_Systemd
+import com.anrisoftware.sscontrol.docker.script.debian.internal.debian_9.Dockerce_Upstream_Debian_9
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Docker CE 17 service using Systemd and Debian 8.
+ * Installs Docker CE 17 from the upstream repository for Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Dockerce_17_Systemd_Debian_8 extends Dockerce_17_Systemd {
+class Dockerce_17_Upstream_Debian_9 extends Dockerce_Upstream_Debian_9 {
 
     @Inject
-    Dockerce_17_Debian_8_Properties debianPropertiesProvider
+    Dockerce_17_Debian_9_Properties debianPropertiesProvider
 
-    @Override
-    Object run() {
+    DebianUtils debian
+
+    @Inject
+    void setDebianUtilsFactory(Debian_9_UtilsFactory factory) {
+        this.debian = factory.create(this)
     }
 
     @Override

@@ -28,6 +28,8 @@ v_check=0
  * vars.checkInstalled
  * Optional:
  * vars.version
+ * vars.update
+ * vars.backport
  */
 installPackage(parent, vars) ::= <<
 set -e
@@ -47,8 +49,12 @@ function check_package() {
     ! (( \$i_check || \$v_check ))
 }
 
+<if(vars.update)>
+apt-get update
+<endif>
+
 check_package || \
 <endif>
-apt-get -y install <if(vars.backport)>-t <vars.backport><endif> <vars.package>
+apt-get -y install <if(vars.backport)>-t <vars.backport><endif> <vars.package><if(vars.version)>=<vars.version><endif>
 
 >>

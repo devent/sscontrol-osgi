@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractDockerceDebianRunnerTest extends AbstractRunnerTestBase {
+abstract class AbstractDockerceRunnerTest extends AbstractRunnerTestBase {
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -55,7 +55,7 @@ abstract class AbstractDockerceDebianRunnerTest extends AbstractRunnerTestBase {
     DockerImplFactory serviceFactory
 
     @Inject
-    Dockerce_17_Debian_8_Factory scriptFactory
+    Dockerce_17_Debian_9_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -66,7 +66,7 @@ abstract class AbstractDockerceDebianRunnerTest extends AbstractRunnerTestBase {
         services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'docker', serviceFactory
-        services.putAvailableScriptService 'docker/debian/8', scriptFactory
+        services.putAvailableScriptService 'docker/debian/9', scriptFactory
         return services
     }
 

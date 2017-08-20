@@ -30,8 +30,8 @@ import com.anrisoftware.sscontrol.docker.service.external.Docker;
 import com.anrisoftware.sscontrol.docker.service.external.DockerService;
 import com.anrisoftware.sscontrol.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.docker.service.internal.RegistryImpl.RegistryImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
@@ -67,7 +67,8 @@ public class DockerImpl implements Docker {
     private Registry registry;
 
     @Inject
-    DockerImpl(DockerImplLogger log, HostPropertiesService propertiesService,
+    DockerImpl(DockerImplLogger log,
+            HostServicePropertiesService propertiesService,
             RegistryImplFactory registryFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;

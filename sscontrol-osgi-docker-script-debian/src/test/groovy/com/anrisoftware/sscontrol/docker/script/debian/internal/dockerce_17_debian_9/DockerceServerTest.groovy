@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -34,23 +34,23 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Dockerce_Debian_8_Server_Test extends AbstractDockerceDebianRunnerTest {
+class DockerceServerTest extends AbstractDockerceRunnerTest {
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 
     @Test
-    void "debian_8_server_docker"() {
+    void "server_docker"() {
         def test = [
-            name: "debian_8_server_docker",
-            script: """
-service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+            name: "server_docker",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "docker"
-""",
-            scriptVars: [:],
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             expected: { Map args ->
-                assertStringResource Dockerce_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
-                assertStringResource Dockerce_Debian_8_Server_Test, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
+                assertStringResource DockerceServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'docker.list').absolutePath), "${args.test.name}_docker_list_expected.txt"
+                assertStringResource DockerceServerTest, remoteCommand("docker --version"), "${args.test.name}_docker_version_expected.txt"
             },
         ]
         doTest test
@@ -58,8 +58,7 @@ service "docker"
 
     @Before
     void beforeMethod() {
-        assumeTrue new File(robobeeSocket).exists()
-        assumeTrue testHostAvailable
+        assumeSocketExists robobeeSocket
     }
 
     Map getScriptEnv(Map args) {

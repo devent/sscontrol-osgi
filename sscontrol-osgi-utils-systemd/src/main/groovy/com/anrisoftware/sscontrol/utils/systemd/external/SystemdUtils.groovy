@@ -88,7 +88,7 @@ class SystemdUtils {
      * first entry from the profile property {@code services}.
      */
     def startService(String service=script.services[0]) {
-        startService([service])
+        startServices([service])
     }
 
     /**
@@ -109,7 +109,7 @@ class SystemdUtils {
      * first entry from the profile property {@code services}.
      */
     def enableService(String service=script.services[0]) {
-        enableService([service])
+        enableServices([service])
     }
 
     /**
@@ -130,7 +130,7 @@ class SystemdUtils {
      * first entry from the profile property {@code services}.
      */
     def restartService(String service=script.services[0]) {
-        restartService([service])
+        restartServices([service])
     }
 
     /**
