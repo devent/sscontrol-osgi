@@ -36,15 +36,17 @@ import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
+import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
+import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.service.external.EtcdService;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
-import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
+import com.anrisoftware.sscontrol.etcd.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -97,6 +99,11 @@ public class EtcdImpl implements Etcd {
     private PeerImplFactory peerFactory;
 
     private Peer peer;
+
+    @Inject
+    private ClientImplFactory clientFactory;
+
+    private Client client;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
@@ -259,6 +266,18 @@ public class EtcdImpl implements Etcd {
         return peer;
     }
 
+    /**
+     * <pre>
+     * client ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
+    public Client client(Map<String, Object> args) {
+        Client client = clientFactory.create(args);
+        this.client = client;
+        log.clientSet(this, client);
+        return client;
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -317,6 +336,11 @@ public class EtcdImpl implements Etcd {
     @Override
     public Peer getPeer() {
         return peer;
+    }
+
+    @Override
+    public Client getClient() {
+        return client;
     }
 
     @Override

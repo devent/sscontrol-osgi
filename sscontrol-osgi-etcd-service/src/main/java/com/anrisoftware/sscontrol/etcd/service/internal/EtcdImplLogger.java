@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.etcd.service.internal;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.advertiseAdded;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.authenticationAdded;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.bindingAdded;
+import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.clientSet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.memberNameSet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.peerSet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.tlsSet;
@@ -27,6 +28,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
+import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
@@ -51,7 +53,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
         authenticationAdded("Authentication {} added for {}"),
 
-        peerSet("Peer {} set for {}");
+        peerSet("Peer {} set for {}"),
+
+        clientSet("Client {} set for {}");
 
         private String name;
 
@@ -94,5 +98,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
     void peerSet(EtcdImpl etcd, Peer peer) {
         debug(peerSet, peer, etcd);
+    }
+
+    void clientSet(EtcdImpl etcd, Client client) {
+        debug(clientSet, client, etcd);
     }
 }

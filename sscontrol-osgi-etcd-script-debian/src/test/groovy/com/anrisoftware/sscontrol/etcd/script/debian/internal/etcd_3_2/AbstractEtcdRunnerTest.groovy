@@ -49,12 +49,34 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
 
     static final Map andreaLocalEtcdCerts = [
         ca: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
+        client: [
+            ca: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
+            cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
+            key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
+        ],
         etcd: [
-            [cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
+            [
+                cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
                 key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
             ],
-            [cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
+            [
+                cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
                 key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem'),
+            ],
+        ],
+    ]
+
+    static final Map robobeetestEtcdCerts = [
+        ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_ca.pem'),
+        client: [
+            ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_ca.pem'),
+            cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_client_cert.pem'),
+            key: AbstractEtcdRunnerTest.class.getResource('robobee_test_client_key.pem'),
+        ],
+        etcd: [
+            [
+                cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_cert.pem'),
+                key: AbstractEtcdRunnerTest.class.getResource('robobee_test_key.pem'),
             ],
         ],
     ]

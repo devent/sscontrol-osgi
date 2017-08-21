@@ -41,10 +41,13 @@ class Etcd_3_2_Upstream_Systemd_Debian_9 extends Etcd_3_x_Upstream_Systemd {
         createDirectories()
         createServices()
         createConfig()
+        uploadServerTls()
         uploadClientTls()
         uploadClientCertAuth()
         uploadPeerTls()
         uploadPeerCertAuth()
+        secureSslDir()
+        createEctdctlVariablesFile()
     }
 
     @Override

@@ -41,6 +41,8 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
 
     TemplateResource configsTemplate
 
+    TemplateResource etcdctlVariablesTemplate
+
     @Inject
     BindingFactory bindingFactory
 
@@ -50,6 +52,7 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
         def templates = templatesFactory.create('Etcd_3_x_Upstream_Systemd_Templates', attrs)
         this.servicesTemplate = templates.getResource('etcd_services')
         this.configsTemplate = templates.getResource('etcd_configs')
+        this.etcdctlVariablesTemplate = templates.getResource('etcdctl_variables')
     }
 
     def setupDefaults() {
@@ -73,13 +76,24 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
             service.memberName = defaultMemberName
         }
         if (!service.tls.caName) {
-            service.tls.caName = defaultClientTlsCaName
+            service.tls.caName = defaultServerTlsCaName
         }
         if (!service.tls.certName) {
-            service.tls.certName = defaultClientTlsCertName
+            service.tls.certName = defaultServerTlsCertName
         }
         if (!service.tls.keyName) {
-            service.tls.keyName = defaultClientTlsKeyName
+            service.tls.keyName = defaultServerTlsKeyName
+        }
+        if (service.client && service.client.tls) {
+            if (!service.client.tls.caName) {
+                service.client.tls.caName = defaultClientTlsCaName
+            }
+            if (!service.client.tls.certName) {
+                service.client.tls.certName = defaultClientTlsCertName
+            }
+            if (!service.client.tls.keyName) {
+                service.client.tls.keyName = defaultClientTlsKeyName
+            }
         }
         service.authentications.findAll { it.tls  } each {
             Tls tls = it.tls
@@ -164,8 +178,14 @@ chmod o-rx '$certsdir'
         ].each { template it call() }
     }
 
-    def uploadClientTls() {
+    def uploadServerTls() {
         uploadTls 'service.tls', service.tls
+    }
+
+    def uploadClientTls() {
+        if (service.client) {
+            uploadTls 'service.client.tls', service.client.tls
+        }
     }
 
     def uploadPeerTls() {
@@ -217,7 +237,7 @@ chmod o-rx '$certsdir'
     }
 
     def uploadCertAuth(String name, List<Authentication> auth) {
-        log.info 'Uploads etcd $name certificates.'
+        log.info 'Uploads etcd {} certificates.', name
         def certsdir = certsDir
         auth.findAll { it.tls  } each {
             Tls tls = it.tls
@@ -248,6 +268,28 @@ chmod o-rx '$certsdir'
         }
     }
 
+    def createEctdctlVariablesFile() {
+        def file = etcdctlVariablesFile
+        log.info 'Create etcdctl variables file', file
+        def a = [
+            resource: etcdctlVariablesTemplate,
+            name: 'etcdctlVariables',
+            privileged: true,
+            dest: file,
+            vars: [:],
+        ]
+        template a call()
+    }
+
+    def secureSslDir() {
+        def dir = certsDir
+        log.info 'Secure ssl directory {}', dir
+        shell privileged: true, """
+chown -R "${user}:root" "$dir"
+chmod -R o-rwX $dir
+""" call()
+    }
+
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
@@ -262,6 +304,10 @@ chmod o-rx '$certsdir'
 
     File getCertsDir() {
         properties.getFileProperty "certs_dir", base, defaultProperties
+    }
+
+    File getEtcdctlVariablesFile() {
+        properties.getFileProperty "etcdctl_variables_file", base, defaultProperties
     }
 
     String getUser() {
@@ -284,16 +330,28 @@ chmod o-rx '$certsdir'
         properties.getProperty 'default_member_name', defaultProperties
     }
 
-    def getDefaultClientTlsCaName() {
+    def getDefaultServerTlsCaName() {
         properties.getProperty 'default_tls_ca_name', defaultProperties
     }
 
-    def getDefaultClientTlsCertName() {
+    def getDefaultServerTlsCertName() {
         properties.getProperty 'default_tls_cert_name', defaultProperties
     }
 
-    def getDefaultClientTlsKeyName() {
+    def getDefaultServerTlsKeyName() {
         properties.getProperty 'default_tls_key_name', defaultProperties
+    }
+
+    def getDefaultClientTlsCaName() {
+        properties.getProperty 'default_client_tls_ca_name', defaultProperties
+    }
+
+    def getDefaultClientTlsCertName() {
+        properties.getProperty 'default_client_tls_cert_name', defaultProperties
+    }
+
+    def getDefaultClientTlsKeyName() {
+        properties.getProperty 'default_client_tls_key_name', defaultProperties
     }
 
     def getDefaultPeerTlsCaName() {
