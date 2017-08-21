@@ -1,0 +1,23 @@
+etcdctlVariables(parent, vars) ::= <<
+export ETCDCTL_API=3
+export ETCDCTL_DIAL_TIMEOUT=3s
+<peerCerts(parent, vars, parent.service.peer)>
+export ETCDCTL_ENDPOINTS=<endpoints(parent, vars)>
+
+>>
+
+endpoints(parent, vars) ::= <%
+<parent.service.advertises:bindings(parent, vars);separator=",">
+%>
+
+bindings(bind, parent, vars) ::= <%
+<bind.address>
+%>
+
+peerCerts(parent, vars, peer) ::= <<
+<if(parent.service.client)>
+<if(parent.service.client.tls.ca)>export ETCDCTL_CACERT="<parent.certsDir>/<parent.service.client.tls.caName>"<endif>
+<if(parent.service.client.tls.cert)>export ETCDCTL_CERT="<parent.certsDir>/<parent.service.client.tls.certName>"<endif>
+<if(parent.service.client.tls.key)>export ETCDCTL_KEY="<parent.certsDir>/<parent.service.client.tls.keyName>"<endif>
+<endif>
+>>

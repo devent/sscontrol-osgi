@@ -174,6 +174,26 @@ service "etcd" with {
     }
 
     @Test
+    void "client"() {
+        def test = [
+            name: 'client',
+            input: """
+service "etcd" with {
+    client ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.client.tls.ca.toString() == 'file:ca.pem'
+                assert s.client.tls.cert.toString() == 'file:cert.pem'
+                assert s.client.tls.key.toString() == 'file:key.pem'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "authentication_args"() {
         def test = [
             name: 'authentication_args',

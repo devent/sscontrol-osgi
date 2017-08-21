@@ -19,9 +19,11 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.AuthenticationFactory;
+import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Cluster;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
+import com.anrisoftware.sscontrol.etcd.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerClientCertsAuthenticationImpl.PeerClientCertsAuthenticationImplFactory;
@@ -57,6 +59,9 @@ public class EtcdModule extends AbstractModule {
                 .implement(Authentication.class,
                         PeerClientCertsAuthenticationImpl.class)
                 .build(PeerClientCertsAuthenticationImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Client.class, ClientImpl.class)
+                .build(ClientImplFactory.class));
         bindAuthentication();
     }
 

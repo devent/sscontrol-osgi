@@ -47,6 +47,7 @@ service "etcd", member: "default"
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
@@ -60,26 +61,28 @@ service "etcd", member: "default"
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 def host = targets['all'][0]
 def i = 0
-service "etcd", target: host, member: "etcd-\${i}" with {
+service "etcd", target: host, member: "etcd-${i}" with {
     debug "debug", level: 1
-    bind "https://\${host.hostAddress}:2379"
-    advertise "https://robobee-test:2379"
+    bind "https://${host.hostAddress}:2379"
+    advertise "https://robobee-test.test:2379"
+    client certs.client
     tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
     authentication "cert", ca: certs.ca
-    peer state: "new", advertise: "https://robobee-test:2380", listen: "https://\${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
-        cluster << "etcd-0=https://robobee-test:2380"
+    peer state: "new", advertise: "https://robobee-test.test:2380", listen: "https://${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
+        cluster << "etcd-0=https://robobee-test.test:2380"
         tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
         authentication "cert", ca: certs.ca
     }
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket, certs: andreaLocalEtcdCerts],
+            scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestEtcdCerts],
             expectedServicesSize: 2,
             expected: { Map args ->
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd.service'), "${args.test.name}_etcd_service_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFilesPrivileged('/etc/etcd/ssl'), "${args.test.name}_ssl_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
