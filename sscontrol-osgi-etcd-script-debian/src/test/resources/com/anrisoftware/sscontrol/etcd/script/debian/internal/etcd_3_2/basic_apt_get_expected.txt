@@ -1,0 +1,2 @@
+-y install wget
+-y install gnupg

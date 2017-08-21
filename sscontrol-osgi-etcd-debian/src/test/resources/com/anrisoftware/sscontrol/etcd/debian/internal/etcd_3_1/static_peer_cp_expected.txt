@@ -1,5 +1,0 @@
-/var/lib/robobee/tmp/etcd.service /tmp/junit/junit/etc/systemd/system/etcd.service
-/var/lib/robobee/tmp/etcd.conf /tmp/junit/junit/etc/etcd/etcd.conf
-/var/lib/robobee/tmp/robobeepeer_cert /tmp/junit/junit/etc/etcd/ssl/peer_cert.pem
-/var/lib/robobee/tmp/robobeepeer_key /tmp/junit/junit/etc/etcd/ssl/peer_key.pem
-/var/lib/robobee/tmp/robobeepeer_ca /tmp/junit/junit/etc/etcd/ssl/peer_ca.pem
