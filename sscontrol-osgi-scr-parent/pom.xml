@@ -33,10 +33,10 @@
         <module>../sscontrol-osgi-docker-script-debian</module>
         <module>../sscontrol-osgi-docker-script-systemd</module>
         <module>../sscontrol-osgi-docker-service</module>
-        <module>../sscontrol-osgi-etcd</module>
-        <module>../sscontrol-osgi-etcd-debian</module>
-        <module>../sscontrol-osgi-etcd-systemd</module>
-        <module>../sscontrol-osgi-etcd-upstream</module>
+        <module>../sscontrol-osgi-etcd-service</module>
+        <module>../sscontrol-osgi-etcd-script-debian</module>
+        <module>../sscontrol-osgi-etcd-script-systemd</module>
+        <module>../sscontrol-osgi-etcd-script-upstream</module>
         <module>../sscontrol-osgi-fail2ban-service</module>
         <module>../sscontrol-osgi-fail2ban-script-0-9</module>
         <module>../sscontrol-osgi-fail2ban-script-debian</module>
@@ -104,6 +104,7 @@
         <module>../sscontrol-osgi-utils-debian</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-st-durationrenderer</module>
+        <module>../sscontrol-osgi-utils-st-miscrenderers</module>
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-systemd</module>
         <module>../sscontrol-osgi-utils-tls</module>

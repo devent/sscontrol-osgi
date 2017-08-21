@@ -1,6 +1,0 @@
-list-unit-files --type=service
-stop etcd
-daemon-reload
-start etcd
-status etcd
-enable etcd

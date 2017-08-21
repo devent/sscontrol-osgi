@@ -1,2 +1,0 @@
--rwxr-xr-x 1 root staff 15764288 date /usr/local/bin/etcd
--rwxr-xr-x 1 root staff 13909728 date /usr/local/bin/etcdctl
