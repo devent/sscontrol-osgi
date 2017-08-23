@@ -66,9 +66,9 @@ class EtcdScriptTest {
     void "member_args"() {
         def test = [
             name: 'member_args',
-            input: """
+            input: '''
 service "etcd", member: "default"
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -82,11 +82,11 @@ service "etcd", member: "default"
     void "bind_address"() {
         def test = [
             name: 'bind_address',
-            input: """
+            input: '''
 service "etcd" with {
     bind address: "http://localhost:2379"
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -101,11 +101,11 @@ service "etcd" with {
     void "bind"() {
         def test = [
             name: 'bind',
-            input: """
+            input: '''
 service "etcd" with {
     bind "http://localhost:2379"
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -120,11 +120,11 @@ service "etcd" with {
     void "advertise_address"() {
         def test = [
             name: 'advertise_address',
-            input: """
+            input: '''
 service "etcd" with {
     advertise address: "http://localhost:2380"
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -139,11 +139,11 @@ service "etcd" with {
     void "advertise"() {
         def test = [
             name: 'advertise',
-            input: """
+            input: '''
 service "etcd" with {
     advertise "http://localhost:2380"
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -158,11 +158,11 @@ service "etcd" with {
     void "tls"() {
         def test = [
             name: 'tls',
-            input: """
+            input: '''
 service "etcd" with {
     tls cert: 'cert.pem', key: 'key.pem'
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -177,11 +177,11 @@ service "etcd" with {
     void "client"() {
         def test = [
             name: 'client',
-            input: """
+            input: '''
 service "etcd" with {
     client ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -194,15 +194,61 @@ service "etcd" with {
     }
 
     @Test
+    void "proxy_args"() {
+        def test = [
+            name: 'proxy_args',
+            input: '''
+service "etcd" with {
+    proxy namespace: "my-prefix/", endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.proxy.namespace == 'my-prefix/'
+                assert s.proxy.endpoints.size() == 1
+                assert s.proxy.endpoints[0] == 'https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "proxy_endpoints"() {
+        def test = [
+            name: 'proxy_endpoints',
+            input: '''
+service "etcd" with {
+    proxy namespace: "my-prefix/" with {
+        endpoint << "https://etcd-0:2379"
+        endpoint << "https://etcd-1:2379"
+        endpoint << "https://etcd-2:2379"
+    }
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.proxy.namespace == 'my-prefix/'
+                assert s.proxy.endpoints.size() == 3
+                assert s.proxy.endpoints[0] == 'https://etcd-0:2379'
+                assert s.proxy.endpoints[1] == 'https://etcd-1:2379'
+                assert s.proxy.endpoints[2] == 'https://etcd-2:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "authentication_args"() {
         def test = [
             name: 'authentication_args',
-            input: """
+            input: '''
 service "etcd" with {
     authentication type: "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     authentication "cert", ca: "ca.pem", cert: "cert.pem", key: "key.pem"
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]
@@ -225,7 +271,7 @@ service "etcd" with {
     void "static_cluster"() {
         def test = [
             name: 'static_cluster',
-            input: """
+            input: '''
 service "etcd" with {
     peer state: "new", advertise: "https://10.0.1.10:2380", listen: "https://10.0.1.10:2380", token: "etcd-cluster-1" with {
         cluster << "infra0=https://10.0.1.10:2380"
@@ -235,7 +281,7 @@ service "etcd" with {
         authentication "cert", ca: "ca.pem", cert: 'cert.pem', key: 'key.pem'
     }
 }
-""",
+''',
             expected: { HostServices services ->
                 assert services.getServices('etcd').size() == 1
                 Etcd s = services.getServices('etcd')[0]

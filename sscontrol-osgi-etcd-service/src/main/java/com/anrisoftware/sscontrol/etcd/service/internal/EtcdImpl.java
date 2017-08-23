@@ -41,8 +41,10 @@ import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.service.external.EtcdService;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
+import com.anrisoftware.sscontrol.etcd.service.external.Proxy;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerImpl.PeerImplFactory;
+import com.anrisoftware.sscontrol.etcd.service.internal.ProxyImpl.ProxyImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
@@ -104,6 +106,11 @@ public class EtcdImpl implements Etcd {
     private ClientImplFactory clientFactory;
 
     private Client client;
+
+    @Inject
+    private ProxyImplFactory proxyFactory;
+
+    private Proxy proxy;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
@@ -278,6 +285,18 @@ public class EtcdImpl implements Etcd {
         return client;
     }
 
+    /**
+     * <pre>
+     * proxy namespace: "my-prefix/", endpoints: "https://etcd-0:2379"
+     * </pre>
+     */
+    public Proxy proxy(Map<String, Object> args) {
+        Proxy proxy = proxyFactory.create(args);
+        this.proxy = proxy;
+        log.proxySet(this, proxy);
+        return proxy;
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -341,6 +360,11 @@ public class EtcdImpl implements Etcd {
     @Override
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public Proxy getProxy() {
+        return proxy;
     }
 
     @Override

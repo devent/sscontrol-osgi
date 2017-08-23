@@ -21,6 +21,7 @@ import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.clientSet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.memberNameSet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.peerSet;
+import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.proxySet;
 import static com.anrisoftware.sscontrol.etcd.service.internal.EtcdImplLogger.m.tlsSet;
 
 import javax.inject.Singleton;
@@ -30,6 +31,7 @@ import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
 import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
+import com.anrisoftware.sscontrol.etcd.service.external.Proxy;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
@@ -55,7 +57,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
         peerSet("Peer {} set for {}"),
 
-        clientSet("Client {} set for {}");
+        clientSet("Client {} set for {}"),
+
+        proxySet("Proxy {} set for {}");
 
         private String name;
 
@@ -102,5 +106,9 @@ final class EtcdImplLogger extends AbstractLogger {
 
     void clientSet(EtcdImpl etcd, Client client) {
         debug(clientSet, client, etcd);
+    }
+
+    void proxySet(EtcdImpl etcd, Proxy proxy) {
+        debug(proxySet, proxy, etcd);
     }
 }

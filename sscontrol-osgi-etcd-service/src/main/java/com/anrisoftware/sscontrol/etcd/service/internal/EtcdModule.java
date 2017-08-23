@@ -22,12 +22,14 @@ import com.anrisoftware.sscontrol.etcd.service.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Cluster;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
+import com.anrisoftware.sscontrol.etcd.service.external.Proxy;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClientCertsAuthenticationImpl.ClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClientImpl.ClientImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerClientCertsAuthenticationImpl.PeerClientCertsAuthenticationImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerImpl.PeerImplFactory;
+import com.anrisoftware.sscontrol.etcd.service.internal.ProxyImpl.ProxyImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -62,6 +64,9 @@ public class EtcdModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Client.class, ClientImpl.class)
                 .build(ClientImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Proxy.class, ProxyImpl.class)
+                .build(ProxyImplFactory.class));
         bindAuthentication();
     }
 
