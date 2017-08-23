@@ -1,0 +1,3 @@
+-y install wget
+-y install curl
+-y install coreutils
