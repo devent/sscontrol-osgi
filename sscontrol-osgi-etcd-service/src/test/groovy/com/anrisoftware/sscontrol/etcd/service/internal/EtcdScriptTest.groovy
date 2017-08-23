@@ -327,7 +327,6 @@ service "etcd" with {
         toStringStyle
         Guice.createInjector(
                 new EtcdModule(),
-                new EtcdPreModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new BindingModule(),
