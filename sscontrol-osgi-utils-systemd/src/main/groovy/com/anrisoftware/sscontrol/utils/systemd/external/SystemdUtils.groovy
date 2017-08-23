@@ -73,12 +73,13 @@ class SystemdUtils {
     /**
      * Stop the specified services.
      * @param services the List of services to stop. Defaults to the
-     * the profile property {@code services}.
+     * the profile property {@code services} in reverse.
      */
     def stopServices(List services=script.services) {
-        log.info 'Stopping {}.', services
+        def s = services.reverse()
+        log.info 'Stopping {}.', s
         script.shell privileged: true,
-        vars: [services: services],
+        vars: [services: s],
         resource: cmdTemplate, name: "stopCmd" call()
     }
 

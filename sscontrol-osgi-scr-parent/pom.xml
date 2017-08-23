@@ -40,10 +40,9 @@
         <module>../sscontrol-osgi-fail2ban-service</module>
         <module>../sscontrol-osgi-fail2ban-script-0-9</module>
         <module>../sscontrol-osgi-fail2ban-script-debian</module>
-        <module>../sscontrol-osgi-flannel-docker</module>
-        <module>../sscontrol-osgi-flannel-docker-debian</module>
-        <module>../sscontrol-osgi-flannel-docker-systemd</module>
-        <module>../sscontrol-osgi-flannel-docker-upstream</module>
+        <module>../sscontrol-osgi-flannel-docker-service</module>
+        <module>../sscontrol-osgi-flannel-docker-script-debian</module>
+        <module>../sscontrol-osgi-flannel-docker-script-upstream</module>
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
