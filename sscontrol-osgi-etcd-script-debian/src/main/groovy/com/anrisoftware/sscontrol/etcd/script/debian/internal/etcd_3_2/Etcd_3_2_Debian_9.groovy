@@ -42,10 +42,9 @@ class Etcd_3_2_Debian_9 extends ScriptBase {
     Etcd_3_2_Upstream_Debian_9_Factory upstreamFactory
 
     @Inject
-    Etcd_3_2_Upstream_Systemd_Debian_9_Factory upstreamSystemdFactory
-
-    @Inject
     EtcdDefaultsFactory etcdDefaultsFactory
+
+    Etcd_3_2_Upstream_Systemd_Debian_9 etcdUpstreamSystemd
 
     DebianUtils debian
 
@@ -54,12 +53,18 @@ class Etcd_3_2_Debian_9 extends ScriptBase {
         this.debian = factory.create this
     }
 
+    @Inject
+    void setUpstreamSystemdFactory(Etcd_3_2_Upstream_Systemd_Debian_9_Factory factory) {
+        this.etcdUpstreamSystemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     def run() {
         etcdDefaultsFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        etcdUpstreamSystemd.stopServices()
         debian.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        etcdUpstreamSystemd.run()
     }
 
     @Override

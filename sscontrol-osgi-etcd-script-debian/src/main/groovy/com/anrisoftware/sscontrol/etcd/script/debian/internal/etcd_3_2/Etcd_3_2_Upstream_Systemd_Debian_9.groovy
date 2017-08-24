@@ -39,7 +39,6 @@ class Etcd_3_2_Upstream_Systemd_Debian_9 extends Etcd_3_x_Upstream_Systemd {
     @Override
     Object run() {
         Etcd service = this.service
-        stopServices()
         createDirectories()
         if (!service.proxy) {
             createServices()
