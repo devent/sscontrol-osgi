@@ -24,5 +24,5 @@ set -e
 >>
 
 findService(parent, vars, service) ::= <<
-systemctl list-units | grep <service>
+systemctl list-units | grep <service>.service
 >>
