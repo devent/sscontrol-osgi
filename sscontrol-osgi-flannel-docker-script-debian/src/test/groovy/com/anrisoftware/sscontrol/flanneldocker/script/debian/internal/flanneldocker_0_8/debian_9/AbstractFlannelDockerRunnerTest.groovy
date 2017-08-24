@@ -39,16 +39,16 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  */
 abstract class AbstractFlannelDockerRunnerTest extends AbstractRunnerTestBase {
 
-    static final URL certCaPem = AbstractFlannelDockerRunnerTest.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = AbstractFlannelDockerRunnerTest.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = AbstractFlannelDockerRunnerTest.class.getResource('cert_key.txt')
-
     static final Map andreaLocalEtcdCerts = [
         ca: AbstractFlannelDockerRunnerTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
         cert: AbstractFlannelDockerRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
         key: AbstractFlannelDockerRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
+    ]
+
+    static final Map robobeetestEtcdCerts = [
+        ca: AbstractFlannelDockerRunnerTest.class.getResource('robobee_test_ca.pem'),
+        cert: AbstractFlannelDockerRunnerTest.class.getResource('robobee_test_client_cert.pem'),
+        key: AbstractFlannelDockerRunnerTest.class.getResource('robobee_test_client_key.pem'),
     ]
 
     @Inject

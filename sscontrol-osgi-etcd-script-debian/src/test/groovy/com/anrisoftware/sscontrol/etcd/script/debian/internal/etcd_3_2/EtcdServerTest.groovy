@@ -119,7 +119,7 @@ service "etcd", target: host, member: "etcd-${i}" with {
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
-    bind "http://localhost:2379"
+    bind "http://localhost:12379"
     proxy endpoints: "https://robobee-test.test:2379"
     client certs.client
 }
