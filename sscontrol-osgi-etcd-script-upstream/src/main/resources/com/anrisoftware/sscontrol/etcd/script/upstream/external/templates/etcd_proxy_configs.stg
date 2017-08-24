@@ -1,0 +1,19 @@
+etcdProxyConfig(parent, vars) ::= <<
+###
+# etcd-proxy system config
+#
+
+#[grpc-proxy]
+ETCD_PROXY_ENDPOINTS="<parent.service.proxy.endpoints;separator=",">"
+ETCD_PROXY_LISTEN_ADDR="<parent.service.bindings:bindings(parent, vars);separator=",">"
+<if(parent.service.client)>
+<if(parent.service.client.tls.ca)>ETCD_PROXY_CERT="<parent.certsDir>/<parent.service.client.tls.caName>"<endif>
+<if(parent.service.client.tls.cert)>ETCD_PROXY_KEY="<parent.certsDir>/<parent.service.client.tls.certName>"<endif>
+<if(parent.service.client.tls.key)>ETCD_PROXY_KEY="<parent.certsDir>/<parent.service.client.tls.keyName>"<endif>
+<endif>
+
+>>
+
+bindings(bind, parent, vars) ::= <%
+<bind.address.host>:<bind.address.port>
+%>

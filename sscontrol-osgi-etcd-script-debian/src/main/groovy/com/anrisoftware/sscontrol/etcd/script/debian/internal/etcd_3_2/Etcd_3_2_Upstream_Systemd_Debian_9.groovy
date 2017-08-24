@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Upstream_Systemd
+import com.anrisoftware.sscontrol.etcd.service.external.Etcd
 
 import groovy.util.logging.Slf4j
 
@@ -37,17 +38,27 @@ class Etcd_3_2_Upstream_Systemd_Debian_9 extends Etcd_3_x_Upstream_Systemd {
 
     @Override
     Object run() {
-        setupDefaults()
+        Etcd service = this.service
+        stopServices()
         createDirectories()
-        createServices()
-        createConfig()
+        if (!service.proxy) {
+            createServices()
+            createConfig()
+        } else {
+            createProxyServices()
+            createProxyConfig()
+        }
         uploadServerTls()
         uploadClientTls()
         uploadClientCertAuth()
         uploadPeerTls()
         uploadPeerCertAuth()
         secureSslDir()
-        createEctdctlVariablesFile()
+        if (!service.proxy) {
+            createEctdctlVariablesFile()
+        }
+        enableServices()
+        startServices()
     }
 
     @Override

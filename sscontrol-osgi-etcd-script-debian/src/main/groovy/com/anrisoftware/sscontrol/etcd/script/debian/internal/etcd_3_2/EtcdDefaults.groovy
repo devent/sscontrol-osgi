@@ -15,29 +15,29 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2
 
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2.Etcd_3_2_Debian_9_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.etcd.script.systemd.external.Etcd_Systemd
+import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Defaults
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Etcd 3.2 service using Systemd and Debian 9.
+ * Configures the Etcd 3.2 service from the upstream sources
+ * for Systemd and Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Etcd_3_2_Systemd_Debian_9 extends Etcd_Systemd {
+class EtcdDefaults extends Etcd_3_x_Defaults {
 
     @Inject
     Etcd_3_2_Debian_9_Properties debianPropertiesProvider
 
     @Override
     Object run() {
+        setupDefaults()
     }
 
     @Override
@@ -48,15 +48,5 @@ class Etcd_3_2_Systemd_Debian_9 extends Etcd_Systemd {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

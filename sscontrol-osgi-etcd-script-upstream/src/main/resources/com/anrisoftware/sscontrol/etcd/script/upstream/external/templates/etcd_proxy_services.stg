@@ -1,0 +1,31 @@
+etcdProxyService(parent, vars) ::= <<
+# Authors
+# ROBOBEE
+[Unit]
+Description=Etcd Proxy
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+WorkingDirectory=<parent.dataDir>
+EnvironmentFile=-<parent.proxyConfigFile>
+User=etcd
+# set GOMAXPROCS to number of processors
+ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/local/bin/etcd grpc-proxy start --endpoints=\"${ETCD_PROXY_ENDPOINTS}\" --listen-addr=\"${ETCD_PROXY_LISTEN_ADDR}\" <tlsCerts(parent, vars)>"
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+>>
+
+tlsCerts(parent, vars) ::= <%
+<if(parent.service.client)>
+<if(parent.service.client.tls.cert)>--cert=\"${ETCD_PROXY_CERT}\" <endif>
+<if(parent.service.client.tls.key)>--key=\"${ETCD_PROXY_KEY}\" <endif>
+<if(parent.service.client.tls.ca)>--ca=\"${ETCD_PROXY_CA}\" <endif>
+<endif>
+%>
