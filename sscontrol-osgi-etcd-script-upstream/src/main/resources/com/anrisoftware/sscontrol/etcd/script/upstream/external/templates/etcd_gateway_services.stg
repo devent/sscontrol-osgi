@@ -1,0 +1,29 @@
+etcdGatewayService(parent, vars) ::= <<
+# Authors
+# ROBOBEE
+[Unit]
+Description=Etcd Gateway
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+WorkingDirectory=<parent.dataDir>
+EnvironmentFile=-<parent.gatewayConfigFile>
+User=etcd
+# set GOMAXPROCS to number of processors
+ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/local/bin/etcd gateway start --endpoints=\"${ETCD_GATEWAY_ENDPOINTS}\" --listen-addr=\"${ETCD_GATEWAY_LISTEN_ADDR}\" <tlsCerts(parent, vars)>"
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
+>>
+
+tlsCerts(parent, vars) ::= <%
+<if(parent.service.client)>
+<if(parent.service.client.tls.ca)>--trusted-ca-file=\"${ETCD_GATEWAY_CA}\" <endif>
+<endif>
+%>

@@ -1,0 +1,6 @@
+list-units
+stop etcd-gateway
+daemon-reload
+enable etcd-gateway
+start etcd-gateway
+status etcd-gateway

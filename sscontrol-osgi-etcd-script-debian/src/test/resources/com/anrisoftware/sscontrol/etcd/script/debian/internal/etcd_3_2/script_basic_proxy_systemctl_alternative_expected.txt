@@ -1,0 +1,5 @@
+stop etcd-proxy
+daemon-reload
+enable etcd-proxy
+start etcd-proxy
+status etcd-proxy
