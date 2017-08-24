@@ -8,3 +8,7 @@
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp

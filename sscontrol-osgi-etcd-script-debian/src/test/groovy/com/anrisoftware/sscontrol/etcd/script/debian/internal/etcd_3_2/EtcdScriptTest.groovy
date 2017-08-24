@@ -33,9 +33,9 @@ import groovy.util.logging.Slf4j
 class EtcdScriptTest extends AbstractEtcdScriptTest {
 
     @Test
-    void "basic"() {
+    void "script_basic"() {
         def test = [
-            name: "basic",
+            name: "script_basic",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default"
@@ -48,20 +48,25 @@ service "etcd", member: "default"
                 File gen = args.test.generatedDir
                 assertFileResource EtcdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource EtcdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                try {
+                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                } catch (AssertionError e) {
+                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_alternative_expected.txt"
+                }
                 assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
     }
 
     @Test
-    void "tls"() {
+    void "script_tls"() {
         def test = [
-            name: "tls",
+            name: "script_tls",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default" with {
@@ -69,6 +74,7 @@ service "etcd", member: "default" with {
     bind "https://etcd-0.muellerpublic.de:2379"
     advertise "https://etcd-0.muellerpublic.de:2379"
     tls testCerts
+    client testCerts
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
@@ -81,6 +87,7 @@ service "etcd", member: "default" with {
                 assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
@@ -144,9 +151,9 @@ service "etcd", member: "infra0" with {
     }
 
     @Test
-    void "script_proxy"() {
+    void "script_basic_proxy"() {
         def test = [
-            name: "script_proxy",
+            name: "script_basic_proxy",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
@@ -164,6 +171,7 @@ service "etcd" with {
                 assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd-proxy.service", "${args.test.name}_etcd_proxy_service_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd-proxy.conf", "${args.test.name}_etcd_proxy_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
@@ -191,6 +199,7 @@ service "etcd" with {
                 assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd-proxy.service", "${args.test.name}_etcd_proxy_service_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd-proxy.conf", "${args.test.name}_etcd_proxy_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test

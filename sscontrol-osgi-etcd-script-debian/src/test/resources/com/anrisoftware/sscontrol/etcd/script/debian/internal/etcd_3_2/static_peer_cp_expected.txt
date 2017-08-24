@@ -4,3 +4,4 @@
 /var/lib/robobee/tmp/robobeepeer_cert /tmp/junit/junit/etc/etcd/ssl/peer_cert.pem
 /var/lib/robobee/tmp/robobeepeer_key /tmp/junit/junit/etc/etcd/ssl/peer_key.pem
 /var/lib/robobee/tmp/robobeepeer_ca /tmp/junit/junit/etc/etcd/ssl/peer_ca.pem
+/var/lib/robobee/tmp/etcdctl-vars /tmp/junit/junit/usr/local/share/etcdctl-vars
