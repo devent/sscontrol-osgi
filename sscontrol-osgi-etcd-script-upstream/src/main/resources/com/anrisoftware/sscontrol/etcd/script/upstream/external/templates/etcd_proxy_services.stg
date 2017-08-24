@@ -26,6 +26,6 @@ tlsCerts(parent, vars) ::= <%
 <if(parent.service.client)>
 <if(parent.service.client.tls.cert)>--cert=\"${ETCD_PROXY_CERT}\" <endif>
 <if(parent.service.client.tls.key)>--key=\"${ETCD_PROXY_KEY}\" <endif>
-<if(parent.service.client.tls.ca)>--ca=\"${ETCD_PROXY_CA}\" <endif>
+<if(parent.service.client.tls.ca)>--cacert=\"${ETCD_PROXY_CA}\" <endif>
 <endif>
 %>

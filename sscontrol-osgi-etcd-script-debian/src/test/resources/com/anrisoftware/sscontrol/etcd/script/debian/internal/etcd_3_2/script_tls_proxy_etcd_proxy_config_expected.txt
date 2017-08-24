@@ -5,6 +5,6 @@
 #[grpc-proxy]
 ETCD_PROXY_ENDPOINTS="https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
 ETCD_PROXY_LISTEN_ADDR="localhost:2379"
-ETCD_PROXY_CERT="/tmp/junit/junit/etc/etcd/ssl/client_ca.pem"
-ETCD_PROXY_KEY="/tmp/junit/junit/etc/etcd/ssl/client_cert.pem"
+ETCD_PROXY_CA="/tmp/junit/junit/etc/etcd/ssl/client_ca.pem"
+ETCD_PROXY_CERT="/tmp/junit/junit/etc/etcd/ssl/client_cert.pem"
 ETCD_PROXY_KEY="/tmp/junit/junit/etc/etcd/ssl/client_key.pem"

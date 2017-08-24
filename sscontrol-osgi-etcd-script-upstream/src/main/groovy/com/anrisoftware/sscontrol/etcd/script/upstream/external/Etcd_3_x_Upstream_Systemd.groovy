@@ -253,6 +253,10 @@ chmod -R o-rwX $dir
         ].each { template it call() }
     }
 
+    def reloadDaemon() {
+        systemd.reloadDaemon()
+    }
+
     def startServices() {
         Etcd service = service
         def services = this.services

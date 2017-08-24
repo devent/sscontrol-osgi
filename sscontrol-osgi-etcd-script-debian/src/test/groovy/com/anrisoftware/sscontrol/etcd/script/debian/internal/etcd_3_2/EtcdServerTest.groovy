@@ -54,6 +54,30 @@ service "etcd", member: "default"
     }
 
     @Test
+    void "server_basic_proxy"() {
+        def test = [
+            name: "server_basic_proxy",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "etcd" with {
+    bind "http://localhost:12379"
+    proxy endpoints: "http://localhost:2379"
+}
+''',
+            scriptVars: [robobeeSocket: robobeeSocket, certs: andreaLocalEtcdCerts],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd-proxy.conf'), "${args.test.name}_etcd_proxy_conf_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-proxy.service'), "${args.test.name}_etcd_proxy_service_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
+                assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 12379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "etcd_tls_peers_server"() {
         def test = [
             name: "etcd_tls_peers_server",
@@ -83,6 +107,31 @@ service "etcd", target: host, member: "etcd-${i}" with {
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFilesPrivileged('/etc/etcd/ssl'), "${args.test.name}_ssl_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "server_tls_proxy"() {
+        def test = [
+            name: "server_tls_proxy",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "etcd" with {
+    bind "http://localhost:12379"
+    proxy endpoints: "https://robobee-test.test:2379"
+    client certs.client
+}
+''',
+            scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestEtcdCerts],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd-proxy.conf'), "${args.test.name}_etcd_proxy_conf_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-proxy.service'), "${args.test.name}_etcd_proxy_service_expected.txt"
+                assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
+                assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 12379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test

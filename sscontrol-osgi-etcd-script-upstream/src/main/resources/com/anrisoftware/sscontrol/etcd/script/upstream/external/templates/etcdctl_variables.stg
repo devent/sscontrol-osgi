@@ -2,12 +2,16 @@ etcdctlVariables(parent, vars) ::= <<
 export ETCDCTL_API=3
 export ETCDCTL_DIAL_TIMEOUT=3s
 <peerCerts(parent, vars, parent.service.peer)>
+<if(parent.service.proxy)>
 export ETCDCTL_ENDPOINTS=<endpoints(parent, vars)>
+<else>
+export ETCDCTL_ENDPOINTS=<parent.service.advertises:bindings(parent, vars);separator=",">
+<endif>
 
 >>
 
 endpoints(parent, vars) ::= <%
-<parent.service.advertises:bindings(parent, vars);separator=",">
+<parent.service.bindings:bindings(parent, vars);separator=",">
 %>
 
 bindings(bind, parent, vars) ::= <%

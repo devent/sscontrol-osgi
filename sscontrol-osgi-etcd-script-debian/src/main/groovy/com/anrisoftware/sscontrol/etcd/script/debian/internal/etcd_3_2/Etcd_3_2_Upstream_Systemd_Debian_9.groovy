@@ -54,9 +54,8 @@ class Etcd_3_2_Upstream_Systemd_Debian_9 extends Etcd_3_x_Upstream_Systemd {
         uploadPeerTls()
         uploadPeerCertAuth()
         secureSslDir()
-        if (!service.proxy) {
-            createEctdctlVariablesFile()
-        }
+        createEctdctlVariablesFile()
+        reloadDaemon()
         enableServices()
         startServices()
     }
