@@ -119,7 +119,7 @@ service "etcd", target: host, member: "etcd-${i}" with {
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
-    bind "http://localhost:12379"
+    bind "http://localhost:2379"
     proxy endpoints: "https://robobee-test.test:2379"
     client certs.client
 }
@@ -131,7 +131,7 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-proxy.service'), "${args.test.name}_etcd_proxy_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 12379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 127.0.0.1:2379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test
