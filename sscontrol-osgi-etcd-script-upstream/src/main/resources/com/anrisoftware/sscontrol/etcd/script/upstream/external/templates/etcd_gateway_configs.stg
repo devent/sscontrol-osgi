@@ -1,0 +1,17 @@
+etcdGatewayConfig(parent, vars) ::= <<
+###
+# etcd-gateway system config
+#
+
+#[gateway]
+ETCD_GATEWAY_ENDPOINTS="<parent.service.gateway.endpoints;separator=",">"
+ETCD_GATEWAY_LISTEN_ADDR="<parent.service.bindings:bindings(parent, vars);separator=",">"
+<if(parent.service.client)>
+<if(parent.service.client.tls.ca)>ETCD_GATEWAY_CA="<parent.certsDir>/<parent.service.client.tls.caName>"<endif>
+<endif>
+
+>>
+
+bindings(bind, parent, vars) ::= <%
+<bind.address.host>:<bind.address.port>
+%>

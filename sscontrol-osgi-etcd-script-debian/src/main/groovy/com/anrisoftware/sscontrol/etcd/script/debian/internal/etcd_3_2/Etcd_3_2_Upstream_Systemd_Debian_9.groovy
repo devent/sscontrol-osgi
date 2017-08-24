@@ -40,13 +40,18 @@ class Etcd_3_2_Upstream_Systemd_Debian_9 extends Etcd_3_x_Upstream_Systemd {
     Object run() {
         Etcd service = this.service
         createDirectories()
-        if (!service.proxy) {
-            createServices()
-            createConfig()
-        } else {
-            createProxyServices()
-            createProxyConfig()
+        def services = { createServices() }
+        def config = { createConfig() }
+        if (service.proxy) {
+            services = { createProxyServices() }
+            config = { createProxyConfig() }
         }
+        if (service.gateway) {
+            services = { createGatewayServices() }
+            config = { createGatewayConfig() }
+        }
+        services()
+        config()
         uploadServerTls()
         uploadClientTls()
         uploadClientCertAuth()

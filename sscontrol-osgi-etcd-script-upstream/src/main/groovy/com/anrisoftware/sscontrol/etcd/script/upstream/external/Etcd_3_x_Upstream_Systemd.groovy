@@ -48,6 +48,10 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
 
     TemplateResource proxyConfigsTemplate
 
+    TemplateResource gatewayServicesTemplate
+
+    TemplateResource gatewayConfigsTemplate
+
     SystemdUtils systemd
 
     @Inject
@@ -60,6 +64,9 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
         templates = templatesFactory.create('Etcd_Proxy_3_x_Upstream_Systemd_Templates')
         this.proxyServicesTemplate = templates.getResource('etcd_proxy_services')
         this.proxyConfigsTemplate = templates.getResource('etcd_proxy_configs')
+        templates = templatesFactory.create('Etcd_Gateway_3_x_Upstream_Systemd_Templates')
+        this.gatewayServicesTemplate = templates.getResource('etcd_gateway_services')
+        this.gatewayConfigsTemplate = templates.getResource('etcd_gateway_configs')
     }
 
     @Inject
@@ -253,6 +260,35 @@ chmod -R o-rwX $dir
         ].each { template it call() }
     }
 
+    def createGatewayServices() {
+        log.info 'Create etcd-gateway services.'
+        def dir = systemdSystemDir
+        [
+            [
+                resource: gatewayServicesTemplate,
+                name: 'etcdGatewayService',
+                privileged: true,
+                dest: "$dir/etcd-gateway.service",
+                vars: [:],
+            ],
+        ].each { template it call() }
+    }
+
+    def createGatewayConfig() {
+        log.info 'Create etcd-gateway configuration.'
+        def dir = configDir
+        shell privileged: true, "mkdir -p $dir" call()
+        [
+            [
+                resource: gatewayConfigsTemplate,
+                name: 'etcdGatewayConfig',
+                privileged: true,
+                dest: "$configDir/etcd-gateway.conf",
+                vars: [:],
+            ],
+        ].each { template it call() }
+    }
+
     def reloadDaemon() {
         systemd.reloadDaemon()
     }
@@ -263,6 +299,9 @@ chmod -R o-rwX $dir
         if (service.proxy) {
             services = this.proxyServices
         }
+        if (service.gateway) {
+            services = this.gatewayServices
+        }
         systemd.startServices services: services, timeout: timeoutMiddle
     }
 
@@ -271,6 +310,9 @@ chmod -R o-rwX $dir
         def services = this.services
         if (service.proxy) {
             services = this.proxyServices
+        }
+        if (service.gateway) {
+            services = this.gatewayServices
         }
         systemd.restartServices services
     }
@@ -281,6 +323,9 @@ chmod -R o-rwX $dir
         if (service.proxy) {
             services = this.proxyServices
         }
+        if (service.gateway) {
+            services = this.gatewayServices
+        }
         systemd.enableServices services
     }
 
@@ -289,6 +334,9 @@ chmod -R o-rwX $dir
         def services = this.services
         if (service.proxy) {
             services = this.proxyServices
+        }
+        if (service.gateway) {
+            services = this.gatewayServices
         }
         systemd.stopServices services
     }
@@ -318,7 +366,7 @@ chmod -R o-rwX $dir
     }
 
     /**
-     * Returns the services of the service.
+     * Returns the services of the proxy service.
      *
      * <ul>
      * <li>profile property {@code proxy_services}</li>
@@ -332,6 +380,23 @@ chmod -R o-rwX $dir
 
     File getProxyConfigFile() {
         getFileProperty "proxy_config_file", configDir, defaultProperties
+    }
+
+    /**
+     * Returns the services of the gateway service.
+     *
+     * <ul>
+     * <li>profile property {@code gateway_services}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getGatewayServices() {
+        properties.getListProperty "gateway_services", defaultProperties
+    }
+
+    File getGatewayConfigFile() {
+        getFileProperty "gateway_config_file", configDir, defaultProperties
     }
 
     @Override
