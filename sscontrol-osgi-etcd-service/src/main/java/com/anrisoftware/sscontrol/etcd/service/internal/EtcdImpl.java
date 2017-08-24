@@ -40,9 +40,11 @@ import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.service.external.EtcdService;
+import com.anrisoftware.sscontrol.etcd.service.external.Gateway;
 import com.anrisoftware.sscontrol.etcd.service.external.Peer;
 import com.anrisoftware.sscontrol.etcd.service.external.Proxy;
 import com.anrisoftware.sscontrol.etcd.service.internal.ClientImpl.ClientImplFactory;
+import com.anrisoftware.sscontrol.etcd.service.internal.GatewayImpl.GatewayImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.PeerImpl.PeerImplFactory;
 import com.anrisoftware.sscontrol.etcd.service.internal.ProxyImpl.ProxyImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
@@ -111,6 +113,11 @@ public class EtcdImpl implements Etcd {
     private ProxyImplFactory proxyFactory;
 
     private Proxy proxy;
+
+    @Inject
+    private GatewayImplFactory gatewayFactory;
+
+    private Gateway gateway;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
@@ -297,6 +304,18 @@ public class EtcdImpl implements Etcd {
         return proxy;
     }
 
+    /**
+     * <pre>
+     * gateway endpoints: "https://etcd-0:2379"
+     * </pre>
+     */
+    public Gateway gateway(Map<String, Object> args) {
+        Gateway gateway = gatewayFactory.create(args);
+        this.gateway = gateway;
+        log.gatewaySet(this, gateway);
+        return gateway;
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -365,6 +384,11 @@ public class EtcdImpl implements Etcd {
     @Override
     public Proxy getProxy() {
         return proxy;
+    }
+
+    @Override
+    public Gateway getGateway() {
+        return gateway;
     }
 
     @Override

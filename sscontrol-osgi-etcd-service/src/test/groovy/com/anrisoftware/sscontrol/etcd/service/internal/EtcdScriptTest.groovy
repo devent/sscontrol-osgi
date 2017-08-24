@@ -240,6 +240,50 @@ service "etcd" with {
     }
 
     @Test
+    void "gateway_args"() {
+        def test = [
+            name: 'gateway_args',
+            input: '''
+service "etcd" with {
+    gateway endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.gateway.endpoints.size() == 1
+                assert s.gateway.endpoints[0] == 'https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "gateway_endpoints"() {
+        def test = [
+            name: 'gateway_endpoints',
+            input: '''
+service "etcd" with {
+    gateway with {
+        endpoint << "https://etcd-0:2379"
+        endpoint << "https://etcd-1:2379"
+        endpoint << "https://etcd-2:2379"
+    }
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+                assert s.gateway.endpoints.size() == 3
+                assert s.gateway.endpoints[0] == 'https://etcd-0:2379'
+                assert s.gateway.endpoints[1] == 'https://etcd-1:2379'
+                assert s.gateway.endpoints[2] == 'https://etcd-2:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "authentication_args"() {
         def test = [
             name: 'authentication_args',
