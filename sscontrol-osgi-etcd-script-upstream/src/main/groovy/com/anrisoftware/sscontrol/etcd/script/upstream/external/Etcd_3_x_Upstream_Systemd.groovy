@@ -21,10 +21,11 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication
 import com.anrisoftware.sscontrol.etcd.service.external.Etcd
-import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.utils.st.miscrenderers.external.NumberTrueRenderer
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -43,8 +44,11 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
 
     TemplateResource etcdctlVariablesTemplate
 
-    @Inject
-    BindingFactory bindingFactory
+    TemplateResource proxyServicesTemplate
+
+    TemplateResource proxyConfigsTemplate
+
+    SystemdUtils systemd
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory, NumberTrueRenderer numberTrueRenderer) {
@@ -53,83 +57,14 @@ abstract class Etcd_3_x_Upstream_Systemd extends ScriptBase {
         this.servicesTemplate = templates.getResource('etcd_services')
         this.configsTemplate = templates.getResource('etcd_configs')
         this.etcdctlVariablesTemplate = templates.getResource('etcdctl_variables')
+        templates = templatesFactory.create('Etcd_Proxy_3_x_Upstream_Systemd_Templates')
+        this.proxyServicesTemplate = templates.getResource('etcd_proxy_services')
+        this.proxyConfigsTemplate = templates.getResource('etcd_proxy_configs')
     }
 
-    def setupDefaults() {
-        Etcd service = service
-        if (!service.debugLogging.modules['debug']) {
-            service.debug 'debug', level: defaultDebugLogLevel
-        }
-        if (service.bindings.size() == 0) {
-            service.bindings << bindingFactory.create()
-        }
-        if (!service.bindings[0].address) {
-            service.bindings[0].address = defaultBindingAddress
-        }
-        if (service.advertises.size() == 0) {
-            service.advertises << bindingFactory.create()
-        }
-        if (!service.advertises[0].address) {
-            service.advertises[0].address = defaultAdvertiseAddress
-        }
-        if (!service.memberName) {
-            service.memberName = defaultMemberName
-        }
-        if (!service.tls.caName) {
-            service.tls.caName = defaultServerTlsCaName
-        }
-        if (!service.tls.certName) {
-            service.tls.certName = defaultServerTlsCertName
-        }
-        if (!service.tls.keyName) {
-            service.tls.keyName = defaultServerTlsKeyName
-        }
-        if (service.client && service.client.tls) {
-            if (!service.client.tls.caName) {
-                service.client.tls.caName = defaultClientTlsCaName
-            }
-            if (!service.client.tls.certName) {
-                service.client.tls.certName = defaultClientTlsCertName
-            }
-            if (!service.client.tls.keyName) {
-                service.client.tls.keyName = defaultClientTlsKeyName
-            }
-        }
-        service.authentications.findAll { it.tls  } each {
-            Tls tls = it.tls
-            if (!tls.caName) {
-                tls.caName = defaultClientAuthenticationTlsCaName[it.type]
-            }
-            if (!tls.certName) {
-                tls.certName = defaultClientAuthenticationTlsCertName[it.type]
-            }
-            if (!tls.keyName) {
-                tls.keyName = defaultClientAuthenticationTlsKeyName[it.type]
-            }
-        }
-        if (service.peer) {
-            if (!service.peer.tls.caName) {
-                service.peer.tls.caName = defaultPeerTlsCaName
-            }
-            if (!service.peer.tls.certName) {
-                service.peer.tls.certName = defaultPeerTlsCertName
-            }
-            if (!service.peer.tls.keyName) {
-                service.peer.tls.keyName = defaultPeerTlsKeyName
-            }
-            service.peer.authentications.findAll { it.tls  } each {
-                Tls tls = it.tls
-                if (!tls.caName) {
-                    tls.caName = defaultPeerAuthenticationTlsCaName[it.type]
-                }
-                if (!tls.certName) {
-                    tls.certName = defaultPeerAuthenticationTlsCertName[it.type]
-                }
-                if (!tls.keyName) {
-                    tls.keyName = defaultPeerAuthenticationTlsKeyName[it.type]
-                }
-            }
-        }
+    @Inject
+    void setSystemd(SystemdUtilsFactory factory) {
+        this.systemd = factory.create this
     }
 
     def createDirectories() {
@@ -160,7 +95,6 @@ chmod o-rx '$certsdir'
                 vars: [:],
             ],
         ].each { template it call() }
-        shell privileged: true, "systemctl daemon-reload" call()
     }
 
     def createConfig() {
@@ -290,6 +224,71 @@ chmod -R o-rwX $dir
 """ call()
     }
 
+    def createProxyServices() {
+        log.info 'Create etcd-proxy services.'
+        def dir = systemdSystemDir
+        [
+            [
+                resource: proxyServicesTemplate,
+                name: 'etcdProxyService',
+                privileged: true,
+                dest: "$dir/etcd-proxy.service",
+                vars: [:],
+            ],
+        ].each { template it call() }
+    }
+
+    def createProxyConfig() {
+        log.info 'Create etcd-proxy configuration.'
+        def dir = configDir
+        shell privileged: true, "mkdir -p $dir" call()
+        [
+            [
+                resource: proxyConfigsTemplate,
+                name: 'etcdProxyConfig',
+                privileged: true,
+                dest: "$configDir/etcd-proxy.conf",
+                vars: [:],
+            ],
+        ].each { template it call() }
+    }
+
+    def startServices() {
+        Etcd service = service
+        def services = this.services
+        if (service.proxy) {
+            services = this.proxyServices
+        }
+        systemd.startServices services: services, timeout: timeoutMiddle
+    }
+
+    def restartServices() {
+        Etcd service = service
+        def services = this.services
+        if (service.proxy) {
+            services = this.proxyServices
+        }
+        systemd.restartServices services
+    }
+
+    def enableServices() {
+        Etcd service = service
+        def services = this.services
+        if (service.proxy) {
+            services = this.proxyServices
+        }
+        systemd.enableServices services
+    }
+
+    def stopServices() {
+        Etcd service = service
+        def services = this.services
+        if (service.proxy) {
+            services = this.proxyServices
+        }
+        systemd.stopServices services
+    }
+
     File getSystemdSystemDir() {
         properties.getFileProperty "systemd_system_dir", base, defaultProperties
     }
@@ -314,86 +313,21 @@ chmod -R o-rwX $dir
         properties.getProperty "user", defaultProperties
     }
 
-    def getDefaultDebugLogLevel() {
-        properties.getNumberProperty 'default_debug_log_level', defaultProperties intValue()
+    /**
+     * Returns the services of the service.
+     *
+     * <ul>
+     * <li>profile property {@code proxy_services}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getProxyServices() {
+        properties.getListProperty "proxy_services", defaultProperties
     }
 
-    URI getDefaultBindingAddress() {
-        properties.getURIProperty 'default_binding_address', defaultProperties
-    }
-
-    URI getDefaultAdvertiseAddress() {
-        properties.getURIProperty 'default_advertise_address', defaultProperties
-    }
-
-    def getDefaultMemberName() {
-        properties.getProperty 'default_member_name', defaultProperties
-    }
-
-    def getDefaultServerTlsCaName() {
-        properties.getProperty 'default_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultServerTlsCertName() {
-        properties.getProperty 'default_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultServerTlsKeyName() {
-        properties.getProperty 'default_tls_key_name', defaultProperties
-    }
-
-    def getDefaultClientTlsCaName() {
-        properties.getProperty 'default_client_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultClientTlsCertName() {
-        properties.getProperty 'default_client_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultClientTlsKeyName() {
-        properties.getProperty 'default_client_tls_key_name', defaultProperties
-    }
-
-    def getDefaultPeerTlsCaName() {
-        properties.getProperty 'default_peer_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultPeerTlsCertName() {
-        properties.getProperty 'default_peer_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultPeerTlsKeyName() {
-        properties.getProperty 'default_peer_tls_key_name', defaultProperties
-    }
-
-    Map getDefaultClientAuthenticationTlsCaName() {
-        def s = properties.getProperty 'default_authentication_tls_ca_name', defaultProperties
-        Eval.me s
-    }
-
-    Map getDefaultClientAuthenticationTlsCertName() {
-        def s = properties.getProperty 'default_authentication_tls_cert_name', defaultProperties
-        Eval.me s
-    }
-
-    Map getDefaultClientAuthenticationTlsKeyName() {
-        def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
-        Eval.me s
-    }
-
-    Map getDefaultPeerAuthenticationTlsCaName() {
-        def s = properties.getProperty 'default_peer_authentication_tls_ca_name', defaultProperties
-        Eval.me s
-    }
-
-    Map getDefaultPeerAuthenticationTlsCertName() {
-        def s = properties.getProperty 'default_peer_authentication_tls_cert_name', defaultProperties
-        Eval.me s
-    }
-
-    Map getDefaultPeerAuthenticationTlsKeyName() {
-        def s = properties.getProperty 'default_peer_authentication_tls_key_name', defaultProperties
-        Eval.me s
+    File getProxyConfigFile() {
+        getFileProperty "proxy_config_file", configDir, defaultProperties
     }
 
     @Override

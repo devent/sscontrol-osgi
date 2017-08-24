@@ -34,16 +34,15 @@ public class Etcd_3_2_Debian_9_Module extends AbstractModule {
                 .build(Etcd_3_2_Debian_9_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
-                        Etcd_3_2_Systemd_Debian_9.class)
-                .build(Etcd_3_2_Systemd_Debian_9_Factory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
                         Etcd_3_2_Upstream_Systemd_Debian_9.class)
                 .build(Etcd_3_2_Upstream_Systemd_Debian_9_Factory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class,
                         Etcd_3_2_Upstream_Debian_9.class)
                 .build(Etcd_3_2_Upstream_Debian_9_Factory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, EtcdDefaults.class)
+                .build(EtcdDefaultsFactory.class));
     }
 
 }

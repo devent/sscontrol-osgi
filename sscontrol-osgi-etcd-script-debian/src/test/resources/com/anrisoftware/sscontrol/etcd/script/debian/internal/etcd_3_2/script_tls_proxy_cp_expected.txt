@@ -1,0 +1,5 @@
+/var/lib/robobee/tmp/etcd-proxy.service /tmp/junit/junit/etc/systemd/system/etcd-proxy.service
+/var/lib/robobee/tmp/etcd-proxy.conf /tmp/junit/junit/etc/etcd/etcd-proxy.conf
+/var/lib/robobee/tmp/robobeeclient_ca /tmp/junit/junit/etc/etcd/ssl/client_ca.pem
+/var/lib/robobee/tmp/robobeeclient_cert /tmp/junit/junit/etc/etcd/ssl/client_cert.pem
+/var/lib/robobee/tmp/robobeeclient_key /tmp/junit/junit/etc/etcd/ssl/client_key.pem

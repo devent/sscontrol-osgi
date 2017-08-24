@@ -143,9 +143,62 @@ service "etcd", member: "infra0" with {
         doTest test
     }
 
+    @Test
+    void "script_proxy"() {
+        def test = [
+            name: "script_proxy",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "etcd" with {
+    proxy endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd-proxy.service", "${args.test.name}_etcd_proxy_service_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd-proxy.conf", "${args.test.name}_etcd_proxy_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_tls_proxy"() {
+        def test = [
+            name: "script_tls_proxy",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "etcd" with {
+    proxy endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+    client testCerts
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd-proxy.service", "${args.test.name}_etcd_proxy_service_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd-proxy.conf", "${args.test.name}_etcd_proxy_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
-        //checkProfile LOCAL_PROFILE
+        checkProfile LOCAL_PROFILE
         checkLocalhostSocket()
     }
 }

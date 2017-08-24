@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Etcd</i> 3.1 service for Debian 8.
+ * Configures the <i>Etcd</i> 3.1 service for Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -44,7 +44,8 @@ class Etcd_3_2_Debian_9 extends ScriptBase {
     @Inject
     Etcd_3_2_Upstream_Systemd_Debian_9_Factory upstreamSystemdFactory
 
-    ScriptBase systemd
+    @Inject
+    EtcdDefaultsFactory etcdDefaultsFactory
 
     DebianUtils debian
 
@@ -53,19 +54,12 @@ class Etcd_3_2_Debian_9 extends ScriptBase {
         this.debian = factory.create this
     }
 
-    @Inject
-    def setSystemdFactory(Etcd_3_2_Systemd_Debian_9_Factory systemdFactory) {
-        this.systemd = systemdFactory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
     @Override
     def run() {
-        systemd.stopService()
+        etcdDefaultsFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         debian.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemd.enableService()
-        systemd.startService()
     }
 
     @Override
