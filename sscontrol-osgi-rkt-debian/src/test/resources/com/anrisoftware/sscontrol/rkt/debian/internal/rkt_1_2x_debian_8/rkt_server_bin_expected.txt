@@ -1,1 +1,0 @@
--rwxr-xr-x 1 root root 24610680 date /usr/bin/rkt

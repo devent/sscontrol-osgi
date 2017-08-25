@@ -74,9 +74,9 @@
         <module>../sscontrol-osgi-k8s-restore-service</module>
         <module>../sscontrol-osgi-registry-docker</module>
         <module>../sscontrol-osgi-registry-docker-linux</module>
-        <module>../sscontrol-osgi-rkt</module>
-        <module>../sscontrol-osgi-rkt-deb</module>
-        <module>../sscontrol-osgi-rkt-debian</module>
+        <module>../sscontrol-osgi-rkt-service</module>
+        <module>../sscontrol-osgi-rkt-script-deb</module>
+        <module>../sscontrol-osgi-rkt-script-debian</module>
         <module>../sscontrol-osgi-repo-git</module>
         <module>../sscontrol-osgi-repo-git-linux</module>
         <module>../sscontrol-osgi-script-runner</module>

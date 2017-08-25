@@ -1,0 +1,7 @@
+/bin/bash -s
+/bin/bash -s
+mkdir -p /var/lib/robobee/tmp
+chown /tmp/junit/junit/id -u /var/lib/robobee/tmp
+chmod o-rwx /var/lib/robobee/tmp
+dpkg -i rkt_1.28.1-1_amd64.deb
+/bin/bash -s
