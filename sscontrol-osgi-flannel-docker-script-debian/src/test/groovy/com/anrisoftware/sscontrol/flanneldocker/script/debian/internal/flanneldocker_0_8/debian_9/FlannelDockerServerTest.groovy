@@ -69,7 +69,7 @@ service "flannel-docker" with {
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "flannel-docker" with {
-    etcd "https://127.0.0.1:2379" with {
+    etcd "https://127.0.0.1:22379" with {
         tls certs
     }
 }

@@ -4,7 +4,7 @@
 # https://koji.fedoraproject.org/koji/buildinfo?buildID=835476
 
 # etcd url location.  Point this to the server where etcd runs
-FLANNEL_ETCD_ENDPOINTS="https://127.0.0.1:2379"
+FLANNEL_ETCD_ENDPOINTS="https://127.0.0.1:22379"
 
 # etcd certificates.
 FLANNELD_ETCD_KEYFILE="/etc/flanneld/ssl/etcd_key.pem"
