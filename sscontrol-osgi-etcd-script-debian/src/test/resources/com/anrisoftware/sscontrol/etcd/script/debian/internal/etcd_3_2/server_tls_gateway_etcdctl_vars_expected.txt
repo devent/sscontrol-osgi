@@ -1,5 +1,5 @@
 export ETCDCTL_API=3
 export ETCDCTL_DIAL_TIMEOUT=3s
-export ETCDCTL_CACERT="/tmp/junit/junit/etc/etcd/ssl/client_ca.pem"
+export ETCDCTL_CACERT="/etc/etcd/ssl/client_ca.pem"
 
 export ETCDCTL_ENDPOINTS=https://127.0.0.1:22379

@@ -33,9 +33,9 @@ import groovy.util.logging.Slf4j
 class EtcdScriptTest extends AbstractEtcdScriptTest {
 
     @Test
-    void "script_basic"() {
+    void "script_basic_etcd"() {
         def test = [
-            name: "script_basic",
+            name: "script_basic_etcd",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default"
@@ -217,6 +217,7 @@ service "etcd" with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
+    bind "http://localhost:22379"
     gateway endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
 }
 ''',
@@ -249,7 +250,8 @@ service "etcd" with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
-    gateway endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
+    bind "https://127.0.0.1:22379"
+    gateway endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
     client ca: testCerts.ca
 }
 ''',
