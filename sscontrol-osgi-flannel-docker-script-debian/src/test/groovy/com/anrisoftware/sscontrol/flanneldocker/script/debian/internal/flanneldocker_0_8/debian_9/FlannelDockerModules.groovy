@@ -33,8 +33,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
@@ -55,7 +54,6 @@ class FlannelDockerModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new FlannelDockerModule(),
             new FlannelDockerDebianModule(),
             new DebianUtilsModule(),

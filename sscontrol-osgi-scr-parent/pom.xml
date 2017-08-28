@@ -16,10 +16,6 @@
     <name>sscontrol-osgi - scr-parent</name>
 
     <modules>
-        <module>../sscontrol-osgi-collectd-script-collectd-5-7</module>
-        <module>../sscontrol-osgi-collectd-script-centos</module>
-        <module>../sscontrol-osgi-collectd-script-debian</module>
-        <module>../sscontrol-osgi-collectd-service</module>
         <module>../sscontrol-osgi-command-copy</module>
         <module>../sscontrol-osgi-command-facts</module>
         <module>../sscontrol-osgi-command-fetch</module>
@@ -35,7 +31,6 @@
         <module>../sscontrol-osgi-docker-service</module>
         <module>../sscontrol-osgi-etcd-service</module>
         <module>../sscontrol-osgi-etcd-script-debian</module>
-        <module>../sscontrol-osgi-etcd-script-systemd</module>
         <module>../sscontrol-osgi-etcd-script-upstream</module>
         <module>../sscontrol-osgi-fail2ban-service</module>
         <module>../sscontrol-osgi-fail2ban-script-0-9</module>
@@ -85,8 +80,8 @@
         <module>../sscontrol-osgi-services-repository</module>
         <module>../sscontrol-osgi-shell-service</module>
         <module>../sscontrol-osgi-shell-linux</module>
-        <module>../sscontrol-osgi-ssh</module>
-        <module>../sscontrol-osgi-ssh-linux</module>
+        <module>../sscontrol-osgi-ssh-service</module>
+        <module>../sscontrol-osgi-ssh-script-linux</module>
         <module>../sscontrol-osgi-sshd-script-openssh</module>
         <module>../sscontrol-osgi-sshd-script-debian</module>
         <module>../sscontrol-osgi-sshd-service</module>

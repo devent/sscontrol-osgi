@@ -31,17 +31,14 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9.Dockerce_17_Debian_9_Module
 import com.anrisoftware.sscontrol.docker.service.internal.DockerModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 
 /**
  *
@@ -57,7 +54,6 @@ class DockerceModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new DockerModule(),
             new Dockerce_17_Debian_9_Module(),
             new DebugLoggingModule(),
@@ -82,12 +78,6 @@ class DockerceModules {
             new SystemNameMappingsModule(),
             new DebianUtilsModule(),
             new SystemdUtilsModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                }
-            }
         ]
     }
 }

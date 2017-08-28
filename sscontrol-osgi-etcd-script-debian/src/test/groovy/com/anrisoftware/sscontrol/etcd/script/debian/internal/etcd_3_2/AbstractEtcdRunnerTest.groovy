@@ -25,10 +25,9 @@ import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -88,16 +87,13 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    EtcdImplFactory serviceFactory
+    EtcdImplFactory etcdFactory
 
     @Inject
-    Etcd_3_2_Debian_9_Factory scriptFactory
+    Etcd_3_2_Debian_9_Factory etcdDebianFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -105,10 +101,9 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'etcd', serviceFactory
-        services.putAvailableScriptService 'etcd/debian/9', scriptFactory
+        services.putAvailableService 'etcd', etcdFactory
+        services.putAvailableScriptService 'etcd/debian/9', etcdDebianFactory
         return services
     }
 
@@ -119,7 +114,6 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
         modules.addAll EtcdModules.getAdditionalModules()
         modules
     }
-
 
     @Before
     void setupTest() {

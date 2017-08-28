@@ -24,14 +24,13 @@ import org.junit.Before
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.command.shell.external.Cmd
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.command.shell.internal.facts.FactsModule
 import com.anrisoftware.sscontrol.command.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.command.shell.internal.replace.ReplaceModule
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImpl
+import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdImplModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
@@ -44,13 +43,11 @@ import com.anrisoftware.sscontrol.hosts.service.internal.HostsModule
 import com.anrisoftware.sscontrol.hosts.service.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 
 import groovy.util.logging.Slf4j
 
@@ -108,7 +105,6 @@ abstract class AbstractTestHosts extends AbstractScriptTestBase {
             new Hosts_Linux_Module(),
             new HostServicesModule(),
             new SshModule(),
-            new SshPreModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -125,13 +121,7 @@ abstract class AbstractTestHosts extends AbstractScriptTestBase {
             new TokensTemplateModule(),
             new SystemNameMappingsModule(),
             new StModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                    bind Cmd to CmdImpl
-                }
-            }
+            new CmdImplModule(),
         ]
     }
 

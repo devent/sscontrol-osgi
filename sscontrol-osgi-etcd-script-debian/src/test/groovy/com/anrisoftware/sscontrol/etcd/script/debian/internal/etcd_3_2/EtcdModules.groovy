@@ -34,8 +34,7 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.etcd.service.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
@@ -56,7 +55,6 @@ class EtcdModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new EtcdModule(),
             new BindingModule(),
             new Etcd_3_2_Debian_9_Module(),

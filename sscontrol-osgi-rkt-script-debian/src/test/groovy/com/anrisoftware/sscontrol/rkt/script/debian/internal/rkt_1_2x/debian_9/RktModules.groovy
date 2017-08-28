@@ -33,8 +33,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.rkt.service.internal.RktModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
@@ -54,7 +53,6 @@ class RktModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new RktModule(),
             new RktDebianModule(),
             new DebianUtilsModule(),
