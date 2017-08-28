@@ -35,8 +35,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.fail2ban.service.internal.Fail2banModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
@@ -57,7 +56,6 @@ class Fail2banTestModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new Fail2banModule(),
             new Fail2ban_Debian_9_Module(),
             new InitFileParserModule(),

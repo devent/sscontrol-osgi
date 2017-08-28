@@ -30,18 +30,15 @@ import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreModule
 import com.anrisoftware.sscontrol.hostname.service.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.hostname.service.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
@@ -71,9 +68,6 @@ class ParserImplTest {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     HostnameImplFactory hostnameFactory
 
     @Inject
@@ -89,7 +83,6 @@ class ParserImplTest {
         def variables = [:]
         def hostServices = servicesFactory.create()
         hostServices.putAvailableService 'ssh', sshFactory
-        hostServices.putAvailablePreService 'ssh', sshPreFactory
         hostServices.putAvailableService 'hostname', hostnameFactory
         hostServices.putAvailablePreService 'hostname', hostnamePreFactory
         def parser = scriptsFactory.create(roots, name, variables, hostServices)
@@ -110,19 +103,12 @@ class ParserImplTest {
                 new StringsModule(),
                 new DebugLoggingModule(),
                 new SshModule(),
-                new SshPreModule(),
                 new HostnameModule(),
                 new HostnamePreModule(),
                 new PropertiesModule(),
                 new SystemNameMappingsModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                        bind TargetsService to TargetsImplFactory
-                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
-                    }
-                }).injectMembers(this)
+                new HostServicePropertiesServiceModule(),
+                ).injectMembers(this)
     }
 
     static final URI hostnameScript = ParserImplTest.class.getResource('HostnameScript.groovy').toURI()

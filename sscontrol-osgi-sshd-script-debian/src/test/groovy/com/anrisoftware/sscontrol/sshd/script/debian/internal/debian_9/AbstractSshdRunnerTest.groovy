@@ -25,11 +25,9 @@ import org.junit.Before
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
-import com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9.Sshd_Debian_9_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.sshd.service.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
@@ -48,9 +46,6 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
@@ -65,7 +60,6 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'sshd', serviceFactory
         services.putAvailableScriptService 'sshd/debian/9', scriptFactory

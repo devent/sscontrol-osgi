@@ -29,10 +29,9 @@ import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoI
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -50,9 +49,6 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
 
     @Inject
     SshImplFactory sshFactory
-
-    @Inject
-    SshPreScriptImplFactory sshPreFactory
 
     @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
@@ -75,7 +71,6 @@ abstract class AbstractDockerRegistryRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'registry-docker', dockerFactory
         services.putAvailableScriptService 'registry-docker/debian/8', dockerScriptFactory

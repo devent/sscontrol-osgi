@@ -26,10 +26,9 @@ import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScript
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.shell.internal.ShellImpl.ShellImplFactory
 import com.anrisoftware.sscontrol.shell.linux.external.Shell_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -47,9 +46,6 @@ abstract class AbstractShellRunnerTestBase extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
@@ -64,7 +60,6 @@ abstract class AbstractShellRunnerTestBase extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'shell', shellFactory
         services.putAvailableScriptService 'shell/linux/0', shellLinuxFactory

@@ -316,6 +316,15 @@ public class EtcdImpl implements Etcd {
         return gateway;
     }
 
+    /**
+     * <pre>
+     * gateway()
+     * </pre>
+     */
+    public Gateway gateway() {
+        return gateway(new HashMap<String, Object>());
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;

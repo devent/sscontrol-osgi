@@ -45,9 +45,8 @@ import com.anrisoftware.sscontrol.hostname.service.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.service.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
@@ -105,7 +104,6 @@ abstract class AbstractTestHostname extends AbstractScriptTestBase {
             new HostnameModule(),
             new Hostname_Debian_9_Module(),
             new SshModule(),
-            new SshPreModule(),
             new DebianUtilsModule(),
             new DebugLoggingModule(),
             new StringsModule(),

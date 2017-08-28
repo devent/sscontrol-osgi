@@ -33,11 +33,9 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.shell.internal.ShellModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 
 /**
  *
@@ -53,7 +51,6 @@ class ShellTestModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new ShellModule(),
             new Shell_Linux_Module(),
             new DebugLoggingModule(),
@@ -75,12 +72,6 @@ class ShellTestModules {
             new TokensTemplateModule(),
             new ResourcesModule(),
             new SystemNameMappingsModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                }
-            }
         ]
     }
 }

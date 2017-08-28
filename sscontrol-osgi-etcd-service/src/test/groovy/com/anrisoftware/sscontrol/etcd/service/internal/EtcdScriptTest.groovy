@@ -264,7 +264,7 @@ service "etcd" with {
             name: 'gateway_endpoints',
             input: '''
 service "etcd" with {
-    gateway with {
+    gateway() with {
         endpoint << "https://etcd-0:2379"
         endpoint << "https://etcd-1:2379"
         endpoint << "https://etcd-2:2379"
