@@ -48,6 +48,8 @@ class EtcdDebian extends ScriptBase {
 
     DebianUtils debian
 
+    ScriptBase etcdUfw
+
     @Inject
     void setDebian(Debian_9_UtilsFactory factory) {
         this.debian = factory.create this
@@ -58,12 +60,18 @@ class EtcdDebian extends ScriptBase {
         this.etcdUpstreamSystemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
+    @Inject
+    void setEtcdUfwFactory(EtcdUfwFactory factory) {
+        this.etcdUfw = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     def run() {
         etcdDefaultsFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         etcdUpstreamSystemd.stopServices()
         debian.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        etcdUfw.run()
         etcdUpstreamSystemd.run()
     }
 

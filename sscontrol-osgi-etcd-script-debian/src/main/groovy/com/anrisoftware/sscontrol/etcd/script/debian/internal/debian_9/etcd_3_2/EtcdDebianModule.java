@@ -37,12 +37,14 @@ public class EtcdDebianModule extends AbstractModule {
                         EtcdUpstreamSystemdDebian.class)
                 .build(EtcdUpstreamSystemdDebianFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        EtcdUpstreamDebian.class)
+                .implement(HostServiceScript.class, EtcdUpstreamDebian.class)
                 .build(EtcdUpstreamDebianFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, EtcdDefaults.class)
                 .build(EtcdDefaultsFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, EtcdUfw.class)
+                .build(EtcdUfwFactory.class));
     }
 
 }
