@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2;
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -40,14 +40,14 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Etcd_3_2_Debian_9_Service implements HostServiceScriptService {
+public class EtcdDebianService implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "9";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Etcd_3_2_Debian_9_Factory scriptFactory;
+    private EtcdDebianFactory scriptFactory;
 
     public String getSystemName() {
         return SYSTEM_NAME;
@@ -66,7 +66,7 @@ public class Etcd_3_2_Debian_9_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new Etcd_3_2_Debian_9_Module()).injectMembers(this);
+        createInjector(new EtcdDebianModule()).injectMembers(this);
     }
 
 }

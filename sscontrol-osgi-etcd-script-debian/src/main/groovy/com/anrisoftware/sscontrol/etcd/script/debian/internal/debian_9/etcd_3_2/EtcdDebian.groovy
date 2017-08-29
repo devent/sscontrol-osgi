@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2.Etcd_3_2_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianService.*
 
 import javax.inject.Inject
 
@@ -33,18 +33,18 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Etcd_3_2_Debian_9 extends ScriptBase {
+class EtcdDebian extends ScriptBase {
 
     @Inject
-    Etcd_3_2_Debian_9_Properties debianPropertiesProvider
+    EtcdDebianProperties debianPropertiesProvider
 
     @Inject
-    Etcd_3_2_Upstream_Debian_9_Factory upstreamFactory
+    EtcdUpstreamDebianFactory upstreamFactory
 
     @Inject
     EtcdDefaultsFactory etcdDefaultsFactory
 
-    Etcd_3_2_Upstream_Systemd_Debian_9 etcdUpstreamSystemd
+    EtcdUpstreamSystemdDebian etcdUpstreamSystemd
 
     DebianUtils debian
 
@@ -54,7 +54,7 @@ class Etcd_3_2_Debian_9 extends ScriptBase {
     }
 
     @Inject
-    void setUpstreamSystemdFactory(Etcd_3_2_Upstream_Systemd_Debian_9_Factory factory) {
+    void setUpstreamSystemdFactory(EtcdUpstreamSystemdDebianFactory factory) {
         this.etcdUpstreamSystemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
