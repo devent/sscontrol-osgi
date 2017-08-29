@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8sbase.base.internal.EtcdPluginImpl.EtcdPluginImplFactory
+import com.anrisoftware.sscontrol.k8sbase.base.service.internal.EtcdPluginImpl.EtcdPluginImplFactory
 import com.google.inject.Guice
 
 /**

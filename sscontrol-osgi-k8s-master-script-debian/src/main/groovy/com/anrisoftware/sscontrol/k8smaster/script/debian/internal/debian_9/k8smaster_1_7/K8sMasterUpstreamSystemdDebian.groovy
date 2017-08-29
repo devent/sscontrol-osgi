@@ -22,7 +22,7 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlClusterLinux
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
-import com.anrisoftware.sscontrol.k8smaster.upstream.script.external.K8sMaster_1_5_Upstream_Systemd
+import com.anrisoftware.sscontrol.k8smaster.upstream.script.external.k8s_1_7.K8sMasterUpstreamSystemd
 
 import groovy.util.logging.Slf4j
 
@@ -34,7 +34,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sMasterUpstreamSystemdDebian extends K8sMaster_1_5_Upstream_Systemd {
+class K8sMasterUpstreamSystemdDebian extends K8sMasterUpstreamSystemd {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider

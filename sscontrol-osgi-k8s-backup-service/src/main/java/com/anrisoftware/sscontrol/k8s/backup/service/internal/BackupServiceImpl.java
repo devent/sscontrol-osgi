@@ -28,7 +28,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8sService;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8sService;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 

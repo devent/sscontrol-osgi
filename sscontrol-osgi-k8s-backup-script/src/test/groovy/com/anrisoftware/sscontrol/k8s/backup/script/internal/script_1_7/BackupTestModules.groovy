@@ -34,14 +34,13 @@ import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.Find
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.backup.client.internal.BackupClientModule
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupModule
-import com.anrisoftware.sscontrol.k8sbase.base.internal.K8sModule
+import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
 import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Service
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
-import com.anrisoftware.sscontrol.ssh.internal.SshModule
-import com.anrisoftware.sscontrol.ssh.internal.SshPreModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
@@ -62,7 +61,6 @@ class BackupTestModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
-            new SshPreModule(),
             new K8sModule(),
             new K8sClusterModule(),
             new K8sCluster_1_5_Linux_Module(),

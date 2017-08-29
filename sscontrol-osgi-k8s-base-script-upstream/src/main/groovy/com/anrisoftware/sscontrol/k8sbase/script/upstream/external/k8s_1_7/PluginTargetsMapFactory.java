@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7;
 
 import java.util.Map;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
-import com.anrisoftware.sscontrol.k8sbase.base.external.Plugin;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
 
 /**

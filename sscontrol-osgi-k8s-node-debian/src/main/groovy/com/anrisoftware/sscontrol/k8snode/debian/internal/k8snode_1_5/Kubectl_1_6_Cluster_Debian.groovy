@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8s
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_6_Cluster_Linux
+import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.Kubectl_1_6_Cluster_Linux
 
 import groovy.util.logging.Slf4j
 

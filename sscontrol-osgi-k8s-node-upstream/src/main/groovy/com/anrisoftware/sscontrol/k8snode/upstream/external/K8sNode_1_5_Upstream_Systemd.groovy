@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8snode.upstream.external
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.K8s_1_5_Upstream_Systemd
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.K8sUpstreamSystemd
 import com.anrisoftware.sscontrol.k8snode.external.K8sNode
 
 import groovy.util.logging.Slf4j
@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class K8sNode_1_5_Upstream_Systemd extends K8s_1_5_Upstream_Systemd {
+abstract class K8sNode_1_5_Upstream_Systemd extends K8sUpstreamSystemd {
 
     def setupClusterDefaults() {
         K8sNode service = service
