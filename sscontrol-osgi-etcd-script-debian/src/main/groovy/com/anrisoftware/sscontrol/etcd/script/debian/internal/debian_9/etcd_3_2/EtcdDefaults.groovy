@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ import groovy.util.logging.Slf4j
 class EtcdDefaults extends Etcd_3_x_Defaults {
 
     @Inject
-    Etcd_3_2_Debian_9_Properties debianPropertiesProvider
+    EtcdDebianProperties debianPropertiesProvider
 
     @Override
     Object run() {

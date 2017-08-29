@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2.Etcd_3_2_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianService.*
 
 import javax.inject.Inject
 
@@ -32,10 +32,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Etcd_3_2_Upstream_Debian_9 extends Etcd_3_x_Upstream {
+class EtcdUpstreamDebian extends Etcd_3_x_Upstream {
 
     @Inject
-    Etcd_3_2_Debian_9_Properties debianPropertiesProvider
+    EtcdDebianProperties debianPropertiesProvider
 
     @Override
     Object run() {

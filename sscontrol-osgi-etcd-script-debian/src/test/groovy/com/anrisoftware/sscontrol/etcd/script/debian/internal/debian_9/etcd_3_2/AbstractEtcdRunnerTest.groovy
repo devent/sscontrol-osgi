@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianFactory
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -93,7 +94,7 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
     EtcdImplFactory etcdFactory
 
     @Inject
-    Etcd_3_2_Debian_9_Factory etcdDebianFactory
+    EtcdDebianFactory etcdDebianFactory
 
     def getRunScriptFactory() {
         runnerFactory
