@@ -151,6 +151,35 @@ service "etcd", member: "infra0" with {
     }
 
     @Test
+    void "peers_ufw"() {
+        def test = [
+            name: "peers_ufw",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "etcd", member: "infra0" with {
+    peer state: "new", advertise: "https://10.0.1.10:2380", listen: "https://10.0.1.10:2380", token: "etcd-cluster-1" with {
+        cluster << "infra0=https://10.0.1.10:2380"
+        cluster name: "infra1", address: "https://10.0.1.11:2380"
+        cluster "infra2", address: "https://10.0.1.12:2380"
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            before: { Map test ->
+                createCommand EtcdScriptTest.class.getResource("peers_ufw_ufw_cmd.txt"), test.dir, 'ufw'
+            },
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource EtcdScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "script_basic_proxy"() {
         def test = [
             name: "script_basic_proxy",
