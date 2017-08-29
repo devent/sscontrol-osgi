@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8snode.external;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s;
 
 /**
  * <i>K8s-Node</i> service.

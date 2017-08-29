@@ -20,10 +20,10 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8s
-import com.anrisoftware.sscontrol.k8sbase.base.external.Label
-import com.anrisoftware.sscontrol.k8sbase.base.external.Taint
-import com.anrisoftware.sscontrol.k8sbase.base.external.TaintFactory
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost

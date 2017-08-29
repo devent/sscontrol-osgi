@@ -25,14 +25,12 @@ import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory
 import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -68,9 +66,6 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
@@ -88,7 +83,6 @@ abstract class AbstractBackupRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableService 'backup', serviceFactory

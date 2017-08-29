@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8s
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_6_Cluster_Linux
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlClusterLinux
 import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Systemd
 
 import groovy.util.logging.Slf4j
@@ -87,7 +87,7 @@ class K8sNode_1_5_Upstream_Systemd_Debian_8 extends K8sNode_1_5_Upstream_Systemd
     }
 
     @Override
-    Kubectl_1_6_Cluster_Linux getKubectlCluster() {
+    KubectlClusterLinux getKubectlCluster() {
         kubectlClusterLinux
     }
 }

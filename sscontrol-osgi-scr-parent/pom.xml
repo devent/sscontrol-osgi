@@ -16,6 +16,10 @@
     <name>sscontrol-osgi - scr-parent</name>
 
     <modules>
+<!--        <module>../sscontrol-osgi-collectd-script-collectd-5-7</module>
+        <module>../sscontrol-osgi-collectd-script-centos</module>
+        <module>../sscontrol-osgi-collectd-script-debian</module>
+        <module>../sscontrol-osgi-collectd-service</module>-->
         <module>../sscontrol-osgi-command-copy</module>
         <module>../sscontrol-osgi-command-facts</module>
         <module>../sscontrol-osgi-command-fetch</module>
@@ -52,16 +56,16 @@
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
-        <module>../sscontrol-osgi-k8s-base</module>
-        <module>../sscontrol-osgi-k8s-base-upstream</module>
+        <module>../sscontrol-osgi-k8s-base-service</module>
+        <module>../sscontrol-osgi-k8s-base-script-upstream</module>
         <module>../sscontrol-osgi-k8s-cluster</module>
         <module>../sscontrol-osgi-k8s-cluster-linux</module>
         <module>../sscontrol-osgi-k8s-from-repository</module>
         <module>../sscontrol-osgi-k8s-glusterfs-heketi</module>
         <module>../sscontrol-osgi-k8s-kubectl-linux</module>
-        <module>../sscontrol-osgi-k8s-master</module>
-        <module>../sscontrol-osgi-k8s-master-debian</module>
-        <module>../sscontrol-osgi-k8s-master-upstream</module>
+        <module>../sscontrol-osgi-k8s-master-service</module>
+        <module>../sscontrol-osgi-k8s-master-script-debian</module>
+        <module>../sscontrol-osgi-k8s-master-script-upstream</module>
         <module>../sscontrol-osgi-k8s-node</module>
         <module>../sscontrol-osgi-k8s-node-debian</module>
         <module>../sscontrol-osgi-k8s-node-upstream</module>

@@ -1,6 +1,0 @@
-kube-apiserver restart
-kube-apiserver status
-kube-controller-manager restart
-kube-controller-manager status
-kube-scheduler restart
-kube-scheduler status

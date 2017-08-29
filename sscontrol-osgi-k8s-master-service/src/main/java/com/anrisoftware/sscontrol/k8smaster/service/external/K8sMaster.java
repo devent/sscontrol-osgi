@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.service.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.k8sbase.base.external.K8s;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s;
 
 /**
  * <i>K8s-Master</i> service.
