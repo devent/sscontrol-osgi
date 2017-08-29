@@ -1,0 +1,16 @@
+startAddon(parent, vars) ::= <<
+kubectl apply -f "<parent.srvManifestsDir>/<vars.manifestFile>"
+
+>>
+
+waitApi(parent, vars) ::= <<
+echo "Waiting for Kubernetes API..."
+<parent.service.cluster.apiServers:waitForServer();separator=",">
+>>
+
+waitForServer(server) ::= <<
+until curl --silent "<server>/version/"
+do
+    sleep 5
+done
+>>
