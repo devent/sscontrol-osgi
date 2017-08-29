@@ -1,0 +1,130 @@
+kubeletService(parent, vars) ::= <<
+# Auto-Generated from Robobee
+# Authors
+# https://github.com/coreos/coreos-kubernetes/blob/master/multi-node/generic/controller-install.sh
+#
+# <parent.systemdSystemDir>/kubelet.service
+[Service]
+EnvironmentFile=<parent.sysConfigDir>/kubelet
+ExecStartPre=/bin/mkdir -p <parent.manifestsDir>
+ExecStartPre=/bin/mkdir -p <parent.cniBinDir>
+ExecStartPre=/bin/mkdir -p <parent.containersLogDir>
+ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
+ExecStart=<parent.binDir>/kubelet-wrapper \
+  --api-servers=${K8S_APISERVERS} \
+  --cni-conf-dir=<parent.cniNetDir> \
+  --network-plugin=cni \
+  --container-runtime=${CONTAINER_RUNTIME} \
+  --rkt-path=/usr/bin/rkt \
+  --rkt-stage1-image=coreos.com/rkt/stage1-coreos \
+  --register-node=<parent.registerNode> \
+  --allow-privileged=true \
+  --pod-manifest-path=<parent.manifestsDir> \
+  --hostname-override=${ADVERTISE_IP} <\u005C>
+<if(parent.nodeTaints)>
+  --register-with-taints=${NODE_TAINTS} <\u005C>
+<endif><if(parent.nodeLabels)>
+  --node-labels=${NODE_LABELS} <\u005C>
+<endif>
+  --cluster_dns=${DNS_SERVICE_IP} \
+  --cluster_domain=cluster.local<if(parent.kubeconfigFile)> \
+  --kubeconfig=<parent.kubeconfigFile><endif><if(parent.service.kubelet.tls.cert)> \
+  --tls-cert-file=<parent.certsDir>/<parent.service.kubelet.tls.certName><endif><if(parent.service.kubelet.tls.key)> \
+  --tls-private-key-file=<parent.certsDir>/<parent.service.kubelet.tls.keyName><endif>
+
+ExecStop=-/usr/bin/rkt stop --uuid-file=${KUBELET_UUID_FILE}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+>>
+
+kubeletWrapper(parent, vars) ::= <<
+#!/bin/bash
+# Wrapper for launching kubelet via rkt-fly.
+#
+# Make sure to set KUBELET_IMAGE_TAG to an image tag published here:
+# https://quay.io/repository/coreos/hyperkube?tab=tags Alternatively,
+# override KUBELET_IMAGE to a custom image.
+
+set -e
+
+function require_ev_all() {
+    for rev in $@ ; do
+        if [[ -z "${!rev}" ]]; then
+            echo "${rev}" is not set
+            exit 1
+        fi
+    done
+}
+
+function require_ev_one() {
+    for rev in $@ ; do
+        if [[ ! -z "${!rev}" ]]; then
+            return
+        fi
+    done
+    echo One of $@ must be set
+    exit 1
+}
+
+if [[ -n "${KUBELET_VERSION}" ]]; then
+    echo KUBELET_VERSION environment variable is deprecated, please use KUBELET_IMAGE_TAG instead
+fi
+
+if [[ -n "${KUBELET_ACI}" ]]; then
+    echo KUBELET_ACI environment variable is deprecated, please use the KUBELET_IMAGE_URL instead
+fi
+
+if [[ -n "${RKT_OPTS}" ]]; then
+    echo RKT_OPTS environment variable is deprecated, please use the RKT_RUN_ARGS instead
+fi
+
+KUBELET_IMAGE_TAG="${KUBELET_IMAGE_TAG:-${KUBELET_VERSION}}"
+
+require_ev_one KUBELET_IMAGE KUBELET_IMAGE_TAG
+
+KUBELET_IMAGE_URL="${KUBELET_IMAGE_URL:-${KUBELET_ACI:-quay.io/coreos/hyperkube}}"
+KUBELET_IMAGE="${KUBELET_IMAGE:-${KUBELET_IMAGE_URL}:${KUBELET_IMAGE_TAG}}"
+
+RKT_RUN_ARGS="${RKT_RUN_ARGS} ${RKT_OPTS}"
+
+if [[ "${KUBELET_IMAGE%%/*}" == "quay.io" ]]; then
+    RKT_RUN_ARGS="${RKT_RUN_ARGS} --trust-keys-from-https"
+fi
+
+mkdir --parents /etc/kubernetes
+mkdir --parents /var/lib/docker
+mkdir --parents /var/lib/kubelet
+mkdir --parents /run/kubelet
+
+RKT="${RKT:-/usr/bin/rkt}"
+RKT_STAGE1_ARG="${RKT_STAGE1_ARG:---stage1-from-dir=stage1-fly.aci}"
+KUBELET_IMAGE_ARGS=${KUBELET_IMAGE_ARGS:---exec=/kubelet}
+set -x
+exec ${RKT} ${RKT_GLOBAL_ARGS} \
+    run ${RKT_RUN_ARGS} \
+    --volume etc-kubernetes,kind=host,source=/etc/kubernetes,readOnly=false \
+    --volume etc-ssl-certs,kind=host,source=/etc/ssl/certs,readOnly=true \
+    --volume usr-share-certs,kind=host,source=/usr/share/ca-certificates,readOnly=true \
+    --volume var-lib-docker,kind=host,source=/var/lib/docker,readOnly=false \
+    --volume var-lib-kubelet,kind=host,source=/var/lib/kubelet,readOnly=false \
+    --volume var-log,kind=host,source=/var/log,readOnly=false \
+    --volume os-release,kind=host,source=/usr/lib/os-release,readOnly=true \
+    --volume run,kind=host,source=/run,readOnly=false \
+    --mount volume=etc-kubernetes,target=/etc/kubernetes \
+    --mount volume=etc-ssl-certs,target=/etc/ssl/certs \
+    --mount volume=usr-share-certs,target=/usr/share/ca-certificates \
+    --mount volume=var-lib-docker,target=/var/lib/docker \
+    --mount volume=var-lib-kubelet,target=/var/lib/kubelet \
+    --mount volume=var-log,target=/var/log \
+    --mount volume=os-release,target=/etc/os-release \
+    --mount volume=run,target=/run \
+    ${RKT_STAGE1_ARG} \
+    ${KUBELET_IMAGE} \
+    ${KUBELET_IMAGE_ARGS} \
+    -- "$@"
+
+>>
