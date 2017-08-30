@@ -189,7 +189,6 @@ service "etcd" with {
     @Before
     void beforeMethod() {
         checkRobobeeSocket()
-        assumeTrue testHostAvailable
     }
 
     void createDummyCommands(File dir) {

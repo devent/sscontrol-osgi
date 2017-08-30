@@ -39,8 +39,17 @@ class EtcdUfw extends ScriptBase {
 
     @Override
     Object run() {
+        Etcd service = this.service
         if (!ufwActive) {
             log.debug 'No Ufw available.'
+            return
+        }
+        if (!service.peer) {
+            log.debug 'No peer available.'
+            return
+        }
+        if (service.peer.listens.empty) {
+            log.debug 'No peer available.'
             return
         }
         updateFirewall()
@@ -57,15 +66,7 @@ class EtcdUfw extends ScriptBase {
 
     def updateFirewall() {
         Etcd service = this.service
-        String listenAddress = listenAddress
-        List peersAddresses = peersAddresses
-        if (!listenAddress) {
-            return
-        }
-        if (peersAddresses.empty) {
-            return
-        }
-        shell st: """
+        shell privileged: true, st: """
 <vars.peers:{p|ufw allow from <p> to <vars.listen> port 2379};separator="\\n">
 <vars.peers:{p|ufw allow from <p> to <vars.listen> port 2380};separator="\\n">
 """, vars: [peers: peersAddresses, listen: listenAddress] call()
@@ -74,12 +75,8 @@ class EtcdUfw extends ScriptBase {
     String getListenAddress() {
         Etcd service = this.service
         def listens = service.peer.listens
-        if (listens.size() > 0) {
-            def address = InetAddress.getByName(service.peer.listens[0].address.host)
-            return address.hostAddress
-        } else {
-            return null
-        }
+        def address = InetAddress.getByName(service.peer.listens[0].address.host)
+        return address.hostAddress
     }
 
     List getPeersAddresses() {
