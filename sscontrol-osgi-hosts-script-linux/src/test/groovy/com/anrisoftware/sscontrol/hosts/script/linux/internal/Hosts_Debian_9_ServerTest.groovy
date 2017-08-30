@@ -39,7 +39,7 @@ class Hosts_Debian_9_ServerTest extends AbstractTestHosts {
             input: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "hosts" with {
-    ip '192.168.56.100', host: 'robobee-test.test', alias: 'robobee-test'
+    ip '192.168.56.200', host: 'robobee-test.test', alias: 'robobee-test'
 }
 ''',
             scriptVars: [robobeeSocket: robobeeSocket],
