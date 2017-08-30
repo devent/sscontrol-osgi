@@ -203,6 +203,26 @@ service "flannel-docker" with {
         doTest test
     }
 
+    @Test
+    void "nodes"() {
+        def test = [
+            name: "nodes",
+            input: '''
+service "flannel-docker" with {
+    node << "node-0.test"
+    node << "node-1.test"
+    node << "node-2.test"
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('flannel-docker').size() == 1
+                FlannelDocker s = services.getServices('flannel-docker')[0]
+                assert s.nodes.size() == 3
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()

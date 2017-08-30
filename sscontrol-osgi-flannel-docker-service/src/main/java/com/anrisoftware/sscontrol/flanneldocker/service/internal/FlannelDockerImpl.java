@@ -35,17 +35,17 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.Backend;
+import com.anrisoftware.sscontrol.flanneldocker.service.external.Backend.BackendFactory;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.Binding;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.Etcd;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDockerService;
 import com.anrisoftware.sscontrol.flanneldocker.service.external.Network;
-import com.anrisoftware.sscontrol.flanneldocker.service.external.Backend.BackendFactory;
 import com.anrisoftware.sscontrol.flanneldocker.service.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.service.internal.EtcdImpl.EtcdImplFactory;
 import com.anrisoftware.sscontrol.flanneldocker.service.internal.NetworkImpl.NetworkImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -94,6 +94,8 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     private final BindingImplFactory bindingFactory;
 
+    private final List<String> nodes;
+
     @Inject
     FlannelDockerImpl(FlannelDockerImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -109,6 +111,7 @@ public class FlannelDockerImpl implements FlannelDocker {
         this.networkFactory = networkFactory;
         this.binding = null;
         this.bindingFactory = bindingFactory;
+        this.nodes = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -249,6 +252,21 @@ public class FlannelDockerImpl implements FlannelDocker {
         return backend;
     }
 
+    /**
+     * <pre>
+     * node << 'node0.test'
+     * </pre>
+     */
+    public List<String> getNode() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                nodes.add(property);
+            }
+        });
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -292,6 +310,11 @@ public class FlannelDockerImpl implements FlannelDocker {
     @Override
     public Backend getBackend() {
         return backend;
+    }
+
+    @Override
+    public List<String> getNodes() {
+        return nodes;
     }
 
     @Override
