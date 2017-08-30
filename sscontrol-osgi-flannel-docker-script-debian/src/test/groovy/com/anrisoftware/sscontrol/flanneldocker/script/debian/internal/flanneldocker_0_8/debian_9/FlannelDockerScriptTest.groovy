@@ -141,6 +141,36 @@ service "flannel-docker" with {
         doTest test
     }
 
+    @Test
+    void "nodes_ufw"() {
+        def test = [
+            name: "nodes_ufw",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "flannel-docker" with {
+    node << "10.0.0.1"
+    node << "10.0.0.2"
+    node << "10.0.0.3"
+    etcd "http://127.0.0.1:2379"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: testCerts],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand FlannelDockerScriptTest.class.getResource("nodes_ufw_ufw_cmd.txt"), test.dir, 'ufw'
+            },
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource FlannelDockerScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource FlannelDockerScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE
