@@ -168,6 +168,7 @@ service "etcd", member: "infra0" with {
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             before: { Map test ->
+                createEchoCommand test.dir, 'which'
                 createCommand EtcdScriptTest.class.getResource("peers_ufw_ufw_cmd.txt"), test.dir, 'ufw'
             },
             expected: { Map args ->

@@ -56,12 +56,8 @@ class EtcdUfw extends ScriptBase {
     }
 
     boolean isUfwActive() {
-        try {
-            def out = shell privileged: true, outString: true, "ufw status" call() out
-            return (out =~ /Status: active.*/)
-        } catch (e) {
-            return false
-        }
+        def ret = shell privileged: true, outString: true, exitCodes: [0, 1] as int[], "which ufw>/dev/null && ufw status" call()
+        return ret.exitValue == 0 && (ret.out =~ /Status: active.*/)
     }
 
     def updateFirewall() {
