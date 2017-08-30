@@ -15,8 +15,10 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.service.external;
 
-import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import java.util.List;
+
 import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 
 /**
  * <i>Flannel-Docker</i> service.
@@ -35,4 +37,6 @@ public interface FlannelDocker extends HostService {
     Network getNetwork();
 
     Backend getBackend();
+
+    List<String> getNodes();
 }
