@@ -54,7 +54,6 @@ service "rkt", version: "1.28"
     @Before
     void beforeMethod() {
         checkRobobeeSocket()
-        assumeTrue testHostAvailable
     }
 
     @Override
