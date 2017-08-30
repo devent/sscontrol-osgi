@@ -40,6 +40,9 @@ public class FlannelDockerDebianModule extends AbstractModule {
                 .implement(HostServiceScript.class,
                         FlannelDockerUpstreamDebian.class)
                 .build(FlannelDockerUpstreamDebianFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, FlannelDockerUfw.class)
+                .build(FlannelDockerUfwFactory.class));
     }
 
 }

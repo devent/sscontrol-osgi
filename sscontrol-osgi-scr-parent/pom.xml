@@ -106,6 +106,7 @@
         <module>../sscontrol-osgi-utils-system-mappings</module>
         <module>../sscontrol-osgi-utils-systemd</module>
         <module>../sscontrol-osgi-utils-tls</module>
+        <module>../sscontrol-osgi-utils-ufw-linux</module>
         <module>../sscontrol-osgi-zimbra-script-centos</module>
         <module>../sscontrol-osgi-zimbra-service</module>
     </modules>

@@ -43,6 +43,7 @@ abstract class AbstractFlannelDockerScriptTest extends AbstractFlannelDockerRunn
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
+        createCommand AbstractFlannelDockerScriptTest.class.getResource('which_ufw_not_found_cmd.txt'), dir, 'which'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -54,7 +55,6 @@ abstract class AbstractFlannelDockerScriptTest extends AbstractFlannelDockerRunn
             'apt-get',
             'service',
             'systemctl',
-            'which',
             'id',
             'sha256sum',
             'mv',

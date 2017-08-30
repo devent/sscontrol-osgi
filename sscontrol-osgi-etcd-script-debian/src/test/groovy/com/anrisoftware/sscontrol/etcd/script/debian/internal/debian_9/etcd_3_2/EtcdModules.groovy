@@ -31,7 +31,6 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianModule
 import com.anrisoftware.sscontrol.etcd.service.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -41,6 +40,7 @@ import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
 
 /**
  *
@@ -61,6 +61,7 @@ class EtcdModules {
             new EtcdDebianModule(),
             new SystemdUtilsModule(),
             new DebianUtilsModule(),
+            new UfwUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

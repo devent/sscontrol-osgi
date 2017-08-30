@@ -46,6 +46,9 @@ class FlannelDockerDebian extends ScriptBase {
     @Inject
     FlannelDockerUpstreamSystemdDebianFactory upstreamSystemdFactory
 
+    @Inject
+    FlannelDockerUfwFactory ufwFactory
+
     DebianUtils debian
 
     SystemdUtils systemd
@@ -66,6 +69,7 @@ class FlannelDockerDebian extends ScriptBase {
         debian.installPackages()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
     }
 
