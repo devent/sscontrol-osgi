@@ -39,17 +39,16 @@ class IcingaServerTest extends AbstractIcingaRunnerTest {
     void "basic_server"() {
         def test = [
             name: "basic_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", socket: "$robobeeSocket"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "icinga", version: "2"
-""",
-            scriptVars: [:],
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             before: { Map test -> },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
                 assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'icinga.list').absolutePath), "${args.test.name}_icinga_list_expected.txt"
-                assertStringResource IcingaServerTest, readRemoteFile(new File('/etc/apt/sources.list.d', 'backports.list').absolutePath), "${args.test.name}_backports_list_expected.txt"
             },
         ]
         doTest test
@@ -134,7 +133,6 @@ object IdoMysqlConnection "mysql-ido" {
     @Before
     void beforeMethod() {
         assumeTrue new File(robobeeSocket).exists()
-        assumeTrue testHostAvailable
     }
 
     Map getScriptEnv(Map args) {

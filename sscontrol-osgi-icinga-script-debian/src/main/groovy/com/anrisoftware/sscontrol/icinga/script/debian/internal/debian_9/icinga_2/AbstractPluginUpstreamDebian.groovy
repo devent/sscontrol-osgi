@@ -66,7 +66,7 @@ abstract class AbstractPluginUpstreamDebian extends ScriptBase {
             return
         }
         debian.addPackagesRepository name: "icinga-${distributionName}"
-        debian.installPackages packages: packages
+        debian.installPackages packages: packages, update: true
     }
 
     def configurePlugin(Plugin plugin) {
