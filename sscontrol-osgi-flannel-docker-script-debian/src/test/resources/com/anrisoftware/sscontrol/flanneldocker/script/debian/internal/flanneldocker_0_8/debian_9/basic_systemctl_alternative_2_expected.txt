@@ -1,0 +1,7 @@
+stop docker
+stop flanneld
+daemon-reload
+start flanneld
+status flanneld
+start docker
+status docker
