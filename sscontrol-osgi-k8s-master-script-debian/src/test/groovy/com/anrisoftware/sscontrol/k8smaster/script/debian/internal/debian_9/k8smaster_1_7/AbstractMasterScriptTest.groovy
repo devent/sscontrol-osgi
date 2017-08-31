@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 /**
  *
@@ -33,8 +34,8 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
     static final URL certKeyPem = AbstractMasterScriptTest.class.getResource('cert_key.txt')
 
     void createDummyCommands(File dir) {
-        createDebianJessieCatCommand dir
-        createCommand exit1Command, dir, 'dpkg'
+        createCommand catCommand, dir, "cat"
+        createCommand grepCommand, dir, 'grep'
         createIdCommand dir
         createEchoCommands dir, [
             'mkdir',
@@ -53,7 +54,6 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'wget',
             'useradd',
             'tar',
-            'grep',
             'curl',
             'sleep',
             'kubectl',

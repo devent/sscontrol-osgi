@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> 6 service for Debian 8.
+ * K8s-Master Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
