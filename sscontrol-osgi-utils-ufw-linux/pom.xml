@@ -43,6 +43,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- own modules -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types-host</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+
         <!-- compile dependencies -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -59,6 +67,15 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-exec</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
     </dependencies>
 
