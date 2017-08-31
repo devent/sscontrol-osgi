@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMaster_Debian_8_Server_Test extends AbstractMasterScriptTest {
+class K8sMasterServerTest extends AbstractMasterScriptTest {
 
     @Test
     void "server_tls"() {
