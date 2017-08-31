@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.upstream.external.Kubectl_1_5_Upstream
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlUpstream
 
 import groovy.util.logging.Slf4j
 
@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Kubectl_1_5_Upstream_Linux extends Kubectl_1_5_Upstream {
+class Kubectl_1_5_Upstream_Linux extends KubectlUpstream {
 
     @Inject
     K8sCluster_1_5_Linux_Properties linuxPropertiesProvider
