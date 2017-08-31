@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.icinga.script.debian.internal.debian_9.icinga_2
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static java.nio.charset.StandardCharsets.*
 
 import javax.inject.Inject
 
 import org.junit.Before
 
+import com.anrisoftware.sscontrol.icinga.service.internal.IcingaImpl.IcingaImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.sshd.service.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -37,7 +36,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
+abstract class AbstractIcingaRunnerTest extends AbstractRunnerTestBase {
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -49,10 +48,10 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    SshdImplFactory serviceFactory
+    IcingaImplFactory serviceFactory
 
     @Inject
-    Sshd_Debian_9_Factory scriptFactory
+    IcingaDebianFactory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -61,8 +60,8 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'sshd', serviceFactory
-        services.putAvailableScriptService 'sshd/debian/9', scriptFactory
+        services.putAvailableService 'icinga', serviceFactory
+        services.putAvailableScriptService 'icinga-2/debian/9', scriptFactory
         return services
     }
 
@@ -70,9 +69,10 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll SshdTestModules.getAdditionalModules()
+        modules.addAll IcingaModules.getAdditionalModules()
         modules
     }
+
 
     @Before
     void setupTest() {
