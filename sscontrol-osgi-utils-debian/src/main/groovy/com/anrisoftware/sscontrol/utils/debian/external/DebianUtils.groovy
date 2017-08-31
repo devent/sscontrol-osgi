@@ -57,7 +57,7 @@ abstract class DebianUtils {
      * installed.
      */
     boolean checkPackagesVersion(List packages) {
-        assertThat "package=null", packages[0], hasKey('package')
+        assertThat "name=null", packages[0], hasKey('name')
         assertThat "version=null", packages[0], hasKey('version')
         def failed = packages.find { Map m ->
             !checkPackage(m)
@@ -81,7 +81,7 @@ abstract class DebianUtils {
         List packages = args.packages
         def found = packages.findAll {
             def a = new HashMap(args)
-            a.package = it
+            a.name = it
             checkPackage a
         }
         return found.size() == packages.size()
@@ -90,17 +90,18 @@ abstract class DebianUtils {
     /**
      * Checks if the apt package is installed.
      * <ul>
-     * <li>package: the package name.
+     * <li>name: the package name.
      * <li>version: optional, the package version.
      * </ul>
      */
     boolean checkPackage(Map args) {
         log.info "Check installed packages {}.", args
-        assertThat "args.package=null", args, hasKey('package')
+        assertThat "args.name=null", args, hasKey('name')
         def a = new HashMap(args)
         a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
         a.vars = new HashMap(args)
+        a.vars.package = args.name
         a.vars.nameInstalled = grepPackageNameInstalled
         a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
         a.resource = commandsTemplate
@@ -142,7 +143,6 @@ abstract class DebianUtils {
         a.privileged = true
         a.vars = new HashMap(args)
         a.vars.nameInstalled = grepPackageNameInstalled
-        a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
         a.vars.checkInstalled = a.vars.checkInstalled != null ? a.vars.checkInstalled : true
         a.vars.update = a.vars.update != null ? a.vars.update : false
         a.resource = commandsTemplate
@@ -192,10 +192,14 @@ abstract class DebianUtils {
      * @see #getPackagesRepositoryListFile()
      */
     def addPackagesRepository(Map args=[:]) {
+        args.key = args.key ? args.key : script.packagesRepositoryKey
         args.key = args.key ? args.key : packagesRepositoryKey
+        args.url = args.url ? args.url : script.packagesRepositoryUrl
         args.url = args.url ? args.url : packagesRepositoryUrl
         args.name = args.name ? args.name : script.distributionName
+        args.comp = args.comp ? args.comp : script.packagesRepositoryComponent
         args.comp = args.comp ? args.comp : packagesRepositoryComponent
+        args.file = args.file ? args.file : script.packagesRepositoryListFile
         args.file = args.file ? args.file : packagesRepositoryListFile
         script.shell """
 curl -fsSL ${args.key} | sudo apt-key add -

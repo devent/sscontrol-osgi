@@ -815,6 +815,104 @@ echo \$file
     }
 
     /**
+     * Returns the packages repository apt-key, for
+     * example {@code "https://packages.icinga.com/icinga.key"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_repository_key}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPackagesRepositoryKey() {
+        properties.getProperty "apt_packages_repository_key", defaultProperties
+    }
+
+    /**
+     * Returns the packages repository base URL, for
+     * example {@code "https://packages.icinga.com/debian"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_pepository_url}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPackagesRepositoryUrl() {
+        properties.getProperty "apt_packages_pepository_url", defaultProperties
+    }
+
+    /**
+     * Returns the packages repository, for
+     * example {@code "/etc/apt/sources.list.d/icinga.list"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_repository_list_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getPackagesRepositoryListFile() {
+        getFileProperty "apt_packages_repository_list_file", base, defaultProperties
+    }
+
+    /**
+     * Returns the packages repository component, for
+     * example {@code "main"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_packages_repository_component}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getPackagesRepositoryComponent() {
+        properties.getProperty "apt_packages_repository_component", defaultProperties
+    }
+
+    /**
+     * Returns the backports repository base URL, for
+     * example {@code "http://deb.debian.org/debian"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_url}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getBackportsRepositoryUrl() {
+        properties.getProperty "apt_backports_repository_url", defaultProperties
+    }
+
+    /**
+     * Returns the backports repository list file, for
+     * example {@code "/etc/apt/sources.list.d/backports.list"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_list_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getBackportsRepositoryListFile() {
+        getFileProperty "apt_backports_repository_list_file", base, defaultProperties
+    }
+
+    /**
+     * Returns the backports repository component, for
+     * example {@code "main"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_backports_repository_component}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    String getBackportsRepositoryComponent() {
+        script.properties.getProperty "apt_backports_repository_component", defaultProperties
+    }
+
+    /**
      * Returns the file property.
      *
      * @param key
