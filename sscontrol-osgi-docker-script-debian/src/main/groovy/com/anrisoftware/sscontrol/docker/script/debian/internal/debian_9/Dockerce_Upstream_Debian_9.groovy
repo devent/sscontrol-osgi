@@ -37,7 +37,7 @@ abstract class Dockerce_Upstream_Debian_9 extends ScriptBase {
     }
 
     def installDocker() {
-        if (debian.checkPackage(package: dockerPackage, version: dockerVersion)) {
+        if (debian.checkPackage(name: dockerPackage, version: dockerVersion)) {
             return
         }
         shell """
