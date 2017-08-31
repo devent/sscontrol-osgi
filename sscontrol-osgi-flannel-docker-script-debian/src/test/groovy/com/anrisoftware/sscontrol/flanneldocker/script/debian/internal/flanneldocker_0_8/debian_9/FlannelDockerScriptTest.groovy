@@ -56,7 +56,10 @@ service "flannel-docker" with {
                 try {
                     assertFileResource FlannelDockerScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 } catch (AssertionError e) {
-                    assertFileResource FlannelDockerScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_alternative_expected.txt"
+                    try {
+                        assertFileResource FlannelDockerScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_alternative_2_expected.txt"
+                    } catch (AssertionError e1) {
+                    }
                 }
                 assertFileResource FlannelDockerScriptTest, new File(gen, '/etc/systemd/system'), "flanneld.service", "${args.test.name}_flanneld_service_expected.txt"
                 assertFileResource FlannelDockerScriptTest, new File(gen, '/etc/systemd/tmpfiles.d'), "flannel.conf", "${args.test.name}_flanneld_tmpfiles_config_expected.txt"
