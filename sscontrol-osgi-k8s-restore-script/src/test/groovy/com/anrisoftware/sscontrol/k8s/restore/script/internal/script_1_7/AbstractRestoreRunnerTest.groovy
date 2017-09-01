@@ -24,7 +24,7 @@ import org.apache.commons.io.IOUtils
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -66,16 +66,16 @@ abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    Ssh_Linux_Factory ssh_Linux_Factory
+    Ssh_Linux_Factory sshLinuxFactory
 
     @Inject
     K8sClusterFactory clusterFactory
 
     @Inject
-    RestoreImplFactory serviceFactory
+    RestoreImplFactory restoreFactory
 
     @Inject
-    Restore_1_7_Factory scriptFactory
+    Restore_1_7_Factory restoreLinuxFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -83,11 +83,10 @@ abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'backup', serviceFactory
-        services.putAvailableScriptService 'backup/linux/0', scriptFactory
+        services.putAvailableService 'restore', restoreFactory
+        services.putAvailableScriptService 'restore/linux/0', restoreLinuxFactory
         return services
     }
 

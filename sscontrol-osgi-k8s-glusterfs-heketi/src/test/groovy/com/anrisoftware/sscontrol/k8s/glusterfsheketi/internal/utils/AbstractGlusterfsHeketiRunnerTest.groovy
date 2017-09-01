@@ -25,8 +25,8 @@ import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.script_1_5.FromRep
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.script_1_6.GlusterfsHeketi_1_6_Factory
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.internal.service.GlusterfsHeketiImpl.GlusterfsHeketiImplFactory
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
+import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
 import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
 import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
@@ -76,19 +76,19 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
     SshImplFactory sshFactory
 
     @Inject
-    Ssh_Linux_Factory ssh_Linux_Factory
+    Ssh_Linux_Factory sshLinuxFactory
 
     @Inject
     K8sClusterFactory clusterFactory
 
     @Inject
-    K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
+    K8sClusterLinuxFactory clusterLinuxFactory
 
     @Inject
     GitRepoImplFactory gitFactory
 
     @Inject
-    GitRepo_Debian_8_Factory gitScriptFactory
+    GitRepo_Debian_8_Factory gitDebianFactory
 
     @Inject
     DockerRegistryImplFactory dockerFactory
@@ -100,13 +100,13 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
     FromRepositoryImplFactory fromRepositoryFactory
 
     @Inject
-    FromRepository_1_5_Factory fromRepository_1_5_Factory
+    FromRepository_1_5_Factory fromRepositoryLinuxFactory
 
     @Inject
     GlusterfsHeketiImplFactory glusterfsHeketiFactory
 
     @Inject
-    GlusterfsHeketi_1_6_Factory glusterfsHeketi_1_6_Factory
+    GlusterfsHeketi_1_6_Factory glusterfsHeketiLinuxFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -114,17 +114,17 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
+        services.putAvailableScriptService 'k8s/cluster/linux/0', clusterLinuxFactory
         services.putAvailableService 'repo-git', gitFactory
-        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
+        services.putAvailableScriptService 'repo-git/debian/8', gitDebianFactory
         services.putAvailableService 'registry-docker', dockerFactory
         services.putAvailableScriptService 'registry-docker/debian/8', dockerScriptFactory
         services.putAvailableService 'from-repository', fromRepositoryFactory
-        services.putAvailableScriptService 'from-repository/linux/0', fromRepository_1_5_Factory
+        services.putAvailableScriptService 'from-repository/linux/0', fromRepositoryLinuxFactory
         services.putAvailableService 'glusterfs-heketi', glusterfsHeketiFactory
-        services.putAvailableScriptService 'glusterfs-heketi/linux/0', glusterfsHeketi_1_6_Factory
+        services.putAvailableScriptService 'glusterfs-heketi/linux/0', glusterfsHeketiLinuxFactory
         return services
     }
 

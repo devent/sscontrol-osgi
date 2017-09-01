@@ -32,27 +32,22 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
 import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScriptModule
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
-import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
@@ -182,14 +177,7 @@ service "from-repository", repo: "wordpress-app" with {
                 new TlsModule(),
                 new RobobeeScriptModule(),
                 new SystemNameMappingsModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                        bind TargetsService to TargetsImplFactory
-                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
-                    }
-                })
+                )
         injector.injectMembers(this)
     }
 

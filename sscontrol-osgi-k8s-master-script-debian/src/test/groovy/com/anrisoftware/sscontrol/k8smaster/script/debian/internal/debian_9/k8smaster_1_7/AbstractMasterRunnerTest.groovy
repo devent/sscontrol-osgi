@@ -21,8 +21,8 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Factory
+import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImpl.K8sMasterImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -47,7 +47,7 @@ abstract class AbstractMasterRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    Ssh_Linux_Factory ssh_Linux_Factory
+    Ssh_Linux_Factory sshLinuxFactory
 
     @Inject
     K8sMasterImplFactory serviceFactory
@@ -59,7 +59,7 @@ abstract class AbstractMasterRunnerTest extends AbstractRunnerTestBase {
     K8sClusterFactory clusterFactory
 
     @Inject
-    K8sCluster_1_5_Linux_Factory cluster_1_5_Factory
+    K8sClusterLinuxFactory clusterLinuxFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -67,9 +67,9 @@ abstract class AbstractMasterRunnerTest extends AbstractRunnerTestBase {
 
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
-        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
         services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableScriptService 'k8s/cluster/linux/0', cluster_1_5_Factory
+        services.putAvailableScriptService 'k8s/cluster/linux/0', clusterLinuxFactory
         services.putAvailableService 'k8s-master', serviceFactory
         services.putAvailableScriptService 'k8s-master/debian/9', scriptFactory
         return services
