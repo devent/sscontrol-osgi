@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlClusterLinux
+import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.KubectlClusterLinux
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.upstream.script.external.k8s_1_7.K8sMasterUpstreamSystemd
 

@@ -66,9 +66,9 @@
         <module>../sscontrol-osgi-k8s-master-service</module>
         <module>../sscontrol-osgi-k8s-master-script-debian</module>
         <module>../sscontrol-osgi-k8s-master-script-upstream</module>
-        <module>../sscontrol-osgi-k8s-node</module>
-        <module>../sscontrol-osgi-k8s-node-debian</module>
-        <module>../sscontrol-osgi-k8s-node-upstream</module>
+        <module>../sscontrol-osgi-k8s-node-service</module>
+        <module>../sscontrol-osgi-k8s-node-script-debian</module>
+        <module>../sscontrol-osgi-k8s-node-script-upstream</module>
         <module>../sscontrol-osgi-k8s-restore-script</module>
         <module>../sscontrol-osgi-k8s-restore-service</module>
         <module>../sscontrol-osgi-registry-docker</module>

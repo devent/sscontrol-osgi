@@ -27,9 +27,8 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Source
-import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7.BackupWorkerImplFactory
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 

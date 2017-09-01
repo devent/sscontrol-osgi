@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlClusterLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class KubectlClusterDebian extends KubectlClusterLinux {
+class KubectlClusterDebian extends AbstractKubectlLinux {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
