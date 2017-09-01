@@ -15,45 +15,32 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8smaster_1_7
 
+import static com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8smaster_1_7.K8sMasterDebianService.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.systemd.k8s_1_7.AbstractK8sSystemdLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * K8s-Master Debian.
+ * Configures the K8s-Master service from the upstream sources
+ * for Systemd and Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sMasterDebian extends ScriptBase {
+class K8sMasterSystemdDebian extends AbstractK8sSystemdLinux {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
 
-    @Inject
-    KubectlUpstreamDebianFactory upstreamFactory
-
-    @Inject
-    K8sMasterUpstreamDebianFactory upstreamSystemdFactory
-
-    DebianUtils debian
-
-    @Inject
-    void setDebian(Debian_9_UtilsFactory factory) {
-        this.debian = factory.create this
-    }
+    KubectlClusterDebian kubectlClusterLinux
 
     @Override
     def run() {
-        debian.installPackages()
-        upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
     @Override

@@ -27,11 +27,11 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtil
  */
 abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
 
-    static final URL certCaPem = AbstractMasterScriptTest.class.getResource('cert_ca.txt')
-
-    static final URL certCertPem = AbstractMasterScriptTest.class.getResource('cert_cert.txt')
-
-    static final URL certKeyPem = AbstractMasterScriptTest.class.getResource('cert_key.txt')
+    static final Map certs = [
+        ca: AbstractMasterScriptTest.class.getResource('cert_ca.txt'),
+        cert: AbstractMasterScriptTest.class.getResource('cert_cert.txt'),
+        key: AbstractMasterScriptTest.class.getResource('cert_key.txt'),
+    ]
 
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
