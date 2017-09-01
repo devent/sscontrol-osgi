@@ -69,7 +69,7 @@
         <module>../sscontrol-osgi-k8s-node-service</module>
         <module>../sscontrol-osgi-k8s-node-script-debian</module>
         <module>../sscontrol-osgi-k8s-node-script-upstream</module>
-        <module>../sscontrol-osgi-k8s-restore-script</module>
+        <module>../sscontrol-osgi-k8s-restore-script-linux</module>
         <module>../sscontrol-osgi-k8s-restore-service</module>
         <module>../sscontrol-osgi-registry-docker</module>
         <module>../sscontrol-osgi-registry-docker-linux</module>
