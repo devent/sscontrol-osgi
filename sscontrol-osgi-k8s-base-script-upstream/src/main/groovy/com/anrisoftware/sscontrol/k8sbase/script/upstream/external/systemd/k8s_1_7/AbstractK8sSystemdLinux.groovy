@@ -15,7 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.systemd.k8s_1_7
 
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -28,12 +32,23 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractK8sSystemdLinux extends ScriptBase {
 
+    SystemdUtils systemd
+
+    @Inject
+    void setSystemd(SystemdUtilsFactory factory) {
+        this.systemd = factory.create this
+    }
+
     def stopServices() {
-        stopSystemdService 'kubelet'
+        systemd.stopServices()
     }
 
     def startServices() {
-        startEnableSystemdService 'kubelet'
+        systemd.startServices()
+    }
+
+    def enableServices() {
+        systemd.enableServices()
     }
 
     @Override
