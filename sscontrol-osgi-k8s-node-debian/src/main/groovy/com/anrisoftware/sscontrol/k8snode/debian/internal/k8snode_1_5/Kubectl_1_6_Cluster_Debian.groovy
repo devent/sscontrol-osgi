@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.k8snode.debian.internal.k8snode_1_5.K8s
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.Kubectl_1_6_Cluster_Linux
+import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.KubectlClusterLinux
 
 import groovy.util.logging.Slf4j
 
@@ -32,7 +32,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Kubectl_1_6_Cluster_Debian extends Kubectl_1_6_Cluster_Linux {
+class Kubectl_1_6_Cluster_Debian extends KubectlClusterLinux {
 
     @Inject
     K8sNode_1_5_Debian_8_Properties debianPropertiesProvider

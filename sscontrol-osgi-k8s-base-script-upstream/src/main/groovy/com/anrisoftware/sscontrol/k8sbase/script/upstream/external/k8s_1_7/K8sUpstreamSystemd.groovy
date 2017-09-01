@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer

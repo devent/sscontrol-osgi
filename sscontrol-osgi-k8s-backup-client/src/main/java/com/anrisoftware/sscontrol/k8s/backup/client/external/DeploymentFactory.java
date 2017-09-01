@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost;
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost;
 
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
 

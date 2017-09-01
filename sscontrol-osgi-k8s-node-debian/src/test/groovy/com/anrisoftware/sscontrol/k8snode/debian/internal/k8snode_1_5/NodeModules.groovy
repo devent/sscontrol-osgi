@@ -33,9 +33,9 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.K8sUpstreamModule
-import com.anrisoftware.sscontrol.k8scluster.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8scluster.linux.internal.k8scluster_1_5.K8sCluster_1_5_Linux_Module
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux_Module
+import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxModule
+import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlLinuxModule
 import com.anrisoftware.sscontrol.k8snode.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.k8snode.upstream.external.K8sNode_1_5_Upstream_Module
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -43,7 +43,6 @@ import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 
 /**
  *
@@ -65,8 +64,8 @@ class NodeModules {
             new K8sNode_1_5_Upstream_Module(),
             new K8sUpstreamModule(),
             new K8sClusterModule(),
-            new K8sCluster_1_5_Linux_Module(),
-            new Kubectl_1_6_Linux_Module(),
+            new K8sClusterLinuxModule(),
+            new KubectlLinuxModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),
@@ -87,12 +86,6 @@ class NodeModules {
             new TlsModule(),
             new SystemNameMappingsModule(),
             new StModule(),
-            new AbstractModule() {
-
-                @Override
-                protected void configure() {
-                }
-            }
         ]
     }
 }

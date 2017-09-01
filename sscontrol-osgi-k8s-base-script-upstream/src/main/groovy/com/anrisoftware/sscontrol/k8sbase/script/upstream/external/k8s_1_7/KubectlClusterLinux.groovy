@@ -15,19 +15,19 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7
 
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.Kubectl_1_6_Linux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Cluster 1.5 service from the upstream sources for
+ * Configures the K8s-Cluster service from the upstream sources for
  * GNU/Linux.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class KubectlClusterLinux extends Kubectl_1_6_Linux {
+abstract class KubectlClusterLinux extends AbstractKubectlLinux {
 
     @Override
     Object run() {
