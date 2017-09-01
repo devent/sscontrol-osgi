@@ -30,7 +30,7 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.GetDeploymentsExcep
 import com.anrisoftware.sscontrol.k8s.backup.client.external.GetServicesException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingTimeoutException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingUnexpectedException
-import com.anrisoftware.sscontrol.k8scluster.external.K8sClusterHost
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer

@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8s
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_7.KubectlUpstream
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.linux.k8s_1_7.AbstractKubectlUpstream
 
 import groovy.util.logging.Slf4j
 
@@ -29,7 +29,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class KubectlUpstreamDebian extends KubectlUpstream {
+class KubectlUpstreamDebian extends AbstractKubectlUpstream {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
