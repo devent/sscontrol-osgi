@@ -383,7 +383,10 @@ systemctl daemon-reload
         K8s service = service
         def name = service.cluster.name
         def label = robobeeLabelNamespace
-        ["${label}/node=${name}"]
+        def l = ["${label}/node=${name}"]
+        service.labels.inject(l) { list, k, v ->
+            list << "${v.key}=${v.value}"
+        }
     }
 
     /**
