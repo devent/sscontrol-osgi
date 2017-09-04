@@ -28,8 +28,6 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 public interface ClusterHost extends TargetHost {
 
-    String getProto();
-
     Credentials getCredentials();
 
     String getClusterName();

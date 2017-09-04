@@ -42,15 +42,14 @@ import com.anrisoftware.resources.st.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.st.internal.worker.STWorkerModule
 import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsModule
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeScript.RobobeeScriptFactory
 import com.anrisoftware.sscontrol.types.host.external.HostService
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -288,12 +287,12 @@ abstract class AbstractScriptTestBase {
                 new PropertiesThreadsModule(),
                 new DurationSimpleFormatModule(),
                 new DurationFormatModule(),
+                new HostServicePropertiesServiceModule(),
                 new AbstractModule() {
 
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
-                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 })
         this.injector = injector.createChildInjector(additionalModules)

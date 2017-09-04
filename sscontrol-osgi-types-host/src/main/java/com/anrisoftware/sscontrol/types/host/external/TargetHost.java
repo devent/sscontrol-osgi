@@ -25,6 +25,8 @@ import java.net.UnknownHostException;
  */
 public interface TargetHost {
 
+    String getProto();
+
     String getHost();
 
     Integer getPort();

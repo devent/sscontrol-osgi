@@ -39,6 +39,8 @@ public class DockerRegistryHostImpl implements DockerRegistryHost {
 
     private String host;
 
+    private String proto;
+
     private Integer port;
 
     /**
@@ -55,6 +57,7 @@ public class DockerRegistryHostImpl implements DockerRegistryHost {
             @Assisted TargetHost target) {
         this.registry = registry;
         this.host = target.getHost();
+        this.proto = target.getProto();
         this.port = target.getPort();
     }
 
@@ -75,6 +78,15 @@ public class DockerRegistryHostImpl implements DockerRegistryHost {
     @Override
     public String getHost() {
         return host;
+    }
+
+    public void setProto(String proto) {
+        this.proto = proto;
+    }
+
+    @Override
+    public String getProto() {
+        return proto;
     }
 
     public void setPort(int port) {

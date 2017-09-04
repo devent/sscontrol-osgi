@@ -68,6 +68,7 @@ public class K8sClusterHostImpl implements K8sClusterHost {
             @Assisted TargetHost target, @Assisted Credentials credentials,
             @Assisted Context context) {
         this.cluster = cluster;
+        this.proto = target.getProto();
         this.host = target.getHost();
         this.port = target.getPort();
         this.credentials = credentials;
