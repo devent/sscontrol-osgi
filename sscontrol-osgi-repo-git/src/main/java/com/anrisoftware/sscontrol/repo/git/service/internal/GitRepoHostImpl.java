@@ -39,6 +39,8 @@ public class GitRepoHostImpl implements GitRepoHost {
 
     private String host;
 
+    private String proto;
+
     private Integer port;
 
     /**
@@ -54,6 +56,7 @@ public class GitRepoHostImpl implements GitRepoHost {
     GitRepoHostImpl(@Assisted GitRepo repo, @Assisted TargetHost target) {
         this.repo = repo;
         this.host = target.getHost();
+        this.proto = target.getProto();
         this.port = target.getPort();
     }
 
@@ -74,6 +77,15 @@ public class GitRepoHostImpl implements GitRepoHost {
     @Override
     public String getHost() {
         return host;
+    }
+
+    public void setProto(String proto) {
+        this.proto = proto;
+    }
+
+    @Override
+    public String getProto() {
+        return proto;
     }
 
     public void setPort(int port) {

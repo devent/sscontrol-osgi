@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase;
-
 /**
  *
  *
@@ -26,8 +24,8 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase;
 @SuppressWarnings("serial")
 public class CreateClientException extends BackupClientException {
 
-    public CreateClientException(ScriptBase script, Exception cause) {
+    public CreateClientException(Deployment deployment, Exception cause) {
         super("Create client error", cause);
-        addContextValue("script", script);
+        addContextValue("deployment", deployment);
     }
 }

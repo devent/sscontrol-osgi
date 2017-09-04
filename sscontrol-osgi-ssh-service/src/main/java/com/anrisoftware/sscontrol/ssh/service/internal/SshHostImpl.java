@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,11 +61,13 @@ public class SshHostImpl implements SshHost {
 
     private transient DefaultSystemInfoFactory systemFactory;
 
+    private String proto;
+
     private final String host;
 
-    private final String user;
+    private Integer port;
 
-    private final Integer port;
+    private final String user;
 
     private final URI key;
 
@@ -83,6 +86,7 @@ public class SshHostImpl implements SshHost {
         this.systemFactory = systemFactory;
         Map<String, Object> a = splitHost(args);
         this.host = parseHost(a);
+        this.proto = parseProto(a);
         this.user = parseUser(a);
         this.port = parsePort(a);
         this.key = parseKey(args);
@@ -93,6 +97,11 @@ public class SshHostImpl implements SshHost {
     @Override
     public String getHost() {
         return host;
+    }
+
+    @Override
+    public String getProto() {
+        return proto;
     }
 
     @Override
@@ -156,6 +165,18 @@ public class SshHostImpl implements SshHost {
         Object v = args.get("host");
         assertThat("host=null", v, notNullValue());
         assertThat("host=empty", v.toString(), not(isEmptyString()));
+        if (v instanceof URI) {
+            URI uri = (URI) v;
+            this.port = uri.getPort() != -1 ? uri.getPort() : null;
+            this.proto = uri.getScheme();
+            return uri.getHost();
+        }
+        if (v instanceof URL) {
+            URL url = (URL) v;
+            this.port = url.getPort() != -1 ? url.getPort() : null;
+            this.proto = url.getProtocol();
+            return url.getHost();
+        }
         return v.toString();
     }
 
@@ -166,7 +187,18 @@ public class SshHostImpl implements SshHost {
 
     private Integer parsePort(Map<String, Object> args) {
         Object v = args.get("port");
+        if (v == null && port != null) {
+            return port;
+        }
         return (Integer) v;
+    }
+
+    private String parseProto(Map<String, Object> args) {
+        Object v = args.get("proto");
+        if (v == null && proto != null) {
+            return proto;
+        }
+        return v.toString();
     }
 
     private URI parseKey(Map<String, Object> args) {

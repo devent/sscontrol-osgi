@@ -21,7 +21,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import groovy.transform.ToString
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -42,6 +42,11 @@ class Localhost implements SshHost {
     @Override
     Integer getPort() {
         22
+    }
+
+    @Override
+    String getProto() {
+        'ssh'
     }
 
     @Override
