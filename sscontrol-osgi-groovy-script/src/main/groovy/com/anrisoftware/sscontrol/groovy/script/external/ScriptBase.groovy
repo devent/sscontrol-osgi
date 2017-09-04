@@ -942,6 +942,18 @@ echo \$file
         return file
     }
 
+    def getScriptProperty(String name) {
+        properties.getProperty name, defaultProperties
+    }
+
+    Map getScriptProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        properties.getProperty name, defaultProperties
+                    }
+                }
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"

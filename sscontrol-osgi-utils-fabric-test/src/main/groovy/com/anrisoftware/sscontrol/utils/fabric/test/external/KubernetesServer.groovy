@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.k8s.backup.client.internal
+package com.anrisoftware.sscontrol.utils.fabric.test.external
 
 import static okhttp3.TlsVersion.TLS_1_0
 
