@@ -1,12 +1,13 @@
 package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
+import java.util.concurrent.TimeUnit
+
 import javax.inject.Inject
 
-import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.utils.fabric.test.external.AbstractFabricTest
-import com.google.inject.Injector
 
 /**
  *
@@ -15,19 +16,20 @@ import com.google.inject.Injector
  */
 class KubectlClientTest extends AbstractFabricTest {
 
-    Injector injector
-
     @Inject
     KubectlClientFactory kubectlFactory
 
-    @Before
-    void injectKubectl() {
-        this.injector = KubectlClientTestModules.createInjector()
-        this.injector.injectMembers(this)
+    @Override
+    List getAdditionalModules() {
+        KubectlClientTestModules.modules
     }
 
     @Test
     void "waitNodeReady"() {
-        kubectlFactory.create()
+        createTestNode()
+        def script = injector.getInstance ScriptMock
+        ClusterHost cluster = createClusterHost()
+        def kubectl = kubectlFactory.create script, cluster
+        kubectl.waitNodeReady 'node0', 10, TimeUnit.SECONDS
     }
 }
