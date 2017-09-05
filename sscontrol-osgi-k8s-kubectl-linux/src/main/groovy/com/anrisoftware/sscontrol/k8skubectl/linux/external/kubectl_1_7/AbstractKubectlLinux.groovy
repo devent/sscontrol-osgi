@@ -173,30 +173,6 @@ chmod o-rx $certsDir
     }
 
     /**
-     * Runs kubectl with a kubeconfig file.
-     *
-     * @param vars
-     * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
-     * <li>args: kubectl arguments.
-     * </ul>
-     */
-    def waitNodeReady(Map vars, String node) {
-        log.info 'Wait for node {} with {}', node, vars
-        ClusterHost cluster = vars.cluster
-        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
-        Map v = new HashMap(vars)
-        v.vars = new HashMap(vars)
-        v.vars.node = node
-        v.resource = kubectlTemplate
-        v.name = 'waitNodeReadyCmd'
-        v.timeout = timeoutLong
-        shell v call()
-    }
-
-    /**
      * Applies the taint on the node.
      *
      * @param vars
