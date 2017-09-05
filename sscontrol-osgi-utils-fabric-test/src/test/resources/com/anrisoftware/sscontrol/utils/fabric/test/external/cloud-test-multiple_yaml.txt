@@ -1,4 +1,41 @@
 ---
+
+apiVersion: v1
+data:
+  owncloud_db: b3duY2xvdWQxMA==
+  owncloud_password: MTIzNA==
+  owncloud_user: b3duY2xvdWQxMA==
+  root_password: c3VtMGNlZTNpaXNoaTVhaGNhZTJZYWhmYWl5OXpvZXY=
+  root_user: YWJjZA==
+kind: Secret
+metadata:
+  annotations: {}
+  labels:
+    app: db
+    group: test
+    tier: backend
+  name: db
+  namespace: test
+type: Opaque
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test
+  namespace: test
+  labels:
+    group: test
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
