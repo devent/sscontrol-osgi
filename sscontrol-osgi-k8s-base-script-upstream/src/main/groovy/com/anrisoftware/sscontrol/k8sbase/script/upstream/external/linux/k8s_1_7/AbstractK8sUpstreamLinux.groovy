@@ -329,7 +329,6 @@ systemctl daemon-reload
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = createTmpFile()
         try {
-            kubectlCluster.uploadKubeconfig(vars)
             kubectlCluster.waitNodeReady vars, node
             service.taints.each { String key, Taint taint ->
                 log.info 'Apply taint {} for {}.', taint, service

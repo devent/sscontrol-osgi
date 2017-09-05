@@ -198,7 +198,11 @@ public class SshHostImpl implements SshHost {
         if (v == null && proto != null) {
             return proto;
         }
-        return v.toString();
+        if (v != null) {
+            return v.toString();
+        } else {
+            return null;
+        }
     }
 
     private URI parseKey(Map<String, Object> args) {
