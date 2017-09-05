@@ -17,6 +17,21 @@ package com.anrisoftware.sscontrol.utils.fabric.test.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
+import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
+import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatModule
+import com.anrisoftware.globalpom.core.resources.ResourcesModule
+import com.anrisoftware.globalpom.core.strings.StringsModule
+import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
+import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
+import com.anrisoftware.sscontrol.tls.internal.TlsModule
+import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -33,6 +48,21 @@ class FabricTestModules {
 
     static Injector createInjector() {
         Guice.createInjector(
+                new K8sModule(),
+                new K8sClusterModule(),
+                new DebugLoggingModule(),
+                new TlsModule(),
+                new SshModule(),
+                new TypesModule(),
+                new StringsModule(),
+                new TokensTemplateModule(),
+                new ResourcesModule(),
+                new SystemNameMappingsModule(),
+                new PropertiesModule(),
+                new PropertiesUtilsModule(),
+                new DurationSimpleFormatModule(),
+                new DurationFormatModule(),
+                new HostServicePropertiesServiceModule(),
                 )
     }
 }
