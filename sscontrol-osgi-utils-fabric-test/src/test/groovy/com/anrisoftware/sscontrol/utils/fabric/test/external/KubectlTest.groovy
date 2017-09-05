@@ -8,6 +8,7 @@ import io.fabric8.kubernetes.api.KubernetesHelper
 import io.fabric8.kubernetes.api.model.KubernetesResource
 import io.fabric8.kubernetes.api.model.Namespace
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaim
+import io.fabric8.kubernetes.api.model.Secret
 import io.fabric8.kubernetes.api.model.StatusBuilder
 import io.fabric8.kubernetes.api.model.extensions.Deployment
 
@@ -50,10 +51,19 @@ class KubectlTest extends AbstractFabricTest {
 
     @Test
     void "load yamls multiple"() {
+        server.expect().post().withPath("/api/v1/namespaces/test/secrets").andReturn(201, new StatusBuilder().build()).always()
         server.expect().post().withPath("/api/v1/namespaces/test/persistentvolumeclaims").andReturn(201, new StatusBuilder().build()).always()
+        server.expect().post().withPath("/apis/extensions/v1beta1/namespaces/test/deployments").andReturn(201, new StatusBuilder().build()).always()
         def om = KubernetesHelper.createYamlObjectMapper()
         def jp = om.factory.createParser(KubectlTest.class.getResource("cloud-test-multiple_yaml.txt").openStream())
         def r = om.readValues jp, KubernetesResource.class
-        r.each { println it }
+        def list = r.inject([]) { v, i -> v << i }
+        assert list.size() == 3
+        assert list[0] instanceof Secret
+        server.client.secrets().create list[0]
+        assert list[1] instanceof PersistentVolumeClaim
+        server.client.persistentVolumeClaims().create list[1]
+        assert list[2] instanceof Deployment
+        server.client.extensions().deployments().create list[2]
     }
 }
