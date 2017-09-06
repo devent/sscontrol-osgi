@@ -170,7 +170,7 @@ service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
     bind "https://127.0.0.1:22379"
     gateway endpoints: "https://robobee-test.test:2379"
-    client ca: certs.client.ca
+    client certs.client
 }
 ''',
             scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestEtcdCerts],
