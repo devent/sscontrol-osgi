@@ -21,6 +21,8 @@ import com.google.inject.Injector
 
 import io.fabric8.kubernetes.api.model.StatusBuilder
 import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder
+import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
+import io.fabric8.kubernetes.client.ConfigBuilder
 
 /**
  *
@@ -62,6 +64,28 @@ abstract class AbstractFabricTest {
     }
 
     /**
+     * Creates the cluster host from the Kubernetes server host.
+     */
+    ClusterHost createClusterHost(String host) {
+        def cb = new ConfigBuilder().withMasterUrl(host).build()
+        def client = new AutoAdaptableKubernetesClient(cb)
+        def config = client.configuration
+        TargetHost target = sshHostFactory.create host: client.masterUrl
+        List<TargetHost> targets = [target]
+        K8sCluster cluster = clusterFactory.create targets: targets
+        cluster.cluster name: 'default-context'
+        cluster.context name: 'default-context'
+        if (config.clientCertFile) {
+            cluster.credentials type: 'cert', cert: config.clientCertFile, key: config.clientKeyFile
+        } else {
+            cluster.credentials type: 'anon'
+        }
+        Credentials credentials = cluster.credentials[0]
+        Context context = contextFactory.create name: 'default-context'
+        clusterHostFactory.create cluster, target, credentials, context
+    }
+
+    /**
      * Creates the cluster host from the Kubernetes server.
      */
     ClusterHost createClusterHost() {
@@ -91,7 +115,7 @@ abstract class AbstractFabricTest {
                 .endCondition()
                 .endStatus()
                 .build()
-                ).always();
+                ).always()
     }
 
     def createMariadbDeploy() {
