@@ -12,13 +12,10 @@ import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Rend
 import com.google.inject.assistedinject.Assisted
 
 import groovy.util.logging.Slf4j
-import io.fabric8.kubernetes.api.model.DoneableNode
-import io.fabric8.kubernetes.api.model.Node
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
 import io.fabric8.kubernetes.client.ConfigBuilder
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 import io.fabric8.kubernetes.client.Watch
-import io.fabric8.kubernetes.client.dsl.Resource
 import io.fabric8.kubernetes.client.internal.readiness.ReadinessWatcher
 
 /**
@@ -44,23 +41,17 @@ class KubectlClient {
     }
 
     /**
-     * Waits until the node is ready.
-     *
-     * @param vars
-     * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
-     * <li>args: kubectl arguments.
-     * </ul>
+     * Waits until the node is ready. The node is identified with the specified
+     * label and value.
      */
-    def waitNodeReady(String name, long amount, TimeUnit timeUnit) {
-        log.info 'Wait for node to be ready: {}', name
+    def waitNodeReady(String label, String value, long amount, TimeUnit timeUnit) {
+        log.info 'Wait for node to be ready: {}', label
         def client = createClient()
-        Resource<Node, DoneableNode> res = client.nodes().withName name
+        def res = client.nodes().withLabel(label, value)
         def node = res.get()
-        def watcher = new ReadinessWatcher(node);
+        def watcher = new ReadinessWatcher(node)
         Watch watch = res.watch(watcher)
-        return watcher.await(amount, timeUnit);
+        return watcher.await(amount, timeUnit)
     }
 
     NamespacedKubernetesClient createClient() {
