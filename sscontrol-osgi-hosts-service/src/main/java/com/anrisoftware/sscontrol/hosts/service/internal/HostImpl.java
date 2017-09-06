@@ -28,14 +28,14 @@ import com.google.inject.assistedinject.Assisted;
 
 /**
  * Host with address and aliases.
- * 
+ *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 public class HostImpl implements Host {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -84,17 +84,9 @@ public class HostImpl implements Host {
         return identifier;
     }
 
-    private static final String ALIASES = "aliases";
-
-    private static final String HOST = "host";
-
-    private static final String IDENTIFIER = "identifier";
-
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(address).append(HOST, host)
-                .append(ALIASES, aliases).append(IDENTIFIER, identifier)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

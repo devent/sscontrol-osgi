@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
+ l * Copyright 2016-2017 Erwin Müller <erwin.mueller@deventm.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,26 +31,31 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMasterServerTest extends AbstractMasterScriptTest {
+class K8sMasterServerTest extends AbstractMasterRunnerTest {
 
     @Test
     void "server_tls"() {
         def test = [
             name: "server_tls",
-            input: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
-service "ssh", group: "etcd", host: "robobee@robobee-test", key: "$robobeeKey"
-service "k8s-master", name: "andrea-cluster" with {
-    bind secure: "192.168.56.120"
-    tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
-    authentication "cert", ca: "$certCaPem"
-    plugin "etcd", target: "etcd"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" with {
+    bind secure: "192.168.56.200"
+    tls certs.tls
+    authentication "cert", ca: certs.tls.ca
+    plugin "etcd", address: "https://192.168.56.200:2379" with {
+        tls certs.etcd
+    }
+    plugin "flannel"
+    plugin "calico"
     kubelet.with {
-        tls ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+        tls certs.tls
     }
 }
-""",
+''',
+            scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
+            expectedServicesSize: 2,
             expected: { Map args ->
             },
         ]
@@ -59,7 +64,7 @@ service "k8s-master", name: "andrea-cluster" with {
 
     @Before
     void beforeMethod() {
-        assumeTrue testHostAvailable
+        checkRobobeeSocket()
     }
 
     void createDummyCommands(File dir) {

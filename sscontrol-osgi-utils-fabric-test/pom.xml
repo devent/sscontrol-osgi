@@ -28,20 +28,22 @@
         </dependency>
         <dependency>
             <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-server-mock</artifactId>
+            <artifactId>kubernetes-api</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
 
-        <!-- own modules -->
-
+        <!-- optional dependencies -->
         <dependency>
             <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-api</artifactId>
-            <type>bundle</type>
+            <artifactId>kubernetes-server-mock</artifactId>
+            <optional>true</optional>
         </dependency>
+
+        <!-- own modules -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-k8s-cluster-service</artifactId>
