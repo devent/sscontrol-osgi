@@ -25,6 +25,8 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlClient
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlClientFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
@@ -62,6 +64,9 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 
     @Inject
     TaintFactory taintFactory
+
+    @Inject
+    KubectlClientFactory kubectlClientFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -345,17 +350,11 @@ systemctl daemon-reload
         }
         log.info 'Apply labels for {}.', service
         def node = service.cluster.name
-        def vars = [:]
-        vars.cluster = service.clusterHost
-        vars.kubeconfigFile = createTmpFile()
-        try {
-            kubectlCluster.waitNodeReady vars, node
-            service.labels.each { String key, Label label ->
-                log.info 'Apply label {} for {}.', label, service
-                kubectlCluster.applyLabelNode vars, node, label
-            }
-        } finally {
-            deleteTmpFile vars.kubeconfigFile
+        def kubectl = createKubectl()
+        kubectl.waitNodeReady robobeeLabelNamespace, node, timeoutLong
+        service.labels.each { String key, Label label ->
+            log.info 'Apply label {} for {}.', label, service
+            kubectl.applyLabelToNode robobeeLabelNamespace, node, label.key, label.value
         }
     }
 
@@ -406,6 +405,14 @@ systemctl daemon-reload
      * Returns the run kubectl for the cluster.
      */
     abstract AbstractKubectlLinux getKubectlCluster()
+
+    /**
+     * Returns the kubectl client.
+     */
+    KubectlClient createKubectl() {
+        K8s service = service
+        kubectlClientFactory.create this, service.clusterHost
+    }
 
     def getDefaultLogLevel() {
         properties.getNumberProperty('default_log_level', defaultProperties).intValue()
