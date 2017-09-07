@@ -8,11 +8,11 @@ import org.junit.Before
 import org.junit.Rule
 
 import com.anrisoftware.sscontrol.k8scluster.service.external.Context
+import com.anrisoftware.sscontrol.k8scluster.service.external.ContextFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sCluster
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.service.internal.ContextImpl.ContextImplFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHostFactory
 import com.anrisoftware.sscontrol.k8scluster.service.internal.CredentialsCertImpl.CredentialsCertImplFactory
-import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterHostImpl.K8sClusterHostImplFactory
 import com.anrisoftware.sscontrol.ssh.service.internal.SshHostImpl.SshHostImplFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -36,7 +36,7 @@ abstract class AbstractFabricTest {
     public KubernetesServer server = new KubernetesServer(false)
 
     @Inject
-    K8sClusterHostImplFactory clusterHostFactory
+    K8sClusterHostFactory clusterHostFactory
 
     @Inject
     K8sClusterFactory clusterFactory
@@ -48,7 +48,7 @@ abstract class AbstractFabricTest {
     CredentialsCertImplFactory credentialsCertFactory
 
     @Inject
-    ContextImplFactory contextFactory
+    ContextFactory contextFactory
 
     Injector injector
 

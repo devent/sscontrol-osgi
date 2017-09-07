@@ -24,7 +24,6 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
-import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -63,9 +62,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 
     @Inject
     TaintFactory taintFactory
-
-    @Inject
-    K8sClusterFactory clusterFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -353,7 +349,6 @@ systemctl daemon-reload
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = createTmpFile()
         try {
-            kubectlCluster.uploadKubeconfig(vars)
             kubectlCluster.waitNodeReady vars, node
             service.labels.each { String key, Label label ->
                 log.info 'Apply label {} for {}.', label, service

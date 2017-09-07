@@ -39,6 +39,12 @@ class K8sMasterServerTest extends AbstractMasterRunnerTest {
             name: "server_tls",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh", group: "masters" with {
+    host "robobee@andrea-master.robobee-test.test", socket: socketFiles.masters[0]
+}
+service "k8s-cluster", target: 'masters' with {
+    credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
+}
 service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" with {
     bind secure: "192.168.56.200"
     tls certs.tls
@@ -51,11 +57,16 @@ service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" w
     kubelet.with {
         tls certs.tls
     }
+    label << "robobeerun.com/dns"
+    label << "robobeerun.com/dashboard"
+    label << "robobeerun.com/calico"
+    label << "robobeerun.com/cluster-monitoring-heapster=required"
+    label << "robobeerun.com/cluster-monitoring-influxdb-grafana=required"
 }
 ''',
             scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
-            expectedServicesSize: 2,
+            expectedServicesSize: 3,
             expected: { Map args ->
             },
         ]

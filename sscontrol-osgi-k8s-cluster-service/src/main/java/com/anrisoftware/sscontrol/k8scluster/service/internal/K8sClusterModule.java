@@ -19,14 +19,14 @@ import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 import com.anrisoftware.sscontrol.k8scluster.service.external.Cluster;
 import com.anrisoftware.sscontrol.k8scluster.service.external.Context;
+import com.anrisoftware.sscontrol.k8scluster.service.external.ContextFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost;
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHostFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8scluster.service.internal.ContextImpl.ContextImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.internal.CredentialsAnonImpl.CredentialsAnonImplFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.internal.CredentialsCertImpl.CredentialsCertImplFactory;
-import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
@@ -51,10 +51,10 @@ public class K8sClusterModule extends AbstractModule {
                 .build(ClusterImplFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(Context.class, ContextImpl.class)
-                .build(ContextImplFactory.class));
+                .build(ContextFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(K8sClusterHost.class, K8sClusterHostImpl.class)
-                .build(K8sClusterHostImplFactory.class));
+                .build(K8sClusterHostFactory.class));
         bindCredentials();
     }
 

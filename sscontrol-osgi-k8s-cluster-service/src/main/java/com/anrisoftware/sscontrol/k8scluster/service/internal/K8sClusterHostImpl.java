@@ -53,16 +53,6 @@ public class K8sClusterHostImpl implements K8sClusterHost {
 
     private final Context context;
 
-    /**
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface K8sClusterHostImplFactory {
-
-        K8sClusterHost create(K8sCluster cluster, TargetHost target,
-                Credentials credentials, Context context);
-    }
-
     @Inject
     K8sClusterHostImpl(@Assisted K8sCluster cluster,
             @Assisted TargetHost target, @Assisted Credentials credentials,

@@ -35,17 +35,6 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ContextImpl implements Context {
 
-    /**
-     *
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface ContextImplFactory {
-
-        Context create(Map<String, Object> args);
-    }
-
     private String name;
 
     private final ContextImplLogger log;

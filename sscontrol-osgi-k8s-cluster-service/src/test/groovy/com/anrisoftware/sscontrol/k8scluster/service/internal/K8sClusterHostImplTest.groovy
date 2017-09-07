@@ -22,10 +22,10 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.k8scluster.service.external.ContextFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.k8scluster.service.internal.ContextImpl.ContextImplFactory
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHostFactory
 import com.anrisoftware.sscontrol.k8scluster.service.internal.CredentialsAnonImpl.CredentialsAnonImplFactory
-import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterHostImpl.K8sClusterHostImplFactory
 import com.anrisoftware.sscontrol.types.host.external.TargetHost
 
 import groovy.util.logging.Slf4j
@@ -40,7 +40,7 @@ import groovy.util.logging.Slf4j
 class K8sClusterHostImplTest {
 
     @Inject
-    K8sClusterHostImplFactory clusterHostFactory
+    K8sClusterHostFactory clusterHostFactory
 
     @Inject
     K8sClusterFactory clusterFactory
@@ -49,7 +49,7 @@ class K8sClusterHostImplTest {
     CredentialsAnonImplFactory credentialsAnonFactory
 
     @Inject
-    ContextImplFactory contextFactory
+    ContextFactory contextFactory
 
     @Test
     void "getUrl"() {
