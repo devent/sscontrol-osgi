@@ -42,14 +42,19 @@ abstract class AbstractMasterRunnerTest extends AbstractRunnerTestBase {
 
     static final Map robobeetestCerts = [
         tls: [
-            ca: AbstractMasterRunnerTest.class.getResource('andrea_master_robobee_test_kube_ca_cert.pem'),
-            cert: AbstractMasterRunnerTest.class.getResource('andrea_master_robobee_test_kube_cert.pem'),
-            key: AbstractMasterRunnerTest.class.getResource('andrea_master_robobee_test_kube_key.pem'),
+            ca: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_ca.pem'),
+            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_master_server_cert.pem'),
+            key: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_master_server_key.pem'),
+        ],
+        admin: [
+            ca: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_ca.pem'),
+            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
+            key: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_admin_key.pem'),
         ],
         etcd: [
             ca: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_ca.pem'),
-            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_client_cert.pem'),
-            key: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_client_key.pem'),
+            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
+            key: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
         ]
     ]
 
