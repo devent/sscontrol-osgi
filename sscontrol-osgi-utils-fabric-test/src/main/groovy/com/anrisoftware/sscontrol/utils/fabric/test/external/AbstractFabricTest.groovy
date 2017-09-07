@@ -86,6 +86,22 @@ abstract class AbstractFabricTest {
     }
 
     /**
+     * Creates the cluster host from the Kubernetes server host.
+     */
+    ClusterHost createClusterHost(String host, URL ca, URL cert, URL key) {
+        URI uri = new URI(host)
+        TargetHost target = sshHostFactory.create host: uri
+        List<TargetHost> targets = [target]
+        K8sCluster cluster = clusterFactory.create targets: targets
+        cluster.cluster name: 'default-context'
+        cluster.context name: 'default-context'
+        cluster.credentials type: 'cert', ca: ca, cert: cert, key: key
+        Credentials credentials = cluster.credentials[0]
+        Context context = contextFactory.create name: 'default-context'
+        clusterHostFactory.create cluster, target, credentials, context
+    }
+
+    /**
      * Creates the cluster host from the Kubernetes server.
      */
     ClusterHost createClusterHost() {
