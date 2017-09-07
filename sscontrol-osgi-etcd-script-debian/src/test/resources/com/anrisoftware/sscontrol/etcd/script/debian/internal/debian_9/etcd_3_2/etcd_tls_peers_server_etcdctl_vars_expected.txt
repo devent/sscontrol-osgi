@@ -4,4 +4,4 @@ export ETCDCTL_CACERT="/etc/etcd/ssl/client_ca.pem"
 export ETCDCTL_CERT="/etc/etcd/ssl/client_cert.pem"
 export ETCDCTL_KEY="/etc/etcd/ssl/client_key.pem"
 
-export ETCDCTL_ENDPOINTS=https://robobee-test.test:2379
+export ETCDCTL_ENDPOINTS=https://etcd-0.robobee-test.test:2379

@@ -3,7 +3,7 @@
 #
 
 #[grpc-proxy]
-ETCD_PROXY_ENDPOINTS="https://robobee-test.test:2379"
+ETCD_PROXY_ENDPOINTS="https://etcd-0.robobee-test.test:2379"
 ETCD_PROXY_LISTEN_ADDR="localhost:12379"
 ETCD_PROXY_CA="/etc/etcd/ssl/client_ca.pem"
 ETCD_PROXY_CERT="/etc/etcd/ssl/client_cert.pem"
