@@ -33,14 +33,6 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
         key: AbstractEtcdScriptTest.class.getResource('cert_key.txt'),
     ]
 
-    static final Map andreaLocalEtcdCerts = [
-        ca: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
-        etcd_0_cert: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
-        etcd_0_key: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
-        etcd_1_cert: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
-        etcd_1_key: AbstractEtcdScriptTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem'),
-    ]
-
     static final URL grepActiveCommand = AbstractEtcdScriptTest.class.getResource('grep_active_command.txt')
 
     @Override
