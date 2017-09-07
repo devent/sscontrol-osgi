@@ -3,6 +3,6 @@
 #
 
 #[gateway]
-ETCD_GATEWAY_ENDPOINTS="https://robobee-test.test:2379"
+ETCD_GATEWAY_ENDPOINTS="https://etcd-0.robobee-test.test:2379"
 ETCD_GATEWAY_LISTEN_ADDR="127.0.0.1:22379"
 ETCD_GATEWAY_CA="/etc/etcd/ssl/client_ca.pem"

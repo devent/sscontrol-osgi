@@ -41,7 +41,7 @@ class EtcdServerTest extends AbstractEtcdRunnerTest {
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd", member: "default"
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket, certs: andreaLocalEtcdCerts],
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             expected: { Map args ->
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd.conf'), "${args.test.name}_etcd_conf_expected.txt"
@@ -64,7 +64,7 @@ service "etcd" with {
     proxy endpoints: "http://localhost:2379"
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket, certs: andreaLocalEtcdCerts],
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             expected: { Map args ->
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd-proxy.conf'), "${args.test.name}_etcd_proxy_conf_expected.txt"
@@ -88,7 +88,7 @@ service "etcd" with {
     gateway endpoints: "http://localhost:2379"
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket, certs: andreaLocalEtcdCerts],
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             expected: { Map args ->
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/etcd/etcd-gateway.conf'), "${args.test.name}_etcd_gateway_conf_expected.txt"
@@ -112,12 +112,12 @@ def i = 0
 service "etcd", target: host, member: "etcd-${i}" with {
     debug "debug", level: 1
     bind "https://${host.hostAddress}:2379"
-    advertise "https://robobee-test.test:2379"
+    advertise "https://etcd-${i}.robobee-test.test:2379"
     client certs.client
     tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
     authentication "cert", ca: certs.ca
-    peer state: "new", advertise: "https://robobee-test.test:2380", listen: "https://${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
-        cluster << "etcd-0=https://robobee-test.test:2380"
+    peer state: "new", advertise: "https://etcd-${i}.robobee-test.test:2380", listen: "https://${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
+        cluster << "etcd-0=https://etcd-${i}.robobee-test.test:2380"
         tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
         authentication "cert", ca: certs.ca
     }
@@ -144,7 +144,7 @@ service "etcd", target: host, member: "etcd-${i}" with {
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
     bind "http://localhost:12379"
-    proxy endpoints: "https://robobee-test.test:2379"
+    proxy endpoints: "https://etcd-0.robobee-test.test:2379"
     client certs.client
 }
 ''',
@@ -169,7 +169,7 @@ service "etcd" with {
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
     bind "https://127.0.0.1:22379"
-    gateway endpoints: "https://robobee-test.test:2379"
+    gateway endpoints: "https://etcd-0.robobee-test.test:2379"
     client certs.client
 }
 ''',

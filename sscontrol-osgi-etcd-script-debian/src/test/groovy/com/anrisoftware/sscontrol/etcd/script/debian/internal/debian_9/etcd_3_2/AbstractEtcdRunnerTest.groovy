@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianFactory
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -47,36 +46,17 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
 
     static final URL certKeyPem = AbstractEtcdRunnerTest.class.getResource('cert_key.txt')
 
-    static final Map andreaLocalEtcdCerts = [
-        ca: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
-        client: [
-            ca: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_ca_cert.pem'),
-            cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_cert.pem'),
-            key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_client_0_robobee_test_key_insecure.pem'),
-        ],
-        etcd: [
-            [
-                cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_cert.pem'),
-                key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_0_robobee_test_key_insecure.pem'),
-            ],
-            [
-                cert: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_cert.pem'),
-                key: AbstractEtcdRunnerTest.class.getResource('andrea_local_etcd_etcd_1_robobee_test_key_insecure.pem'),
-            ],
-        ],
-    ]
-
     static final Map robobeetestEtcdCerts = [
-        ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_ca.pem'),
+        ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_ca.pem'),
         client: [
-            ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_ca.pem'),
-            cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_client_cert.pem'),
-            key: AbstractEtcdRunnerTest.class.getResource('robobee_test_client_key.pem'),
+            ca: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_ca.pem'),
+            cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
+            key: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
         ],
         etcd: [
             [
-                cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_cert.pem'),
-                key: AbstractEtcdRunnerTest.class.getResource('robobee_test_key.pem'),
+                cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_0_server_cert.pem'),
+                key: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_0_server_key.pem'),
             ],
         ],
     ]
