@@ -32,16 +32,16 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.k8scluster.service.external.Cluster;
 import com.anrisoftware.sscontrol.k8scluster.service.external.Context;
+import com.anrisoftware.sscontrol.k8scluster.service.external.ContextFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.external.CredentialsFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost;
+import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHostFactory;
 import com.anrisoftware.sscontrol.k8scluster.service.internal.ClusterImpl.ClusterImplFactory;
-import com.anrisoftware.sscontrol.k8scluster.service.internal.ContextImpl.ContextImplFactory;
-import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterHostImpl.K8sClusterHostImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
@@ -69,18 +69,18 @@ public class K8sClusterImpl implements K8sCluster {
 
     private Cluster cluster;
 
-    private final ContextImplFactory contextFactory;
+    private final ContextFactory contextFactory;
 
     private Context context;
 
-    private final K8sClusterHostImplFactory clusterHostFactory;
+    private final K8sClusterHostFactory clusterHostFactory;
 
     @Inject
     K8sClusterImpl(K8sClusterImplLogger log,
             HostServicePropertiesService propertiesService,
             ClusterImplFactory clusterFactory,
-            ContextImplFactory contextFactory,
-            K8sClusterHostImplFactory clusterHostFactory,
+            ContextFactory contextFactory,
+            K8sClusterHostFactory clusterHostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
