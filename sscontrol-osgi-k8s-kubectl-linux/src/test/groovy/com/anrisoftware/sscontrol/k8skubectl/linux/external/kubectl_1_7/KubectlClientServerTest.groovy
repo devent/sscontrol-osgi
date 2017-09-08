@@ -39,7 +39,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     }
 
     @Test
-    void "applyLabelToNode"() {
+    void "applyLabelToNode with key and value"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
         def nodeClient = nodeClientFactory.create cluster
@@ -49,6 +49,24 @@ class KubectlClientServerTest extends AbstractFabricTest {
         try {
             def node = nodeClient.getNode nodeLabel, nodeValue
             assert node.node.metadata.labels["test"] == "foo"
+        } finally {
+            nodeClient.applyLabelToNode nodeLabel, nodeValue, "test-", null
+            def node = nodeClient.getNode nodeLabel, nodeValue
+            assert !node.node.metadata.labels.containsKey("test")
+        }
+    }
+
+    @Test
+    void "applyLabelToNode with key and no value"() {
+        def script = injector.getInstance ScriptMock
+        ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
+        def nodeClient = nodeClientFactory.create cluster
+        def nodeLabel = "robobeerun.com/node"
+        def nodeValue = "andrea-test-cluster"
+        nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", null
+        try {
+            def node = nodeClient.getNode nodeLabel, nodeValue
+            assert node.node.metadata.labels["test"] == "null"
         } finally {
             nodeClient.applyLabelToNode nodeLabel, nodeValue, "test-", null
             def node = nodeClient.getNode nodeLabel, nodeValue

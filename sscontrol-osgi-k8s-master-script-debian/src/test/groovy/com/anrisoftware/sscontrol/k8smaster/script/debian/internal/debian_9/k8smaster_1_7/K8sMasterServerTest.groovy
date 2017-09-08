@@ -62,6 +62,7 @@ service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" w
     label << "robobeerun.com/calico"
     label << "robobeerun.com/cluster-monitoring-heapster=required"
     label << "robobeerun.com/cluster-monitoring-influxdb-grafana=required"
+    label << "robobee-test.test/web"
 }
 ''',
             scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestCerts],

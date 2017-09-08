@@ -57,7 +57,7 @@ class KubeNodeClient extends KubectlClient {
     def applyLabelToNode(String nodeLabel, String nodeValue, String key, String value) {
         def res = getNodeResource(nodeLabel, nodeValue)
         def node = res.node
-        node.applyLabelToNode nodeLabel, nodeValue, key, value
+        node.applyLabelToNode nodeLabel, nodeValue, key, value == null ? "null" : value
     }
 
     KubeNode getNode(String label, String value) {
