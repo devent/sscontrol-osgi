@@ -23,7 +23,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     static final URL robobeeKey = KubectlClientServerTest.class.getResource('robobee_test_kube_admin_key.pem')
 
     @Inject
-    KubectlClientFactory kubectlFactory
+    KubeNodeClientFactory nodeClientFactory
 
     @Override
     List getAdditionalModules() {
@@ -34,7 +34,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     void "waitNodeReady"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
-        def kubectl = kubectlFactory.create script, cluster
+        def kubectl = nodeClientFactory.create cluster
         kubectl.waitNodeReady "robobeerun.com/node", "andrea-test-cluster", 10, TimeUnit.SECONDS
     }
 
@@ -42,17 +42,17 @@ class KubectlClientServerTest extends AbstractFabricTest {
     void "applyLabelToNode"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
-        def kubectl = kubectlFactory.create script, cluster
+        def nodeClient = nodeClientFactory.create cluster
         def nodeLabel = "robobeerun.com/node"
         def nodeValue = "andrea-test-cluster"
-        kubectl.applyLabelToNode nodeLabel, nodeValue, "test", "foo"
+        nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", "foo"
         try {
-            def node = kubectl.getNode nodeLabel, nodeValue
-            assert node.metadata.labels["test"] == "foo"
+            def node = nodeClient.getNode nodeLabel, nodeValue
+            assert node.node.metadata.labels["test"] == "foo"
         } finally {
-            kubectl.applyLabelToNode nodeLabel, nodeValue, "test-", null
-            def node = kubectl.getNode nodeLabel, nodeValue
-            assert !node.metadata.labels.containsKey("test")
+            nodeClient.applyLabelToNode nodeLabel, nodeValue, "test-", null
+            def node = nodeClient.getNode nodeLabel, nodeValue
+            assert !node.node.metadata.labels.containsKey("test")
         }
     }
 }

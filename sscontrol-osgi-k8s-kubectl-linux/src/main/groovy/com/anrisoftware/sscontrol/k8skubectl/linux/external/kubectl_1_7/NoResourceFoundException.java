@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
 
+import java.util.Map;
+
 /**
  *
  *
@@ -24,10 +26,9 @@ package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
 @SuppressWarnings("serial")
 public class NoResourceFoundException extends KubectlClientException {
 
-    public NoResourceFoundException(KubectlClient client, String label,
-            String value, Exception cause) {
+    public NoResourceFoundException(KubectlClient client,
+            @SuppressWarnings("rawtypes") Map labels, Exception cause) {
         super("No such resource was found", client, cause);
-        addContextValue("label", label);
-        addContextValue("value", value);
+        addContextValue("labels", labels);
     }
 }
