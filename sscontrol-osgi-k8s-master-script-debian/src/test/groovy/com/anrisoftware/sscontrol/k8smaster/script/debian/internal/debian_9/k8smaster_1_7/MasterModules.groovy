@@ -45,6 +45,7 @@ import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
 
 /**
  *
@@ -70,6 +71,7 @@ class MasterModules {
             new KubectlLinuxModule(),
             new DebianUtilsModule(),
             new SystemdUtilsModule(),
+            new UfwUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

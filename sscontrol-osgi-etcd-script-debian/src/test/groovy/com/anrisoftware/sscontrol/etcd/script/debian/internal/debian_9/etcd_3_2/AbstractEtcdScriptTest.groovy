@@ -39,7 +39,7 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
-        createCommand AbstractEtcdScriptTest.class.getResource('which_ufw_not_found_cmd.txt'), dir, 'which'
+        createCommand whichufwnotfoundCommand, dir, 'which'
         createEchoCommands dir, [
             'mkdir',
             'chown',

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.linux.k8s_1_7;
+package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8smaster_1_7;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -24,16 +23,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class K8sUpstreamModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(PluginTargetsMap.class, PluginTargetsMap.class)
-                .build(PluginTargetsMapFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Addresses.class, Addresses.class)
-                .build(AddressesFactory.class));
-    }
-
+public interface K8sMasterUfwDebianFactory
+        extends HostServiceScriptService {
 }
