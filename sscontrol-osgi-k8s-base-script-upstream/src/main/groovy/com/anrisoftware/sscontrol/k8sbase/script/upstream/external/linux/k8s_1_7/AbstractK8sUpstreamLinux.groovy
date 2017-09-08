@@ -25,8 +25,8 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlClient
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlClientFactory
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubeNodeClient
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubeNodeClientFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -67,7 +67,7 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     TaintFactory taintFactory
 
     @Inject
-    KubectlClientFactory kubectlClientFactory
+    KubeNodeClientFactory nodeClientFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -106,6 +106,28 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (!registerSchedulable) {
             def taint = ismasterNoScheduleTaint
             service.taints << ["${taint.key}": taint]
+        }
+    }
+
+    def setupClusterHostDefaults() {
+        K8s service = service
+        ClusterHost host = service.clusterHost
+        if (!host) {
+            return
+        }
+        if (!host.proto) {
+            if (host.credentials.type == 'cert') {
+                host.proto = defaultApiProtocolSecure
+            } else {
+                host.proto = defaultApiProtocolInsecure
+            }
+        }
+        if (!host.port) {
+            if (host.credentials.type == 'cert') {
+                host.port = defaultApiPortSecure
+            } else {
+                host.proto = defaultApiPortInsecure
+            }
         }
     }
 
@@ -341,11 +363,11 @@ systemctl daemon-reload
         }
         log.info 'Apply labels for {}.', service
         def node = service.cluster.name
-        def kubectl = createKubectl()
-        kubectl.waitNodeReady robobeeLabelNode, node, timeoutLong
+        def nodeClient = createNodeClient()
+        nodeClient.waitNodeReady robobeeLabelNode, node, timeoutLong
         service.labels.each { String key, Label label ->
             log.info 'Apply label {} for {}.', label, service
-            kubectl.applyLabelToNode robobeeLabelNode, node, label.key, label.value
+            nodeClient.applyLabelToNode robobeeLabelNode, node, label.key, label.value
         }
     }
 
@@ -398,26 +420,11 @@ systemctl daemon-reload
     abstract AbstractKubectlLinux getKubectlCluster()
 
     /**
-     * Returns the kubectl client.
+     * Returns the kubernetes node client.
      */
-    KubectlClient createKubectl() {
+    KubeNodeClient createNodeClient() {
         K8s service = service
-        ClusterHost host = service.clusterHost
-        if (!host.proto) {
-            if (host.credentials.type == 'cert') {
-                host.proto = defaultApiProtocolSecure
-            } else {
-                host.proto = defaultApiProtocolInsecure
-            }
-        }
-        if (!host.port) {
-            if (host.credentials.type == 'cert') {
-                host.port = defaultApiPortSecure
-            } else {
-                host.proto = defaultApiPortInsecure
-            }
-        }
-        kubectlClientFactory.create this, service.clusterHost
+        nodeClientFactory.create service.clusterHost
     }
 
     def getDefaultLogLevel() {

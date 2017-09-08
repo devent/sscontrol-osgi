@@ -51,6 +51,7 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
         setupAdmissionsDefaults()
         setupAccountDefaults()
         setupClusterDefaults()
+        setupClusterHostDefaults()
         setupClusterApiDefaults()
         setupBindDefaults()
         setupKubeletDefaults()
