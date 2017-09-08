@@ -6,14 +6,13 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
 
 /**
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface KubectlClientFactory {
+public interface KubeNodeClientFactory {
 
-    KubectlClient create(ClusterHost cluster);
+    KubeNodeClient create(ClusterHost cluster);
 
-    KubectlClient create(NamespacedKubernetesClient client);
+    KubeNodeClient create(NamespacedKubernetesClient client);
+
 }
-
