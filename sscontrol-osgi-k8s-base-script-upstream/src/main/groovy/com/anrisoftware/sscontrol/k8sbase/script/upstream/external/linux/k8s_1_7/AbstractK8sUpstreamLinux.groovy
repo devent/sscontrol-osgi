@@ -351,6 +351,16 @@ systemctl daemon-reload
         def node = service.cluster.name
         def vars = [:]
         vars.cluster = service.clusterHost
+        vars.kubeconfigFile = createTmpFile()
+        try {
+            createNodeClient().waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
+            service.taints.each { String key, Taint taint ->
+                log.info 'Apply taint {} for {}.', taint, service
+                kubectlCluster.applyTaintNode vars, node, taint
+            }
+        } finally {
+            deleteTmpFile vars.kubeconfigFile
+        }
     }
 
     def applyLabels() {
@@ -403,9 +413,7 @@ systemctl daemon-reload
         def list = []
         K8s service = service
         service.taints.each { String key, Taint taint ->
-            list << [
-                taintString(taint)
-            ]
+            list << taintString(taint)
         }
         return list
     }

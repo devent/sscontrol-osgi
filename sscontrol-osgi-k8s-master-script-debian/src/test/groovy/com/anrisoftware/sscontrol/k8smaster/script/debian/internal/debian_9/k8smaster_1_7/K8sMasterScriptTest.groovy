@@ -191,7 +191,7 @@ service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] wi
         doTest test
     }
 
-    @Test
+    //@Test
     void "script_taints_labels"() {
         def test = [
             name: "script_taints_labels",
