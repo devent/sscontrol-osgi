@@ -36,6 +36,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
+        createCommand whichufwnotfoundCommand, dir, 'which'
         createIdCommand dir
         createEchoCommands dir, [
             'mkdir',
@@ -57,6 +58,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'curl',
             'sleep',
             'kubectl',
+            'ufw',
         ]
     }
 }

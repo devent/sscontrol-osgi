@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8smaster_1_7
 
-import static com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8smaster_1_7.K8sMasterDebianService.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -39,13 +37,27 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
 
-    K8sMasterSystemdDebian systemdDebian
+    K8sMasterSystemdDebian systemd
 
     KubectlClusterDebian kubectlClusterLinux
 
     @Override
     Object run() {
-        systemdDebian.stopServices()
+    }
+
+    def stopServices() {
+        systemd.stopServices()
+    }
+
+    def startServices() {
+        systemd.startServices()
+    }
+
+    def enableServices() {
+        systemd.enableServices()
+    }
+
+    def setupDefaults() {
         setupMiscDefaults()
         setupApiServersDefaults()
         setupAdmissionsDefaults()
@@ -58,6 +70,9 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
         setupAuthenticationsDefaults()
         setupPluginsDefaults()
         setupKernelParameter()
+    }
+
+    def createService() {
         createDirectories()
         uploadK8sCertificates()
         uploadAccountCertificates()
@@ -68,8 +83,9 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
         createKubeletManifests()
         createHostRkt()
         createFlannelCni()
-        systemdDebian.startServices()
-        systemdDebian.enableServices()
+    }
+
+    def postInstall() {
         startAddons()
         startCalico()
         applyTaints()
@@ -91,7 +107,7 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
 
     @Inject
     void setSystemdDebianFactory(K8sMasterSystemdDebianFactory factory) {
-        this.systemdDebian = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+        this.systemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
@@ -102,16 +118,6 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 
     @Override
