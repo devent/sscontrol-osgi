@@ -33,9 +33,9 @@ import groovy.util.logging.Slf4j
 class DockerceScriptTest extends AbstractDockerceScriptTest {
 
     @Test
-    void "basic"() {
+    void "script_basic"() {
         def test = [
-            name: "basic",
+            name: "script_basic",
             script: """
 service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker"
@@ -57,9 +57,9 @@ service "docker"
     }
 
     @Test
-    void "mirror_localhost"() {
+    void "script_mirror_localhost"() {
         def test = [
-            name: "mirror_localhost",
+            name: "script_mirror_localhost",
             script: """
 service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker" with {
@@ -83,9 +83,9 @@ service "docker" with {
     }
 
     @Test
-    void "mirror_localhost_ca"() {
+    void "script_mirror_localhost_ca"() {
         def test = [
-            name: "mirror_localhost_ca",
+            name: "script_mirror_localhost_ca",
             script: """
 service "ssh", host: "localhost", socket: "$localhostSocket"
 service "docker" with {
