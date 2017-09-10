@@ -57,6 +57,7 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_kube_options.conf", "${args.test.name}_kube_options_conf_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/usr/local/bin'), "host-rkt", "${args.test.name}_host_rkt_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/usr/local/bin'), "kubelet-wrapper", "${args.test.name}_kubelet_wrapper_expected.txt"
@@ -78,6 +79,21 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                try {
+                    assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl1_expected.txt"
+                } catch (AssertionError e) {
+                    try {
+                        assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl2_expected.txt"
+                    }
+                    catch (AssertionError e1) {
+                        try {
+                            assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl3_expected.txt"
+                        }
+                        catch (AssertionError e2) {
+                            assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl4_expected.txt"
+                        }
+                    }
+                }
             },
         ]
         doTest test

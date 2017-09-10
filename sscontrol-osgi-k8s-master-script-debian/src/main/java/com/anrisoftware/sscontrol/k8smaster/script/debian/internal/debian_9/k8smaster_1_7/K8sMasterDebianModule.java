@@ -49,6 +49,9 @@ public class K8sMasterDebianModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, K8sMasterUfwDebian.class)
                 .build(K8sMasterUfwDebianFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, K8sMasterDockerDebian.class)
+                .build(K8sMasterDockerDebianFactory.class));
     }
 
 }

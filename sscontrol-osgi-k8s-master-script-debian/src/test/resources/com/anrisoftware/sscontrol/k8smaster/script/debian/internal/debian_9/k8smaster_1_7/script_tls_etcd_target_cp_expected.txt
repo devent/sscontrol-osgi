@@ -1,3 +1,4 @@
+/var/lib/robobee/tmp/10_kube_options.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/10_kube_options.conf
 /tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
 /var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
 /var/lib/robobee/tmp/robobeekub_tls_ca /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_ca.pem

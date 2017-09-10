@@ -37,6 +37,9 @@ class K8sMasterDebian extends ScriptBase {
     K8sMasterDebianProperties debianPropertiesProvider
 
     @Inject
+    K8sMasterDockerDebianFactory dockerDebianFactory
+
+    @Inject
     KubectlUpstreamDebianFactory kubectlUpstreamFactory
 
     K8sMasterUpstreamDebian upstream
@@ -58,6 +61,7 @@ class K8sMasterDebian extends ScriptBase {
 
     @Override
     def run() {
+        dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.stopServices()
         debian.installPackages()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
