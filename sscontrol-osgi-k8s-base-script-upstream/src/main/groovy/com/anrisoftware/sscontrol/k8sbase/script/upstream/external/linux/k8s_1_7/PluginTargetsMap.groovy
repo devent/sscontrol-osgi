@@ -49,32 +49,35 @@ class PluginTargetsMap extends HashMap {
         if (!plugin) {
             return []
         }
-        if (plugin.targets) {
-            return getSshTargets(plugin, key)
-        }
-        if (plugin.addresses) {
-            return getAddresses(plugin, key)
+        if (plugin.endpoints) {
+            return getEndpoints(plugin, key)
         }
     }
 
-    private List getSshTargets(Plugin plugin, String key) {
-        def repo = repo
-        plugin.targets.inject([]) { result, target ->
-            repo.targets(target).each {
-                result << [host: it.host, protocol: plugin.protocol, port: plugin.port]
+    private List getEndpoints(Plugin plugin, String key) {
+        plugin.endpoints.inject([]) { result, e ->
+            if (e instanceof String) {
+                if (new URI(e).scheme) {
+                    result << endpointString(plugin, e)
+                } else {
+                    endpointTargets(result, plugin, e)
+                }
             }
             result
         }
     }
 
-    private List getAddresses(Plugin plugin, String key) {
-        plugin.addresses.inject([]) { result, address ->
-            def uri = new URI(address)
-            def host = uri.host ? uri.host : uri.path
-            def proto = uri.scheme ? uri.scheme : plugin.protocol
-            def port = uri.port != -1 ? uri.port : plugin.port
-            result << [host: host, protocol: proto, port: port]
-            result
+    def endpointString(Plugin plugin, String endpoint) {
+        def uri = new URI(endpoint)
+        def host = uri.host ? uri.host : uri.path
+        def proto = uri.scheme
+        def port = uri.port != -1 ? uri.port : plugin.port
+        [host: host, protocol: proto, port: port]
+    }
+
+    def endpointTargets(List list, Plugin plugin, String target) {
+        repo.targets(target).each {
+            list << [host: it.host, protocol: plugin.protocol, port: plugin.port]
         }
     }
 }

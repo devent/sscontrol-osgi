@@ -49,7 +49,7 @@ service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" w
     bind secure: "192.168.56.200"
     tls certs.tls
     authentication "cert", ca: certs.tls.ca
-    plugin "etcd", address: "https://192.168.56.200:2379" with {
+    plugin "etcd", endpoint: "https://192.168.56.200:22379" with {
         tls certs.etcd
     }
     plugin "flannel"

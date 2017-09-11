@@ -27,9 +27,10 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
  */
 public interface EtcdPlugin extends Plugin {
 
-    List<Object> getTarget();
-
-    List<String> getAddress();
+    /**
+     * Returns the list of endpoints.
+     */
+    List<Object> getEndpoints();
 
     Tls getTls();
 
