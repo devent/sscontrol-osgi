@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.flanneldocker.script.debian.internal.flanneld
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
@@ -160,7 +161,7 @@ service "flannel-docker" with {
             scriptVars: [localhostSocket: localhostSocket, certs: testCerts],
             before: { Map test ->
                 createEchoCommand test.dir, 'which'
-                createCommand FlannelDockerScriptTest.class.getResource("nodes_ufw_ufw_cmd.txt"), test.dir, 'ufw'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
             },
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
