@@ -17,7 +17,7 @@ spec:
     - /hyperkube
     - apiserver
     - --bind-address=0.0.0.0
-    - --etcd-servers=https://etcd:2379
+    - --etcd-servers=https://etcd-0:2379
     - --etcd-cafile=/tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_ca.pem
     - --etcd-certfile=/tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_cert.pem
     - --etcd-keyfile=/tmp/junit/junit/etc/kubernetes/ssl/etcd_tls_key.pem

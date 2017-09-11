@@ -43,7 +43,7 @@ service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     tls certs
     authentication "cert", ca: certs.ca
-    plugin "etcd", target: "etcd"
+    plugin "etcd", endpoint: "etcd"
     plugin "flannel"
     plugin "calico"
     kubelet.with {
@@ -110,7 +110,7 @@ service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     tls certs
     authentication "cert", ca: certs.ca
-    plugin "etcd", target: "etcd"
+    plugin "etcd", endpoint: "etcd"
     plugin "flannel"
     plugin "calico"
     kubelet.with {
@@ -140,8 +140,9 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
             name: "script_etcd_address_defaults",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
-    plugin "etcd", address: "etcd"
+    plugin "etcd", endpoint: "etcd"
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket],
@@ -168,7 +169,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
-    plugin "etcd", address: "https://etcd-0:2379,https://etcd-1:2379"
+    plugin "etcd", endpoint: "https://etcd-0:2379,https://etcd-1:2379"
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket],
@@ -192,8 +193,9 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             name: "script_etcd_tls",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
-    plugin "etcd", address: "etcd" with {
+    plugin "etcd", endpoint: "etcd" with {
         tls certs
     }
     plugin "calico"
@@ -223,9 +225,10 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             name: "script_advertise_target",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "ssh", host: "localhost", socket: localhostSocket, group: "master"
 service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] with {
-    plugin "etcd", address: "etcd"
+    plugin "etcd", endpoint: "etcd"
     plugin "calico"
 }
 ''',

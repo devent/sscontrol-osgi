@@ -17,7 +17,7 @@ spec:
     - /hyperkube
     - apiserver
     - --bind-address=0.0.0.0
-    - --etcd-servers=http://etcd:2379
+    - --etcd-servers=http://etcd-0:2379
     - --allow-privileged=true
     - --service-cluster-ip-range=10.3.0.0/24
     - --insecure-port=8080

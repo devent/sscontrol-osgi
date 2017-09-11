@@ -40,7 +40,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class EtcdPluginImpl implements EtcdPlugin {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -49,9 +49,7 @@ public class EtcdPluginImpl implements EtcdPlugin {
 
     }
 
-    private final List<Object> targets;
-
-    private final List<String> addresses;
+    private final List<Object> endpoints;
 
     private transient TlsFactory tlsFactory;
 
@@ -70,8 +68,7 @@ public class EtcdPluginImpl implements EtcdPlugin {
     EtcdPluginImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create();
-        this.targets = new ArrayList<>();
-        this.addresses = new ArrayList<>();
+        this.endpoints = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -84,38 +81,17 @@ public class EtcdPluginImpl implements EtcdPlugin {
         return "etcd";
     }
 
-    public void addTargets(String[] list) {
-        addTargets(Arrays.asList(list));
-    }
-
-    public void addTargets(List<?> list) {
-        targets.addAll(list);
-    }
-
-    public void addTarget(Object target) {
-        targets.add(target);
-    }
-
-    @Override
-    public List<Object> getTarget() {
-        return targets;
-    }
-
-    public void addAddresses(String[] list) {
-        addAddresses(Arrays.asList(list));
-    }
-
-    public void addAddresses(List<String> list) {
-        addresses.addAll(list);
+    public void addEndpoints(List<?> list) {
+        endpoints.addAll(list);
     }
 
     public void addAddress(String address) {
-        addresses.add(address);
+        endpoints.add(address);
     }
 
     @Override
-    public List<String> getAddress() {
-        return addresses;
+    public List<Object> getEndpoints() {
+        return endpoints;
     }
 
     public void setTls(Tls tls) {
@@ -151,30 +127,17 @@ public class EtcdPluginImpl implements EtcdPlugin {
     }
 
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("target");
+        Object v = args.get("endpoint");
         if (v != null) {
-            setTargets(v);
-        }
-        v = args.get("address");
-        if (v != null) {
-            getAddresses(v);
+            setEndpoints(v);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private void getAddresses(Object v) {
+    private void setEndpoints(Object v) {
         if (v instanceof List) {
-            addAddresses((List<String>) v);
+            addEndpoints((List<?>) v);
         } else {
-            addAddresses(split(v.toString(), ","));
-        }
-    }
-
-    private void setTargets(Object v) {
-        if (v instanceof List) {
-            addTargets((List<?>) v);
-        } else {
-            addTargets(split(v.toString(), ","));
+            addEndpoints(Arrays.asList(split(v.toString(), ",")));
         }
     }
 

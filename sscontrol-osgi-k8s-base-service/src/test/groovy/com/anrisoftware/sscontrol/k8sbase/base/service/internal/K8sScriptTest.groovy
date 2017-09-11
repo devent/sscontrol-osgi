@@ -121,8 +121,8 @@ service "k8s-master" with {
                 assert s.plugins.size() == 1
                 EtcdPlugin e = s.plugins.etcd
                 assert e.name == 'etcd'
-                assert e.address.size() == 1
-                assert e.address[0] == 'infra-0'
+                assert e.endpoints.size() == 1
+                assert e.endpoints[0] == 'infra-0'
             },
         ]
         doTest test
@@ -145,8 +145,8 @@ service "k8s-master" with {
                 assert s.plugins.size() == 1
                 EtcdPlugin e = s.plugins.etcd
                 assert e.name == 'etcd'
-                assert e.address.size() == 1
-                assert e.address[0] == 'http://etcd-0:2379'
+                assert e.endpoints.size() == 1
+                assert e.endpoints[0] == 'http://etcd-0:2379'
             },
         ]
         doTest test
@@ -201,8 +201,8 @@ service "k8s-master" with {
                 assert s.plugins.size() == 1
                 EtcdPlugin e = s.plugins.etcd
                 assert e.name == 'etcd'
-                assert e.address.size() == 1
-                assert e.address[0] == 'infra-0'
+                assert e.endpoints.size() == 1
+                assert e.endpoints[0] == 'infra-0'
                 assert e.tls.ca.toString() == 'file:ca.pem'
                 assert e.tls.cert.toString() == 'file:cert.pem'
                 assert e.tls.key.toString() == 'file:key.pem'

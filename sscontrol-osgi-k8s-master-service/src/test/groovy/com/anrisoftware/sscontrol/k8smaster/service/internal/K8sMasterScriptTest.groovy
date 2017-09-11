@@ -150,7 +150,7 @@ service "k8s-master" with {
             name: 'ectd plugin target',
             input: """
 service "k8s-master" with {
-    plugin "etcd", target: "infra-0"
+    plugin "etcd", endpoint: "infra-0"
 }
 """,
             expected: { HostServices services ->
@@ -160,8 +160,8 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].targets.size() == 1
-                assert s.plugins['etcd'].targets[0] == 'infra-0'
+                assert s.plugins['etcd'].endpoints.size() == 1
+                assert s.plugins['etcd'].endpoints[0] == 'infra-0'
             },
         ]
         doTest test
@@ -173,7 +173,7 @@ service "k8s-master" with {
             name: 'ectd plugin targets',
             input: """
 service "k8s-master" with {
-    plugin "etcd", target: "infra-0,infra-1"
+    plugin "etcd", endpoint: "infra-0,infra-1"
 }
 """,
             expected: { HostServices services ->
@@ -183,9 +183,9 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].targets.size() == 2
-                assert s.plugins['etcd'].targets[0] == 'infra-0'
-                assert s.plugins['etcd'].targets[1] == 'infra-1'
+                assert s.plugins['etcd'].endpoints.size() == 2
+                assert s.plugins['etcd'].endpoints[0] == 'infra-0'
+                assert s.plugins['etcd'].endpoints[1] == 'infra-1'
             },
         ]
         doTest test
@@ -197,7 +197,7 @@ service "k8s-master" with {
             name: 'ectd plugin address',
             input: """
 service "k8s-master" with {
-    plugin "etcd", address: "http://etcd-0:2379"
+    plugin "etcd", endpoint: "http://etcd-0:2379"
 }
 """,
             expected: { HostServices services ->
@@ -207,8 +207,8 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].addresses.size() == 1
-                assert s.plugins['etcd'].addresses[0] == 'http://etcd-0:2379'
+                assert s.plugins['etcd'].endpoints.size() == 1
+                assert s.plugins['etcd'].endpoints[0] == 'http://etcd-0:2379'
             },
         ]
         doTest test
@@ -220,7 +220,7 @@ service "k8s-master" with {
             name: 'ectd plugin addresses',
             input: """
 service "k8s-master" with {
-    plugin "etcd", address: "http://etcd-0:2379,http://etcd-1:2379"
+    plugin "etcd", endpoint: "http://etcd-0:2379,http://etcd-1:2379"
 }
 """,
             expected: { HostServices services ->
@@ -230,9 +230,9 @@ service "k8s-master" with {
                 assert s.cluster.serviceRange == null
                 assert s.plugins.size() == 1
                 assert s.plugins['etcd'].name == 'etcd'
-                assert s.plugins['etcd'].addresses.size() == 2
-                assert s.plugins['etcd'].addresses[0] == 'http://etcd-0:2379'
-                assert s.plugins['etcd'].addresses[1] == 'http://etcd-1:2379'
+                assert s.plugins['etcd'].endpoints.size() == 2
+                assert s.plugins['etcd'].endpoints[0] == 'http://etcd-0:2379'
+                assert s.plugins['etcd'].endpoints[1] == 'http://etcd-1:2379'
             },
         ]
         doTest test
