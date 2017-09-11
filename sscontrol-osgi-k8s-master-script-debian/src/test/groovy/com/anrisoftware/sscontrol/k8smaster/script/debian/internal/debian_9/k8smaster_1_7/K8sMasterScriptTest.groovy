@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.debian_9.k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
@@ -94,6 +95,40 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                         }
                     }
                 }
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_ufw"() {
+        def test = [
+            name: "script_ufw",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
+    tls certs
+    authentication "cert", ca: certs.ca
+    plugin "etcd", target: "etcd"
+    plugin "flannel"
+    plugin "calico"
+    kubelet.with {
+        tls certs
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
             },
         ]
         doTest test

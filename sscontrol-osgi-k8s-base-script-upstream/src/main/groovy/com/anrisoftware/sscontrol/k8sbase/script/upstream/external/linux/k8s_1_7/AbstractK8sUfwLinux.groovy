@@ -57,7 +57,7 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
     def updateFirewall() {
         K8s service = this.service
         shell privileged: true, st: """
-ufw allow from <podNetwork> to <address>
+ufw allow from <vars.podNetwork> to <vars.address>
 """, vars: [podNetwork: service.cluster.podRange, address: advertiseAddress] call()
     }
 

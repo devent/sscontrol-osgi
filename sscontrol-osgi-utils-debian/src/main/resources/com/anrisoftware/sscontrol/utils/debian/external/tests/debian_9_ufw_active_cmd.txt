@@ -2,9 +2,9 @@
 theCommand="$0"
 echo "$theCommand $@"
 echo "$@" >> $theCommand.out
-if [[ "$1" == "ufw" ]]; then
-    echo "ufw not found"
-    exit 1
+if [[ "$1" = "status" ]]; then
+    echo "Status: active"
+    exit 0
 fi
 if [ "$#" -gt 0 ]; then
     cmd=($1)
