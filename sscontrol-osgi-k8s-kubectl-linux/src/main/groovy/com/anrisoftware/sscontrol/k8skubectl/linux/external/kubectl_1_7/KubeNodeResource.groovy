@@ -24,13 +24,18 @@ class KubeNodeResource {
 
     final Resource resource
 
+    final Object parent
+
     @Inject
     KubeNodeFactory nodeFactory
 
     @Inject
-    KubeNodeResource(@Assisted NamespacedKubernetesClient client, @Assisted Resource resource) {
+    KubeNodeResource(@Assisted NamespacedKubernetesClient client,
+    @Assisted Resource resource,
+    @Assisted Object parent) {
         this.client = client
         this.resource = resource
+        this.parent = parent
     }
 
     KubeNode getNode() {
@@ -39,7 +44,7 @@ class KubeNodeResource {
             throw new NoResourceFoundException(this, resource.labels)
         }
         def node = list.items[0]
-        nodeFactory.create(client, this, node)
+        nodeFactory.create(client, this, node, parent)
     }
 
     void waitNodeReady(def node, long amount, TimeUnit timeUnit) {

@@ -28,14 +28,20 @@ class KubeNode {
 
     final KNode node
 
+    final Object parent
+
     @Inject
     KubeNodeClientFactory nodeClientFactory
 
     @Inject
-    KubeNode(@Assisted NamespacedKubernetesClient client, @Assisted KubeNodeResource resource, @Assisted KNode node) {
+    KubeNode(@Assisted NamespacedKubernetesClient client,
+    @Assisted KubeNodeResource resource,
+    @Assisted KNode node,
+    @Assisted Object parent) {
         this.client = client
         this.resource = resource
         this.node = node
+        this.parent = parent
     }
 
     /**
@@ -52,7 +58,7 @@ class KubeNode {
     }
 
     def applyLabelToNode(String nodeLabel, String nodeValue, String key, String value) {
-        def res = nodeClientFactory.create client getNodeResource node.metadata.name
+        def res = nodeClientFactory.create client, parent getNodeResource node.metadata.name
         DoneableNode dn = res.resource.edit()
         NodeFluent.MetadataNested m = dn.editOrNewMetadata()
         if (key.endsWith("-")) {

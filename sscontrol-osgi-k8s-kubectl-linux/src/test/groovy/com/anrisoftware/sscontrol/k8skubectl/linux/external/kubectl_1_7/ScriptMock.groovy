@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
 import java.util.concurrent.ExecutorService
 
+import org.joda.time.Duration
+
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
@@ -18,6 +20,10 @@ class ScriptMock implements HostServiceScript {
 
     @Override
     Object run() {
+    }
+
+    Duration getKubectlTimeout() {
+        Duration.standardMinutes 2
     }
 
     @Override

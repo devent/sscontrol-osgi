@@ -12,8 +12,7 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
  */
 public interface KubectlClientFactory {
 
-    KubectlClient create(ClusterHost cluster);
+    KubectlClient create(ClusterHost cluster, Object parent);
 
-    KubectlClient create(NamespacedKubernetesClient client);
+    KubectlClient create(NamespacedKubernetesClient client, Object parent);
 }
-

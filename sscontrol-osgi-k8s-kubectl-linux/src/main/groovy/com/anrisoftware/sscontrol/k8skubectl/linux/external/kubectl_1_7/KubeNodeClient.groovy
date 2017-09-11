@@ -26,13 +26,13 @@ class KubeNodeClient extends KubectlClient {
     KubeNodeResourceFactory kubeNodeResourceFactory
 
     @AssistedInject
-    KubeNodeClient(@Assisted ClusterHost cluster) {
-        super(cluster)
+    KubeNodeClient(@Assisted ClusterHost cluster, @Assisted Object parent) {
+        super(cluster, parent)
     }
 
     @AssistedInject
-    KubeNodeClient(@Assisted NamespacedKubernetesClient client) {
-        super(client)
+    KubeNodeClient(@Assisted NamespacedKubernetesClient client, @Assisted Object parent) {
+        super(client, parent)
     }
 
     /**
@@ -63,18 +63,18 @@ class KubeNodeClient extends KubectlClient {
     KubeNode getNode(String label, String value) {
         def client = createClient()
         def r = client.nodes().withLabel(label, value)
-        kubeNodeResourceFactory.create client, r node
+        kubeNodeResourceFactory.create client, r, parent node
     }
 
     KubeNodeResource getNodeResource(String label, String value) {
         def client = createClient()
         def r = client.nodes().withLabel(label, value)
-        kubeNodeResourceFactory.create client, r
+        kubeNodeResourceFactory.create client, r, parent
     }
 
     KubeNodeResource getNodeResource(String name) {
         def client = createClient()
         def r = client.nodes().withName(name)
-        kubeNodeResourceFactory.create client, r
+        kubeNodeResourceFactory.create client, r, parent
     }
 }
