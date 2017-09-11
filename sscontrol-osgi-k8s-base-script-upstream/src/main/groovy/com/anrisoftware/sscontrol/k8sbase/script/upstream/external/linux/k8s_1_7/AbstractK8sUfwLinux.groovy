@@ -43,22 +43,44 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
 
     @Override
     Object run() {
+        if (!ufwAvailable) {
+            return
+        }
+        updatePodNetwork()
+        openPublicPorts()
     }
 
+    /**
+     * Checks that UFW client is available.
+     */
     boolean isUfwAvailable() {
         if (!ufw.ufwActive) {
-            log.debug 'No Ufw available.'
+            log.debug 'No Ufw available, nothing to do.'
             return false
         } else {
             return true
         }
     }
 
-    def updateFirewall() {
+    /**
+     * Updates the firewall for the pod network.
+     */
+    def updatePodNetwork() {
         K8s service = this.service
         shell privileged: true, st: """
-ufw allow from <vars.podNetwork> to <vars.address>
-""", vars: [podNetwork: service.cluster.podRange, address: advertiseAddress] call()
+ufw allow from <vars.podNetwork> to <parent.advertiseAddress>
+""", vars: [podNetwork: service.cluster.podRange] call()
+    }
+
+    /**
+     * Opens the public ports.
+     */
+    def openPublicPorts() {
+        K8s service = this.service
+        println publicTcpPorts
+        shell privileged: true, st: """
+<parent.publicTcpPorts:{p|ufw allow from any to <parent.advertiseAddress> port <p> proto tcp};separator="\n">
+""", vars: [:] call()
     }
 
     String getAdvertiseAddress() {
@@ -68,6 +90,13 @@ ufw allow from <vars.podNetwork> to <vars.address>
             return advertiseAddress.hostAddress
         } else {
             return advertiseAddress.toString()
+        }
+    }
+
+    List getPublicTcpPorts() {
+        def list = getScriptListProperty 'public_tcp_ports'
+        list.inject([]) { l, String v ->
+            l << v.replaceAll('-', ':')
         }
     }
 

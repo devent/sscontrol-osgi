@@ -954,6 +954,14 @@ echo \$file
                 }
     }
 
+    /**
+     * Returns a list script property.
+     */
+    List getScriptListProperty(String key,
+            ContextProperties defaults=defaultProperties) {
+        properties.getListProperty key, defaults
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
