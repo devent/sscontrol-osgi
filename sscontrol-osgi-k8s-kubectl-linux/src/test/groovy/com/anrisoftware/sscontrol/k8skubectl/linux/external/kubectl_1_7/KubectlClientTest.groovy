@@ -1,7 +1,5 @@
 package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
-import java.util.concurrent.TimeUnit
-
 import javax.inject.Inject
 
 import org.junit.Test
@@ -25,11 +23,11 @@ class KubectlClientTest extends AbstractFabricTest {
     }
 
     @Test
-    void "waitNodeReady"() {
+    void "createClient"() {
         createTestNode()
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost()
-        def kubectl = kubectlFactory.create script, cluster
-        kubectl.waitNodeReady 'node0', 10, TimeUnit.SECONDS
+        def kubectl = kubectlFactory.create cluster, script
+        kubectl.createClient()
     }
 }

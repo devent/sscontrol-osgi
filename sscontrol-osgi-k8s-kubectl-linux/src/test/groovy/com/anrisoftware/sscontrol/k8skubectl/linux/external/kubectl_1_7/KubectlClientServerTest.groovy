@@ -1,9 +1,12 @@
 package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
+import static org.junit.Assume.*
+
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
 
+import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -34,7 +37,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     void "waitNodeReady"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
-        def kubectl = nodeClientFactory.create cluster
+        def kubectl = nodeClientFactory.create cluster, script
         kubectl.waitNodeReady "robobeerun.com/node", "andrea-test-cluster", 10, TimeUnit.SECONDS
     }
 
@@ -42,7 +45,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     void "applyLabelToNode with key and value"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
-        def nodeClient = nodeClientFactory.create cluster
+        def nodeClient = nodeClientFactory.create cluster, script
         def nodeLabel = "robobeerun.com/node"
         def nodeValue = "andrea-test-cluster"
         nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", "foo"
@@ -60,7 +63,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
     void "applyLabelToNode with key and no value"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
-        def nodeClient = nodeClientFactory.create cluster
+        def nodeClient = nodeClientFactory.create cluster, script
         def nodeLabel = "robobeerun.com/node"
         def nodeValue = "andrea-test-cluster"
         nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", null
@@ -72,5 +75,12 @@ class KubectlClientServerTest extends AbstractFabricTest {
             def node = nodeClient.getNode nodeLabel, nodeValue
             assert !node.node.metadata.labels.containsKey("test")
         }
+    }
+
+    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
+
+    @Before
+    void beforeMethod() {
+        assumeTrue "$robobeeSocket available", new File(robobeeSocket).exists()
     }
 }

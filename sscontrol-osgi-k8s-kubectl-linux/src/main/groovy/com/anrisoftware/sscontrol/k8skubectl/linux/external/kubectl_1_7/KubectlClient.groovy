@@ -2,6 +2,8 @@ package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -25,19 +27,23 @@ class KubectlClient {
 
     ClusterHost cluster
 
+    Object parent
+
     @Inject
     UriBase64Renderer uriBase64Renderer
 
     NamespacedKubernetesClient client
 
     @AssistedInject
-    KubectlClient(@Assisted ClusterHost cluster) {
+    KubectlClient(@Assisted ClusterHost cluster, @Assisted Object parent) {
         this.cluster = cluster
+        this.parent = parent
     }
 
     @AssistedInject
-    KubectlClient(@Assisted NamespacedKubernetesClient client) {
+    KubectlClient(@Assisted NamespacedKubernetesClient client, @Assisted Object parent) {
         this.client = client
+        this.parent = parent
     }
 
     KubectlClient reuseClient(NamespacedKubernetesClient client) {
@@ -61,6 +67,8 @@ class KubectlClient {
 
     def buildConfig(URI hostUrl, Credentials credentials) {
         def config = new ConfigBuilder().withMasterUrl(hostUrl.toString())
+        Duration timeout = parent.kubectlTimeout
+        config.withWebsocketTimeout timeout.millis
         if (credentials.hasProperty('tls')) {
             Tls tls = credentials.tls
             if (tls.ca) {

@@ -11,5 +11,5 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 public interface KubeNodeResourceFactory {
 
     KubeNodeResource create(NamespacedKubernetesClient client,
-            @SuppressWarnings("rawtypes") Resource resource);
+            @SuppressWarnings("rawtypes") Resource resource, Object parent);
 }
