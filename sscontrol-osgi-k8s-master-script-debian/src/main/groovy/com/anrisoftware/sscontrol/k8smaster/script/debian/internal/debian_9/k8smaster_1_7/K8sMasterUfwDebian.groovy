@@ -37,14 +37,6 @@ class K8sMasterUfwDebian extends AbstractK8sUfwLinux {
     K8sMasterDebianProperties debianPropertiesProvider
 
     @Override
-    def run() {
-        if (!ufwAvailable) {
-            return
-        }
-        updateFirewall()
-    }
-
-    @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
     }

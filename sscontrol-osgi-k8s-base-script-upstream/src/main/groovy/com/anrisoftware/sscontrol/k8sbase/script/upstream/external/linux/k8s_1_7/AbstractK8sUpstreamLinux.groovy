@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.linux.k8s_1_
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -432,7 +434,7 @@ systemctl daemon-reload
      */
     KubeNodeClient createNodeClient() {
         K8s service = service
-        nodeClientFactory.create service.clusterHost
+        nodeClientFactory.create service.clusterHost, this
     }
 
     def getDefaultLogLevel() {
@@ -831,6 +833,10 @@ systemctl daemon-reload
 
     File getSysctlFile() {
         getFileProperty 'sysctl_file'
+    }
+
+    Duration getKubectlTimeout() {
+        properties.getDurationProperty 'kubectl_timeout', defaultProperties
     }
 
     @Override
