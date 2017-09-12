@@ -167,8 +167,9 @@ service "etcd" with {
             name: "server_tls_gateway",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+def host = targets['all'][0]
 service "etcd" with {
-    bind "https://127.0.0.1:22379"
+    bind "https://${host.hostAddress}:22379"
     gateway endpoints: "https://etcd-0.robobee-test.test:2379"
     client certs.client
 }
@@ -180,7 +181,7 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-gateway.service'), "${args.test.name}_etcd_gateway_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 127.0.0.1:22379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep :22379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test
