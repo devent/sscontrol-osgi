@@ -4,4 +4,4 @@ export ETCDCTL_CACERT="/etc/etcd/ssl/client_ca.pem"
 export ETCDCTL_CERT="/etc/etcd/ssl/client_cert.pem"
 export ETCDCTL_KEY="/etc/etcd/ssl/client_key.pem"
 
-export ETCDCTL_ENDPOINTS=https://127.0.0.1:22379
+export ETCDCTL_ENDPOINTS=https://192.168.56.200:22379
