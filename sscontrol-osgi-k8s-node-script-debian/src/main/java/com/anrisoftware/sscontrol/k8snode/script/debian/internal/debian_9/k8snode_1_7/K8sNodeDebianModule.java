@@ -44,6 +44,9 @@ public class K8sNodeDebianModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, K8sNodeSystemdDebian.class)
                 .build(K8sNodeSystemdDebianFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, K8sNodeDockerDebian.class)
+                .build(K8sNodeDockerDebianFactory.class));
     }
 
 }
