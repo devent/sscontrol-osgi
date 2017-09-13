@@ -49,6 +49,8 @@ class K8sMasterDebian extends ScriptBase {
 
     DebianUtils debian
 
+    K8sMasterSystemdDebian systemd
+
     @Inject
     void setDebian(Debian_9_UtilsFactory factory) {
         this.debian = factory.create this
@@ -59,17 +61,22 @@ class K8sMasterDebian extends ScriptBase {
         this.upstream = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
+    @Inject
+    void setSystemdDebianFactory(K8sMasterSystemdDebianFactory factory) {
+        this.systemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     def run() {
         dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        upstream.stopServices()
+        systemd.stopServices()
         debian.installPackages()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.createService()
-        upstream.startServices()
-        upstream.enableServices()
+        systemd.startServices()
+        systemd.enableServices()
         upstream.postInstall()
     }
 

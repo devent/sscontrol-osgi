@@ -25,8 +25,7 @@ import com.anrisoftware.sscontrol.k8smaster.upstream.script.external.k8s_1_7.K8s
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Master service from the upstream sources
- * for Systemd and Debian.
+ * Configures the K8s-Master service from the upstream sources Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -37,24 +36,10 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
 
-    K8sMasterSystemdDebian systemd
-
     KubectlClusterDebian kubectlClusterLinux
 
     @Override
     Object run() {
-    }
-
-    def stopServices() {
-        systemd.stopServices()
-    }
-
-    def startServices() {
-        systemd.startServices()
-    }
-
-    def enableServices() {
-        systemd.enableServices()
     }
 
     def setupDefaults() {
@@ -103,11 +88,6 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     @Inject
     void setKubectlClusterLinuxFactory(KubectlClusterDebianFactory factory) {
         this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
-    @Inject
-    void setSystemdDebianFactory(K8sMasterSystemdDebianFactory factory) {
-        this.systemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
