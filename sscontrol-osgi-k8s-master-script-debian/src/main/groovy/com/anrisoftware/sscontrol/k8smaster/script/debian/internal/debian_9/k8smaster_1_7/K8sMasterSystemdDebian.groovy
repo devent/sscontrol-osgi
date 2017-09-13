@@ -25,8 +25,7 @@ import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.systemd.k8s_1
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Master service from the upstream sources
- * for Systemd and Debian.
+ * Configures the K8s-Master service for Systemd.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -36,8 +35,6 @@ class K8sMasterSystemdDebian extends AbstractK8sSystemdLinux {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
-
-    KubectlClusterDebian kubectlClusterLinux
 
     @Override
     def run() {
