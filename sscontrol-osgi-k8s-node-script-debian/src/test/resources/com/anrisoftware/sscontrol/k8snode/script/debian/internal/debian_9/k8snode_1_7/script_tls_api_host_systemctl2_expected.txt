@@ -1,0 +1,10 @@
+daemon-reload
+stop docker
+start docker
+status docker
+enable docker
+stop kubelet
+daemon-reload
+start kubelet
+status kubelet
+enable kubelet
