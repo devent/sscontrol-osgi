@@ -51,3 +51,4 @@ mv /tmp/junit/junit/basename https://storage.googleapis.com/kubernetes-release/r
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
