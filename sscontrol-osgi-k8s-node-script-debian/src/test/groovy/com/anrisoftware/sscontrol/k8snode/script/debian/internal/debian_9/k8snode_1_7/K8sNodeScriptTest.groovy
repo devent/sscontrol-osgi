@@ -54,6 +54,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource K8sNodeScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
+                assertFileResource K8sNodeScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_kube_options.conf", "${args.test.name}_kube_options_conf_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/usr/local/bin'), "host-rkt", "${args.test.name}_host_rkt_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/usr/local/bin'), "kubelet-wrapper", "${args.test.name}_kubelet_wrapper_expected.txt"

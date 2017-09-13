@@ -1,3 +1,4 @@
+/var/lib/robobee/tmp/10_kube_options.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/10_kube_options.conf
 /var/lib/robobee/tmp/robobeekubelet_tls_ca /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_ca.pem
 /var/lib/robobee/tmp/robobeekubelet_tls_cert /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_cert.pem
 /var/lib/robobee/tmp/robobeekubelet_tls_key /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_key.pem
