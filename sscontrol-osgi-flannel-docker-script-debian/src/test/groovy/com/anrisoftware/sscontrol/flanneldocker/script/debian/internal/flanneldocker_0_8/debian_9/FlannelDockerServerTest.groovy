@@ -70,7 +70,7 @@ service "flannel-docker" with {
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "flannel-docker" with {
     node << "192.168.56.200"
-    etcd "https://127.0.0.1:22379" with {
+    etcd "https://192.168.56.200:22379" with {
         tls certs
     }
 }
