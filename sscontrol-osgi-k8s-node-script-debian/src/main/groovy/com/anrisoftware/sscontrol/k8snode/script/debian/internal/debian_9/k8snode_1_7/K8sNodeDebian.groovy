@@ -42,6 +42,9 @@ class K8sNodeDebian extends ScriptBase {
     @Inject
     KubectlUpstreamDebianFactory kubectlUpstreamFactory
 
+    @Inject
+    K8sNodeUfwDebianFactory ufwFactory
+
     DebianUtils debian
 
     K8sNodeUpstreamDebian upstream
@@ -70,6 +73,7 @@ class K8sNodeDebian extends ScriptBase {
         debian.installPackages()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
+        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.createService()
         systemd.startServices()
         systemd.enableServices()

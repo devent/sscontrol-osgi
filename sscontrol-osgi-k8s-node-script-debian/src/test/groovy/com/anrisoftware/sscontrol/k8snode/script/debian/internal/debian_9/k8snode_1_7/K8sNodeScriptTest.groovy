@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8snode.script.debian.internal.debian_9.k8sno
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
@@ -88,25 +89,26 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
     }
 
     @Test
-    void "tls_api_target"() {
+    void "script_tls_api_target"() {
         def test = [
-            name: "tls_api_target",
+            name: "script_tls_api_target",
             script: '''
 service "ssh", group: "master" with {
     host "master.robobee.test", socket: localhostSocket
 }
 service "ssh", group: "nodes" with {
-    host "localhost"
+    host "localhost", socket: localhostSocket
 }
 service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
     plugin "flannel"
     plugin "calico"
     kubelet.with {
-        tls cert: "$certCertPem", key: "$certKeyPem"
-        client ca: "$certCaPem", cert: "$certCertPem", key: "$certKeyPem"
+        tls certs
+        client certs
     }
 }
 ''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -121,18 +123,54 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
     }
 
     @Test
-    void "taints"() {
+    void "script_ufw"() {
         def test = [
-            name: "taints",
+            name: "script_ufw",
             script: '''
 service "ssh", group: "master" with {
     host "master.robobee.test", socket: localhostSocket
 }
 service "ssh", group: "nodes" with {
-    host "localhost"
+    host "localhost", socket: localhostSocket
+}
+service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
+    plugin "flannel"
+    plugin "calico"
+    kubelet.with {
+        tls certs
+        client certs
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sNodeScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    //@Test
+    void "script_taints"() {
+        def test = [
+            name: "script_taints",
+            script: '''
+service "ssh", group: "master" with {
+    host "master.robobee.test", socket: localhostSocket
+}
+service "ssh", group: "nodes" with {
+    host "localhost", socket: localhostSocket
 }
 service "k8s-cluster", target: "master" with {
-    credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', ca: certs.ca
 }
 service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168.0.200', api: targets['master'] with {
     plugin "flannel"
@@ -140,6 +178,7 @@ service "k8s-node", name: "andrea-cluster", target: "nodes", advertise: '192.168
     taint << "robobeerun.com/dedicated=:NoSchedule"
 }
 ''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
             expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->

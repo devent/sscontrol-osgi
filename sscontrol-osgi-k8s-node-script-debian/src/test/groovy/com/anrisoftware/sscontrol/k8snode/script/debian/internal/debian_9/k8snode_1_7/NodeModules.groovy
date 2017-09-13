@@ -36,7 +36,6 @@ import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.linux.k8s_1_7
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxModule
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlLinuxModule
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.debian_9.k8snode_1_7.K8sNodeDebianModule
 import com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8s_1_7.K8sNodeUpstreamModule
 import com.anrisoftware.sscontrol.k8snode.service.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
@@ -46,6 +45,7 @@ import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
 
 /**
  *
@@ -71,6 +71,7 @@ class NodeModules {
             new KubectlLinuxModule(),
             new DebianUtilsModule(),
             new SystemdUtilsModule(),
+            new UfwUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

@@ -44,6 +44,7 @@ class K8sNodeUpstreamDebian extends K8sNodeUpstreamSystemd {
     def setupDefaults() {
         setupMiscDefaults()
         setupClusterDefaults()
+        setupClusterHostDefaults()
         setupClusterApiDefaults()
         setupKubeletDefaults()
         setupPluginsDefaults()
