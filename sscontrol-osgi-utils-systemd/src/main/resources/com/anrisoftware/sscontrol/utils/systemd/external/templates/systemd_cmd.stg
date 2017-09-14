@@ -10,7 +10,7 @@ set -e
 
 startCmd(parent, vars) ::= <<
 set -e
-<vars.services:{s|systemctl start <s> && systemctl status <s>};separator="\n">
+<vars.services:systemctlStart(parent, vars);separator="\n">
 >>
 
 restartCmd(parent, vars) ::= <<
@@ -25,4 +25,19 @@ set -e
 
 findService(parent, vars, service) ::= <<
 systemctl list-units | grep <service>.service
+>>
+
+systemctlStart(service, parent, vars) ::= <%
+<if(vars.delayed)>set +e && <endif>systemctl start <service> <if(vars.delayed)>--no-block<endif> && <systemctlStatus(service, parent, vars)>
+%>
+
+systemctlStatus(service, parent, vars) ::= <<
+systemctl status <service>
+<if(vars.delayed)>
+ret=\$?
+if [[ \$ret -eq 3 ]]; then
+ret=0
+fi
+exit \$ret
+<endif>
 >>

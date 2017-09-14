@@ -306,7 +306,7 @@ chmod -R o-rwX $dir
             return
         }
         def services = this.services
-        systemd.startServices services: services, timeout: timeoutMiddle
+        systemd.startServices services: services, timeout: timeoutMiddle, delayed: true
     }
 
     def restartServices() {
