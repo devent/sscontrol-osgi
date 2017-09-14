@@ -295,13 +295,17 @@ chmod -R o-rwX $dir
 
     def startServices() {
         Etcd service = service
-        def services = this.services
         if (service.proxy) {
-            services = this.proxyServices
+            def services = this.proxyServices
+            systemd.startServices services: services, timeout: timeoutShort
+            return
         }
         if (service.gateway) {
-            services = this.gatewayServices
+            def services = this.gatewayServices
+            systemd.startServices services: services, timeout: timeoutShort
+            return
         }
+        def services = this.services
         systemd.startServices services: services, timeout: timeoutMiddle
     }
 
