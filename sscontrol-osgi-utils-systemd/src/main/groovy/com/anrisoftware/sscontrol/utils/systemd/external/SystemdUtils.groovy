@@ -110,9 +110,10 @@ class SystemdUtils {
     def startServices(Map args) {
         log.info 'Starting {}.', args
         Map a = new HashMap(args)
-        a.vars = a.vars == null ? [:] : a.vars
+        a.vars = a.vars ? a.vars : [:]
         a.vars.services = args.services
-        a.timeout = args.timeout == null ? script.timeoutShort : args.timeout
+        a.vars.delayed = args.delayed ? args.delayed : false
+        a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.privileged = true
         a.resource = cmdTemplate
         a.name = "startCmd"
