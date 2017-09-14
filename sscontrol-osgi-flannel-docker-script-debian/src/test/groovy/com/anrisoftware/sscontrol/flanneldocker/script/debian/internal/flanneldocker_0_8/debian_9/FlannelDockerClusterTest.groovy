@@ -42,10 +42,9 @@ service "ssh" with {
     host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
 }
-targets['all'].eachWithIndex { host, i ->
+targets['default'].eachWithIndex { host, i ->
 service "flannel-docker", target: host with {
-    node << "192.168.56.200"
-    node << "192.168.56.201"
+    node << "default"
     debug "error", level: 1
     bind name: "enp0s8"
     etcd "https://${host.hostAddress}:22379" with {

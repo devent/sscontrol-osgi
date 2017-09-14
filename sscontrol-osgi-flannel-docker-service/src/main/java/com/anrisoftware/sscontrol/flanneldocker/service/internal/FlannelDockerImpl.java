@@ -48,6 +48,8 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -94,7 +96,7 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     private final BindingImplFactory bindingFactory;
 
-    private final List<String> nodes;
+    private final List<Object> nodes;
 
     @Inject
     FlannelDockerImpl(FlannelDockerImplLogger log,
@@ -254,17 +256,19 @@ public class FlannelDockerImpl implements FlannelDocker {
 
     /**
      * <pre>
-     * node << 'node0.test'
+     * node &lt;&lt; 'node0.test'
+     * node &lt;&lt; nodes
      * </pre>
      */
-    public List<String> getNode() {
-        return stringListStatement(new ListProperty() {
+    public List<Object> getNode() {
+        return GeneticListPropertyUtil.<Object>geneticListStatement(
+                new GeneticListProperty<Object>() {
 
-            @Override
-            public void add(String property) {
-                nodes.add(property);
-            }
-        });
+                    @Override
+                    public void add(Object property) {
+                        nodes.add(property);
+                    }
+                });
     }
 
     @Override
@@ -313,7 +317,7 @@ public class FlannelDockerImpl implements FlannelDocker {
     }
 
     @Override
-    public List<String> getNodes() {
+    public List<Object> getNodes() {
         return nodes;
     }
 

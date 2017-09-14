@@ -13,33 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.service.external;
+package com.anrisoftware.sscontrol.flanneldocker.script.upstream.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
-import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>Flannel-Docker</i> service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface FlannelDocker extends HostService {
+public class FlannelDockerUpstreamModule extends AbstractModule {
 
-    DebugLogging getDebugLogging();
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(NodesTargetsAddressList.class, NodesTargetsAddressList.class)
+                .build(NodesTargetsAddressListFactory.class));
+    }
 
-    Binding getBinding();
-
-    Etcd getEtcd();
-
-    Network getNetwork();
-
-    Backend getBackend();
-
-    /**
-     * Returns the list of flanneld nodes.
-     */
-    List<Object> getNodes();
 }
