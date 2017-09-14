@@ -204,9 +204,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "nodes"() {
+    void "nodes_addresses"() {
         def test = [
-            name: "nodes",
+            name: "nodes_addresses",
             input: '''
 service "flannel-docker" with {
     node << "node-0.test"

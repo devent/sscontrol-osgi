@@ -146,15 +146,15 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "nodes_ufw"() {
+    void "nodes_addresses_ufw"() {
         def test = [
-            name: "nodes_ufw",
+            name: "nodes_addresses_ufw",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "flannel-docker" with {
-    node << "10.0.0.1"
-    node << "10.0.0.2"
-    node << "10.0.0.3"
+    node << "node://10.0.0.1"
+    node << "node://10.0.0.2"
+    node << "node://10.0.0.3"
     etcd "http://127.0.0.1:2379"
 }
 ''',
@@ -169,6 +169,40 @@ service "flannel-docker" with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource FlannelDockerScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource FlannelDockerScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "nodes_targets_ufw"() {
+        def test = [
+            name: "nodes_targets_ufw",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", group: "masters" with {
+    host "localhost", socket: localhostSocket
+}
+service "ssh", group: "nodes" with {
+    host "localhost", socket: localhostSocket
+}
+service "flannel-docker" with {
+    node << "nodes"
+    node << "nodes"
+    etcd "http://127.0.0.1:2379"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: testCerts],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
                 assertFileResource FlannelDockerScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
             },
         ]
