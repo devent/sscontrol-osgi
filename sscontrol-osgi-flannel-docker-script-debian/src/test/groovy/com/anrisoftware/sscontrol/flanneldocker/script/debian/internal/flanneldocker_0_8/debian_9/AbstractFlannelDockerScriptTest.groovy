@@ -65,6 +65,7 @@ abstract class AbstractFlannelDockerScriptTest extends AbstractFlannelDockerRunn
             'gpg',
             'curl',
             'mktemp',
+            'docker',
         ]
     }
 }

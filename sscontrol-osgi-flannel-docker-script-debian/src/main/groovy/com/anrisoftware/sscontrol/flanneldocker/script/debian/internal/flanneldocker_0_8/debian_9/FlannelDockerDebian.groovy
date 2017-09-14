@@ -49,6 +49,8 @@ class FlannelDockerDebian extends ScriptBase {
     @Inject
     FlannelDockerUfwFactory ufwFactory
 
+    IperfConnectionCheck iperf
+
     DebianUtils debian
 
     SystemdUtils systemd
@@ -63,6 +65,11 @@ class FlannelDockerDebian extends ScriptBase {
         this.systemd = factory.create this
     }
 
+    @Inject
+    void setIperfConnectionCheckFactory(IperfConnectionCheckFactory factory) {
+        this.iperf = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     def run() {
         systemd.stopServices()
@@ -71,6 +78,15 @@ class FlannelDockerDebian extends ScriptBase {
         upstreamSystemdFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.startServices()
+        def iperfServers = []
+        try {
+            iperfServers = iperf.startServers()
+            iperf.startClients iperfServers
+        } finally {
+            if (!iperfServers.empty) {
+                iperf.stopServers(iperfServers)
+            }
+        }
     }
 
     @Override

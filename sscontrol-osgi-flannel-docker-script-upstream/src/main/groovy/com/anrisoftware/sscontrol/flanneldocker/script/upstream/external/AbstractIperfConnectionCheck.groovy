@@ -24,6 +24,7 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 
 import groovy.util.logging.Slf4j
 
@@ -36,6 +37,9 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractIperfConnectionCheck extends ScriptBase {
 
+    @Inject
+    NodesTargetsListFactory nodesFactory
+
     TemplateResource iperfCmdsResource
 
     @Inject
@@ -44,11 +48,38 @@ abstract class AbstractIperfConnectionCheck extends ScriptBase {
         this.iperfCmdsResource = t.getResource 'iperf_cmds'
     }
 
-    def startServers() {
+    List startServers() {
         log.info 'Stars iperf servers.'
         FlannelDocker service = this.service
-        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
-        shell resource: iperfCmdsResource, name: 'installCmd' call()
+        def list = []
+        nodesFactory.create(service, scriptsRepository, this).nodes.each {
+            def p = shell target: it, privileged: true, outString: true, resource: iperfCmdsResource, name: 'startServer' call()
+            list << parseServerOutput(it, p.out)
+        }
+        list
+    }
+
+    def stopServers(List servers) {
+        log.info 'Stop iperf servers.'
+        FlannelDocker service = this.service
+        servers.each { Map map ->
+            shell target: map.host, privileged: true, resource: iperfCmdsResource, name: 'stopServer', vars: [container: map] call()
+        }
+    }
+
+    def startClients(List servers) {
+        log.info 'Stars iperf clients.'
+        FlannelDocker service = this.service
+        servers.each { Map map ->
+            shell privileged: true, resource: iperfCmdsResource, name: 'startClient', vars: [container: map] call()
+        }
+    }
+
+    Map parseServerOutput(SshHost host, String out) {
+        String[] s = out.split(";")
+        def name = (s[0] =~ /Container: (.*)/)[0][1]
+        def address = (s[1] =~ /Address: (.*)/)[0][1]
+        [host: host, name: name, address: address]
     }
 
     @Override

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.script.upstream.external;
+package com.anrisoftware.sscontrol.flanneldocker.script.debian.internal.flanneldocker_0_8.debian_9;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -24,16 +23,5 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class FlannelDockerUpstreamModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(NodesTargetsAddressList.class, NodesTargetsAddressList.class)
-                .build(NodesTargetsAddressListFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(NodesTargetsList.class, NodesTargetsList.class)
-                .build(NodesTargetsListFactory.class));
-    }
-
+public interface IperfConnectionCheckFactory extends HostServiceScriptService {
 }
