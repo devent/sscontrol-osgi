@@ -188,7 +188,7 @@ service "ssh", group: "nodes" with {
     host "localhost", socket: localhostSocket
 }
 service "flannel-docker" with {
-    node << "nodes"
+    node << "masters"
     node << "nodes"
     etcd "http://127.0.0.1:2379"
 }
