@@ -47,7 +47,7 @@ service "flannel-docker", target: host with {
     node << "default"
     debug "error", level: 1
     bind name: "enp0s8"
-    etcd "https://${host.hostAddress}:22379" with {
+    etcd "https://10.10.10.7:22379" with {
         tls certs
     }
 }
