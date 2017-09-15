@@ -45,7 +45,7 @@ service "ssh", group: "masters" with {
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
 }
-service "k8s-master", name: "andrea-test-cluster", advertise: "192.168.56.200" with {
+service "k8s-master", name: "andrea-master-0-test", advertise: "192.168.56.200" with {
     bind secure: "192.168.56.200"
     tls certs.tls
     authentication "cert", ca: certs.tls.ca
