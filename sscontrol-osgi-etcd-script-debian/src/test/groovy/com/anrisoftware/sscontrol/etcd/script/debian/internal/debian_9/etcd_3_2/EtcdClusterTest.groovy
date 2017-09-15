@@ -78,7 +78,7 @@ service "ssh" with {
 }
 targets['all'].eachWithIndex { host, i ->
 service "etcd", target: host with {
-    bind "https://${host.hostAddress}:22379"
+    bind "https://10.10.10.7:22379"
     gateway endpoints: "https://etcd-${i}.robobee-test.test:2379"
     client certs.client
 }
