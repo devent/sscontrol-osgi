@@ -302,6 +302,34 @@ service "etcd" with {
         doTest test
     }
 
+    @Test
+    void "script_vnetwork_gateway"() {
+        def test = [
+            name: "script_vnetwork_gateway",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "etcd" with {
+    bind interface: "enp0s8:1", "http://10.10.10.7:22379"
+    gateway endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd-gateway.service", "${args.test.name}_etcd_gateway_service_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd-gateway.conf", "${args.test.name}_etcd_gateway_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE

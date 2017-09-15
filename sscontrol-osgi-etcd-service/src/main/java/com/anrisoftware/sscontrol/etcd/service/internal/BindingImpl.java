@@ -36,6 +36,8 @@ public class BindingImpl implements Binding {
 
     private URI address;
 
+    private String binterface;
+
     @AssistedInject
     BindingImpl() {
         this(new HashMap<String, Object>());
@@ -63,13 +65,27 @@ public class BindingImpl implements Binding {
         return address;
     }
 
+    public void setInterface(String binterface) {
+        this.binterface = binterface;
+    }
+
+    @Override
+    public String getInterface() {
+        return binterface;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("address", getAddress())
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     private void parseArgs(Map<String, Object> args) throws URISyntaxException {
+        parseAddress(args);
+        parseInterface(args);
+    }
+
+    private void parseAddress(Map<String, Object> args)
+            throws URISyntaxException {
         Object v = args.get("address");
         if (v != null) {
             if (v instanceof URI) {
@@ -77,6 +93,13 @@ public class BindingImpl implements Binding {
             } else {
                 this.address = new URI(v.toString());
             }
+        }
+    }
+
+    private void parseInterface(Map<String, Object> args) {
+        Object v = args.get("interface");
+        if (v != null) {
+            setInterface(v.toString());
         }
     }
 }

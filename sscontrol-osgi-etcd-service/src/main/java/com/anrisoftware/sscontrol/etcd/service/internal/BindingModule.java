@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.etcd.service.internal;
 
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
-import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
+import com.anrisoftware.sscontrol.etcd.service.external.BindingFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

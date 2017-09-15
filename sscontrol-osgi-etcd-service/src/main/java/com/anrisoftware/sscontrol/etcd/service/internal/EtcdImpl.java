@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
-import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
+import com.anrisoftware.sscontrol.etcd.service.external.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Client;
 import com.anrisoftware.sscontrol.etcd.service.external.Etcd;
 import com.anrisoftware.sscontrol.etcd.service.external.EtcdService;
@@ -192,6 +192,17 @@ public class EtcdImpl implements Etcd {
      * </pre>
      */
     public void bind(String address) {
+        Map<String, Object> a = new HashMap<>();
+        a.put("address", address);
+        bind(a);
+    }
+
+    /**
+     * <pre>
+     * bind interface: "enp0s8:1", "http://10.10.10.7:22379"
+     * </pre>
+     */
+    public void bind(Map<String, Object> args, String address) {
         Map<String, Object> a = new HashMap<>();
         a.put("address", address);
         bind(a);
