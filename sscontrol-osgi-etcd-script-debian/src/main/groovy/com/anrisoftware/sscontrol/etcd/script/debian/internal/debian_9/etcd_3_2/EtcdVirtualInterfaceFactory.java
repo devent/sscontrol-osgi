@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.service.external;
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2;
 
-import java.net.URI;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * <i>Binding</i>.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface Binding {
-
-    String getNetwork();
-
-    URI getAddress();
+public interface EtcdVirtualInterfaceFactory extends HostServiceScriptService {
 }

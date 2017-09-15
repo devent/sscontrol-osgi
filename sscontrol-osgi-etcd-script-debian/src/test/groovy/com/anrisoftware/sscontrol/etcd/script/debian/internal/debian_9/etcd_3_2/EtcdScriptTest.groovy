@@ -49,9 +49,9 @@ service "etcd", member: "default"
                 assertFileResource EtcdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource EtcdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 try {
-                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl1_expected.txt"
                 } catch (AssertionError e) {
-                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_alternative_expected.txt"
+                    assertFileResource EtcdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl2_expected.txt"
                 }
                 assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
@@ -309,11 +309,16 @@ service "etcd" with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
-    bind interface: "enp0s8:1", "http://10.10.10.7:22379"
+    bind network: "enp0s8:1", "http://10.10.10.7:22379"
     gateway endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket],
+            before: { Map test ->
+                def dir = new File(test.dir, '/etc/network')
+                dir.mkdirs()
+                createFile EtcdScriptTest.class.getResource("debian_network_interfaces.txt"), dir, 'interfaces'
+            },
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->

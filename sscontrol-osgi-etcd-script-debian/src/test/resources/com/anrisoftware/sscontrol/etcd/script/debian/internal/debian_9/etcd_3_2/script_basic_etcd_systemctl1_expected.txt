@@ -2,5 +2,5 @@ list-units
 stop etcd
 daemon-reload
 enable etcd
-start etcd
+start etcd --no-block
 status etcd

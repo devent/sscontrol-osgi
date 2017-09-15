@@ -280,12 +280,12 @@ service "etcd" with {
     }
 
     @Test
-    void "gateway_interface"() {
+    void "gateway_network"() {
         def test = [
-            name: 'gateway_interface',
+            name: 'gateway_network',
             input: '''
 service "etcd" with {
-    bind interface: "enp0s8:1", "http://10.10.10.7:22379"
+    bind network: "enp0s8:1", "http://10.10.10.7:22379"
 }
 ''',
             expected: { HostServices services ->
@@ -293,6 +293,7 @@ service "etcd" with {
                 Etcd s = services.getServices('etcd')[0]
                 assert s.bindings.size() == 1
                 assert s.bindings[0].address.toString() == 'http://10.10.10.7:22379'
+                assert s.bindings[0].network == 'enp0s8:1'
             },
         ]
         doTest test
