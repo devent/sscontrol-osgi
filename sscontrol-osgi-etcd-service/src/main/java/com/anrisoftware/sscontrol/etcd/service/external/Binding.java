@@ -25,14 +25,7 @@ import java.net.URI;
  */
 public interface Binding {
 
-    /**
-     * 
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    public interface BindingFactory extends BindingService {
-    }
+    String getInterface();
 
     URI getAddress();
 }

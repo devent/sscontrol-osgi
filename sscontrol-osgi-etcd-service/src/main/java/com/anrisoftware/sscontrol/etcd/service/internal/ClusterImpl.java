@@ -25,8 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
+import com.anrisoftware.sscontrol.etcd.service.external.BindingFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Cluster;
-import com.anrisoftware.sscontrol.etcd.service.external.Binding.BindingFactory;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
