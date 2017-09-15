@@ -36,7 +36,7 @@ public class BindingImpl implements Binding {
 
     private URI address;
 
-    private String binterface;
+    private String network;
 
     @AssistedInject
     BindingImpl() {
@@ -65,13 +65,13 @@ public class BindingImpl implements Binding {
         return address;
     }
 
-    public void setInterface(String binterface) {
-        this.binterface = binterface;
+    public void setNetwork(String binterface) {
+        this.network = binterface;
     }
 
     @Override
-    public String getInterface() {
-        return binterface;
+    public String getNetwork() {
+        return network;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BindingImpl implements Binding {
 
     private void parseArgs(Map<String, Object> args) throws URISyntaxException {
         parseAddress(args);
-        parseInterface(args);
+        parseNetwork(args);
     }
 
     private void parseAddress(Map<String, Object> args)
@@ -96,10 +96,10 @@ public class BindingImpl implements Binding {
         }
     }
 
-    private void parseInterface(Map<String, Object> args) {
-        Object v = args.get("interface");
+    private void parseNetwork(Map<String, Object> args) {
+        Object v = args.get("network");
         if (v != null) {
-            setInterface(v.toString());
+            setNetwork(v.toString());
         }
     }
 }

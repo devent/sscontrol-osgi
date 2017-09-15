@@ -44,6 +44,9 @@ class EtcdDebian extends ScriptBase {
     @Inject
     EtcdDefaultsFactory etcdDefaultsFactory
 
+    @Inject
+    EtcdVirtualInterfaceFactory virtualInterfaceFactory
+
     EtcdUpstreamSystemdDebian etcdUpstreamSystemd
 
     DebianUtils debian
@@ -70,6 +73,7 @@ class EtcdDebian extends ScriptBase {
         etcdDefaultsFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         etcdUpstreamSystemd.stopServices()
         debian.installPackages()
+        virtualInterfaceFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         etcdUfw.run()
         etcdUpstreamSystemd.run()

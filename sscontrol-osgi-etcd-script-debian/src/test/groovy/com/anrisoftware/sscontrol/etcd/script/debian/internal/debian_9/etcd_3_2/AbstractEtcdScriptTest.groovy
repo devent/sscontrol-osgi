@@ -58,7 +58,9 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
             'useradd',
             'tar',
             'gpg',
-            'dpkg'
+            'dpkg',
+            'ifdown',
+            'ifup',
         ]
     }
 }

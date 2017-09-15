@@ -1,0 +1,14 @@
+/*
+ * Network configuration.
+ *
+ * Mandatory
+ *
+ * vars.network
+ * vars.address
+ */
+networkConfig(parent, vars) ::= <<
+auto <vars.network>
+iface <vars.network> inet static
+  address <vars.address>
+  netmask 255.255.255.252
+>>

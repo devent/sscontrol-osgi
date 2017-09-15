@@ -199,11 +199,11 @@ public class EtcdImpl implements Etcd {
 
     /**
      * <pre>
-     * bind interface: "enp0s8:1", "http://10.10.10.7:22379"
+     * bind network: "enp0s8:1", "http://10.10.10.7:22379"
      * </pre>
      */
     public void bind(Map<String, Object> args, String address) {
-        Map<String, Object> a = new HashMap<>();
+        Map<String, Object> a = new HashMap<>(args);
         a.put("address", address);
         bind(a);
     }
