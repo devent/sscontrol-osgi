@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianService.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -95,15 +93,5 @@ class EtcdUfw extends ScriptBase {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

@@ -54,6 +54,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesServi
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -119,6 +120,8 @@ public class EtcdImpl implements Etcd {
 
     private Gateway gateway;
 
+    private SshHost checkOn;
+
     @Inject
     EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
             BindingFactory bindingFactory, TlsFactory tlsFactory,
@@ -132,6 +135,7 @@ public class EtcdImpl implements Etcd {
         this.tls = tlsFactory.create();
         this.tlsFactory = tlsFactory;
         this.authentications = new ArrayList<>();
+        this.checkOn = null;
         parseArgs(args);
     }
 
@@ -336,6 +340,17 @@ public class EtcdImpl implements Etcd {
         return gateway(new HashMap<String, Object>());
     }
 
+    /**
+     * <pre>
+     * check on: targets.default[0]
+     * </pre>
+     */
+    public void check(Map<String, Object> args) {
+        Object v = args.get("on");
+        assertThat("check on=null", v, notNullValue());
+        this.checkOn = (SshHost) v;
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -411,21 +426,46 @@ public class EtcdImpl implements Etcd {
         return gateway;
     }
 
+    public void setCheckOn(SshHost checkOn) {
+        this.checkOn = checkOn;
+    }
+
+    @Override
+    public SshHost getCheckOn() {
+        return checkOn;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
+        parseTargets(args);
+        parseMember(args);
+        parseCheck(args);
+    }
+
+    private void parseCheck(Map<String, Object> args) {
+        Object v = args.get("check");
+        if (v != null) {
+            setCheckOn((SshHost) v);
+        }
+    }
+
+    private void parseMember(Map<String, Object> args) {
+        Object v = args.get("member");
+        if (v != null) {
+            setMemberName(v.toString());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
             targets.addAll((List<TargetHost>) v);
-        }
-        v = args.get("member");
-        if (v != null) {
-            setMemberName(v.toString());
         }
     }
 

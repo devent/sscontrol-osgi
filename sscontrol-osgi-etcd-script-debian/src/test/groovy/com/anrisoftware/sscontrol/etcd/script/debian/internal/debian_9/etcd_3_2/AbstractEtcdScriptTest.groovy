@@ -40,6 +40,9 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createCommand whichufwnotfoundCommand, dir, 'which'
+        def d = new File(dir, '/usr/local/share')
+        d.mkdirs()
+        createFile EtcdScriptTest.class.getResource("etcdctl_vars.txt"), d, 'etcdctl-vars'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -61,6 +64,8 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
             'dpkg',
             'ifdown',
             'ifup',
+            'source',
+            'etcdctl',
         ]
     }
 }

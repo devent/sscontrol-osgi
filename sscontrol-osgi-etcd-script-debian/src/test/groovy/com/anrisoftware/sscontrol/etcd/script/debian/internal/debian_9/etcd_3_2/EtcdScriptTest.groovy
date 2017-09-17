@@ -335,6 +335,32 @@ service "etcd" with {
         doTest test
     }
 
+    @Test
+    void "script_check_on"() {
+        def test = [
+            name: "script_check_on",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "etcd", member: "default" with {
+    check on: targets[0]
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource EtcdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource EtcdScriptTest, dir, "etcdctl.out", "${args.test.name}_etcdctl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE

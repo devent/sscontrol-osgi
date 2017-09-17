@@ -1,0 +1,6 @@
+checkEtcd(parent, vars) ::= <<
+set -e
+source <parent.etcdctlVariablesFile>
+etcdctl member list
+
+>>

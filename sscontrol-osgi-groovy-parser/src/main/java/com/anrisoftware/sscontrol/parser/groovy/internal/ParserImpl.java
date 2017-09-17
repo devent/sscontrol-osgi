@@ -49,7 +49,7 @@ import groovy.util.ScriptException;
 public class ParserImpl implements Parser {
 
     /**
-     * 
+     *
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
@@ -93,7 +93,7 @@ public class ParserImpl implements Parser {
     private HostServices loadScript(URL[] roots) throws AppException {
         CompilerConfiguration cc = createCompiler();
         Binding binding = createBinding();
-        GroovyScriptEngine engine = createEngine(cc, binding, roots);
+        GroovyScriptEngine engine = createEngine(cc, roots);
         try {
             engine.run(name, binding);
             return services;
@@ -105,7 +105,7 @@ public class ParserImpl implements Parser {
     }
 
     private GroovyScriptEngine createEngine(CompilerConfiguration cc,
-            Binding binding, URL[] roots) throws AppException {
+            URL[] roots) throws AppException {
         GroovyScriptEngine engine = new GroovyScriptEngine(roots);
         engine.setConfig(cc);
         return engine;

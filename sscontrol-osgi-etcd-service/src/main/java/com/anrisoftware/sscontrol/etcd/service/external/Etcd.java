@@ -20,6 +20,7 @@ import java.util.List;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * <i>Etcd</i> service.
@@ -48,4 +49,6 @@ public interface Etcd extends HostService {
     Proxy getProxy();
 
     Gateway getGateway();
+
+    SshHost getCheckOn();
 }
