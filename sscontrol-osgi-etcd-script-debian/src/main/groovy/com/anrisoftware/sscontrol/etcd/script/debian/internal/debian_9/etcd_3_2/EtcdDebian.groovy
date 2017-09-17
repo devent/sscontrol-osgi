@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianService.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -46,6 +44,9 @@ class EtcdDebian extends ScriptBase {
 
     @Inject
     EtcdVirtualInterfaceFactory virtualInterfaceFactory
+
+    @Inject
+    EtcdCheckFactory checkFactory
 
     EtcdUpstreamSystemdDebian etcdUpstreamSystemd
 
@@ -77,6 +78,7 @@ class EtcdDebian extends ScriptBase {
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         etcdUfw.run()
         etcdUpstreamSystemd.run()
+        checkFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
     }
 
     @Override
@@ -87,15 +89,5 @@ class EtcdDebian extends ScriptBase {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

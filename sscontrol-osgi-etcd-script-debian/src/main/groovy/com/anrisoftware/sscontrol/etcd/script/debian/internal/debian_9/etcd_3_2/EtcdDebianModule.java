@@ -48,6 +48,9 @@ public class EtcdDebianModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, EtcdVirtualInterface.class)
                 .build(EtcdVirtualInterfaceFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, EtcdCheck.class)
+                .build(EtcdCheckFactory.class));
     }
 
 }

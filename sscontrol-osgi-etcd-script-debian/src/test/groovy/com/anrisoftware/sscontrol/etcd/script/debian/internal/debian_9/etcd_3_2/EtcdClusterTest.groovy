@@ -43,7 +43,7 @@ service "ssh", group: "etcd" with {
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
 }
 targets.etcd.eachWithIndex { host, i ->
-service "etcd", target: host, member: "etcd-${i}" with {
+service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with {
     debug "debug", level: 1
     bind "https://${host.hostAddress}:2379"
     advertise "https://etcd-${i}.robobee-test.test:2379"

@@ -60,6 +60,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.ssh.ShellCmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
 import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
+import com.anrisoftware.sscontrol.ssh.service.internal.Localhost
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector

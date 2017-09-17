@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.groovy.script.external
+package com.anrisoftware.sscontrol.ssh.service.internal
 
 import com.anrisoftware.sscontrol.types.host.external.SystemInfo
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
