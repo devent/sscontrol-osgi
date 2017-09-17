@@ -187,7 +187,7 @@ service "ssh", group: "masters" with {
 service "ssh", group: "nodes" with {
     host "localhost", socket: localhostSocket
 }
-service "flannel-docker" with {
+service "flannel-docker", check: targets.default[0] with {
     node << "masters"
     node << "nodes"
     etcd "http://127.0.0.1:2379"
@@ -204,6 +204,7 @@ service "flannel-docker" with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource FlannelDockerScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+                assertFileResource FlannelDockerScriptTest, dir, "docker.out", "${args.test.name}_docker_expected.txt"
             },
         ]
         doTest test

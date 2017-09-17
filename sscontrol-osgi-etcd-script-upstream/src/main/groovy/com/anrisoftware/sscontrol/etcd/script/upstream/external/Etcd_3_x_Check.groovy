@@ -45,9 +45,9 @@ abstract class Etcd_3_x_Check extends ScriptBase {
     @Override
     Object run() {
         Etcd service = this.service
-        if (service.checkOn) {
-            if (target != service.checkOn) {
-                log.info 'Target!=checkOn-target, nothing to do'
+        if (service.checkHost) {
+            if (target != service.checkHost) {
+                log.info 'Target!=check-host, nothing to do'
                 return
             }
         }

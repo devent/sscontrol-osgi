@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
  * <i>Flannel-Docker</i> service.
@@ -42,4 +43,6 @@ public interface FlannelDocker extends HostService {
      * Returns the list of flanneld nodes.
      */
     List<Object> getNodes();
+
+    SshHost getCheckHost();
 }
