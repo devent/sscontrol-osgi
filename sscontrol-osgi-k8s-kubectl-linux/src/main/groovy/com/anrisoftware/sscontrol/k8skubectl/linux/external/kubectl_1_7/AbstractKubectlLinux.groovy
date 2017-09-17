@@ -143,7 +143,6 @@ chmod o-rx $certsDir
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
-        println v.vars.certs
         v.resource = kubeconfTemplate
         v.name = 'kubectlConf'
         v.dest = vars.kubeconfigFile

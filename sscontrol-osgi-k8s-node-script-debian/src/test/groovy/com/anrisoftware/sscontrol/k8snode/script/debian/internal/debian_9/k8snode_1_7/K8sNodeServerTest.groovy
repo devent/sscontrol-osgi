@@ -43,19 +43,21 @@ service "ssh", group: "masters" with {
     host "andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
 }
 service "ssh", group: "nodes" with {
-    host "node-1.robobee-test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
 }
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
 }
 targets['nodes'].eachWithIndex { host, i ->
-service "k8s-node", name: "andrea-node-1-test", target: "nodes", advertise: host.hostAddress, api: targets['masters'] with {
+service "k8s-node", name: "andrea-node-${i+1}-test", target: "nodes", advertise: host.hostAddress, api: targets['masters'] with {
     plugin "flannel"
     plugin "calico"
     kubelet.with {
         tls certs.tls
         client certs.tls
     }
+    label << "robobeerun.com/role=edge-router"
+    taint << "dedicated=web:NoSchedule"
 }
 }
 ''',
