@@ -120,7 +120,7 @@ public class EtcdImpl implements Etcd {
 
     private Gateway gateway;
 
-    private SshHost checkOn;
+    private SshHost checkHost;
 
     @Inject
     EtcdImpl(EtcdImplLogger log, HostServicePropertiesService propertiesService,
@@ -135,7 +135,7 @@ public class EtcdImpl implements Etcd {
         this.tls = tlsFactory.create();
         this.tlsFactory = tlsFactory;
         this.authentications = new ArrayList<>();
-        this.checkOn = null;
+        this.checkHost = null;
         parseArgs(args);
     }
 
@@ -348,7 +348,7 @@ public class EtcdImpl implements Etcd {
     public void check(Map<String, Object> args) {
         Object v = args.get("on");
         assertThat("check on=null", v, notNullValue());
-        this.checkOn = (SshHost) v;
+        this.checkHost = (SshHost) v;
     }
 
     @Override
@@ -426,13 +426,13 @@ public class EtcdImpl implements Etcd {
         return gateway;
     }
 
-    public void setCheckOn(SshHost checkOn) {
-        this.checkOn = checkOn;
+    public void setCheckHost(SshHost host) {
+        this.checkHost = host;
     }
 
     @Override
-    public SshHost getCheckOn() {
-        return checkOn;
+    public SshHost getCheckHost() {
+        return checkHost;
     }
 
     @Override
@@ -450,7 +450,7 @@ public class EtcdImpl implements Etcd {
     private void parseCheck(Map<String, Object> args) {
         Object v = args.get("check");
         if (v != null) {
-            setCheckOn((SshHost) v);
+            setCheckHost((SshHost) v);
         }
     }
 

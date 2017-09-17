@@ -38,19 +38,16 @@ class FlannelDockerClusterTest extends AbstractFlannelDockerRunnerTest {
         def test = [
             name: "cluster_tls",
             script: '''
-service "ssh" with {
+service "ssh", group: "servers" with {
     host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
 }
-targets['default'].eachWithIndex { host, i ->
-service "flannel-docker", target: host with {
-    node << "default"
-    debug "error", level: 1
+service "flannel-docker", target: "servers", check: targets.servers[-1] with {
+    node << "servers"
     bind name: "enp0s8"
     etcd "https://10.10.10.7:22379" with {
         tls certs
     }
-}
 }
 ''',
             scriptVars: [certs: robobeetestEtcdCerts],

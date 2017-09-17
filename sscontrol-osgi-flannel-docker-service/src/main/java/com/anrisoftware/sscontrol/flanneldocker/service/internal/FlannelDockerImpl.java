@@ -51,6 +51,7 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -97,6 +98,8 @@ public class FlannelDockerImpl implements FlannelDocker {
     private final BindingImplFactory bindingFactory;
 
     private final List<Object> nodes;
+
+    private SshHost checkHost;
 
     @Inject
     FlannelDockerImpl(FlannelDockerImplLogger log,
@@ -271,6 +274,17 @@ public class FlannelDockerImpl implements FlannelDocker {
                 });
     }
 
+    /**
+     * <pre>
+     * check on: targets.default[0]
+     * </pre>
+     */
+    public void check(Map<String, Object> args) {
+        Object v = args.get("on");
+        assertThat("check on=null", v, notNullValue());
+        this.checkHost = (SshHost) v;
+    }
+
     @Override
     public DebugLogging getDebugLogging() {
         return debug;
@@ -321,14 +335,35 @@ public class FlannelDockerImpl implements FlannelDocker {
         return nodes;
     }
 
+    public void setCheckHost(SshHost host) {
+        this.checkHost = host;
+    }
+
+    @Override
+    public SshHost getCheckHost() {
+        return checkHost;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", targets).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
+        parseCheck(args);
+        parseTargets(args);
+    }
+
+    private void parseCheck(Map<String, Object> args) {
+        Object v = args.get("check");
+        if (v != null) {
+            setCheckHost((SshHost) v);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
             targets.addAll((List<TargetHost>) v);

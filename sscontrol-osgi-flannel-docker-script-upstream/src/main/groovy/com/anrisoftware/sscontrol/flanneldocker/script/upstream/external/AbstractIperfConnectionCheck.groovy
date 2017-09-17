@@ -48,6 +48,25 @@ abstract class AbstractIperfConnectionCheck extends ScriptBase {
         this.iperfCmdsResource = t.getResource 'iperf_cmds'
     }
 
+    def checkFlannel() {
+        FlannelDocker service = this.service
+        if (service.checkHost) {
+            if (target != service.checkHost) {
+                log.info 'Target!=check-host, nothing to do'
+                return
+            }
+        }
+        def iperfServers = []
+        try {
+            iperfServers = startServers()
+            startClients iperfServers
+        } finally {
+            if (!iperfServers.empty) {
+                stopServers(iperfServers)
+            }
+        }
+    }
+
     List startServers() {
         log.info 'Stars iperf servers.'
         FlannelDocker service = this.service

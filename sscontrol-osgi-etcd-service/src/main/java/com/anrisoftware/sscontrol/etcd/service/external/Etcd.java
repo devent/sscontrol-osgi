@@ -50,5 +50,5 @@ public interface Etcd extends HostService {
 
     Gateway getGateway();
 
-    SshHost getCheckOn();
+    SshHost getCheckHost();
 }
