@@ -38,11 +38,11 @@ class EtcdClusterTest extends AbstractEtcdRunnerTest {
         def test = [
             name: "cluster_tls",
             script: '''
-service "ssh" with {
+service "ssh", group: "etcd" with {
     host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
 }
-targets['all'].eachWithIndex { host, i ->
+targets.etcd.eachWithIndex { host, i ->
 service "etcd", target: host, member: "etcd-${i}" with {
     debug "debug", level: 1
     bind "https://${host.hostAddress}:2379"
@@ -72,11 +72,11 @@ service "etcd", target: host, member: "etcd-${i}" with {
         def test = [
             name: "server_tls_gateway",
             script: '''
-service "ssh" with {
+service "ssh", group: "etcd" with {
     host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
 }
-targets['all'].eachWithIndex { host, i ->
+targets.etcd.eachWithIndex { host, i ->
 service "etcd", target: host with {
     bind network: "enp0s8:1", "https://10.10.10.7:22379"
     gateway endpoints: "https://etcd-${i}.robobee-test.test:2379"
