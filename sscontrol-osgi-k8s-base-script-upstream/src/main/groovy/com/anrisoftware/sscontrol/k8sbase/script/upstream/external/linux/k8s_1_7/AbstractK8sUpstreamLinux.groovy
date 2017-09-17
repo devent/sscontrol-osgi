@@ -356,6 +356,7 @@ systemctl daemon-reload
         vars.kubeconfigFile = createTmpFile()
         try {
             createNodeClient().waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
+            kubectlCluster.uploadKubeconfig(vars)
             service.taints.each { String key, Taint taint ->
                 log.info 'Apply taint {} for {}.', taint, service
                 kubectlCluster.applyTaintNode vars, node, taint
