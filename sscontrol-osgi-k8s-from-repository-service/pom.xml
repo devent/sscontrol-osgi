@@ -12,12 +12,12 @@
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-k8s-glusterfs-heketi</artifactId>
-    <name>sscontrol-osgi - k8s-glusterfs-heketi</name>
+    <artifactId>sscontrol-osgi-k8s-from-repository-service</artifactId>
+    <name>sscontrol-osgi - k8s-from-repository-service</name>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8s.glusterfsheketi.service</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8s.fromrepository.service</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -193,12 +193,6 @@
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-command-shell-linux-openssh</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-k8s-from-repository-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>

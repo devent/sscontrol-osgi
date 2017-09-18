@@ -29,19 +29,17 @@ import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 import com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImpl.K8sMasterImplFactory
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
@@ -448,12 +446,7 @@ service "k8s-master" with {
                 new ResourcesModule(),
                 new TlsModule(),
                 new SystemNameMappingsModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
-                    }
-                }).injectMembers(this)
+                new HostServicePropertiesServiceModule(),
+                ).injectMembers(this)
     }
 }

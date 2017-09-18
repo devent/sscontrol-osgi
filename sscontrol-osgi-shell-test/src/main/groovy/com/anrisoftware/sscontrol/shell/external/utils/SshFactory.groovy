@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.shell.external.utils
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -42,6 +42,7 @@ class SshFactory implements Ssh {
                 getHost: { 'localhost' },
                 getUser: { System.getProperty('user.name') },
                 getPort: { 22 },
+                getProto: { null },
                 getKey: { },
                 getHostAddress: { '127.0.0.1' },
                 getSocket: {
@@ -59,6 +60,7 @@ class SshFactory implements Ssh {
                 getHost: { 'robobee-test' },
                 getUser: { 'robobee' },
                 getPort: { 22 },
+                getProto: { null },
                 getKey: { UnixTestUtil.robobeeKey.toURI() },
                 getHostAddress: { InetAddress.getByName('robobee').getHostAddress() },
                 getSocket: {

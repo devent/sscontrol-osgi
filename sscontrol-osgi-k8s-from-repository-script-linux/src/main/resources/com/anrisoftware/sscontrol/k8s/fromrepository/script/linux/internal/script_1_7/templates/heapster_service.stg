@@ -1,0 +1,18 @@
+heapsterService(parent, vars) ::= <<
+kind: Service
+apiVersion: v1
+metadata:
+  name: heapster
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "Heapster"
+spec:
+  ports:
+    - port: 80
+      targetPort: 8082
+  selector:
+    k8s-app: heapster
+
+>>

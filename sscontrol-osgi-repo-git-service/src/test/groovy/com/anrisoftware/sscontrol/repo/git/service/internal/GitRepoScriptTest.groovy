@@ -83,7 +83,7 @@ service "repo-git", group: 'wordpress-app' with {
             name: 'git_url',
             input: """
 service "repo-git", group: 'wordpress-app' with {
-    remote url: "git://git@github.com/devent/wordpress-app"
+    remote url: "git://github.com/devent/wordpress-app.git"
     credentials "ssh", key: "id_rsa.pub"
 }
 """,
@@ -92,7 +92,7 @@ service "repo-git", group: 'wordpress-app' with {
                 GitRepo s = services.getServices('repo-git')[0] as GitRepo
                 assert s.name == 'repo-git'
                 assert s.group == 'wordpress-app'
-                assert s.remote.uri.toString() == 'git://git@github.com/devent/wordpress-app'
+                assert s.remote.uri.toString() == 'git://github.com/devent/wordpress-app.git'
                 assert s.credentials.type == 'ssh'
                 assert s.credentials.key.toString() == 'file:id_rsa.pub'
             },
