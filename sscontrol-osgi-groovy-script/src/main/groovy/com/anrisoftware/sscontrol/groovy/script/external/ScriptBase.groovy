@@ -962,6 +962,14 @@ echo \$file
         properties.getListProperty key, defaults
     }
 
+    /**
+     * Returns a number script property.
+     */
+    Number getScriptNumberProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        properties.getNumberProperty name, defaults
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"

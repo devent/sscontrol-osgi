@@ -1,2 +1,0 @@
--p /var/lib/robobee/tmp
--p /tmp/junit/junit.tmp

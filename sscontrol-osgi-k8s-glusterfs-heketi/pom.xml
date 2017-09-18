@@ -99,7 +99,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-registry-docker-linux</artifactId>
+            <artifactId>sscontrol-osgi-registry-docker-script-linux</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>

@@ -71,8 +71,8 @@
         <module>../sscontrol-osgi-k8s-node-script-upstream</module>
         <module>../sscontrol-osgi-k8s-restore-script-linux</module>
         <module>../sscontrol-osgi-k8s-restore-service</module>
-        <module>../sscontrol-osgi-registry-docker</module>
-        <module>../sscontrol-osgi-registry-docker-linux</module>
+        <module>../sscontrol-osgi-registry-docker-service</module>
+        <module>../sscontrol-osgi-registry-docker-script-linux</module>
         <module>../sscontrol-osgi-rkt-service</module>
         <module>../sscontrol-osgi-rkt-script-deb</module>
         <module>../sscontrol-osgi-rkt-script-debian</module>
