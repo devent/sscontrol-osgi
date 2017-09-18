@@ -76,8 +76,8 @@
         <module>../sscontrol-osgi-rkt-service</module>
         <module>../sscontrol-osgi-rkt-script-deb</module>
         <module>../sscontrol-osgi-rkt-script-debian</module>
-        <module>../sscontrol-osgi-repo-git</module>
-        <module>../sscontrol-osgi-repo-git-linux</module>
+        <module>../sscontrol-osgi-repo-git-service</module>
+        <module>../sscontrol-osgi-repo-git-script-debian</module>
         <module>../sscontrol-osgi-script-runner</module>
         <module>../sscontrol-osgi-script-runner-test</module>
         <module>../sscontrol-osgi-services-properties</module>
