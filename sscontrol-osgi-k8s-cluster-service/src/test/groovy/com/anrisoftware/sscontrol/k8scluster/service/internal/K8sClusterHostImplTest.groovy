@@ -54,7 +54,12 @@ class K8sClusterHostImplTest {
     @Test
     void "getUrl"() {
         def cluster = clusterFactory.create([:])
-        def target = [getHost: {'localhost'}, getHostAddress: {'127.0.0.1'}, getPort: {22}] as TargetHost
+        def target = [
+            getHost: {'localhost'},
+            getHostAddress: {'127.0.0.1'},
+            getPort: {22},
+            getProto: {null},
+        ] as TargetHost
         def credentials = credentialsAnonFactory.create([type: 'anon'])
         def context = contextFactory.create([name: 'default'])
         def host = clusterHostFactory.create(cluster, target, credentials, context)
