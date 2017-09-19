@@ -19,17 +19,15 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
+import javax.inject.Named
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.external.Templates
-import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.external.find.FindFilesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.FromRepository
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_5.TemplateParser
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.FromRepository
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService
 
@@ -49,7 +47,8 @@ class FromRepositoryLinux extends ScriptBase {
     FromRepositoryLinuxProperties debianPropertiesProvider
 
     @Inject
-    HostServiceScriptService k8sCluster_1_5_Linux_Service
+    @Named("cluster-service")
+    HostServiceScriptService clusterService
 
     @Inject
     Map<String, TemplateParser> templateParsers
@@ -57,18 +56,11 @@ class FromRepositoryLinux extends ScriptBase {
     @Inject
     FindFilesFactory findFilesFactory
 
-    Templates templates
-
-    @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        this.templates = templatesFactory.create('MonitoringClusterHeapsterInfluxdbGrafana_1_5_Templates')
-    }
-
     @Override
     def run() {
         FromRepository service = service
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
-        def cluster = k8sCluster_1_5_Linux_Service.create(scriptsRepository, service, target, threads, scriptEnv)
+        def cluster = clusterService.create(scriptsRepository, service, target, threads, scriptEnv)
         cluster.uploadCertificates credentials: service.cluster.cluster.credentials, clusterName: service.cluster.cluster.cluster.name
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         assertThat "checkout-dir=null for $service", dir, notNullValue()

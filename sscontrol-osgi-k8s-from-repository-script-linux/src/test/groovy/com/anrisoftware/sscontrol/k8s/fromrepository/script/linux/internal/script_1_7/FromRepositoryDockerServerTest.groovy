@@ -35,6 +35,12 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class FromRepositoryDockerServerTest extends AbstractFromRepositoryRunnerTest {
 
+    static final URL wordpressZip = FromRepositoryDockerServerTest.class.getResource('wordpress-app_zip.txt')
+
+    static final URL wordpressStZip = FromRepositoryDockerServerTest.class.getResource('wordpress-app-st_zip.txt')
+
+    static final URL wordpressStgZip = FromRepositoryDockerServerTest.class.getResource('wordpress-app-stg_zip.txt')
+
     @Test
     void "docker_build_no_parse_basic_server"() {
         def test = [
@@ -48,7 +54,7 @@ service "k8s-cluster" with {
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
-    property << "checkout_directory=$checkoutDir"
+    property << "checkout_directory=${checkoutDir}"
 }
 service "registry-docker", group: "erwin82" with {
     credentials "user", name: "erwin82", password: "blaue sonne"
@@ -64,7 +70,7 @@ service "from-repository", repo: "wordpress-app", registry: "erwin82" with {
                 cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
             ],
             expectedServicesSize: 5,
-            before: { Map test -> setupServer test: test, zipArchive: AbstractFromRepositoryRunnerTest.wordpressZip },
+            before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
                 assertStringResource FromRepositoryDockerServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
@@ -161,7 +167,7 @@ rm -r /tmp/wordpress-app
 
     @Before
     void beforeMethod() {
-        assumeTrue testHostAvailable
+        checkRobobeeSocket()
     }
 
     Map getScriptEnv(Map args) {

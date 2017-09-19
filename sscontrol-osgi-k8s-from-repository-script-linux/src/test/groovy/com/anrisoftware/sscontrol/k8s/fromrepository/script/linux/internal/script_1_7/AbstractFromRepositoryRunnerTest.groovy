@@ -24,13 +24,12 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.internal.service.FromRepositoryImpl.FromRepositoryImplFactory
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_5.FromRepository_1_5_Factory
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
+import com.anrisoftware.sscontrol.registry.docker.script.linux.internal.linux.DockerRegistryLinuxFactory
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryImpl.DockerRegistryImplFactory
-import com.anrisoftware.sscontrol.registry.docker.service.internal.debian_8.DockerRegistry_Debian_8_Factory
-import com.anrisoftware.sscontrol.repo.git.linux.internal.debian_8.GitRepo_Debian_8_Factory
+import com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9.GitRepoDebianFactory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -64,12 +63,6 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         ],
     ]
 
-    static final URL wordpressZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app.zip')
-
-    static final URL wordpressStZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-st.zip')
-
-    static final URL wordpressStgZip = AbstractFromRepositoryRunnerTest.class.getResource('wordpress-app-stg.zip')
-
     static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('kubectl_command.txt').openStream(), StandardCharsets.UTF_8) }
 
     static final def DOCKER_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('docker_command.txt').openStream(), StandardCharsets.UTF_8) }
@@ -93,19 +86,19 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
     GitRepoImplFactory gitFactory
 
     @Inject
-    GitRepo_Debian_8_Factory gitScriptFactory
+    GitRepoDebianFactory gitDebianFactory
 
     @Inject
     DockerRegistryImplFactory dockerFactory
 
     @Inject
-    DockerRegistry_Debian_8_Factory dockerScriptFactory
+    DockerRegistryLinuxFactory dockerLinuxFactory
 
     @Inject
-    FromRepositoryImplFactory serviceFactory
+    FromRepositoryImplFactory fromRepositoryFactory
 
     @Inject
-    FromRepository_1_5_Factory scriptFactory
+    FromRepositoryLinuxFactory fromRepositoryLinuxFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -117,11 +110,11 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableScriptService 'k8s/cluster/linux/0', clusterLinuxFactory
         services.putAvailableService 'repo-git', gitFactory
-        services.putAvailableScriptService 'repo-git/debian/8', gitScriptFactory
+        services.putAvailableScriptService 'repo-git/debian/9', gitDebianFactory
         services.putAvailableService 'registry-docker', dockerFactory
-        services.putAvailableScriptService 'registry-docker/debian/8', dockerScriptFactory
-        services.putAvailableService 'from-repository', serviceFactory
-        services.putAvailableScriptService 'from-repository/linux/0', scriptFactory
+        services.putAvailableScriptService 'registry-docker/linux/0', dockerLinuxFactory
+        services.putAvailableService 'from-repository', fromRepositoryFactory
+        services.putAvailableScriptService 'from-repository/linux/0', fromRepositoryLinuxFactory
         return services
     }
 

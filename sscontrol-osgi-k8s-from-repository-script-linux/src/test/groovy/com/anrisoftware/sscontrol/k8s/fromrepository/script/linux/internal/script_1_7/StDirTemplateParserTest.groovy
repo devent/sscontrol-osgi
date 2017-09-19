@@ -27,15 +27,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_5.FileTemplateModule
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7.StDirTemplateParser
 import com.google.inject.Guice
 import com.google.inject.Injector
 
 import groovy.util.logging.Slf4j
 
 /**
- * 
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -62,7 +60,7 @@ class StDirTemplateParserTest {
             ],
         ].each { Map test ->
             log.info 'Test: {}', test
-            def string = templateParser.getFilename new File(test.file)
+            def string = templateParser.getFilename test.file
             assertStringContent string, test.expected
         }
     }
