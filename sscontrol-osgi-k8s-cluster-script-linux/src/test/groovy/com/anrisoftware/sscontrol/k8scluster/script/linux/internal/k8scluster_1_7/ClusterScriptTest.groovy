@@ -35,13 +35,14 @@ class ClusterScriptTest extends AbstractClusterScriptTest {
     void "unsecured"() {
         def test = [
             name: "unsecured",
-            input: """
-service "ssh", host: "localhost"
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-cluster", target: 'default' with {
     cluster name: 'default-cluster'
     context name: 'default-system'
 }
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -59,14 +60,15 @@ service "k8s-cluster", target: 'default' with {
     void "client_cert"() {
         def test = [
             name: "client_cert",
-            input: """
-service "ssh", host: "localhost"
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-cluster", target: 'default' with {
     cluster name: 'default-cluster'
     context name: 'default-system'
-    credentials type: 'cert', name: 'default-admin', ca: '$certCaPem', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', ca: cert.ca, cert: cert.cert, key: cert.key
 }
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket, cert: [ca: certCaPem, cert: certCertPem, key: certKeyPem]],
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
