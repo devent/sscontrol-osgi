@@ -18,15 +18,15 @@ package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.scri
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * From repository service for Kubernetes 1.5 properties provider from
- * {@code "/from_repository_1_5_linux.properties"}.
+ * From repository service for Kubernetes properties provider from
+ * {@code "/from_repository_1_7_linux.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class FromRepositoryLinuxProperties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = FromRepositoryLinuxProperties.class.getResource("/from_repository_1_5_linux.properties")
+    private static final URL RESOURCE = FromRepositoryLinuxProperties.class.getResource("/from_repository_1_7_linux.properties")
 
     FromRepositoryLinuxProperties() {
         super(FromRepositoryLinuxProperties.class, RESOURCE)

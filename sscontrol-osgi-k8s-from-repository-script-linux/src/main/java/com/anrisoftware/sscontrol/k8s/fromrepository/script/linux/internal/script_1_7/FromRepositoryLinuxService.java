@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class FromRepositoryService implements HostServiceScriptService {
+public class FromRepositoryLinuxService implements HostServiceScriptService {
 
     static final String SERVICE_NAME = "from-repository";
 
@@ -67,7 +67,7 @@ public class FromRepositoryService implements HostServiceScriptService {
     static final String SERVICE_SYSTEM_SYSTEM_PROPERTY = "service.system.system";
 
     @Inject
-    private FromRepositoryFactory scriptFactory;
+    private FromRepositoryLinuxFactory scriptFactory;
 
     public SystemInfo getSystem() {
         return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(
@@ -85,7 +85,7 @@ public class FromRepositoryService implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new FromRepositoryModule()).injectMembers(this);
+        createInjector(new FromRepositoryLinuxModule()).injectMembers(this);
     }
 
 }

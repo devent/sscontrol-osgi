@@ -17,9 +17,8 @@ package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.scri
 
 import java.nio.charset.Charset
 
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.TemplateNotFoundException
-import com.anrisoftware.sscontrol.k8s.fromreposiroty.external.TemplateParseException
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_5.TemplateParser
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.external.TemplateNotFoundException
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.external.TemplateParseException
 
 /**
  *

@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * @author Erwin Müller <erwin.mueller@deventm.de>
@@ -25,6 +26,12 @@ public class FileTemplateModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        MapBinder<String, TemplateParser> mapbinder = MapBinder
+                .newMapBinder(binder(), String.class, TemplateParser.class);
+        mapbinder.addBinding(StDirTemplateParser.TEMPLATE_NAME)
+                .to(StDirTemplateParser.class);
+        mapbinder.addBinding(StgFileTemplateParser.TEMPLATE_NAME)
+                .to(StgFileTemplateParser.class);
     }
 
 }

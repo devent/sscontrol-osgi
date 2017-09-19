@@ -25,7 +25,6 @@ import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.jcabi.ssh.SSH
 
@@ -40,32 +39,34 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class FromRepositoryManifestsServerTest extends AbstractFromRepositoryRunnerTest {
 
-    static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
+    static final URL wordpressZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app_zip.txt')
 
-    static final URL wordpressZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app.zip')
+    static final URL wordpressStZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-st_zip.txt')
 
-    static final URL wordpressStZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-st.zip')
-
-    static final URL wordpressStgZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-stg.zip')
+    static final URL wordpressStgZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app-stg_zip.txt')
 
     @Test
     void "yaml_files_server"() {
         def test = [
             name: "yaml_files_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
-    property << "checkout_directory=\$checkoutDir"
+    property << "checkout_directory=${checkoutDir}"
 }
 service "from-repository", repo: "wordpress-app" with {
     property << "kubectl_cmd=/tmp/kubectl"
 }
-""",
-            scriptVars: [checkoutDir: '/tmp/w'],
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
             after: { Map test -> tearDownServer test: test },
@@ -80,21 +81,26 @@ service "from-repository", repo: "wordpress-app" with {
     void "yaml_ssh_server"() {
         def test = [
             name: "yaml_ssh_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
-    credentials "ssh", key: "$robobeeKey"
-    property << "checkout_directory=\$checkoutDir"
+    credentials "ssh", key: robobeeKey
+    property << "checkout_directory=${checkoutDir}"
 }
 service "from-repository", repo: "wordpress-app" with {
     property << "kubectl_cmd=/tmp/kubectl"
 }
-""",
-            scriptVars: [checkoutDir: '/tmp/w'],
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                robobeeKey: robobeeKey,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressZip },
             after: { Map test -> tearDownServer test: test },
@@ -109,20 +115,24 @@ service "from-repository", repo: "wordpress-app" with {
     void "st_yaml_files_server"() {
         def test = [
             name: "st_yaml_files_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
-    property << "checkout_directory=\$checkoutDir"
+    property << "checkout_directory=${checkoutDir}"
 }
 service "from-repository", repo: "wordpress-app" with {
     property << "kubectl_cmd=/tmp/kubectl"
 }
-""",
-            scriptVars: [checkoutDir: '/tmp/w'],
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
             after: { Map test -> tearDownServer test: test },
@@ -137,22 +147,27 @@ service "from-repository", repo: "wordpress-app" with {
     void "st_yaml_ssh_tag_server"() {
         def test = [
             name: "st_yaml_ssh_tag_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "git@github.com:robobee-repos/wordpress-app-test.git"
     checkout tag: "st"
-    credentials "ssh", key: "$robobeeKey"
-    property << "checkout_directory=\$checkoutDir"
+    credentials "ssh", key: robobeeKey
+    property << "checkout_directory=${checkoutDir}"
 }
 service "from-repository", repo: "wordpress-app" with {
     property << "kubectl_cmd=/tmp/kubectl"
 }
-""",
-            scriptVars: [checkoutDir: '/tmp/w'],
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                robobeeKey: robobeeKey,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressStZip },
             after: { Map test -> tearDownServer test: test },
@@ -167,20 +182,24 @@ service "from-repository", repo: "wordpress-app" with {
     void "stg_yaml_files_server"() {
         def test = [
             name: "stg_yaml_files_server",
-            script: """
-service "ssh", host: "robobee@robobee-test", key: "$robobeeKey"
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: '$certCertPem', key: '$certKeyPem'
+    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
 }
 service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
-    property << "checkout_directory=\$checkoutDir"
+    property << "checkout_directory=${checkoutDir}"
 }
 service "from-repository", repo: "wordpress-app" with {
     property << "kubectl_cmd=/tmp/kubectl"
 }
-""",
-            scriptVars: [checkoutDir: '/tmp/w'],
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w',
+                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+            ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressStgZip },
             after: { Map test -> tearDownServer test: test },
@@ -229,7 +248,7 @@ rm -r /tmp/wordpress-app
 
     @Before
     void beforeMethod() {
-        assumeTrue testHostAvailable
+        checkRobobeeSocket()
     }
 
     Map getScriptEnv(Map args) {
