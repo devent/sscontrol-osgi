@@ -375,7 +375,7 @@ service "etcd" with {
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
-        services.targets.addTarget([getGroup: {'default'}, getHosts: { [localhost]}] as Ssh)
+        services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
         services.putAvailableService 'etcd', serviceFactory
         Eval.me 'service', services, test.input as String
         Closure expected = test.expected
