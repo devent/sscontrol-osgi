@@ -126,6 +126,7 @@ service "ssh", host: "localhost", socket: "$socketFile"
             'rm',
             'sudo',
             'scp',
+            'id',
         ]
     }
 

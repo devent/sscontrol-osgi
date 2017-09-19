@@ -38,9 +38,10 @@ class IcingaScriptTest extends AbstractIcingaScriptTest {
         def test = [
             name: "basic_script",
             script: '''
-service "ssh", host: "localhost"
+service "ssh", host: "localhost", socket: localhostSocket
 service "icinga", version: "2"
 ''',
+            scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
             expectedServicesSize: 2,
             expected: { Map args ->
@@ -58,7 +59,7 @@ service "icinga", version: "2"
         def test = [
             name: "api_script",
             script: '''
-service "ssh", host: "localhost"
+service "ssh", host: "localhost", socket: localhostSocket
 service "icinga", version: "2" with {
     plugin 'api'
     config << [name: 'api-users', script: """
@@ -69,6 +70,7 @@ object ApiUser "web2" {
 """]
 }
 ''',
+            scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
             expectedServicesSize: 2,
             expected: { Map args ->
@@ -87,7 +89,7 @@ object ApiUser "web2" {
         def test = [
             name: "ido_mysql_script",
             script: '''
-service "ssh", host: "localhost"
+service "ssh", host: "localhost", socket: localhostSocket
 def mysql = [user: "icinga", database: "icinga", password: "icinga"]
 service "icinga", version: "2" with {
     plugin 'ido-mysql' with {
@@ -95,6 +97,7 @@ service "icinga", version: "2" with {
     }
 }
 ''',
+            scriptVars: [localhostSocket: localhostSocket],
             before: { test ->
                 File dir = test.dir
                 FileUtils.touch(new File(dir, "/usr/share/icinga2-ido-mysql/schema/mysql.sql"))
