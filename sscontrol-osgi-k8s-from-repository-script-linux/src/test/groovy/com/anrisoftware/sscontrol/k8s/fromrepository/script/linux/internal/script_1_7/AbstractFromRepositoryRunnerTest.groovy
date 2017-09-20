@@ -55,14 +55,6 @@ abstract class AbstractFromRepositoryRunnerTest extends AbstractRunnerTestBase {
 
     static final URL certKeyPem = AbstractFromRepositoryRunnerTest.class.getResource('cert_key.txt')
 
-    static final Map andreaLocalCerts = [
-        worker: [
-            ca: AbstractFromRepositoryRunnerTest.class.getResource('andrea_local_k8smaster_ca_cert.pem'),
-            cert: AbstractFromRepositoryRunnerTest.class.getResource('andrea_local_node_0_robobee_test_cert.pem'),
-            key: AbstractFromRepositoryRunnerTest.class.getResource('andrea_local_node_0_test_key_insecure.pem'),
-        ],
-    ]
-
     static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('kubectl_command.txt').openStream(), StandardCharsets.UTF_8) }
 
     static final def DOCKER_COMMAND = { IOUtils.toString(AbstractFromRepositoryRunnerTest.class.getResource('docker_command.txt').openStream(), StandardCharsets.UTF_8) }
