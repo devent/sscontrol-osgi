@@ -69,6 +69,9 @@ public class ScriptsMap extends HashMap<ScriptInfo, HostServiceScriptService> {
         if (s == null) {
             s = super.get(createInfo(info, system, name, "0"));
         }
+        if (s == null) {
+            s = super.get(createInfo(info, system, system, "0"));
+        }
         return s;
     }
 

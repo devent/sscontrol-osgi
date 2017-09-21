@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.service
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,9 +28,10 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.FromRepository
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryModule
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryImpl.FromRepositoryImplFactory
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi
+import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImpl.GlusterfsHeketiImplFactory
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
@@ -53,7 +53,6 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
-import net.lingala.zip4j.core.ZipFile
 
 /**
  *
@@ -62,7 +61,7 @@ import net.lingala.zip4j.core.ZipFile
  * @version 1.0
  */
 @Slf4j
-class FromRepositoryScriptTest {
+class GlusterfsHeketiTest {
 
     @Inject
     RobobeeScriptFactory robobeeScriptFactory
@@ -79,63 +78,107 @@ class FromRepositoryScriptTest {
     @Inject
     GitRepoImplFactory gitFactory
 
-    File tmpRepo
+    @Inject
+    GlusterfsHeketiImplFactory glusterfsHeketiFactory
 
     @Test
-    void "cluster"() {
+    void "json topology"() {
         def test = [
-            name: 'cluster',
+            name: 'json topology',
             script: '''
-service "k8s-cluster"
-service "repo-git", group: "wordpress-app" with {
-    remote url: "git@github.com:devent/wordpress-app.git"
-    credentials "ssh", key: "id_rsa"
+service "k8s-cluster" with {
+    credentials type: 'cert', name: 'default-admin'
 }
-service "from-repository", repo: "wordpress-app"
-''',
-            before: { Map args ->
-                def tmp = folder.newFolder()
-                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
-                args.tmpRepo = tmp
+service "repo-git", group: "glusterfs-heketi" with {
+    remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
+}
+service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
+    admin key: "MySecret"
+    user key: "MyVolumeSecret"
+    vars << [heketi: [snapshot: [limit: 32]]]
+    vars << [tolerations: [
+        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
+        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+    ]]
+    topology parse: """
+{
+  "clusters":[
+    {
+      "nodes":[
+        {
+          "node":{
+            "hostnames":{
+              "manage":[
+                "node0"
+              ],
+              "storage":[
+                "192.168.10.100"
+              ]
             },
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('from-repository').size() == 1
-                FromRepository s = services.getServices('from-repository')[0]
-                assert s.repo.repo.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app.git'
-                assert s.repo.repo.credentials.type == 'ssh'
+            "zone":1
+          },
+          "devices":[
+            "/dev/vdb",
+            "/dev/vdc",
+            "/dev/vdd"
+          ]
+        },
+        {
+          "node":{
+            "hostnames":{
+              "manage":[
+                "node1"
+              ],
+              "storage":[
+                "192.168.10.101"
+              ]
             },
-        ]
-        doTest test
+            "zone":1
+          },
+          "devices":[
+            "/dev/vdb",
+            "/dev/vdc",
+            "/dev/vdd"
+          ]
+        },
+        {
+          "node":{
+            "hostnames":{
+              "manage":[
+                "node2"
+              ],
+              "storage":[
+                "192.168.10.102"
+              ]
+            },
+            "zone":1
+          },
+          "devices":[
+            "/dev/vdb",
+            "/dev/vdc",
+            "/dev/vdd"
+          ]
+        }
+      ]
     }
-
-    @Test
-    void "vars"() {
-        def test = [
-            name: 'vars',
-            script: '''
-service "k8s-cluster"
-service "repo-git", group: "wordpress-app" with {
-    remote url: "git@github.com:devent/wordpress-app.git"
-    credentials "ssh", key: "id_rsa"
+  ]
 }
-service "from-repository", repo: "wordpress-app" with {
-    vars << [mysql: [version: "5.6", image: "mysql"]]
-    vars << [wordpress: [version: "4.7.3-apache", image: "wordpress"]]
+"""
 }
 ''',
-            before: { Map args ->
-                def tmp = folder.newFolder()
-                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
-                args.tmpRepo = tmp
-            },
+            before: { },
             scriptVars: [:],
             expected: { HostServices services ->
-                assert services.getServices('from-repository').size() == 1
-                FromRepository s = services.getServices('from-repository')[0]
+                assert services.getServices('glusterfs-heketi').size() == 1
+                GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
+                assert s.cluster.clusterName == 'default'
+                assert s.nodes == 'default'
+                assert s.repo.repo.group == "glusterfs-heketi"
+                assert s.labelName == 'glusterfs'
                 assert s.vars.size() == 2
-                assert s.vars.mysql.size() == 2
-                assert s.vars.mysql.version == '5.6'
+                assert s.admin.key == 'MySecret'
+                assert s.user.key == 'MyVolumeSecret'
+                assert s.topology.size() == 1
             },
         ]
         doTest test
@@ -149,6 +192,7 @@ service "from-repository", repo: "wordpress-app" with {
         services.putAvailableService 'k8s-cluster', clusterFactory
         services.putAvailableService 'repo-git', gitFactory
         services.putAvailableService 'from-repository', fromRepositoryFactory
+        services.putAvailableService 'glusterfs-heketi', glusterfsHeketiFactory
         robobeeScriptFactory.create folder.newFile(), test.script, test.scriptVars, services call()
         Closure expected = test.expected
         expected services
@@ -167,6 +211,7 @@ service "from-repository", repo: "wordpress-app" with {
                 new K8sClusterModule(),
                 new FromRepositoryModule(),
                 new GitRepoModule(),
+                new GlusterfsHeketiModule(),
                 new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
@@ -182,13 +227,5 @@ service "from-repository", repo: "wordpress-app" with {
                 new HostServicePropertiesServiceModule(),
                 )
         injector.injectMembers(this)
-    }
-
-    static void unzip(URL source, File dest) {
-        def zip = new File(dest, "tmp.zip")
-        IOUtils.copy source.openStream(), new FileOutputStream(zip)
-        def zipFile = new ZipFile(zip)
-        zipFile.extractAll(dest.absolutePath)
-        zip.delete()
     }
 }
