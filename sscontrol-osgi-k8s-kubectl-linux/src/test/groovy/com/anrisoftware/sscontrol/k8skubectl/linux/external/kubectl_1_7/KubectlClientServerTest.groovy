@@ -53,7 +53,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
         def kubectl = nodeClientFactory.create cluster, script
-        kubectl.waitNodeReady "robobeerun.com/node", "andrea-test-cluster", 10, TimeUnit.SECONDS
+        kubectl.waitNodeReady "robobeerun.com/node", "andrea-master-0-test", 10, TimeUnit.SECONDS
     }
 
     @Test
@@ -62,7 +62,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
         def nodeClient = nodeClientFactory.create cluster, script
         def nodeLabel = "robobeerun.com/node"
-        def nodeValue = "andrea-test-cluster"
+        def nodeValue = "andrea-master-0-test"
         nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", "foo"
         try {
             def node = nodeClient.getNode nodeLabel, nodeValue
@@ -80,7 +80,7 @@ class KubectlClientServerTest extends AbstractFabricTest {
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
         def nodeClient = nodeClientFactory.create cluster, script
         def nodeLabel = "robobeerun.com/node"
-        def nodeValue = "andrea-test-cluster"
+        def nodeValue = "andrea-master-0-test"
         nodeClient.applyLabelToNode nodeLabel, nodeValue, "test", null
         try {
             def node = nodeClient.getNode nodeLabel, nodeValue

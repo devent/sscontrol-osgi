@@ -29,6 +29,7 @@ import com.google.inject.assistedinject.AssistedInject
 import groovy.util.logging.Slf4j
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
 import io.fabric8.kubernetes.client.ConfigBuilder
+import io.fabric8.kubernetes.client.KubernetesClientException
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
 
 /**
@@ -69,12 +70,27 @@ class KubectlClient {
         if (client) {
             return client
         }
+        return createClient(3)
+    }
+
+    NamespacedKubernetesClient createClient(int retries) {
+        log.debug 'Creating client retries: {}', retries
         try  {
             def config = buildConfig cluster.url, cluster.credentials
             def client = new AutoAdaptableKubernetesClient(config)
             log.debug 'Created client {}', client
             this.client = client
             return client
+        } catch (KubernetesClientException e) {
+            if (retries == 0) {
+                throw e
+            }
+            if (e.cause) {
+                log.error '{}', e.cause
+            } else {
+                log.error '{}', e
+            }
+            return createClient(--retries)
         } catch (Exception e) {
             throw new CreateClientException(this, e)
         }

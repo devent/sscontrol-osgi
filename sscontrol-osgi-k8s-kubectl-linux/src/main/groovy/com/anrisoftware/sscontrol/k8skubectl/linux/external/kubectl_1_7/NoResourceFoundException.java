@@ -26,7 +26,13 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class NoResourceFoundException extends KubectlClientException {
 
-    public NoResourceFoundException(KubectlClient client,
+    public NoResourceFoundException(Object client,
+            @SuppressWarnings("rawtypes") Map labels) {
+        super("No such resource was found", client);
+        addContextValue("labels", labels);
+    }
+
+    public NoResourceFoundException(Object client,
             @SuppressWarnings("rawtypes") Map labels, Exception cause) {
         super("No such resource was found", client, cause);
         addContextValue("labels", labels);

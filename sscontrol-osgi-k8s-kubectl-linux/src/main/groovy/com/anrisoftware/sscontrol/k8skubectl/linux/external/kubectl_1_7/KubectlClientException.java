@@ -26,13 +26,13 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 @SuppressWarnings("serial")
 public abstract class KubectlClientException extends AppException {
 
-    protected KubectlClientException(String message, KubectlClient client,
+    protected KubectlClientException(String message, Object client,
             Throwable cause) {
         super(message, cause);
         addContextValue("client", client);
     }
 
-    protected KubectlClientException(String message, KubectlClient client) {
+    protected KubectlClientException(String message, Object client) {
         super(message);
         addContextValue("client", client);
     }
