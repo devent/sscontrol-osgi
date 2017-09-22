@@ -46,6 +46,8 @@ import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistr
 import com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9.GitRepoDebianModule
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
+import com.anrisoftware.sscontrol.shell.internal.ShellModule
+import com.anrisoftware.sscontrol.shell.linux.internal.Shell_Linux_Module
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
@@ -79,6 +81,8 @@ class GlusterfsHeketiTestModules {
             new DockerRegistryLinuxModule(),
             new GlusterfsHeketiModule(),
             new GlusterfsHeketiDebianModule(),
+            new ShellModule(),
+            new Shell_Linux_Module(),
             new DebianUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
