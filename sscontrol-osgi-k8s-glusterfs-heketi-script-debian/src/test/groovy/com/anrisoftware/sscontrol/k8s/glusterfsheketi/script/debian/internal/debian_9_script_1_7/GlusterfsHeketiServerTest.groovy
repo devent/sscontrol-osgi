@@ -19,9 +19,6 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
-import java.nio.charset.StandardCharsets
-
-import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -43,7 +40,16 @@ class GlusterfsHeketiServerTest extends AbstractGlusterfsHeketiRunnerTest {
         def test = [
             name: "json_topology_server",
             script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh" with {
+    host "robobee@andrea-master.robobee-test.test", socket: robobeeSocket
+    host "robobee@node-1.robobee-test.test", socket: robobeeSocket
+}
+service "ssh", group: "gluster-node-0" with {
+    host "robobee@andrea-master.robobee-test.test", socket: robobeeSocket
+}
+service "ssh", group: "gluster-node-1" with {
+    host "robobee@node-1.robobee-test.test", socket: robobeeSocket
+}
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
 }
@@ -51,16 +57,61 @@ service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
+def glusterNode = [
+    targets['gluster-node-0'][0].hostAddress,
+    targets['gluster-node-1'][0].hostAddress,
+]
+def size_M = 5000
+service "shell", privileged: true with {
+    script << """
+set -e
+cat <<EOF > /usr/local/bin/create-glusterfs-lo.sh
+#!/bin/bash
+set -e
+/bin/mkdir -p /disks
+if [ ! -f /disks/disk-0 ]; then
+  /bin/dd if=/dev/zero of=/disks/disk-0 bs=1M count=${size_M}
+fi
+EOF
+
+chmod +x /usr/local/bin/create-glusterfs-lo.sh
+
+cat <<EOF > /etc/systemd/system/glusterfs-lo.service
+[Unit]
+Description=Setup loop devices for glusterfs.
+After=local-fs.target
+Before=kubelet.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/local/bin/create-glusterfs-lo.sh
+ExecStart=/sbin/losetup /dev/loop10 /disks/disk-0
+ExecStop=/sbin/losetup -D /dev/loop10
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+"""
+    script timeout: "PT2H", command: """
+set +e
+systemctl daemon-reload
+systemctl start glusterfs-lo
+systemctl enable glusterfs-lo
+"""
+}
 service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
-    storage address: "10.2.35.3:8080"
+    vars << [gluster: [
+            limits: [cpu: '1', memory: '256Mi'],
+            requests: [cpu: '1', memory: '256Mi']
+    ]]
     vars << [tolerations: [
         [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
         [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+        [key: 'dedicated', effect: 'NoSchedule'],
     ]]
-    property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
-    property << "kubectl_command=/tmp/kubectl"
     topology parse: """
 {
   "clusters":[
@@ -70,54 +121,32 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
           "node":{
             "hostnames":{
               "manage":[
-                "node0"
+                "${glusterNode[0]}"
               ],
               "storage":[
-                "192.168.10.100"
+                "${glusterNode[0]}"
               ]
             },
             "zone":1
           },
           "devices":[
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
+            "/dev/loop10"
           ]
         },
         {
           "node":{
             "hostnames":{
               "manage":[
-                "node1"
+                "${glusterNode[1]}"
               ],
               "storage":[
-                "192.168.10.101"
+                "${glusterNode[1]}"
               ]
             },
-            "zone":1
+            "zone":2
           },
           "devices":[
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
-          ]
-        },
-        {
-          "node":{
-            "hostnames":{
-              "manage":[
-                "node2"
-              ],
-              "storage":[
-                "192.168.10.102"
-              ]
-            },
-            "zone":1
-          },
-          "devices":[
-            "/dev/vdb",
-            "/dev/vdc",
-            "/dev/vdd"
+            "/dev/loop10"
           ]
         }
       ]
@@ -128,44 +157,11 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 }
 ''',
             scriptVars: [robobeeKey: robobeeKey, robobeeSocket: robobeeSocket, certs: certs],
-            expectedServicesSize: 4,
-            before: { setupServer test: it },
-            after: { tearDownServer test: it },
+            expectedServicesSize: 5,
             expected: { Map args ->
-                assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/etc', 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
             },
         ]
         doTest test
-    }
-
-    def setupServer(Map args) {
-        remoteCommand """
-rm /tmp/gk-deploy
-rm /tmp/gk-deploy.out
-rm /tmp/kubectl
-rm /tmp/kubectl.out
-
-echo "Create /tmp/gk-deploy."
-cat > /tmp/gk-deploy << 'EOL'
-${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
-EOL
-chmod +x /tmp/gk-deploy
-
-cp /tmp/gk-deploy /tmp/kubectl
-chmod +x /tmp/kubectl
-"""
-    }
-
-    def tearDownServer(Map args) {
-        remoteCommand """
-rm /tmp/gk-deploy
-rm /tmp/gk-deploy.out
-rm /tmp/kubectl
-rm /tmp/kubectl.out
-"""
     }
 
     @Before

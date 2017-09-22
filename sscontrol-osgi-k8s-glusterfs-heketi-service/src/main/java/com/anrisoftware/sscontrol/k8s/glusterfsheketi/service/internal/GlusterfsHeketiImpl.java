@@ -37,10 +37,12 @@ import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.AdminImpl
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.StorageImpl.StorageImplFactory;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.UserImpl.UserImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 import com.google.inject.assistedinject.Assisted;
@@ -75,7 +77,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private final List<RepoHost> repos;
 
-    private String nodes;
+    private final List<Object> nodes;
 
     private Admin admin;
 
@@ -116,6 +118,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         this.vars = new HashMap<>();
         this.storageFactory = storageFactory;
         this.storage = storageFactory.create();
+        this.nodes = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -192,6 +195,23 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     public void storage(Map<String, Object> args) {
         this.storage = storageFactory.create(args);
         log.storageSet(this, storage);
+    }
+
+    /**
+     * <pre>
+     * node &lt;&lt; 'node0.test'
+     * node &lt;&lt; nodes
+     * </pre>
+     */
+    public List<Object> getNode() {
+        return GeneticListPropertyUtil.<Object>geneticListStatement(
+                new GeneticListProperty<Object>() {
+
+                    @Override
+                    public void add(Object property) {
+                        nodes.add(property);
+                    }
+                });
     }
 
     @Override
@@ -286,13 +306,18 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         return namespace;
     }
 
-    public void setNodes(String nodes) {
-        this.nodes = nodes;
-        log.nodesSet(this, nodes);
+    public void addNodes(List<Object> nodes) {
+        this.nodes.addAll(nodes);
+        log.nodesAdded(this, nodes);
+    }
+
+    public void addNode(Object node) {
+        this.nodes.add(node);
+        log.nodeAdded(this, node);
     }
 
     @Override
-    public String getNodes() {
+    public List<Object> getNodes() {
         return nodes;
     }
 
