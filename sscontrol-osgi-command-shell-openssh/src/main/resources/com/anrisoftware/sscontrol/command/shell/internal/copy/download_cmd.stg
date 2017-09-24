@@ -106,7 +106,7 @@ fi
 >>
 
 wgetCmd(args, name, src) ::= <<
-set -e && wget -nv -O "<name>" "<src>"
+set -e && wget <if(args.quiet)>-nv<endif> -O "<name>" "<src>"
 >>
 
 curlCmd(args, name, src) ::= <<

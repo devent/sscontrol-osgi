@@ -111,7 +111,7 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         shell """
 cd /tmp
 if [ -d 'certbot-zimbra-${archiveName}' ]; then rm -rf "certbot-zimbra-${archiveName}"; fi
-unzip $archiveFile
+unzip <if(parent.commandsQuiet)>-q<endif> $archiveFile
 mv "certbot-zimbra-${archiveName}" "certbot-zimbra"
             """ call()
         return new File("/tmp/certbot-zimbra")

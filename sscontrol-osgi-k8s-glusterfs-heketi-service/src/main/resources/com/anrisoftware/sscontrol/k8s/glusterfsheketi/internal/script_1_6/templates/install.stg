@@ -15,7 +15,7 @@ file="<parent.glusterKubernetesDeployArchiveFile>"
 name="${file%.*}"
 archive=$(basename "<parent.glusterKubernetesDeployArchive>")
 tag="${archive%.*}"
-unzip "$file"
+unzip <if(parent.commandsQuiet)>-q<endif> "$file"
 mv "${name}-${tag}" "${name}"
 sudo rm -rf '<parent.optDir>/${name}'
 sudo cp -r "${name}" '<parent.optDir>'
