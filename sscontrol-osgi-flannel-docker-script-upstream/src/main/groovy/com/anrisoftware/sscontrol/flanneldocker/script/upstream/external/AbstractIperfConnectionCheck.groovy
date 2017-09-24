@@ -25,6 +25,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory
 
 import groovy.util.logging.Slf4j
 
@@ -38,7 +39,7 @@ import groovy.util.logging.Slf4j
 abstract class AbstractIperfConnectionCheck extends ScriptBase {
 
     @Inject
-    NodesTargetsListFactory nodesFactory
+    TargetsListFactory nodesFactory
 
     TemplateResource iperfCmdsResource
 
@@ -71,7 +72,7 @@ abstract class AbstractIperfConnectionCheck extends ScriptBase {
         log.info 'Stars iperf servers.'
         FlannelDocker service = this.service
         def list = []
-        nodesFactory.create(service, scriptsRepository, this).nodes.each {
+        nodesFactory.create(service, scriptsRepository, "nodes", this).nodes.each {
             def p = shell target: it, privileged: true, outString: true, resource: iperfCmdsResource, name: 'startServer' call()
             list << parseServerOutput(it, p.out)
         }

@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.script.upstream.external;
+package com.anrisoftware.sscontrol.types.ssh.external;
 
-import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
 
-public interface NodesTargetsAddressListFactory {
+/**
+ *
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
+public interface TargetsListFactory {
 
-    NodesTargetsAddressList create(FlannelDocker service, HostServices repo,
-            Object parent);
+    TargetsList create(HostService service, HostServices repo,
+            String targetsPropertyName, Object parent);
 }

@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.flanneldocker.script.upstream.external;
 
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressList;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressListFactory;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsList;
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -29,11 +33,11 @@ public class FlannelDockerUpstreamModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(NodesTargetsAddressList.class, NodesTargetsAddressList.class)
-                .build(NodesTargetsAddressListFactory.class));
+                .implement(TargetsAddressList.class, TargetsAddressList.class)
+                .build(TargetsAddressListFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(NodesTargetsList.class, NodesTargetsList.class)
-                .build(NodesTargetsListFactory.class));
+                .implement(TargetsList.class, TargetsList.class)
+                .build(TargetsListFactory.class));
     }
 
 }
