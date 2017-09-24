@@ -27,6 +27,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
@@ -44,6 +45,9 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     @Inject
     GlusterfsHeketiDebianProperties debianPropertiesProvider
+
+    @Inject
+    TargetsListFactory targetsFactory
 
     TemplateResource installResource
 
@@ -106,27 +110,30 @@ class GlusterfsHeketiDebian extends ScriptBase {
      */
     def installPackagesNodes() {
         GlusterfsHeketi service = service
-        def nodes = service.nodes
-        def list = findService 'ssh', service.nodes
-        assertThat "nodes=0", list.size(), greaterThan(0)
-        list.each { ssh ->
-            ssh.targets.each { target ->
-                if (nodePackages.size() > 0) {
-                    log.debug 'Install packages for node {}', target
-                    debian.installPackages target: target, packages: nodePackages
-                }
-                if (nodeKernelModules.size() > 0) {
-                    log.debug 'Setup kernel modules for node {}', target
-                    shell target: target, privileged: true, st: """
+        def nodes = nodesTargets
+        assertThat "nodes=0", nodes.size(), greaterThan(0)
+        nodes.each { target ->
+            if (nodePackages.size() > 0) {
+                log.debug 'Install packages for node {}', target
+                debian.installPackages target: target, packages: nodePackages
+            }
+            if (nodeKernelModules.size() > 0) {
+                log.debug 'Setup kernel modules for node {}', target
+                shell target: target, privileged: true, st: """
 <parent.nodeKernelModules:{m|modprobe <m>};separator="\\n">
 """ call()
-                    replace privileged: true, dest: '/etc/modules' with {
-                        line "s/(?m)^#?dm_thin_pool/dm_thin_pool/"
-                        it
-                    }()
-                }
+                replace privileged: true, dest: '/etc/modules' with {
+                    nodeKernelModules.each { module -> //
+                        line "s/(?m)^#?${module}/${module}/" }
+                    it
+                }()
             }
         }
+    }
+
+    List getNodesTargets() {
+        GlusterfsHeketi service = this.service
+        targetsFactory.create(service, scriptsRepository, "nodes", this).nodes
     }
 
     def installGlusterfsHeketi() {
