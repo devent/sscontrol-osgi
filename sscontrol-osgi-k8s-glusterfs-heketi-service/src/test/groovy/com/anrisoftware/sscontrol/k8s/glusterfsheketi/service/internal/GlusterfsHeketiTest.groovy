@@ -172,7 +172,8 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
                 assert services.getServices('glusterfs-heketi').size() == 1
                 GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
                 assert s.cluster.clusterName == 'default'
-                assert s.nodes == 'default'
+                assert s.nodes.size() == 1
+                assert s.nodes[0] == 'default'
                 assert s.repo.repo.group == "glusterfs-heketi"
                 assert s.labelName == 'glusterfs'
                 assert s.vars.size() == 2

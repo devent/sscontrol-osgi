@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.core.arrays.ToList;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.Admin;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi;
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.Storage;
@@ -346,7 +347,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     private void parseNodes(Map<String, Object> args) {
         Object v = args.get("nodes");
         if (v != null) {
-            setNodes(v.toString());
+            addNodes(ToList.toList(v));
         }
     }
 
