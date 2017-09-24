@@ -18,9 +18,9 @@ package com.anrisoftware.sscontrol.flanneldocker.script.debian.internal.flanneld
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.flanneldocker.script.upstream.external.NodesTargetsAddressListFactory
 import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressListFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
 
@@ -39,7 +39,7 @@ class FlannelDockerUfw extends ScriptBase {
     FlannelDockerDebianProperties debianPropertiesProvider
 
     @Inject
-    NodesTargetsAddressListFactory nodesFactory
+    TargetsAddressListFactory nodesFactory
 
     UfwUtils ufw
 
@@ -71,7 +71,7 @@ class FlannelDockerUfw extends ScriptBase {
 
     List getNodesAddresses() {
         FlannelDocker service = this.service
-        nodesFactory.create(service, scriptsRepository, this).nodes
+        nodesFactory.create(service, scriptsRepository, "nodes", this).nodes
     }
 
     @Override

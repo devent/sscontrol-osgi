@@ -13,41 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.script.upstream.external
+package com.anrisoftware.sscontrol.types.ssh.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.flanneldocker.service.external.FlannelDocker
+import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
-import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
 /**
- * Returns a list of the host of the nodes.
+ * Returns a list of the hosts of the targets.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class NodesTargetsList {
+class TargetsList {
 
-    FlannelDocker service
+    HostService service
 
     HostServices repo
 
     Object parent
 
+    String targetsPropertyName
+
     @Inject
-    NodesTargetsList(@Assisted FlannelDocker service,
+    TargetsList(
+    @Assisted HostService service,
     @Assisted HostServices repo,
+    @Assisted String targetsPropertyName,
     @Assisted Object parent) {
         super()
         this.service = service
         this.repo = repo
         this.parent = parent
+        this.targetsPropertyName = targetsPropertyName
     }
 
     List<SshHost> getNodes() {
-        service.nodes.inject([]) { result, e ->
+        List targets = service."${targetsPropertyName}"
+        targets.inject([]) { result, e ->
             result.addAll getAddress(e)
             result
         }
