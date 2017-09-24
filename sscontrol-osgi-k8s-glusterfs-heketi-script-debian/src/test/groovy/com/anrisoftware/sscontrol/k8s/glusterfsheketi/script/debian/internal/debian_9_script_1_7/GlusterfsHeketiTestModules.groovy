@@ -51,6 +51,7 @@ import com.anrisoftware.sscontrol.shell.linux.internal.Shell_Linux_Module
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsListModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 
@@ -106,6 +107,7 @@ class GlusterfsHeketiTestModules {
             new SystemNameMappingsModule(),
             new FindModule(),
             new K8sClusterLinuxServiceModule(),
+            new TargetsListModule(),
         ]
     }
 }
