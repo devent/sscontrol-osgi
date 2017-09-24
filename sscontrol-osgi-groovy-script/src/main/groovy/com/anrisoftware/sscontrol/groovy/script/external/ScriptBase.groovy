@@ -913,6 +913,20 @@ echo \$file
     }
 
     /**
+     * Returns if the commands run should have less output.
+     *
+     * <ul>
+     * <li>profile property {@code commands_quiet}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    boolean getCommandsQuiet() {
+        def v = properties.getBooleanProperty 'commands_quiet', defaultProperties
+        v ? v : true
+    }
+
+    /**
      * Returns the file property.
      *
      * @param key
@@ -970,6 +984,14 @@ echo \$file
         properties.getNumberProperty name, defaults
     }
 
+    /**
+     * Returns a boolean script property.
+     */
+    boolean getScriptBooleanProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        properties.getBooleanProperty name, defaults
+    }
+
     private setupArgs(Map args, String name='') {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
@@ -992,6 +1014,9 @@ echo \$file
             a.sudoEnv = sudoEnv
         } else {
             a.sudoEnv.putAll sudoEnv
+        }
+        if (!a.containsKey('quiet')) {
+            a.quiet = commandsQuiet
         }
         if (createTmpFileCallback) {
             args.cmdName = name
