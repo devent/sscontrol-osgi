@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal;
 
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImplLogger.m.clustersAdded;
+import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImplLogger.m.nodeAdded;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImplLogger.m.nodesAdded;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImplLogger.m.registriesAdded;
 import static com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImplLogger.m.reposAdded;
@@ -51,6 +52,8 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
         nodesSet("Nodes group {} added to {}"),
 
         nodesAdded("Nodes added to {}: {}"),
+
+        nodeAdded("Node {} added to {}"),
 
         storageSet("Storage {} set for {}");
 
@@ -94,7 +97,6 @@ final class GlusterfsHeketiImplLogger extends AbstractLogger {
     }
 
     void nodeAdded(GlusterfsHeketiImpl g, Object node) {
-        // TODO Auto-generated method stub
-
+        debug(nodeAdded, node, g);
     }
 }
