@@ -56,6 +56,7 @@ service "k8s-cluster" with {
 service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
+    property << "command_timeout_short=PT30M"
 }
 def glusterNode = [
     targets['gluster-node-0'][0].hostAddress,
@@ -101,6 +102,7 @@ systemctl enable glusterfs-lo
 """
 }
 service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
+    property << "commands_quiet=false"
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     vars << [gluster: [
