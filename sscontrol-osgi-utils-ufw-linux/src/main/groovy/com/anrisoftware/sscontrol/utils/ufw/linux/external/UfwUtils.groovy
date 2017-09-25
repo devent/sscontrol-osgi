@@ -50,4 +50,15 @@ abstract class UfwUtils {
         ProcessTask ret = script.shell privileged: true, outString: true, exitCodes: [0, 1] as int[], "which ufw>/dev/null && ufw status" call()
         return ret.exitValue == 0 && (ret.out =~ /Status: active.*/)
     }
+
+    /**
+     * Returns a list of tcp ports from the property {@code tcp_ports}.
+     * Translates port range to Ufw syntax.
+     */
+    List getTcpPorts(List ports) {
+        def list = ports
+        list.inject([]) { l, String v ->
+            l << v.replaceAll('-', ':')
+        }
+    }
 }

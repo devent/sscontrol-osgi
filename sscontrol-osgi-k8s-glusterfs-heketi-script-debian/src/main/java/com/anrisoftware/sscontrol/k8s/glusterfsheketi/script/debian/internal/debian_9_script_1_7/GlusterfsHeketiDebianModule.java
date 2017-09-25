@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7;
 
-import com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7.GlusterfsHeketiDebian;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,6 +32,10 @@ public class GlusterfsHeketiDebianModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, GlusterfsHeketiDebian.class)
                 .build(GlusterfsHeketiDebianFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class,
+                        GlusterfsHeketiUfwDebian.class)
+                .build(GlusterfsHeketiUfwDebianFactory.class));
     }
 
 }

@@ -29,7 +29,8 @@ import com.google.inject.assistedinject.Assisted
 class UfwLinuxUtils extends UfwUtils {
 
     @Inject
-    UfwLinuxUtils(@Assisted HostServiceScript script) {
+    UfwLinuxUtils(
+    @Assisted HostServiceScript script) {
         super(script)
     }
 }

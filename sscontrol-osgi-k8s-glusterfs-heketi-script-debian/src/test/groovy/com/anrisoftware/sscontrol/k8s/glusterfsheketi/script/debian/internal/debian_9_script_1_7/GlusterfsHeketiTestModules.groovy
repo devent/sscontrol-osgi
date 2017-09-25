@@ -54,6 +54,7 @@ import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsListModule
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
 
 /**
  *
@@ -85,6 +86,7 @@ class GlusterfsHeketiTestModules {
             new ShellModule(),
             new Shell_Linux_Module(),
             new DebianUtilsModule(),
+            new UfwUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

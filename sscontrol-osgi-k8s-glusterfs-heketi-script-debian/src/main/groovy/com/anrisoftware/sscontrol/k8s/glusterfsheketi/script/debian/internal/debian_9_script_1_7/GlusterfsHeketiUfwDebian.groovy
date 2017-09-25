@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.ufw.linux.external;
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+
+import groovy.util.logging.Slf4j
 
 /**
- * Ufw utilities factory.
+ * Configures the Ufw firewall.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface UfwLinuxUtilsFactory {
+@Slf4j
+class GlusterfsHeketiUfwDebian extends AbstractGlusterfsHeketiUfwLinux {
 
-    UfwUtils create(HostServiceScript script);
+    @Inject
+    GlusterfsHeketiDebianProperties debianPropertiesProvider
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        debianPropertiesProvider.get()
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

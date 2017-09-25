@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.ufw.linux.external;
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Ufw utilities factory.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface UfwLinuxUtilsFactory {
-
-    UfwUtils create(HostServiceScript script);
+public interface GlusterfsHeketiUfwDebianFactory extends HostServiceScriptService {
 }

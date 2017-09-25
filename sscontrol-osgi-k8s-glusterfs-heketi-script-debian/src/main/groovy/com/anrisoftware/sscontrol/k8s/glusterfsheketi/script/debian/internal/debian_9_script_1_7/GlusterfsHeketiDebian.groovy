@@ -49,6 +49,9 @@ class GlusterfsHeketiDebian extends ScriptBase {
     @Inject
     TargetsListFactory targetsFactory
 
+    @Inject
+    GlusterfsHeketiUfwDebianFactory ufwFactory
+
     TemplateResource installResource
 
     TemplateResource gkdeployResource
@@ -73,6 +76,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
     @Override
     def run() {
         setupDefaults()
+        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         debian.installPackages()
         installPackagesNodes()
         installHeketi()
