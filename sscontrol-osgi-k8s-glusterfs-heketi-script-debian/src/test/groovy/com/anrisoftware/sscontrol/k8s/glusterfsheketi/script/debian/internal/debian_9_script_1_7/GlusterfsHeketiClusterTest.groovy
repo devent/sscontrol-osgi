@@ -41,14 +41,14 @@ class GlusterfsHeketiClusterTest extends AbstractGlusterfsHeketiRunnerTest {
             name: "json_topology_server",
             script: '''
 service "ssh" with {
-    host "robobee@andrea-master.robobee-test.test", socket: robobeeSocket
-    host "robobee@node-1.robobee-test.test", socket: robobeeSocket
+    host "robobee@andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
+    host "robobee@node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
 }
 service "ssh", group: "gluster-node-0" with {
-    host "robobee@andrea-master.robobee-test.test", socket: robobeeSocket
+    host "robobee@andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
 }
 service "ssh", group: "gluster-node-1" with {
-    host "robobee@node-1.robobee-test.test", socket: robobeeSocket
+    host "robobee@node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
 }
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
@@ -56,7 +56,6 @@ service "k8s-cluster" with {
 service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
-    property << "command_timeout_short=PT30M"
 }
 def glusterNode = [
     targets['gluster-node-0'][0].hostAddress,
@@ -158,7 +157,7 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 """
 }
 ''',
-            scriptVars: [robobeeKey: robobeeKey, robobeeSocket: robobeeSocket, certs: certs],
+            scriptVars: [robobeeKey: robobeeKey, certs: certs],
             expectedServicesSize: 5,
             expected: { Map args ->
             },
@@ -168,7 +167,8 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 
     @Before
     void beforeMethod() {
-        checkRobobeeSocket()
+        assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
+        assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
     }
 
     Map getScriptEnv(Map args) {
