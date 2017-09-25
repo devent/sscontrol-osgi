@@ -923,7 +923,7 @@ echo \$file
      */
     boolean getCommandsQuiet() {
         def v = properties.getBooleanProperty 'commands_quiet', defaultProperties
-        v ? v : true
+        v != null ? v : true
     }
 
     /**
