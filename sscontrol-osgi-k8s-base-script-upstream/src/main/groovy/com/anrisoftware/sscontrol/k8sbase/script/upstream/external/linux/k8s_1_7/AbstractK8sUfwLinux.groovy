@@ -77,10 +77,9 @@ ufw allow from <vars.podNetwork> to <parent.advertiseAddress>
      */
     def openPublicPorts() {
         K8s service = this.service
-        println publicTcpPorts
         shell privileged: true, st: """
-<parent.publicTcpPorts:{p|ufw allow from any to <parent.advertiseAddress> port <p> proto tcp};separator="\n">
-""", vars: [:] call()
+<vars.ports:{p|ufw allow from any to <parent.advertiseAddress> port <p> proto tcp};separator="\n">
+""", vars: [ports: ufw.getTcpPorts(publicTcpPorts)] call()
     }
 
     String getAdvertiseAddress() {
@@ -94,10 +93,7 @@ ufw allow from <vars.podNetwork> to <parent.advertiseAddress>
     }
 
     List getPublicTcpPorts() {
-        def list = getScriptListProperty 'public_tcp_ports'
-        list.inject([]) { l, String v ->
-            l << v.replaceAll('-', ':')
-        }
+        getScriptListProperty 'public_tcp_ports'
     }
 
     @Override

@@ -17,8 +17,11 @@ package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.de
 
 import javax.inject.Inject
 
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressListFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
 
@@ -33,11 +36,22 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
 
+    @Inject
+    TargetsAddressListFactory targetsFactory
+
     UfwUtils ufw
+
+    TemplateResource ufwTemplate
 
     @Inject
     void setUfwUtilsFactory(UfwLinuxUtilsFactory factory) {
         this.ufw = factory.create this
+    }
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('AbstractGlusterfsHeketiUfwLinux_Templates')
+        this.ufwTemplate = templates.getResource('ufw_commands')
     }
 
     @Override
@@ -64,15 +78,20 @@ abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
      * Updates the firewall.
      */
     def updateFirewall() {
+        println nodesAddresses
+        println ufw.getTcpPorts(privateTcpPorts)
         GlusterfsHeketi service = this.service
-        shell privileged: true, st: """
-<vars.nodes:{p|ufw allow from <p> to any port 8472 proto udp};separator="\\n">
-""", vars: [nodes: nodesAddresses] call()
+        shell privileged: true, resource: ufwTemplate, name: "ufwPrivatePorts",
+        vars: [nodes: nodesAddresses, ports: ufw.getTcpPorts(privateTcpPorts)] call()
     }
 
     List getNodesAddresses() {
         GlusterfsHeketi service = this.service
-        nodesFactory.create(service, scriptsRepository, this).nodes
+        targetsFactory.create(service, scriptsRepository, "nodes", this).nodes
+    }
+
+    List getPrivateTcpPorts() {
+        getScriptListProperty 'private_tcp_ports'
     }
 
     @Override

@@ -61,6 +61,7 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
     ]]
     property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
     property << "kubectl_command=/tmp/kubectl"
+    property << "commands_quiet=false"
     topology parse: """
 {
   "clusters":[
