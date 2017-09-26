@@ -312,6 +312,10 @@ class GlusterfsHeketiDebian extends ScriptBase {
         properties.getBooleanProperty 'default_storage_class_is_default', defaultProperties
     }
 
+    boolean getDebugGkdeploy() {
+        properties.getBooleanProperty 'debug_gk_deploy', defaultProperties
+    }
+
     File getKubectlCmd() {
         getFileProperty 'kubectl_command'
     }

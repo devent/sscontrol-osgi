@@ -53,7 +53,7 @@ service "ssh", group: "gluster-node-1" with {
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
 }
-service "repo-git", group: "glusterfs-heketi" with {
+service "repo-git", group: "glusterfs-heketi", target: targets.default[0] with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
@@ -102,6 +102,7 @@ systemctl enable glusterfs-lo
 }
 service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     property << "commands_quiet=false"
+    property << "debug_gk_deploy=true"
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     vars << [gluster: [
