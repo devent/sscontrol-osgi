@@ -17,11 +17,8 @@ package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.de
 
 import javax.inject.Inject
 
-import com.anrisoftware.resources.templates.external.TemplateResource
-import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi
-import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressListFactory
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
@@ -46,17 +43,9 @@ abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
 
     UfwUtils ufw
 
-    TemplateResource ufwTemplate
-
     @Inject
     void setUfwUtilsFactory(UfwLinuxUtilsFactory factory) {
         this.ufw = factory.create this
-    }
-
-    @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('AbstractGlusterfsHeketiUfwLinux_Templates')
-        this.ufwTemplate = templates.getResource('ufw_commands')
     }
 
     @Override
@@ -84,10 +73,7 @@ abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
      */
     def updateFirewall() {
         GlusterfsHeketi service = this.service
-        nodes.each { SshHost target ->
-            shell target: target, privileged: true, resource: ufwTemplate, name: "ufwPrivatePorts",
-            vars: [nodes: nodesAddresses, ports: ufw.getTcpPorts(privateTcpPorts)] call()
-        }
+        ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
     }
 
     List getNodes() {
