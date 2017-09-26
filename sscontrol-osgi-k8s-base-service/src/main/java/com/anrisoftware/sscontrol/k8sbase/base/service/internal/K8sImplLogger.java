@@ -20,7 +20,6 @@ import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLo
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.clusterSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.kubeletSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.labelAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.nodeAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.pluginAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.taintAdded;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImplLogger.m.tlsSet;
@@ -33,7 +32,6 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label;
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.Node;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint;
 import com.anrisoftware.sscontrol.tls.external.Tls;
@@ -63,8 +61,6 @@ final class K8sImplLogger extends AbstractLogger {
         labelAdded("Label {} added to {}"),
 
         taintAdded("Taint {} added to {}"),
-
-        nodeAdded("Node {} added to {}"),
 
         clusterHostsAdded("Cluster hosts added to {}: {}");
 
@@ -113,10 +109,6 @@ final class K8sImplLogger extends AbstractLogger {
 
     void taintAdded(K8sImpl k8s, Taint taint) {
         debug(taintAdded, taint, k8s);
-    }
-
-    void nodeAdded(K8sImpl k8s, Node node) {
-        debug(nodeAdded, node, k8s);
     }
 
     void clusterHostsAdded(K8sImpl k8s, List<ClusterHost> list) {

@@ -74,16 +74,9 @@ public interface K8s extends HostService {
 
     Kubelet kubelet(Map<String, Object> args);
 
-    void addNode(Node node);
-
     ClusterHost getClusterHost();
 
     List<ClusterHost> getClusterHosts();
-
-    /**
-     * Returns the list of nodes of this Kubernetes service.
-     */
-    List<Node> getNodes();
 
     /**
      * Returns labels for the node.

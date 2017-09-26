@@ -9,7 +9,7 @@ data:
   etcd_endpoints: "https://etcd-0:2379"
 
   # Configure the Calico backend to use.
-  calico_backend: "none"
+  calico_backend: "bird"
 
   # Path of the CNI net directory.
   cni_net_dir: "/tmp/junit/junit/etc/kubernetes/cni/net.d"

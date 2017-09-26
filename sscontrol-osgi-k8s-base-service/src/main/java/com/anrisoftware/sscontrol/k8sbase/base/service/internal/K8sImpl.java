@@ -43,18 +43,17 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8sService;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Kubelet;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.LabelFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.Node;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory;
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.KubeletImpl.KubeletImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -116,8 +115,6 @@ public class K8sImpl implements K8s {
 
     private final Map<String, Taint> taints;
 
-    private final List<Node> nodes;
-
     private final List<ClusterHost> clusterHosts;
 
     @Inject
@@ -139,7 +136,6 @@ public class K8sImpl implements K8s {
         this.tls = tlsFactory.create();
         this.labels = new HashMap<>();
         this.taints = new HashMap<>();
-        this.nodes = new ArrayList<>();
         this.clusterHosts = new ArrayList<>();
         parseArgs(args);
     }
@@ -427,17 +423,6 @@ public class K8sImpl implements K8s {
     @Override
     public Map<String, Taint> getTaints() {
         return taints;
-    }
-
-    @Override
-    public void addNode(Node node) {
-        this.nodes.add(node);
-        log.nodeAdded(this, node);
-    }
-
-    @Override
-    public List<Node> getNodes() {
-        return nodes;
     }
 
     @Override

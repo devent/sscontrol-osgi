@@ -1,4 +1,4 @@
 # /tmp/junit/junit/etc/systemd/system/docker.service.d/10_kube_options.conf
 # Author: robobee
 [Service]
-Environment="DOCKER_OPTIONS=--iptables=false"
+Environment="DOCKER_OPTIONS="
