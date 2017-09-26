@@ -20,7 +20,9 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.Matchers.*
 
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask
+import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 
 import groovy.util.logging.Slf4j
 
@@ -38,6 +40,11 @@ abstract class UfwUtils {
     protected UfwUtils(HostServiceScript script) {
         this.script = script
     }
+
+    /**
+     * Returns the template resource with the Ufw commands.
+     */
+    abstract TemplateResource getUfwCommandsTemplate()
 
     /**
      * Returns the default {@link Properties} for the service.
@@ -60,5 +67,31 @@ abstract class UfwUtils {
         list.inject([]) { l, String v ->
             l << v.replaceAll('-', ':')
         }
+    }
+
+    /**
+     * Allows ports on all nodes.
+     */
+    def allowPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, Object script) {
+        nodes.each { SshHost target ->
+            script.shell target: target, privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsOnNodes",
+            vars: [nodes: nodesAddresses, ports: getTcpPorts(ports)] call()
+        }
+    }
+
+    /**
+     * Allows all ports from address to address.
+     */
+    def allowFromToAllPorts(def fromNetwork, def toNetwork, Object script) {
+        script.shell privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowFromToAllPorts",
+        vars: [fromNetwork: fromNetwork, toNetwork: toNetwork] call()
+    }
+
+    /**
+     * Allows ports to address.
+     */
+    def allowPortsToNetwork(List ports, def toNetwork, Object script) {
+        script.shell privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsToNetwork",
+        vars: [ports: getTcpPorts(ports), toNetwork: toNetwork] call()
     }
 }

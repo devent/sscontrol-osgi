@@ -67,9 +67,7 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
      */
     def updatePodNetwork() {
         K8s service = this.service
-        shell privileged: true, st: """
-ufw allow from <vars.podNetwork> to <parent.advertiseAddress>
-""", vars: [podNetwork: service.cluster.podRange] call()
+        ufw.allowFromToAllPorts service.cluster.podRange, advertiseAddress, this
     }
 
     /**
@@ -77,9 +75,16 @@ ufw allow from <vars.podNetwork> to <parent.advertiseAddress>
      */
     def openPublicPorts() {
         K8s service = this.service
-        shell privileged: true, st: """
-<vars.ports:{p|ufw allow from any to <parent.advertiseAddress> port <p> proto tcp};separator="\n">
-""", vars: [ports: ufw.getTcpPorts(publicTcpPorts)] call()
+        ufw.allowPortsToNetwork publicTcpPorts, advertiseAddress, this
+    }
+
+    /**
+     * Opens the private ports.
+     */
+    def openPrivatePorts() {
+        K8s service = this.service
+        List nodes = service.nodes
+        ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
     }
 
     String getAdvertiseAddress() {
