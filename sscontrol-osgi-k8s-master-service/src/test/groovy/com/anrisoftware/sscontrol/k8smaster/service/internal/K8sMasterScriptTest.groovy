@@ -348,7 +348,7 @@ service "k8s-master" with {
             name: 'etcd tls',
             input: '''
 service "k8s-master" with {
-    plugin "etcd", target: "infra-0" with {
+    plugin "etcd", endpoint: "infra-0" with {
         tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
     }
 }
@@ -361,7 +361,8 @@ service "k8s-master" with {
                 assert s.plugins.size() == 1
                 def etcd = s.plugins['etcd']
                 assert etcd.name == 'etcd'
-                assert etcd.targets[0] == 'infra-0'
+                assert etcd.endpoints.size() == 1
+                assert etcd.endpoints[0] == 'infra-0'
                 assert etcd.tls.ca.toString() =~ /.*ca\.pem/
                 assert etcd.tls.cert.toString() =~ /.*cert\.pem/
                 assert etcd.tls.key.toString() =~ /.*key\.pem/
