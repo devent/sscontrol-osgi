@@ -84,7 +84,6 @@ abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
      */
     def updateFirewall() {
         GlusterfsHeketi service = this.service
-        println nodes
         nodes.each { SshHost target ->
             shell target: target, privileged: true, resource: ufwTemplate, name: "ufwPrivatePorts",
             vars: [nodes: nodesAddresses, ports: ufw.getTcpPorts(privateTcpPorts)] call()
