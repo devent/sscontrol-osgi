@@ -73,10 +73,17 @@ abstract class UfwUtils {
      * Allows ports on all nodes.
      */
     def allowPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, Object script) {
+        allowPortsOnNodes nodes, nodesAddresses, ports, "tcp", script
+    }
+
+    /**
+     * Allows ports on all nodes.
+     */
+    def allowPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, String proto, Object script) {
         nodes.each { SshHost target ->
             if (isUfwActive(target)) {
                 script.shell target: target, privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsOnNodes",
-                vars: [nodes: nodesAddresses, ports: getTcpPorts(ports)] call()
+                vars: [nodes: nodesAddresses, ports: getTcpPorts(ports), proto: proto] call()
             }
         }
     }

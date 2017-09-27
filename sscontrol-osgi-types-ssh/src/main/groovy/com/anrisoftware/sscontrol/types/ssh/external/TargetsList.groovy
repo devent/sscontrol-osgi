@@ -61,7 +61,7 @@ class TargetsList {
     List<SshHost> getAddress(Object n) {
         def list = []
         if (n instanceof String) {
-            if (isValidTargetName(n)) {
+            if (!isURIName(n)) {
                 list.addAll nodeTargets(n)
             }
         }
@@ -82,7 +82,7 @@ class TargetsList {
         repo.targets(target).inject([]) { result, e -> result << e }
     }
 
-    boolean isValidTargetName(String n) {
-        !new URI(n).scheme
+    boolean isURIName(String n) {
+        new URI(n).scheme
     }
 }
