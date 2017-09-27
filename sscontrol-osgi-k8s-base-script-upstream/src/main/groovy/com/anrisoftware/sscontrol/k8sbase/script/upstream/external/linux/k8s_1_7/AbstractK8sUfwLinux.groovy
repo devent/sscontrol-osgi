@@ -91,7 +91,10 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
      * Opens the ports between nodes.
      */
     def openNodesPorts() {
-        ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
+        K8s service = this.service
+        if (service.hasProperty("nodes")) {
+            ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
+        }
     }
 
     String getAdvertiseAddress() {
