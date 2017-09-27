@@ -29,7 +29,9 @@ done
 */
 applyTaintCmd(parent, vars) ::= <<
 node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
+until <parent.kubectlCmd> describe nodes ${node} | grep `echo "<vars.taint>" | sed "s/=:/:/"`; do
 <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> taint --overwrite nodes $node <vars.taint>
+done
 >>
 
 /*
