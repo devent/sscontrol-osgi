@@ -19,6 +19,7 @@ import static com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelD
 import static com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerImplLogger.a.bindingSet;
 import static com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerImplLogger.a.etcdSet;
 import static com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerImplLogger.a.networkSet;
+import static com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerImplLogger.a.nodeAdded;
 
 import javax.inject.Singleton;
 
@@ -45,7 +46,9 @@ final class FlannelDockerImplLogger extends AbstractLogger {
 
         backendSet("Backend {} set for {}"),
 
-        bindingSet("Binding {} set for {}");
+        bindingSet("Binding {} set for {}"),
+
+        nodeAdded("Node {} added to {}");
 
         private String name;
 
@@ -80,5 +83,9 @@ final class FlannelDockerImplLogger extends AbstractLogger {
 
     void bindingSet(FlannelDockerImpl flannel, Binding binding) {
         debug(bindingSet, binding, flannel);
+    }
+
+    void nodeAdded(FlannelDockerImpl flannel, Object node) {
+        debug(nodeAdded, node, flannel);
     }
 }

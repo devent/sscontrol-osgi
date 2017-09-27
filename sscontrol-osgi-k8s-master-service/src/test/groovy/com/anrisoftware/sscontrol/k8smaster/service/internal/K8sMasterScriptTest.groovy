@@ -84,6 +84,24 @@ service "k8s-master" with {
     }
 
     @Test
+    void "nodes_args"() {
+        def test = [
+            name: 'nodes_args',
+            input: """
+service "k8s-master", nodes: "node-0" with {
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8sMaster s = services.getServices('k8s-master')[0]
+                assert s.nodes.size() == 1
+                assert s.nodes[0] == 'node-0'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "bind"() {
         def test = [
             name: 'bind',

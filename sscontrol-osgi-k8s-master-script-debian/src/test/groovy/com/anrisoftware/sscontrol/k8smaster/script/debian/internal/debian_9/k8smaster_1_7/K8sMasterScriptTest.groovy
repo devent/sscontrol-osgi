@@ -135,6 +135,43 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     }
 
     @Test
+    void "script_nodes_ufw"() {
+        def test = [
+            name: "script_nodes_ufw",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "localhost", socket: localhostSocket, group: "nodes"
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
+    nodes << "default"
+    nodes << "nodes"
+    tls certs
+    authentication "cert", ca: certs.ca
+    plugin "etcd", endpoint: "etcd"
+    plugin "flannel"
+    plugin "calico"
+    kubelet.with {
+        tls certs
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "script_etcd_address_defaults"() {
         def test = [
             name: "script_etcd_address_defaults",

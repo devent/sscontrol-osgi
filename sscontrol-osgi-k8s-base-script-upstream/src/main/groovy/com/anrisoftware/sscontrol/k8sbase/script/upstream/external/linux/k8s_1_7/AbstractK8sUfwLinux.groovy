@@ -20,6 +20,8 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.types.host.external.TargetHost
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsAddressListFactory
+import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
 
@@ -37,6 +39,12 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
     UfwUtils ufw
 
     @Inject
+    TargetsListFactory nodesFactory
+
+    @Inject
+    TargetsAddressListFactory addressesFactory
+
+    @Inject
     void setUfwUtilsFactory(UfwLinuxUtilsFactory factory) {
         this.ufw = factory.create this
     }
@@ -48,6 +56,7 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
         }
         updatePodNetwork()
         openPublicPorts()
+        openNodesPorts()
     }
 
     /**
@@ -79,11 +88,9 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
     }
 
     /**
-     * Opens the private ports.
+     * Opens the ports between nodes.
      */
-    def openPrivatePorts() {
-        K8s service = this.service
-        List nodes = service.nodes
+    def openNodesPorts() {
         ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
     }
 
@@ -99,6 +106,20 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
 
     List getPublicTcpPorts() {
         getScriptListProperty 'public_tcp_ports'
+    }
+
+    List getPrivateTcpPorts() {
+        getScriptListProperty 'private_tcp_ports'
+    }
+
+    List getNodes() {
+        K8s service = this.service
+        nodesFactory.create(service, scriptsRepository, "nodes", this).nodes
+    }
+
+    List getNodesAddresses() {
+        K8s service = this.service
+        addressesFactory.create(service, scriptsRepository, "nodes", this).nodes
     }
 
     @Override
