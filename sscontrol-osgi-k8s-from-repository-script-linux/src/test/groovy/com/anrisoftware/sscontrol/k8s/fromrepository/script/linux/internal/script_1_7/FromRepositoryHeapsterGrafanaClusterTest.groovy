@@ -105,8 +105,8 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
     vars << [
         heapsterInfluxdb: [
             image: [name: 'gcr.io/google_containers/heapster-influxdb-amd64', version: 'v1.3.3'],
-            limits: [cpu: '50m', memory: '200Mi'],
-            requests: [cpu: '50m', memory: '200Mi'],
+            limits: [cpu: '50m', memory: '100Mi'],
+            requests: [cpu: '50m', memory: '100Mi'],
         ]
     ]
     vars << [
