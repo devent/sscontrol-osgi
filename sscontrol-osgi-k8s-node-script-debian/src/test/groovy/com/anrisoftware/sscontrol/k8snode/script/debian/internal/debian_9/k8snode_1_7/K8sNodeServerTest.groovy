@@ -49,7 +49,7 @@ service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
 }
 targets['nodes'].eachWithIndex { host, i ->
-service "k8s-node", name: "andrea-node-${i+1}-test", target: "nodes", advertise: host.hostAddress, api: targets['masters'] with {
+service "k8s-node", name: "andrea-node-${i+1}-test", target: host, advertise: host.hostAddress, api: targets.masters with {
     plugin "flannel"
     plugin "calico"
     kubelet.with {

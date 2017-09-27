@@ -344,9 +344,11 @@ systemctl daemon-reload
     def applyTaints() {
         K8s service = service
         if (service.taints.isEmpty()) {
+            log.debug 'No taints to apply, nothing to do.'
             return
         }
         if (!service.clusterHost) {
+            log.debug 'No cluster host, nothing to do.'
             return
         }
         log.info 'Apply taints for {}.', service
@@ -369,9 +371,11 @@ systemctl daemon-reload
     def applyLabels() {
         K8s service = service
         if (service.labels.isEmpty()) {
+            log.debug 'No labels to apply, nothing to do.'
             return
         }
         if (!service.clusterHost) {
+            log.debug 'No cluster host, nothing to do.'
             return
         }
         log.info 'Apply labels for {}.', service
