@@ -1,5 +1,0 @@
-
-status
-allow from 10.0.0.1 to any port 8472 proto udp
-allow from 10.0.0.2 to any port 8472 proto udp
-allow from 10.0.0.3 to any port 8472 proto udp
