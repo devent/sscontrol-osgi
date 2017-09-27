@@ -54,6 +54,8 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
+import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -99,6 +101,8 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final K8s k8s;
 
+    private final List<Object> nodes;
+
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, K8sImplFactory k8sFactory,
             BindingImplFactory bindingFactory,
@@ -113,6 +117,7 @@ public class K8sMasterImpl implements K8sMaster {
         this.bindingFactory = bindingFactory;
         this.accountFactory = accountFactory;
         this.account = accountFactory.create();
+        this.nodes = new ArrayList<>();
         parseArgs(args);
     }
 
@@ -337,6 +342,23 @@ public class K8sMasterImpl implements K8sMaster {
         log.accountSet(this, account);
     }
 
+    /**
+     * <pre>
+     * node &lt;&lt; 'node0.test'
+     * node &lt;&lt; nodes
+     * </pre>
+     */
+    public List<Object> getNode() {
+        return GeneticListPropertyUtil.<Object>geneticListStatement(
+                new GeneticListProperty<Object>() {
+
+                    @Override
+                    public void add(Object property) {
+                        addNode(property);
+                    }
+                });
+    }
+
     @Override
     public void label(Map<String, Object> args) {
         k8s.label(args);
@@ -471,6 +493,16 @@ public class K8sMasterImpl implements K8sMaster {
         return k8s.getClusterHosts();
     }
 
+    public void addNode(Object node) {
+        nodes.add(node);
+        log.nodeAdded(this, node);
+    }
+
+    @Override
+    public List<Object> getNodes() {
+        return nodes;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -478,6 +510,14 @@ public class K8sMasterImpl implements K8sMaster {
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parseNodes(args);
+    }
+
+    private void parseNodes(Map<String, Object> args) {
+        Object v = args.get("nodes");
+        if (v != null) {
+            addNode(v);
+        }
     }
 
 }

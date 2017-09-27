@@ -269,7 +269,7 @@ public class FlannelDockerImpl implements FlannelDocker {
 
                     @Override
                     public void add(Object property) {
-                        nodes.add(property);
+                        addNode(property);
                     }
                 });
     }
@@ -328,6 +328,11 @@ public class FlannelDockerImpl implements FlannelDocker {
     @Override
     public Backend getBackend() {
         return backend;
+    }
+
+    public void addNode(Object node) {
+        nodes.add(node);
+        log.nodeAdded(this, node);
     }
 
     @Override

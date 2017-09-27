@@ -998,7 +998,7 @@ echo \$file
         if (!args.containsKey('parent')) {
             a.parent = this
         }
-        if (!args.containsKey('target')) {
+        if (args.get('target') == null) {
             a.target = target
         }
         if (!a.containsKey('chdir')) {

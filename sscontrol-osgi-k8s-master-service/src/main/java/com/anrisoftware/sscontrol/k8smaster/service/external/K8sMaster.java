@@ -37,4 +37,9 @@ public interface K8sMaster extends K8s {
 
     Account getAccount();
 
+    /**
+     * Returns the list of kubernetes nodes.
+     */
+    List<Object> getNodes();
+
 }

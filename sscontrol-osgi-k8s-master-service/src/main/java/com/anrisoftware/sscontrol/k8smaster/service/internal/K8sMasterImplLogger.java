@@ -21,6 +21,7 @@ import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImp
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.authenticationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.authorizationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.nodeAdded;
 
 import javax.inject.Singleton;
 
@@ -57,7 +58,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
         bindingSet("Binding {} set for {}"),
 
-        accountSet("Account {} set for {}");
+        accountSet("Account {} set for {}"),
+
+        nodeAdded("Node {} added to {}");
 
         private String name;
 
@@ -100,5 +103,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     void accountSet(K8sMasterImpl k8s, Account account) {
         debug(accountSet, account, k8s);
+    }
+
+    void nodeAdded(K8sMasterImpl k8s, Object node) {
+        debug(nodeAdded, node, k8s);
     }
 }
