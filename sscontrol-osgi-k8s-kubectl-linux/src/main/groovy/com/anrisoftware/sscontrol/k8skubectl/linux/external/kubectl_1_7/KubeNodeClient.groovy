@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
 
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -40,6 +41,8 @@ class KubeNodeClient extends KubectlClient {
     @Inject
     KubeNodeResourceFactory kubeNodeResourceFactory
 
+    final long retryWaitTime = Duration.standardSeconds(5).millis
+
     @AssistedInject
     KubeNodeClient(@Assisted ClusterHost cluster, @Assisted Object parent) {
         super(cluster, parent)
@@ -64,9 +67,39 @@ class KubeNodeClient extends KubectlClient {
      */
     def waitNodeReady(String label, String value, long amount, TimeUnit timeUnit) {
         log.info 'Wait for node to be ready: {}', label
+        def latch = new CountDownLatch(1)
+        Thread.start {
+            while (true) {
+                try {
+                    def b = waitNode label, value, amount, timeUnit, latch
+                    if (b) {
+                        break
+                    } else {
+                        Thread.sleep retryWaitTime
+                        continue
+                    }
+                } catch (e) {
+                    Thread.sleep retryWaitTime
+                    continue
+                }
+            }
+        }
+        if (!latch.await(amount, timeUnit)) {
+            throw new NoResourceFoundException(this, ["$label": value])
+        }
+    }
+
+    boolean waitNode(String label, String value, long amount, TimeUnit timeUnit, def latch) {
         def res = getNodeResource label, value
         def node = res.node
-        node.waitNodeReady amount, timeUnit
+        if (!node) {
+            Thread.sleep retryWaitTime
+            return false
+        } else {
+            node.waitNodeReady amount, timeUnit
+            latch.countDown()
+            return true
+        }
     }
 
     def applyLabelToNode(String nodeLabel, String nodeValue, String key, String value) {

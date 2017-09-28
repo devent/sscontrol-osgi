@@ -49,11 +49,19 @@ class KubectlClientServerTest extends AbstractFabricTest {
     }
 
     @Test
-    void "waitNodeReady"() {
+    void "waitNodeReady master node"() {
         def script = injector.getInstance ScriptMock
         ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
         def kubectl = nodeClientFactory.create cluster, script
         kubectl.waitNodeReady "robobeerun.com/node", "andrea-master-0-test", 10, TimeUnit.SECONDS
+    }
+
+    @Test(expected=NoResourceFoundException)
+    void "waitNodeReady no node"() {
+        def script = injector.getInstance ScriptMock
+        ClusterHost cluster = createClusterHost 'https://andrea-master.robobee-test.test:443', robobeeCa, robobeeCert, robobeeKey
+        def kubectl = nodeClientFactory.create cluster, script
+        kubectl.waitNodeReady "robobeerun.com/node", "not-there", 3, TimeUnit.SECONDS
     }
 
     @Test
