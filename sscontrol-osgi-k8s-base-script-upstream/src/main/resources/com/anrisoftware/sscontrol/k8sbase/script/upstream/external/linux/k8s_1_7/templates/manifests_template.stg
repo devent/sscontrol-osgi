@@ -634,6 +634,8 @@ spec:
   selector:
     matchLabels:
       k8s-app: calico-node
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -761,11 +763,14 @@ spec:
       tolerations:
       - effect: <parent.robobeeDedicatedTaintEffect>
         key: <parent.robobeeDedicatedTaintKey>
-        operator: Equal
+        operator: Exists
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
 <if(parent.allowCalicoNodeOnMaster)>
       - effect: NoSchedule
         key: node.alpha.kubernetes.io/ismaster
-        operator: Equal
+        operator: Exists
 <endif>
 
 ---
