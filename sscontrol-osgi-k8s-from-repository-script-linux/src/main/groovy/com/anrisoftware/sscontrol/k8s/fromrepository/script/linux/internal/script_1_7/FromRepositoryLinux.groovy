@@ -117,13 +117,14 @@ class FromRepositoryLinux extends ScriptBase {
         createCmd findFilesFactory, chdir: dir, suffix: kubectlFilesPatterns call() each {
             if (!StringUtils.isBlank(it)) {
                 try {
-                    cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
-                } catch (e) {
                     File tmp = File.createTempFile(it, null)
                     fetch src: "$dir/$it", dest: tmp call()
                     def s = FileUtils.readFileToString(tmp, charset)
                     tmp.delete()
-                    throw new ApplyManifestException(e, dir, it, s)
+                    log.trace 'Apply manifest {}/{}: ```\n{}```', dir, it, s
+                    cluster.runKubectl chdir: dir, service: service, cluster: service.cluster, args: "apply -f $it"
+                } catch (e) {
+                    throw new ApplyManifestException(e, dir, it)
                 }
             }
         }
