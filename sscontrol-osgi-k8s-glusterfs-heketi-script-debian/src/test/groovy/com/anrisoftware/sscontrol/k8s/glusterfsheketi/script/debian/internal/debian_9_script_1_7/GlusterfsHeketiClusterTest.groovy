@@ -106,12 +106,12 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     vars << [gluster: [
-            limits: [cpu: '1', memory: '256Mi'],
-            requests: [cpu: '1', memory: '256Mi']
+            limits: [cpu: '0.5', memory: '256Mi'],
+            requests: [cpu: '0.5', memory: '256Mi']
     ]]
     vars << [tolerations: [
-        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
         [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
         [key: 'dedicated', effect: 'NoSchedule'],
     ]]
     topology parse: """

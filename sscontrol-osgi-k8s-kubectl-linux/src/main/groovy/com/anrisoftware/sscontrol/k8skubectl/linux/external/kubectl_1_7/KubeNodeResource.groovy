@@ -45,6 +45,9 @@ class KubeNodeResource {
     KubeNodeFactory nodeFactory
 
     @Inject
+    KubeNodeResourceLogger log
+
+    @Inject
     KubeNodeResource(
     @Assisted NamespacedKubernetesClient client,
     @Assisted Resource resource,
@@ -57,7 +60,8 @@ class KubeNodeResource {
     KubeNode getNode() {
         KNodeList list = resource.list()
         if (list.items.isEmpty()) {
-            throw new NoResourceFoundException(this, resource.labels)
+            log.nodeNotFound this, resource.labels
+            return null
         }
         def node = list.items[0]
         nodeFactory.create(client, this, node, parent)
