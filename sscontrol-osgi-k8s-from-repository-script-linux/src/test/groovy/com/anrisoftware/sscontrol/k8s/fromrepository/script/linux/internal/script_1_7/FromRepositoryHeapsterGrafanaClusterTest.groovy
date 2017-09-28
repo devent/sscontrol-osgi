@@ -62,7 +62,8 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
             image: [name: 'gcr.io/google_containers/heapster-amd64', version: 'v1.5.0-beta.0'],
             affinityRequired: true,
             tolerations: [
-                [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']
+                [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+                [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
             ],
         ]
     ]
@@ -98,7 +99,8 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
             image: [version: 'v4'],
             affinityRequired: true,
             tolerations: [
-                [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']
+                [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+                [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
             ]
         ]
     ]

@@ -22,10 +22,8 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 @SuppressWarnings("serial")
 public class ApplyManifestException extends AppException {
 
-    public ApplyManifestException(Throwable cause, File dir, String name,
-            String content) {
+    public ApplyManifestException(Throwable cause, File dir, String name) {
         super("Error applying manifest", cause);
         addContextValue("file", new File(dir, name));
-        addContextValue("content", content);
     }
 }
