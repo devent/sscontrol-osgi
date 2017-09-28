@@ -353,11 +353,12 @@ systemctl daemon-reload
         }
         log.info 'Apply taints for {}.', service
         def node = service.cluster.name
+        def nodeClient = createNodeClient()
         def vars = [:]
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = createTmpFile()
         try {
-            createNodeClient().waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
+            nodeClient.waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
             kubectlCluster.uploadKubeconfig(vars)
             service.taints.each { String key, Taint taint ->
                 log.info 'Apply taint {} for {}.', taint, service
@@ -381,10 +382,18 @@ systemctl daemon-reload
         log.info 'Apply labels for {}.', service
         def node = service.cluster.name
         def nodeClient = createNodeClient()
-        nodeClient.waitNodeReady robobeeLabelNode, node, timeoutLong
-        service.labels.each { String key, Label label ->
-            log.info 'Apply label {} for {}.', label, service
-            nodeClient.applyLabelToNode robobeeLabelNode, node, label.key, label.value
+        def vars = [:]
+        vars.cluster = service.clusterHost
+        vars.kubeconfigFile = createTmpFile()
+        try {
+            nodeClient.waitNodeReady robobeeLabelNode, node, timeoutLong
+            kubectlCluster.uploadKubeconfig(vars)
+            service.labels.each { String key, Label label ->
+                log.info 'Apply label {} for {}.', label, service
+                kubectlCluster.applyLabelNode vars, node, label
+            }
+        } finally {
+            deleteTmpFile vars.kubeconfigFile
         }
     }
 

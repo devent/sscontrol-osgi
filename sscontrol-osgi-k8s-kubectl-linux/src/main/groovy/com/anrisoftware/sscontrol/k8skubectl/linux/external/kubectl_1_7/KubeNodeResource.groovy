@@ -45,7 +45,8 @@ class KubeNodeResource {
     KubeNodeFactory nodeFactory
 
     @Inject
-    KubeNodeResource(@Assisted NamespacedKubernetesClient client,
+    KubeNodeResource(
+    @Assisted NamespacedKubernetesClient client,
     @Assisted Resource resource,
     @Assisted Object parent) {
         this.client = client
