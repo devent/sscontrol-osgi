@@ -36,6 +36,10 @@ if cat $gkdeploy_out | grep "pod not found.">/dev/null; then
 exit 1
 fi
 
+if cat $gkdeploy_out | grep "pods not found.">/dev/null; then
+exit 1
+fi
+
 if cat $gkdeploy_out | grep "Please destroy existing setup and try again.">/dev/null; then
 <vars.glusterfsScript.glusterKubernetesDeployCommand> -g --yes \\
 -c kubectl \\
