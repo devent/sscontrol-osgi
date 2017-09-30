@@ -222,6 +222,12 @@ class GlusterfsHeketiDebian extends ScriptBase {
             def address = ret.out[0..-2]
             service.storage.restAddress = address
         }
+        if (!service.storage.restUser) {
+            service.storage.restUser = "admin"
+        }
+        if (!service.storage.restKey) {
+            service.storage.restKey = service.admin.key
+        }
         def tmp = createTmpFile target: target
         try {
             template target: target, resource: storageClassResource, name: 'storageClass', dest: tmp, vars: [:] call()
