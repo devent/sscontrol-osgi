@@ -62,6 +62,10 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
                 cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_1_server_cert.pem'),
                 key: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_1_server_key.pem'),
             ],
+            [
+                cert: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_2_server_cert.pem'),
+                key: AbstractEtcdRunnerTest.class.getResource('robobee_test_etcd_etcd_2_server_key.pem'),
+            ],
         ],
     ]
 

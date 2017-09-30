@@ -41,17 +41,12 @@ class GlusterfsHeketiClusterTest extends AbstractGlusterfsHeketiRunnerTest {
             name: "json_topology_server",
             script: '''
 service "ssh" with {
-    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "ssh", group: "masters" with {
     host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
-}
-service "ssh", group: "gluster-node-0" with {
-    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
-}
-service "ssh", group: "gluster-node-1" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
 }
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
@@ -60,11 +55,9 @@ service "repo-git", group: "glusterfs-heketi", target: targets.default[0] with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-def glusterNode = [
-    targets['gluster-node-0'][0].hostAddress,
-    targets['gluster-node-1'][0].hostAddress,
-]
-def size_M = 40000
+def glusterNode = targets.default.inject([]) { list, host ->
+    list << host.hostAddress
+}
 service "shell", privileged: true with {
     script << """
 set -e
@@ -103,7 +96,7 @@ systemctl start glusterfs-lo
 systemctl enable glusterfs-lo
 """
 }
-service "glusterfs-heketi", target: 'masters', repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
+service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     property << "commands_quiet=false"
     property << "debug_gk_deploy=true"
     admin key: "MySecret"
@@ -153,6 +146,22 @@ service "glusterfs-heketi", target: 'masters', repo: "glusterfs-heketi", name: "
           "devices":[
             "/dev/loop10"
           ]
+        },
+        {
+          "node":{
+            "hostnames":{
+              "manage":[
+                "${glusterNode[2]}"
+              ],
+              "storage":[
+                "${glusterNode[2]}"
+              ]
+            },
+            "zone":3
+          },
+          "devices":[
+            "/dev/loop10"
+          ]
         }
       ]
     }
@@ -161,19 +170,7 @@ service "glusterfs-heketi", target: 'masters', repo: "glusterfs-heketi", name: "
 """
 }
 ''',
-            scriptVars: [
-                sockets: [
-                    masters: [
-                        "/tmp/robobee@robobee-test:22"
-                    ],
-                    nodes: [
-                        "/tmp/robobee@robobee-test:22",
-                        "/tmp/robobee@robobee-1-test:22"
-                    ]
-                ],
-                robobeeKey: robobeeKey,
-                certs: certs
-            ],
+            scriptVars: [sockets: sockets, size_M: "40000", certs: certs, robobeeKey: robobeeKey],
             expectedServicesSize: 5,
             expected: { Map args ->
             },
@@ -181,10 +178,28 @@ service "glusterfs-heketi", target: 'masters', repo: "glusterfs-heketi", name: "
         doTest test
     }
 
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
+    static final Map certs = [
+        worker: [
+            ca: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_ca.txt'),
+            cert: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_admin_cert.txt'),
+            key: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_admin_key.txt'),
+        ],
+    ]
+
     @Before
     void beforeMethod() {
-        assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
-        assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
+        assumeSocketsExists sockets.nodes
     }
 
     Map getScriptEnv(Map args) {

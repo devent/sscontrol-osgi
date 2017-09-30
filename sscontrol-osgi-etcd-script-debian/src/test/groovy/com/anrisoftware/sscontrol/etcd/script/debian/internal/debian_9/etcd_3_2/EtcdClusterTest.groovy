@@ -39,8 +39,9 @@ class EtcdClusterTest extends AbstractEtcdRunnerTest {
             name: "cluster_tls",
             script: '''
 service "ssh", group: "etcd" with {
-    host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
-    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 targets.etcd.eachWithIndex { host, i ->
 service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with {
@@ -53,13 +54,14 @@ service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with 
     peer state: "new", advertise: "https://etcd-${i}.robobee-test.test:2380", listen: "https://${host.hostAddress}:2380", token: "robobee-test-cluster-1" with {
         cluster << "etcd-0=https://etcd-0.robobee-test.test:2380"
         cluster << "etcd-1=https://etcd-1.robobee-test.test:2380"
+        cluster << "etcd-2=https://etcd-2.robobee-test.test:2380"
         tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
         authentication "cert", ca: certs.ca
     }
 }
 }
 ''',
-            scriptVars: [certs: robobeetestEtcdCerts],
+            scriptVars: [sockets: sockets, certs: robobeetestEtcdCerts],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
@@ -73,8 +75,9 @@ service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with 
             name: "server_tls_gateway",
             script: '''
 service "ssh", group: "etcd" with {
-    host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
-    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 targets.etcd.eachWithIndex { host, i ->
 service "etcd", target: host with {
@@ -84,7 +87,7 @@ service "etcd", target: host with {
 }
 }
 ''',
-            scriptVars: [certs: robobeetestEtcdCerts],
+            scriptVars: [sockets: sockets, certs: robobeetestEtcdCerts],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
@@ -92,10 +95,20 @@ service "etcd", target: host with {
         doTest test
     }
 
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
     @Before
     void beforeMethod() {
-        assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
-        assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
+        assumeSocketsExists sockets.nodes
     }
 
     void createDummyCommands(File dir) {

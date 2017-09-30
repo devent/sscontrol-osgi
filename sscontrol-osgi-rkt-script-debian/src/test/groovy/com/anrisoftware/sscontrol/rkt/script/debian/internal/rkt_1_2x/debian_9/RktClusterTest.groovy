@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.flanneldocker.script.debian.internal.flanneldocker_0_9.debian_9
+package com.anrisoftware.sscontrol.rkt.script.debian.internal.rkt_1_2x.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -31,27 +31,21 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FlannelDockerClusterTest extends AbstractFlannelDockerRunnerTest {
+class RktClusterTest extends AbstractRktRunnerTest {
 
     @Test
-    void "cluster_tls"() {
+    void "cluster_rkt_basic"() {
         def test = [
-            name: "cluster_tls",
+            name: "cluster_rkt_basic",
             script: '''
-service "ssh", group: "servers" with {
+service "ssh" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
-service "flannel-docker", target: "servers", check: targets.servers[-1] with {
-    node << "servers"
-    bind name: "enp0s8"
-    etcd "https://10.10.10.7:22379" with {
-        tls certs
-    }
-}
+service "rkt", version: "1.28"
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestEtcdCerts],
+            scriptVars: [sockets: sockets],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -76,9 +70,11 @@ service "flannel-docker", target: "servers", check: targets.servers[-1] with {
         assumeSocketsExists sockets.nodes
     }
 
+    @Override
     void createDummyCommands(File dir) {
     }
 
+    @Override
     Map getScriptEnv(Map args) {
         getEmptyScriptEnv args
     }

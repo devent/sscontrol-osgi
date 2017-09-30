@@ -46,19 +46,20 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sMasterServerTest extends AbstractMasterRunnerTest {
+class K8sMasterClusterTest extends AbstractMasterRunnerTest {
 
     @Test
-    void "server_tls"() {
+    void "cluster_tls"() {
         def test = [
-            name: "server_tls",
+            name: "cluster_tls",
             script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh", host: "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
 service "ssh", group: "masters" with {
-    host "robobee@andrea-master.robobee-test.test", socket: robobeeSocket
+    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
-    host "node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
@@ -84,7 +85,7 @@ service "k8s-master", name: "andrea-master-0-test", advertise: "192.168.56.200" 
     label << "robobeerun.com/cluster-monitoring-influxdb-grafana=required"
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestCerts],
+            scriptVars: [sockets: sockets, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
             expectedServicesSize: 3,
             expected: { Map args ->
@@ -93,9 +94,20 @@ service "k8s-master", name: "andrea-master-0-test", advertise: "192.168.56.200" 
         doTest test
     }
 
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
     @Before
     void beforeMethod() {
-        checkRobobeeSocket()
+        assumeSocketsExists sockets.nodes
     }
 
     void createDummyCommands(File dir) {
