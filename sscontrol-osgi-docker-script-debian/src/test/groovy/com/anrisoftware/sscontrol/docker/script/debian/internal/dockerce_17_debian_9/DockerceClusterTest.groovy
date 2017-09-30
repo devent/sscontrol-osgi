@@ -26,6 +26,7 @@ import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
 
 import groovy.util.logging.Slf4j
 
+
 /**
  *
  *
@@ -35,26 +36,21 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class DockerceClusterTest extends AbstractDockerceRunnerTest {
 
-    static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
-
-    static final Map certs = [
-        ca: DockerceClusterTest.class.getResource('registry_robobee_test_test_ca.pem'),
-    ]
-
     @Test
     void "cluster_docker"() {
         def test = [
             name: "cluster_docker",
             script: '''
 service "ssh" with {
-    host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
-    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "docker" with {
     registry mirror: 'https://registry.robobee-test.test:5000', ca: certs.ca
 }
 ''',
-            scriptVars: [certs: certs],
+            scriptVars: [sockets: sockets, certs: certs],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
@@ -62,10 +58,24 @@ service "docker" with {
         doTest test
     }
 
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
+    static final Map certs = [
+        ca: DockerceClusterTest.class.getResource('registry_robobee_test_test_ca.pem'),
+    ]
+
     @Before
     void beforeMethod() {
-        assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
-        assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
+        checkRobobeeSocket()
     }
 
     void createDummyCommands(File dir) {

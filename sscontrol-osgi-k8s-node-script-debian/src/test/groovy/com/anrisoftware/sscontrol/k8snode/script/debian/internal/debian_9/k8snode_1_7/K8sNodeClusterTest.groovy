@@ -32,7 +32,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class K8sNodeServerTest extends AbstractNodeRunnerTest {
+class K8sNodeClusterTest extends AbstractNodeRunnerTest {
 
     @Test
     void "nodes_tls"() {
@@ -40,10 +40,11 @@ class K8sNodeServerTest extends AbstractNodeRunnerTest {
             name: "nodes_tls",
             script: '''
 service "ssh", group: "masters" with {
-    host "andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
+    host "andrea-master.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
-    host "node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
@@ -56,12 +57,12 @@ service "k8s-node", name: "andrea-node-${i+1}-test", target: host, advertise: ho
         tls certs.tls
         client certs.tls
     }
-    label << "robobeerun.com/role=edge-router"
-    taint << "dedicated=web:NoSchedule"
+    nodes.labels[i].each { label << it }
+    nodes.taints[i].each { taint << it }
 }
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, certs: robobeetestCerts],
+            scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes],
             expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -74,21 +75,45 @@ service "k8s-node", name: "andrea-node-${i+1}-test", target: host, advertise: ho
 
     static final Map robobeetestCerts = [
         tls: [
-            ca: K8sNodeServerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: K8sNodeServerTest.class.getResource('robobee_test_kube_node_1_server_cert.pem'),
-            key: K8sNodeServerTest.class.getResource('robobee_test_kube_node_1_server_key.pem'),
+            ca: K8sNodeClusterTest.class.getResource('robobee_test_kube_ca.pem'),
+            cert: K8sNodeClusterTest.class.getResource('robobee_test_kube_node_1_server_cert.pem'),
+            key: K8sNodeClusterTest.class.getResource('robobee_test_kube_node_1_server_key.pem'),
         ],
         admin: [
-            ca: K8sNodeServerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: K8sNodeServerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: K8sNodeServerTest.class.getResource('robobee_test_kube_admin_key.pem'),
+            ca: K8sNodeClusterTest.class.getResource('robobee_test_kube_ca.pem'),
+            cert: K8sNodeClusterTest.class.getResource('robobee_test_kube_admin_cert.pem'),
+            key: K8sNodeClusterTest.class.getResource('robobee_test_kube_admin_key.pem'),
         ],
+    ]
+
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
+    static final Map nodes = [
+        labels: [
+            [
+                "robobeerun.com/role=edge-router",
+                "muellerpublic.de/role=web"
+            ],
+            [
+                "muellerpublic.de/role=dev"]
+        ],
+        taints: [
+            [],
+            []]
     ]
 
     @Before
     void beforeMethod() {
-        assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
-        assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
+        assumeSocketsExists sockets.nodes
     }
 
     void createDummyCommands(File dir) {

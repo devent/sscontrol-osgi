@@ -33,22 +33,14 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FromRepositoryHeapsterGrafanaClusterTest extends AbstractFromRepositoryRunnerTest {
-
-    static final Map certs = [
-        worker: [
-            ca: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_key.pem'),
-        ],
-    ]
+class FromRepositoryHeapsterGrafanaPersistentClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
-    void "heapster_grafana_ephemeral"() {
+    void "heapster_grafana_persistent"() {
         def test = [
-            name: "heapster_grafana_ephemeral",
+            name: "heapster_grafana_persistent",
             script: '''
-service "ssh", host: "andrea-master.robobee-test.test", socket: robobeeSocket
+service "ssh", host: "andrea-master.robobee-test.test", socket: sockets.masters[0]
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', ca: certs.worker.ca, cert: certs.worker.cert, key: certs.worker.key
 }
@@ -109,6 +101,7 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
             image: [name: 'gcr.io/google_containers/heapster-influxdb-amd64', version: 'v1.3.3'],
             limits: [cpu: '50m', memory: '100Mi'],
             requests: [cpu: '50m', memory: '100Mi'],
+            persistent: [share: true, storage: [class: "slow", size: "10Gi"]],
         ]
     ]
     vars << [
@@ -121,7 +114,15 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
 }
 ''',
             scriptVars: [
-                robobeeSocket: robobeeSocket,
+                sockets: [
+                    masters: [
+                        "/tmp/robobee@robobee-test:22"
+                    ],
+                    nodes: [
+                        "/tmp/robobee@robobee-test:22",
+                        "/tmp/robobee@robobee-1-test:22"
+                    ]
+                ],
                 robobeeKey: robobeeKey,
                 certs: certs,
             ],
@@ -131,6 +132,14 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
         ]
         doTest test
     }
+
+    static final Map certs = [
+        worker: [
+            ca: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_ca.pem'),
+            cert: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
+            key: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_key.pem'),
+        ],
+    ]
 
     @Before
     void beforeMethod() {
