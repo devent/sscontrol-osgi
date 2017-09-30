@@ -38,7 +38,7 @@ abstract class Rkt_Deb_Upstream extends ScriptBase {
     def installRkt() {
         log.info 'Installs rkt.'
         def installed = debian.checkPackagesVersion([
-            [package: rktPackage, version: rktVersion]
+            [name: rktPackage, version: rktVersion]
         ])
         if (installed) {
             return
