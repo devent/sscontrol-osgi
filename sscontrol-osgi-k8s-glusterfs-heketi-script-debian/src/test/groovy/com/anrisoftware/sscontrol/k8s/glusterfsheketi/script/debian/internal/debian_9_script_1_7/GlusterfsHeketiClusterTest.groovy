@@ -41,16 +41,19 @@ class GlusterfsHeketiClusterTest extends AbstractGlusterfsHeketiRunnerTest {
             name: "json_topology_server",
             script: '''
 service "ssh" with {
-    host "robobee@andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
-    host "robobee@node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+}
+service "ssh", group: "masters" with {
+    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "gluster-node-0" with {
-    host "robobee@andrea-master.robobee-test.test", socket: "/tmp/robobee@robobee-test:22"
+    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "gluster-node-1" with {
-    host "robobee@node-1.robobee-test.test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
 }
-service "k8s-cluster" with {
+service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
 }
 service "repo-git", group: "glusterfs-heketi", target: targets.default[0] with {
@@ -61,7 +64,7 @@ def glusterNode = [
     targets['gluster-node-0'][0].hostAddress,
     targets['gluster-node-1'][0].hostAddress,
 ]
-def size_M = 5000
+def size_M = 40000
 service "shell", privileged: true with {
     script << """
 set -e
@@ -100,7 +103,7 @@ systemctl start glusterfs-lo
 systemctl enable glusterfs-lo
 """
 }
-service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
+service "glusterfs-heketi", target: 'masters', repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     property << "commands_quiet=false"
     property << "debug_gk_deploy=true"
     admin key: "MySecret"
@@ -158,7 +161,19 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 """
 }
 ''',
-            scriptVars: [robobeeKey: robobeeKey, certs: certs],
+            scriptVars: [
+                sockets: [
+                    masters: [
+                        "/tmp/robobee@robobee-test:22"
+                    ],
+                    nodes: [
+                        "/tmp/robobee@robobee-test:22",
+                        "/tmp/robobee@robobee-1-test:22"
+                    ]
+                ],
+                robobeeKey: robobeeKey,
+                certs: certs
+            ],
             expectedServicesSize: 5,
             expected: { Map args ->
             },
