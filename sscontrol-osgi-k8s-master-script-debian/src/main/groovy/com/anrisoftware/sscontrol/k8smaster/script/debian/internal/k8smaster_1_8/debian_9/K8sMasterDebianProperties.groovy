@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.script.debian.internal.debian_9.k8snode_1_7
+package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUfwLinux
-
-import groovy.util.logging.Slf4j
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Ufw.
+ * <i>K8s-Master 1.7 Debian 9</i> properties provider from
+ * {@code "/k8s_master_1_7_debian_9.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-@Slf4j
-class K8sNodeUfwDebian extends AbstractK8sUfwLinux {
+class K8sMasterDebianProperties extends AbstractContextPropertiesProvider {
 
-    @Inject
-    K8sNodeDebianProperties debianPropertiesProvider
+    private static final URL RESOURCE = K8sMasterDebianProperties.class.getResource("/k8s_master_1_7_debian_9.properties")
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
-    }
-
-    @Override
-    def getLog() {
-        log
+    K8sMasterDebianProperties() {
+        super(K8sMasterDebianProperties.class, RESOURCE)
     }
 }

@@ -13,35 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7
+package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.systemd
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractKubectlUpstream
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
+import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Installs kubectl from the upstream sources for GNU/Linux.
+ * Configures the K8s service for Systemd.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class KubectlUpstreamLinux extends AbstractKubectlUpstream {
+abstract class AbstractK8sSystemdLinux extends ScriptBase {
+
+    SystemdUtils systemd
 
     @Inject
-    K8sClusterLinuxProperties linuxPropertiesProvider
-
-    @Override
-    Object run() {
-        installKubectl()
+    void setSystemd(SystemdUtilsFactory factory) {
+        this.systemd = factory.create this
     }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        linuxPropertiesProvider.get()
+    def stopServices() {
+        systemd.stopServices()
+    }
+
+    def startServices() {
+        systemd.startServices()
+    }
+
+    def enableServices() {
+        systemd.enableServices()
     }
 
     @Override

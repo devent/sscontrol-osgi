@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7
+package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractKubectlUpstream
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUfwLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * Installs kubectl from the upstream sources for GNU/Linux.
+ * Ufw.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class KubectlUpstreamLinux extends AbstractKubectlUpstream {
+class K8sMasterUfwDebian extends AbstractK8sUfwLinux {
 
     @Inject
-    K8sClusterLinuxProperties linuxPropertiesProvider
-
-    @Override
-    Object run() {
-        installKubectl()
-    }
+    K8sMasterDebianProperties debianPropertiesProvider
 
     @Override
     ContextProperties getDefaultProperties() {
-        linuxPropertiesProvider.get()
+        debianPropertiesProvider.get()
     }
 
     @Override
