@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8s_1_7
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.linux.k8s_1_7.AbstractK8sUpstreamLinux
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUpstreamLinux
 import com.anrisoftware.sscontrol.k8snode.service.external.K8sNode
 
 import groovy.util.logging.Slf4j

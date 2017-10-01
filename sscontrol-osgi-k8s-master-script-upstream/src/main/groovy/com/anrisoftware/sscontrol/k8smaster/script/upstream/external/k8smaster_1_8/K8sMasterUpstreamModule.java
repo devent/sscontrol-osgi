@@ -13,34 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.script.debian.internal.debian_9.k8snode_1_7
+package com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8;
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUfwLinux
-
-import groovy.util.logging.Slf4j
+import com.google.inject.AbstractModule;
 
 /**
- * Ufw.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-@Slf4j
-class K8sNodeUfwDebian extends AbstractK8sUfwLinux {
-
-    @Inject
-    K8sNodeDebianProperties debianPropertiesProvider
+public class K8sMasterUpstreamModule extends AbstractModule {
 
     @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
+    protected void configure() {
     }
 
-    @Override
-    def getLog() {
-        log
-    }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8snode.script.debian.internal.debian_9.k8snode_1_7
+package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
 import javax.inject.Inject
 
@@ -31,10 +31,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sNodeDockerDebian extends AbstractK8sDockerLinux {
+class K8sMasterDockerDebian extends AbstractK8sDockerLinux {
 
     @Inject
-    K8sNodeDebianProperties debianPropertiesProvider
+    K8sMasterDebianProperties debianPropertiesProvider
 
     SystemdUtils systemd
 
