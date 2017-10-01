@@ -78,6 +78,7 @@ exec ${RKT} ${RKT_GLOBAL_ARGS} \
     --mount volume=var-log,target=/var/log \
     --mount volume=os-release,target=/etc/os-release \
     --mount volume=run,target=/run \
+    ${CALICO_OPTS} \
     ${RKT_STAGE1_ARG} \
     ${KUBELET_IMAGE} \
     ${KUBELET_IMAGE_ARGS} \

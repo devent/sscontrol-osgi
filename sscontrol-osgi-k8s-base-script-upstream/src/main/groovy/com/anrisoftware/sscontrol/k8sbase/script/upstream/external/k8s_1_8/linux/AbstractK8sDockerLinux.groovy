@@ -36,7 +36,7 @@ abstract class AbstractK8sDockerLinux extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('K8s_1_7_DockerOptionsTemplates')
+        def templates = templatesFactory.create('K8s_1_8_DockerOptionsTemplates')
         this.dockerOptionsTemplate = templates.getResource('docker_options')
     }
 
@@ -50,7 +50,7 @@ abstract class AbstractK8sDockerLinux extends ScriptBase {
     }
 
     boolean getIptablesDisableDocker() {
-        properties.getBooleanProperty 'iptables_disable_docker', defaultProperties
+        getScriptBooleanProperty 'iptables_disable_docker'
     }
 
     @Override
