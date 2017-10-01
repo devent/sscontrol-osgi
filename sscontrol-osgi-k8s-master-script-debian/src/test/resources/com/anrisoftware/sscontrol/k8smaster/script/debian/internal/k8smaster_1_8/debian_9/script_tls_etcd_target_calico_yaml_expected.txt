@@ -78,6 +78,8 @@ spec:
   selector:
     matchLabels:
       k8s-app: calico-node
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -94,7 +96,7 @@ spec:
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          image: quay.io/calico/node:v2.5.1
+          image: quay.io/calico/node:v2.6.1
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS
@@ -148,7 +150,7 @@ spec:
         # This container installs the Calico CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          image: quay.io/calico/cni:v1.10.0
+          image: quay.io/calico/cni:v1.11.0
           imagePullPolicy: Always
           command: ["/install-cni.sh"]
           env:
@@ -205,10 +207,13 @@ spec:
       tolerations:
       - effect: NoSchedule
         key: robobeerun.com/dedicated
-        operator: Equal
+        operator: Exists
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
       - effect: NoSchedule
         key: node.alpha.kubernetes.io/ismaster
-        operator: Equal
+        operator: Exists
 
 ---
 
@@ -243,7 +248,7 @@ spec:
       hostNetwork: true
       containers:
         - name: calico-policy-controller
-          image: quay.io/calico/kube-policy-controller:v0.7.0
+          image: quay.io/calico/kube-policy-controller:v1.0.0-rc4
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS

@@ -968,6 +968,13 @@ echo \$file
                 }
     }
 
+    public File getScriptFileProperty(String key,
+            File parent=base,
+            ContextProperties defaults=defaultProperties,
+            boolean useAbsolute=true) {
+        return getFileProperty(key, parent, defaults, useAbsolute)
+    }
+
     /**
      * Returns a list script property.
      */
@@ -990,6 +997,27 @@ echo \$file
     boolean getScriptBooleanProperty(String name,
             ContextProperties defaults=defaultProperties) {
         properties.getBooleanProperty name, defaults
+    }
+
+    /**
+     * Returns a duration script property.
+     */
+    Duration getScriptDurationProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        properties.getDurationProperty name, defaults
+    }
+
+    /**
+     * Returns a Map script property.
+     */
+    Map getScriptMapProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        def v = getScriptListProperty name, defaults
+        v.inject([:]) { result, s ->
+            def ss = s.split(":")
+            result."${ss[0]}" = ss[1].toString()
+            result
+        }
     }
 
     private setupArgs(Map args, String name='') {

@@ -74,7 +74,7 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def attr = [renderers: [new UriBase64Renderer()]]
-        def templates = templatesFactory.create('K8s_1_7_UpstreamSystemdTemplates', attr)
+        def templates = templatesFactory.create('K8s_1_8_UpstreamSystemdTemplates', attr)
         this.kubeletServiceTemplate = templates.getResource('kubelet_service')
         this.kubeletConfigTemplate = templates.getResource('kubelet_config')
         this.manifestsTemplate = templates.getResource('manifests_template')
@@ -830,27 +830,35 @@ systemctl daemon-reload
     }
 
     String getRobobeeLabelNamespace() {
-        properties.getProperty 'robobee_label_namespace', defaultProperties
+        getScriptProperty 'robobee_label_namespace'
     }
 
     String getRobobeeDedicatedTaintEffect() {
-        properties.getProperty 'robobee_dedicated_taint_effect', defaultProperties
+        getScriptProperty 'robobee_dedicated_taint_effect'
     }
 
     String getRobobeeDedicatedTaintKey() {
-        properties.getProperty 'robobee_dedicated_taint_key', defaultProperties
+        getScriptProperty 'robobee_dedicated_taint_key'
     }
 
     long getMaxMapCount() {
-        properties.getNumberProperty 'max_map_count', defaultProperties
+        getScriptNumberProperty 'max_map_count'
     }
 
     File getSysctlFile() {
-        getFileProperty 'sysctl_file'
+        getScriptFileProperty 'sysctl_file'
     }
 
     Duration getKubectlTimeout() {
-        properties.getDurationProperty 'kubectl_timeout', defaultProperties
+        getScriptDurationProperty 'kubectl_timeout'
+    }
+
+    boolean getFailSwapOn() {
+        getScriptBooleanProperty 'fail_swap_on'
+    }
+
+    Map getFeatureGates() {
+        getScriptMapProperty 'feature_gates'
     }
 
     @Override
