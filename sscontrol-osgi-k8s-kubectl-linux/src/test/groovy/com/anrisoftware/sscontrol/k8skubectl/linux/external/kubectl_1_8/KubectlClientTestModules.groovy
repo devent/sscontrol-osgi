@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8
 
-import io.fabric8.kubernetes.api.model.Node;
-import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
+import static com.anrisoftware.globalpom.utils.TestUtils.*
+
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
+
+import groovy.util.logging.Slf4j
 
 /**
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface KubeNodeFactory {
+@Slf4j
+class KubectlClientTestModules {
 
-    KubeNode create(NamespacedKubernetesClient client,
-            KubeNodeResource resource, Node node, Object parent);
+    static List getModules() {
+        [
+            new KubectlLinuxModule(),
+        ]
+    }
 }

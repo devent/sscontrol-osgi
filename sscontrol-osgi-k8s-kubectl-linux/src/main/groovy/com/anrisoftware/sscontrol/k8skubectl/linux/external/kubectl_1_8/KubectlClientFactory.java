@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
+
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+
+import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
 
 /**
  *
@@ -21,10 +25,9 @@ package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@SuppressWarnings("serial")
-public class KubeClientException extends KubectlClientException {
+public interface KubectlClientFactory {
 
-    public KubeClientException(KubectlClient client, Exception cause) {
-        super("Client error", client, cause);
-    }
+    KubectlClient create(ClusterHost cluster, Object parent);
+
+    KubectlClient create(NamespacedKubernetesClient client, Object parent);
 }

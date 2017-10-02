@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 

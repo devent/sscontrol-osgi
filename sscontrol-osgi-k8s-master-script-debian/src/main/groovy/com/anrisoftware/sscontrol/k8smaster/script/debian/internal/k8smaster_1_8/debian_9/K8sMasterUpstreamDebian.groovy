@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8.K8sMasterUpstreamSystemd
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 
