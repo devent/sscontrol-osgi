@@ -65,6 +65,7 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
         uploadEtcdCertificates()
         createKubeletService()
         createKubeletConfig()
+        createKubeletKubeconfig()
         createKubeletManifests()
         createHostRkt()
         createFlannelCni()

@@ -56,8 +56,8 @@ abstract class K8sNodeUpstreamSystemd extends AbstractK8sUpstreamLinux {
         templates.each { template it call() }
     }
 
-    File getKubeconfigFile() {
-        properties.getFileProperty "kubeconfig_file", configDir, defaultProperties
+    File getProxyKubeconfigFile() {
+        properties.getFileProperty "proxy_kubeconfig_file", configDir, defaultProperties
     }
 
     @Override

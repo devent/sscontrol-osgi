@@ -57,11 +57,40 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                def ex = null
+                def systemctlExpected = [
+                    "${args.test.name}_systemctl1_expected.txt",
+                    "${args.test.name}_systemctl2_expected.txt",
+                    "${args.test.name}_systemctl3_expected.txt",
+                    "${args.test.name}_systemctl4_expected.txt"
+                ]
+                for (int i=0; i<systemctlExpected.size(); i++) {
+                    try {
+                        log.debug 'Test {}', systemctlExpected[i]
+                        assertFileResource K8sMasterScriptTest, dir, "systemctl.out", systemctlExpected[i]
+                        ex = null
+                        break
+                    } catch (AssertionError e) {
+                        ex = e
+                        continue
+                    }
+                }
+                if (ex) {
+                    throw ex
+                }
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_kube_options.conf", "${args.test.name}_kube_options_conf_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/usr/local/bin'), "host-rkt", "${args.test.name}_host_rkt_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/usr/local/bin'), "kubelet-wrapper", "${args.test.name}_kubelet_wrapper_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
@@ -73,28 +102,6 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-svc.yaml", "${args.test.name}_kube_dashboard_svc_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "calico.yaml", "${args.test.name}_calico_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/cni/net.d'), "10-flannel.conf", "${args.test.name}_cni_flannel_conf_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                try {
-                    assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl1_expected.txt"
-                } catch (AssertionError e) {
-                    try {
-                        assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl2_expected.txt"
-                    }
-                    catch (AssertionError e1) {
-                        try {
-                            assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl3_expected.txt"
-                        }
-                        catch (AssertionError e2) {
-                            assertFileResource K8sMasterScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl4_expected.txt"
-                        }
-                    }
-                }
             },
         ]
         doTest test
@@ -190,6 +197,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 File gen = args.test.generatedDir
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
@@ -215,6 +223,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
@@ -246,6 +255,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 File gen = args.test.generatedDir
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
@@ -275,6 +285,7 @@ service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] wi
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
             },

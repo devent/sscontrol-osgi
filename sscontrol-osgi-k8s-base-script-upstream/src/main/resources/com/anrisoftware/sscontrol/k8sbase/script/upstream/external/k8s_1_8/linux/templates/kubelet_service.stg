@@ -11,7 +11,6 @@ ExecStartPre=/bin/mkdir -p <parent.cniBinDir>
 ExecStartPre=/bin/mkdir -p <parent.containersLogDir>
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=${KUBELET_UUID_FILE}
 ExecStart=<parent.binDir>/kubelet-wrapper \
-  --api-servers=${K8S_APISERVERS} \
   --cni-conf-dir=<parent.cniNetDir> \
   --network-plugin=cni \
   --container-runtime=${CONTAINER_RUNTIME} \

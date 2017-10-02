@@ -16,6 +16,7 @@
 -p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/sysconfig
 -p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
 -p /tmp/junit/junit/etc/kubernetes/manifests
 -p /tmp/junit/junit/srv/kubernetes/manifests
 -p /var/lib/robobee/tmp

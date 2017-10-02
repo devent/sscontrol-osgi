@@ -304,6 +304,12 @@ systemctl daemon-reload
         template privileged: true, resource: flannelCniTemplate, name: 'flannelCniDropin', dest: "$dir/10-flannel.conf", vars: [:] call()
     }
 
+    def createKubeletKubeconfig() {
+        K8s service = service
+        log.info 'Create kubelet-kubeconfig.'
+        template privileged: true, resource: manifestsTemplate, name: 'kubeletManifest', dest: kubeconfigFile, vars: [:] call()
+    }
+
     def createWorkerKubeconfig() {
         K8s service = service
         log.info 'Create worker-kubeconfig.'
@@ -813,6 +819,10 @@ systemctl daemon-reload
     }
 
     File getKubeconfigFile() {
+        getScriptFileProperty 'kubeconfig_file', configDir
+    }
+
+    File getProxyKubeconfigFile() {
         null
     }
 
