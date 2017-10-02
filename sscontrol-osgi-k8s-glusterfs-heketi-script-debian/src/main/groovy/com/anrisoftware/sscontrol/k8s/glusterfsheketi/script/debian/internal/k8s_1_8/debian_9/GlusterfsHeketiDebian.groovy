@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.k8s_1_8.debian_9
 
 import static org.apache.commons.io.FilenameUtils.getBaseName
 import static org.hamcrest.MatcherAssert.assertThat
@@ -67,7 +67,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     @Inject
     def setTemplates(TemplatesFactory factory) {
-        def t = factory.create 'GlusterfsHeketi_1_7_Debian_9_Templates'
+        def t = factory.create 'GlusterfsHeketi_1_8_Debian_9_Templates'
         this.installResource = t.getResource 'install'
         this.gkdeployResource = t.getResource 'gkdeploy'
         this.storageClassResource = t.getResource 'storage_class'
@@ -295,7 +295,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
     }
 
     File getGlusterKubernetesDeployCommand() {
-        getFileProperty 'gluster_kubernetes_deploy_command', optDir, defaultProperties
+        getScriptFileProperty 'gluster_kubernetes_deploy_command', optDir, defaultProperties
     }
 
     String getHeketiArchive() {
