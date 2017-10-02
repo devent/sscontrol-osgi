@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.debian_9_script_1_7
+package com.anrisoftware.sscontrol.k8s.glusterfsheketi.script.debian.internal.k8s_1_8.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -134,8 +134,8 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
             after: { tearDownServer test: it },
             expected: { Map args ->
                 assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp/opt/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
                 assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/etc', 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
             },
         ]
@@ -144,28 +144,36 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 
     def setupServer(Map args) {
         remoteCommand """
-rm /tmp/gk-deploy
-rm /tmp/gk-deploy.out
+rm /tmp/opt/tmp/gk-deploy
+rm /tmp/opt/tmp/gk-deploy.out
 rm /tmp/kubectl
 rm /tmp/kubectl.out
 
-echo "Create /tmp/gk-deploy."
-cat > /tmp/gk-deploy << 'EOL'
+mkdir -p /tmp/tmp
+mkdir -p /tmp/opt/tmp
+
+file="/tmp/opt/tmp/gk-deploy"
+echo "Create \$file"
+cat > \$file << 'EOL'
 ${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
-chmod +x /tmp/gk-deploy
+chmod +x \$file
 
-cp /tmp/gk-deploy /tmp/kubectl
-chmod +x /tmp/kubectl
+file="/tmp/tmp/kubectl"
+echo "Create \$file"
+cat > \$file << 'EOL'
+${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
+EOL
+chmod +x \$file
 """
     }
 
     def tearDownServer(Map args) {
         remoteCommand """
-rm /tmp/gk-deploy
-rm /tmp/gk-deploy.out
-rm /tmp/kubectl
-rm /tmp/kubectl.out
+rm /tmp/opt/tmp/gk-deploy
+rm /tmp/opt/tmp/gk-deploy.out
+rm /tmp/tmp/kubectl
+rm /tmp/tmp/kubectl.out
 """
     }
 
@@ -175,7 +183,9 @@ rm /tmp/kubectl.out
     }
 
     Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
+        def env = getEmptyScriptEnv args
+        env.base = "/tmp" as File
+        env
     }
 
     void createDummyCommands(File dir) {

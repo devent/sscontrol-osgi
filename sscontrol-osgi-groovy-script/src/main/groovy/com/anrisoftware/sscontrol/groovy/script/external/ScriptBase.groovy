@@ -954,7 +954,6 @@ echo \$file
         } else {
             file = properties.getFileProperty key, parent, defaults
         }
-        println file
         return file
     }
 

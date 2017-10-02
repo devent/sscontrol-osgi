@@ -4,13 +4,13 @@
 # at boot time, one per line. Lines beginning with "#" are ignored.
 
 #ROBOBEE_BEGIN
-dm_thin_pool
-#ROBOBEE_END
-#ROBOBEE_BEGIN
 dm_snapshot
 #ROBOBEE_END
 #ROBOBEE_BEGIN
 dm_mirror
+#ROBOBEE_END
+#ROBOBEE_BEGIN
+dm_thin_pool
 #ROBOBEE_END
 #ROBOBEE_BEGIN
 target_core_user
