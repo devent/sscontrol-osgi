@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
+package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -36,8 +36,8 @@ import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxModule
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
-import com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8.K8sMasterUpstreamModule
-import com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterModule
+import com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8snode_1_8.K8sNodeUpstreamModule
+import com.anrisoftware.sscontrol.k8snode.service.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
@@ -54,7 +54,7 @@ import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class MasterModules {
+class NodeModules {
 
     /**
      * Returns the needed modules.
@@ -62,10 +62,10 @@ class MasterModules {
     static List getAdditionalModules() {
         [
             new SshModule(),
+            new K8sNodeModule(),
             new K8sModule(),
-            new K8sMasterModule(),
-            new K8sMasterDebianModule(),
-            new K8sMasterUpstreamModule(),
+            new K8sNodeDebianModule(),
+            new K8sNodeUpstreamModule(),
             new K8sUpstreamModule(),
             new K8sClusterModule(),
             new K8sClusterLinuxModule(),
