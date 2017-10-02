@@ -67,7 +67,7 @@ spec:
     name: ssl-certs-host
 <if(parent.proxyKubeconfigFile)>
   - hostPath:
-      path: "<parent.kubeconfigFile>"
+      path: "<parent.proxyKubeconfigFile>"
     name: "kubeconfig"
 <endif>
   - hostPath:

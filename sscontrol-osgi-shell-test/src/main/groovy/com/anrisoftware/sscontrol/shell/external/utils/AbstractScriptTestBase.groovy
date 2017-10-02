@@ -194,6 +194,31 @@ abstract class AbstractScriptTestBase {
         expected test: test, services: services, dir: dir
     }
 
+    /**
+     * Checks the output to various alternatives. Example:
+     * <pre>
+     * checkAlternatives K8sMasterScriptTest, dir, 4, "systemctl.out", { int i -> "${args.test.name}_systemctl${i+1}_expected.txt" }
+     * </pre>
+     */
+    def checkAlternatives(def contextClass, def dir, int count, String fileName, def nameClosure) {
+        def ex = null
+        for (int i = 0; i < count; i++) {
+            try {
+                def expected = nameClosure(i)
+                log.debug 'Test {}', expected
+                assertFileResource contextClass, dir, fileName, expected
+                ex = null
+                break
+            } catch (AssertionError e) {
+                ex = e
+                continue
+            }
+        }
+        if (ex) {
+            throw ex
+        }
+    }
+
     abstract String getServiceName()
 
     abstract String getScriptServiceName()

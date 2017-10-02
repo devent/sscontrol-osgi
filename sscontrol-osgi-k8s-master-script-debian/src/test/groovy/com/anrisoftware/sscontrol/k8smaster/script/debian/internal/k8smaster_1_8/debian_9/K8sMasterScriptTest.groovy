@@ -64,27 +64,7 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                def ex = null
-                def systemctlExpected = [
-                    "${args.test.name}_systemctl1_expected.txt",
-                    "${args.test.name}_systemctl2_expected.txt",
-                    "${args.test.name}_systemctl3_expected.txt",
-                    "${args.test.name}_systemctl4_expected.txt"
-                ]
-                for (int i=0; i<systemctlExpected.size(); i++) {
-                    try {
-                        log.debug 'Test {}', systemctlExpected[i]
-                        assertFileResource K8sMasterScriptTest, dir, "systemctl.out", systemctlExpected[i]
-                        ex = null
-                        break
-                    } catch (AssertionError e) {
-                        ex = e
-                        continue
-                    }
-                }
-                if (ex) {
-                    throw ex
-                }
+                checkAlternatives K8sMasterScriptTest, dir, 4, "systemctl.out", { int i -> "${args.test.name}_systemctl${i+1}_expected.txt" }
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_kube_options.conf", "${args.test.name}_kube_options_conf_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
