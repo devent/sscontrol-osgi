@@ -946,13 +946,15 @@ echo \$file
             boolean useAbsolute=true) {
         File file
         if (useAbsolute) {
-            file = properties.getFileProperty key, base, defaults
-            if (!file.absolute) {
+            if (!parent) {
+                file = properties.getFileProperty key, base, defaults
+            } else {
                 file = properties.getFileProperty key, parent, defaults
             }
         } else {
             file = properties.getFileProperty key, parent, defaults
         }
+        println file
         return file
     }
 

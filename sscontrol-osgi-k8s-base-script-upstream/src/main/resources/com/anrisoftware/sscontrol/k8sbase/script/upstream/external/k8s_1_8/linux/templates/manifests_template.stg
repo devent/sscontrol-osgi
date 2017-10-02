@@ -1,3 +1,25 @@
+kubeletManifest(parent, vars) ::= <<
+apiVersion: v1
+kind: Config
+clusters:
+- name: local
+  cluster:
+    server: <parent.masterHosts:masterList(parent, vars);separator="\n">
+users:
+- name: kubelet
+contexts:
+- context:
+    cluster: local
+    user: kubelet
+  name: kubelet-context
+current-context: kubelet-context
+
+>>
+
+masterList(master, parent, vars) ::= <<
+    <masterHosts(master, parent, vars)>
+>>
+
 kubeProxyManifest(parent, vars) ::= <<
 # Auto-Generated from Robobee
 # Authors
@@ -21,14 +43,14 @@ spec:
     - proxy
     - --master=<parent.masterHosts:masterHosts(parent, vars);separator=",">
     - --cluster-cidr=<parent.service.cluster.podRange>
-<if(parent.kubeconfigFile)>    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml<endif>
+<if(parent.proxyKubeconfigFile)>    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml<endif>
     securityContext:
       privileged: true
     volumeMounts:
     - mountPath: /etc/ssl/certs
       name: ssl-certs-host
       readOnly: true
-<if(parent.kubeconfigFile)>
+<if(parent.proxyKubeconfigFile)>
     - mountPath: /etc/kubernetes/worker-kubeconfig.yaml
       name: "kubeconfig"
       readOnly: true
@@ -43,7 +65,7 @@ spec:
   - hostPath:
       path: /usr/share/ca-certificates
     name: ssl-certs-host
-<if(parent.kubeconfigFile)>
+<if(parent.proxyKubeconfigFile)>
   - hostPath:
       path: "<parent.kubeconfigFile>"
     name: "kubeconfig"
