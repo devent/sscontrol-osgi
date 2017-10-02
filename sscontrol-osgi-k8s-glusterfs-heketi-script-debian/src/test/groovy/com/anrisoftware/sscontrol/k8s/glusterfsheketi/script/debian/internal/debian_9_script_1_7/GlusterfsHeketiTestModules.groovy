@@ -40,7 +40,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxModule
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxServiceModule
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlLinuxModule
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
 import com.anrisoftware.sscontrol.registry.docker.script.linux.internal.linux.DockerRegistryLinuxModule
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryModule
 import com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9.GitRepoDebianModule

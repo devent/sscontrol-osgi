@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -55,7 +55,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def attr = [renderers: [new UriBase64Renderer()]]
-        def templates = templatesFactory.create('Kubectl_1_7_Linux_Templates', attr)
+        def templates = templatesFactory.create('Kubectl_1_8_Linux_Templates', attr)
         this.kubectlTemplate = templates.getResource('kubectl_cmd')
         this.kubeconfTemplate = templates.getResource('kubectl_conf')
     }

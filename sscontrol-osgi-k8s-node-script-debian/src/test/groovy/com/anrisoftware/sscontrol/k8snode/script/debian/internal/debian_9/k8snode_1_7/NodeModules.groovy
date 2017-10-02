@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.K8sUpstreamModule
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_7.K8sClusterLinuxModule
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubectlLinuxModule
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
 import com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8s_1_7.K8sNodeUpstreamModule
 import com.anrisoftware.sscontrol.k8snode.service.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
 
+import io.fabric8.kubernetes.api.model.Node;
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
-import io.fabric8.kubernetes.client.dsl.Resource;
 
 /**
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface KubeNodeResourceFactory {
+public interface KubeNodeFactory {
 
-    KubeNodeResource create(NamespacedKubernetesClient client,
-            @SuppressWarnings("rawtypes") Resource resource, Object parent);
+    KubeNode create(NamespacedKubernetesClient client,
+            KubeNodeResource resource, Node node, Object parent);
 }

@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
 
-import com.anrisoftware.sscontrol.types.app.external.AppException;
+import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
+import io.fabric8.kubernetes.client.dsl.Resource;
 
 /**
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-@SuppressWarnings("serial")
-public abstract class KubectlClientException extends AppException {
+public interface KubeNodeResourceFactory {
 
-    protected KubectlClientException(String message, Object client,
-            Throwable cause) {
-        super(message, cause);
-        addContextValue("client", client);
-    }
-
-    protected KubectlClientException(String message, Object client) {
-        super(message);
-        addContextValue("client", client);
-    }
-
+    KubeNodeResource create(NamespacedKubernetesClient client,
+            @SuppressWarnings("rawtypes") Resource resource, Object parent);
 }

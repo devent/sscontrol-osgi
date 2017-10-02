@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7;
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
 
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import java.util.Map;
 
-import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
+import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
 
 /**
  *
@@ -25,9 +25,7 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface KubectlClientFactory {
+public interface CredentialsNopFactory {
 
-    KubectlClient create(ClusterHost cluster, Object parent);
-
-    KubectlClient create(NamespacedKubernetesClient client, Object parent);
+    Credentials create(Map<String, Object> args);
 }

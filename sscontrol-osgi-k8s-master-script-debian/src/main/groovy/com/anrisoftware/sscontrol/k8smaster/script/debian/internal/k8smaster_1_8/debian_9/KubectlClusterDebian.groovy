@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
@@ -46,15 +46,5 @@ class KubectlClusterDebian extends AbstractKubectlLinux {
     @Override
     def getLog() {
         log
-    }
-
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
     }
 }

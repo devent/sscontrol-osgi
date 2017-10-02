@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8
 
 import javax.inject.Inject
 
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlClientFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.utils.fabric.test.external.AbstractFabricTest
 

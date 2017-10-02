@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7
-
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-
-import groovy.util.logging.Slf4j
+package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
 
 /**
  *
@@ -25,12 +21,10 @@ import groovy.util.logging.Slf4j
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@Slf4j
-class KubectlClientTestModules {
+@SuppressWarnings("serial")
+public class KubeClientException extends KubectlClientException {
 
-    static List getModules() {
-        [
-            new KubectlLinuxModule(),
-        ]
+    public KubeClientException(KubectlClient client, Exception cause) {
+        super("Client error", client, cause);
     }
 }

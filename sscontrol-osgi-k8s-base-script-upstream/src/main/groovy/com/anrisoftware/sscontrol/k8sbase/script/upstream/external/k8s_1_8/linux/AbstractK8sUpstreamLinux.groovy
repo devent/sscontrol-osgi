@@ -26,9 +26,9 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.AbstractKubectlLinux
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubeNodeClient
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_7.KubeNodeClientFactory
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubeNodeClient
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubeNodeClientFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
