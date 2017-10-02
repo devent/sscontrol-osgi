@@ -5,8 +5,13 @@ clusters:
 - name: local
   cluster:
     server: <parent.masterHosts:masterList(parent, vars);separator="\n">
+<if(parent.service.kubelet.client.ca)>    certificate-authority: <parent.certsDir>/<parent.service.kubelet.client.caName><endif>
 users:
 - name: kubelet
+<if(parent.service.kubelet.client.cert)>
+  user:
+<if(parent.service.kubelet.client.cert)>    client-certificate: <parent.certsDir>/<parent.service.kubelet.client.certName><endif>
+<if(parent.service.kubelet.client.key)>    client-key: <parent.certsDir>/<parent.service.kubelet.client.keyName><\n><endif><endif>
 contexts:
 - context:
     cluster: local

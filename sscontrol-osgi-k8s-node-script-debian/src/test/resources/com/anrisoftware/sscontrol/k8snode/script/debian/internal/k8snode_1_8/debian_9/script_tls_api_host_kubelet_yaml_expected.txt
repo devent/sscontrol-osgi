@@ -4,8 +4,12 @@ clusters:
 - name: local
   cluster:
     server: https://192.168.0.100:443
+    certificate-authority: /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_ca.pem
 users:
 - name: kubelet
+  user:
+    client-certificate: /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_cert.pem
+    client-key: /tmp/junit/junit/etc/kubernetes/ssl/kubelet_client_key.pem
 contexts:
 - context:
     cluster: local
