@@ -21,13 +21,22 @@ kubectl get nodes -o custom-columns="NAME:.metadata.name" --no-headers --selecto
 >>
 
 waitApi(parent, vars) ::= <<
-echo "Waiting for Kubernetes API..."
 <parent.service.cluster.apiServers:waitForServer();separator=",">
 >>
 
 waitForServer(server) ::= <<
+tmp_out=`mktemp`
+trap "rm -f $tmp_out" EXIT
 until curl --silent "<server>/version/"
 do
+    echo "Waiting for Kubernetes API..."
+    systemctl status kubelet > $tmp_out
+    ret=$?
+    if [[ ! $ret -eq 0 ]]; then
+        echo "Error waiting for the Kubernetes API:"
+        cat $tmp_out
+        exit $ret
+    fi
     sleep 5
 done
 >>
