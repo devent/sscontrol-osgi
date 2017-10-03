@@ -162,7 +162,7 @@ chmod +x \$file
 file="/tmp/tmp/kubectl"
 echo "Create \$file"
 cat > \$file << 'EOL'
-${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
+${IOUtils.toString(kubectlCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
 chmod +x \$file
 """

@@ -56,6 +56,8 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
         ],
     ]
 
+    static final kubectlCommand = AbstractGlusterfsHeketiRunnerTest.class.getResource("kubectl_command.txt")
+
     @Inject
     RunScriptImplFactory runnerFactory
 
