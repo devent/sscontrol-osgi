@@ -105,6 +105,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
             limits: [cpu: '0.5', memory: '256Mi'],
             requests: [cpu: '0.5', memory: '256Mi']
     ]]
+    vars << [heketi: [
+            limits: [cpu: '0', memory: '0'],
+            requests: [cpu: '0', memory: '0']
+    ]]
     vars << [tolerations: [
         [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
         [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
