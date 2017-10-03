@@ -235,6 +235,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
         } finally {
             deleteTmpFile file: tmp, target: target
         }
+        shell target: target, resource: storageClassResource, name: 'testStorageClass', vars: [:] call()
     }
 
     @Override
