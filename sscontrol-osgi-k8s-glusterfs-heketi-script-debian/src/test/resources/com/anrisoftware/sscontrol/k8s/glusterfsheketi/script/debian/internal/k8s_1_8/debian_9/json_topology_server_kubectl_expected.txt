@@ -1,1 +1,2 @@
-apply -f /tmp/tmp.tmp
+get sc slow
+create -f /tmp/tmp.tmp

@@ -231,7 +231,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
         def tmp = createTmpFile target: target
         try {
             template target: target, resource: storageClassResource, name: 'storageClass', dest: tmp, vars: [:] call()
-            shell target: target, "${kubectlCmd} apply -f $tmp" call()
+            shell target: target, resource: storageClassResource, name: 'createStorageClass', vars: [file: tmp] call()
         } finally {
             deleteTmpFile file: tmp, target: target
         }
