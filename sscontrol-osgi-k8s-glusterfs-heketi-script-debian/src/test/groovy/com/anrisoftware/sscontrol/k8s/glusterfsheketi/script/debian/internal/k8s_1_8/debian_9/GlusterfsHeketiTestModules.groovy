@@ -32,8 +32,8 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7.FileTemplateModule
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7.FromRepositoryLinuxModule
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FileTemplateModule
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FromRepositoryLinuxModule
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryModule
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiModule
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule

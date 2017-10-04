@@ -13,36 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.Map;
+import org.stringtemplate.v4.STGroup
+import org.stringtemplate.v4.STGroupFile
 
 /**
- * Parses the files via a template engine.
+ * Parses the group file via a ST4 template engine.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface TemplateParser {
+class StgFileTemplateParser extends AbstractSTTemplateParser {
 
-    String parseFile(File parentDirectory, String fileName,
-            Map<String, Object> args, Charset encoding);
+    public static String TEMPLATE_NAME = 'stg'
 
-    /**
-     * Returns the template name.
-     */
-    String getTemplateName();
+    @Override
+    STGroup loadGroup(File parentDirectory, String fileName) {
+        new STGroupFile(new File(parentDirectory, fileName).absolutePath)
+    }
 
-    /**
-     * Checks if the file with the specified name is a Kubernetes manifest.
-     */
-    boolean isKubeFile(String fileName);
-
-    /**
-     * Returns the target file name.
-     */
-    String getFilename(String fileName);
-
+    @Override
+    String getTemplateName() {
+        TEMPLATE_NAME
+    }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -210,13 +210,15 @@ service "from-repository", repo: "wordpress-app" with {
     }
 
     def setupServer(Map args) {
-        def file = SSH.escape('wordpress-app.zip')
         execRemoteFile """
-echo "Create /tmp/kubectl."
-cat > /tmp/kubectl << 'EOL'
+mkdir -p /tmp/tmp
+
+file="/tmp/tmp/kubectl"
+echo "Create \$file"
+cat > \$file << 'EOL'
 ${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
-chmod +x /tmp/kubectl
+chmod +x \$file
 
 echo "Create ${args.test.scriptVars.checkoutDir}."
 rm -rf "${args.test.scriptVars.checkoutDir}"
@@ -231,15 +233,16 @@ fi
 echo "Unzip to /tmp/wordpress-app."
 mkdir -p /tmp/wordpress-app
 cd /tmp/wordpress-app
-cat > ${file}
-unzip $file
+file="wordpress-app.zip"
+cat > \$file
+unzip \$file
 """, args.zipArchive.openStream()
     }
 
     def tearDownServer(Map args) {
         remoteCommand """
-rm /tmp/kubectl
-rm /tmp/kubectl.out
+rm /tmp/tmp/kubectl
+rm /tmp/tmp/kubectl.out
 rm -rf "${args.test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """
@@ -251,7 +254,9 @@ rm -r /tmp/wordpress-app
     }
 
     Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
+        def env = getEmptyScriptEnv args
+        env.base = "/tmp" as File
+        env
     }
 
     void createDummyCommands(File dir) {
