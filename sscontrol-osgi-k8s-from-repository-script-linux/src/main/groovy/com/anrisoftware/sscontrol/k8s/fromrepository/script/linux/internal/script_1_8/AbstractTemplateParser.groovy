@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
 import java.nio.charset.Charset
 
 import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.external.TemplateNotFoundException
 import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.external.TemplateParseException
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.TemplateParser
 
 /**
  *

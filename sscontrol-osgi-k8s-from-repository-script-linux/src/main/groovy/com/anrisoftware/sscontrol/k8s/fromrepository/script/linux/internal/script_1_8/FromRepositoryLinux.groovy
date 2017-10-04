@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.external.find.FindFilesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.TemplateParser
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.FromRepository
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService

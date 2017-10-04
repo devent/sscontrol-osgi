@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8;
 
-import static org.hamcrest.Matchers.*
-
-import org.stringtemplate.v4.STGroup
-import org.stringtemplate.v4.STGroupDir
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
- * Parses the file via a ST4 template engine.
+ * Parses the files via a template engine.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class StDirTemplateParser extends AbstractSTTemplateParser {
+public interface TemplateParser {
 
-    public static String TEMPLATE_NAME = 'st'
+    String parseFile(File parentDirectory, String fileName,
+            Map<String, Object> args, Charset encoding);
 
-    @Override
-    STGroup loadGroup(File parentDirectory, String fileName) {
-        new STGroupDir(parentDirectory.absolutePath)
-    }
+    /**
+     * Returns the template name.
+     */
+    String getTemplateName();
 
-    @Override
-    String getTemplateName() {
-        TEMPLATE_NAME
-    }
+    /**
+     * Checks if the file with the specified name is a Kubernetes manifest.
+     */
+    boolean isKubeFile(String fileName);
+
+    /**
+     * Returns the target file name.
+     */
+    String getFilename(String fileName);
+
 }

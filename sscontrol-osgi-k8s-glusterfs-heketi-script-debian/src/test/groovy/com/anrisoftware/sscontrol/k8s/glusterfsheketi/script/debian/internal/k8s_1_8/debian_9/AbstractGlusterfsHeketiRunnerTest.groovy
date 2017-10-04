@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7.FromRepositoryLinuxFactory
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FromRepositoryLinuxFactory
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryImpl.FromRepositoryImplFactory
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal.GlusterfsHeketiImpl.GlusterfsHeketiImplFactory
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxFactory

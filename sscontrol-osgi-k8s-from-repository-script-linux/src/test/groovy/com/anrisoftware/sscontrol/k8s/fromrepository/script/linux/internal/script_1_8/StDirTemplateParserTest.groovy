@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -27,6 +27,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FileTemplateModule
+import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.StDirTemplateParser
 import com.google.inject.Guice
 import com.google.inject.Injector
 
