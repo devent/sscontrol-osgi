@@ -117,21 +117,8 @@ class GlusterfsHeketiDebian extends ScriptBase {
         def nodes = nodesTargets
         assertThat "nodes=0", nodes.size(), greaterThan(0)
         nodes.each { target ->
-            if (nodePackages.size() > 0) {
-                log.debug 'Install packages for node {}', target
-                debian.installPackages target: target, packages: nodePackages
-            }
-            if (nodeKernelModules.size() > 0) {
-                log.debug 'Setup kernel modules for node {}', target
-                shell target: target, privileged: true, st: """
-<parent.nodeKernelModules:{m|modprobe <m>};separator="\\n">
-""" call()
-                replace privileged: true, dest: '/etc/modules' with {
-                    nodeKernelModules.each { module -> //
-                        line "s/(?m)^#?${module}/${module}/" }
-                    it
-                }()
-            }
+            debian.installPackages target: target, packages: nodePackages
+            debian.enableModules nodeKernelModules, target
         }
     }
 

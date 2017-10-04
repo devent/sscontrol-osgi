@@ -59,6 +59,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'sleep',
             'kubectl',
             'ufw',
+            'modprobe',
         ]
     }
 }

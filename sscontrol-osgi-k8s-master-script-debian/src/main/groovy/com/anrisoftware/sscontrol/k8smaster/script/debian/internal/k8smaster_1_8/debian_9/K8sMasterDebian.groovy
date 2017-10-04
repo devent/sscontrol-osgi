@@ -19,11 +19,6 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterDockerDebianFactory
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterSystemdDebianFactory
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterUfwDebianFactory
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterUpstreamDebianFactory
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.KubectlUpstreamDebianFactory
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
@@ -76,6 +71,7 @@ class K8sMasterDebian extends ScriptBase {
         dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.stopServices()
         debian.installPackages()
+        debian.enableModules()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()

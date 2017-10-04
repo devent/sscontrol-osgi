@@ -137,7 +137,10 @@ abstract class DebianUtils {
      */
     void installPackages(Map args) {
         log.info "Installing packages {}.", args
-        def packages = args.packages
+        List packages = args.packages
+        if (packages.empty) {
+            return
+        }
         def a = new HashMap(args)
         a.timeout = a.timeout ? a.timeout : script.timeoutLong
         a.privileged = true
@@ -230,6 +233,27 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
         script.shell """
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 """ call()
+    }
+
+    /**
+     * Enables the modules.
+     *
+     * @param modules the List of modules to install, defaults to the property {@code "modules"}
+     * @param target the target to which the modules to install, defaults to the property {@code "script#target"}
+     */
+    def enableModules(List modules=modules, def target=script.target) {
+        if (modules.empty) {
+            return
+        }
+        log.debug 'Setup kernel modules for node {}', target
+        script.shell target: target, privileged: true, vars: [modules: modules], st: """
+<vars.modules:{m|modprobe <m>};separator="\\n">
+""" call()
+        script.replace target: target, privileged: true, dest: modulesFile with {
+            modules.each { module -> //
+                line "s/(?m)^#?${module}/${module}/" }
+            it
+        }()
     }
 
     /**
@@ -340,5 +364,31 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
         }
         def s = script.properties.getProperty 'grep_apt_package_version_installed', defaultProperties
         new ST(s).add('version', version).render()
+    }
+
+    /**
+     * Returns the modules to enable.
+     *
+     * <ul>
+     * <li>profile property {@code modules}</li>
+     * </ul>
+     *
+     * @see script#getDefaultProperties()
+     */
+    List getModules() {
+        script.getScriptListProperty "modules"
+    }
+
+    /**
+     * Returns the modules file.
+     *
+     * <ul>
+     * <li>profile property {@code modules_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getModulesFile() {
+        script.getScriptFileProperty "modules_file", script.base, defaultProperties
     }
 }
