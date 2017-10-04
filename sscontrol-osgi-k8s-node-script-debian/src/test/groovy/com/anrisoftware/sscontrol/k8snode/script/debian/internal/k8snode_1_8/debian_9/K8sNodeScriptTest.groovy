@@ -61,6 +61,7 @@ service "k8s-node", name: "andrea-cluster", advertise: '192.168.0.200', api: 'ht
                 assertFileResource K8sNodeScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sNodeScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 checkAlternatives K8sNodeScriptTest, dir, 4, "systemctl.out", { int i -> "${args.test.name}_systemctl${i+1}_expected.txt" }
+                assertFileResource K8sNodeScriptTest, dir, "modprobe.out", "${args.test.name}_modprobe_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "10_kube_options.conf", "${args.test.name}_kube_options_conf_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
