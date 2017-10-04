@@ -71,6 +71,7 @@ class K8sNodeDebian extends ScriptBase {
         dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         systemd.stopServices()
         debian.installPackages()
+        debian.enableModules()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()

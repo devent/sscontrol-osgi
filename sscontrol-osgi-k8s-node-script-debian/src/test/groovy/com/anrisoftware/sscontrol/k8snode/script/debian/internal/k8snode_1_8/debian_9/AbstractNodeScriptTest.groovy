@@ -61,6 +61,7 @@ abstract class AbstractNodeScriptTest extends AbstractNodeRunnerTest {
             'docker',
             'kubectl',
             'ufw',
+            'modprobe',
         ]
     }
 }
