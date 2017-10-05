@@ -117,7 +117,8 @@ class GlusterfsHeketiDebian extends ScriptBase {
         def nodes = nodesTargets
         assertThat "nodes=0", nodes.size(), greaterThan(0)
         nodes.each { target ->
-            debian.installPackages target: target, packages: nodePackages
+            debian.addPackagesRepository target: target, key: nodePackagesRepositoryKey, url: nodePackagesRepositoryUrl, file: nodePackagesRepositoryListFile
+            debian.installPackages target: target, packages: nodePackages, update: true
             debian.enableModules nodeKernelModules, target
         }
     }
@@ -263,7 +264,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
     }
 
     List getNodePackages() {
-        properties.getListProperty "node_packages", defaultProperties
+        getScriptPackagesVersionsProperty "node_packages"
     }
 
     List getNodeKernelModules() {
@@ -312,6 +313,18 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     File getKubectlCmd() {
         getFileProperty 'kubectl_command'
+    }
+
+    String getNodePackagesRepositoryKey() {
+        getScriptProperty 'node_packages_repository_key'
+    }
+
+    String getNodePackagesRepositoryUrl() {
+        getScriptProperty 'node_packages_repository_url'
+    }
+
+    File getNodePackagesRepositoryListFile() {
+        getScriptFileProperty 'node_packages_repository_list_file', debian.sourcesListDir
     }
 
     @Override

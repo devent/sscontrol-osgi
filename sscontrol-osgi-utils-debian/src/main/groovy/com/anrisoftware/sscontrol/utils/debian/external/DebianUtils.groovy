@@ -187,6 +187,7 @@ abstract class DebianUtils {
      * <li>name: distribution name;
      * <li>comp: repository component;
      * <li>file: repository list file;
+     * <li>target: the target, defaults to {@code script#target};
      * </ul>
      *
      * @see #getPackagesRepositoryKey()
@@ -204,8 +205,15 @@ abstract class DebianUtils {
         args.comp = args.comp ? args.comp : packagesRepositoryComponent
         args.file = args.file ? args.file : script.packagesRepositoryListFile
         args.file = args.file ? args.file : packagesRepositoryListFile
-        script.shell """
-curl -fsSL ${args.key} | sudo apt-key add -
+        args.target = args.target ? args.target : script.target
+        assertThat "url=null", args.url, notNullValue()
+        assertThat "comp=null", args.comp, notNullValue()
+        assertThat "file=null", args.file, notNullValue()
+        script.shell target: args.target, """
+key_file=`mktemp`
+trap "rm -f \$key_file" EXIT
+wget -O \$key_file ${args.key}
+sudo bash -c "cat \$key_file | apt-key add -"
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 """ call()
     }
@@ -286,7 +294,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 
     /**
      * Returns the packages repository, for
-     * example {@code "/etc/apt/sources.list.d/icinga.list"}
+     * example {@code "icinga.list"}
      *
      * <ul>
      * <li>profile property {@code apt_packages_repository_list_file}</li>
@@ -295,7 +303,21 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getPackagesRepositoryListFile() {
-        script.getFileProperty "apt_packages_repository_list_file", script.base, defaultProperties
+        script.getFileProperty "apt_packages_repository_list_file", sourcesListDir, defaultProperties
+    }
+
+    /**
+     * Returns the packages sources list directory, for
+     * example {@code "/etc/apt/sources.list.d"}
+     *
+     * <ul>
+     * <li>profile property {@code apt_sources_list_dir}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getSourcesListDir() {
+        script.getFileProperty "apt_sources_list_dir", script.base, defaultProperties
     }
 
     /**
