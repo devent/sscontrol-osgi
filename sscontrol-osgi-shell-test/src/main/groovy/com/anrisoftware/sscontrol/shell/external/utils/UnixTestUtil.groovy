@@ -144,6 +144,8 @@ class UnixTestUtil {
         def s = remoteCommand "ls -l $dir", host, port, user, key
         s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d{4}', 'date'
         s = s.replaceAll '\\w{3}\\s+\\d+\\s+\\d+:\\d+', 'date'
+        s = s.replaceAll 'tmp\\.[\\w\\d]*', 'tmp.tmp'
+        s = s.replaceAll(/junit\d+/, 'junit')
     }
 
     static String checkRemoteFilesPrivileged(String dir, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {

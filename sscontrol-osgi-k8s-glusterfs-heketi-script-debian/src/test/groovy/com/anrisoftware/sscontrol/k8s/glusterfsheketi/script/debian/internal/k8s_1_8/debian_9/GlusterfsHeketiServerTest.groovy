@@ -130,50 +130,56 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
 ''',
             scriptVars: [robobeeKey: robobeeKey, robobeeSocket: robobeeSocket, certs: certs],
             expectedServicesSize: 4,
-            before: { setupServer test: it },
-            after: { tearDownServer test: it },
+            before: { setupServer it },
+            after: { tearDownServer it },
             expected: { Map args ->
-                assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles('/usr/local/bin/heketi-cli'), "${args.test.name}_local_bin_heketi_cli_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp/opt/tmp', 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/tmp/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
-                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File('/etc', 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, checkRemoteFiles("${args.dir}/usr/local/bin/heketi-cli"), "${args.test.name}_local_bin_heketi_cli_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File("${args.dir}/opt/tmp", 'gk-deploy.out').absolutePath), "${args.test.name}_gk_deploy_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File("${args.dir}/tmp", 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource GlusterfsHeketiServerTest, readRemoteFile(new File("${args.dir}/etc", 'modules').absolutePath), "${args.test.name}_modules_expected.txt"
             },
         ]
         doTest test
     }
 
     def setupServer(Map args) {
+        println args.dir
         remoteCommand """
-rm /tmp/opt/tmp/gk-deploy
-rm /tmp/opt/tmp/gk-deploy.out
-rm /tmp/kubectl
-rm /tmp/kubectl.out
+mkdir -p ${args.dir}/tmp
+mkdir -p ${args.dir}/opt/tmp
+mkdir -p ${args.dir}/etc/apt/sources.list.d
+mkdir -p ${args.dir}/etc
 
-mkdir -p /tmp/tmp
-mkdir -p /tmp/opt/tmp
-
-file="/tmp/opt/tmp/gk-deploy"
+file="${args.dir}/opt/tmp/gk-deploy"
 echo "Create \$file"
 cat > \$file << 'EOL'
 ${IOUtils.toString(echoCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
 chmod +x \$file
 
-file="/tmp/tmp/kubectl"
+file="${args.dir}/tmp/kubectl"
 echo "Create \$file"
 cat > \$file << 'EOL'
 ${IOUtils.toString(kubectlCommand.openStream(), StandardCharsets.UTF_8)}
 EOL
 chmod +x \$file
+
+file="${args.dir}/etc/modules"
+echo "Create \$file"
+cat > \$file << 'EOL'
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with "#" are ignored.
+
+EOL
+
 """
     }
 
     def tearDownServer(Map args) {
         remoteCommand """
-rm /tmp/opt/tmp/gk-deploy
-rm /tmp/opt/tmp/gk-deploy.out
-rm /tmp/tmp/kubectl
-rm /tmp/tmp/kubectl.out
+rm -rf ${args.dir}
 """
     }
 
@@ -184,7 +190,7 @@ rm /tmp/tmp/kubectl.out
 
     Map getScriptEnv(Map args) {
         def env = getEmptyScriptEnv args
-        env.base = "/tmp" as File
+        env.base = args.dir
         env
     }
 

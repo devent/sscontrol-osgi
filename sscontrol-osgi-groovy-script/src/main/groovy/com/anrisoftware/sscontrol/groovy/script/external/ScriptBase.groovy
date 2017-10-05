@@ -1015,9 +1015,25 @@ echo \$file
             ContextProperties defaults=defaultProperties) {
         def v = getScriptListProperty name, defaults
         v.inject([:]) { result, s ->
-            def ss = s.split(":")
-            result."${ss[0]}" = ss[1].toString()
+            String[] ss = s.split(":")
+            if (ss.length == 2) {
+                result."${ss[0]}" = ss[1].toString()
+            }
+            if (ss.length == 1) {
+                result."${ss[0]}" = null
+            }
             result
+        }
+    }
+
+    /**
+     * Returns a List of [name=version] tupels.
+     */
+    List getScriptPackagesVersionsProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        def v = getScriptMapProperty name, defaults
+        v.inject([]) { result, s ->
+            result << [name: s.key, version: s.value]
         }
     }
 
