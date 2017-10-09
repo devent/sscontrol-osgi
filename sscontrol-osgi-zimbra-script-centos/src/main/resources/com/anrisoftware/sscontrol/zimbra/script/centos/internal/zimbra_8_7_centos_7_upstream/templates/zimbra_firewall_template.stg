@@ -2,7 +2,7 @@ delimiters "%", "%"
 configureFirewall(parent, vars) ::= <<
 set -x
 
-cat <<'EOF' > /etc/firewalld/services/zimbra-admin-console.xml
+cat <<'EOF' > %parent.zimbraFirewallServiceFile%
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>Zimbra Administration Console</short>

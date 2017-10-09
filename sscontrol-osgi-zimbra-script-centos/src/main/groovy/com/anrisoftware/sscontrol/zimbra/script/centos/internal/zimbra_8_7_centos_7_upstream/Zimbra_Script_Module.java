@@ -36,9 +36,8 @@ public class Zimbra_Script_Module extends AbstractModule {
                 .implement(HostServiceScript.class, Zimbra_Upstream.class)
                 .build(Zimbra_Upstream_Factory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        Zimbra_LetsEncrypt_Docker.class)
-                .build(Zimbra_LetsEncrypt_Docker_Factory.class));
+                .implement(HostServiceScript.class, ZimbraLetsEncrypt.class)
+                .build(ZimbraLetsEncryptFactory.class));
     }
 
 }

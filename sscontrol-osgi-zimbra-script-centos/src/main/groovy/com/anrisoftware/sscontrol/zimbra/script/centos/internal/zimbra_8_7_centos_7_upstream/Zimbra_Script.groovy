@@ -42,7 +42,7 @@ class Zimbra_Script extends ScriptBase {
     Zimbra_Upstream_Factory upstreamFactory
 
     @Inject
-    Zimbra_LetsEncrypt_Docker_Factory letsEncryptDockerFactory
+    ZimbraLetsEncryptFactory letsEncryptFactory
 
     CentosUtils centos
 
@@ -65,7 +65,7 @@ class Zimbra_Script extends ScriptBase {
         upstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         configureFirewall()
         if (useLetsEncrypt) {
-            letsEncryptDockerFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+            letsEncryptFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         }
     }
 
@@ -76,31 +76,35 @@ class Zimbra_Script extends ScriptBase {
     }
 
     boolean getAllowHttp() {
-        properties.getBooleanProperty 'allow_http', defaultProperties
+        getScriptBooleanProperty 'allow_http'
     }
 
     boolean getAllowHttps() {
-        properties.getBooleanProperty 'allow_https', defaultProperties
+        getScriptBooleanProperty 'allow_https'
     }
 
     boolean getAllowSmtp() {
-        properties.getBooleanProperty 'allow_smtp', defaultProperties
+        getScriptBooleanProperty 'allow_smtp'
     }
 
     boolean getAllowImap() {
-        properties.getBooleanProperty 'allow_imap', defaultProperties
+        getScriptBooleanProperty 'allow_imap'
     }
 
     boolean getAllowImaps() {
-        properties.getBooleanProperty 'allow_imaps', defaultProperties
+        getScriptBooleanProperty 'allow_imaps'
     }
 
     boolean getAllowAdminConsole() {
-        properties.getBooleanProperty 'allow_admin_console', defaultProperties
+        getScriptBooleanProperty 'allow_admin_console'
     }
 
     boolean getUseLetsEncrypt() {
-        properties.getBooleanProperty 'use_letsencrypt', defaultProperties
+        getScriptBooleanProperty 'use_letsencrypt'
+    }
+
+    File getZimbraFirewallServiceFile() {
+        getScriptFileProperty 'zimbra_firewall_service_file'
     }
 
     @Override

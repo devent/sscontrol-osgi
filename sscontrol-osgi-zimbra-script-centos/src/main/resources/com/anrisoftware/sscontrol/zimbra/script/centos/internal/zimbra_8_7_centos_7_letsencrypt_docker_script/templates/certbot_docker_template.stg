@@ -1,12 +1,12 @@
 delimiters "%", "%"
 createCertbot(parent, vars) ::= <<
 set -e
-cat <<'EOF' > /sbin/certbot
+cat <<'EOF' > %parent.certbotCmd%
 docker run -it --rm -p 80:80 --name certbot \
             -v "/etc/letsencrypt:/etc/letsencrypt" \
             -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
             --privileged \
             certbot/certbot "\$@"
 EOF
-chmod +x /sbin/certbot
+chmod +x %parent.certbotCmd%
 >>

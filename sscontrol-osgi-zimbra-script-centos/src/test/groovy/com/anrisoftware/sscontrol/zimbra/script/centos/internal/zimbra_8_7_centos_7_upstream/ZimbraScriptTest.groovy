@@ -33,20 +33,49 @@ import groovy.util.logging.Slf4j
 class ZimbraScriptTest extends AbstractZimbraScriptTest {
 
     @Test
-    void "zimbra_script"() {
+    void "script_basic"() {
         def test = [
-            name: "rkt_defaults",
-            expectedServicesSize: 2,
-            script: """
-service "ssh", host: "localhost", socket: "$localhostSocket"
+            name: "script_basic",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
 service "zimbra", version: "8.7"
-""",
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource ZimbraScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource ZimbraScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource ZimbraScriptTest, dir, "yum.out", "${args.test.name}_yum_expected.txt"
+                assertFileResource ZimbraScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_lets_encrypt"() {
+        def test = [
+            name: "script_lets_encrypt",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "zimbra", version: "8.7" with {
+    domain email: "erwin.mueller82@gmail.com"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            before: { Map test ->
+                File dir = test.dir
+                new File(dir, '/sbin').mkdirs()
+            },
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource ZimbraScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource ZimbraScriptTest, dir, "yum.out", "${args.test.name}_yum_expected.txt"
                 assertFileResource ZimbraScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
             },
         ]

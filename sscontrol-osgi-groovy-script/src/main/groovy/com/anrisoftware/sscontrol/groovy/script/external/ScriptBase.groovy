@@ -1009,6 +1009,14 @@ echo \$file
     }
 
     /**
+     * Returns a URI script property.
+     */
+    URI getScriptURIProperty(String name,
+            ContextProperties defaults=defaultProperties) {
+        properties.getURIProperty name, defaults
+    }
+
+    /**
      * Returns a Map script property.
      */
     Map getScriptMapProperty(String name,
