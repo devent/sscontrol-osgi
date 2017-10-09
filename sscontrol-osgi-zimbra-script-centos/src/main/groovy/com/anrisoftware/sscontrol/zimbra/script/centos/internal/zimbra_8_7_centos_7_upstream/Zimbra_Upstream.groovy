@@ -143,7 +143,7 @@ tar xf $archiveFile
     }
 
     boolean getAutoUpdateZimbra() {
-        properties.getBooleanProperty 'auto_update_zimbra', defaultProperties
+        getScriptBooleanProperty 'auto_update_zimbra'
     }
 
     @Override

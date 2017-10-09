@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_centos_7_upstream
+package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_centos_7_letsencrypt_docker_script
 
 import static org.apache.commons.io.FilenameUtils.*
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -37,10 +36,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Zimbra_LetsEncrypt_Docker extends ScriptBase {
-
-    @Inject
-    Zimbra_Properties propertiesProvider
+abstract class ZimbraLetsEncryptDockerScript extends ScriptBase {
 
     CentosUtils centos
 
@@ -58,7 +54,7 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory, DurationAttributeFormat durationAttributeFormat) {
         def attr = [renderers: [durationAttributeFormat]]
-        def templates = templatesFactory.create('Zimbra_LetsEncrypt_Docker_Templates', attr)
+        def templates = templatesFactory.create('ZimbraLetsEncryptDockerScriptTemplates', attr)
         this.certbotDockerTemplate = templates.getResource('certbot_docker_template')
         this.certbotZimbraExpect = templates.getResource('certbot_zimbra_expect')
         this.stopDockerCmd = templates.getResource('stop_docker_cmd')
@@ -67,9 +63,11 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
     @Override
     def run() {
         if(!checkDomain()) {
+            log.info 'No email for domain set, nothing to do.'
             return
         }
-        startDocker()
+        installDocker()
+        startServiceDocker()
         def certbotZimbraDir = downloadCertbotzimbra()
         try {
             setupCert certbotZimbraDir
@@ -87,19 +85,22 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         return true
     }
 
-    def startDocker() {
-        log.info 'Start docker for certbot.'
+    def installDocker() {
         centos.installPackages(packages: ['docker', 'unzip'])
-        startSystemdService 'docker'
     }
+
+    abstract startServiceDocker()
 
     def stopDocker() {
         def ret = shell outString: true, privileged: true, resource: stopDockerCmd, name: "stopDockerCmd" call()
-        int count = Integer.valueOf ret.out
+        def n = ret.out.split(" ").last()
+        int count = Integer.valueOf n
         if (count == 1) {
-            stopSystemdService 'docker'
+            stopDockerService()
         }
     }
+
+    abstract stopDockerService()
 
     File downloadCertbotzimbra() {
         log.info 'Download certbot-zimbra.'
@@ -108,7 +109,7 @@ class Zimbra_LetsEncrypt_Docker extends ScriptBase {
         copy src: archive, dest: '/tmp', direct: true, timeout: timeoutMiddle call()
         def archiveFile = getName(archive.toString())
         def archiveName = getBaseName(archive.toString())
-        shell """
+        shell vars: [:], st: """
 cd /tmp
 if [ -d 'certbot-zimbra-${archiveName}' ]; then rm -rf "certbot-zimbra-${archiveName}"; fi
 unzip <if(parent.commandsQuiet)>-q<endif> $archiveFile
@@ -125,16 +126,15 @@ mv "certbot-zimbra-${archiveName}" "certbot-zimbra"
     }
 
     URI getCertbotZimbraArchive() {
-        properties.getURIProperty 'certbot_zimbra_archive', defaultProperties
+        getScriptURIProperty 'certbot_zimbra_archive'
     }
 
     boolean getForceRenewCertbotCertificate() {
-        properties.getBooleanProperty 'force_renew_certbot_certificate', defaultProperties
+        getScriptBooleanProperty 'force_renew_certbot_certificate'
     }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
+    File getCertbotCmd() {
+        getScriptFileProperty 'certbot_cmd'
     }
 
     @Override

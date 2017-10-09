@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_cent
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.centos.external.CentosTestUtils.*
 
 /**
  *
@@ -26,12 +27,11 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
  */
 abstract class AbstractZimbraScriptTest extends AbstractZimbraRunnerTest {
 
-    static final URL dpkgCustomCommand = AbstractZimbraScriptTest.class.getResource('dpkg_custom_command.txt')
-
     @Override
     void createDummyCommands(File dir) {
-        createCommand dpkgCustomCommand, dir, 'dpkg'
-        createDebianJessieCatCommand dir
+        createCommand catCommand, dir, 'cat'
+        createCommand yumCommand, dir, 'yum'
+        createCommand AbstractZimbraScriptTest.class.getResource('wc_custom_command.txt'), dir, 'wc'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -49,8 +49,11 @@ abstract class AbstractZimbraScriptTest extends AbstractZimbraRunnerTest {
             'useradd',
             'tar',
             'grep',
-            'apt-get',
             'gpg',
+            'sha256sum',
+            'expect',
+            'firewall-cmd',
+            'docker',
         ]
     }
 }

@@ -1,0 +1,9 @@
+list installed wget
+list installed expect
+list installed wget
+install -y wget
+list installed expect
+install -y expect
+list installed postfix
+install -y docker
+install -y unzip

@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Zimbra_LetsEncrypt_Docker_Factory extends HostServiceScriptService {
+public interface ZimbraLetsEncryptFactory extends HostServiceScriptService {
 }
