@@ -36,7 +36,6 @@ import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxModule
 import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
-import com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8snode_1_8.K8sNodeUpstreamModule
 import com.anrisoftware.sscontrol.k8snode.service.internal.K8sNodeModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
@@ -65,7 +64,6 @@ class NodeModules {
             new K8sNodeModule(),
             new K8sModule(),
             new K8sNodeDebianModule(),
-            new K8sNodeUpstreamModule(),
             new K8sUpstreamModule(),
             new K8sClusterModule(),
             new K8sClusterLinuxModule(),
