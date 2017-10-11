@@ -336,8 +336,8 @@ public class K8sImpl implements K8s {
             @Override
             public void add(String property) {
                 Matcher m = TAINT_PATTERN.matcher(property);
-                assertThat(format("taint matches %s", TAINT_PATTERN),
-                        m.matches(), equalTo(true));
+                assertThat(format("taint matches %s but was %s", TAINT_PATTERN,
+                        property), m.matches(), equalTo(true));
                 String key = m.group("key");
                 String value = m.group("value");
                 String effect = m.group("effect");
