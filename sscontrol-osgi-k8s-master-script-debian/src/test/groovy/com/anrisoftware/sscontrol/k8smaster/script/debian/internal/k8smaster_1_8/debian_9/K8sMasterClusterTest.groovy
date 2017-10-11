@@ -70,11 +70,11 @@ service "k8s-master", name: "andrea-master-0-test", advertise: targets.masters[0
     nodes << "nodes"
     tls certs.tls
     authentication "cert", ca: certs.tls.ca
+    plugin "flannel"
+    plugin "calico"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
     }
-    plugin "flannel"
-    plugin "calico"
     kubelet.with {
         tls certs.tls
     }
