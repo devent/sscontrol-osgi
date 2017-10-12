@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8;
 
 import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
-import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7.BackupLinux;
-import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7.BackupWorkerImpl;
+import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8.BackupLinux;
+import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8.BackupWorkerImpl;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
