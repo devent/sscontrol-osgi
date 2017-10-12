@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -44,18 +44,20 @@ service "ssh" with {
     host "robobee@robobee-test", socket: robobeeSocket
 }
 service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
+    credentials type: 'cert', name: 'default-admin', cert: certs.cert, key: certs.key
 }
 service "backup" with {
     service namespace: "wordpress", name: "db"
-    destination dir: "/mnt/backup"
+    destination dir: backupDir
+    client key: rsyncKey, proxy: true, timeout: "1h"
     property << "kubectl_cmd=/tmp/kubectl"
 }
 ''',
             scriptVars: [
                 robobeeSocket: robobeeSocket,
                 backupDir: '/tmp/w',
-                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+                certs: [ cert: certCertPem, key: certKeyPem],
+                rsyncKey: rsyncKey,
             ],
             expectedServicesSize: 3,
             before: { Map test -> setupServer test: test },
@@ -93,9 +95,7 @@ rm -rf "${args.test.scriptVars.backupDir}"
 
     @Before
     void beforeMethod() {
-        assumeTrue testHostAvailable
         assumeSocketExists robobeeSocket
-        assumeSocketExists '/tmp/robobee@andrea-master-0.muellerpublic.de:22'
     }
 
     Map getScriptEnv(Map args) {

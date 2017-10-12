@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
-import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * Backup service for Kubernetes properties provider from
+ * {@code "/backup_1_8_linux.properties"}.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface BackupWorkerImplFactory {
+class BackupLinuxProperties extends AbstractContextPropertiesProvider {
 
-    BackupWorker create(Backup service, Deployment deployment);
+    private static final URL RESOURCE = BackupLinuxProperties.class.getResource("/backup_1_8_linux.properties")
+
+    BackupLinuxProperties() {
+        super(BackupLinuxProperties.class, RESOURCE)
+    }
 }

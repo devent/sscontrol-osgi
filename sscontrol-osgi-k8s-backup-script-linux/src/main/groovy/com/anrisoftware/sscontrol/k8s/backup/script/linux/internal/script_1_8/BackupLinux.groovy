@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -35,7 +35,7 @@ import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import groovy.util.logging.Slf4j
 
 /**
- * Backup service for Kubernetes 1.7.
+ * Backup service for Kubernetes.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -133,23 +133,23 @@ class BackupLinux extends ScriptBase {
     }
 
     int getDefaultServerPortUnsecured() {
-        properties.getNumberProperty 'default_server_port_unsecured', defaultProperties
+        getScriptNumberProperty 'default_server_port_unsecured'
     }
 
     int getDefaultServerPortSecured() {
-        properties.getNumberProperty 'default_server_port_secured', defaultProperties
+        getScriptNumberProperty 'default_server_port_secured'
     }
 
     String getDefaultServerProtoUnsecured() {
-        properties.getProperty 'default_server_proto_unsecured', defaultProperties
+        getScriptProperty 'default_server_proto_unsecured'
     }
 
     String getDefaultServerProtoSecured() {
-        properties.getProperty 'default_server_proto_secured', defaultProperties
+        getScriptProperty 'default_server_proto_secured'
     }
 
     String getDefaultServiceSource() {
-        properties.getProperty 'default_service_source', defaultProperties
+        getScriptProperty 'default_service_source'
     }
 
     @Override
