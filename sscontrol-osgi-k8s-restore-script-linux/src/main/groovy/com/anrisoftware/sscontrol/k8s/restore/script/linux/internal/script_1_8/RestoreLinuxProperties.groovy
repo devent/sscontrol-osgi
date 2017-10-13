@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * Restore service for Kubernetes properties provider from
+ * {@code "/restore_1_8_linux.properties"}.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface Restore_1_7_Factory extends HostServiceScriptService {
+class RestoreLinuxProperties extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = RestoreLinuxProperties.class.getResource("/restore_1_8_linux.properties")
+
+    RestoreLinuxProperties() {
+        super(RestoreLinuxProperties.class, RESOURCE)
+    }
 }

@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.internal
 
+import static java.nio.charset.StandardCharsets.*
+
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -42,8 +44,8 @@ import io.fabric8.kubernetes.api.model.Service
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
 import io.fabric8.kubernetes.client.ConfigBuilder
 import io.fabric8.kubernetes.client.NamespacedKubernetesClient
-import io.fabric8.kubernetes.client.dsl.ExecWatch
 import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation
+import io.fabric8.kubernetes.client.dsl.internal.ExecWebSocketListener
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl
 
 /**
@@ -242,11 +244,13 @@ class DeploymentImpl implements Deployment {
         client.pods().inNamespace(namespace).withLabel("app", name).list().items
     }
 
-    void execCommand(Object deployOp, String cmd) {
+    @Override
+    void execCommand(Object deployOp, String... cmd) {
+        //def scmd = URLEncoder.encode(cmd, UTF_8.name())
         deployOp = deployOp as HasMetadataOperation
         Pod pod = getPods(deployOp.namespace, deployOp.name)[0]
         PodOperationsImpl podOp = client.pods().inNamespace(deployOp.namespace).withName(pod.metadata.name)
-        ExecWatch watch = podOp.redirectingInput().redirectingOutput().exec(cmd)
-        log.commandExecuted(deployOp, cmd)
+        ExecWebSocketListener watch = podOp.redirectingInput().redirectingOutput().exec(cmd)
+        log.commandExecuted(deployOp, Arrays.toString(cmd))
     }
 }

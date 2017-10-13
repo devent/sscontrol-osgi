@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static java.nio.charset.StandardCharsets.*
@@ -23,7 +23,7 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7.Restore_1_7_Factory
+import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8.RestoreLinuxFactory
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -76,7 +76,7 @@ abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
     RestoreImplFactory restoreFactory
 
     @Inject
-    Restore_1_7_Factory restoreLinuxFactory
+    RestoreLinuxFactory restoreLinuxFactory
 
     def getRunScriptFactory() {
         runnerFactory

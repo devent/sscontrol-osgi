@@ -50,7 +50,7 @@ public class RestoreServiceImpl implements K8sService {
 
     @Override
     public String getName() {
-        return "restore";
+        return "backup";
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -44,7 +44,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Restore_1_7_Service implements HostServiceScriptService {
+public class RestoreLinuxService implements HostServiceScriptService {
 
     static final String SERVICE_NAME = "restore";
 
@@ -67,7 +67,7 @@ public class Restore_1_7_Service implements HostServiceScriptService {
     static final String SERVICE_SYSTEM_SYSTEM_PROPERTY = "service.system.system";
 
     @Inject
-    private Restore_1_7_Factory scriptFactory;
+    private RestoreLinuxFactory scriptFactory;
 
     public SystemInfo getSystem() {
         return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(
@@ -85,7 +85,7 @@ public class Restore_1_7_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new Restore_1_7_Module()).injectMembers(this);
+        createInjector(new RestoreLinuxModule()).injectMembers(this);
     }
 
 }
