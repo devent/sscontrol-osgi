@@ -39,8 +39,8 @@ import com.anrisoftware.sscontrol.k8s.restore.service.internal.DirSourceImpl.Dir
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
@@ -237,7 +237,7 @@ public class RestoreImpl implements Restore {
 
     @Override
     public String getName() {
-        return "backup";
+        return "restore";
     }
 
     @Override

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7;
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8;
 
-import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment;
-import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -25,7 +23,5 @@ import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface RestoreWorkerImplFactory {
-
-    BackupWorker create(Restore service, Deployment deployment);
+public interface RestoreLinuxFactory extends HostServiceScriptService {
 }

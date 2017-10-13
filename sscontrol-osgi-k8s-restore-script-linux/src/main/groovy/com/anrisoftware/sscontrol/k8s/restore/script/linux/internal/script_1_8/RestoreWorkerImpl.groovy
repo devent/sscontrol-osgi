@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import javax.inject.Inject
+
+import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractBackupWorker
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
+import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore
+import com.google.inject.assistedinject.Assisted
 
 /**
- * Restore service for Kubernetes 1.7 properties provider from
- * {@code "/restore_1_7_linux.properties"}.
+ * Starts the restore.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Restore_1_7_Properties extends AbstractContextPropertiesProvider {
+class RestoreWorkerImpl extends AbstractBackupWorker {
 
-    private static final URL RESOURCE = Restore_1_7_Properties.class.getResource("/restore_1_7_linux.properties")
+    @Inject
+    @Assisted
+    Restore service
 
-    Restore_1_7_Properties() {
-        super(Restore_1_7_Properties.class, RESOURCE)
-    }
+    @Inject
+    @Assisted
+    Deployment deploy
 }

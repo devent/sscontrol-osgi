@@ -52,5 +52,5 @@ public interface Deployment {
 
     List<?> waitDeploy(Object deploy, int replicas, boolean ready);
 
-    void execCommand(Object deployOp, String cmd);
+    void execCommand(Object deployOp, String... cmd);
 }

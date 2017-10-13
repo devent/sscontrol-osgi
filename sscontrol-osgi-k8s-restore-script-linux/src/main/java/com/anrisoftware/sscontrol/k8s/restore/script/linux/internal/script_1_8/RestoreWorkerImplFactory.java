@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8;
 
-import javax.inject.Inject
-
-import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractBackupWorker
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
-import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore
-import com.google.inject.assistedinject.Assisted
+import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment;
+import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore;
 
 /**
- * Starts the restore.
+ *
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class RestoreWorkerImpl extends AbstractBackupWorker {
+public interface RestoreWorkerImplFactory {
 
-    @Inject
-    @Assisted
-    Restore service
-
-    @Inject
-    @Assisted
-    Deployment deploy
+    BackupWorker create(Restore service, Deployment deployment);
 }

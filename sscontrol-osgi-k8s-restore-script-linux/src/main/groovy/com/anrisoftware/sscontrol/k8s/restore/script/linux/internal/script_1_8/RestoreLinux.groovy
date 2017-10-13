@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -27,7 +27,6 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Source
 import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
-import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_7.RestoreWorkerImplFactory
 import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -36,16 +35,16 @@ import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import groovy.util.logging.Slf4j
 
 /**
- * Restore service for Kubernetes 1.7.
+ * Restore service for Kubernetes.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Restore_1_7 extends ScriptBase {
+class RestoreLinux extends ScriptBase {
 
     @Inject
-    Restore_1_7_Properties propertiesProvider
+    RestoreLinuxProperties propertiesProvider
 
     @Inject
     K8sClusterFactory clusterFactory
@@ -76,20 +75,20 @@ class Restore_1_7 extends ScriptBase {
         assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
         setupHost service.cluster
         deployment = deployment.createClient()
-        def sources = service.sources
+        def origins = service.sources
         restoreWorkerFactory.create(service, deployment).with {
             init()
             try {
                 before()
                 start { Map args ->
                     println args
-                    println sources
+                    println origins
                     println rsyncPort
-                    sources.each { Source source ->
-                        println source
-                        rsyncClient.start(backup: false, path: source.target, dir: service.origin.dir, port: rsyncPort)
-                        if (source.chown) {
-                            deployment.execCommand rsyncDeploy, "sh -c 'chown ${source.chown} -R \"${source.target}\"'"
+                    origins.each { Source origin ->
+                        println origin
+                        rsyncClient.start(backup: false, path: origin.target, dir: service.origin.dir, port: args.rsyncPort)
+                        if (origin.chown) {
+                            deployment.execCommand rsyncDeploy, "chown", "${origin.chown}", "-R", "${origin.target}"
                         }
                     }
                 }
