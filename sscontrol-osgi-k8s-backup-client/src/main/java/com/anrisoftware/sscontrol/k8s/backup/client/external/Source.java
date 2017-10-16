@@ -29,4 +29,6 @@ public interface Source {
 
     String getChown();
 
+    String getChmod();
+
 }

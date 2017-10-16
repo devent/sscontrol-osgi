@@ -81,14 +81,13 @@ class RestoreLinux extends ScriptBase {
             try {
                 before()
                 start { Map args ->
-                    println args
-                    println origins
-                    println rsyncPort
                     origins.each { Source origin ->
-                        println origin
                         rsyncClient.start(backup: false, path: origin.target, dir: service.origin.dir, port: args.rsyncPort)
                         if (origin.chown) {
                             deployment.execCommand rsyncDeploy, "chown", "${origin.chown}", "-R", "${origin.target}"
+                        }
+                        if (origin.chmod) {
+                            deployment.execCommand rsyncDeploy, "chmod", "${origin.chmod}", "-R", "${origin.target}"
                         }
                     }
                 }

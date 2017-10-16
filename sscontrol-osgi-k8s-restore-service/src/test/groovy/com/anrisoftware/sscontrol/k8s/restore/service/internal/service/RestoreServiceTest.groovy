@@ -134,7 +134,7 @@ service "restore" with {
 service "k8s-cluster"
 service "restore" with {
     source << [target: "/data", chown: "33.33"]
-    source << [target: "/html", chown: "33.2014"]
+    source << [target: "/html", chown: "33.2014", chmod: "0660"]
 }
 ''',
             scriptVars: [:],
@@ -146,6 +146,7 @@ service "restore" with {
                 assert s.sources[0].chown == '33.33'
                 assert s.sources[1].target == '/html'
                 assert s.sources[1].chown == '33.2014'
+                assert s.sources[1].chmod == '0660'
             },
         ]
         doTest test
