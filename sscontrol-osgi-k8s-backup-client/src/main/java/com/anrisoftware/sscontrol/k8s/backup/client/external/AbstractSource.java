@@ -31,6 +31,8 @@ public class AbstractSource implements Source {
 
     private String chown;
 
+    private String chmod;
+
     protected AbstractSource(Map<String, Object> args) {
         parseArgs(args);
     }
@@ -62,6 +64,15 @@ public class AbstractSource implements Source {
         return chown;
     }
 
+    public void setChmod(String chmod) {
+        this.chmod = chmod;
+    }
+
+    @Override
+    public String getChmod() {
+        return chmod;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -71,6 +82,14 @@ public class AbstractSource implements Source {
         parseSource(args);
         parseTarget(args);
         parseChown(args);
+        parseChmod(args);
+    }
+
+    private void parseChmod(Map<String, Object> args) {
+        Object v = args.get("chmod");
+        if (v != null) {
+            setChmod(v.toString());
+        }
     }
 
     private void parseChown(Map<String, Object> args) {
