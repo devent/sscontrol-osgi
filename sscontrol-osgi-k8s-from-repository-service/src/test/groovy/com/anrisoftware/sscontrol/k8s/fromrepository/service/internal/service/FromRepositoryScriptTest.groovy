@@ -141,6 +141,39 @@ service "from-repository", repo: "wordpress-app" with {
         doTest test
     }
 
+    @Test
+    void "vars_add"() {
+        def test = [
+            name: 'vars_add',
+            script: '''
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app" with {
+    vars << [mysql: [version: "5.6", image: "mysql"]]
+    vars.mysql.putAll([name: "aaa"])
+}
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 1
+                assert s.vars.mysql.size() == 3
+                assert s.vars.mysql.version == '5.6'
+                assert s.vars.mysql.name == 'aaa'
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         test.before(test)
