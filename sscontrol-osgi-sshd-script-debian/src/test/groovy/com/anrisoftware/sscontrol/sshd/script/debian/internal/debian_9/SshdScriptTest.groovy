@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
@@ -72,6 +73,34 @@ service "sshd" with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_ufw_binding_port"() {
+        def test = [
+            name: "script_ufw_binding_port",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "sshd" with {
+    bind port: 2222
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            before: { Map test ->
+                File dir = test.dir
+                createEchoCommand dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource SshdScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
             },
         ]
         doTest test

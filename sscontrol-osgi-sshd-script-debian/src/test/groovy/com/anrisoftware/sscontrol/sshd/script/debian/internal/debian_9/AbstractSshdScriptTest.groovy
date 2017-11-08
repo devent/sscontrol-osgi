@@ -30,6 +30,7 @@ abstract class AbstractSshdScriptTest extends AbstractSshdRunnerTest {
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
+        createWhichCommand dir
         createIdCommand dir
         createEchoCommands dir, [
             'mkdir',
@@ -41,7 +42,6 @@ abstract class AbstractSshdScriptTest extends AbstractSshdRunnerTest {
             'cp',
             'apt-get',
             'systemctl',
-            'which',
             'sha256sum',
             'mv',
             'basename',

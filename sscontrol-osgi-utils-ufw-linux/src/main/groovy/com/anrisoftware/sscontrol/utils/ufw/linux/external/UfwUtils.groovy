@@ -64,8 +64,12 @@ abstract class UfwUtils {
      */
     List getTcpPorts(List ports) {
         def list = ports
-        list.inject([]) { l, String v ->
-            l << v.replaceAll('-', ':')
+        list.inject([]) { l, def v ->
+            if (v instanceof String) {
+                l << v.replaceAll('-', ':')
+            } else {
+                l << v
+            }
         }
     }
 
@@ -102,5 +106,13 @@ abstract class UfwUtils {
     def allowPortsToNetwork(List ports, def toNetwork, Object script) {
         script.shell privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsToNetwork",
         vars: [ports: getTcpPorts(ports), toNetwork: toNetwork] call()
+    }
+
+    /**
+     * Allows ports any.
+     */
+    def ufwAllowPortsToAny(List ports, Object script) {
+        script.shell privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsToAny",
+        vars: [ports: getTcpPorts(ports)] call()
     }
 }
