@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.sshd.service.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 
 /**
  * Sshd service.
@@ -31,4 +31,9 @@ public interface Sshd extends HostService {
     DebugLogging getDebugLogging();
 
     List<String> getUsers();
+
+    /**
+     * The binding of the sshd.
+     */
+    Binding getBinding();
 }

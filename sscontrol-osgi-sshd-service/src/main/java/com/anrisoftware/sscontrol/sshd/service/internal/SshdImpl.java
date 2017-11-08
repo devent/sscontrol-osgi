@@ -29,10 +29,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.sshd.service.external.Binding;
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.service.external.SshdService;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
+import com.anrisoftware.sscontrol.sshd.service.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -67,13 +69,20 @@ public class SshdImpl implements Sshd {
 
     private DebugLogging debug;
 
+    private Binding binding;
+
+    private transient BindingImplFactory bindingFactory;
+
     @AssistedInject
     SshdImpl(SshdImplLogger log, HostServicePropertiesService propertiesService,
+            BindingImplFactory bindingFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<TargetHost>();
         this.users = new ArrayList<String>();
+        this.binding = bindingFactory.create();
+        this.bindingFactory = bindingFactory;
         parseArgs(args);
     }
 
@@ -122,6 +131,17 @@ public class SshdImpl implements Sshd {
         });
     }
 
+    /**
+     * <pre>
+     * bind port: 2222
+     * </pre>
+     */
+    public void bind(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<>(args);
+        this.binding = bindingFactory.create(a);
+        log.bindingSet(this, binding);
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -145,6 +165,11 @@ public class SshdImpl implements Sshd {
     @Override
     public List<String> getUsers() {
         return users;
+    }
+
+    @Override
+    public Binding getBinding() {
+        return binding;
     }
 
     @Override

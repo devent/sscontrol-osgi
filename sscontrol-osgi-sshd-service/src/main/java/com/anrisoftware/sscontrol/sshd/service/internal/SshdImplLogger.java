@@ -16,10 +16,12 @@
 package com.anrisoftware.sscontrol.sshd.service.internal;
 
 import static com.anrisoftware.sscontrol.sshd.service.internal.SshdImplLogger.m.addUser;
+import static com.anrisoftware.sscontrol.sshd.service.internal.SshdImplLogger.m.bindingSet;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.sshd.service.external.Binding;
 
 /**
  * Logging for {@link SshdImpl}.
@@ -32,7 +34,9 @@ final class SshdImplLogger extends AbstractLogger {
 
     enum m {
 
-        addUser("User '{}' added to {}");
+        addUser("User '{}' added to {}"),
+
+        bindingSet("Binding {} set for {}");
 
         private String name;
 
@@ -55,6 +59,10 @@ final class SshdImplLogger extends AbstractLogger {
 
     void addUser(SshdImpl sshd, String name) {
         debug(addUser, name, sshd);
+    }
+
+    void bindingSet(SshdImpl sshd, Binding binding) {
+        debug(bindingSet, binding, sshd);
     }
 
 }
