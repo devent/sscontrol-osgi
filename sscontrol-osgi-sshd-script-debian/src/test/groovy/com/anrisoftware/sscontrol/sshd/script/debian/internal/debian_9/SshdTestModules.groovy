@@ -55,7 +55,7 @@ class SshdTestModules {
         [
             new SshModule(),
             new SshdModule(),
-            new Sshd_Debian_9_Module(),
+            new SshdDebianModule(),
             new DebianUtilsModule(),
             new SystemdUtilsModule(),
             new DebugLoggingModule(),

@@ -52,7 +52,7 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
     SshdImplFactory serviceFactory
 
     @Inject
-    Sshd_Debian_9_Factory scriptFactory
+    SshdDebianFactory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory

@@ -15,9 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -25,13 +23,5 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class Sshd_Debian_9_Module extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, Sshd_Debian_9.class)
-                .build(Sshd_Debian_9_Factory.class));
-    }
-
+public interface SshdDebianFactory extends HostServiceScriptService {
 }

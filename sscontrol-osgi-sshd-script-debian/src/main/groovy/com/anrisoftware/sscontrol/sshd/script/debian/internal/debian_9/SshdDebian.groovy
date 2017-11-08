@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.sshd.script.debian.external.Sshd_6_Debian
+import com.anrisoftware.sscontrol.sshd.script.debian.external.SshdSystemd
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
@@ -32,10 +32,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Sshd_Debian_9 extends Sshd_6_Debian {
+class SshdDebian extends SshdSystemd {
 
     @Inject
-    Sshd_Debian_9_Properties debianPropertiesProvider
+    SshdDebianProperties debianPropertiesProvider
 
     DebianUtils debian
 

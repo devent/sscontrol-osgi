@@ -40,14 +40,14 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  */
 @Component
 @Service(HostServiceScriptService.class)
-public class Sshd_Debian_9_Service implements HostServiceScriptService {
+public class SshdDebianService implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private Sshd_Debian_9_Factory scriptFactory;
+    private SshdDebianFactory scriptFactory;
 
     public String getSystemName() {
         return SYSTEM_NAME;
@@ -66,7 +66,7 @@ public class Sshd_Debian_9_Service implements HostServiceScriptService {
 
     @Activate
     protected void start() {
-        createInjector(new Sshd_Debian_9_Module()).injectMembers(this);
+        createInjector(new SshdDebianModule()).injectMembers(this);
     }
 
 }
