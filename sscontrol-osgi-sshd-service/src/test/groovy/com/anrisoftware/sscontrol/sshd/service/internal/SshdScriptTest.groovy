@@ -106,6 +106,24 @@ service "sshd" with {
         doTest test
     }
 
+    @Test
+    void "binding"() {
+        def test = [
+            name: 'binding',
+            input: """
+service "sshd" with {
+    bind port: 2222
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('sshd').size() == 1
+                Sshd hosts = services.getServices('sshd')[0] as Sshd
+                assert hosts.binding.port == 2222
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()
