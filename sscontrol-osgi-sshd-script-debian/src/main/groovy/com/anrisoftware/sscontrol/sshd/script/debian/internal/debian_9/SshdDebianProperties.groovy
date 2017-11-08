@@ -24,11 +24,11 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class Sshd_Debian_9_Properties extends AbstractContextPropertiesProvider {
+class SshdDebianProperties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Sshd_Debian_9_Properties.class.getResource("/sshd_debian_9.properties");
+    private static final URL RESOURCE = SshdDebianProperties.class.getResource("/sshd_debian_9.properties");
 
-    Sshd_Debian_9_Properties() {
-        super(Sshd_Debian_9_Properties.class, RESOURCE);
+    SshdDebianProperties() {
+        super(SshdDebianProperties.class, RESOURCE);
     }
 }

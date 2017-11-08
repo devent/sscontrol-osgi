@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class Openssh_Systemd extends ScriptBase {
+abstract class OpensshSystemd extends ScriptBase {
 
     def configureService() {
         log.info 'Configuring sshd service.'
