@@ -61,10 +61,17 @@ class SshdDebian extends SshdSystemd {
         if (!service.debugLogging.modules['debug']) {
             service.debug level: defaultLogLevel
         }
+        if (!service.binding.port) {
+            service.bind port: defaultPort
+        }
     }
 
     def getDefaultLogLevel() {
-        defaultProperties.getNumberProperty('default_log_level').intValue()
+        getScriptNumberProperty 'default_log_level' intValue()
+    }
+
+    def getDefaultPort() {
+        getScriptNumberProperty 'default_port' intValue()
     }
 
     @Override
