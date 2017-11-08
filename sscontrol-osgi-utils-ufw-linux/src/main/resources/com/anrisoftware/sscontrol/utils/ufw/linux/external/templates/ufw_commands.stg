@@ -28,3 +28,11 @@ ufwAllowPortsToNetwork(parent, vars) ::= <<
 <vars.ports:{p|ufw allow from any to <vars.toNetwork> port <p> proto tcp};separator="\n">
 
 >>
+
+/*
+ * vars.ports
+ */
+ufwAllowPortsToAny(parent, vars) ::= <<
+<vars.ports:{p|ufw allow from any to any port <p> proto tcp};separator="\n">
+
+>>

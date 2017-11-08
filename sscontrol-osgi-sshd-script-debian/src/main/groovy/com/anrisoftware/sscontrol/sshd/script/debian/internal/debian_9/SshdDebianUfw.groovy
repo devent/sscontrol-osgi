@@ -18,63 +18,52 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.sshd.script.debian.external.SshdSystemd
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> 6 service for Debian 9.
+ * Configures the Ufw firewall.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class SshdDebian extends SshdSystemd {
+class SshdDebianUfw extends ScriptBase {
 
     @Inject
     SshdDebianProperties debianPropertiesProvider
 
-    @Inject
-    SshdDebianUfwFactory ufwFactory
-
-    DebianUtils debian
+    UfwUtils ufw
 
     @Inject
-    void setDebianUtilsFactory(Debian_9_UtilsFactory factory) {
-        this.debian = factory.create this
+    void setUfwUtilsFactory(UfwLinuxUtilsFactory factory) {
+        this.ufw = factory.create this
     }
 
     @Override
-    def run() {
-        setupDefaults()
-        installPackages()
-        configureService()
-        restartService()
-        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-    }
-
-    def setupDefaults() {
+    Object run() {
         Sshd service = service
-        if (!service.debugLogging.modules['debug']) {
-            service.debug level: defaultLogLevel
+        if (!ufw.ufwActive) {
+            log.debug 'No Ufw available.'
+            return
         }
+        updateFirewall()
     }
 
-    def getDefaultLogLevel() {
-        defaultProperties.getNumberProperty('default_log_level').intValue()
+    def updateFirewall() {
+        Sshd service = service
+        if (service.binding.port) {
+            ufw.ufwAllowPortsToAny([service.binding.port], this)
+        }
     }
 
     @Override
     ContextProperties getDefaultProperties() {
         debianPropertiesProvider.get()
-    }
-
-    @Override
-    Sshd getService() {
-        super.getService()
     }
 
     @Override
