@@ -55,6 +55,28 @@ service "sshd"
         doTest test
     }
 
+    @Test
+    void "script_binding_port"() {
+        def test = [
+            name: "script_binding_port",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "sshd" with {
+    bind port: 2222
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE

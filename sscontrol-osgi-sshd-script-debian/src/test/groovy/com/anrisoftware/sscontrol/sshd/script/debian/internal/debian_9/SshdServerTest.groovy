@@ -19,6 +19,9 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
+import java.nio.charset.StandardCharsets
+
+import org.apache.commons.io.IOUtils
 import org.junit.Before
 import org.junit.Test
 
@@ -51,6 +54,37 @@ service "sshd"
         ]
         doTest test
     }
+
+    @Test
+    void "server_binding_port"() {
+        def test = [
+            name: "server_binding_port",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "sshd" with {
+    bind port: 2222
+}
+''',
+            scriptVars: [robobeeSocket: robobeeSocket],
+            expectedServicesSize: 2,
+            after: {  Map args ->
+                remoteCommand """
+sudo bash -s << eof1
+cat > /etc/ssh/sshd_config << 'EOL'
+${sshdConfig()}
+EOL
+eof1
+sudo systemctl restart sshd
+""", 'robobee-test', 2222
+            },
+            expected: { Map args ->
+                assertStringResource SshdServerTest, readRemoteFile('/etc/ssh/sshd_config', 'robobee-test', 2222), "${args.test.name}_sshd_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    static final sshdConfig = { IOUtils.toString(SshdServerTest.class.getResource("sshd_config.txt").openStream(), StandardCharsets.UTF_8) }
 
     @Before
     void beforeMethod() {

@@ -36,18 +36,21 @@ abstract class Openssh_Systemd extends ScriptBase {
         replace "s/(?m)^#?\\s*LogLevel.*/LogLevel ${logLevelMap[debug]}/", privileged: true, dest: configFile call()
         replace "s/(?m)^#?\\s*PermitRootLogin.*/PermitRootLogin ${permitRootLogin}/", privileged: true, dest: configFile call()
         replace "s/(?m)^#?\\s*PasswordAuthentication.*/PasswordAuthentication ${passwordAuthentication}/", privileged: true, dest: configFile call()
+        if (service.binding.port) {
+            replace "s/(?m)^#?\\s*Port.*/Port ${service.binding.port}/", privileged: true, dest: configFile call()
+        }
     }
 
     Map getLogLevelMap() {
-        Eval.me defaultProperties.getProperty('log_level_map')
+        Eval.me getScriptProperty('log_level_map')
     }
 
     String getPermitRootLogin() {
-        defaultProperties.getProperty('permit_root_login')
+        getScriptProperty 'permit_root_login'
     }
 
     String getPasswordAuthentication() {
-        defaultProperties.getProperty('password_authentication')
+        getScriptProperty 'password_authentication'
     }
 
     @Override
