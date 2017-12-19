@@ -135,7 +135,7 @@ class DeploymentImpl implements Deployment {
         def waitTime = Duration.standardHours 1
         try {
             deployOp = deployOp as HasMetadataOperation
-            deployOp.waitUntilReady waitTime.standardSeconds, TimeUnit.SECONDS
+            deployOp.waitUntilReady waitTime.standardSeconds * 1000, TimeUnit.MILLISECONDS
         } catch (e) {
             def deploy = deployOp.get()
             def ex = new WaitScalingTimeoutException(e, deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
