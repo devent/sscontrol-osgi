@@ -9,7 +9,7 @@ Wants=network-online.target
 [Service]
 Type=notify
 WorkingDirectory=/tmp/junit/junit/var/lib/etcd
-EnvironmentFile=-/tmp/junit/junit/etcd-proxy.conf
+EnvironmentFile=-/tmp/junit/junit/etc/etcd/etcd-proxy.conf
 User=etcd
 # set GOMAXPROCS to number of processors
 ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/local/bin/etcd grpc-proxy start --endpoints=\"${ETCD_PROXY_ENDPOINTS}\" --listen-addr=\"${ETCD_PROXY_LISTEN_ADDR}\" --cert=\"${ETCD_PROXY_CERT}\" --key=\"${ETCD_PROXY_KEY}\" --cacert=\"${ETCD_PROXY_CA}\" "

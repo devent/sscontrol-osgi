@@ -9,7 +9,7 @@ Wants=network-online.target
 [Service]
 Type=notify
 WorkingDirectory=/tmp/junit/junit/var/lib/etcd
-EnvironmentFile=-/tmp/junit/junit/etcd.conf
+EnvironmentFile=-/tmp/junit/junit/etc/etcd/etcd.conf
 User=etcd
 # set GOMAXPROCS to number of processors
 ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /tmp/junit/junit/usr/local/bin/etcd --name=\"${ETCD_NAME}\" --data-dir=\"${ETCD_DATA_DIR}\" --listen-client-urls=\"${ETCD_LISTEN_CLIENT_URLS}\""

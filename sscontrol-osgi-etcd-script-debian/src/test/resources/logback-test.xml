@@ -18,21 +18,22 @@
 -->
 <configuration>
 
-	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
-		<target>System.err</target>
-		<encoder>
-			<pattern>[%-5level] %d [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>true</immediateFlush>
-		</encoder>
-	</appender>
+    <appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <encoder>
+            <pattern>[%level] %-4relative [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
 
-	<root level="ERROR">
-		<appender-ref ref="TESTING_STYLE" />
-	</root>
+    <root level="ERROR">
+        <appender-ref ref="TESTING_STYLE" />
+    </root>
 
+    <logger name="org.perf4j.TimingLogger" level="INFO" />
     <logger name="com.anrisoftware" level="INFO" />
-    <logger name="com.anrisoftware.globalpom.exec" level="DEBUG" />
-    <logger name="com.anrisoftware.sscontrol" level="INFO" />
-    <logger name="com.anrisoftware.sscontrol.groovy.script.external" level="DEBUG" />
+    <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.shell.internal.scp" level="INFO" />
 
 </configuration>
