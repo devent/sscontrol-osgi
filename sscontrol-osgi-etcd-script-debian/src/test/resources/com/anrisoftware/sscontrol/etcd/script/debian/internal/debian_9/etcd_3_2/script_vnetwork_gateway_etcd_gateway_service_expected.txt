@@ -9,7 +9,7 @@ Wants=network-online.target
 [Service]
 Type=notify
 WorkingDirectory=/tmp/junit/junit/var/lib/etcd
-EnvironmentFile=-/tmp/junit/junit/etcd-gateway.conf
+EnvironmentFile=-/tmp/junit/junit/etc/etcd/etcd-gateway.conf
 User=etcd
 # set GOMAXPROCS to number of processors
 ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/local/bin/etcd gateway start --endpoints=\"${ETCD_GATEWAY_ENDPOINTS}\" --listen-addr=\"${ETCD_GATEWAY_LISTEN_ADDR}\" "

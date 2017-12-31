@@ -94,9 +94,9 @@ service "etcd", member: "default" with {
     }
 
     @Test
-    void "cert_auth"() {
+    void "script_cert_auth"() {
         def test = [
-            name: "cert_auth",
+            name: "script_cert_auth",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default" with {
@@ -119,9 +119,9 @@ service "etcd", member: "default" with {
     }
 
     @Test
-    void "static_peer"() {
+    void "script_static_peer"() {
         def test = [
-            name: "static_peer",
+            name: "script_static_peer",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "infra0" with {
@@ -151,9 +151,9 @@ service "etcd", member: "infra0" with {
     }
 
     @Test
-    void "peers_ufw"() {
+    void "script_peers_ufw"() {
         def test = [
-            name: "peers_ufw",
+            name: "script_peers_ufw",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "infra0" with {
