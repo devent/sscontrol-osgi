@@ -29,7 +29,8 @@
         <module>../sscontrol-osgi-command-shell-openssh</module>
         <module>../sscontrol-osgi-command-template</module>
         <module>../sscontrol-osgi-debug</module>
-        <module>../sscontrol-osgi-dhclient</module>
+        <module>../sscontrol-osgi-dhclient-script-debian</module>
+        <module>../sscontrol-osgi-dhclient-service</module>
         <module>../sscontrol-osgi-docker-script-debian</module>
         <module>../sscontrol-osgi-docker-script-systemd</module>
         <module>../sscontrol-osgi-docker-service</module>
