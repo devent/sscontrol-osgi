@@ -43,6 +43,7 @@ class Fail2banClusterTest extends AbstractFail2banRunnerTest {
 service "ssh", group: "servers" with {
     host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
     host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
+    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-2-test:22"
 }
 service "fail2ban", target: "servers" with {
     debug "debug", level: 4
@@ -62,6 +63,7 @@ service "fail2ban", target: "servers" with {
     void beforeMethod() {
         assumeTrue new File('/tmp/robobee@robobee-test:22').exists()
         assumeTrue new File('/tmp/robobee@robobee-1-test:22').exists()
+        assumeTrue new File('/tmp/robobee@robobee-2-test:22').exists()
     }
 
     Map getScriptEnv(Map args) {
