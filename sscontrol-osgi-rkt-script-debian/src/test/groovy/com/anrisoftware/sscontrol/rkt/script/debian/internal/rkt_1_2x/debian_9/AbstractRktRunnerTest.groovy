@@ -61,7 +61,7 @@ abstract class AbstractRktRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'rkt', rktFactory
-        services.putAvailableScriptService 'rkt-1.28/debian/9', scriptFactory
+        services.putAvailableScriptService 'rkt-1.29/debian/9', scriptFactory
         return services
     }
 

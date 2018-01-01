@@ -43,7 +43,7 @@ service "ssh" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
-service "rkt", version: "1.28"
+service "rkt", version: "1.29"
 ''',
             scriptVars: [sockets: sockets],
             expectedServicesSize: 2,
