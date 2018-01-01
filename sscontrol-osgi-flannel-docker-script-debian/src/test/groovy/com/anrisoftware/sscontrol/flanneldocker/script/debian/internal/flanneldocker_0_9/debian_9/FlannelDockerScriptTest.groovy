@@ -34,9 +34,9 @@ import groovy.util.logging.Slf4j
 class FlannelDockerScriptTest extends AbstractFlannelDockerScriptTest {
 
     @Test
-    void "basic"() {
+    void "script_basic"() {
         def test = [
-            name: "basic",
+            name: "script_basic",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "flannel-docker" with {
@@ -72,9 +72,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "multiple_endpoints"() {
+    void "script_multiple_endpoints"() {
         def test = [
-            name: "multiple_endpoints",
+            name: "script_multiple_endpoints",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "flannel-docker" with {
@@ -95,9 +95,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "address_multiple_endpoints"() {
+    void "script_address_multiple_endpoints"() {
         def test = [
-            name: "address_multiple_endpoints",
+            name: "script_address_multiple_endpoints",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "flannel-docker" with {
@@ -118,9 +118,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "etcd_tls"() {
+    void "script_etcd_tls"() {
         def test = [
-            name: "etcd_tls",
+            name: "script_etcd_tls",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "flannel-docker" with {
@@ -146,9 +146,9 @@ service "flannel-docker" with {
     }
 
     @Test
-    void "nodes_targets_ufw"() {
+    void "script_nodes_targets_ufw"() {
         def test = [
-            name: "nodes_targets_ufw",
+            name: "script_nodes_targets_ufw",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", group: "masters" with {
