@@ -39,7 +39,7 @@ class RktScriptTest extends AbstractRktScriptTest {
             expectedServicesSize: 2,
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
-service "rkt", version: "1.28"
+service "rkt", version: "1.29"
 ''',
             scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
