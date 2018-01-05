@@ -23,7 +23,7 @@ spec:
     - --insecure-port=8080
     - --secure-port=443
     - --advertise-address=192.168.0.100
-    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota
+    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds
     - --tls-cert-file=
     - --tls-private-key-file=
     - --service-account-key-file=
