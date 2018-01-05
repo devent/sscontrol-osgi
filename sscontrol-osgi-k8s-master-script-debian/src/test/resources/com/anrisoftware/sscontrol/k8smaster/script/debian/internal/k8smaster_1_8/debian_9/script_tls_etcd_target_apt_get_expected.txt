@@ -4,3 +4,4 @@
 -y install golang-go
 -y install curl
 -y install git
+-y install netcat
