@@ -1,2 +1,2 @@
 
--nv -O /tmp/junit/junit/basename https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/amd64/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.8.0/bin/linux/amd64/kubectl
+-nv -O /tmp/junit/junit/basename https://storage.googleapis.com/kubernetes-release/release/v1.8.5/bin/linux/amd64/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.8.5/bin/linux/amd64/kubectl
