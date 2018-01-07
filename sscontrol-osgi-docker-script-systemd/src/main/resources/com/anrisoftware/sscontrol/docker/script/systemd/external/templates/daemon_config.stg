@@ -1,0 +1,12 @@
+daemonConfig(parent, vars) ::= <<
+{
+  <daemonExecOpts(parent, vars)>
+}
+
+>>
+
+daemonExecOpts(parent, vars) ::= <%
+<if(vars.execOpts)>
+"exec-opts": [<vars.execOpts:{o|"<o>"};separator=",">]
+<endif>
+%>

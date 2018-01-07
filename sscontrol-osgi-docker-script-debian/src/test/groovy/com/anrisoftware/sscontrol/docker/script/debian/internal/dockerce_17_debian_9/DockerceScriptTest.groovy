@@ -57,6 +57,27 @@ service "docker"
     }
 
     @Test
+    void "script_native_cgroupdriver"() {
+        def test = [
+            name: "script_native_cgroupdriver",
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
+service "docker" with {
+    property << "native_cgroupdriver=systemd"
+}
+""",
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/docker'), "daemon.json", "${args.test.name}_daemon_json.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "script_mirror_localhost"() {
         def test = [
             name: "script_mirror_localhost",

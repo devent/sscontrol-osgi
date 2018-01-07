@@ -43,6 +43,8 @@ abstract class Dockerce_17_Systemd extends ScriptBase {
 
     TemplateResource dockerdTemplate
 
+    TemplateResource daemonTemplate
+
     SystemdUtils systemd
 
     @Inject
@@ -50,6 +52,7 @@ abstract class Dockerce_17_Systemd extends ScriptBase {
         def templates = templatesFactory.create('Dockerce_17_Systemd_Templates')
         this.dockerdTemplate = templates.getResource('dockerd_config')
         this.mirrorTemplate = templates.getResource('mirror_config')
+        this.daemonTemplate = templates.getResource('daemon_config')
     }
 
     @Inject
@@ -123,6 +126,26 @@ mkdir -p '$dropin'
         }
     }
 
+    /**
+     * Creates the docker daemon configuration in "/etc/docker/daemon.json".
+     */
+    def createDaemonConfig() {
+        Docker service = service
+        boolean notEmpty = false
+        notEmpty = notEmpty || haveNativeCgroupdriver
+        if (!notEmpty) {
+            return
+        }
+        def execOpts = []
+        haveNativeCgroupdriver ? execOpts << "native.cgroupdriver=${nativeCgroupdriver}" : false
+        println execOpts
+        template resource: daemonTemplate,
+        name: 'daemonConfig',
+        privileged: true,
+        dest: "$daemonConfigFile",
+        vars: [execOpts: execOpts.empty ? null : execOpts] call()
+    }
+
     def stopServices() {
         systemd.stopService 'docker'
     }
@@ -191,6 +214,18 @@ rm -rf $dockerAufsDirectory; true
 
     File getDockerAufsDirectory() {
         getFileProperty 'docker_aufs_directory'
+    }
+
+    String getNativeCgroupdriver() {
+        getScriptProperty 'native_cgroupdriver'
+    }
+
+    boolean getHaveNativeCgroupdriver() {
+        !nativeCgroupdriver.empty
+    }
+
+    File getDaemonConfigFile() {
+        getScriptFileProperty 'daemon_config_file'
     }
 
     @Override
