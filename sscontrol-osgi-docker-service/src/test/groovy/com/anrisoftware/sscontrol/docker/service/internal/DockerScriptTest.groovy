@@ -160,6 +160,24 @@ service "docker" with {
         doTest test
     }
 
+    @Test
+    void "cgroup_driver"() {
+        def test = [
+            name: 'cgroup_driver',
+            input: """
+service "docker" with {
+    property << "native_cgroupdriver=systemd"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('docker').size() == 1
+                Docker s = services.getServices('docker')[0]
+                assert s.serviceProperties.getProperty("native_cgroupdriver") == "systemd"
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def services = servicesFactory.create()

@@ -54,6 +54,28 @@ service "docker"
         doTest test
     }
 
+    @Test
+    void "cluster_docker_native_cgroupdriver"() {
+        def test = [
+            name: "cluster_docker_native_cgroupdriver",
+            script: '''
+service "ssh" with {
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
+}
+service "docker" with {
+    property << "native_cgroupdriver=systemd"
+}
+''',
+            scriptVars: [sockets: sockets, certs: certs],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+            },
+        ]
+        doTest test
+    }
+
     static final Map sockets = [
         masters: [
             "/tmp/robobee@robobee-test:22"
