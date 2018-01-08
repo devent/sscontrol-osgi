@@ -76,8 +76,7 @@ class K8sMasterDebian extends ScriptBase {
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.createService()
-        systemd.startServices()
-        systemd.enableServices()
+        upstream.installKubeadm()
         upstream.postInstall()
     }
 

@@ -269,45 +269,10 @@ chmod o-rx '$certsDir'
         uploadTlsCerts tls: etcdTls, name: 'etcd'
     }
 
-    def createKubeletService() {
-        log.info 'Create kubelet service.'
-        template privileged: true, resource: kubeletServiceTemplate, name: 'kubeletService', dest: "$systemdSystemDir/kubelet.service", vars: [:] call()
-        template privileged: true, resource: kubeletServiceTemplate, name: 'kubeletWrapper', dest: "$binDir/kubelet-wrapper", vars: [:] call()
-        shell privileged: true, """
-chmod +x $binDir/kubelet-wrapper
-systemctl daemon-reload
-        """ call()
-    }
-
     def createKubeletConfig() {
         log.info 'Create kubelet configuration.'
         shell privileged: true, "mkdir -p $sysConfigDir" call()
         template privileged: true, resource: kubeletConfigTemplate, name: 'kubeletConfig', dest: "$sysConfigDir/kubelet", vars: [:] call()
-    }
-
-    def createHostRkt() {
-        log.info 'Create host-rkt.'
-        def dir = binDir
-        shell privileged: true, "mkdir -p $dir" call()
-        template privileged: true, resource: rktTemplate, name: 'hostRkt', dest: "$dir/host-rkt", vars: [:] call()
-        shell privileged: true, "chmod +x $dir/host-rkt" call()
-    }
-
-    def createFlannelCni() {
-        K8s service = service
-        if (!service.plugins.containsKey('flannel')) {
-            return
-        }
-        log.info 'Create flannel cni drop-in.'
-        def dir = cniNetDir
-        shell privileged: true, "mkdir -p $dir" call()
-        template privileged: true, resource: flannelCniTemplate, name: 'flannelCniDropin', dest: "$dir/10-flannel.conf", vars: [:] call()
-    }
-
-    def createKubeletKubeconfig() {
-        K8s service = service
-        log.info 'Create kubelet-kubeconfig.'
-        template privileged: true, resource: manifestsTemplate, name: 'kubeletManifest', dest: kubeconfigFile, vars: [:] call()
     }
 
     def createWorkerKubeconfig() {
@@ -466,7 +431,7 @@ systemctl daemon-reload
     }
 
     def getDefaultAllowPrivileged() {
-        properties.getBooleanProperty 'default_allow_privileged', defaultProperties
+        getScriptBooleanProperty "default_allow_privileged"
     }
 
     def getDefaultInsecureAddress() {
@@ -723,24 +688,28 @@ systemctl daemon-reload
         properties.getFileProperty "containers_log_dir", base, defaultProperties
     }
 
+    boolean getDeployAddonManager() {
+        getScriptBooleanProperty "deploy_addon_manager"
+    }
+
     boolean getDeployKubeDns() {
-        properties.getBooleanProperty "deploy_kube_dns", defaultProperties
+        getScriptBooleanProperty "deploy_kube_dns"
     }
 
     boolean getDeployKubeDashboard() {
-        properties.getBooleanProperty "deploy_kube_dashboard", defaultProperties
+        getScriptBooleanProperty "deploy_kube_dashboard"
     }
 
     boolean getDeployCalico() {
-        properties.getBooleanProperty "deploy_calico", defaultProperties
+        getScriptBooleanProperty "deploy_calico"
     }
 
     boolean getRegisterSchedulable() {
-        properties.getBooleanProperty 'register_schedulable', defaultProperties
+        getScriptBooleanProperty "register_schedulable"
     }
 
     boolean getRegisterNode() {
-        properties.getBooleanProperty 'register_node', defaultProperties
+        getScriptBooleanProperty "register_node"
     }
 
     /**
@@ -748,14 +717,14 @@ systemctl daemon-reload
      * for the master taint will be added to the DNS deployment.
      */
     boolean getAllowDnsOnMaster() {
-        properties.getBooleanProperty 'allow_dns_on_master', defaultProperties
+        getScriptBooleanProperty "allow_dns_on_master"
     }
 
     /**
      * Returns true if we require a particular node label for DNS pods.
      */
     boolean getRequireDnsNodeLabel() {
-        properties.getBooleanProperty 'require_dns_node_label', defaultProperties
+        getScriptBooleanProperty "require_dns_node_label"
     }
 
     /**
@@ -771,7 +740,7 @@ systemctl daemon-reload
      * Returns true if we require a particular node label for Dashboard pods.
      */
     boolean getRequireDashboardNodeLabel() {
-        properties.getBooleanProperty 'require_dashboard_node_label', defaultProperties
+        getScriptBooleanProperty "require_dashboard_node_label"
     }
 
     /**
@@ -789,7 +758,7 @@ systemctl daemon-reload
      * DaemonSet.
      */
     boolean getAllowCalicoNodeOnMaster() {
-        properties.getBooleanProperty 'allow_calico_node_on_master', defaultProperties
+        getScriptBooleanProperty "allow_calico_node_on_master"
     }
 
     /**
@@ -798,7 +767,7 @@ systemctl daemon-reload
      * Calico Policy-Controller Deployment.
      */
     boolean getAllowCalicoPolicyControllerOnMaster() {
-        properties.getBooleanProperty 'allow_calico_policy_controller_on_master', defaultProperties
+        getScriptBooleanProperty "allow_calico_policy_controller_on_master"
     }
 
     /**
@@ -806,7 +775,7 @@ systemctl daemon-reload
      * Calico Policy-Controller pods.
      */
     boolean getRequireCalicoPolicyControllerNodeLabel() {
-        properties.getBooleanProperty 'require_calico_policy_controller_node_label', defaultProperties
+        getScriptBooleanProperty "require_calico_policy_controller_node_label"
     }
 
     /**
