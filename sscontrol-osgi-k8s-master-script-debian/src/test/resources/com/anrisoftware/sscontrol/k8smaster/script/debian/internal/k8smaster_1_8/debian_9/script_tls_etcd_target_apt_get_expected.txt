@@ -5,3 +5,7 @@
 -y install curl
 -y install git
 -y install netcat
+update
+install -y apt-transport-https
+update
+install -y kubelet kubeadm kubectl

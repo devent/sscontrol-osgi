@@ -63,19 +63,23 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
         uploadAccountCertificates()
         uploadAuthenticationsCertificates()
         uploadEtcdCertificates()
-        createKubeletService()
-        createKubeletConfig()
-        createKubeletKubeconfig()
-        createKubeletManifests()
-        createHostRkt()
-        createFlannelCni()
+    }
+
+    def installKubeadm() {
+        shell privileged: true, """
+apt-get update && apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+""" call()
     }
 
     def postInstall() {
-        startAddons()
-        startCalico()
-        applyTaints()
-        applyLabels()
+        //applyTaints()
+        //applyLabels()
     }
 
     def setupClusterDefaults() {

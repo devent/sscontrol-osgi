@@ -60,7 +60,6 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
@@ -76,13 +75,6 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-de.yaml", "${args.test.name}_kube_dns_de_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-autoscaler-de.yaml", "${args.test.name}_kube_dns_autoscaler_de_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dns-svc.yaml", "${args.test.name}_kube_dns_svc_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-de.yaml", "${args.test.name}_kube_dashboard_de_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "kube-dashboard-svc.yaml", "${args.test.name}_kube_dashboard_svc_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "calico.yaml", "${args.test.name}_calico_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/cni/net.d'), "10-flannel.conf", "${args.test.name}_cni_flannel_conf_expected.txt"
             },
         ]
         doTest test

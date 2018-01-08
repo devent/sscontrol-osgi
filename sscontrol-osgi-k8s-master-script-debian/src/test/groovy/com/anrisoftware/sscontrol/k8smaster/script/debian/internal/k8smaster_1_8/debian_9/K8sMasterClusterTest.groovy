@@ -70,19 +70,12 @@ service "k8s-master", name: "andrea-master-0-test", advertise: targets.masters[0
     nodes << "nodes"
     tls certs.tls
     authentication "cert", ca: certs.tls.ca
-    plugin "flannel"
-    plugin "calico"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
     }
     kubelet.with {
         tls certs.tls
     }
-    label << "robobeerun.com/dns"
-    label << "robobeerun.com/dashboard"
-    label << "robobeerun.com/calico"
-    label << "robobeerun.com/cluster-monitoring-heapster=required"
-    label << "robobeerun.com/cluster-monitoring-influxdb-grafana=required"
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts],
