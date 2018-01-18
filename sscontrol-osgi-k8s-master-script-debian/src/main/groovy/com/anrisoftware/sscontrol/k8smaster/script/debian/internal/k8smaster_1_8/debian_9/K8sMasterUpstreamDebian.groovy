@@ -66,7 +66,7 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     }
 
     def installKubeadm() {
-        shell privileged: true, """
+        shell privileged: true, timeout: timeoutLong, """
 apt-get update && apt-get install -y apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
