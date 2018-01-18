@@ -53,9 +53,9 @@ class K8sMasterClusterTest extends AbstractMasterRunnerTest {
         def test = [
             name: "cluster_tls",
             script: '''
-service "ssh", host: "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
+service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "ssh", group: "masters" with {
-    host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
+    host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
@@ -64,7 +64,7 @@ service "ssh", group: "nodes" with {
 service "k8s-cluster", target: 'masters' with {
     credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
 }
-service "k8s-master", name: "andrea-master-0-test", advertise: targets.masters[0] with {
+service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     bind secure: "192.168.56.200"
     nodes << "masters"
     nodes << "nodes"
