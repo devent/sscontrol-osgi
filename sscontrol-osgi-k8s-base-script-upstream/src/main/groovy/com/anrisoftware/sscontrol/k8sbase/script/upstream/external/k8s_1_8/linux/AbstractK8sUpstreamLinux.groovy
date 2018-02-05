@@ -105,10 +105,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (service.tls.ca) {
             service.tls.caName = defaultKubernetesTlsCaName
         }
-        if (!registerSchedulable) {
-            def taint = ismasterNoScheduleTaint
-            service.taints << ["${taint.key}": taint]
-        }
     }
 
     def setupClusterHostDefaults() {
@@ -243,12 +239,9 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     }
 
     def createDirectories() {
-        log.info 'Create k8s-master directories.'
+        log.info 'Create k8s directories.'
         def dirs = [
-            configDir,
             certsDir,
-            cniNetDir,
-            systemdSystemDir
         ]
         shell privileged: true, """
 mkdir -p ${dirs.join(' ')}
@@ -257,7 +250,7 @@ chmod o-rx '$certsDir'
     }
 
     def uploadK8sCertificates() {
-        log.info 'Uploads k8s-master certificates.'
+        log.info 'Uploads k8s certificates.'
         def certsdir = certsDir
         K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
@@ -434,6 +427,10 @@ chmod o-rx '$certsDir'
         getScriptBooleanProperty "default_allow_privileged"
     }
 
+    /**
+     * Returns the default address to bind the API server for insecure
+     * connections.
+     */
     def getDefaultInsecureAddress() {
         properties.getProperty 'default_bind_insecure_address', defaultProperties
     }
@@ -660,139 +657,8 @@ chmod o-rx '$certsDir'
         }
     }
 
-    File getSystemdSystemDir() {
-        properties.getFileProperty "systemd_system_dir", base, defaultProperties
-    }
-
-    File getRunDir() {
-        properties.getFileProperty "run_dir", base, defaultProperties
-    }
-
-    File getManifestsDir() {
-        properties.getFileProperty "manifests_dir", base, defaultProperties
-    }
-
-    File getSrvManifestsDir() {
-        properties.getFileProperty "srv_manifests_dir", base, defaultProperties
-    }
-
-    File getCniNetDir() {
-        properties.getFileProperty "cni_net_dir", base, defaultProperties
-    }
-
-    File getCniBinDir() {
-        properties.getFileProperty "cni_bin_dir", base, defaultProperties
-    }
-
     File getContainersLogDir() {
         properties.getFileProperty "containers_log_dir", base, defaultProperties
-    }
-
-    boolean getDeployAddonManager() {
-        getScriptBooleanProperty "deploy_addon_manager"
-    }
-
-    boolean getDeployKubeDns() {
-        getScriptBooleanProperty "deploy_kube_dns"
-    }
-
-    boolean getDeployKubeDashboard() {
-        getScriptBooleanProperty "deploy_kube_dashboard"
-    }
-
-    boolean getDeployCalico() {
-        getScriptBooleanProperty "deploy_calico"
-    }
-
-    boolean getRegisterSchedulable() {
-        getScriptBooleanProperty "register_schedulable"
-    }
-
-    boolean getRegisterNode() {
-        getScriptBooleanProperty "register_node"
-    }
-
-    /**
-     * Returns true if we allow DNS pods on the master. If true, a toleration
-     * for the master taint will be added to the DNS deployment.
-     */
-    boolean getAllowDnsOnMaster() {
-        getScriptBooleanProperty "allow_dns_on_master"
-    }
-
-    /**
-     * Returns true if we require a particular node label for DNS pods.
-     */
-    boolean getRequireDnsNodeLabel() {
-        getScriptBooleanProperty "require_dns_node_label"
-    }
-
-    /**
-     * Returns the node label for DNS pods.
-     */
-    String getDnsNodeLabelKey() {
-        def ns = robobeeLabelNamespace
-        def key = properties.getProperty 'dns_node_label_key', defaultProperties
-        "$ns/$key"
-    }
-
-    /**
-     * Returns true if we require a particular node label for Dashboard pods.
-     */
-    boolean getRequireDashboardNodeLabel() {
-        getScriptBooleanProperty "require_dashboard_node_label"
-    }
-
-    /**
-     * Returns the node label for Dashboard pods.
-     */
-    String getDashboardNodeLabelKey() {
-        def ns = robobeeLabelNamespace
-        def key = properties.getProperty 'dashboard_node_label_key', defaultProperties
-        "$ns/$key"
-    }
-
-    /**
-     * Returns true if we allow Calico node pods on the master. If true, a
-     * toleration for the master taint will be added to the Calico node
-     * DaemonSet.
-     */
-    boolean getAllowCalicoNodeOnMaster() {
-        getScriptBooleanProperty "allow_calico_node_on_master"
-    }
-
-    /**
-     * Returns true if we allow Calico Policy-Controller pods on the master.
-     * If true, a toleration for the master taint will be added to the
-     * Calico Policy-Controller Deployment.
-     */
-    boolean getAllowCalicoPolicyControllerOnMaster() {
-        getScriptBooleanProperty "allow_calico_policy_controller_on_master"
-    }
-
-    /**
-     * Returns true if we require a particular node label for
-     * Calico Policy-Controller pods.
-     */
-    boolean getRequireCalicoPolicyControllerNodeLabel() {
-        getScriptBooleanProperty "require_calico_policy_controller_node_label"
-    }
-
-    /**
-     * Returns the node label for Calico Policy-Controller pods.
-     */
-    String getCalicoPolicyControllerNodeLabelKey() {
-        def ns = robobeeLabelNamespace
-        def key = properties.getProperty 'calico_policy_controller_node_label_key', defaultProperties
-        "$ns/$key"
-    }
-
-    File getKubeconfigFile() {
-        getScriptFileProperty 'kubeconfig_file', configDir
-    }
-
-    File getProxyKubeconfigFile() {
-        null
     }
 
     Tls getEtcdTls() {
@@ -810,14 +676,6 @@ chmod o-rx '$certsDir'
 
     String getRobobeeLabelNamespace() {
         getScriptProperty 'robobee_label_namespace'
-    }
-
-    String getRobobeeDedicatedTaintEffect() {
-        getScriptProperty 'robobee_dedicated_taint_effect'
-    }
-
-    String getRobobeeDedicatedTaintKey() {
-        getScriptProperty 'robobee_dedicated_taint_key'
     }
 
     long getMaxMapCount() {

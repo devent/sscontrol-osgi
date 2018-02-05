@@ -1,7 +1,0 @@
-dockerOptions(parent, vars) ::= <<
-# <parent.dockerOptionsFile>
-# Author: robobee
-[Service]
-Environment="DOCKER_OPTIONS=<if(parent.iptablesDisableDocker)>--iptables=false<endif>"
-
->>

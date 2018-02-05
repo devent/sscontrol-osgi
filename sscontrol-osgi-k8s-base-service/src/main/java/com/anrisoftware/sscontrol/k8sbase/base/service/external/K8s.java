@@ -32,6 +32,10 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
  */
 public interface K8s extends HostService {
 
+    /**
+     * Returns the plugins to use. A plugin can be the etcd cluster or the pod
+     * network plugin.
+     */
     Map<String, Plugin> getPlugins();
 
     DebugLogging getDebugLogging();
@@ -42,8 +46,14 @@ public interface K8s extends HostService {
 
     Kubelet getKubelet();
 
+    /**
+     * Returns the api server TLS certificates.
+     */
     Tls getTls();
 
+    /**
+     * Returns the container runtime: docker or rkt.
+     */
     String getContainerRuntime();
 
     List<String> getProperty();
