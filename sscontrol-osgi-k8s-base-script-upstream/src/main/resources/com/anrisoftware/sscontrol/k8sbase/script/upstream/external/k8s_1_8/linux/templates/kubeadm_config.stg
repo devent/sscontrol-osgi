@@ -2,7 +2,7 @@ kubeadmConfig(parent, vars) ::= <<
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
-  advertiseAddress: <address|string>
+  advertiseAddress: <parent.service.advertiseAddress>
   bindPort: <int>
 etcd:
   endpoints:
@@ -21,8 +21,8 @@ kubeProxy:
     mode: <value|string>
 networking:
   dnsDomain: <string>
-  serviceSubnet: <cidr>
-  podSubnet: <cidr>
+  serviceSubnet: <parent.service.cluster.serviceRange>
+  podSubnet: <parent.service.cluster.podRange>
 kubernetesVersion: <string>
 cloudProvider: <string>
 nodeName: <string>
