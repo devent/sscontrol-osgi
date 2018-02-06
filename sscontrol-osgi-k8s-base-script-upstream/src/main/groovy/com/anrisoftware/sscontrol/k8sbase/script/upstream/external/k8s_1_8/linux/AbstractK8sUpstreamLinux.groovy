@@ -45,19 +45,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 
-    TemplateResource kubeletServiceTemplate
-
-    TemplateResource kubeletConfigTemplate
-
-    TemplateResource manifestsTemplate
-
-    TemplateResource rktTemplate
-
-    TemplateResource flannelCniTemplate
-
-    TemplateResource clusterCmds
-
-    TemplateResource addonsCmd
+    TemplateResource kubeadmConfigTemplate
 
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
@@ -74,14 +62,8 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def attr = [renderers: [new UriBase64Renderer()]]
-        def templates = templatesFactory.create('K8s_1_8_UpstreamSystemdTemplates', attr)
-        this.kubeletServiceTemplate = templates.getResource('kubelet_service')
-        this.kubeletConfigTemplate = templates.getResource('kubelet_config')
-        this.manifestsTemplate = templates.getResource('manifests_template')
-        this.rktTemplate = templates.getResource('rkt_template')
-        this.flannelCniTemplate = templates.getResource('flannel_cni_template')
-        this.clusterCmds = templates.getResource('cluster_cmds')
-        this.addonsCmd = templates.getResource('addons_cmd')
+        def templates = templatesFactory.create('K8s_1_8_UpstreamTemplates', attr)
+        this.kubeadmConfigTemplate = templates.getResource('kubeadm_config')
     }
 
     def setupMiscDefaults() {
@@ -132,17 +114,14 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
-        if (!service.cluster.hostnameOverride) {
-            service.cluster.hostnameOverride = advertiseAddress
-        }
         if (!service.cluster.serviceRange) {
             service.cluster.serviceRange = defaultServiceNetwork
         }
         if (!service.cluster.podRange) {
             service.cluster.podRange = defaultPodNetwork
         }
-        if (!service.cluster.dnsAddress) {
-            service.cluster.dnsAddress = defaultDnsServiceAddress
+        if (!service.cluster.dnsDomain) {
+            service.cluster.dnsDomain = defaultDnsDomain
         }
         if (service.cluster.apiServers.isEmpty()) {
             service.cluster.apiServers.addAll defaultApiServers
@@ -254,55 +233,16 @@ chmod o-rx '$certsDir'
         def certsdir = certsDir
         K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
-        uploadTlsCerts tls: service.kubelet.tls, name: 'kubelet-tls'
-        uploadTlsCerts tls: service.kubelet.client, name: 'kubelet-client'
     }
 
     def uploadEtcdCertificates() {
         uploadTlsCerts tls: etcdTls, name: 'etcd'
     }
 
-    def createKubeletConfig() {
-        log.info 'Create kubelet configuration.'
-        shell privileged: true, "mkdir -p $sysConfigDir" call()
-        template privileged: true, resource: kubeletConfigTemplate, name: 'kubeletConfig', dest: "$sysConfigDir/kubelet", vars: [:] call()
-    }
-
-    def createWorkerKubeconfig() {
-        K8s service = service
-        log.info 'Create worker-kubeconfig.'
-        template privileged: true, resource: manifestsTemplate, name: 'workerKubeconfig', dest: "$configDir/worker-kubeconfig.yaml", vars: [:] call()
-    }
-
-    def startKubeDnsAddon() {
-        K8s service = service
-        if (deployKubeDns) {
-            log.info 'Start kube-dns.'
-            shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-de.yaml'] call()
-            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-svc.yaml'] call()
-            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dns-autoscaler-de.yaml'] call()
-        }
-    }
-
-    def startKubeDashboardAddon() {
-        K8s service = service
-        if (deployKubeDashboard) {
-            log.info 'Start dashboard.'
-            shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
-            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-de.yaml'] call()
-            shell resource: clusterCmds, name: 'startAddon', vars: [manifestFile: 'kube-dashboard-svc.yaml'] call()
-        }
-    }
-
-    def startCalicoAddon() {
-        K8s service = service
-        if (!havePluginCalico) {
-            return
-        }
-        log.info 'Start Calico.'
-        shell resource: clusterCmds, name: 'waitApi', timeout: timeoutVeryLong call()
-        shell resource: addonsCmd, name: 'startAddon', vars: [manifestFile: 'calico.yaml'] call()
+    def createKubeadmConfig() {
+        log.info 'Create kubeadm configuration.'
+        template privileged: true, resource: kubeadmConfigTemplate,
+        name: 'kubeadmConfig', dest: "/root/kubeadm.yaml", vars: [:] call()
     }
 
     def applyTaints() {
@@ -459,8 +399,8 @@ chmod o-rx '$certsDir'
         properties.getProperty 'default_kubernetes_api_address', defaultProperties
     }
 
-    def getDefaultDnsServiceAddress() {
-        properties.getProperty 'default_dns_service_address', defaultProperties
+    def getDefaultDnsDomain() {
+        properties.getProperty 'default_dns_domain_address', defaultProperties
     }
 
     List getDefaultApiServers() {
@@ -591,38 +531,6 @@ chmod o-rx '$certsDir'
 
     def getKubernetesVersion() {
         properties.getProperty 'kubernetes_version', defaultProperties
-    }
-
-    def getHypercubeImageRepo() {
-        properties.getProperty 'hypercube_image_repo', defaultProperties
-    }
-
-    def getCalicoNodeVersion() {
-        properties.getProperty 'calico_node_version', defaultProperties
-    }
-
-    def getCalicoNodeImageRepo() {
-        properties.getProperty 'calico_node_image_repo', defaultProperties
-    }
-
-    def getCalicoCniVersion() {
-        properties.getProperty 'calico_cni_version', defaultProperties
-    }
-
-    def getCalicoCniImageRepo() {
-        properties.getProperty 'calico_cni_image_repo', defaultProperties
-    }
-
-    def getCalicoKubePolicyControllerVersion() {
-        properties.getProperty 'calico_kube_policy_controller_version', defaultProperties
-    }
-
-    def getCalicoKubePolicyControllerImageRepo() {
-        properties.getProperty 'calico_kube_policy_controller_image_repo', defaultProperties
-    }
-
-    File getKubeletUuidFile() {
-        properties.getFileProperty 'kubelet_uuid_file', base, defaultProperties
     }
 
     Map getPluginsTargets() {

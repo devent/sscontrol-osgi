@@ -32,8 +32,15 @@ public interface Cluster {
      */
     String getName();
 
+    /**
+     * Returns the pods network CIDR, the range of IP addresses for the pod
+     * network.
+     */
     String getPodRange();
 
+    /**
+     * Returns the range of IP address for service VIPs.
+     */
     String getServiceRange();
 
     /**
@@ -42,7 +49,10 @@ public interface Cluster {
      */
     Object getAdvertiseAddress();
 
-    String getDnsAddress();
+    /**
+     * Returns the DNS domain like {@code cluster.local}
+     */
+    String getDnsDomain();
 
     /**
      * Returns the list of api servers. The list can contain a host string or
@@ -59,7 +69,5 @@ public interface Cluster {
      * Returns the default api-server port.
      */
     Integer getPort();
-
-    String getHostnameOverride();
 
 }

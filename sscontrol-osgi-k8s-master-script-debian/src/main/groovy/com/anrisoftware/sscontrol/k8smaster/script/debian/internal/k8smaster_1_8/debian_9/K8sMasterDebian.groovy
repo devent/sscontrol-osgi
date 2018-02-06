@@ -36,20 +36,12 @@ class K8sMasterDebian extends ScriptBase {
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
 
-    @Inject
-    K8sMasterDockerDebianFactory dockerDebianFactory
-
-    @Inject
-    KubectlUpstreamDebianFactory kubectlUpstreamFactory
-
     K8sMasterUpstreamDebian upstream
 
     @Inject
     K8sMasterUfwDebianFactory ufwFactory
 
     DebianUtils debian
-
-    K8sMasterSystemdDebian systemd
 
     @Inject
     void setDebian(Debian_9_UtilsFactory factory) {
@@ -61,18 +53,10 @@ class K8sMasterDebian extends ScriptBase {
         this.upstream = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
-    @Inject
-    void setSystemdDebianFactory(K8sMasterSystemdDebianFactory factory) {
-        this.systemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
     @Override
     def run() {
-        dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemd.stopServices()
         debian.installPackages()
         debian.enableModules()
-        kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.createService()

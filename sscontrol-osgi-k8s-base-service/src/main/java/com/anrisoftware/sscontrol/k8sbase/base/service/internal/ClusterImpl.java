@@ -54,11 +54,9 @@ public class ClusterImpl implements Cluster {
 
     private Object advertiseAddress;
 
-    private String dnsAddress;
+    private String dnsDomain;
 
     private final List<Object> apiServers;
-
-    private String hostnameOverride;
 
     private String podRange;
 
@@ -99,14 +97,14 @@ public class ClusterImpl implements Cluster {
         return advertiseAddress;
     }
 
-    public void setDnsAddress(String address) {
-        this.dnsAddress = address;
-        log.dnsAddressSet(this, address);
+    public void setDnsDomain(String domain) {
+        this.dnsDomain = domain;
+        log.dnsDomainSet(this, domain);
     }
 
     @Override
-    public String getDnsAddress() {
-        return dnsAddress;
+    public String getDnsDomain() {
+        return dnsDomain;
     }
 
     @Override
@@ -131,16 +129,6 @@ public class ClusterImpl implements Cluster {
     @Override
     public String getServiceRange() {
         return serviceRange;
-    }
-
-    public void setHostnameOverride(String hostname) {
-        this.hostnameOverride = hostname;
-        log.hostnameOverrideSet(this, hostname);
-    }
-
-    @Override
-    public String getHostnameOverride() {
-        return hostnameOverride;
     }
 
     public void setPodRange(String range) {
@@ -189,17 +177,13 @@ public class ClusterImpl implements Cluster {
         if (v != null) {
             setAdvertiseAddress(v);
         }
-        v = args.get("hostname");
-        if (v != null) {
-            setHostnameOverride(v.toString());
-        }
         v = args.get("pod");
         if (v != null) {
             setPodRange(v.toString());
         }
-        v = args.get("dns");
+        v = args.get("domain");
         if (v != null) {
-            setDnsAddress(v.toString());
+            setDnsDomain(v.toString());
         }
         v = args.get("api");
         if (v != null) {

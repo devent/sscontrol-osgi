@@ -17,8 +17,7 @@ package com.anrisoftware.sscontrol.k8sbase.base.service.internal;
 
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.advertiseAddressSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.apiServersAdded;
-import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.dnsAddressSet;
-import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.hostnameOverrideSet;
+import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.dnsDomainSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.podRangeSet;
 import static com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImplLogger.m.serviceRangeSet;
 
@@ -39,13 +38,11 @@ final class ClusterImplLogger extends AbstractLogger {
 
         advertiseAddressSet("Advertise address {} set for {}"),
 
-        dnsAddressSet("DNS address {} set for {}"),
+        dnsDomainSet("DNS domain {} set for {}"),
 
         apiServersAdded("API server {} added to {}"),
 
         serviceRangeSet("Service range {} set for {}"),
-
-        hostnameOverrideSet("Hostname override {} set for {}"),
 
         podRangeSet("Pod range {} set for {}");
 
@@ -72,8 +69,8 @@ final class ClusterImplLogger extends AbstractLogger {
         debug(advertiseAddressSet, address, cluster);
     }
 
-    void dnsAddressSet(ClusterImpl cluster, String address) {
-        debug(dnsAddressSet, address, cluster);
+    void dnsDomainSet(ClusterImpl cluster, String address) {
+        debug(dnsDomainSet, address, cluster);
     }
 
     void apiServersAdded(ClusterImpl cluster, Object server) {
@@ -82,10 +79,6 @@ final class ClusterImplLogger extends AbstractLogger {
 
     void serviceRangeSet(ClusterImpl cluster, String range) {
         debug(serviceRangeSet, range, cluster);
-    }
-
-    void hostnameOverrideSet(ClusterImpl cluster, String hostname) {
-        debug(hostnameOverrideSet, hostname, cluster);
     }
 
     void podRangeSet(ClusterImpl cluster, String range) {
