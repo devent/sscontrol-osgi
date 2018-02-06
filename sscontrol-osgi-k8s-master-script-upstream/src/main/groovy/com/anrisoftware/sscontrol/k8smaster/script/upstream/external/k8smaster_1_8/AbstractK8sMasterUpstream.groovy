@@ -20,7 +20,6 @@ import static org.hamcrest.Matchers.*
 
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUpstreamLinux
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
-import com.anrisoftware.sscontrol.tls.external.Tls
 
 import groovy.util.logging.Slf4j
 
@@ -31,7 +30,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class K8sMasterUpstreamSystemd extends AbstractK8sUpstreamLinux {
+abstract class AbstractK8sMasterUpstream extends AbstractK8sUpstreamLinux {
 
     def setupClusterDefaults() {
         K8sMaster service = service
@@ -44,34 +43,6 @@ abstract class K8sMasterUpstreamSystemd extends AbstractK8sUpstreamLinux {
         K8sMaster service = service
         if (service.cluster.apiServers.size() == 0) {
             service.cluster.apiServers << defaultApiServerHost
-        }
-    }
-
-    def setupAdmissionsDefaults() {
-        log.debug 'Setup admissions defaults for {}', service
-        K8sMaster service = service
-        if (service.admissions.size() == 0) {
-            service.admissions.addAll defaultAdmissions
-        }
-    }
-
-    def setupAccountDefaults() {
-        log.debug 'Setup account defaults for {}', service
-        K8sMaster service = service
-        if (!service.account.tls.ca) {
-            service.account.tls.ca = service.tls.ca
-        }
-        if (!service.account.tls.key) {
-            service.account.tls.key = service.tls.key
-        }
-        if (service.account.tls.ca) {
-            service.account.tls.caName = defaultAccountTlsCaName
-        }
-        if (service.account.tls.cert) {
-            service.account.tls.certName = defaultAccountTlsCertName
-        }
-        if (service.account.tls.key) {
-            service.account.tls.keyName = defaultAccountTlsKeyName
         }
     }
 
@@ -92,39 +63,8 @@ abstract class K8sMasterUpstreamSystemd extends AbstractK8sUpstreamLinux {
         }
     }
 
-    def setupAuthenticationsDefaults() {
-        log.debug 'Setup authentications defaults for {}', service
-        K8sMaster service = service
-        service.authentications.findAll { it.tls  } each {
-            Tls tls = it.tls
-            if (!tls.caName) {
-                tls.caName = defaultAuthenticationTlsCaName[it.type]
-            }
-            if (!tls.certName) {
-                tls.certName = defaultAuthenticationTlsCertName[it.type]
-            }
-            if (!tls.keyName) {
-                tls.keyName = defaultAuthenticationTlsKeyName[it.type]
-            }
-        }
-    }
-
-    def uploadAccountCertificates() {
-        log.info 'Uploads k8s-master account certificates.'
-        K8sMaster service = service
-        uploadTlsCerts tls: service.account.tls, name: 'account-tls'
-    }
-
-    def uploadAuthenticationsCertificates() {
-        K8sMaster service = service
-        service.authentications.findAll { it.tls  } each {
-            Tls tls = it.tls
-            uploadTlsCerts tls: tls, name: it.toString()
-        }
-    }
-
     String getDefaultApiServerHost() {
-        properties.getProperty "default_api_server_host", defaultProperties
+        getScriptProperty "default_api_server_host"
     }
 
     @Override

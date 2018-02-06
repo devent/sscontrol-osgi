@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
-import com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8.K8sMasterUpstreamSystemd
+import com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8.AbstractK8sMasterUpstream
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 
 import groovy.util.logging.Slf4j
@@ -31,7 +31,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
+class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
@@ -45,14 +45,11 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     def setupDefaults() {
         setupMiscDefaults()
         setupApiServersDefaults()
-        setupAdmissionsDefaults()
-        setupAccountDefaults()
         setupClusterDefaults()
         setupClusterHostDefaults()
         setupClusterApiDefaults()
         setupBindDefaults()
         setupKubeletDefaults()
-        setupAuthenticationsDefaults()
         setupPluginsDefaults()
         setupKernelParameter()
     }
@@ -60,8 +57,6 @@ class K8sMasterUpstreamDebian extends K8sMasterUpstreamSystemd {
     def createService() {
         createDirectories()
         uploadK8sCertificates()
-        uploadAccountCertificates()
-        uploadAuthenticationsCertificates()
         uploadEtcdCertificates()
     }
 

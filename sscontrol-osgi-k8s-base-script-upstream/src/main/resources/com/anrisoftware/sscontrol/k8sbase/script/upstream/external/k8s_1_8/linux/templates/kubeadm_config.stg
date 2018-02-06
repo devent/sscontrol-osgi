@@ -5,61 +5,29 @@ api:
   advertiseAddress: <parent.service.advertiseAddress>
   bindPort: <int>
 etcd:
-  endpoints:
-  - <endpoint1|string>
-  - <endpoint2|string>
-  caFile: <path|string>
-  certFile: <path|string>
-  keyFile: <path|string>
-  dataDir: <path|string>
-  extraArgs:
-    <argument>: <value|string>
-    <argument>: <value|string>
-  image: <string>
-kubeProxy:
-  config:
-    mode: <value|string>
+  <etcdPlugin(parent, vars)>
+  <etcdTls(parent, vars)>
 networking:
-  dnsDomain: <string>
+  dnsDomain: <parent.service.cluster.dnsDomain>
   serviceSubnet: <parent.service.cluster.serviceRange>
   podSubnet: <parent.service.cluster.podRange>
-kubernetesVersion: <string>
-cloudProvider: <string>
-nodeName: <string>
-authorizationModes:
-- <authorizationMode1|string>
-- <authorizationMode2|string>
-token: <string>
-tokenTTL: <time duration>
-selfHosted: <bool>
-apiServerExtraArgs:
-  <argument>: <value|string>
-  <argument>: <value|string>
-controllerManagerExtraArgs:
-  <argument>: <value|string>
-  <argument>: <value|string>
-schedulerExtraArgs:
-  <argument>: <value|string>
-  <argument>: <value|string>
-apiServerExtraVolumes:
-- name: <value|string>
-  hostPath: <value|string>
-  mountPath: <value|string>
-controllerManagerExtraVolumes:
-- name: <value|string>
-  hostPath: <value|string>
-  mountPath: <value|string>
-schedulerExtraVolumes:
-- name: <value|string>
-  hostPath: <value|string>
-  mountPath: <value|string>
-apiServerCertSANs:
-- <name1|string>
-- <name2|string>
-certificatesDir: <string>
-imageRepository: <string>
-unifiedControlPlaneImage: <string>
-featureGates:
-  <feature>: <bool>
-  <feature>: <bool>
+kubernetesVersion: <parent.kubernetesVersion>
+nodeName: <parent.service.cluster.name>
+selfHosted: true
+certificatesDir: <parent.certDir>
+>>
+
+etcdPlugin(parent, vars) ::= <<
+endpoints:
+<etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
+>>
+
+etcdTls(parent, vars) ::= <<
+<if(parent.etcdTls)><etcdTlsFiles(parent, vars)><endif>
+>>
+
+etcdTlsFiles(parent, vars) ::= <<
+<if(parent.etcdTls.ca)>caFile: <parent.certsDir>/<parent.etcdTls.caName><endif>
+<if(parent.etcdTls.cert)>certFile: <parent.certsDir>/<parent.etcdTls.certName><endif>
+<if(parent.etcdTls.key)>keyFile: <parent.certsDir>/<parent.etcdTls.keyName><endif>
 >>

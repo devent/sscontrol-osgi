@@ -20,18 +20,17 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.FlannelPlugin;
-import com.anrisoftware.sscontrol.k8sbase.base.service.internal.FlannelPluginImplLogger;
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.CanalPlugin;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * <i>Flannel</i> plugin.
+ * <i>Canal</i> plugin.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class FlannelPluginImpl implements FlannelPlugin {
+public class CanalPluginImpl implements CanalPlugin {
 
     /**
      *
@@ -39,51 +38,27 @@ public class FlannelPluginImpl implements FlannelPlugin {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface FlannelPluginImplFactory extends PluginFactory {
+    public interface CanalPluginImplFactory extends PluginFactory {
 
     }
 
-    private String range;
-
-    private final FlannelPluginImplLogger log;
-
     @AssistedInject
-    FlannelPluginImpl(FlannelPluginImplLogger log) {
-        this(log, new HashMap<String, Object>());
+    CanalPluginImpl() {
+        this(new HashMap<String, Object>());
     }
 
     @AssistedInject
-    FlannelPluginImpl(FlannelPluginImplLogger log,
-            @Assisted Map<String, Object> args) {
-        this.log = log;
-        parseArgs(args);
+    CanalPluginImpl(@Assisted Map<String, Object> args) {
     }
 
     @Override
     public String getName() {
-        return "flannel";
-    }
-
-    public void setRange(String range) {
-        this.range = range;
-        log.rangeSet(this, range);
-    }
-
-    @Override
-    public String getRange() {
-        return range;
+        return "canal";
     }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("range");
-        if (v != null) {
-            setRange(v.toString());
-        }
     }
 
 }

@@ -33,13 +33,8 @@ public class K8sClusterLinuxModule extends AbstractModule {
                 .implement(HostServiceScript.class, K8sClusterLinux.class)
                 .build(K8sClusterLinuxFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        KubectlClusterLinux.class)
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
                 .build(KubectlClusterLinuxFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        KubectlUpstreamLinux.class)
-                .build(KubectlUpstreamLinuxFactory.class));
     }
 
 }

@@ -32,13 +32,13 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
  */
 public interface K8s extends HostService {
 
+    DebugLogging getDebugLogging();
+
     /**
      * Returns the plugins to use. A plugin can be the etcd cluster or the pod
      * network plugin.
      */
     Map<String, Plugin> getPlugins();
-
-    DebugLogging getDebugLogging();
 
     Cluster getCluster();
 
@@ -55,6 +55,16 @@ public interface K8s extends HostService {
      * Returns the container runtime: docker or rkt.
      */
     String getContainerRuntime();
+
+    /**
+     * Returns labels for the node.
+     */
+    Map<String, Label> getLabels();
+
+    /**
+     * Returns taints for the node.
+     */
+    Map<String, Taint> getTaints();
 
     List<String> getProperty();
 
@@ -89,11 +99,6 @@ public interface K8s extends HostService {
     List<ClusterHost> getClusterHosts();
 
     /**
-     * Returns labels for the node.
-     */
-    Map<String, Label> getLabels();
-
-    /**
      * <pre>
      * label key: "muellerpublic.de/some", value: "foo"
      * </pre>
@@ -106,11 +111,6 @@ public interface K8s extends HostService {
      * </pre>
      */
     List<String> getLabel();
-
-    /**
-     * Returns taints for the node.
-     */
-    Map<String, Taint> getTaints();
 
     /**
      * <pre>

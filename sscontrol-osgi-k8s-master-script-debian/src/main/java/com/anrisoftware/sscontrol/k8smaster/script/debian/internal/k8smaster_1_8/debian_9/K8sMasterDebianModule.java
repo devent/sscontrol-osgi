@@ -15,13 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9;
 
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterDockerDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterSystemdDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterUfwDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.K8sMasterUpstreamDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.KubectlClusterDebian;
-import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9.KubectlUpstreamDebian;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -44,21 +37,11 @@ public class K8sMasterDebianModule extends AbstractModule {
                         K8sMasterUpstreamDebian.class)
                 .build(K8sMasterUpstreamDebianFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, KubectlUpstreamDebian.class)
-                .build(KubectlUpstreamDebianFactory.class));
-        install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, KubectlClusterDebian.class)
                 .build(KubectlClusterDebianFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        K8sMasterSystemdDebian.class)
-                .build(K8sMasterSystemdDebianFactory.class));
-        install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, K8sMasterUfwDebian.class)
                 .build(K8sMasterUfwDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, K8sMasterDockerDebian.class)
-                .build(K8sMasterDockerDebianFactory.class));
     }
 
 }

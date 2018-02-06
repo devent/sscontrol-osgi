@@ -37,17 +37,9 @@ class K8sClusterLinux extends ScriptBase implements K8sClusterScript {
 
     KubectlClusterLinux kubectlClusterLinux
 
-    KubectlUpstreamLinux kubectlUpstreamLinux
-
     @Override
     def run() {
         kubectlClusterLinux.run()
-        kubectlUpstreamLinux.run()
-    }
-
-    @Inject
-    void setKubectlUpstreamLinuxFactory(KubectlUpstreamLinuxFactory factory) {
-        this.kubectlUpstreamLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Inject

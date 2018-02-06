@@ -1,14 +1,5 @@
-/var/lib/robobee/tmp/10_kube_options.conf /tmp/junit/junit/etc/systemd/system/docker.service.d/10_kube_options.conf
-/tmp/junit/junit/etc/modules /var/lib/robobee/tmp
-/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/modules
 /tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
 /var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
-/var/lib/robobee/tmp/robobeekub_tls_ca /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_ca.pem
-/var/lib/robobee/tmp/robobeekub_tls_cert /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_cert.pem
-/var/lib/robobee/tmp/robobeekub_tls_key /tmp/junit/junit/etc/kubernetes/ssl/kub_tls_key.pem
-/var/lib/robobee/tmp/robobeekubelet_tls_ca /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_ca.pem
-/var/lib/robobee/tmp/robobeekubelet_tls_cert /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_cert.pem
-/var/lib/robobee/tmp/robobeekubelet_tls_key /tmp/junit/junit/etc/kubernetes/ssl/kubelet_tls_key.pem
-/var/lib/robobee/tmp/robobeeaccount_tls_ca /tmp/junit/junit/etc/kubernetes/ssl/account_tls_ca.pem
-/var/lib/robobee/tmp/robobeeaccount_tls_key /tmp/junit/junit/etc/kubernetes/ssl/account_tls_key.pem
-/var/lib/robobee/tmp/robobeeclient_ca /tmp/junit/junit/etc/kubernetes/ssl/client_ca.pem
+/var/lib/robobee/tmp/robobeeca /tmp/junit/junit/etc/kubernetes/pki/ca.crt
+/var/lib/robobee/tmp/robobeeca /tmp/junit/junit/etc/kubernetes/pki/ca.cert
+/var/lib/robobee/tmp/robobeeca /tmp/junit/junit/etc/kubernetes/pki/ca.key

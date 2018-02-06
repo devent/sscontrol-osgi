@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9;
-
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+package com.anrisoftware.sscontrol.k8sbase.base.service.external;
 
 /**
- *
+ * <i>Canal</i> plugin.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface K8sMasterSystemdDebianFactory
-        extends HostServiceScriptService {
+public interface CanalPlugin extends Plugin {
+
 }
