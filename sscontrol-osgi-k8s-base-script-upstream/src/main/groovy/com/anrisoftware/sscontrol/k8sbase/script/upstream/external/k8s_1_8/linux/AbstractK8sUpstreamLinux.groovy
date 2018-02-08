@@ -132,14 +132,14 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         log.debug 'Setup cluster api defaults for {}', service
         K8s service = service
         if (!service.cluster.port) {
-            if (service.kubelet.tls.cert) {
+            if (service.tls.cert) {
                 service.cluster.port = defaultApiPortSecure
             } else {
                 service.cluster.port = defaultApiPortInsecure
             }
         }
         if (!service.cluster.protocol) {
-            if (service.kubelet.tls.cert) {
+            if (service.tls.cert) {
                 service.cluster.protocol = defaultApiProtocolSecure
             } else {
                 service.cluster.protocol = defaultApiProtocolInsecure
@@ -229,13 +229,14 @@ chmod o-rx '$certsDir'
     }
 
     def uploadK8sCertificates() {
-        log.info 'Uploads k8s certificates.'
+        log.info 'Uploads k8s certificates: {}', service.tls
         def certsdir = certsDir
         K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
     }
 
     def uploadEtcdCertificates() {
+        log.info 'Uploads etcd certificates: {}', etcdTls
         uploadTlsCerts tls: etcdTls, name: 'etcd'
     }
 
@@ -400,7 +401,7 @@ chmod o-rx '$certsDir'
     }
 
     def getDefaultDnsDomain() {
-        properties.getProperty 'default_dns_domain_address', defaultProperties
+        properties.getProperty 'default_dns_domain', defaultProperties
     }
 
     List getDefaultApiServers() {

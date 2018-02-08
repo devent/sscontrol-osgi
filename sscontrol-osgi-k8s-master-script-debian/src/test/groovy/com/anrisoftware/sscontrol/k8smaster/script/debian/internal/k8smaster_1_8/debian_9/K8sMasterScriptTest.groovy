@@ -34,9 +34,9 @@ import groovy.util.logging.Slf4j
 class K8sMasterScriptTest extends AbstractMasterScriptTest {
 
     @Test
-    void "script_tls_etcd_target"() {
+    void "script_tls_etcd_canal"() {
         def test = [
-            name: "script_tls_etcd_target",
+            name: "script_tls_etcd_canal",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
@@ -58,8 +58,40 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "modprobe.out", "${args.test.name}_modprobe_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/root'), "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_tls_etcd_tls_canal"() {
+        def test = [
+            name: "script_tls_etcd_tls_canal",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
+    tls certs
+    plugin "etcd", endpoint: "etcd" with {
+        tls certs
+    }
+    plugin "canal"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
             },
         ]
         doTest test
@@ -186,39 +218,6 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
                 assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "script_etcd_tls"() {
-        def test = [
-            name: "script_etcd_tls",
-            script: '''
-service "ssh", host: "localhost", socket: localhostSocket
-service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
-    plugin "etcd", endpoint: "etcd" with {
-        tls certs
-    }
-    plugin "calico"
-}
-''',
-            scriptVars: [localhostSocket: localhostSocket, certs: certs],
-            expectedServicesSize: 2,
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/srv/kubernetes/manifests'), "calico.yaml", "${args.test.name}_calico_yaml_expected.txt"
             },
         ]
         doTest test
