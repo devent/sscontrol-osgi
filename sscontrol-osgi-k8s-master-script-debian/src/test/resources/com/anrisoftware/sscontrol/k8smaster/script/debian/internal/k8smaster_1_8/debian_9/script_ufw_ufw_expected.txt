@@ -1,6 +1,6 @@
 
 status
-allow from 10.2.0.0/16 to 192.168.0.100
+allow from 10.244.0.0/16 to 192.168.0.100
 allow from any to 192.168.0.100 port 80 proto tcp
 allow from any to 192.168.0.100 port 443 proto tcp
 allow from any to 192.168.0.100 port 10250 proto tcp

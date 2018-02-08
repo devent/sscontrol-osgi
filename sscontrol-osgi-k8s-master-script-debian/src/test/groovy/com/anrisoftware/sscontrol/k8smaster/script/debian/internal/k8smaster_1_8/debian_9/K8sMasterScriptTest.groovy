@@ -106,13 +106,8 @@ service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     tls certs
-    authentication "cert", ca: certs.ca
     plugin "etcd", endpoint: "etcd"
-    plugin "flannel"
-    plugin "calico"
-    kubelet.with {
-        tls certs
-    }
+    plugin "canal"
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket, certs: certs],
@@ -143,13 +138,8 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     nodes << "default"
     nodes << "nodes"
     tls certs
-    authentication "cert", ca: certs.ca
     plugin "etcd", endpoint: "etcd"
-    plugin "flannel"
-    plugin "calico"
-    kubelet.with {
-        tls certs
-    }
+    plugin "canal"
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket, certs: certs],
