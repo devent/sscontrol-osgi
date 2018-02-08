@@ -2,8 +2,8 @@ kubeadmConfig(parent, vars) ::= <<
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
-  advertiseAddress: <parent.service.advertiseAddress>
-  bindPort: <int>
+  advertiseAddress: <parent.service.cluster.advertiseAddress>
+  bindPort: <parent.service.cluster.port>
 etcd:
   <etcdPlugin(parent, vars)>
   <etcdTls(parent, vars)>
@@ -14,12 +14,13 @@ networking:
 kubernetesVersion: <parent.kubernetesVersion>
 nodeName: <parent.service.cluster.name>
 selfHosted: true
-certificatesDir: <parent.certDir>
+certificatesDir: <parent.certsDir>
+
 >>
 
 etcdPlugin(parent, vars) ::= <<
 endpoints:
-<etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
+<parent.pluginsTargets.etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
 >>
 
 etcdTls(parent, vars) ::= <<

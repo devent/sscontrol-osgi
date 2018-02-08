@@ -58,6 +58,7 @@ class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
         createDirectories()
         uploadK8sCertificates()
         uploadEtcdCertificates()
+        createKubeadmConfig()
     }
 
     def installKubeadm() {

@@ -1,0 +1,4 @@
+update
+install -y apt-transport-https
+update
+install -y kubelet kubeadm kubectl
