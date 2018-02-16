@@ -98,9 +98,9 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     }
 
     @Test
-    void "script_ufw"() {
+    void "script_master_ufw"() {
         def test = [
-            name: "script_ufw",
+            name: "script_master_ufw",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
