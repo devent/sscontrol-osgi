@@ -49,7 +49,7 @@ import groovy.util.logging.Slf4j
 class K8sMasterClusterTest extends AbstractMasterRunnerTest {
 
     @Test
-    void "cluster_tls"() {
+    void "cluster_tls_etcd_tls_canal"() {
         def test = [
             name: "cluster_tls",
             script: '''
@@ -69,12 +69,9 @@ service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     nodes << "masters"
     nodes << "nodes"
     tls certs.tls
-    authentication "cert", ca: certs.tls.ca
+    plugin "canal"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
-    }
-    kubelet.with {
-        tls certs.tls
     }
 }
 ''',
