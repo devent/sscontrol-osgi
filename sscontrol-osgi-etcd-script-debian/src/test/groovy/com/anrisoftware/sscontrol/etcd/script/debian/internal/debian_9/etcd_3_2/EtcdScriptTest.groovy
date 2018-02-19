@@ -145,6 +145,7 @@ service "etcd", member: "infra0" with {
                 assertFileResource EtcdScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/systemd/system'), "etcd.service", "${args.test.name}_etcd_service_expected.txt"
                 assertFileResource EtcdScriptTest, new File(gen, '/etc/etcd'), "etcd.conf", "${args.test.name}_etcd_config_expected.txt"
+                assertFileResource EtcdScriptTest, new File(gen, '/usr/local/share/'), "etcdctl-vars", "${args.test.name}_etcdctl_vars_expected.txt"
             },
         ]
         doTest test
@@ -282,7 +283,7 @@ service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
     bind "https://127.0.0.1:22379"
     gateway endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
-    client ca: testCerts.ca
+    client testCerts
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
