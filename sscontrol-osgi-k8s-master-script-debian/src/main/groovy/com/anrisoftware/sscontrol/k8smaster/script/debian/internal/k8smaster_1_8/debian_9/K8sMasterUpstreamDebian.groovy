@@ -69,7 +69,13 @@ cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y kubelet kubeadm kubectl
+apt-get install -y ${kubeadmPackages.join(" ")}
+""" call()
+    }
+
+    def installKube() {
+        shell privileged: true, timeout: timeoutLong, """
+kubeadm init --config /root/kubeadm.yaml
 """ call()
     }
 
@@ -104,5 +110,16 @@ apt-get install -y kubelet kubeadm kubectl
     @Override
     AbstractKubectlLinux getKubectlCluster() {
         kubectlClusterLinux
+    }
+
+    /**
+     * Returns the needed packages for kubeadm.
+     *
+     * <ul>
+     * <li>profile property {@code kubeadm_packages}</li>
+     * </ul>
+     */
+    List getKubeadmPackages() {
+        getScriptListProperty "kubeadm_packages"
     }
 }
