@@ -41,15 +41,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
 abstract class AbstractMasterRunnerTest extends AbstractRunnerTestBase {
 
     static final Map robobeetestCerts = [
-        tls: [
-            ca: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_master_server_cert.pem'),
-            key: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_master_server_key.pem'),
-        ],
-        admin: [
-            ca: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_admin_key.pem'),
+        ca: [
+            cert: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_ca.pem'),
+            key: AbstractMasterRunnerTest.class.getResource('robobee_test_kube_key.pem'),
         ],
         etcd: [
             ca: AbstractMasterRunnerTest.class.getResource('robobee_test_etcd_ca.pem'),

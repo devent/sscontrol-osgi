@@ -42,7 +42,7 @@ abstract class AbstractK8sMasterUpstream extends AbstractK8sUpstreamLinux {
         log.debug 'Setup api-servers hosts defaults for {}', service
         K8sMaster service = service
         if (service.cluster.apiServers.size() == 0) {
-            service.cluster.apiServers << defaultApiServerHost
+            service.cluster.apiServers << scriptProperties.default_api_server_host
         }
     }
 
@@ -50,21 +50,17 @@ abstract class AbstractK8sMasterUpstream extends AbstractK8sUpstreamLinux {
         log.debug 'Setup bind defaults for {}', service
         K8sMaster service = service
         if (!service.binding.insecureAddress) {
-            service.binding.insecureAddress = defaultInsecureAddress
+            service.binding.insecureAddress = scriptProperties.default_bind_insecure_address
         }
         if (!service.binding.secureAddress) {
-            service.binding.secureAddress = defaultSecureAddress
+            service.binding.secureAddress = scriptProperties.default_bind_secure_address
         }
         if (!service.binding.port) {
-            service.binding.port = defaultPort
+            service.binding.port = scriptNumberProperties.default_bind_port
         }
         if (!service.binding.insecurePort) {
-            service.binding.insecurePort = defaultInsecurePort
+            service.binding.insecurePort = scriptNumberProperties.default_bind_insecure_port
         }
-    }
-
-    String getDefaultApiServerHost() {
-        getScriptProperty "default_api_server_host"
     }
 
     @Override

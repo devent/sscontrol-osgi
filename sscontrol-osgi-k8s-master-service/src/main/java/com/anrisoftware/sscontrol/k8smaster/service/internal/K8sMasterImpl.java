@@ -50,6 +50,7 @@ import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster;
 import com.anrisoftware.sscontrol.k8smaster.service.internal.AccountImpl.AccountImplFactory;
 import com.anrisoftware.sscontrol.k8smaster.service.internal.BindingImpl.BindingImplFactory;
 import com.anrisoftware.sscontrol.tls.external.Tls;
+import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
@@ -103,10 +104,14 @@ public class K8sMasterImpl implements K8sMaster {
 
     private final List<Object> nodes;
 
+    private Tls ca;
+
+    private final TlsFactory tlsFactory;
+
     @Inject
     K8sMasterImpl(K8sMasterImplLogger log, K8sImplFactory k8sFactory,
             BindingImplFactory bindingFactory,
-            AccountImplFactory accountFactory,
+            AccountImplFactory accountFactory, TlsFactory tlsFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.k8s = (K8s) k8sFactory.create(args);
@@ -118,6 +123,8 @@ public class K8sMasterImpl implements K8sMaster {
         this.accountFactory = accountFactory;
         this.account = accountFactory.create();
         this.nodes = new ArrayList<>();
+        this.tlsFactory = tlsFactory;
+        this.ca = tlsFactory.create();
         parseArgs(args);
     }
 
@@ -222,31 +229,22 @@ public class K8sMasterImpl implements K8sMaster {
         return k8s.plugin(args);
     }
 
-    /**
-     * <pre>
-     * privileged true
-     * </pre>
-     */
     @Override
     public void privileged(boolean allow) {
         k8s.privileged(allow);
     }
 
-    /**
-     * <pre>
-     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-     * </pre>
-     */
     @Override
     public void tls(Map<String, Object> args) {
         k8s.tls(args);
     }
 
-    /**
-     * <pre>
-     * kubelet port: 10250
-     * </pre>
-     */
+    @Override
+    public void ca(Map<String, Object> args) {
+        this.ca = tlsFactory.create(args);
+        log.caSet(this, ca);
+    }
+
     @Override
     public Kubelet kubelet(Map<String, Object> args) {
         return k8s.kubelet(args);
@@ -442,6 +440,11 @@ public class K8sMasterImpl implements K8sMaster {
     @Override
     public Tls getTls() {
         return k8s.getTls();
+    }
+
+    @Override
+    public Tls getCa() {
+        return ca;
     }
 
     @Override

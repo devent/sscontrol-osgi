@@ -68,7 +68,7 @@ service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     bind secure: "192.168.56.200"
     nodes << "masters"
     nodes << "nodes"
-    tls certs.tls
+    ca certs.ca
     plugin "canal"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
