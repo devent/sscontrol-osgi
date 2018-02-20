@@ -261,33 +261,18 @@ public class K8sImpl implements K8s {
         return plugin;
     }
 
-    /**
-     * <pre>
-     * privileged true
-     * </pre>
-     */
     @Override
     public void privileged(boolean allow) {
         this.allowPrivileged = allow;
         log.allowPrivilegedSet(this, allow);
     }
 
-    /**
-     * <pre>
-     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-     * </pre>
-     */
     @Override
     public void tls(Map<String, Object> args) {
         this.tls = tlsFactory.create(args);
         log.tlsSet(this, tls);
     }
 
-    /**
-     * <pre>
-     * kubelet port: 10250
-     * </pre>
-     */
     @Override
     public Kubelet kubelet(Map<String, Object> args) {
         this.kubelet = kubeletFactory.create(args);

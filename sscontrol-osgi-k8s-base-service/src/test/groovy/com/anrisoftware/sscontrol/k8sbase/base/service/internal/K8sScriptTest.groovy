@@ -85,6 +85,26 @@ service "k8s-master" with {
     }
 
     @Test
+    void "ca"() {
+        def test = [
+            name: 'ca',
+            input: """
+service "k8s-master" with {
+    ca ca: "ca.pem", key: "key.pem"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8s s = services.getServices('k8s-master')[0] as K8s
+                assert s.targets.size() == 0
+                assert s.ca.ca.toString() == 'file:ca.pem'
+                assert s.ca.key.toString() == 'file:key.pem'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "allow privileged"() {
         def test = [
             name: 'allow privileged',

@@ -41,7 +41,7 @@ class K8sMasterScriptTest extends AbstractMasterScriptTest {
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
-    tls certs
+    ca certs
     plugin "etcd", endpoint: "etcd"
     plugin "canal"
 }
@@ -72,7 +72,7 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
 service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
-    tls certs
+    ca certs
     plugin "etcd", endpoint: "etcd" with {
         tls certs
     }
@@ -175,13 +175,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/systemd/system'), "kubelet.service", "${args.test.name}_kubelet_service_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
             },
         ]
         doTest test
@@ -203,38 +197,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-controller-manager.yaml", "${args.test.name}_kube_controller_manager_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-scheduler.yaml", "${args.test.name}_kube_scheduler_yaml_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "script_advertise_target"() {
-        def test = [
-            name: "script_advertise_target",
-            script: '''
-service "ssh", host: "localhost", socket: localhostSocket
-service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "ssh", host: "localhost", socket: localhostSocket, group: "master"
-service "k8s-master", name: "andrea-cluster", advertise: targets['master'][0] with {
-    plugin "etcd", endpoint: "etcd"
-    plugin "calico"
-}
-''',
-            scriptVars: [localhostSocket: localhostSocket],
-            expectedServicesSize: 2,
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes'), "kubelet.yaml", "${args.test.name}_kubelet_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-proxy.yaml", "${args.test.name}_kube_proxy_yaml_expected.txt"
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/kubernetes/manifests'), "kube-apiserver.yaml", "${args.test.name}_kube_apiserver_yaml_expected.txt"
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
             },
         ]
         doTest test

@@ -21,6 +21,7 @@ import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImp
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.authenticationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.authorizationAdded;
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.bindingSet;
+import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.caSet;
 import static com.anrisoftware.sscontrol.k8smaster.service.internal.K8sMasterImplLogger.m.nodeAdded;
 
 import javax.inject.Singleton;
@@ -30,6 +31,7 @@ import com.anrisoftware.sscontrol.k8smaster.service.external.Account;
 import com.anrisoftware.sscontrol.k8smaster.service.external.Authentication;
 import com.anrisoftware.sscontrol.k8smaster.service.external.Authorization;
 import com.anrisoftware.sscontrol.k8smaster.service.external.Binding;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * Logging for {@link K8sMasterImpl}.
@@ -42,11 +44,7 @@ final class K8sMasterImplLogger extends AbstractLogger {
 
     enum m {
 
-        pluginAdded("Plugin {} added to {}"),
-
-        clusterSet("Cluster {} set for {}"),
-
-        tlsSet("TLS {} set for {}"),
+        caSet("CA {} set for {}"),
 
         authenticationAdded("Authentication {} added for {}"),
 
@@ -108,4 +106,9 @@ final class K8sMasterImplLogger extends AbstractLogger {
     void nodeAdded(K8sMasterImpl k8s, Object node) {
         debug(nodeAdded, node, k8s);
     }
+
+    void caSet(K8sMasterImpl k8s, Tls tls) {
+        debug(caSet, tls, k8s);
+    }
+
 }

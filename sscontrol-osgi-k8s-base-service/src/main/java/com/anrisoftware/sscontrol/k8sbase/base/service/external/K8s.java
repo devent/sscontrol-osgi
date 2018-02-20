@@ -84,14 +84,35 @@ public interface K8s extends HostService {
 
     Plugin plugin(Map<String, Object> args);
 
+    /**
+     * Set if allow containers to request privileged mode.
+     *
+     * <pre>
+     * privileged true
+     * </pre>
+     */
     void privileged(boolean allow);
 
+    /**
+     * Sets the api server TLS certificates.
+     *
+     * <pre>
+     * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
+     * </pre>
+     */
     void tls(Map<String, Object> args);
 
     void addTargets(List<TargetHost> list);
 
     void setContainerRuntime(String runtime);
 
+    /**
+     * Set kubelet properties.
+     *
+     * <pre>
+     * kubelet port: 10250
+     * </pre>
+     */
     Kubelet kubelet(Map<String, Object> args);
 
     ClusterHost getClusterHost();
@@ -99,6 +120,8 @@ public interface K8s extends HostService {
     List<ClusterHost> getClusterHosts();
 
     /**
+     * Adds node label.
+     *
      * <pre>
      * label key: "muellerpublic.de/some", value: "foo"
      * </pre>
@@ -106,6 +129,8 @@ public interface K8s extends HostService {
     void label(Map<String, Object> args);
 
     /**
+     * Adds node label.
+     *
      * <pre>
      * label << 'name=value'
      * </pre>
@@ -113,6 +138,8 @@ public interface K8s extends HostService {
     List<String> getLabel();
 
     /**
+     * Adds node taint.
+     *
      * <pre>
      * taint key: "extra", value: "foo", effect: "aaa"
      * </pre>
@@ -120,6 +147,8 @@ public interface K8s extends HostService {
     void taint(Map<String, Object> args);
 
     /**
+     * Adds node taint.
+     *
      * <pre>
      * taint << "dedicated=mail:NoSchedule"
      * </pre>

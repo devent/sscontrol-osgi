@@ -16,8 +16,10 @@
 package com.anrisoftware.sscontrol.k8smaster.service.external;
 
 import java.util.List;
+import java.util.Map;
 
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s;
+import com.anrisoftware.sscontrol.tls.external.Tls;
 
 /**
  * <i>K8s-Master</i> service.
@@ -41,5 +43,19 @@ public interface K8sMaster extends K8s {
      * Returns the list of kubernetes nodes.
      */
     List<Object> getNodes();
+
+    /**
+     * Returns the CA certificates for signing generated TLS certificates.
+     */
+    Tls getCa();
+
+    /**
+     * Sets the CA certificates for signing generated TLS certificates.
+     *
+     * <pre>
+     * ca ca: "ca.pem", key: "key.pem"
+     * </pre>
+     */
+    void ca(Map<String, Object> args);
 
 }

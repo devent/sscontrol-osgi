@@ -459,22 +459,25 @@ abstract class ScriptBase extends Script implements HostServiceScript {
                     name: "${name}.ca",
                     src: tls.ca,
                     dest: "$dest/$tls.caName",
-                    privileged: true
+                    privileged: true,
+                    fileExists: tls.ca && tls.caName
                 ],
                 [
                     name: "${name}.cert",
                     src: tls.cert,
                     dest: "$dest/$tls.certName",
-                    privileged: true
+                    privileged: true,
+                    fileExists: tls.cert && tls.certName
                 ],
                 [
                     name: "${name}.key",
                     src: tls.key,
                     dest: "$dest/$tls.keyName",
-                    privileged: true
+                    privileged: true,
+                    fileExists: tls.key && tls.keyName
                 ],
             ].each {
-                if (it.src) {
+                if (it.fileExists) {
                     log.debug 'Upload {} TLS', it.name
                     copyResource it
                 }
@@ -927,6 +930,19 @@ echo \$file
     }
 
     /**
+     * Returns the default log level.
+     *
+     * <ul>
+     * <li>profile property {@code default_log_level}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    int getDefaultLogLevel() {
+        getScriptNumberProperty('default_log_level').intValue()
+    }
+
+    /**
      * Returns the file property.
      *
      * @param key
@@ -964,7 +980,23 @@ echo \$file
     Map getScriptProperties() {
         new HashMap() {
                     def get(def name) {
-                        properties.getProperty name, defaultProperties
+                        ScriptBase.this.getScriptProperty name
+                    }
+                }
+    }
+
+    Map getScriptNumberProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptNumberProperty name
+                    }
+                }
+    }
+
+    Map getScriptBooleanProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptBooleanProperty name
                     }
                 }
     }

@@ -73,19 +73,25 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
             service.debug "debug", level: defaultLogLevel
         }
         if (!service.containerRuntime) {
-            service.containerRuntime = defaultContainerRuntime
+            service.containerRuntime = scriptProperties.default_container_runtime
         }
         if (!service.allowPrivileged) {
-            service.privileged defaultAllowPrivileged
+            service.privileged scriptBooleanProperties.default_allow_privileged
         }
         if (service.tls.cert) {
-            service.tls.certName = defaultKubernetesTlsCertName
+            service.tls.certName = scriptProperties.default_kubernetes_tls_cert_name
         }
         if (service.tls.key) {
-            service.tls.keyName = defaultKubernetesTlsKeyName
+            service.tls.keyName = scriptProperties.default_kubernetes_tls_key_name
         }
         if (service.tls.ca) {
-            service.tls.caName = defaultKubernetesTlsCaName
+            service.tls.caName = scriptProperties.default_kubernetes_tls_ca_name
+        }
+        if (service.ca.cert) {
+            service.ca.certName = scriptProperties.default_kubernetes_ca_cert_name
+        }
+        if (service.ca.key) {
+            service.ca.keyName = scriptProperties.default_kubernetes_ca_key_name
         }
     }
 
@@ -97,16 +103,16 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         }
         if (!host.proto) {
             if (host.credentials.type == 'cert') {
-                host.proto = defaultApiProtocolSecure
+                host.proto = scriptProperties.default_api_protocol_secure
             } else {
-                host.proto = defaultApiProtocolInsecure
+                host.proto = scriptProperties.default_api_protocol_insecure
             }
         }
         if (!host.port) {
             if (host.credentials.type == 'cert') {
-                host.port = defaultApiPortSecure
+                host.port = scriptNumberProperties.default_api_port_secure
             } else {
-                host.proto = defaultApiPortInsecure
+                host.port = scriptNumberProperties.default_api_port_insecure
             }
         }
     }
@@ -115,13 +121,13 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
         if (!service.cluster.serviceRange) {
-            service.cluster.serviceRange = defaultServiceNetwork
+            service.cluster.serviceRange = scriptProperties.default_service_network
         }
         if (!service.cluster.podRange) {
-            service.cluster.podRange = defaultPodNetwork
+            service.cluster.podRange = scriptProperties.default_pod_network
         }
         if (!service.cluster.dnsDomain) {
-            service.cluster.dnsDomain = defaultDnsDomain
+            service.cluster.dnsDomain = scriptProperties.default_dns_domain
         }
         if (service.cluster.apiServers.isEmpty()) {
             service.cluster.apiServers.addAll defaultApiServers
@@ -133,16 +139,26 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         K8s service = service
         if (!service.cluster.port) {
             if (service.tls.cert) {
-                service.cluster.port = defaultApiPortSecure
+                service.cluster.port = scriptNumberProperties.default_api_port_secure
             } else {
-                service.cluster.port = defaultApiPortInsecure
+                service.cluster.port = scriptNumberProperties.default_api_port_insecure
+            }
+            if (service.ca.cert) {
+                service.cluster.port = scriptNumberProperties.default_api_port_secure
+            } else {
+                service.cluster.port = scriptNumberProperties.default_api_port_insecure
             }
         }
         if (!service.cluster.protocol) {
             if (service.tls.cert) {
-                service.cluster.protocol = defaultApiProtocolSecure
+                service.cluster.protocol = scriptProperties.default_api_protocol_secure
             } else {
-                service.cluster.protocol = defaultApiProtocolInsecure
+                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
+            }
+            if (service.ca.cert) {
+                service.cluster.protocol = scriptProperties.default_api_protocol_secure
+            } else {
+                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
             }
         }
     }
@@ -157,22 +173,22 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
             service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
         }
         if (service.kubelet.tls.ca) {
-            service.kubelet.tls.caName = defaultKubeletTlsCaName
+            service.kubelet.tls.caName = scriptProperties.default_kubelet_tls_ca_name
         }
         if (service.kubelet.tls.cert) {
-            service.kubelet.tls.certName = defaultKubeletTlsCertName
+            service.kubelet.tls.certName = scriptProperties.default_kubelet_tls_cert_name
         }
         if (service.kubelet.tls.key) {
-            service.kubelet.tls.keyName = defaultKubeletTlsKeyName
+            service.kubelet.tls.keyName = scriptProperties.default_kubelet_tls_key_name
         }
         if (service.kubelet.client.ca) {
-            service.kubelet.client.caName = defaultKubeletClientCaName
+            service.kubelet.client.caName = scriptProperties.default_kubelet_client_ca_name
         }
         if (service.kubelet.client.cert) {
-            service.kubelet.client.certName = defaultKubeletClientCertName
+            service.kubelet.client.certName = scriptProperties.default_kubelet_client_cert_name
         }
         if (service.kubelet.client.key) {
-            service.kubelet.client.keyName = defaultKubeletClientKeyName
+            service.kubelet.client.keyName = scriptProperties.default_kubelet_client_key_name
         }
     }
 
@@ -233,6 +249,7 @@ chmod o-rx '$certsDir'
         def certsdir = certsDir
         K8s service = service
         uploadTlsCerts tls: service.tls, name: 'k8s-tls'
+        uploadTlsCerts tls: service.ca, name: 'k8s-ca'
     }
 
     def uploadEtcdCertificates() {
@@ -307,8 +324,8 @@ chmod o-rx '$certsDir'
      * scheduling of pods.
      */
     Taint getIsmasterNoScheduleTaint() {
-        def key = properties.getProperty('taint_key_ismaster', defaultProperties)
-        def effect = properties.getProperty('taint_effect_ismaster', defaultProperties)
+        def key = getScriptProperty 'taint_key_ismaster'
+        def effect = getScriptProperty 'taint_effect_ismaster'
         return taintFactory.create(key: key, value: null, effect: effect)
     }
 
@@ -356,52 +373,12 @@ chmod o-rx '$certsDir'
         nodeClientFactory.create service.clusterHost, this
     }
 
-    def getDefaultLogLevel() {
-        properties.getNumberProperty('default_log_level', defaultProperties).intValue()
-    }
-
     def getDefaultContainerRuntime() {
-        properties.getProperty 'default_container_runtime', defaultProperties
+        getScriptProperty 'default_container_runtime'
     }
 
     def getDefaultAllowPrivileged() {
         getScriptBooleanProperty "default_allow_privileged"
-    }
-
-    /**
-     * Returns the default address to bind the API server for insecure
-     * connections.
-     */
-    def getDefaultInsecureAddress() {
-        properties.getProperty 'default_bind_insecure_address', defaultProperties
-    }
-
-    def getDefaultSecureAddress() {
-        properties.getProperty 'default_bind_secure_address', defaultProperties
-    }
-
-    def getDefaultPort() {
-        properties.getNumberProperty 'default_bind_port', defaultProperties
-    }
-
-    def getDefaultInsecurePort() {
-        properties.getNumberProperty 'default_insecure_port', defaultProperties
-    }
-
-    def getDefaultPodNetwork() {
-        properties.getProperty 'default_pod_network', defaultProperties
-    }
-
-    def getDefaultServiceNetwork() {
-        properties.getProperty 'default_service_network', defaultProperties
-    }
-
-    def getDefaultKubernetesApiAddress() {
-        properties.getProperty 'default_kubernetes_api_address', defaultProperties
-    }
-
-    def getDefaultDnsDomain() {
-        properties.getProperty 'default_dns_domain', defaultProperties
     }
 
     List getDefaultApiServers() {
@@ -413,7 +390,7 @@ chmod o-rx '$certsDir'
     }
 
     def getDefaultClusterRange() {
-        properties.getProperty 'default_cluster_range', defaultProperties
+        getScriptProperty 'default_cluster_range'
     }
 
     def getDefaultAdmissions() {
@@ -424,83 +401,19 @@ chmod o-rx '$certsDir'
         properties.getListProperty 'default_kubelet_preferred_address_types', defaultProperties
     }
 
-    def getDefaultKubernetesTlsCaName() {
-        properties.getProperty 'default_kubernetes_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultKubernetesTlsCertName() {
-        properties.getProperty 'default_kubernetes_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultKubernetesTlsKeyName() {
-        properties.getProperty 'default_kubernetes_tls_key_name', defaultProperties
-    }
-
-    def getDefaultAccountTlsCaName() {
-        properties.getProperty 'default_account_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultAccountTlsCertName() {
-        properties.getProperty 'default_account_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultAccountTlsKeyName() {
-        properties.getProperty 'default_account_tls_key_name', defaultProperties
-    }
-
-    def getDefaultKubeletTlsCaName() {
-        properties.getProperty 'default_kubelet_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultKubeletTlsCertName() {
-        properties.getProperty 'default_kubelet_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultKubeletTlsKeyName() {
-        properties.getProperty 'default_kubelet_tls_key_name', defaultProperties
-    }
-
-    def getDefaultKubeletClientCaName() {
-        properties.getProperty 'default_kubelet_client_ca_name', defaultProperties
-    }
-
-    def getDefaultKubeletClientCertName() {
-        properties.getProperty 'default_kubelet_client_cert_name', defaultProperties
-    }
-
-    def getDefaultKubeletClientKeyName() {
-        properties.getProperty 'default_kubelet_client_key_name', defaultProperties
-    }
-
     Map getDefaultAuthenticationTlsCaName() {
-        def s = properties.getProperty 'default_authentication_tls_ca_name', defaultProperties
+        def s = getScriptProperty 'default_authentication_tls_ca_name'
         Eval.me s
     }
 
     Map getDefaultAuthenticationTlsCertName() {
-        def s = properties.getProperty 'default_authentication_tls_cert_name', defaultProperties
+        def s = getScriptProperty 'default_authentication_tls_cert_name'
         Eval.me s
     }
 
     Map getDefaultAuthenticationTlsKeyName() {
-        def s = properties.getProperty 'default_authentication_tls_key_name', defaultProperties
+        def s = getScriptProperty 'default_authentication_tls_key_name'
         Eval.me s
-    }
-
-    int getDefaultApiPortInsecure() {
-        properties.getNumberProperty "default_api_port_insecure", defaultProperties
-    }
-
-    String getDefaultApiProtocolInsecure() {
-        properties.getProperty "default_api_protocol_insecure", defaultProperties
-    }
-
-    int getDefaultApiPortSecure() {
-        properties.getNumberProperty "default_api_port_secure", defaultProperties
-    }
-
-    String getDefaultApiProtocolSecure() {
-        properties.getProperty "default_api_protocol_secure", defaultProperties
     }
 
     int getDefaultPluginPort(String name) {
@@ -531,7 +444,7 @@ chmod o-rx '$certsDir'
     }
 
     def getKubernetesVersion() {
-        properties.getProperty 'kubernetes_version', defaultProperties
+        getScriptProperty 'kubernetes_version'
     }
 
     Map getPluginsTargets() {
