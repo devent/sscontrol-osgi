@@ -47,6 +47,8 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 
     TemplateResource kubeadmConfigTemplate
 
+    TemplateResource kubeletConfigTemplate
+
     @Inject
     PluginTargetsMapFactory pluginTargetsMapFactory
 
@@ -64,6 +66,7 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         def attr = [renderers: [new UriBase64Renderer()]]
         def templates = templatesFactory.create('K8s_1_8_UpstreamTemplates', attr)
         this.kubeadmConfigTemplate = templates.getResource('kubeadm_config')
+        this.kubeletConfigTemplate = templates.getResource('kubelet_config')
     }
 
     def setupMiscDefaults() {
@@ -261,6 +264,12 @@ chmod o-rx '$certsDir'
         log.info 'Create kubeadm configuration.'
         template privileged: true, resource: kubeadmConfigTemplate,
         name: 'kubeadmConfig', dest: "/root/kubeadm.yaml", vars: [:] call()
+    }
+
+    def createKubeletConfig() {
+        log.info 'Create kubelet configuration.'
+        template privileged: true, resource: kubeletConfigTemplate,
+        name: 'kubeletConfig', dest: scriptProperties.kubelet_extra_conf, vars: [:] call()
     }
 
     def applyTaints() {

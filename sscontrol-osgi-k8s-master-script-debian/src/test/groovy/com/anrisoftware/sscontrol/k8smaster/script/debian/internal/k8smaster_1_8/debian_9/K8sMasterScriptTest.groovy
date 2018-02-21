@@ -58,7 +58,9 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
                 assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "kubeadm.out", "${args.test.name}_kubeadm_expected.txt"
                 assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
             },
         ]
         doTest test
