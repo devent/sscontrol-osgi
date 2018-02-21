@@ -61,9 +61,6 @@ service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
-service "k8s-cluster", target: 'masters' with {
-    credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
-}
 service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     bind secure: "192.168.56.200"
     nodes << "masters"
@@ -77,7 +74,7 @@ service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
-            expectedServicesSize: 3,
+            expectedServicesSize: 2,
             expected: { Map args ->
             },
         ]
