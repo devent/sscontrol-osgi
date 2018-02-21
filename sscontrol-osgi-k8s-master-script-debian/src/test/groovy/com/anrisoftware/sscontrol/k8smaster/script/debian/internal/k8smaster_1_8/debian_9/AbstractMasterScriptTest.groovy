@@ -60,6 +60,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'kubectl',
             'ufw',
             'modprobe',
+            'kubeadm',
         ]
     }
 }

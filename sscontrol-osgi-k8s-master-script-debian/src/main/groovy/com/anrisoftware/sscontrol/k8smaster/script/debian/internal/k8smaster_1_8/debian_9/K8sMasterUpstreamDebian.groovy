@@ -59,6 +59,7 @@ class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
         uploadK8sCertificates()
         uploadEtcdCertificates()
         createKubeadmConfig()
+        createKubeletConfig()
     }
 
     def installKubeadm() {
@@ -85,7 +86,7 @@ echo kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
             ignoreCheckErrors << "Swap"
         }
         if (ignoreCheckErrors.size() > 0) {
-            "--ignore-checks-errors " + ignoreCheckErrors.join(",")
+            "--ignore-preflight-errors " + ignoreCheckErrors.join(",")
         } else {
             ""
         }

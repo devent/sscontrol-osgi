@@ -985,27 +985,19 @@ echo \$file
                 }
     }
 
-    Map getScriptNumberProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptNumberProperty name
-                    }
-                }
-    }
-
-    Map getScriptBooleanProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptBooleanProperty name
-                    }
-                }
-    }
-
     public File getScriptFileProperty(String key,
             File parent=base,
             ContextProperties defaults=defaultProperties,
             boolean useAbsolute=true) {
         return getFileProperty(key, parent, defaults, useAbsolute)
+    }
+
+    File getScriptFileProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptFileProperty name
+                    }
+                }
     }
 
     /**
@@ -1024,12 +1016,28 @@ echo \$file
         properties.getNumberProperty name, defaults
     }
 
+    Map getScriptNumberProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptNumberProperty name
+                    }
+                }
+    }
+
     /**
      * Returns a boolean script property.
      */
     boolean getScriptBooleanProperty(String name,
             ContextProperties defaults=defaultProperties) {
         properties.getBooleanProperty name, defaults
+    }
+
+    Map getScriptBooleanProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptBooleanProperty name
+                    }
+                }
     }
 
     /**

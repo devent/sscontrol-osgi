@@ -1,0 +1,6 @@
+kubeletConfig(parent, vars) ::= <<
+# auto-generated from robobee-run
+[Service]
+Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=<parent.failSwapOn>"
+
+>>
