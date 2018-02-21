@@ -75,8 +75,20 @@ apt-get install -y ${kubeadmPackages.join(" ")}
 
     def installKube() {
         shell privileged: true, timeout: timeoutLong, """
-kubeadm init --config /root/kubeadm.yaml
+echo kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
 """ call()
+    }
+
+    def getIgnoreChecksErrors() {
+        List ignoreCheckErrors = []
+        if (!failSwapOn) {
+            ignoreCheckErrors << "Swap"
+        }
+        if (ignoreCheckErrors.size() > 0) {
+            "--ignore-checks-errors " + ignoreCheckErrors.join(",")
+        } else {
+            ""
+        }
     }
 
     def postInstall() {
