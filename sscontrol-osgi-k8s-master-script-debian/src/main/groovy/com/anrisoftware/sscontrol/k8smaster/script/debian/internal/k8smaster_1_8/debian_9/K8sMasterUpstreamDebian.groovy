@@ -76,7 +76,7 @@ apt-get install -y ${kubeadmPackages.join(" ")}
 
     def installKube() {
         shell privileged: true, timeout: timeoutLong, """
-echo kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
+kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
 """ call()
     }
 
