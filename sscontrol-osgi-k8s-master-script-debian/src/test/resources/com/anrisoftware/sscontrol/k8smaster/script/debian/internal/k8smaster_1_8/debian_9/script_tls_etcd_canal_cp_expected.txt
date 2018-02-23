@@ -4,3 +4,4 @@
 /var/lib/robobee/tmp/robobeeca /tmp/junit/junit/etc/kubernetes/pki/ca.key
 /var/lib/robobee/tmp/kubeadm.yaml /root/kubeadm.yaml
 /var/lib/robobee/tmp/20-robobee.conf /etc/systemd/system/kubelet.service.d/20-robobee.conf
+-i /etc/kubernetes/admin.conf /home/user/.kube/config

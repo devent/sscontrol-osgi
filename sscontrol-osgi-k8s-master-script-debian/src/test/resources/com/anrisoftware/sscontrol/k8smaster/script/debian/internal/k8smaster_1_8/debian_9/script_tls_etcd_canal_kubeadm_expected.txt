@@ -1,1 +1,1 @@
-init --config /root/kubeadm.yaml --ignore-preflight-errors Swap
+token list

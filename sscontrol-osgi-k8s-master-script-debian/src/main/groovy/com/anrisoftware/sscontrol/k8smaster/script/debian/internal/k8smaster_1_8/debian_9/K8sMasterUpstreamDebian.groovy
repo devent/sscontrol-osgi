@@ -60,6 +60,18 @@ class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
         uploadEtcdCertificates()
         createKubeadmConfig()
         createKubeletConfig()
+        restartKubelet()
+    }
+
+    /**
+     * Restarts kubelet after the configuration was deployed.
+     */
+    def restartKubelet() {
+        shell privileged: true, timeout: timeoutShort, """
+systemctl daemon-reload
+systemctl restart kubelet
+systemctl status kubelet
+""" call()
     }
 
     def installKubeadm() {
@@ -76,7 +88,17 @@ apt-get install -y ${kubeadmPackages.join(" ")}
 
     def installKube() {
         shell privileged: true, timeout: timeoutLong, """
+if ! kubeadm token list; then
 kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
+fi
+""" call()
+    }
+
+    def setupKubectl() {
+        shell """
+mkdir -p \$HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf \$HOME/.kube/config
+sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
 """ call()
     }
 
