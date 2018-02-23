@@ -62,6 +62,7 @@ class K8sMasterDebian extends ScriptBase {
         upstream.installKubeadm()
         upstream.createService()
         upstream.installKube()
+        upstream.setupKubectl()
         upstream.postInstall()
     }
 
