@@ -1,3 +1,0 @@
-o-rx /tmp/junit/junit/var/robobee/certs/default-cluster
-o-rwx /var/lib/robobee/tmp
-+x /tmp/junit/junit/usr/local/bin/kubectl

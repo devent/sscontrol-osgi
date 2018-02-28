@@ -27,8 +27,6 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubeNodeClient
-import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubeNodeClientFactory
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -57,9 +55,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 
     @Inject
     TaintFactory taintFactory
-
-    @Inject
-    KubeNodeClientFactory nodeClientFactory
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
@@ -373,14 +368,6 @@ chmod o-rx '$certsDir'
      * Returns the run kubectl for the cluster.
      */
     abstract AbstractKubectlLinux getKubectlCluster()
-
-    /**
-     * Returns the kubernetes node client.
-     */
-    KubeNodeClient createNodeClient() {
-        K8s service = service
-        nodeClientFactory.create service.clusterHost, this
-    }
 
     def getDefaultContainerRuntime() {
         getScriptProperty 'default_container_runtime'

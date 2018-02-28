@@ -32,9 +32,32 @@ import groovy.util.logging.Slf4j
 class ClusterScriptTest extends AbstractClusterScriptTest {
 
     @Test
-    void "unsecured"() {
+    void "unsecured_context"() {
         def test = [
-            name: "unsecured",
+            name: "unsecured_context",
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "k8s-cluster", target: 'default' with {
+    context name: 'default-system'
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "unsecured_cluster"() {
+        def test = [
+            name: "unsecured_cluster",
             input: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-cluster", target: 'default' with {
@@ -50,7 +73,6 @@ service "k8s-cluster", target: 'default' with {
                 assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "wget.out", "${args.test.name}_wget_expected.txt"
             },
         ]
         doTest test
@@ -76,7 +98,6 @@ service "k8s-cluster", target: 'default' with {
                 assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "wget.out", "${args.test.name}_wget_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource ClusterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
             },
