@@ -116,7 +116,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
 
     def postInstall() {
         //applyTaints()
-        //applyLabels()
+        applyLabels()
     }
 
     def setupClusterDefaults() {

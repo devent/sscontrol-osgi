@@ -20,6 +20,8 @@ import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -71,39 +73,6 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         }
     }
 
-    def uploadCertificates(Map vars) {
-        log.info 'Uploads k8s-cluster certificates.'
-        def certsdir = certsDir
-        List credentials = vars.credentials
-        String clusterName = vars.clusterName
-        assertThat "credentials=null", credentials, notNullValue()
-        assertThat "clusterName=null", clusterName, notNullValue()
-        def args = [:]
-        def certsDir = getClusterCertsDir(clusterName)
-        shell privileged: true, """
-mkdir -p $certsDir
-chown robobee.robobee -R $certsDir
-chmod o-rx $certsDir
-""" call()
-        credentials.findAll { it.hasProperty('tls') } each {
-            Tls tls = it.tls
-            if (tls.cert) {
-                tls.certName = defaultCredentialsTlsCertName
-            }
-            if (tls.key) {
-                tls.keyName = defaultCredentialsTlsKeyName
-            }
-            if (tls.ca) {
-                tls.caName = defaultCredentialsTlsCaName
-            }
-            def a = [:]
-            a.dest = certsDir
-            a.tls = tls
-            a.name = 'client-tls'
-            uploadTlsCerts a
-        }
-    }
-
     def runKubectl(Map vars) {
         log.info 'Run kubectl with {}', vars
         ClusterService service = vars.service
@@ -112,7 +81,6 @@ chmod o-rx $certsDir
         assertThat "service!=null", service, notNullValue()
         assertThat "host!=null", host, notNullValue()
         Credentials c = host.credentials
-        setupHost host
         Map v = new HashMap(vars)
         v.service = service
         v.cluster = host
@@ -138,7 +106,6 @@ chmod o-rx $certsDir
         ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
         assertThat "cluster!=null", cluster, notNullValue()
-        setupHost cluster
         Credentials c = cluster.credentials
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
@@ -169,6 +136,15 @@ chmod o-rx $certsDir
         v.resource = kubectlTemplate
         v.name = 'kubectlKubeconfigCmd'
         shell v call()
+    }
+
+    /**
+     * Waits for the node to be available.
+     *
+     * @param name
+     * node name.
+     */
+    def waitNodeAvailable(def name, Duration timeoutLong) {
     }
 
     /**
@@ -222,39 +198,6 @@ chmod o-rx $certsDir
     }
 
     /**
-     * Setups the credentials.
-     */
-    def setupHost(ClusterHost host) {
-        Credentials c = host.credentials
-        if (!host.proto) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.proto = defaultServerProtoSecured
-            } else {
-                host.proto = defaultServerProtoUnsecured
-            }
-        }
-        if (!host.port) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.port = defaultServerPortSecured
-            } else {
-                host.port = defaultServerPortUnsecured
-            }
-        }
-        if (c.hasProperty('tls')) {
-            Tls tls = c.tls
-            if (tls.cert) {
-                tls.certName = defaultCredentialsTlsCertName
-            }
-            if (tls.key) {
-                tls.keyName = defaultCredentialsTlsKeyName
-            }
-            if (tls.ca) {
-                tls.caName = defaultCredentialsTlsCaName
-            }
-        }
-    }
-
-    /**
      * Returns base64 encoded certificates data.
      */
     Map certsData(Tls tls) {
@@ -302,40 +245,8 @@ chmod o-rx $certsDir
         getClusterTls()
     }
 
-    def getDefaultCredentialsTlsCaName() {
-        properties.getProperty 'default_credentials_tls_ca_name', defaultProperties
-    }
-
-    def getDefaultCredentialsTlsCertName() {
-        properties.getProperty 'default_credentials_tls_cert_name', defaultProperties
-    }
-
-    def getDefaultCredentialsTlsKeyName() {
-        properties.getProperty 'default_credentials_tls_key_name', defaultProperties
-    }
-
-    int getDefaultServerPortUnsecured() {
-        properties.getNumberProperty 'default_server_port_unsecured', defaultProperties
-    }
-
-    int getDefaultServerPortSecured() {
-        properties.getNumberProperty 'default_server_port_secured', defaultProperties
-    }
-
-    String getDefaultServerProtoUnsecured() {
-        properties.getProperty 'default_server_proto_unsecured', defaultProperties
-    }
-
-    String getDefaultServerProtoSecured() {
-        properties.getProperty 'default_server_proto_secured', defaultProperties
-    }
-
     File getKubectlCmd() {
         getFileProperty 'kubectl_cmd', binDir
-    }
-
-    String getRobobeeLabelNode() {
-        properties.getProperty 'robobee_label_node', defaultProperties
     }
 
     @Override

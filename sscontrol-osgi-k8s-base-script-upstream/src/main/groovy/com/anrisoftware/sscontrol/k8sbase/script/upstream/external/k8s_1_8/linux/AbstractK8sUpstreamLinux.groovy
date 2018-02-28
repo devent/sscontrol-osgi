@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
+import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
@@ -307,12 +308,12 @@ chmod o-rx '$certsDir'
         }
         log.info 'Apply labels for {}.', service
         def node = service.cluster.name
-        def nodeClient = createNodeClient()
+        def nodeClient = kubectlCluster
         def vars = [:]
         vars.cluster = service.clusterHost
-        vars.kubeconfigFile = createTmpFile()
+        vars.kubeconfigFile = getKubeconfigFile(service.clusterHost)
         try {
-            nodeClient.waitNodeReady robobeeLabelNode, node, timeoutLong
+            nodeClient.waitNodeAvailable node, timeoutLong
             kubectlCluster.uploadKubeconfig(vars)
             service.labels.each { String key, Label label ->
                 log.info 'Apply label {} for {}.', label, service
@@ -368,6 +369,45 @@ chmod o-rx '$certsDir'
      * Returns the run kubectl for the cluster.
      */
     abstract AbstractKubectlLinux getKubectlCluster()
+
+    File getKubeconfigFile(ClusterHost cluster) {
+        setupHostCredentials cluster
+        Credentials c = cluster.credentials
+        new File("/home/robobee/.kube/config")
+    }
+
+    /**
+     * Setups the credentials.
+     */
+    def setupHostCredentials(ClusterHost host) {
+        Credentials c = host.credentials
+        if (!host.proto) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.proto = scriptProperties.default_server_proto_secured
+            } else {
+                host.proto = scriptProperties.default_server_proto_unsecured
+            }
+        }
+        if (!host.port) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.port = scriptNumberProperties.default_server_port_secured
+            } else {
+                host.port = scriptNumberProperties.default_server_port_unsecured
+            }
+        }
+        if (c.hasProperty('tls')) {
+            Tls tls = c.tls
+            if (tls.cert) {
+                tls.certName = scriptProperties.default_credentials_tls_cert_name
+            }
+            if (tls.key) {
+                tls.keyName = scriptProperties.default_credentials_tls_key_name
+            }
+            if (tls.ca) {
+                tls.caName = scriptProperties.default_credentials_tls_ca_name
+            }
+        }
+    }
 
     def getDefaultContainerRuntime() {
         getScriptProperty 'default_container_runtime'
