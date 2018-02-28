@@ -32,18 +32,6 @@ public class KubectlLinuxModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Credentials.class, CredentialsNop.class)
                 .build(CredentialsNopFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(KubectlClient.class, KubectlClient.class)
-                .build(KubectlClientFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(KubeNodeClient.class, KubeNodeClient.class)
-                .build(KubeNodeClientFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(KubeNode.class, KubeNode.class)
-                .build(KubeNodeFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(KubeNodeResource.class, KubeNodeResource.class)
-                .build(KubeNodeResourceFactory.class));
     }
 
 }

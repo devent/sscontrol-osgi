@@ -61,6 +61,9 @@ service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
+service "k8s-cluster", target: 'masters' with {
+    context name: 'kubernetes-admin@kubernetes'
+}
 service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     bind secure: "192.168.56.200"
     nodes << "masters"
