@@ -73,11 +73,12 @@ service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
     }
+    label << "robobeerun.com/node=node-0"
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
-            expectedServicesSize: 2,
+            expectedServicesSize: 3,
             expected: { Map args ->
             },
         ]
