@@ -1,6 +1,10 @@
 kubeletConfig(parent, vars) ::= <<
 # auto-generated from robobee-run
 [Service]
-Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=<parent.failSwapOn>"
+Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=<parent.failSwapOn><nodeLabels(parent, vars)>"
 
 >>
+
+nodeLabels(parent, vars) ::= <%
+<if(parent.haveLabels)> --node-labels=<parent.nodeLabels;separator=","><endif>
+%>
