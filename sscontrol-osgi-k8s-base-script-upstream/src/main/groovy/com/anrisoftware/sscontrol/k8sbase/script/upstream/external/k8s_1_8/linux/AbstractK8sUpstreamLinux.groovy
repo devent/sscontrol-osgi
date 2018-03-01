@@ -94,6 +94,14 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         }
     }
 
+    def setupLabelsDefaults() {
+        log.debug 'Setup default labels for {}', service
+        K8s service = service
+        def name = service.cluster.name
+        def label = robobeeLabelNode
+        service.label key: label, value: name
+    }
+
     def setupClusterHostDefaults() {
         K8s service = service
         ClusterHost host = service.clusterHost
@@ -335,15 +343,20 @@ chmod o-rx '$certsDir'
     }
 
     /**
+     * Returns if there are node labels to be set after the node was registered.
+     * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --node-labels mapStringString</a>
+     */
+    boolean getHaveLabels() {
+        service.labels.size() > 0
+    }
+
+    /**
      * Returns node labels to be set after the node was registered.
      * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --node-labels mapStringString</a>
      */
     List getNodeLabels() {
         K8s service = service
-        def name = service.cluster.name
-        def label = robobeeLabelNamespace
-        def l = ["${label}/node=${name}"]
-        service.labels.inject(l) { list, k, v ->
+        service.labels.inject([]) { list, k, v ->
             list << "${v.key}=${v.value}"
         }
     }

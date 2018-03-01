@@ -44,6 +44,7 @@ class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
 
     def setupDefaults() {
         setupMiscDefaults()
+        setupLabelsDefaults()
         setupApiServersDefaults()
         setupClusterDefaults()
         setupClusterHostDefaults()
