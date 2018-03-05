@@ -37,9 +37,6 @@ class K8sNodeDebian extends ScriptBase {
     K8sNodeDebianProperties debianPropertiesProvider
 
     @Inject
-    K8sNodeDockerDebianFactory dockerDebianFactory
-
-    @Inject
     KubectlUpstreamDebianFactory kubectlUpstreamFactory
 
     @Inject
@@ -48,8 +45,6 @@ class K8sNodeDebian extends ScriptBase {
     DebianUtils debian
 
     K8sNodeUpstreamDebian upstream
-
-    K8sNodeSystemdDebian systemd
 
     @Inject
     void setDebian(Debian_9_UtilsFactory factory) {
@@ -61,23 +56,14 @@ class K8sNodeDebian extends ScriptBase {
         this.upstream = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
-    @Inject
-    void setSystemdDebianFactory(K8sNodeSystemdDebianFactory factory) {
-        this.systemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
     @Override
     def run() {
-        dockerDebianFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        systemd.stopServices()
         debian.installPackages()
         debian.enableModules()
         kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.createService()
-        systemd.startServices()
-        systemd.enableServices()
         upstream.postInstall()
     }
 
