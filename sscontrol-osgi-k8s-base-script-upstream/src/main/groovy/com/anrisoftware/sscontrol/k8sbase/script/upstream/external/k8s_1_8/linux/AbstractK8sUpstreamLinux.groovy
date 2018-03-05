@@ -292,15 +292,10 @@ chmod o-rx '$certsDir'
         def vars = [:]
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = createTmpFile()
-        try {
-            nodeClient.waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
-            kubectlCluster.uploadKubeconfig(vars)
-            service.taints.each { String key, Taint taint ->
-                log.info 'Apply taint {} for {}.', taint, service
-                kubectlCluster.applyTaintNode vars, node, taint
-            }
-        } finally {
-            deleteTmpFile vars.kubeconfigFile
+        nodeClient.waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
+        service.taints.each { String key, Taint taint ->
+            log.info 'Apply taint {} for {}.', taint, service
+            kubectlCluster.applyTaintNode vars, node, taint
         }
     }
 
@@ -318,17 +313,13 @@ chmod o-rx '$certsDir'
         def node = service.cluster.name
         def nodeClient = kubectlCluster
         def vars = [:]
+        vars.parent = this
         vars.cluster = service.clusterHost
         vars.kubeconfigFile = getKubeconfigFile(service.clusterHost)
-        try {
-            nodeClient.waitNodeAvailable node, timeoutLong
-            kubectlCluster.uploadKubeconfig(vars)
-            service.labels.each { String key, Label label ->
-                log.info 'Apply label {} for {}.', label, service
-                kubectlCluster.applyLabelNode vars, node, label
-            }
-        } finally {
-            deleteTmpFile vars.kubeconfigFile
+        nodeClient.waitNodeAvailable vars << [timeout: timeoutMiddle], node
+        service.labels.each { String key, Label label ->
+            log.info 'Apply label {} for {}.', label, service
+            kubectlCluster.applyLabelNode vars, node, label
         }
     }
 
@@ -549,6 +540,10 @@ chmod o-rx '$certsDir'
         getScriptProperty 'robobee_label_namespace'
     }
 
+    String getKubernetesLabelHostname() {
+        getScriptProperty 'kubernetes_label_hostname'
+    }
+
     long getMaxMapCount() {
         getScriptNumberProperty 'max_map_count'
     }
@@ -567,6 +562,10 @@ chmod o-rx '$certsDir'
 
     Map getFeatureGates() {
         getScriptMapProperty 'feature_gates'
+    }
+
+    File getKubectlCmd() {
+        getFileProperty 'kubectl_cmd', binDir
     }
 
     @Override

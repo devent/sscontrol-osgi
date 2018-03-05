@@ -2,6 +2,37 @@ kubectlKubeconfigCmd(parent, vars) ::= <<
 <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> <vars.args>
 >>
 
+getNodeRobobeeLabel(parent, vars) ::= <%
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
+%>
+
+getKubernetesHostnameLabel(parent, vars) ::= <%
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>|grep "<vars.node>"
+%>
+
+/*
+* Waits until the node is available.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.kubeconfigFile: the kubeconfig file path.
+* vars.node: the node name.
+*/
+waitClusterAvailableCmd(parent, vars) ::= <<
+echo "Waiting for node..."
+function node_on_label() {
+    <getNodeRobobeeLabel(parent, vars)>|grep "<vars.node>"
+}
+function node_on_hostname() {
+    <getKubernetesHostnameLabel(parent, vars)>|grep "<vars.node>"
+}
+
+until node_on_label || node_on_hostname
+do
+    sleep 5
+done
+>>
+
 /*
 * Waits until the node is ready.
 *
@@ -12,11 +43,22 @@ kubectlKubeconfigCmd(parent, vars) ::= <<
 */
 waitNodeReadyCmd(parent, vars) ::= <<
 echo "Waiting for node..."
-until <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>|grep "Ready"
+function node_on_label() {
+    <getNodeRobobeeLabel(parent, vars)>|grep "Ready"
+}
+until node_on_label
 do
     sleep 5
 done
 >>
+
+retrieveNodeNameRobobeeLabel(parent, vars) ::= <%
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
+%>
+
+retrieveNodeNameKubernetesHostname(parent, vars) ::= <%
+<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
+%>
 
 /*
 * Applies the taint on the node.
@@ -28,7 +70,7 @@ done
 * vars.tain: the taint.
 */
 applyTaintCmd(parent, vars) ::= <<
-node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
+node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> taint --overwrite nodes $node <vars.taint>
 >>
 
@@ -42,7 +84,10 @@ node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-hea
 * vars.label: the label.
 */
 applyLabelCmd(parent, vars) ::= <<
-node=$(<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' ')
+node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
+if [[ -z "$node" ]]; then
+    node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
+fi
 <parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> label --overwrite nodes $node <vars.label>
 >>
 
