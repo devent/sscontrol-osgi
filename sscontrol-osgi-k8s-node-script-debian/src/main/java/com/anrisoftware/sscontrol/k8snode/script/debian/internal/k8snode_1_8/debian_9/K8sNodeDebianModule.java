@@ -15,13 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9;
 
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.K8sNodeDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.K8sNodeDockerDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.K8sNodeSystemdDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.K8sNodeUfwDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.K8sNodeUpstreamDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.KubectlClusterDebian;
-import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9.KubectlUpstreamDebian;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -43,17 +36,8 @@ public class K8sNodeDebianModule extends AbstractModule {
                 .implement(HostServiceScript.class, K8sNodeUpstreamDebian.class)
                 .build(K8sNodeUpstreamDebianFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, KubectlUpstreamDebian.class)
-                .build(KubectlUpstreamDebianFactory.class));
-        install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, KubectlClusterDebian.class)
                 .build(KubectlClusterDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, K8sNodeSystemdDebian.class)
-                .build(K8sNodeSystemdDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, K8sNodeDockerDebian.class)
-                .build(K8sNodeDockerDebianFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, K8sNodeUfwDebian.class)
                 .build(K8sNodeUfwDebianFactory.class));
