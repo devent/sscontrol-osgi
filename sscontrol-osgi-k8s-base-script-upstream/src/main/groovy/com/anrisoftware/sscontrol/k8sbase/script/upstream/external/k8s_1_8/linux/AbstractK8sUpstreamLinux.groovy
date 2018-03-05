@@ -240,6 +240,31 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         } call()
     }
 
+    def setupApiServersDefaults() {
+        log.debug 'Setup api-servers hosts defaults for {}', service
+        def service = service
+        if (service.cluster.apiServers.size() == 0) {
+            service.cluster.apiServers << scriptProperties.default_api_server_host
+        }
+    }
+
+    def setupBindDefaults() {
+        log.debug 'Setup bind defaults for {}', service
+        def service = service
+        if (!service.binding.insecureAddress) {
+            service.binding.insecureAddress = scriptProperties.default_bind_insecure_address
+        }
+        if (!service.binding.secureAddress) {
+            service.binding.secureAddress = scriptProperties.default_bind_secure_address
+        }
+        if (!service.binding.port) {
+            service.binding.port = scriptNumberProperties.default_bind_port
+        }
+        if (!service.binding.insecurePort) {
+            service.binding.insecurePort = scriptNumberProperties.default_bind_insecure_port
+        }
+    }
+
     def createDirectories() {
         log.info 'Create k8s directories.'
         def dirs = [
