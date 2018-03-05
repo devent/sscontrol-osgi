@@ -288,11 +288,12 @@ chmod o-rx '$certsDir'
         }
         log.info 'Apply taints for {}.', service
         def node = service.cluster.name
-        def nodeClient = createNodeClient()
+        def nodeClient = kubectlCluster
         def vars = [:]
+        vars.parent = this
         vars.cluster = service.clusterHost
-        vars.kubeconfigFile = createTmpFile()
-        nodeClient.waitNodeReady robobeeLabelNode, service.cluster.name, timeoutLong
+        vars.kubeconfigFile = getKubeconfigFile(service.clusterHost)
+        nodeClient.waitNodeAvailable vars << [timeout: timeoutMiddle], node
         service.taints.each { String key, Taint taint ->
             log.info 'Apply taint {} for {}.', taint, service
             kubectlCluster.applyTaintNode vars, node, taint
