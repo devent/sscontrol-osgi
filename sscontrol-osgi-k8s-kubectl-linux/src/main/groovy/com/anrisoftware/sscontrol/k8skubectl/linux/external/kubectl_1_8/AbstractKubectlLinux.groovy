@@ -20,8 +20,6 @@ import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
-import org.joda.time.Duration
-
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -141,10 +139,25 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     /**
      * Waits for the node to be available.
      *
-     * @param name
-     * node name.
+     * @param vars
+     * <ul>
+     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
+     * <li>cluster: the ClusterHost.
+     * <li>node: the node name.
+     * </ul>
+     * @param node the node name.
      */
-    def waitNodeAvailable(def name, Duration timeoutLong) {
+    def waitNodeAvailable(Map vars, String node) {
+        log.info 'Wait for node to be available: {}', node
+        ClusterHost cluster = vars.cluster
+        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
+        assertThat "cluster!=null", cluster, notNullValue()
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.node = node
+        v.resource = kubectlTemplate
+        v.name = 'waitClusterAvailableCmd'
+        shell v call()
     }
 
     /**
@@ -243,10 +256,6 @@ abstract class AbstractKubectlLinux extends ScriptBase {
 
     def getClientTls() {
         getClusterTls()
-    }
-
-    File getKubectlCmd() {
-        getFileProperty 'kubectl_cmd', binDir
     }
 
     @Override
