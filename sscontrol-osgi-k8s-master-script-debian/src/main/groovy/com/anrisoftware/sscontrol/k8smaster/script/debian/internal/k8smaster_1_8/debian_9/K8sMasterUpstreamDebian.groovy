@@ -15,14 +15,18 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUpstreamLinux
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
-import com.anrisoftware.sscontrol.k8smaster.script.upstream.external.k8smaster_1_8.AbstractK8sMasterUpstream
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 
 import groovy.util.logging.Slf4j
+
 
 /**
  * Configures the K8s-Master service from the upstream sources Debian.
@@ -31,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
+class K8sMasterUpstreamDebian extends AbstractK8sUpstreamLinux {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
@@ -62,6 +66,15 @@ class K8sMasterUpstreamDebian extends AbstractK8sMasterUpstream {
         createKubeadmConfig()
         createKubeletConfig()
         restartKubelet()
+    }
+
+    def setupClusterDefaults() {
+        K8sMaster service = service
+        assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
+        super.setupClusterDefaults()
+        if (!service.cluster.name) {
+            service.cluster.name = 'master'
+        }
     }
 
     /**
@@ -118,14 +131,6 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
     def postInstall() {
         applyLabels()
         applyTaints()
-    }
-
-    def setupClusterDefaults() {
-        super.setupClusterDefaults()
-        K8sMaster service = service
-        if (!service.cluster.name) {
-            service.cluster.name = 'master'
-        }
     }
 
     @Inject
