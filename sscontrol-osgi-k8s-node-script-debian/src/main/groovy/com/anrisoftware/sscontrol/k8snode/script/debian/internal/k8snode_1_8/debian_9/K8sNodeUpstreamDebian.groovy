@@ -15,22 +15,24 @@
  */
 package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9
 
+import static org.hamcrest.Matchers.*
+
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.KubectlClusterLinux
-import com.anrisoftware.sscontrol.k8snode.script.upstream.external.k8snode_1_8.K8sNodeUpstreamSystemd
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.debian.debian_9.AbstractK8sUpstreamDebian
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Node service from the upstream sources for Debian.
+ * Configures the K8s-Master service from the upstream sources Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sNodeUpstreamDebian extends K8sNodeUpstreamSystemd {
+class K8sNodeUpstreamDebian extends AbstractK8sUpstreamDebian {
 
     @Inject
     K8sNodeDebianProperties debianPropertiesProvider
@@ -43,29 +45,33 @@ class K8sNodeUpstreamDebian extends K8sNodeUpstreamSystemd {
 
     def setupDefaults() {
         setupMiscDefaults()
+        setupLabelsDefaults()
+        setupApiServersDefaults()
         setupClusterDefaults()
         setupClusterHostDefaults()
         setupClusterApiDefaults()
+        setupBindDefaults()
         setupKubeletDefaults()
         setupPluginsDefaults()
+        setupKernelParameter()
     }
 
     def createService() {
         createDirectories()
         uploadK8sCertificates()
         uploadEtcdCertificates()
-        createKubeletService()
+        createKubeadmConfig()
         createKubeletConfig()
-        createKubeletKubeconfig()
-        createKubeletManifests()
-        createHostRkt()
-        createFlannelCni()
-        createWorkerKubeconfig()
+        restartKubelet()
+    }
+
+    def setupClusterDefaults() {
+        super.setupClusterDefaults()
     }
 
     def postInstall() {
-        applyTaints()
         applyLabels()
+        applyTaints()
     }
 
     @Inject
@@ -84,7 +90,7 @@ class K8sNodeUpstreamDebian extends K8sNodeUpstreamSystemd {
     }
 
     @Override
-    KubectlClusterLinux getKubectlCluster() {
+    AbstractKubectlLinux getKubectlCluster() {
         kubectlClusterLinux
     }
 }

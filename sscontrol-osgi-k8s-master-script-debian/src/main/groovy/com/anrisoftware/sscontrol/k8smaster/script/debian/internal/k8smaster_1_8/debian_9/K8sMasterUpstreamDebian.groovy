@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.*
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUpstreamLinux
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.debian.debian_9.AbstractK8sUpstreamDebian
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class K8sMasterUpstreamDebian extends AbstractK8sUpstreamLinux {
+class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
 
     @Inject
     K8sMasterDebianProperties debianPropertiesProvider
@@ -77,57 +77,6 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamLinux {
         }
     }
 
-    /**
-     * Restarts kubelet after the configuration was deployed.
-     */
-    def restartKubelet() {
-        shell privileged: true, timeout: timeoutShort, """
-systemctl daemon-reload
-systemctl restart kubelet
-systemctl status kubelet
-""" call()
-    }
-
-    def installKubeadm() {
-        shell privileged: true, timeout: timeoutLong, """
-apt-get update && apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-apt-get update
-apt-get install -y ${kubeadmPackages.join(" ")}
-""" call()
-    }
-
-    def installKube() {
-        shell privileged: true, timeout: timeoutLong, """
-if ! kubeadm token list; then
-kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
-fi
-""" call()
-    }
-
-    def setupKubectl() {
-        shell """
-mkdir -p \$HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf \$HOME/.kube/config
-sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
-""" call()
-    }
-
-    def getIgnoreChecksErrors() {
-        List ignoreCheckErrors = []
-        if (!failSwapOn) {
-            ignoreCheckErrors << "Swap"
-        }
-        if (ignoreCheckErrors.size() > 0) {
-            "--ignore-preflight-errors " + ignoreCheckErrors.join(",")
-        } else {
-            ""
-        }
-    }
-
     def postInstall() {
         applyLabels()
         applyTaints()
@@ -151,16 +100,5 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
     @Override
     AbstractKubectlLinux getKubectlCluster() {
         kubectlClusterLinux
-    }
-
-    /**
-     * Returns the needed packages for kubeadm.
-     *
-     * <ul>
-     * <li>profile property {@code kubeadm_packages}</li>
-     * </ul>
-     */
-    List getKubeadmPackages() {
-        getScriptListProperty "kubeadm_packages"
     }
 }

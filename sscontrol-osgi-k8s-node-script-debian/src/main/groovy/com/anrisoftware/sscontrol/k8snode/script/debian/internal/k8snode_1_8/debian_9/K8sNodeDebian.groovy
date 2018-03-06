@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Kubernetes node.
+ * K8s-Master Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -36,15 +36,12 @@ class K8sNodeDebian extends ScriptBase {
     @Inject
     K8sNodeDebianProperties debianPropertiesProvider
 
-    @Inject
-    KubectlUpstreamDebianFactory kubectlUpstreamFactory
+    K8sNodeUpstreamDebian upstream
 
     @Inject
     K8sNodeUfwDebianFactory ufwFactory
 
     DebianUtils debian
-
-    K8sNodeUpstreamDebian upstream
 
     @Inject
     void setDebian(Debian_9_UtilsFactory factory) {
@@ -60,10 +57,12 @@ class K8sNodeDebian extends ScriptBase {
     def run() {
         debian.installPackages()
         debian.enableModules()
-        kubectlUpstreamFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
         upstream.setupDefaults()
         ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        upstream.installKubeadm()
         upstream.createService()
+        upstream.installKube()
+        upstream.setupKubectl()
         upstream.postInstall()
     }
 

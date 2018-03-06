@@ -58,7 +58,8 @@
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
         <module>../sscontrol-osgi-k8s-base-service</module>
-        <module>../sscontrol-osgi-k8s-base-script-upstream</module>
+        <module>../sscontrol-osgi-k8s-base-script-upstream-debian</module>
+        <module>../sscontrol-osgi-k8s-base-script-upstream-linux</module>
         <module>../sscontrol-osgi-k8s-cluster-service</module>
         <module>../sscontrol-osgi-k8s-cluster-script-linux</module>
         <module>../sscontrol-osgi-k8s-from-repository-service</module>
