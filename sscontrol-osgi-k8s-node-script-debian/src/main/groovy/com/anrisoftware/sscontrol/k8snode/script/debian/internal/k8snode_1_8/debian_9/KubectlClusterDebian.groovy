@@ -18,19 +18,18 @@ package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.de
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.KubectlClusterLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the K8s-Cluster 1.5 service from the upstream sources for
- * GNU/Linux.
+ * Kubectl service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class KubectlClusterDebian extends KubectlClusterLinux {
+class KubectlClusterDebian extends AbstractKubectlLinux {
 
     @Inject
     K8sNodeDebianProperties debianPropertiesProvider

@@ -73,7 +73,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-k8s-base-script-upstream</artifactId>
+            <artifactId>sscontrol-osgi-k8s-base-script-upstream-linux</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
