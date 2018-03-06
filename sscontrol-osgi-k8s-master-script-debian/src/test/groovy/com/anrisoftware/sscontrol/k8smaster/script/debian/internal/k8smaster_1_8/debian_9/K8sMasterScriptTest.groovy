@@ -67,6 +67,31 @@ service "k8s-master", name: "node-0", advertise: '192.168.0.100' with {
     }
 
     @Test
+    void "script_advertise_host"() {
+        def test = [
+            name: "script_advertise_host",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-master", name: "node-0", advertise: targets.all[0] with {
+    ca certs
+    plugin "etcd", endpoint: "etcd"
+    plugin "canal"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "script_kubelet_labels"() {
         def test = [
             name: "script_kubelet_labels",
