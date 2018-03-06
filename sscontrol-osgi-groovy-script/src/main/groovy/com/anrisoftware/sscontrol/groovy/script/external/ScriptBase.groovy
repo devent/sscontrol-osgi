@@ -814,6 +814,9 @@ echo \$file
                     T get(Object key) {
                         return getState(key)
                     }
+                    T put(String key, T value) {
+                        putState(key, value)
+                    }
                 }
     }
 

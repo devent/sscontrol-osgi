@@ -377,6 +377,13 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         }
     }
 
+    def getJoinCommand() {
+        shell privileged: true, outString: true, timeout: timeoutShort, """
+token=\$(kubeadm token generate)
+kubeadm token create \$token --print-join-command
+""" call().out
+    }
+
     /**
      * Returns the taint to mark a node as the master node and forbid the
      * scheduling of pods.
