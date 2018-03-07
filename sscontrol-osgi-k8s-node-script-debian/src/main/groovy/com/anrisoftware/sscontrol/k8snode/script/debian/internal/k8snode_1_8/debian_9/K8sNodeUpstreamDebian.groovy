@@ -61,10 +61,6 @@ class K8sNodeUpstreamDebian extends AbstractK8sUpstreamDebian {
         restartKubelet()
     }
 
-    def setupClusterDefaults() {
-        super.setupClusterDefaults()
-    }
-
     def postInstall() {
         applyLabels()
         applyTaints()

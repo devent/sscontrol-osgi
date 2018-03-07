@@ -446,7 +446,8 @@ public class K8sImpl implements K8s {
         Object name = args.get("name");
         Object advertise = args.get("advertise");
         Object api = args.get("api");
-        if (name != null || advertise != null || api != null) {
+        Object join = args.get("join");
+        if (name != null || advertise != null || api != null || join != null) {
             this.cluster = clusterFactory.create(args);
         }
     }

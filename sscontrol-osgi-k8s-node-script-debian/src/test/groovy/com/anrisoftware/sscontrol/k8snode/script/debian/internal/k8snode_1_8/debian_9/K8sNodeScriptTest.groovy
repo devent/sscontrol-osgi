@@ -33,17 +33,34 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class K8sNodeScriptTest extends AbstractNodeScriptTest {
 
-    @Test
-    void "script_tls_etcd_canal"() {
+    @Test(expected=AssertionError)
+    void "script_no_join"() {
         def test = [
-            name: "script_tls_etcd_canal",
+            name: "script_no_join",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "k8s-node", name: "node-0" with {
-    plugin "etcd", endpoint: "etcd"
-    plugin "canal"
-}
+service "k8s-node", name: "node-0"
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_join_arg"() {
+        def test = [
+            name: "script_join_arg",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-node", name: "node-0", join: 'kubeadm join abc'
 ''',
             scriptVars: [localhostSocket: localhostSocket, certs: certs],
             expectedServicesSize: 2,
@@ -71,9 +88,7 @@ service "k8s-node", name: "node-0" with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "k8s-node", name: "node-0" with {
-    plugin "etcd", endpoint: "etcd"
-    plugin "canal"
+service "k8s-node", name: "node-0", join: 'kubeadm join abc' with {
     label << "some-label=value"
 }
 ''',
@@ -90,31 +105,25 @@ service "k8s-node", name: "node-0" with {
     }
 
     @Test
-    void "script_tls_etcd_tls_canal"() {
+    void "script_nodes_ufw"() {
         def test = [
-            name: "script_tls_etcd_tls_canal",
+            name: "script_nodes_ufw",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "k8s-node", name: "node-0" with {
-    plugin "etcd", endpoint: "etcd" with {
-        tls certs
-    }
-    plugin "canal"
-}
+service "k8s-node", name: "node-0", join: 'kubeadm join abc'
 ''',
             scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            before: { Map test ->
+                createEchoCommand test.dir, 'which'
+                createCommand ufwActiveCommand, test.dir, 'ufw'
+            },
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource K8sNodeScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sNodeScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
             },
         ]
         doTest test
