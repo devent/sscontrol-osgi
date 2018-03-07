@@ -44,24 +44,20 @@ service "ssh", group: "masters" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
-    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[1]
 }
 service "k8s-cluster", target: 'masters' with {
     context name: 'kubernetes-admin@kubernetes'
 }
 targets['nodes'].eachWithIndex { host, i ->
-    service "k8s-node", name: "node-${i+1}" with {
-        plugin "canal"
-        plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
-            tls certs.etcd
-        }
+    service "k8s-node", target: host, name: "node-${i+1}", join: joinCommand with {
         nodes.labels[i].each { label << it }
         nodes.taints[i].each { taint << it }
     }
 }
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes],
+            scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
             expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -73,24 +69,20 @@ targets['nodes'].eachWithIndex { host, i ->
     }
 
     static final Map robobeetestCerts = [
-        tls: [
-            ca: K8sNodeClusterTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: K8sNodeClusterTest.class.getResource('robobee_test_kube_node_1_server_cert.pem'),
-            key: K8sNodeClusterTest.class.getResource('robobee_test_kube_node_1_server_key.pem'),
-        ],
-        admin: [
-            ca: K8sNodeClusterTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: K8sNodeClusterTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: K8sNodeClusterTest.class.getResource('robobee_test_kube_admin_key.pem'),
-        ],
+        etcd: [
+            ca: K8sNodeClusterTest.class.getResource('robobee_test_etcd_ca.pem'),
+            cert: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
+            key: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
+        ]
     ]
+
+    static final String joinCommand = 'kubeadm join --token 57f337.a8c66cf53ae4b8cd 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
 
     static final Map sockets = [
         masters: [
             "/tmp/robobee@robobee-test:22"
         ],
         nodes: [
-            "/tmp/robobee@robobee-test:22",
             "/tmp/robobee@robobee-1-test:22",
             "/tmp/robobee@robobee-2-test:22",
         ]

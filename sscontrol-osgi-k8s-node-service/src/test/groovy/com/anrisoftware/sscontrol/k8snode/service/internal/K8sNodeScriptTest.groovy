@@ -75,110 +75,37 @@ class K8sNodeScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "cluster_api_host"() {
+    void "cluster_join_statement"() {
         def test = [
-            name: 'cluster_api_host',
+            name: 'cluster_join_statement',
             script: """
 service "k8s-node" with {
-    cluster api: 'https://master.robobee.test'
+    cluster join: 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
 }
 """,
             scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.cluster.apiServers.size() == 1
-                assert s.cluster.apiServers[0] == 'https://master.robobee.test'
+                assert s.cluster.joinCommand == 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
             },
         ]
         doTest test
     }
 
     @Test
-    void "cluster_api_host_args"() {
+    void "cluster_join_service"() {
         def test = [
-            name: 'cluster_api_host_args',
+            name: 'cluster_join_service',
             script: """
-service "k8s-node", api: 'https://master.robobee.test' with {
+service "k8s-node", join: 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f' with {
 }
 """,
             scriptVars: [:],
             expected: { HostServices services ->
                 assert services.getServices('k8s-node').size() == 1
                 K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.cluster.apiServers.size() == 1
-                assert s.cluster.apiServers[0] == 'https://master.robobee.test'
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "cluster_api_targets"() {
-        def test = [
-            name: 'cluster_api_targets',
-            script: """
-service "ssh", group: "master" with {
-    host "robobee@master-0.robobee.test"
-    host "robobee@master-1.robobee.test"
-}
-def master = targets['master']
-service "k8s-node" with {
-    cluster api: master
-}
-""",
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('k8s-node').size() == 1
-                K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.cluster.apiServers.size() == 2
-                assert s.cluster.apiServers[0].host == 'master-0.robobee.test'
-                assert s.cluster.apiServers[1].host == 'master-1.robobee.test'
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "cluster_api_target"() {
-        def test = [
-            name: 'cluster_api_target',
-            script: """
-service "ssh", group: "master" with {
-    host "robobee@master.robobee.test"
-}
-def master = targets['master'][0]
-service "k8s-node" with {
-    cluster api: master
-}
-""",
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('k8s-node').size() == 1
-                K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.cluster.apiServers.size() == 1
-                assert s.cluster.apiServers[0].host == 'master.robobee.test'
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "tls"() {
-        def test = [
-            name: 'tls',
-            script: """
-service "k8s-node" with {
-    tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
-}
-""",
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('k8s-node').size() == 1
-                K8sNode s = services.getServices('k8s-node')[0] as K8sNode
-                assert s.tls.ca.toString() =~ /.*ca\.pem/
-                assert s.tls.cert.toString() =~ /.*cert\.pem/
-                assert s.tls.key.toString() =~ /.*key\.pem/
+                assert s.cluster.joinCommand == 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
             },
         ]
         doTest test

@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linu
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
 import org.joda.time.Duration
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -133,6 +134,9 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (service.cluster.apiServers.isEmpty()) {
             service.cluster.apiServers.addAll defaultApiServers
         }
+        if (!service.cluster.advertiseAddress) {
+            service.cluster.advertiseAddress = target.hostAddress
+        }
     }
 
     def setupKubeletDefaults() {
@@ -235,9 +239,10 @@ fi
     def joinNode() {
         K8s service = service
         def joinCommand = service.cluster.joinCommand
+        assert StringUtils.isNotBlank(joinCommand) : "No join command for node ${target}"
         shell privileged: true, timeout: timeoutLong, """
 if ! kubeadm token list; then
-kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
+${joinCommand} ${ignoreChecksErrors}
 fi
 """ call()
     }
