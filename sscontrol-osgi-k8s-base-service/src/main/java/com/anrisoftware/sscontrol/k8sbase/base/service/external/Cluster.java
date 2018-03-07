@@ -70,4 +70,9 @@ public interface Cluster {
      */
     Integer getPort();
 
+    /**
+     * Returns the join command for the cluster.
+     */
+    String getJoinCommand();
+
 }

@@ -86,12 +86,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (service.tls.ca) {
             service.tls.caName = scriptProperties.default_kubernetes_tls_ca_name
         }
-        if (service.ca.cert) {
-            service.ca.certName = scriptProperties.default_kubernetes_ca_cert_name
-        }
-        if (service.ca.key) {
-            service.ca.keyName = scriptProperties.default_kubernetes_ca_key_name
-        }
     }
 
     def setupLabelsDefaults() {
@@ -138,35 +132,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         }
         if (service.cluster.apiServers.isEmpty()) {
             service.cluster.apiServers.addAll defaultApiServers
-        }
-    }
-
-    def setupClusterApiDefaults() {
-        log.debug 'Setup cluster api defaults for {}', service
-        K8s service = service
-        if (!service.cluster.port) {
-            if (service.tls.cert) {
-                service.cluster.port = scriptNumberProperties.default_api_port_secure
-            } else {
-                service.cluster.port = scriptNumberProperties.default_api_port_insecure
-            }
-            if (service.ca.cert) {
-                service.cluster.port = scriptNumberProperties.default_api_port_secure
-            } else {
-                service.cluster.port = scriptNumberProperties.default_api_port_insecure
-            }
-        }
-        if (!service.cluster.protocol) {
-            if (service.tls.cert) {
-                service.cluster.protocol = scriptProperties.default_api_protocol_secure
-            } else {
-                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
-            }
-            if (service.ca.cert) {
-                service.cluster.protocol = scriptProperties.default_api_protocol_secure
-            } else {
-                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
-            }
         }
     }
 
@@ -248,23 +213,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         }
     }
 
-    def setupBindDefaults() {
-        log.debug 'Setup bind defaults for {}', service
-        def service = service
-        if (!service.binding.insecureAddress) {
-            service.binding.insecureAddress = scriptProperties.default_bind_insecure_address
-        }
-        if (!service.binding.secureAddress) {
-            service.binding.secureAddress = scriptProperties.default_bind_secure_address
-        }
-        if (!service.binding.port) {
-            service.binding.port = scriptNumberProperties.default_bind_port
-        }
-        if (!service.binding.insecurePort) {
-            service.binding.insecurePort = scriptNumberProperties.default_bind_insecure_port
-        }
-    }
-
     def createDirectories() {
         log.info 'Create k8s directories.'
         def dirs = [
@@ -277,6 +225,16 @@ chmod o-rx '$certsDir'
     }
 
     def installKube() {
+        shell privileged: true, timeout: timeoutLong, """
+if ! kubeadm token list; then
+kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
+fi
+""" call()
+    }
+
+    def joinNode() {
+        K8s service = service
+        def joinCommand = service.cluster.joinCommand
         shell privileged: true, timeout: timeoutLong, """
 if ! kubeadm token list; then
 kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}

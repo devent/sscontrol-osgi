@@ -62,6 +62,7 @@ abstract class AbstractNodeScriptTest extends AbstractNodeRunnerTest {
             'kubectl',
             'ufw',
             'modprobe',
+            'kubeadm',
         ]
     }
 }

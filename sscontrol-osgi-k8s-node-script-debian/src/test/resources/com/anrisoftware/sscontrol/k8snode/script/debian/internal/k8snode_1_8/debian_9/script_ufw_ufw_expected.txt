@@ -1,7 +1,0 @@
-
-status
-allow from 10.2.0.0/16 to 192.168.0.200
-allow from any to 192.168.0.200 port 80 proto tcp
-allow from any to 192.168.0.200 port 443 proto tcp
-allow from any to 192.168.0.200 port 10250 proto tcp
-allow from any to 192.168.0.200 port 30000:32767 proto tcp

@@ -65,7 +65,13 @@ class K8sScriptTest {
             name: 'cluster args',
             input: """
 service "k8s-master" with {
-    cluster name: 'master-0', advertise: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', domain: 'cluster.local', api: 'http://localhost:8080'
+    cluster name: 'master-0',
+    advertise: '192.168.0.1',
+    service: '10.3.0.0/24',
+    pod: '10.2.0.0/16',
+    domain: 'cluster.local',
+    api: 'http://localhost:8080',
+    join: 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
 }
 """,
             expected: { HostServices services ->
@@ -79,6 +85,7 @@ service "k8s-master" with {
                 assert s.cluster.dnsDomain == 'cluster.local'
                 assert s.cluster.apiServers.size() == 1
                 assert s.cluster.apiServers[0] == 'http://localhost:8080'
+                assert s.cluster.joinCommand == 'kubeadm join --token 34f578.e9676c9fc49544bb 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
             },
         ]
         doTest test

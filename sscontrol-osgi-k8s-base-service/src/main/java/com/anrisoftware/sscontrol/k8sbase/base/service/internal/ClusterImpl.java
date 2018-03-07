@@ -66,6 +66,8 @@ public class ClusterImpl implements Cluster {
 
     private Integer port;
 
+    private String joinCommand;
+
     @AssistedInject
     ClusterImpl(ClusterImplLogger log) {
         this(log, new HashMap<String, Object>());
@@ -159,6 +161,15 @@ public class ClusterImpl implements Cluster {
         return port;
     }
 
+    public void setJoinCommand(String joinCommand) {
+        this.joinCommand = joinCommand;
+    }
+
+    @Override
+    public String getJoinCommand() {
+        return joinCommand;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -192,6 +203,10 @@ public class ClusterImpl implements Cluster {
             } else {
                 addApiServer(v);
             }
+        }
+        v = args.get("join");
+        if (v != null) {
+            setJoinCommand(v.toString());
         }
     }
 
