@@ -1,0 +1,7 @@
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rx /tmp/junit/junit/etc/kubernetes/pki
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp

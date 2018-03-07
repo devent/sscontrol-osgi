@@ -49,8 +49,6 @@ class K8sNodeUpstreamDebian extends AbstractK8sUpstreamDebian {
         setupApiServersDefaults()
         setupClusterDefaults()
         setupClusterHostDefaults()
-        setupClusterApiDefaults()
-        setupBindDefaults()
         setupKubeletDefaults()
         setupPluginsDefaults()
         setupKernelParameter()
@@ -58,9 +56,7 @@ class K8sNodeUpstreamDebian extends AbstractK8sUpstreamDebian {
 
     def createService() {
         createDirectories()
-        uploadK8sCertificates()
         uploadEtcdCertificates()
-        createKubeadmConfig()
         createKubeletConfig()
         restartKubelet()
     }

@@ -1,6 +1,0 @@
--y install util-linux
--y install gnupg2
--y install gcc
--y install golang-go
--y install curl
--y install git

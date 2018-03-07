@@ -82,6 +82,63 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
         applyTaints()
     }
 
+    def setupMiscDefaults() {
+        super.setupMiscDefaults()
+        K8sMaster service = service
+        if (service.ca.cert) {
+            service.ca.certName = scriptProperties.default_kubernetes_ca_cert_name
+        }
+        if (service.ca.key) {
+            service.ca.keyName = scriptProperties.default_kubernetes_ca_key_name
+        }
+    }
+
+    def setupClusterApiDefaults() {
+        log.debug 'Setup cluster api defaults for {}', service
+        K8sMaster service = service
+        if (!service.cluster.port) {
+            if (service.tls.cert) {
+                service.cluster.port = scriptNumberProperties.default_api_port_secure
+            } else {
+                service.cluster.port = scriptNumberProperties.default_api_port_insecure
+            }
+            if (service.ca.cert) {
+                service.cluster.port = scriptNumberProperties.default_api_port_secure
+            } else {
+                service.cluster.port = scriptNumberProperties.default_api_port_insecure
+            }
+        }
+        if (!service.cluster.protocol) {
+            if (service.tls.cert) {
+                service.cluster.protocol = scriptProperties.default_api_protocol_secure
+            } else {
+                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
+            }
+            if (service.ca.cert) {
+                service.cluster.protocol = scriptProperties.default_api_protocol_secure
+            } else {
+                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
+            }
+        }
+    }
+
+    def setupBindDefaults() {
+        log.debug 'Setup bind defaults for {}', service
+        K8sMaster service = service
+        if (!service.binding.insecureAddress) {
+            service.binding.insecureAddress = scriptProperties.default_bind_insecure_address
+        }
+        if (!service.binding.secureAddress) {
+            service.binding.secureAddress = scriptProperties.default_bind_secure_address
+        }
+        if (!service.binding.port) {
+            service.binding.port = scriptNumberProperties.default_bind_port
+        }
+        if (!service.binding.insecurePort) {
+            service.binding.insecurePort = scriptNumberProperties.default_bind_insecure_port
+        }
+    }
+
     @Inject
     void setKubectlClusterLinuxFactory(KubectlClusterDebianFactory factory) {
         this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)

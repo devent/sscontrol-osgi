@@ -39,27 +39,26 @@ class K8sNodeClusterTest extends AbstractNodeRunnerTest {
         def test = [
             name: "nodes_tls",
             script: '''
+service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "ssh", group: "masters" with {
-    host "andrea-master.robobee-test.test", socket: sockets.masters[0]
+    host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "k8s-cluster", target: 'masters' with {
-    credentials type: 'cert', name: 'robobee-admin', ca: certs.admin.ca, cert: certs.admin.cert, key: certs.admin.key
+    context name: 'kubernetes-admin@kubernetes'
 }
 targets['nodes'].eachWithIndex { host, i ->
-service "k8s-node", name: "andrea-node-${i+1}-test", target: host, advertise: host.hostAddress, api: targets.masters with {
-    plugin "flannel"
-    plugin "calico"
-    kubelet.with {
-        tls certs.tls
-        client certs.tls
+    service "k8s-node", name: "node-${i+1}" with {
+        plugin "canal"
+        plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
+            tls certs.etcd
+        }
+        nodes.labels[i].each { label << it }
+        nodes.taints[i].each { taint << it }
     }
-    nodes.labels[i].each { label << it }
-    nodes.taints[i].each { taint << it }
-}
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes],

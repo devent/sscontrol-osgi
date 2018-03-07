@@ -1,0 +1,1 @@
+apply -f /tmp/junit/junit/srv/kubernetes/manifests/addon-manager-de.yaml

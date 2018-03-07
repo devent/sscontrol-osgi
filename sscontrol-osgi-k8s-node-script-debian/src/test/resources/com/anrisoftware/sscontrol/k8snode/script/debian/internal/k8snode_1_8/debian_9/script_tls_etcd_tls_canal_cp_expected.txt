@@ -1,0 +1,7 @@
+/tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
+/var/lib/robobee/tmp/robobeeetcd_tls_ca /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_ca.pem
+/var/lib/robobee/tmp/robobeeetcd_tls_cert /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_cert.pem
+/var/lib/robobee/tmp/robobeeetcd_tls_key /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_key.pem
+/var/lib/robobee/tmp/20-robobee.conf /etc/systemd/system/kubelet.service.d/20-robobee.conf
+-i /etc/kubernetes/admin.conf /home/user/.kube/config

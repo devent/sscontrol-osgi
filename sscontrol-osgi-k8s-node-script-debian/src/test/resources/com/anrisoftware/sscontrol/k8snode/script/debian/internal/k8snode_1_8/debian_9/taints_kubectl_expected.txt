@@ -1,2 +1,0 @@
---kubeconfig=/tmp/junit/junit.tmp get nodes --no-headers -l robobeerun.com/node=andrea-cluster
---kubeconfig=/tmp/junit/junit.tmp taint --overwrite nodes robobeerun.com/dedicated=:NoSchedule
