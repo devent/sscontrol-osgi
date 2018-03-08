@@ -66,6 +66,7 @@ class K8sMasterDebian extends ScriptBase {
         upstream.postInstall()
         def joinCommand = upstream.joinCommand
         states << [kubeadmJoinCommand: joinCommand]
+        upstream.installNetwork()
     }
 
     @Override
