@@ -139,6 +139,25 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
         }
     }
 
+    /**
+     * Installs a pod network.
+     */
+    def installNetwork() {
+        log.debug 'Installs pod network for {}', service
+        K8sMaster service = service
+        if (service.plugins.containsKey("canal")) {
+            installCanalNetwork()
+        }
+    }
+
+    def installCanalNetwork() {
+        log.debug 'Installs canal as the pod network for {}', service
+        shell """
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+""" call()
+    }
+
     @Inject
     void setKubectlClusterLinuxFactory(KubectlClusterDebianFactory factory) {
         this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
