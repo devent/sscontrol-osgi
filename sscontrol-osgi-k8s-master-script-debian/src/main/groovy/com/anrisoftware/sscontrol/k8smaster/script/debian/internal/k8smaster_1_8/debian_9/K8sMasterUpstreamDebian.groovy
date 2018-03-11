@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
@@ -70,7 +69,6 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
 
     def setupClusterDefaults() {
         K8sMaster service = service
-        assertThat("cluster advertise address=null", service.cluster.advertiseAddress, not(isEmptyOrNullString()))
         super.setupClusterDefaults()
         if (!service.cluster.name) {
             service.cluster.name = 'master'
@@ -97,28 +95,10 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
         log.debug 'Setup cluster api defaults for {}', service
         K8sMaster service = service
         if (!service.cluster.port) {
-            if (service.tls.cert) {
-                service.cluster.port = scriptNumberProperties.default_api_port_secure
-            } else {
-                service.cluster.port = scriptNumberProperties.default_api_port_insecure
-            }
-            if (service.ca.cert) {
-                service.cluster.port = scriptNumberProperties.default_api_port_secure
-            } else {
-                service.cluster.port = scriptNumberProperties.default_api_port_insecure
-            }
+            service.cluster.port = scriptNumberProperties.default_api_port_secure
         }
         if (!service.cluster.protocol) {
-            if (service.tls.cert) {
-                service.cluster.protocol = scriptProperties.default_api_protocol_secure
-            } else {
-                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
-            }
-            if (service.ca.cert) {
-                service.cluster.protocol = scriptProperties.default_api_protocol_secure
-            } else {
-                service.cluster.protocol = scriptProperties.default_api_protocol_insecure
-            }
+            service.cluster.protocol = scriptProperties.default_api_protocol_secure
         }
     }
 

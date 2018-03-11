@@ -34,13 +34,42 @@ import groovy.util.logging.Slf4j
 class K8sMasterScriptTest extends AbstractMasterScriptTest {
 
     @Test
-    void "script_tls_etcd_canal"() {
+    void "script with interal etcd cluster, default network plugin, default certificates"() {
         def test = [
-            name: "script_tls_etcd_canal",
+            name: "script_basic",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
-service "k8s-master", name: "node-0", advertise: '192.168.0.100' with {
+service "k8s-master", name: "node-0"
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assertFileResource K8sMasterScriptTest, dir, "kubeadm.out", "${args.test.name}_kubeadm_expected.txt"
+                assertFileResource K8sMasterScriptTest, gen, "kubeadm.yaml", "${args.test.name}_kubeadm_yaml_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script with external etcd cluster, canal network plugin, custom CA certificates"() {
+        def test = [
+            name: "script_custom_ca_etcd_canal",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-master", name: "node-0" with {
     ca certs
     plugin "etcd", endpoint: "etcd"
     plugin "canal"

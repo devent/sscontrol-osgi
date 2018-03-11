@@ -33,6 +33,11 @@ public interface Cluster {
     String getName();
 
     /**
+     * Returns the target where kubectl can be called.
+     */
+    Object getTarget();
+
+    /**
      * Returns the pods network CIDR, the range of IP addresses for the pod
      * network.
      */

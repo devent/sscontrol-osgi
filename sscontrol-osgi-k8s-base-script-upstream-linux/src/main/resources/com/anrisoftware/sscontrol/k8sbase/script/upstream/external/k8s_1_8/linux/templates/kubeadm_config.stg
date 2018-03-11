@@ -4,9 +4,7 @@ kind: MasterConfiguration
 api:
   advertiseAddress: <parent.advertiseAddress>
   bindPort: <parent.service.cluster.port>
-etcd:
-  <etcdPlugin(parent, vars)>
-  <etcdTls(parent, vars)>
+<etcdPluginIf(parent, vars)>
 networking:
   dnsDomain: <parent.service.cluster.dnsDomain>
   serviceSubnet: <parent.service.cluster.serviceRange>
@@ -18,17 +16,28 @@ certificatesDir: <parent.certsDir>
 
 >>
 
+etcdPluginIf(parent, vars) ::= <%
+<if(parent.pluginsTargets.etcd)>
+<etcdPlugin(parent, vars)>
+<etcdTlsFilesIf(parent, vars)>
+<endif>
+%>
+
 etcdPlugin(parent, vars) ::= <<
-endpoints:
-<parent.pluginsTargets.etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
+etcd:
+  endpoints:
+  <parent.pluginsTargets.etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
 >>
 
-etcdTls(parent, vars) ::= <<
-<if(parent.etcdTls)><etcdTlsFiles(parent, vars)><endif>
->>
+etcdTlsFilesIf(parent, vars) ::= <%
+<if(parent.etcdTls.ca||parent.etcdTls.cert||parent.etcdTls.key)>
+<etcdTlsFiles(parent, vars)>
+<endif>
+%>
 
 etcdTlsFiles(parent, vars) ::= <<
-<if(parent.etcdTls.ca)>caFile: <parent.certsDir>/<parent.etcdTls.caName><endif>
-<if(parent.etcdTls.cert)>certFile: <parent.certsDir>/<parent.etcdTls.certName><endif>
-<if(parent.etcdTls.key)>keyFile: <parent.certsDir>/<parent.etcdTls.keyName><endif>
+
+  <if(parent.etcdTls.ca)>caFile: <parent.certsDir>/<parent.etcdTls.caName><endif>
+  <if(parent.etcdTls.cert)>certFile: <parent.certsDir>/<parent.etcdTls.certName><endif>
+  <if(parent.etcdTls.key)>keyFile: <parent.certsDir>/<parent.etcdTls.keyName><endif>
 >>

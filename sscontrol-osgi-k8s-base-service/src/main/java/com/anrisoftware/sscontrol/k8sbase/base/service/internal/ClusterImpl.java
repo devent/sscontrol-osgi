@@ -50,6 +50,8 @@ public class ClusterImpl implements Cluster {
 
     private String name;
 
+    private Object target;
+
     private String serviceRange;
 
     private Object advertiseAddress;
@@ -87,6 +89,16 @@ public class ClusterImpl implements Cluster {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setTarget(Object target) {
+        this.target = target;
+        log.targetSet(this, target);
+    }
+
+    @Override
+    public Object getTarget() {
+        return target;
     }
 
     public void setAdvertiseAddress(Object advertise) {
@@ -207,6 +219,10 @@ public class ClusterImpl implements Cluster {
         v = args.get("join");
         if (v != null) {
             setJoinCommand(v.toString());
+        }
+        v = args.get("target");
+        if (v != null) {
+            setTarget(v);
         }
     }
 

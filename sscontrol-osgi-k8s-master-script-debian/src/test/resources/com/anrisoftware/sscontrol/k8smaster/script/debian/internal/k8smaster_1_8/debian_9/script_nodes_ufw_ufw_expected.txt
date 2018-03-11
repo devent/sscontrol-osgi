@@ -7,6 +7,8 @@ allow from any to 192.168.0.100 port 10250 proto tcp
 allow from any to 192.168.0.100 port 30000:32767 proto tcp
 
 status
+allow from 127.0.0.1 to any port 6443 proto tcp
+allow from 127.0.0.1 to any port 6443 proto tcp
 allow from 127.0.0.1 to any port 10251 proto tcp
 allow from 127.0.0.1 to any port 10251 proto tcp
 allow from 127.0.0.1 to any port 10252 proto tcp
@@ -15,6 +17,8 @@ allow from 127.0.0.1 to any port 10255 proto tcp
 allow from 127.0.0.1 to any port 10255 proto tcp
 
 status
+allow from 127.0.0.1 to any port 6443 proto tcp
+allow from 127.0.0.1 to any port 6443 proto tcp
 allow from 127.0.0.1 to any port 10251 proto tcp
 allow from 127.0.0.1 to any port 10251 proto tcp
 allow from 127.0.0.1 to any port 10252 proto tcp

@@ -1,0 +1,5 @@
+/tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
+/var/lib/robobee/tmp/kubeadm.yaml /root/kubeadm.yaml
+/var/lib/robobee/tmp/20-robobee.conf /etc/systemd/system/kubelet.service.d/20-robobee.conf
+-i /etc/kubernetes/admin.conf /home/user/.kube/config

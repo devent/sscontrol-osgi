@@ -1,32 +1,34 @@
 kubectlKubeconfigCmd(parent, vars) ::= <<
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> <vars.args>
+<parent.kubectlCmd> <vars.args>
 >>
 
 getNodeRobobeeLabel(parent, vars) ::= <%
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
+<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
 %>
 
 getKubernetesHostnameLabel(parent, vars) ::= <%
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>|grep "<vars.node>"
+<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>
 %>
 
-/*
-* Waits until the node is available.
-*
-* parent.kubectlCmd: the kubectl command.
-* parent.robobeeLabelNode: the robobee node name label key.
-* vars.kubeconfigFile: the kubeconfig file path.
-* vars.node: the node name.
-*/
-waitClusterAvailableCmd(parent, vars) ::= <<
-echo "Waiting for node..."
+grepNodeFunctions(parent, vars) ::= <<
 function node_on_label() {
     <getNodeRobobeeLabel(parent, vars)>|grep "<vars.node>"
 }
 function node_on_hostname() {
     <getKubernetesHostnameLabel(parent, vars)>|grep "<vars.node>"
 }
+>>
 
+/*
+* Waits until the node is available.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.node: the node name.
+*/
+waitNodeAvailableCmd(parent, vars) ::= <<
+echo "Waiting for node..."
+<grepNodeFunctions(parent, vars)>
 until node_on_label || node_on_hostname
 do
     sleep 5
@@ -38,26 +40,23 @@ done
 *
 * parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
-* vars.kubeconfigFile: the kubeconfig file path.
 * vars.node: the node name.
 */
 waitNodeReadyCmd(parent, vars) ::= <<
 echo "Waiting for node..."
-function node_on_label() {
-    <getNodeRobobeeLabel(parent, vars)>|grep "Ready"
-}
-until node_on_label
+<grepNodeFunctions(parent, vars)>
+until node_on_label || node_on_hostname
 do
     sleep 5
 done
 >>
 
 retrieveNodeNameRobobeeLabel(parent, vars) ::= <%
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
+<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
 %>
 
 retrieveNodeNameKubernetesHostname(parent, vars) ::= <%
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
+<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
 %>
 
 /*
@@ -65,13 +64,12 @@ retrieveNodeNameKubernetesHostname(parent, vars) ::= <%
 *
 * parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
-* vars.kubeconfigFile: the kubeconfig file path.
 * vars.node: the node name.
 * vars.tain: the taint.
 */
 applyTaintCmd(parent, vars) ::= <<
 node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> taint --overwrite nodes $node <vars.taint>
+<parent.kubectlCmd> taint --overwrite nodes $node <vars.taint>
 >>
 
 /*
@@ -79,7 +77,6 @@ node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 *
 * parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
-* vars.kubeconfigFile: the kubeconfig file path.
 * vars.node: the node name.
 * vars.label: the label.
 */
@@ -88,7 +85,7 @@ node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 if [[ -z "$node" ]]; then
     node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
 fi
-<parent.kubectlCmd> --kubeconfig=<vars.kubeconfigFile> label --overwrite nodes $node <vars.label>
+<parent.kubectlCmd> label --overwrite nodes $node <vars.label>
 >>
 
 setupKubectl(parent, vars) ::= <<
