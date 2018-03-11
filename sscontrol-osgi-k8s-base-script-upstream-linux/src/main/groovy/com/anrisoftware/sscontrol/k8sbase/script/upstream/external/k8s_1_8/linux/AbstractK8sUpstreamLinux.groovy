@@ -30,7 +30,6 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
 
@@ -122,6 +121,9 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
+        if (!service.cluster.target) {
+            service.cluster.target = target
+        }
         if (!service.cluster.serviceRange) {
             service.cluster.serviceRange = scriptProperties.default_service_network
         }
@@ -255,6 +257,32 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
 """ call()
     }
 
+    /**
+     * Wait until the node is in Ready state.
+     */
+    def waitNodeReady() {
+        K8s service = service
+        log.info 'Wait until the node is in Ready state: {}', service.cluster.name
+        def vars = [:]
+        vars.parent = this
+        vars.target = service.cluster.target
+        vars.timeout = timeoutMiddle
+        kubectlCluster.waitNodeReady vars, service.cluster.name
+    }
+
+    /**
+     * Wait until the node is available.
+     */
+    def waitNodeAvailable() {
+        K8s service = service
+        log.info 'Wait until the node is available: {}', service.cluster.name
+        def vars = [:]
+        vars.parent = this
+        vars.target = service.cluster.target
+        vars.timeout = timeoutMiddle
+        kubectlCluster.waitNodeAvailable vars, service.cluster.name
+    }
+
     def getIgnoreChecksErrors() {
         List ignoreCheckErrors = []
         if (!failSwapOn) {
@@ -298,18 +326,12 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
             log.debug 'No taints to apply, nothing to do.'
             return
         }
-        if (!service.clusterHost) {
-            log.debug 'No cluster host, nothing to do.'
-            return
-        }
         log.info 'Apply taints for {}.', service
         def node = service.cluster.name
         def nodeClient = kubectlCluster
         def vars = [:]
         vars.parent = this
-        vars.cluster = service.clusterHost
-        vars.kubeconfigFile = getKubeconfigFile(service.clusterHost)
-        nodeClient.waitNodeAvailable vars << [timeout: timeoutMiddle], node
+        vars.target = service.cluster.target
         service.taints.each { String key, Taint taint ->
             log.info 'Apply taint {} for {}.', taint, service
             kubectlCluster.applyTaintNode vars, node, taint
@@ -322,18 +344,12 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
             log.debug 'No labels to apply, nothing to do.'
             return
         }
-        if (!service.clusterHost) {
-            log.debug 'No cluster host, nothing to do.'
-            return
-        }
         log.info 'Apply labels for {}.', service
         def node = service.cluster.name
         def nodeClient = kubectlCluster
         def vars = [:]
         vars.parent = this
-        vars.cluster = service.clusterHost
-        vars.kubeconfigFile = getKubeconfigFile(service.clusterHost)
-        nodeClient.waitNodeAvailable vars << [timeout: timeoutMiddle], node
+        vars.target = service.cluster.target
         service.labels.each { String key, Label label ->
             log.info 'Apply label {} for {}.', label, service
             kubectlCluster.applyLabelNode vars, node, label
@@ -397,45 +413,6 @@ kubeadm token create \$token --print-join-command
      * Returns the run kubectl for the cluster.
      */
     abstract AbstractKubectlLinux getKubectlCluster()
-
-    File getKubeconfigFile(ClusterHost cluster) {
-        setupHostCredentials cluster
-        Credentials c = cluster.credentials
-        new File("/home/robobee/.kube/config")
-    }
-
-    /**
-     * Setups the credentials.
-     */
-    def setupHostCredentials(ClusterHost host) {
-        Credentials c = host.credentials
-        if (!host.proto) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.proto = scriptProperties.default_server_proto_secured
-            } else {
-                host.proto = scriptProperties.default_server_proto_unsecured
-            }
-        }
-        if (!host.port) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.port = scriptNumberProperties.default_server_port_secured
-            } else {
-                host.port = scriptNumberProperties.default_server_port_unsecured
-            }
-        }
-        if (c.hasProperty('tls')) {
-            Tls tls = c.tls
-            if (tls.cert) {
-                tls.certName = scriptProperties.default_credentials_tls_cert_name
-            }
-            if (tls.key) {
-                tls.keyName = scriptProperties.default_credentials_tls_key_name
-            }
-            if (tls.ca) {
-                tls.caName = scriptProperties.default_credentials_tls_ca_name
-            }
-        }
-    }
 
     def getDefaultContainerRuntime() {
         getScriptProperty 'default_container_runtime'

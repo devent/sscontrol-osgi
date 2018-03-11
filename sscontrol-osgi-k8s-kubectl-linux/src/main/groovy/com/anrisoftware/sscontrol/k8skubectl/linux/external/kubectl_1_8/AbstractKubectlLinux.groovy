@@ -141,22 +141,38 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      *
      * @param vars
      * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
-     * <li>node: the node name.
+     * <li>target: the kubectl target host.
      * </ul>
      * @param node the node name.
      */
     def waitNodeAvailable(Map vars, String node) {
         log.info 'Wait for node to be available: {}', node
-        ClusterHost cluster = vars.cluster
-        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
+        assertThat "vars.target!=null", vars.target, notNullValue()
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.resource = kubectlTemplate
-        v.name = 'waitClusterAvailableCmd'
+        v.name = 'waitNodeAvailableCmd'
+        shell v call()
+    }
+
+    /**
+     * Waits for the node to be ready.
+     *
+     * @param vars
+     * <ul>
+     * <li>target: the kubectl target host.
+     * </ul>
+     * @param node the node name.
+     */
+    def waitNodeReady(Map vars, String node) {
+        log.info 'Wait for node to become ready: {}', node
+        assertThat "vars.target!=null", vars.target, notNullValue()
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.node = node
+        v.resource = kubectlTemplate
+        v.name = 'waitNodeReadyCmd'
         shell v call()
     }
 
@@ -165,17 +181,12 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      *
      * @param vars
      * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
-     * <li>node: the node name.
-     * <li>taint: the Taint.
+     * <li>target: the kubectl target host.
      * </ul>
      */
     def applyTaintNode(Map vars, String node, def taint) {
         log.info 'Apply taint {} for node {} with {}', taint, node, vars
-        ClusterHost cluster = vars.cluster
-        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
+        assertThat "vars.target!=null", vars.target, notNullValue()
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
@@ -190,17 +201,12 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      *
      * @param vars
      * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
-     * <li>node: the node name.
-     * <li>label: the Label.
+     * <li>target: the kubectl target host.
      * </ul>
      */
     def applyLabelNode(Map vars, String node, def label) {
         log.info 'Apply label {} for node {} with {}', label, node, vars
-        ClusterHost cluster = vars.cluster
-        assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
+        assertThat "vars.target!=null", vars.target, notNullValue()
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node

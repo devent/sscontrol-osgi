@@ -63,10 +63,12 @@ class K8sMasterDebian extends ScriptBase {
         upstream.createService()
         upstream.installKube()
         upstream.setupKubectl()
+        upstream.waitNodeAvailable()
         upstream.postInstall()
         def joinCommand = upstream.joinCommand
         states << [kubeadmJoinCommand: joinCommand]
         upstream.installNetwork()
+        upstream.waitNodeReady()
     }
 
     @Override

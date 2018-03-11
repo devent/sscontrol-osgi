@@ -1,0 +1,3 @@
+token list
+token generate
+token create --print-join-command

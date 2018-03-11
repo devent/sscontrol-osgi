@@ -2,7 +2,7 @@ apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
   advertiseAddress: 192.168.0.100
-  bindPort: 443
+  bindPort: 6443
 etcd:
   endpoints:
   - https://etcd-0:2379

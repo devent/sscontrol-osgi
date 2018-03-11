@@ -76,7 +76,7 @@ targets['nodes'].eachWithIndex { host, i ->
         ]
     ]
 
-    static final String joinCommand = 'kubeadm join --token 57f337.a8c66cf53ae4b8cd 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
+    static final String joinCommand = 'kubeadm join --token 11f7ba.a1f1b40bc527296a 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
 
     static final Map sockets = [
         masters: [

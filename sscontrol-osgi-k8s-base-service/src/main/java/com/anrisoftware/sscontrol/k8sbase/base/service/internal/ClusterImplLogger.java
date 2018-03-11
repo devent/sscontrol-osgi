@@ -44,7 +44,9 @@ final class ClusterImplLogger extends AbstractLogger {
 
         serviceRangeSet("Service range {} set for {}"),
 
-        podRangeSet("Pod range {} set for {}");
+        podRangeSet("Pod range {} set for {}"),
+
+        targetSet("Target {} set for {}");
 
         private String name;
 
@@ -83,5 +85,9 @@ final class ClusterImplLogger extends AbstractLogger {
 
     void podRangeSet(ClusterImpl cluster, String range) {
         debug(podRangeSet, range, cluster);
+    }
+
+    void targetSet(ClusterImpl cluster, Object target) {
+        debug(m.targetSet, target, cluster);
     }
 }
