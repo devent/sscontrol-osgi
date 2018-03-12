@@ -47,9 +47,6 @@ service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[0]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[1]
 }
-service "k8s-cluster", target: 'masters' with {
-    context name: 'kubernetes-admin@kubernetes'
-}
 targets['nodes'].eachWithIndex { host, i ->
     service "k8s-node", target: host, name: "node-${i+1}", join: joinCommand with {
         nodes.labels[i].each { label << it }
@@ -58,7 +55,7 @@ targets['nodes'].eachWithIndex { host, i ->
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
-            expectedServicesSize: 3,
+            expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
@@ -76,7 +73,13 @@ targets['nodes'].eachWithIndex { host, i ->
         ]
     ]
 
-    static final String joinCommand = 'kubeadm join --token 11f7ba.a1f1b40bc527296a 192.168.56.200:443 --discovery-token-ca-cert-hash sha256:7501bc596d3dce2f88ece232d3454876293bea94884bb19f90f2ebc6824e845f'
+    /**
+     * <pre>
+     * token=$(kubeadm token generate)
+     * kubeadm token create $token --print-join-command --ttl=0
+     * <pre>
+     */
+    static final String joinCommand = 'kubeadm join --token 3d5c4c.f6ca746816840ce2 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:37cccdbca6bb83b21c3b238036e1594c1419f17c736b891a4401f6371d9cb566'
 
     static final Map sockets = [
         masters: [
