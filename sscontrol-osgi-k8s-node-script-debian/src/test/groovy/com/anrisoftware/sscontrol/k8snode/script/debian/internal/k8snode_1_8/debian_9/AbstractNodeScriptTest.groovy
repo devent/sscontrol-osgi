@@ -37,6 +37,7 @@ abstract class AbstractNodeScriptTest extends AbstractNodeRunnerTest {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createCommand whichufwnotfoundCommand, dir, 'which'
+        new File(dir, "/etc/apt/sources.list.d").mkdirs()
         createEchoCommands dir, [
             'id',
             'mkdir',

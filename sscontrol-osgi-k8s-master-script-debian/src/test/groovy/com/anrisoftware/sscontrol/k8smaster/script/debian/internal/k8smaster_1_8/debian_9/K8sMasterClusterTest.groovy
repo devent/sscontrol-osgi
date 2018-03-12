@@ -49,9 +49,9 @@ import groovy.util.logging.Slf4j
 class K8sMasterClusterTest extends AbstractMasterRunnerTest {
 
     @Test
-    void "cluster_tls_etcd_tls_canal"() {
+    void "cluster external etcd, canal"() {
         def test = [
-            name: "cluster_tls",
+            name: "cluster_external_etcd_canal",
             script: '''
 service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "ssh", group: "masters" with {
@@ -64,11 +64,10 @@ service "ssh", group: "nodes" with {
 service "k8s-cluster", target: 'masters' with {
     context name: 'kubernetes-admin@kubernetes'
 }
-service "k8s-master", name: "node-0", advertise: targets.masters[0] with {
+service "k8s-master", name: "node-0" with {
     bind secure: "192.168.56.200"
     nodes << "masters"
     nodes << "nodes"
-    ca certs.ca
     plugin "canal"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd

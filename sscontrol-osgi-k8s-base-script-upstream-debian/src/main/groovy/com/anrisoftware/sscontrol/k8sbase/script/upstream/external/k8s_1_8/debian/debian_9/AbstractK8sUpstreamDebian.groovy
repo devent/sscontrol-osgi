@@ -15,7 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.debian.debian_9
 
+import javax.inject.Inject
+
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sUpstreamLinux
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -27,6 +31,13 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 abstract class AbstractK8sUpstreamDebian extends AbstractK8sUpstreamLinux {
+
+    DebianUtils debian
+
+    @Inject
+    void setDebian(Debian_9_UtilsFactory factory) {
+        this.debian = factory.create this
+    }
 
     /**
      * Restarts kubelet after the configuration was deployed.
@@ -43,12 +54,11 @@ systemctl status kubelet
         shell privileged: true, timeout: timeoutLong, """
 apt-get update && apt-get install -y apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+cat <<EOF >${aptKubernetesListFile}
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
-apt-get update
-apt-get install -y ${kubeadmPackages.join(" ")}
 """ call()
+        debian.installPackages packages: kubeadmPackages, update: true
     }
 
     @Override
