@@ -150,6 +150,7 @@ abstract class DebianUtils {
         a.vars.update = a.vars.update != null ? a.vars.update : false
         a.resource = commandsTemplate
         a.name = 'installPackage'
+        a.parent = this
         packages.eachWithIndex { it, i ->
             Map b = new HashMap(a)
             if (it instanceof Map) {
@@ -415,5 +416,19 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      */
     File getModulesFile() {
         script.getScriptFileProperty "modules_file", script.base, defaultProperties
+    }
+
+    /**
+     * Returns the apt lock files. The lock files indicate that a different
+     * apt or dpkg process is running.
+     *
+     * <ul>
+     * <li>profile property {@code apt_lock_files}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getAptLockFiles() {
+        script.getScriptListProperty "apt_lock_files", defaultProperties
     }
 }

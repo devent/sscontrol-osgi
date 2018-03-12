@@ -37,6 +37,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createCommand whichufwnotfoundCommand, dir, 'which'
+        new File(dir, "/etc/apt/sources.list.d").mkdirs()
         createIdCommand dir
         createEchoCommands dir, [
             'mkdir',

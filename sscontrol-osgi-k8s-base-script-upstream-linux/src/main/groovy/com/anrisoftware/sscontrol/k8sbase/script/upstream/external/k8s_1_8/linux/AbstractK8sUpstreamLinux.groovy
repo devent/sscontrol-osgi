@@ -577,8 +577,17 @@ kubeadm token create \$token --print-join-command
      * </ul>
      */
     List getKubeadmPackages() {
-        getScriptListProperty "kubeadm_packages"
+        getScriptListProperty "kubeadm_packages", ","
     }
+
+    /**
+     * Returns the file path of the apt repository list file for kubernetes.
+     * That is normally the {@code /etc/apt/sources.list.d/kubernetes.list} file.
+     */
+    File getAptKubernetesListFile() {
+        getFileProperty 'apt_kubernetes_list_file'
+    }
+
     @Override
     def getLog() {
         log

@@ -49,6 +49,8 @@ function check_package() {
     ! (( \$i_check || \$v_check ))
 }
 
+<parent.aptLockFiles:{f|while lsof <f>; do sleep 5; done};separator="\n">
+
 <if(vars.update)>
 apt-get update
 <endif>

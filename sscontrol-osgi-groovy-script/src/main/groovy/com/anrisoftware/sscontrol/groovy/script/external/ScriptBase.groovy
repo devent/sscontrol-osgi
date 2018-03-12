@@ -1012,6 +1012,14 @@ echo \$file
     }
 
     /**
+     * Returns a list script property.
+     */
+    List getScriptListProperty(String key, String separatorChars,
+            ContextProperties defaults=defaultProperties) {
+        properties.getListProperty key, separatorChars, defaults
+    }
+
+    /**
      * Returns a number script property.
      */
     Number getScriptNumberProperty(String name,
