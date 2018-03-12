@@ -150,7 +150,7 @@ abstract class DebianUtils {
         a.vars.update = a.vars.update != null ? a.vars.update : false
         a.resource = commandsTemplate
         a.name = 'installPackage'
-        packages.each {
+        packages.eachWithIndex { it, i ->
             Map b = new HashMap(a)
             if (it instanceof Map) {
                 b.vars.package = it.name
@@ -158,6 +158,9 @@ abstract class DebianUtils {
                 b.vars.versionInstalled = getGrepPackageVersionInstalled(it.version)
             } else {
                 b.vars.package = it
+            }
+            if (i > 0) {
+                b.vars.update = false
             }
             script.shell b call()
         }
