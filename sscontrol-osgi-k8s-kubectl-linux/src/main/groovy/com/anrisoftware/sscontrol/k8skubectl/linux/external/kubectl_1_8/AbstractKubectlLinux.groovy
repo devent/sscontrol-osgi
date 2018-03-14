@@ -71,27 +71,6 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         }
     }
 
-    def runKubectl(Map vars) {
-        log.info 'Run kubectl with {}', vars
-        ClusterService service = vars.service
-        ClusterHost host = vars.cluster
-        assertThat "chdir!=null", vars.chdir, notNullValue()
-        assertThat "service!=null", service, notNullValue()
-        assertThat "host!=null", host, notNullValue()
-        Credentials c = host.credentials
-        Map v = new HashMap(vars)
-        v.service = service
-        v.cluster = host
-        v.credentials = c
-        v.tls = c.hasProperty('tls') ? c.tls : null
-        v.certsDir = getClusterCertsDir(host.clusterName)
-        def args = new HashMap(vars)
-        args.resource = kubectlTemplate
-        args.name = 'kubectlCmd'
-        args.vars = v
-        shell args call()
-    }
-
     /**
      * Creates and uploads kubeconfig for the cluster.
      *
@@ -136,6 +115,18 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         shell v call()
     }
 
+    def runKubectl(Map vars) {
+        log.info 'Run kubectl with {}', vars
+        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
+        assertThat "vars.hosts>0", vars.hosts, not(empty())
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.service = service
+        v.resource = kubectlTemplate
+        v.name = 'kubectlCmd'
+        runShellOnTargets v
+    }
+
     /**
      * Waits for the node to be available.
      *
@@ -147,13 +138,14 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      */
     def waitNodeAvailable(Map vars, String node) {
         log.info 'Wait for node to be available: {}', node
-        assertThat "vars.target!=null", vars.target, notNullValue()
+        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
+        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeAvailableCmd'
-        shell v call()
+        runShellOnTargets v
     }
 
     /**
@@ -167,13 +159,14 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      */
     def waitNodeReady(Map vars, String node) {
         log.info 'Wait for node to become ready: {}', node
-        assertThat "vars.target!=null", vars.target, notNullValue()
+        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
+        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeReadyCmd'
-        shell v call()
+        runShellOnTargets v
     }
 
     /**
@@ -186,14 +179,15 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      */
     def applyTaintNode(Map vars, String node, def taint) {
         log.info 'Apply taint {} for node {} with {}', taint, node, vars
-        assertThat "vars.target!=null", vars.target, notNullValue()
+        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
+        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.vars.taint = "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
         v.resource = kubectlTemplate
         v.name = 'applyTaintCmd'
-        shell v call()
+        runShellOnTargets v
     }
 
     /**
@@ -201,19 +195,28 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      *
      * @param vars
      * <ul>
-     * <li>target: the kubectl target host.
+     * <li>targets: the kubectl target hosts.
      * </ul>
      */
     def applyLabelNode(Map vars, String node, def label) {
         log.info 'Apply label {} for node {} with {}', label, node, vars
-        assertThat "vars.target!=null", vars.target, notNullValue()
+        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
+        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.vars.label = "${label.key}=${label.value?label.value:''}"
         v.resource = kubectlTemplate
         v.name = 'applyLabelCmd'
-        shell v call()
+        runShellOnTargets v
+    }
+
+    def runShellOnTargets(Map vars) {
+        Map v = new HashMap(vars)
+        vars.hosts.each {
+            v.target = it
+            shell v call()
+        }
     }
 
     /**

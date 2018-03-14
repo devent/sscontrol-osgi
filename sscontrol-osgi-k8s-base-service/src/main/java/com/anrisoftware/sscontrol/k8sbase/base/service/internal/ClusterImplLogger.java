@@ -46,7 +46,9 @@ final class ClusterImplLogger extends AbstractLogger {
 
         podRangeSet("Pod range {} set for {}"),
 
-        targetSet("Target {} set for {}");
+        hostsSet("Kubectl hosts {} set for {}"),
+
+        hostAdded("Kubectl host {} added for {}");
 
         private String name;
 
@@ -87,7 +89,11 @@ final class ClusterImplLogger extends AbstractLogger {
         debug(podRangeSet, range, cluster);
     }
 
-    void targetSet(ClusterImpl cluster, Object target) {
-        debug(m.targetSet, target, cluster);
+    void hostsSet(ClusterImpl cluster, Object target) {
+        debug(m.hostsSet, target, cluster);
+    }
+
+    void hostAdded(ClusterImpl cluster, Object target) {
+        debug(m.hostAdded, target, cluster);
     }
 }

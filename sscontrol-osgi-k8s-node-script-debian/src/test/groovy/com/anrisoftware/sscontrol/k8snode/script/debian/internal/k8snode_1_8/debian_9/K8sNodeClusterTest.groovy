@@ -48,7 +48,8 @@ service "ssh", group: "nodes" with {
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[1]
 }
 targets['nodes'].eachWithIndex { host, i ->
-    service "k8s-node", target: host, name: "node-${i+1}", join: joinCommand with {
+    service "k8s-node", target: host, name: "node-${i+1}" with {
+        cluster host: "masters", join: joinCommand
         nodes.labels[i].each { label << it }
         nodes.taints[i].each { taint << it }
     }

@@ -46,19 +46,21 @@ public class ClusterImpl implements Cluster {
 
         Cluster create(@Assisted Map<String, Object> args);
 
+        Cluster create(Cluster cluster, Map<String, Object> a);
+
     }
 
     private String name;
 
-    private Object target;
+    private List<Object> hosts;
+
+    private final List<Object> apiServers;
 
     private String serviceRange;
 
     private Object advertiseAddress;
 
     private String dnsDomain;
-
-    private final List<Object> apiServers;
 
     private String podRange;
 
@@ -77,8 +79,27 @@ public class ClusterImpl implements Cluster {
 
     @AssistedInject
     ClusterImpl(ClusterImplLogger log, @Assisted Map<String, Object> args) {
+        this(log, null, args);
+    }
+
+    @AssistedInject
+    ClusterImpl(ClusterImplLogger log, @Assisted Cluster cluster,
+            @Assisted Map<String, Object> args) {
         this.log = log;
-        this.apiServers = new ArrayList<>();
+        if (cluster != null) {
+            this.name = cluster.getName();
+            this.hosts = new ArrayList<>(cluster.getHosts());
+            this.apiServers = new ArrayList<>(cluster.getApiServers());
+            this.serviceRange = cluster.getServiceRange();
+            this.dnsDomain = cluster.getDnsDomain();
+            this.podRange = cluster.getPodRange();
+            this.protocol = cluster.getProtocol();
+            this.port = cluster.getPort();
+            this.joinCommand = cluster.getJoinCommand();
+        } else {
+            this.hosts = new ArrayList<>();
+            this.apiServers = new ArrayList<>();
+        }
         parseArgs(args);
     }
 
@@ -91,14 +112,19 @@ public class ClusterImpl implements Cluster {
         return name;
     }
 
-    public void setTarget(Object target) {
-        this.target = target;
-        log.targetSet(this, target);
+    public void setHosts(List<Object> hosts) {
+        this.hosts = hosts;
+        log.hostsSet(this, hosts);
+    }
+
+    public void addHost(Object host) {
+        this.hosts.add(host);
+        log.hostAdded(this, host);
     }
 
     @Override
-    public Object getTarget() {
-        return target;
+    public List<Object> getHosts() {
+        return hosts;
     }
 
     public void setAdvertiseAddress(Object advertise) {
@@ -220,9 +246,9 @@ public class ClusterImpl implements Cluster {
         if (v != null) {
             setJoinCommand(v.toString());
         }
-        v = args.get("target");
+        v = args.get("host");
         if (v != null) {
-            setTarget(v);
+            addHost(v);
         }
     }
 

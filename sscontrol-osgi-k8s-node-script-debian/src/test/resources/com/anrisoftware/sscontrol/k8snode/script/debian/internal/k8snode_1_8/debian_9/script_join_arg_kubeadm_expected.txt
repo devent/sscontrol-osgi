@@ -1,1 +1,1 @@
-token list
+join abc --ignore-preflight-errors Swap

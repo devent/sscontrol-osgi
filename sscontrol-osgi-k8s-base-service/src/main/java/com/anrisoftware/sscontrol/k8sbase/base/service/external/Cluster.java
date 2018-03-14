@@ -33,9 +33,9 @@ public interface Cluster {
     String getName();
 
     /**
-     * Returns the target where kubectl can be called.
+     * Returns the target hosts from where kubectl can be called.
      */
-    Object getTarget();
+    List<Object> getHosts();
 
     /**
      * Returns the pods network CIDR, the range of IP addresses for the pod

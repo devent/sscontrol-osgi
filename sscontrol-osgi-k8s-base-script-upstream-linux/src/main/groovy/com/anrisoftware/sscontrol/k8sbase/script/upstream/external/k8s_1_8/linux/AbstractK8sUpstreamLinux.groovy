@@ -121,9 +121,7 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
-        if (!service.cluster.target) {
-            service.cluster.target = target
-        }
+        setupClusterTarget()
         if (!service.cluster.serviceRange) {
             service.cluster.serviceRange = scriptProperties.default_service_network
         }
@@ -139,6 +137,23 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (!service.cluster.advertiseAddress) {
             service.cluster.advertiseAddress = target.hostAddress
         }
+    }
+
+    def setupClusterTarget() {
+        K8s service = service
+        def target = this.target
+        if (service.cluster.hosts.empty) {
+            service.cluster.hosts << target
+        }
+        def hosts = service.cluster.hosts.inject([]) { list, t ->
+            if (t instanceof SshHost) {
+                list << t
+            } else {
+                list.addAll scriptsRepository.targets.getHosts(t.toString())
+            }
+            list
+        }
+        service.cluster.hosts = hosts
     }
 
     def setupKubeletDefaults() {
@@ -243,7 +258,7 @@ fi
         def joinCommand = service.cluster.joinCommand
         assert StringUtils.isNotBlank(joinCommand) : "No join command for node ${target}"
         shell privileged: true, timeout: timeoutLong, """
-if ! kubeadm token list; then
+if ! ls /etc/kubernetes/kubelet.conf&>/dev/null; then
 ${joinCommand} ${ignoreChecksErrors}
 fi
 """ call()
@@ -265,7 +280,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         log.info 'Wait until the node is in Ready state: {}', service.cluster.name
         def vars = [:]
         vars.parent = this
-        vars.target = service.cluster.target
+        vars.hosts = service.cluster.hosts
         vars.timeout = timeoutMiddle
         kubectlCluster.waitNodeReady vars, service.cluster.name
     }
@@ -278,7 +293,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         log.info 'Wait until the node is available: {}', service.cluster.name
         def vars = [:]
         vars.parent = this
-        vars.target = service.cluster.target
+        vars.hosts = service.cluster.hosts
         vars.timeout = timeoutMiddle
         kubectlCluster.waitNodeAvailable vars, service.cluster.name
     }
@@ -331,7 +346,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         def nodeClient = kubectlCluster
         def vars = [:]
         vars.parent = this
-        vars.target = service.cluster.target
+        vars.hosts = service.cluster.hosts
         service.taints.each { String key, Taint taint ->
             log.info 'Apply taint {} for {}.', taint, service
             kubectlCluster.applyTaintNode vars, node, taint
@@ -349,7 +364,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         def nodeClient = kubectlCluster
         def vars = [:]
         vars.parent = this
-        vars.target = service.cluster.target
+        vars.hosts = service.cluster.hosts
         service.labels.each { String key, Label label ->
             log.info 'Apply label {} for {}.', label, service
             kubectlCluster.applyLabelNode vars, node, label
