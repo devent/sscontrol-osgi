@@ -22,7 +22,6 @@ function node_on_hostname() {
 /*
 * Waits until the node is available.
 *
-* parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
 */
@@ -38,7 +37,6 @@ done
 /*
 * Waits until the node is ready.
 *
-* parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
 */
@@ -52,40 +50,43 @@ done
 >>
 
 retrieveNodeNameRobobeeLabel(parent, vars) ::= <%
-<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
+kubectl get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
 %>
 
 retrieveNodeNameKubernetesHostname(parent, vars) ::= <%
-<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
+kubectl get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
 %>
 
 /*
 * Applies the taint on the node.
 *
-* parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
 * vars.tain: the taint.
 */
 applyTaintCmd(parent, vars) ::= <<
+<waitNodeAvailableCmd(parent, vars)>
 node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
-<parent.kubectlCmd> taint --overwrite nodes $node <vars.taint>
+if [[ -z "$node" ]]; then
+    node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
+fi
+kubectl taint --overwrite nodes $node <vars.taint>
 >>
 
 /*
 * Applies the label on the node.
 *
-* parent.kubectlCmd: the kubectl command.
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
 * vars.label: the label.
 */
 applyLabelCmd(parent, vars) ::= <<
+<waitNodeAvailableCmd(parent, vars)>
 node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 if [[ -z "$node" ]]; then
     node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
 fi
-<parent.kubectlCmd> label --overwrite nodes $node <vars.label>
+kubectl label --overwrite nodes $node <vars.label>
 >>
 
 setupKubectl(parent, vars) ::= <<

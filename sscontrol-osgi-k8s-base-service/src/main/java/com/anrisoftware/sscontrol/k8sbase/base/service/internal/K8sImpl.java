@@ -216,7 +216,11 @@ public class K8sImpl implements K8s {
     @Override
     public void cluster(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<>(args);
-        this.cluster = clusterFactory.create(a);
+        if (this.cluster != null) {
+            this.cluster = clusterFactory.create(this.cluster, a);
+        } else {
+            this.cluster = clusterFactory.create(a);
+        }
         log.clusterSet(this, cluster);
     }
 
@@ -447,7 +451,9 @@ public class K8sImpl implements K8s {
         Object advertise = args.get("advertise");
         Object api = args.get("api");
         Object join = args.get("join");
-        if (name != null || advertise != null || api != null || join != null) {
+        Object host = args.get("host");
+        if (name != null || advertise != null || api != null || join != null
+                || host != null) {
             this.cluster = clusterFactory.create(args);
         }
     }

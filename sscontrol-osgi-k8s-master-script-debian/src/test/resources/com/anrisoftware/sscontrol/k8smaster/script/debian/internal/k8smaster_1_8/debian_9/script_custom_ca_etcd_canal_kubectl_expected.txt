@@ -1,1 +1,2 @@
-apply -f /tmp/junit/junit/srv/kubernetes/manifests/addon-manager-de.yaml
+get nodes --no-headers -l robobeerun.com/node=node-0
+label --overwrite nodes robobeerun.com/node=node-0
