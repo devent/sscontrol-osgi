@@ -15,9 +15,11 @@
  */
 package com.anrisoftware.sscontrol.docker.service.internal;
 
+import com.anrisoftware.sscontrol.docker.service.external.LoggingDriver;
 import com.anrisoftware.sscontrol.docker.service.external.Mirror;
 import com.anrisoftware.sscontrol.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.docker.service.internal.DockerImpl.DockerImplFactory;
+import com.anrisoftware.sscontrol.docker.service.internal.LoggingDriverImpl.LoggingDriverImplFactory;
 import com.anrisoftware.sscontrol.docker.service.internal.MirrorImpl.MirrorImplFactory;
 import com.anrisoftware.sscontrol.docker.service.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
@@ -43,5 +45,8 @@ public class DockerModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Mirror.class, MirrorImpl.class)
                 .build(MirrorImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(LoggingDriver.class, LoggingDriverImpl.class)
+                .build(LoggingDriverImplFactory.class));
     }
 }

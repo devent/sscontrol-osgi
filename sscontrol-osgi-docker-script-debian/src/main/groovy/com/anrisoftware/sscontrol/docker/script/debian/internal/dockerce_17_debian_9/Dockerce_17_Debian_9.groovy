@@ -59,6 +59,7 @@ class Dockerce_17_Debian_9 extends Dockerce_Systemd_Debian {
         setupDefaults()
         dockerSystemd.stopServices()
         dockerSystemd.setupDefaults()
+        dockerSystemd.setupDefaultLogDriver()
         dockerSystemd.createDirectories()
         dockerSystemd.createDockerdConfig()
         dockerSystemd.createRegistryMirrorConfig()

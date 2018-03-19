@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.docker.service.external.LoggingDriver;
 import com.anrisoftware.sscontrol.docker.service.external.Registry;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
@@ -42,7 +43,9 @@ final class DockerImplLogger extends AbstractLogger {
 
         registrySet("Registry {} set for {}"),
 
-        targetsAdded("Targets {} added to {}");
+        targetsAdded("Targets {} added to {}"),
+
+        loggingDriverSet("Logging driver {} set for {}");
 
         private String name;
 
@@ -73,5 +76,9 @@ final class DockerImplLogger extends AbstractLogger {
 
     void targetsAdded(DockerImpl docker, List<TargetHost> list) {
         debug(targetsAdded, list, docker);
+    }
+
+    void loggingDriverSet(DockerImpl docker, LoggingDriver driver) {
+        debug(m.loggingDriverSet, driver, docker);
     }
 }
