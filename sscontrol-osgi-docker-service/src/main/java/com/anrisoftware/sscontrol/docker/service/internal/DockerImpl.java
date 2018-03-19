@@ -16,9 +16,11 @@
 package com.anrisoftware.sscontrol.docker.service.internal;
 
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
+import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,13 +28,17 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.docker.service.external.Docker;
 import com.anrisoftware.sscontrol.docker.service.external.DockerService;
+import com.anrisoftware.sscontrol.docker.service.external.LoggingDriver;
 import com.anrisoftware.sscontrol.docker.service.external.Registry;
+import com.anrisoftware.sscontrol.docker.service.internal.LoggingDriverImpl.LoggingDriverImplFactory;
 import com.anrisoftware.sscontrol.docker.service.internal.RegistryImpl.RegistryImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 
@@ -66,10 +72,17 @@ public class DockerImpl implements Docker {
 
     private Registry registry;
 
+    private DebugLogging debug;
+
+    private LoggingDriver loggingDriver;
+
+    private final LoggingDriverImplFactory loggingDriverFactory;
+
     @Inject
     DockerImpl(DockerImplLogger log,
             HostServicePropertiesService propertiesService,
             RegistryImplFactory registryFactory,
+            LoggingDriverImplFactory loggingDriverFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
@@ -77,7 +90,45 @@ public class DockerImpl implements Docker {
         this.cgroups = new ArrayList<>();
         this.registryFactory = registryFactory;
         this.registry = registryFactory.create();
+        this.loggingDriver = loggingDriverFactory.create();
+        this.loggingDriverFactory = loggingDriverFactory;
         parseArgs(args);
+    }
+
+    @Inject
+    public void setDebugService(DebugService debugService) {
+        this.debug = debugService.create();
+    }
+
+    /**
+     * <pre>
+     * debug "error", level: 1
+     * </pre>
+     */
+    public void debug(Map<String, Object> args, String name) {
+        Map<String, Object> arguments = new HashMap<>(args);
+        arguments.put("name", name);
+        invokeMethod(debug, "debug", arguments);
+    }
+
+    /**
+     * <pre>
+     * debug name: "error", level: 1
+     * </pre>
+     */
+    public void debug(Map<String, Object> args) {
+        Map<String, Object> arguments = new HashMap<>(args);
+        invokeMethod(debug, "debug", arguments);
+    }
+
+    /**
+     * <pre>
+     * debug << [name: "error", level: 1]
+     * </pre>
+     */
+    @SuppressWarnings("unchecked")
+    public List<Object> getDebug() {
+        return (List<Object>) invokeMethod(debug, "getDebug", null);
     }
 
     /**
@@ -127,6 +178,17 @@ public class DockerImpl implements Docker {
         log.targetsAdded(this, list);
     }
 
+    /**
+     * <pre>
+     * log driver: 'json-file', maxSize: "10m", maxFile: 10
+     * </pre>
+     */
+    public LoggingDriver log(Map<String, Object> args) {
+        this.loggingDriver = loggingDriverFactory.create(args);
+        log.loggingDriverSet(this, loggingDriver);
+        return loggingDriver;
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -143,6 +205,11 @@ public class DockerImpl implements Docker {
     }
 
     @Override
+    public DebugLogging getDebugLogging() {
+        return debug;
+    }
+
+    @Override
     public List<String> getCgroups() {
         return cgroups;
     }
@@ -155,6 +222,11 @@ public class DockerImpl implements Docker {
     @Override
     public Registry getRegistry() {
         return registry;
+    }
+
+    @Override
+    public LoggingDriver getLoggingDriver() {
+        return loggingDriver;
     }
 
     @Override

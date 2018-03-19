@@ -48,8 +48,9 @@ abstract class Dockerce_17_Systemd extends ScriptBase {
     SystemdUtils systemd
 
     @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Dockerce_17_Systemd_Templates')
+    void loadTemplates(TemplatesFactory templatesFactory, LoggingDriverOptsRenderer loggingDriverOptsRenderer) {
+        def a = [renderers:[loggingDriverOptsRenderer]]
+        def templates = templatesFactory.create('Dockerce_17_Systemd_Templates', a)
         this.dockerdTemplate = templates.getResource('dockerd_config')
         this.mirrorTemplate = templates.getResource('mirror_config')
         this.daemonTemplate = templates.getResource('daemon_config')
@@ -73,6 +74,17 @@ abstract class Dockerce_17_Systemd extends ScriptBase {
                 tls.caName = defaultRegistryMirrorCaName
             }
         }
+    }
+
+    def setupDefaultLogDriver() {
+        Docker service = service
+        if (service.loggingDriver.driver != null) {
+            return
+        }
+        def vars = [:]
+        vars.driver = scriptProperties.default_logging_driver_driver
+        vars << getScriptMapProperty("default_logging_driver_opts")
+        service.log vars
     }
 
     def createDirectories() {
@@ -133,17 +145,29 @@ mkdir -p '$dropin'
         Docker service = service
         boolean notEmpty = false
         notEmpty = notEmpty || haveNativeCgroupdriver
+        notEmpty = notEmpty || haveLoggingDriver
         if (!notEmpty) {
             return
         }
-        def execOpts = []
-        haveNativeCgroupdriver ? execOpts << "native.cgroupdriver=${nativeCgroupdriver}" : false
-        println execOpts
+        def vars = [:]
+        vars << execOptsVars
+        vars << [loggingDriver: service.loggingDriver]
         template resource: daemonTemplate,
         name: 'daemonConfig',
         privileged: true,
         dest: "$daemonConfigFile",
-        vars: [execOpts: execOpts.empty ? null : execOpts] call()
+        vars: vars call()
+    }
+
+    Map getExecOptsVars() {
+        def execOpts = []
+        haveNativeCgroupdriver ? execOpts << "native.cgroupdriver=${nativeCgroupdriver}" : false
+        [execOpts: execOpts.empty ? null : execOpts]
+    }
+
+    boolean getHaveLoggingDriver() {
+        Docker service = service
+        service.loggingDriver.driver != null
     }
 
     def stopServices() {

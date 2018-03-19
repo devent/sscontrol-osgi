@@ -23,6 +23,13 @@
 
     <dependencies>
 
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- own bundles -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
@@ -63,6 +70,11 @@
         <dependency>
             <groupId>com.anrisoftware.resources</groupId>
             <artifactId>resources-templates</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
             <type>bundle</type>
         </dependency>
     </dependencies>

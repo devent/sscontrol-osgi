@@ -51,6 +51,30 @@ service "docker"
                 assertFileResource DockerceScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource DockerceScriptTest, new File(dir, '/etc/default'), "grub", "${args.test.name}_grub_expected.txt"
                 assertFileResource DockerceScriptTest, new File(gen, '/etc/systemd/system/docker.service.d'), "00_dockerd_opts.conf", "${args.test.name}_dockerd_opts_conf_expected.txt"
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/docker'), "daemon.json", "${args.test.name}_daemon_json_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "log driver"() {
+        def test = [
+            name: "script_log_driver",
+            script: """
+service "ssh", host: "localhost", socket: "$localhostSocket"
+service "docker" with {
+    log driver: 'json-file', maxSize: "10m", maxFile: 10
+}
+""",
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource DockerceScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
+                assertFileResource DockerceScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
+                assertFileResource DockerceScriptTest, new File(gen, '/etc/docker'), "daemon.json", "${args.test.name}_daemon_json_expected.txt"
             },
         ]
         doTest test

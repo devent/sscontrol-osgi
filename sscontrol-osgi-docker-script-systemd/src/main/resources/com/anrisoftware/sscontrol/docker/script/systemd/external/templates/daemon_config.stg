@@ -1,6 +1,7 @@
 daemonConfig(parent, vars) ::= <<
 {
   <daemonExecOpts(parent, vars)>
+  <logDriver(parent, vars)>
 }
 
 >>
@@ -9,4 +10,17 @@ daemonExecOpts(parent, vars) ::= <%
 <if(vars.execOpts)>
 "exec-opts": [<vars.execOpts:{o|"<o>"};separator=",">]
 <endif>
+%>
+
+logDriver(parent, vars) ::= <<
+<if(vars.loggingDriver.driver)>
+"log-driver": "<vars.loggingDriver.driver>",
+"log-opts": {
+  <vars.loggingDriver.opts.keys:logDriverEntry(parent, vars);separator=",\n">
+}
+<endif>
+>>
+
+logDriverEntry(k, parent, vars) ::= <%
+"<k;format="camelCaseToDash">": "<vars.loggingDriver.opts.(k)>"
 %>
