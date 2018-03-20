@@ -25,6 +25,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Plugin.PluginFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.service.internal.AddonManagerPluginImpl.AddonManagerPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.CanalPluginImpl.CanalPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImpl.ClusterImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.EtcdPluginImpl.EtcdPluginImplFactory;
@@ -70,10 +71,15 @@ public class K8sModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Plugin.class, CanalPluginImpl.class)
                 .build(CanalPluginImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(Plugin.class, AddonManagerPluginImpl.class)
+                .build(AddonManagerPluginImplFactory.class));
         MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
                 String.class, PluginFactory.class);
         mapbinder.addBinding("etcd").to(EtcdPluginImplFactory.class);
         mapbinder.addBinding("canal").to(CanalPluginImplFactory.class);
+        mapbinder.addBinding("addon-manager")
+                .to(AddonManagerPluginImplFactory.class);
     }
 
 }
