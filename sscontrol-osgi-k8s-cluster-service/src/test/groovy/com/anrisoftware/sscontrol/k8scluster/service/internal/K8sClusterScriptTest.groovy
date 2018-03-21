@@ -46,9 +46,9 @@ class K8sClusterScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "cluster"() {
+    void "explicit statements"() {
         def test = [
-            name: 'cluster',
+            name: 'explicit_statements',
             input: """
 service "k8s-cluster", target: 'default' with {
     cluster name: 'default-context'
@@ -75,9 +75,9 @@ service "k8s-cluster", target: 'default' with {
     }
 
     @Test
-    void "args"() {
+    void "statements as arguments"() {
         def test = [
-            name: 'args',
+            name: 'statements_args',
             input: """
 service "k8s-cluster", cluster: 'default-cluster', context: 'default-system' with {
     credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
@@ -101,13 +101,11 @@ service "k8s-cluster", cluster: 'default-cluster', context: 'default-system' wit
     }
 
     @Test
-    void "defaults"() {
+    void "only with defaults"() {
         def test = [
             name: 'defaults',
             input: """
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
-}
+service "k8s-cluster"
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-cluster').size() == 1
@@ -115,12 +113,7 @@ service "k8s-cluster" with {
                 assert s.group == 'default'
                 assert s.cluster.name == 'default'
                 assert s.context.name == 'default-system'
-                assert s.credentials.size() == 1
-                assert s.credentials[0].type == 'cert'
-                assert s.credentials[0].name == 'default-admin'
-                assert s.credentials[0].tls.ca.toString() =~ /.*ca\.pem/
-                assert s.credentials[0].tls.cert.toString() =~ /.*cert\.pem/
-                assert s.credentials[0].tls.key.toString() =~ /.*key\.pem/
+                assert s.credentials.size() == 0
             },
         ]
         doTest test

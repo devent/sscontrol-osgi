@@ -37,7 +37,6 @@ class KubectlClusterLinux extends AbstractKubectlLinux {
     @Override
     Object run() {
         setupMiscDefaults()
-        uploadCertificates credentials: service.credentials, clusterName: service.cluster.name
     }
 
     @Override

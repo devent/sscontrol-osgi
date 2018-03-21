@@ -32,9 +32,32 @@ import groovy.util.logging.Slf4j
 class ClusterScriptTest extends AbstractClusterScriptTest {
 
     @Test
-    void "unsecured_context"() {
+    void "script with implicit default context"() {
+        def test = [
+            name: "implicit_context",
+            test: "https://project.anrisoftware.com/issues/4020",
+            input: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "k8s-cluster", target: 'default'
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assert new File(dir, "chmod.out").isFile() == false
+                assert new File(dir, "mkdir.out").isFile() == false
+                assert new File(dir, "sudo.out").isFile() == false
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script with unsecured context"() {
         def test = [
             name: "unsecured_context",
+            test: "https://project.anrisoftware.com/issues/4019",
             input: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-cluster", target: 'default' with {
