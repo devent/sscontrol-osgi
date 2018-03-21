@@ -82,9 +82,9 @@ class FromRepositoryScriptTest {
     File tmpRepo
 
     @Test
-    void "cluster"() {
+    void "use external cluster in the group default implicit"() {
         def test = [
-            name: 'cluster',
+            name: 'cluster_default',
             script: '''
 service "k8s-cluster"
 service "repo-git", group: "wordpress-app" with {
@@ -92,6 +92,33 @@ service "repo-git", group: "wordpress-app" with {
     credentials "ssh", key: "id_rsa"
 }
 service "from-repository", repo: "wordpress-app"
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.repo.repo.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app.git'
+                assert s.repo.repo.credentials.type == 'ssh'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "use kubectl host on explicit host default"() {
+        def test = [
+            name: 'kubectl_host_default',
+            script: '''
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app", cluster: "default"
 ''',
             before: { Map args ->
                 def tmp = folder.newFolder()
