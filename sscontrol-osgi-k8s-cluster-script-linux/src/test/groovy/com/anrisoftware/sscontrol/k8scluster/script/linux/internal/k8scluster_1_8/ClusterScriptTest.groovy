@@ -69,16 +69,16 @@ service "k8s-cluster", target: 'default' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assert new File(dir, "chmod.out").isFile() == false
+                assert new File(dir, "mkdir.out").isFile() == false
+                assert new File(dir, "sudo.out").isFile() == false
             },
         ]
         doTest test
     }
 
     @Test
-    void "unsecured_cluster"() {
+    void "script with unsecured cluster and context"() {
         def test = [
             name: "unsecured_cluster",
             input: '''
@@ -93,16 +93,16 @@ service "k8s-cluster", target: 'default' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
+                assert new File(dir, "chmod.out").isFile() == false
+                assert new File(dir, "mkdir.out").isFile() == false
+                assert new File(dir, "sudo.out").isFile() == false
             },
         ]
         doTest test
     }
 
     @Test
-    void "client_cert"() {
+    void "script with client certificate authenfication"() {
         def test = [
             name: "client_cert",
             input: '''
