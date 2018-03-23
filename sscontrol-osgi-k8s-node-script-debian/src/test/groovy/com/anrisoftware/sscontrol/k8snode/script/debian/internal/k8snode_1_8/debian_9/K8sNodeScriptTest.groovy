@@ -78,7 +78,7 @@ service "k8s-node", name: "node-0", join: 'kubeadm join abc'
                 assertFileResource K8sNodeScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource K8sNodeScriptTest, dir, "kubeadm.out", "${args.test.name}_kubeadm_expected.txt"
                 assertFileResource K8sNodeScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
-                assertFileResource K8sNodeScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+                //assertFileResource K8sNodeScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test

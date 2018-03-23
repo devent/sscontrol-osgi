@@ -261,9 +261,6 @@ public class K8sClusterImpl implements K8sCluster {
     private void parseContext(Map<String, Object> args) {
         Object v = args.get("context");
         Map<String, Object> a = new HashMap<>(args);
-        if (v == null) {
-            v = "default-system";
-        }
         a.put("name", v);
         context(a);
     }
@@ -271,9 +268,6 @@ public class K8sClusterImpl implements K8sCluster {
     private void parseCluster(Map<String, Object> args) {
         Object v = args.get("cluster");
         Map<String, Object> a = new HashMap<>(args);
-        if (v == null) {
-            v = "default-cluster";
-        }
         a.put("name", v);
         cluster(a);
     }

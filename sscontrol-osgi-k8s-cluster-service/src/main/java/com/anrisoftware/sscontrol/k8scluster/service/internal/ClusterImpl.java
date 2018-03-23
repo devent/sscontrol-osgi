@@ -15,9 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.service.internal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,8 +87,9 @@ public class ClusterImpl implements Cluster {
 
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("name");
-        assertThat("name=null", v, notNullValue());
-        setName(v.toString());
+        if (v != null) {
+            setName(v.toString());
+        }
     }
 
 }

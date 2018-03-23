@@ -15,9 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.service.internal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -62,8 +59,9 @@ public class ContextImpl implements Context {
 
     private void parseArgs(Map<String, Object> args) {
         Object v = args.get("name");
-        assertThat("name=null", v, notNullValue());
-        setName(v.toString());
+        if (v != null) {
+            setName(v.toString());
+        }
     }
 
 }
