@@ -23,9 +23,9 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
-import com.anrisoftware.sscontrol.types.cluster.external.Cluster
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -45,9 +45,6 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     @Inject
     TlsFactory tlsFactory
 
-    @Inject
-    CredentialsNopFactory credentialsNopFactory
-
     TemplateResource kubectlTemplate
 
     TemplateResource kubeconfTemplate
@@ -60,15 +57,13 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         this.kubeconfTemplate = templates.getResource('kubectl_conf')
     }
 
-    def setupMiscDefaults() {
-        log.debug 'Setup misc defaults for {}', service
-        Cluster service = service
-        if (service.credentials.size() == 0) {
-            def args = [:]
-            args.name = "default-admin"
-            args.type = "anon"
-            service.credentials << credentialsNopFactory.create(args)
-        }
+    /**
+     * Returns the {@link ClusterHost} from where to run kubectl from to
+     * access the cluster.
+     */
+    List<ClusterHost> getCluster() {
+        K8s service = service
+        service.clusterHosts
     }
 
     /**
@@ -76,38 +71,34 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      *
      * @param vars
      * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
      */
     def uploadKubeconfig(Map vars) {
         log.info 'Uploads kubeconfig for {}.', vars
-        ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
-        Credentials c = cluster.credentials
-        Map v = new HashMap(vars)
-        v.vars = new HashMap(vars)
-        v.vars.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
-        v.resource = kubeconfTemplate
-        v.name = 'kubectlConf'
-        v.dest = vars.kubeconfigFile
-        template v call()
+        cluster.each {
+            Credentials c = it.credentials
+            Map v = new HashMap(vars)
+            v.vars = new HashMap(vars)
+            v.vars.certs = c.hasProperty('tls') ? certsData(c.tls) : [:]
+            v.resource = kubeconfTemplate
+            v.name = 'kubectlConf'
+            v.dest = vars.kubeconfigFile
+            template v call()
+        }
     }
 
     /**
-     * Runs kubectl with a kubeconfig file.
+     * Runs kubectl with a specific kube-config file.
      *
      * @param vars
      * <ul>
-     * <li>kubeconfigFile: the path of the kubeconfig file on the server.
-     * <li>cluster: the ClusterHost.
+     * <li>kubeconfigFile: the path of the kube-config file on the server.
      * <li>args: kubectl arguments.
      * </ul>
      */
     def runKubectlKubeconfig(Map vars) {
         log.info 'Run kubectl with {}', vars
-        ClusterHost cluster = vars.cluster
         assertThat "kubeconfigFile!=null", vars.kubeconfigFile, notNullValue()
-        assertThat "cluster!=null", cluster, notNullValue()
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.resource = kubectlTemplate
@@ -115,106 +106,100 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         shell v call()
     }
 
+    /**
+     * Runs kubectl.
+     *
+     * @param vars
+     * <ul>
+     * <li>args: kubectl arguments.
+     * </ul>
+     */
     def runKubectl(Map vars) {
         log.info 'Run kubectl with {}', vars
-        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
-        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.service = service
         v.resource = kubectlTemplate
         v.name = 'kubectlCmd'
-        runShellOnTargets v
+        runShellOnHosts v
     }
 
     /**
      * Waits for the node to be available.
      *
-     * @param vars
-     * <ul>
-     * <li>target: the kubectl target host.
-     * </ul>
+     * @param vars additional arguments to the shell, like the timeout.
      * @param node the node name.
      */
     def waitNodeAvailable(Map vars, String node) {
         log.info 'Wait for node to be available: {}', node
-        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
-        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeAvailableCmd'
-        runShellOnTargets v
+        runShellOnHosts v
     }
 
     /**
      * Waits for the node to be ready.
      *
-     * @param vars
-     * <ul>
-     * <li>target: the kubectl target host.
-     * </ul>
+     * @param vars additional arguments to the shell, like the timeout.
      * @param node the node name.
      */
     def waitNodeReady(Map vars, String node) {
         log.info 'Wait for node to become ready: {}', node
-        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
-        assertThat "vars.hosts>0", vars.hosts, not(empty())
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeReadyCmd'
-        runShellOnTargets v
+        runShellOnHosts v
     }
 
     /**
-     * Applies the taint on the node.
+     * Applies the taints on the node.
      *
-     * @param vars
-     * <ul>
-     * <li>target: the kubectl target host.
-     * </ul>
+     * @param vars additional arguments to the shell, like the timeout.
+     * @param node the node name.
+     * @param taints the taints to apply.
      */
-    def applyTaintNode(Map vars, String node, def taint) {
-        log.info 'Apply taint {} for node {} with {}', taint, node, vars
-        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
-        assertThat "vars.hosts>0", vars.hosts, not(empty())
+    def applyNodeTaints(Map vars, String node, Map taints) {
+        log.debug 'Apply taints {} for node {} with {}', taints, node, vars
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
-        v.vars.taint = "${taint.key}=${taint.value?taint.value:''}:${taint.effect}"
+        v.vars.taints = taints
         v.resource = kubectlTemplate
-        v.name = 'applyTaintCmd'
-        runShellOnTargets v
+        v.name = 'applyTaintsCmd'
+        runShellOnHosts v
     }
 
     /**
      * Applies the label on the node.
      *
-     * @param vars
-     * <ul>
-     * <li>targets: the kubectl target hosts.
-     * </ul>
+     * @param vars additional arguments to the shell, like the timeout.
+     * @param node the node name.
+     * @param labels the labels to apply.
      */
-    def applyLabelNode(Map vars, String node, def label) {
-        log.info 'Apply label {} for node {} with {}', label, node, vars
-        assertThat "vars.hosts!=null", vars.hosts, notNullValue()
-        assertThat "vars.hosts>0", vars.hosts, not(empty())
+    def applyNodeLabels(Map vars, String node, def labels) {
+        log.debug 'Apply labels {} for node {} with {}', labels, node, vars
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.node = node
-        v.vars.label = "${label.key}=${label.value?label.value:''}"
+        v.vars.labels = labels
         v.resource = kubectlTemplate
-        v.name = 'applyLabelCmd'
-        runShellOnTargets v
+        v.name = 'applyLabelsCmd'
+        runShellOnHosts v
     }
 
-    def runShellOnTargets(Map vars) {
+    /**
+     * Runs kubectl on the cluster hosts.
+     */
+    def runShellOnHosts(Map vars) {
         Map v = new HashMap(vars)
-        vars.hosts.each {
-            v.target = it
+        cluster.each { ClusterHost it ->
+            v.vars.host = it
+            v.target = it.target
             shell v call()
         }
     }
@@ -265,6 +250,14 @@ abstract class AbstractKubectlLinux extends ScriptBase {
 
     def getClientTls() {
         getClusterTls()
+    }
+
+    String getRobobeeLabelNode() {
+        getScriptProperty 'robobee_label_node'
+    }
+
+    String getKubernetesLabelHostname() {
+        getScriptProperty 'kubernetes_label_hostname'
     }
 
     @Override

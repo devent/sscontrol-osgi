@@ -40,6 +40,9 @@ public interface K8s extends HostService {
      */
     Map<String, Plugin> getPlugins();
 
+    /**
+     * Returns information about the Kubernetes cluster.
+     */
     Cluster getCluster();
 
     Boolean isAllowPrivileged();
@@ -115,8 +118,16 @@ public interface K8s extends HostService {
      */
     Kubelet kubelet(Map<String, Object> args);
 
+    /**
+     * Returns the host that can be used to have access to the cluster via
+     * kubectl.
+     */
     ClusterHost getClusterHost();
 
+    /**
+     * Returns the hosts that can be used to have access to the clusters via
+     * kubectl.
+     */
     List<ClusterHost> getClusterHosts();
 
     /**

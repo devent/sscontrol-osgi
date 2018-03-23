@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8;
+package com.anrisoftware.sscontrol.types.cluster.external;
 
-import java.util.Map;
+import java.util.List;
 
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
+import com.anrisoftware.sscontrol.types.host.external.TargetHostService;
 
 /**
+ * Cluster target service. Contains the {@link ClusterHost} that can be used to
+ * connect to the cluster and the {@link Credentials} for authentication.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface CredentialsNopFactory {
+public interface ClusterTargetService extends TargetHostService<ClusterHost> {
 
-    Credentials create(Map<String, Object> args);
+    List<Credentials> getCredentials();
+
 }

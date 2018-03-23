@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.services.internal.cluster;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.services.internal.targets.AbstractTargetsImpl;
-import com.anrisoftware.sscontrol.types.cluster.external.Cluster;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterTargetService;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Clusters;
 import com.anrisoftware.sscontrol.types.cluster.external.ClustersService;
@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClustersService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class ClustersImpl extends AbstractTargetsImpl<ClusterHost, Cluster>
+public class ClustersImpl extends AbstractTargetsImpl<ClusterHost, ClusterTargetService>
         implements Clusters {
 
     /**

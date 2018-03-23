@@ -52,8 +52,6 @@ public class ClusterImpl implements Cluster {
 
     private String name;
 
-    private List<Object> hosts;
-
     private final List<Object> apiServers;
 
     private String serviceRange;
@@ -88,7 +86,6 @@ public class ClusterImpl implements Cluster {
         this.log = log;
         if (cluster != null) {
             this.name = cluster.getName();
-            this.hosts = new ArrayList<>(cluster.getHosts());
             this.apiServers = new ArrayList<>(cluster.getApiServers());
             this.serviceRange = cluster.getServiceRange();
             this.dnsDomain = cluster.getDnsDomain();
@@ -97,7 +94,6 @@ public class ClusterImpl implements Cluster {
             this.port = cluster.getPort();
             this.joinCommand = cluster.getJoinCommand();
         } else {
-            this.hosts = new ArrayList<>();
             this.apiServers = new ArrayList<>();
         }
         parseArgs(args);
@@ -110,21 +106,6 @@ public class ClusterImpl implements Cluster {
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setHosts(List<Object> hosts) {
-        this.hosts = hosts;
-        log.hostsSet(this, hosts);
-    }
-
-    public void addHost(Object host) {
-        this.hosts.add(host);
-        log.hostAdded(this, host);
-    }
-
-    @Override
-    public List<Object> getHosts() {
-        return hosts;
     }
 
     public void setAdvertiseAddress(Object advertise) {
@@ -245,10 +226,6 @@ public class ClusterImpl implements Cluster {
         v = args.get("join");
         if (v != null) {
             setJoinCommand(v.toString());
-        }
-        v = args.get("host");
-        if (v != null) {
-            addHost(v);
         }
     }
 

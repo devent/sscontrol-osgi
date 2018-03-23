@@ -36,7 +36,6 @@ class KubectlClusterLinux extends AbstractKubectlLinux {
 
     @Override
     Object run() {
-        setupMiscDefaults()
     }
 
     @Override
