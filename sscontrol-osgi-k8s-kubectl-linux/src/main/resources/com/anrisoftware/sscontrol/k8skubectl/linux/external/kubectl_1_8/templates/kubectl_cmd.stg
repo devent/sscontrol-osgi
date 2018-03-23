@@ -72,10 +72,10 @@ node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 if [[ -z "$node" ]]; then
     node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
 fi
-<vars.taints:{k|kubectl taint --overwrite nodes $node <k>=<taintValueEffect(parent, vars, vars.taints.(k)>};separator="\n">
+<vars.taints:{k|kubectl taint --overwrite nodes $node <k>=<taintValueEffect(vars.taints.(k))>};separator="\n">
 >>
 
-taintValueEffect(parent, vars, taint) ::= <%
+taintValueEffect(taint) ::= <%
 <if(taint.value)><taint.value><endif>:<taint.effect>
 %>
 

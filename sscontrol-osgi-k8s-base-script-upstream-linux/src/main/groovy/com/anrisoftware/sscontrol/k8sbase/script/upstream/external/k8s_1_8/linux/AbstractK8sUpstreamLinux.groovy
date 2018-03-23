@@ -330,7 +330,7 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
             log.info 'No labels to apply for node {}.', node
             return
         }
-        log.info 'Apply node labels {} for {}.', service.taints, node
+        log.info 'Apply node labels {} for {}.', service.labels, node
         kubectlCluster.applyNodeLabels [:], node, service.labels
     }
 
@@ -368,6 +368,14 @@ kubeadm token create \$token --print-join-command
         service.labels.inject([]) { list, k, v ->
             list << "${v.key}=${v.value}"
         }
+    }
+
+    /**
+     * Returns if there are node taints to be set after the node was registered.
+     * See <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet --register-with-taints []api.Taint</a>
+     */
+    boolean getHaveTaints() {
+        service.taints.size() > 0
     }
 
     /**
