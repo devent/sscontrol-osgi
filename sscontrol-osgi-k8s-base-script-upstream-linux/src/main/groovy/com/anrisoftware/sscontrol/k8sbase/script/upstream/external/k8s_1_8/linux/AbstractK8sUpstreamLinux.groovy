@@ -24,7 +24,6 @@ import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.Label
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Taint
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.TaintFactory
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
@@ -121,7 +120,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
     def setupClusterDefaults() {
         log.debug 'Setup cluster defaults for {}', service
         K8s service = service
-        setupClusterTarget()
         if (!service.cluster.serviceRange) {
             service.cluster.serviceRange = scriptProperties.default_service_network
         }
@@ -137,23 +135,6 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
         if (!service.cluster.advertiseAddress) {
             service.cluster.advertiseAddress = target.hostAddress
         }
-    }
-
-    def setupClusterTarget() {
-        K8s service = service
-        def target = this.target
-        if (service.cluster.hosts.empty) {
-            service.cluster.hosts << target
-        }
-        def hosts = service.cluster.hosts.inject([]) { list, t ->
-            if (t instanceof SshHost) {
-                list << t
-            } else {
-                list.addAll scriptsRepository.targets.getHosts(t.toString())
-            }
-            list
-        }
-        service.cluster.hosts = hosts
     }
 
     def setupKubeletDefaults() {
@@ -279,8 +260,6 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         K8s service = service
         log.info 'Wait until the node is in Ready state: {}', service.cluster.name
         def vars = [:]
-        vars.parent = this
-        vars.hosts = service.cluster.hosts
         vars.timeout = timeoutMiddle
         kubectlCluster.waitNodeReady vars, service.cluster.name
     }
@@ -292,8 +271,6 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
         K8s service = service
         log.info 'Wait until the node is available: {}', service.cluster.name
         def vars = [:]
-        vars.parent = this
-        vars.hosts = service.cluster.hosts
         vars.timeout = timeoutMiddle
         kubectlCluster.waitNodeAvailable vars, service.cluster.name
     }
@@ -337,38 +314,24 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
 
     def applyTaints() {
         K8s service = service
+        def node = service.cluster.name
         if (service.taints.isEmpty()) {
-            log.debug 'No taints to apply, nothing to do.'
+            log.info 'No taints to apply for node {}.', node
             return
         }
-        log.info 'Apply taints for {}.', service
-        def node = service.cluster.name
-        def nodeClient = kubectlCluster
-        def vars = [:]
-        vars.parent = this
-        vars.hosts = service.cluster.hosts
-        service.taints.each { String key, Taint taint ->
-            log.info 'Apply taint {} for {}.', taint, service
-            kubectlCluster.applyTaintNode vars, node, taint
-        }
+        log.info 'Apply node taints {} for {}.', service.taints, node
+        kubectlCluster.applyNodeTaints [:], node, service.taints
     }
 
     def applyLabels() {
         K8s service = service
+        def node = service.cluster.name
         if (service.labels.isEmpty()) {
-            log.debug 'No labels to apply, nothing to do.'
+            log.info 'No labels to apply for node {}.', node
             return
         }
-        log.info 'Apply labels for {}.', service
-        def node = service.cluster.name
-        def nodeClient = kubectlCluster
-        def vars = [:]
-        vars.parent = this
-        vars.hosts = service.cluster.hosts
-        service.labels.each { String key, Label label ->
-            log.info 'Apply label {} for {}.', label, service
-            kubectlCluster.applyLabelNode vars, node, label
-        }
+        log.info 'Apply node labels {} for {}.', service.taints, node
+        kubectlCluster.applyNodeLabels [:], node, service.labels
     }
 
     def getJoinCommand() {

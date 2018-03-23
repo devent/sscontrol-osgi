@@ -46,9 +46,26 @@ class K8sClusterScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
+    void "explicit target"() {
+        def test = [
+            input: """
+service "k8s-cluster" with {
+    target name: 'default'
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-cluster').size() == 1
+                K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
+                assert s.group == 'default'
+                assert s.targets.size() == 0
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "explicit statements"() {
         def test = [
-            name: 'explicit_statements',
             input: """
 service "k8s-cluster", target: 'default' with {
     cluster name: 'default-context'
@@ -59,7 +76,7 @@ service "k8s-cluster", target: 'default' with {
             expected: { HostServices services ->
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.group == 'default-context'
+                assert s.group == 'default'
                 assert s.cluster.name == 'default-context'
                 assert s.context.name == 'default-system'
                 assert s.credentials.size() == 1
@@ -80,13 +97,13 @@ service "k8s-cluster", target: 'default' with {
             name: 'statements_args',
             input: """
 service "k8s-cluster", cluster: 'default-cluster', context: 'default-system' with {
-    credentials type: 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
+    credentials 'cert', name: 'default-admin', ca: 'ca.pem', cert: 'cert.pem', key: 'key.pem'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
-                assert s.group == 'default-cluster'
+                assert s.group == 'default'
                 assert s.cluster.name == 'default-cluster'
                 assert s.context.name == 'default-system'
                 assert s.credentials.size() == 1
@@ -111,7 +128,7 @@ service "k8s-cluster"
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
                 assert s.group == 'default'
-                assert s.cluster.name == 'default'
+                assert s.cluster.name == 'default-cluster'
                 assert s.context.name == 'default-system'
                 assert s.credentials.size() == 0
             },

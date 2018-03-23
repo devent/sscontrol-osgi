@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.services.internal.host.ScriptsMap.ScriptsMapFactory;
-import com.anrisoftware.sscontrol.types.cluster.external.Cluster;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterTargetService;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.cluster.external.Clusters;
 import com.anrisoftware.sscontrol.types.cluster.external.ClustersService;
@@ -98,7 +98,7 @@ public class HostServicesImpl implements HostServices {
 
     private final GetTargets<SshHost, Ssh> getTargets;
 
-    private final GetTargets<ClusterHost, Cluster> getClusters;
+    private final GetTargets<ClusterHost, ClusterTargetService> getClusters;
 
     private final GetTargets<RegistryHost, Registry> getRegistries;
 
@@ -129,12 +129,12 @@ public class HostServicesImpl implements HostServices {
                 scriptsMapFactory.create());
         this.states = synchronizedMap(new HashMap<String, Object>());
         this.getTargets = new GetTargets<>(SshHost.class, Ssh.class, "target");
-        this.getClusters = new GetTargets<ClusterHost, Cluster>(
-                ClusterHost.class, Cluster.class, "cluster") {
+        this.getClusters = new GetTargets<ClusterHost, ClusterTargetService>(
+                ClusterHost.class, ClusterTargetService.class, "cluster") {
 
             @Override
             public List<ClusterHost> getTargets(HostServiceService service,
-                    HostTargets<ClusterHost, Cluster> targets, String name) {
+                    HostTargets<ClusterHost, ClusterTargetService> targets, String name) {
                 try {
                     return targets.getHosts(name);
                 } catch (AssertionError e) {

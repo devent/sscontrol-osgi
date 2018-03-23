@@ -20,7 +20,7 @@ import java.util.List;
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 
 /**
- * K8s cluster.
+ * Information about the Kubernetes cluster.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -31,11 +31,6 @@ public interface Cluster {
      * Returns the name of the cluster.
      */
     String getName();
-
-    /**
-     * Returns the target hosts from where kubectl can be called.
-     */
-    List<Object> getHosts();
 
     /**
      * Returns the pods network CIDR, the range of IP addresses for the pod

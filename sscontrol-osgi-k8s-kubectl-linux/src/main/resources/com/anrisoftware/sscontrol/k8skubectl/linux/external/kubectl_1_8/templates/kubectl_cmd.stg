@@ -3,11 +3,11 @@ kubectlKubeconfigCmd(parent, vars) ::= <<
 >>
 
 getNodeRobobeeLabel(parent, vars) ::= <%
-<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
+kubectl get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
 %>
 
 getKubernetesHostnameLabel(parent, vars) ::= <%
-<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>
+kubectl get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>
 %>
 
 grepNodeFunctions(parent, vars) ::= <<
@@ -27,6 +27,7 @@ function node_on_hostname() {
 */
 waitNodeAvailableCmd(parent, vars) ::= <<
 echo "Waiting for node..."
+<setupKubectl(parent, vars)>
 <grepNodeFunctions(parent, vars)>
 until node_on_label || node_on_hostname
 do
@@ -42,6 +43,7 @@ done
 */
 waitNodeReadyCmd(parent, vars) ::= <<
 echo "Waiting for node..."
+<setupKubectl(parent, vars)>
 <grepNodeFunctions(parent, vars)>
 until node_on_label || node_on_hostname
 do
@@ -58,39 +60,43 @@ kubectl get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> |
 %>
 
 /*
-* Applies the taint on the node.
+* Applies the taints on the node.
 *
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
-* vars.tain: the taint.
+* vars.tains: the taints.
 */
-applyTaintCmd(parent, vars) ::= <<
+applyTaintsCmd(parent, vars) ::= <<
 <waitNodeAvailableCmd(parent, vars)>
 node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 if [[ -z "$node" ]]; then
     node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
 fi
-kubectl taint --overwrite nodes $node <vars.taint>
+<vars.taints:{k|kubectl taint --overwrite nodes $node <k>=<taintValueEffect(parent, vars, vars.taints.(k)>};separator="\n">
 >>
 
+taintValueEffect(parent, vars, taint) ::= <%
+<if(taint.value)><taint.value><endif>:<taint.effect>
+%>
+
 /*
-* Applies the label on the node.
+* Applies the labels on the node.
 *
 * parent.robobeeLabelNode: the robobee node name label key.
 * vars.node: the node name.
-* vars.label: the label.
+* vars.labels: the labels.
 */
-applyLabelCmd(parent, vars) ::= <<
+applyLabelsCmd(parent, vars) ::= <<
 <waitNodeAvailableCmd(parent, vars)>
 node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
 if [[ -z "$node" ]]; then
     node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
 fi
-kubectl label --overwrite nodes $node <vars.label>
+<vars.labels:{k|kubectl label --overwrite nodes $node <k>=<vars.labels.(k).value>};separator="\n">
 >>
 
 setupKubectl(parent, vars) ::= <<
-<parent.kubectlCmd> config use-context <vars.cluster.context.name>
+kubectl config use-context <vars.cluster.context.name>
 if [[ $? != 0 ]]; then
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>

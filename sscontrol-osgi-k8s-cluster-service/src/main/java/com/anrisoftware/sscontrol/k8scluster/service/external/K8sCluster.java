@@ -15,14 +15,16 @@
  */
 package com.anrisoftware.sscontrol.k8scluster.service.external;
 
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterTargetService;
+
 /**
- * <i>K8s-Cluster</i> service.
+ * Kubernetes cluster target service. Contains the {@link Cluster} and
+ * {@link Context}.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8sCluster
-        extends com.anrisoftware.sscontrol.types.cluster.external.Cluster {
+public interface K8sCluster extends ClusterTargetService {
 
     Cluster getCluster();
 

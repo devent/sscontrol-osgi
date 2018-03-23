@@ -75,11 +75,12 @@ public class K8sClusterImpl implements K8sCluster {
 
     private final K8sClusterHostFactory clusterHostFactory;
 
+    private String group;
+
     @Inject
     K8sClusterImpl(K8sClusterImplLogger log,
             HostServicePropertiesService propertiesService,
-            ClusterImplFactory clusterFactory,
-            ContextFactory contextFactory,
+            ClusterImplFactory clusterFactory, ContextFactory contextFactory,
             K8sClusterHostFactory clusterHostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
@@ -89,6 +90,7 @@ public class K8sClusterImpl implements K8sCluster {
         this.clusterFactory = clusterFactory;
         this.contextFactory = contextFactory;
         this.clusterHostFactory = clusterHostFactory;
+        this.group = "default";
         parseArgs(args);
     }
 
@@ -121,17 +123,6 @@ public class K8sClusterImpl implements K8sCluster {
 
     /**
      * <pre>
-     * cluster "default-cluster"
-     * </pre>
-     */
-    public void cluster(String name) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
-    }
-
-    /**
-     * <pre>
      * cluster name: "default-cluster"
      * </pre>
      */
@@ -146,18 +137,7 @@ public class K8sClusterImpl implements K8sCluster {
 
     /**
      * <pre>
-     * context "default-cluster"
-     * </pre>
-     */
-    public void context(String name) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        cluster(args);
-    }
-
-    /**
-     * <pre>
-     * context name: "default-cluster"
+     * context name: "default-context"
      * </pre>
      */
     public void context(Map<String, Object> args) {
@@ -172,7 +152,7 @@ public class K8sClusterImpl implements K8sCluster {
      */
     public void credentials(Map<String, Object> args, String type) {
         Map<String, Object> a = new HashMap<>(args);
-        args.put("type", type);
+        a.put("type", type);
         credentials(a);
     }
 
@@ -231,25 +211,21 @@ public class K8sClusterImpl implements K8sCluster {
 
     @Override
     public String getGroup() {
-        return cluster.getName();
+        return group;
     }
 
+    /**
+     * Returns the hosts from where kubectl can be called, optionally with the
+     * credentials for authentication.
+     */
     @Override
     public List<ClusterHost> getHosts() {
         List<ClusterHost> list = new ArrayList<>();
         List<Credentials> creds = new ArrayList<>(credentials);
-        if (creds.size() == 0) {
-            Map<String, Object> args = new HashMap<>();
-            args.put("name", "default-admin");
-            args.put("type", "anon");
-            creds.add(credentialsFactories.get("anon").create(args));
-        }
         for (TargetHost ssh : targets) {
-            for (Credentials cred : creds) {
-                K8sClusterHost host;
-                host = clusterHostFactory.create(this, ssh, cred, context);
-                list.add(host);
-            }
+            K8sClusterHost host;
+            host = clusterHostFactory.create(this, ssh, creds);
+            list.add(host);
         }
         return Collections.unmodifiableList(list);
     }
@@ -260,14 +236,26 @@ public class K8sClusterImpl implements K8sCluster {
                 .append("targets", getTargets()).toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
+        parseTargets(args);
+        parseGroup(args);
+        parseCluster(args);
+        parseContext(args);
+    }
+
+    private void parseGroup(Map<String, Object> args) {
+        Object v = args.get("group");
+        if (v != null) {
+            this.group = v.toString();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
         Object v = args.get("targets");
         if (v != null) {
             targets.addAll((List<TargetHost>) v);
         }
-        parseCluster(args);
-        parseContext(args);
     }
 
     private void parseContext(Map<String, Object> args) {
@@ -284,7 +272,7 @@ public class K8sClusterImpl implements K8sCluster {
         Object v = args.get("cluster");
         Map<String, Object> a = new HashMap<>(args);
         if (v == null) {
-            v = "default";
+            v = "default-cluster";
         }
         a.put("name", v);
         cluster(a);

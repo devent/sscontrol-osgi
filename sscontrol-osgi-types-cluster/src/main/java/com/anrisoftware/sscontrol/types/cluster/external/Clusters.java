@@ -23,6 +23,6 @@ import com.anrisoftware.sscontrol.types.host.external.HostTargets;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Clusters extends HostTargets<ClusterHost, Cluster> {
+public interface Clusters extends HostTargets<ClusterHost, ClusterTargetService> {
 
 }

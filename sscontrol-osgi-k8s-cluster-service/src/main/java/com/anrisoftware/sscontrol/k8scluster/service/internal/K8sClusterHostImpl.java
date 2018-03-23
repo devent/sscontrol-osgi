@@ -19,12 +19,13 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.k8scluster.service.external.Context;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sCluster;
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost;
 import com.anrisoftware.sscontrol.tls.external.Tls;
@@ -41,9 +42,11 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class K8sClusterHostImpl implements K8sClusterHost {
 
-    private final Credentials credentials;
+    private final List<Credentials> credentials;
 
     private final K8sCluster cluster;
+
+    private final TargetHost target;
 
     private String proto;
 
@@ -51,18 +54,16 @@ public class K8sClusterHostImpl implements K8sClusterHost {
 
     private Integer port;
 
-    private final Context context;
-
     @Inject
     K8sClusterHostImpl(@Assisted K8sCluster cluster,
-            @Assisted TargetHost target, @Assisted Credentials credentials,
-            @Assisted Context context) {
+            @Assisted TargetHost target,
+            @Assisted List<Credentials> credentials) {
         this.cluster = cluster;
+        this.target = target;
+        this.credentials = new ArrayList<>();
         this.proto = target.getProto();
         this.host = target.getHost();
         this.port = target.getPort();
-        this.credentials = credentials;
-        this.context = context;
     }
 
     @Override
@@ -76,13 +77,13 @@ public class K8sClusterHostImpl implements K8sClusterHost {
     }
 
     @Override
-    public Credentials getCredentials() {
+    public List<Credentials> getCredentials() {
         return credentials;
     }
 
     @Override
-    public Context getContext() {
-        return context;
+    public TargetHost getTarget() {
+        return target;
     }
 
     public void setProto(String proto) {
@@ -119,9 +120,11 @@ public class K8sClusterHostImpl implements K8sClusterHost {
 
     @Override
     public Tls getTls() {
-        if (credentials instanceof CredentialsCert) {
-            CredentialsCert certs = (CredentialsCert) credentials;
-            return certs.getTls();
+        for (Credentials c : credentials) {
+            if (c instanceof CredentialsCert) {
+                CredentialsCert certs = (CredentialsCert) c;
+                return certs.getTls();
+            }
         }
         return null;
     }
