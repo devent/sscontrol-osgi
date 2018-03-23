@@ -1,5 +1,5 @@
 kubectlKubeconfigCmd(parent, vars) ::= <<
-<parent.kubectlCmd> <vars.args>
+kubectl <vars.args>
 >>
 
 getNodeRobobeeLabel(parent, vars) ::= <%
@@ -83,6 +83,7 @@ taintValueEffect(parent, vars, taint) ::= <%
 * Applies the labels on the node.
 *
 * parent.robobeeLabelNode: the robobee node name label key.
+* vars.cluster: the kubernetes cluster information.
 * vars.node: the node name.
 * vars.labels: the labels.
 */
@@ -95,29 +96,35 @@ fi
 <vars.labels:{k|kubectl label --overwrite nodes $node <k>=<vars.labels.(k).value>};separator="\n">
 >>
 
+/*
+* Setups kubectl on the host.
+*
+* vars.cluster: the kubernetes cluster information.
+*/
 setupKubectl(parent, vars) ::= <<
-kubectl config use-context <vars.cluster.context.name>
-if [[ $? != 0 ]]; then
+<if(vars.cluster.context.name)>
+if ! kubectl config current-context | grep "<vars.cluster.context.name>";
 <setCluster(parent, vars)>
 <setCredentials(parent, vars)>
 <setContext(parent, vars)>
-<parent.kubectlCmd> config use-context <vars.cluster.context.name>
+kubectl config use-context <vars.cluster.context.name>
 fi
+<endif>
 
 >>
 
 setCluster(parent, vars) ::= <<
-<parent.kubectlCmd> config set-cluster <vars.cluster.cluster.group> --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
+kubectl config set-cluster <vars.cluster.cluster.group> --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
 
 >>
 
 setCredentials(parent, vars) ::= <<
-<parent.kubectlCmd> config set-credentials <vars.cluster.cluster.group>-<vars.cluster.credentials.name> <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
+kubectl config set-credentials <vars.cluster.cluster.group>-<vars.cluster.credentials.name> <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
 
 >>
 
 setContext(parent, vars) ::= <<
-<parent.kubectlCmd> config set-context <vars.cluster.context.name> --cluster=<vars.cluster.cluster.group> --user=<vars.cluster.cluster.group>-<vars.cluster.credentials.name>
+kubectl config set-context <vars.cluster.context.name> --cluster=<vars.cluster.cluster.group> --user=<vars.cluster.cluster.group>-<vars.cluster.credentials.name>
 
 >>
 
@@ -135,7 +142,7 @@ kubeKey(parent, vars) ::= <%
 
 kubectlCmd(parent, vars) ::= <<
 <setupKubectl(parent, vars)>
-<parent.kubectlCmd> <vars.args>
+kubectl <vars.args>
 
 >>
 

@@ -198,7 +198,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     def runShellOnHosts(Map vars) {
         Map v = new HashMap(vars)
         cluster.each { ClusterHost it ->
-            v.vars.host = it
+            v.vars.cluster = it.cluster
             v.target = it.target
             shell v call()
         }

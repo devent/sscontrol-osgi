@@ -46,7 +46,7 @@ class K8sClusterScriptTest {
     HostServicesImplFactory servicesFactory
 
     @Test
-    void "explicit target"() {
+    void "explicit target, default cluster and context"() {
         def test = [
             input: """
 service "k8s-cluster" with {
@@ -58,6 +58,8 @@ service "k8s-cluster" with {
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
                 assert s.group == 'default'
                 assert s.targets.size() == 0
+                assert s.cluster.name == null
+                assert s.context.name == null
             },
         ]
         doTest test
@@ -128,8 +130,8 @@ service "k8s-cluster"
                 assert services.getServices('k8s-cluster').size() == 1
                 K8sCluster s = services.getServices('k8s-cluster')[0] as K8sCluster
                 assert s.group == 'default'
-                assert s.cluster.name == 'default-cluster'
-                assert s.context.name == 'default-system'
+                assert s.cluster.name == null
+                assert s.context.name == null
                 assert s.credentials.size() == 0
             },
         ]
