@@ -57,7 +57,7 @@ targets['nodes'].eachWithIndex { host, i ->
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
-            expectedServicesSize: 2,
+            expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
                 File dir = args.dir
