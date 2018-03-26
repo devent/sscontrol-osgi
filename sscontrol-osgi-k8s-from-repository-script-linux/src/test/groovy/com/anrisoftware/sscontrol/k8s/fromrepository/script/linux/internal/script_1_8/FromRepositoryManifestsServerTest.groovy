@@ -166,14 +166,12 @@ service "from-repository", repo: "wordpress-app" with {
     }
 
     @Test
-    void "stg_yaml_files_server"() {
+    void "apply stg yaml templates from ssh"() {
         def test = [
-            name: "stg_yaml_files_server",
+            name: "server_stg_yaml_files",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: cluster_vars.certs.cert, key: cluster_vars.certs.key
-}
+service "k8s-cluster"
 service "repo-git", group: "wordpress-app" with {
     remote url: "/tmp/wordpress-app"
     property << "checkout_directory=${checkoutDir}"
@@ -184,14 +182,13 @@ service "from-repository", repo: "wordpress-app" with {
 ''',
             scriptVars: [
                 robobeeSocket: robobeeSocket,
-                checkoutDir: '/tmp/w',
-                cluster_vars: [ certs: [ cert: certCertPem, key: certKeyPem], ],
+                checkoutDir: '/tmp/w'
             ],
             expectedServicesSize: 4,
             before: { Map test -> setupServer test: test, zipArchive: wordpressStgZip },
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
-                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
             },
         ]
         doTest test
@@ -199,8 +196,22 @@ service "from-repository", repo: "wordpress-app" with {
 
     def setupServer(Map args) {
         def createArchiveFile = ""
+        def archiveStream = null
         if (args.zipArchive) {
+            archiveStream = args.zipArchive.openStream()
             createArchiveFile = """
+echo "Install unzip."
+if ! which unzip; then
+sudo apt-get update
+sudo apt-get install unzip
+fi
+
+echo "Unzip to /tmp/wordpress-app."
+mkdir -p /tmp/wordpress-app
+cd /tmp/wordpress-app
+file="wordpress-app.zip"
+cat > \$file
+unzip \$file
 """
         }
         execRemoteFile """
@@ -217,19 +228,8 @@ echo "Create ${args.test.scriptVars.checkoutDir}."
 rm -rf "${args.test.scriptVars.checkoutDir}"
 mkdir -p "${args.test.scriptVars.checkoutDir}"
 
-echo "Install unzip."
-if ! which unzip; then
-sudo apt-get update
-sudo apt-get install unzip
-fi
-
-echo "Unzip to /tmp/wordpress-app."
-mkdir -p /tmp/wordpress-app
-cd /tmp/wordpress-app
-file="wordpress-app.zip"
-cat > \$file
-unzip \$file
-""", args.zipArchive.openStream()
+${createArchiveFile}
+""", archiveStream
     }
 
     def tearDownServer(Map args) {
