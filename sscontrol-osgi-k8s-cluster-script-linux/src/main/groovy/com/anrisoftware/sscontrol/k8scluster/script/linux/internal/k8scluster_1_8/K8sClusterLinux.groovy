@@ -58,11 +58,6 @@ class K8sClusterLinux extends ScriptBase implements K8sClusterScript {
     }
 
     @Override
-    void uploadCertificates(Map<String, Object> vars) {
-        kubectlClusterLinux.uploadCertificates(vars)
-    }
-
-    @Override
     def getLog() {
         log
     }

@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.cluster.external;
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Cluster service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface ClusterService extends HostService {
-
-    /**
-     * Returns the host that can be used to have access to the cluster via
-     * kubectl.
-     */
-    ClusterHost getClusterHost();
-
-    /**
-     * Returns the hosts that can be used to have access to the clusters via
-     * kubectl.
-     */
-    List<ClusterHost> getClusterHosts();
-
+public interface KubectlClusterLinuxFactory extends HostServiceScriptService {
 }

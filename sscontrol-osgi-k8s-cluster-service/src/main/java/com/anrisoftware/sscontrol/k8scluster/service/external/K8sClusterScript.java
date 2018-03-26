@@ -27,6 +27,4 @@ public interface K8sClusterScript {
 
     void runKubectl(Map<String, Object> vars);
 
-    void uploadCertificates(Map<String, Object> vars);
-
 }

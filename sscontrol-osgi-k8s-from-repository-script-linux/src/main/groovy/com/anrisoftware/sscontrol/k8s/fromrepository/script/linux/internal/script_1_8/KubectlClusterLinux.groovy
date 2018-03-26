@@ -13,30 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.cluster.external;
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
-import java.util.List;
+import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
+
+import groovy.util.logging.Slf4j
 
 /**
- * Cluster service.
+ * Kubectl service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ClusterService extends HostService {
+@Slf4j
+class KubectlClusterLinux extends AbstractKubectlLinux {
 
-    /**
-     * Returns the host that can be used to have access to the cluster via
-     * kubectl.
-     */
-    ClusterHost getClusterHost();
+    @Inject
+    FromRepositoryLinuxProperties linuxPropertiesProvider
 
-    /**
-     * Returns the hosts that can be used to have access to the clusters via
-     * kubectl.
-     */
-    List<ClusterHost> getClusterHosts();
+    @Override
+    Object run() {
+    }
 
+    @Override
+    ContextProperties getDefaultProperties() {
+        linuxPropertiesProvider.get()
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

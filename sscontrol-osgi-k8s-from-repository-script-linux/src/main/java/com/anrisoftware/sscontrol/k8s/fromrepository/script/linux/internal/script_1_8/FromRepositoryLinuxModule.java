@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8;
 
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FromRepositoryLinux;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -33,6 +32,9 @@ public class FromRepositoryLinuxModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, FromRepositoryLinux.class)
                 .build(FromRepositoryLinuxFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
+                .build(KubectlClusterLinuxFactory.class));
     }
 
 }

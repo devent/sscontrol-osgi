@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.tls.external.Tls;
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 
@@ -30,7 +29,7 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface K8s extends HostService {
+public interface K8s extends ClusterService {
 
     DebugLogging getDebugLogging();
 
@@ -117,18 +116,6 @@ public interface K8s extends HostService {
      * </pre>
      */
     Kubelet kubelet(Map<String, Object> args);
-
-    /**
-     * Returns the host that can be used to have access to the cluster via
-     * kubectl.
-     */
-    ClusterHost getClusterHost();
-
-    /**
-     * Returns the hosts that can be used to have access to the clusters via
-     * kubectl.
-     */
-    List<ClusterHost> getClusterHosts();
 
     /**
      * Adds node label.
