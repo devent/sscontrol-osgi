@@ -23,7 +23,6 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.tls.external.Tls
 import com.anrisoftware.sscontrol.tls.external.Tls.TlsFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
@@ -62,7 +61,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
      * access the cluster.
      */
     List<ClusterHost> getCluster() {
-        K8s service = service
+        ClusterService service = service
         service.clusterHosts
     }
 
@@ -250,6 +249,10 @@ abstract class AbstractKubectlLinux extends ScriptBase {
 
     def getClientTls() {
         getClusterTls()
+    }
+
+    File getKubectlCmd() {
+        getScriptFileProperty 'kubectl_cmd'
     }
 
     String getRobobeeLabelNode() {

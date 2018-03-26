@@ -39,8 +39,8 @@ import com.anrisoftware.sscontrol.k8s.backup.service.internal.DirDestinationImpl
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory;
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.SourceImpl.SourceImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
@@ -209,17 +209,17 @@ public class BackupImpl implements Backup {
     }
 
     @Override
-    public ClusterHost getCluster() {
-        return getClusters().get(0);
+    public ClusterHost getClusterHost() {
+        return getClusterHosts().get(0);
     }
 
-    public void addClusters(List<ClusterHost> list) {
+    public void addClusterHosts(List<ClusterHost> list) {
         this.clusters.addAll(list);
         log.clustersAdded(this, list);
     }
 
     @Override
-    public List<ClusterHost> getClusters() {
+    public List<ClusterHost> getClusterHosts() {
         return Collections.unmodifiableList(clusters);
     }
 
@@ -261,7 +261,7 @@ public class BackupImpl implements Backup {
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets())
-                .append("clusters", getClusters()).toString();
+                .append("clusters", getClusterHosts()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
@@ -280,7 +280,7 @@ public class BackupImpl implements Backup {
     private void parseClusters(Map<String, Object> args) {
         Object v = args.get("clusters");
         assertThat("clusters=null", v, notNullValue());
-        addClusters((List<ClusterHost>) v);
+        addClusterHosts((List<ClusterHost>) v);
     }
 
 }

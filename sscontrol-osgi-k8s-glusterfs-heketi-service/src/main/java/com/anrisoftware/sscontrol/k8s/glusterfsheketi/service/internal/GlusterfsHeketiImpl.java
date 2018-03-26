@@ -230,17 +230,17 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     }
 
     @Override
-    public ClusterHost getCluster() {
-        return getClusters().get(0);
+    public ClusterHost getClusterHost() {
+        return getClusterHosts().get(0);
     }
 
-    public void addClusters(List<ClusterHost> list) {
+    public void addClusterHosts(List<ClusterHost> list) {
         this.clusters.addAll(list);
         log.clustersAdded(this, list);
     }
 
     @Override
-    public List<ClusterHost> getClusters() {
+    public List<ClusterHost> getClusterHosts() {
         return Collections.unmodifiableList(clusters);
     }
 
@@ -331,8 +331,8 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets())
-                .append("clusters", getClusters()).append("repos", getRepos())
-                .toString();
+                .append("clusters", getClusterHosts())
+                .append("repos", getRepos()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
@@ -376,7 +376,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     private void parseClusters(Map<String, Object> args) {
         Object v = args.get("clusters");
         assertThat("clusters=null", v, notNullValue());
-        addClusters((List<ClusterHost>) v);
+        addClusterHosts((List<ClusterHost>) v);
     }
 
     @SuppressWarnings("unchecked")
