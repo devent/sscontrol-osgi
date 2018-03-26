@@ -72,6 +72,8 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final Map<String, Object> vars;
 
+    private String destination;
+
     @Inject
     FromRepositoryImpl(FromRepositoryImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -109,6 +111,17 @@ public class FromRepositoryImpl implements FromRepository {
     @Override
     public Map<String, Object> getVars() {
         return vars;
+    }
+
+    /**
+     * <pre>
+     * dest dir: "/etc/kubernetes/addon"
+     * </pre>
+     */
+    public void dest(Map<String, Object> args) {
+        Object v = args.get("dir");
+        assertThat("dir=null", v, notNullValue());
+        setDestination(v.toString());
     }
 
     @Override
@@ -186,6 +199,16 @@ public class FromRepositoryImpl implements FromRepository {
         return serviceProperties;
     }
 
+    public void setDestination(String destination) {
+        this.destination = destination;
+        log.destinationSet(this, destination);
+    }
+
+    @Override
+    public String getDestination() {
+        return destination;
+    }
+
     @Override
     public String getName() {
         return "from-repository";
@@ -205,6 +228,14 @@ public class FromRepositoryImpl implements FromRepository {
         parseClusters(args);
         parseRepos(args);
         parseRegistries(args);
+        parseDestination(args);
+    }
+
+    private void parseDestination(Map<String, Object> args) {
+        Object v = args.get("dest");
+        if (v != null) {
+            setDestination(v.toString());
+        }
     }
 
     @SuppressWarnings("unchecked")

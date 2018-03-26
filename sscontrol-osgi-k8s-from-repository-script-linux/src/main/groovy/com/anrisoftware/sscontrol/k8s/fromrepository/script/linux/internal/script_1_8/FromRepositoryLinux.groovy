@@ -63,9 +63,9 @@ class FromRepositoryLinux extends ScriptBase {
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         assertThat "checkout-dir=null for $service", dir, notNullValue()
         try {
-            parseTemplateFiles(dir)
-            buildDocker(dir)
-            kubeFiles(dir)
+            parseTemplateFiles dir
+            buildDocker dir
+            kubeFiles dir
         } finally {
             shell "rm -rf $dir" call()
         }
@@ -115,15 +115,31 @@ class FromRepositoryLinux extends ScriptBase {
         createCmd findFilesFactory, chdir: dir, suffix: kubectlFilesPatterns call() each {
             if (!StringUtils.isBlank(it)) {
                 try {
-                    File tmp = File.createTempFile(it, null)
-                    fetch src: "$dir/$it", dest: tmp call()
-                    def s = FileUtils.readFileToString(tmp, charset)
-                    tmp.delete()
-                    log.trace 'Apply manifest {}/{}: ```\n{}```', dir, it, s
-                    kubectlClusterLinux.runKubectl chdir: dir, args: "apply -f $it"
+                    readApplyManifestTmpFile dir, it
                 } catch (e) {
                     throw new ApplyManifestException(e, dir, it)
                 }
+            }
+        }
+    }
+
+    def readApplyManifestTmpFile(File dir, def name) {
+        withLocalTempFile name, { File tmp ->
+            readApplyManifest dir, name, tmp
+        }
+    }
+
+    def readApplyManifest(File dir, def name, File tmp) {
+        fetch src: "$dir/$name", dest: tmp call()
+        def s = FileUtils.readFileToString(tmp, charset)
+        withRemoteTempFile { File destTmp ->
+            copy src: tmp, dest: destTmp call()
+            log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
+            FromRepository service = service
+            if (service.destination) {
+                deployToDestination name, destTmp, service.destination
+            } else {
+                kubectlClusterLinux.runKubectl chdir: dir, args: "apply -f $destTmp"
             }
         }
     }
@@ -176,6 +192,16 @@ class FromRepositoryLinux extends ScriptBase {
         } finally {
             tmpdir.deleteDir()
         }
+    }
+
+    /**
+     * Deploy manifests to the destination directory.
+     */
+    def deployToDestination(String name, File destTmp, String destination) {
+        shell privileged: true, """
+mkdir -p ${destination}
+mv ${destTmp} ${destination}/${name}
+""" call()
     }
 
     @Override

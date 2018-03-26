@@ -201,6 +201,62 @@ service "from-repository", repo: "wordpress-app" with {
         doTest test
     }
 
+    @Test
+    void "load manifests to destination directory in argument"() {
+        def test = [
+            script: '''
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app", dest: "/etc/kubernetes/addon"
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 0
+                assert s.destination == "/etc/kubernetes/addon"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "load manifests to destination directory as statement"() {
+        def test = [
+            script: '''
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app" with {
+    dest dir: "/etc/kubernetes/addon"
+}
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 0
+                assert s.destination == "/etc/kubernetes/addon"
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         test.before(test)

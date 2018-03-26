@@ -1,2 +1,0 @@
-apply -f ./mysql-deployment.yaml
-apply -f ./wordpress-deployment.yaml

@@ -721,6 +721,32 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Calls the callback on a created local temporary file. The temporary file
+     * is deleted after the callback returns.
+     */
+    def withLocalTempFile(def name, def callback) {
+        File tmp = File.createTempFile(name, null)
+        try {
+            return callback(tmp)
+        } finally {
+            tmp.delete()
+        }
+    }
+
+    /**
+     * Calls the callback on a created remote temporary file. The temporary file
+     * is deleted after the callback returns.
+     */
+    def withRemoteTempFile(def callback, Map args=[:]) {
+        File tmp = createTmpFile(args)
+        try {
+            return callback(tmp)
+        } finally {
+            deleteTmpFile tmp
+        }
+    }
+
+    /**
      * Creates and returns a temporary file.
      */
     File createTmpFile(Map args=[:]) {

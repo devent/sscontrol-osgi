@@ -166,9 +166,9 @@ service "from-repository", repo: "wordpress-app" with {
     }
 
     @Test
-    void "apply stg yaml templates from ssh"() {
+    void "apply stg yaml templates from directory"() {
         def test = [
-            name: "server_stg_yaml_files",
+            name: "server_stg_yaml_dir",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "k8s-cluster"
@@ -189,6 +189,38 @@ service "from-repository", repo: "wordpress-app" with {
             after: { Map test -> tearDownServer test: test },
             expected: { Map args ->
                 assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp/tmp', 'kubectl.out').absolutePath), "${args.test.name}_kubectl_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "store stg yaml templates from directory"() {
+        def test = [
+            name: "server_store_stg_yaml_dir",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=${checkoutDir}"
+}
+service "from-repository", repo: "wordpress-app", dest: "/tmp/addon/wordpress" with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w'
+            ],
+            expectedServicesSize: 4,
+            before: { Map test -> setupServer test: test, zipArchive: wordpressStgZip },
+            after: { Map test ->
+                tearDownServer test: test
+            },
+            expected: { Map args ->
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp/addon', 'mysql-deployment.yaml').absolutePath), "${args.test.name}_mysql_deployment_expected.txt"
+                assertStringResource FromRepositoryManifestsServerTest, readRemoteFile(new File('/tmp/addon', 'wordpress-deployment.yaml').absolutePath), "${args.test.name}_wordpress_deployment_expected.txt"
             },
         ]
         doTest test
