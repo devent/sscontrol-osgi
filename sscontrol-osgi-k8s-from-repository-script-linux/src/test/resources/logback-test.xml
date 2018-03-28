@@ -35,6 +35,6 @@
     <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
     <logger name="com.anrisoftware.sscontrol" level="DEBUG" />
     <logger name="com.anrisoftware.sscontrol.shell.internal.scp" level="INFO" />
-    <logger name="com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_7" level="TRACE" />
+    <logger name="com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8" level="TRACE" />
 
 </configuration>
