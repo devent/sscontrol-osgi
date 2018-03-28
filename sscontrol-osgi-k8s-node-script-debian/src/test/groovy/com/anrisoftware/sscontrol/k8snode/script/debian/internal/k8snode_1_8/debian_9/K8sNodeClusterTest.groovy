@@ -81,7 +81,7 @@ targets['nodes'].eachWithIndex { host, i ->
      * kubeadm token create $token --print-join-command --ttl=0
      * <pre>
      */
-    static final String joinCommand = 'kubeadm join --token 3d5c4c.f6ca746816840ce2 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:37cccdbca6bb83b21c3b238036e1594c1419f17c736b891a4401f6371d9cb566'
+    static final String joinCommand = 'kubeadm join --token 91c898.a37b307a4a83f9ff 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:1207b308a0dbca72a34a2c2b3288b11de81fe1e144eb56a4e985a37f40017c6f'
 
     static final Map sockets = [
         masters: [
