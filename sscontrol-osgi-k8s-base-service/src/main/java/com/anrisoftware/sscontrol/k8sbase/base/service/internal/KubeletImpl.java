@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -56,7 +54,6 @@ public class KubeletImpl implements Kubelet {
         Kubelet create(Map<String, Object> args);
     }
 
-    @Inject
     private transient KubeletImplLogger log;
 
     private Tls tls;
@@ -69,13 +66,17 @@ public class KubeletImpl implements Kubelet {
 
     private Tls client;
 
+    private String address;
+
     @AssistedInject
-    KubeletImpl(TlsFactory tlsFactory) {
-        this(tlsFactory, new HashMap<String, Object>());
+    KubeletImpl(KubeletImplLogger log, TlsFactory tlsFactory) {
+        this(log, tlsFactory, new HashMap<String, Object>());
     }
 
     @AssistedInject
-    KubeletImpl(TlsFactory tlsFactory, @Assisted Map<String, Object> args) {
+    KubeletImpl(KubeletImplLogger log, TlsFactory tlsFactory,
+            @Assisted Map<String, Object> args) {
+        this.log = log;
         this.tlsFactory = tlsFactory;
         this.tls = tlsFactory.create(new HashMap<String, Object>());
         this.client = tlsFactory.create(new HashMap<String, Object>());
@@ -98,9 +99,20 @@ public class KubeletImpl implements Kubelet {
         return preferredAddressTypes;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+        log.addressSet(this, address);
+    }
+
+    @Override
+    public String getAddress() {
+        return address;
+    }
+
     public void setPort(int port) {
         assertThat("port>0", port, greaterThan(0));
         this.port = port;
+        log.portSet(this, port);
     }
 
     @Override
@@ -144,13 +156,12 @@ public class KubeletImpl implements Kubelet {
 
     /**
      * <pre>
-     * bind port: 10250
+     * bind address: "192.168.56.200", port: 10250
      * </pre>
      */
     public void bind(Map<String, Object> args) {
-        Object v = args.get("port");
-        Integer port = (Integer) v;
-        setPort(port);
+        parsePort(args);
+        parseAddress(args);
     }
 
     @Override
@@ -159,9 +170,21 @@ public class KubeletImpl implements Kubelet {
     }
 
     private void parseArgs(Map<String, Object> args) {
+        parsePort(args);
+        parseAddress(args);
+    }
+
+    private void parsePort(Map<String, Object> args) {
         Object v = args.get("port");
         if (v != null) {
             setPort((int) v);
+        }
+    }
+
+    private void parseAddress(Map<String, Object> args) {
+        Object v = args.get("address");
+        if (v != null) {
+            setAddress(v.toString());
         }
     }
 

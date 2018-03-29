@@ -1,9 +1,16 @@
 kubeletConfig(parent, vars) ::= <<
 # auto-generated from robobee-run
 [Service]
-Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=<parent.failSwapOn><nodeLabels(parent, vars)><nodeTaints(parent, vars)>"
+Environment="KUBELET_EXTRA_ARGS=<kubeletArguments(parent, vars)>"
 
 >>
+
+kubeletArguments(parent, vars) ::= <%
+--fail-swap-on=<parent.failSwapOn>
+<nodeLabels(parent, vars)>
+<nodeTaints(parent, vars)>
+<nodeIp(parent, vars)>
+%>
 
 nodeLabels(parent, vars) ::= <%
 <if(parent.haveLabels)> --node-labels=<parent.nodeLabels;separator=","><endif>
@@ -11,4 +18,8 @@ nodeLabels(parent, vars) ::= <%
 
 nodeTaints(parent, vars) ::= <%
 <if(parent.haveTaints)> --register-with-taints=<parent.nodeTaints;separator=","><endif>
+%>
+
+nodeIp(parent, vars) ::= <%
+<if(parent.service.kubelet.address)> --node-ip=<parent.service.kubelet.address><endif>
 %>

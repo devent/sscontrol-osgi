@@ -64,6 +64,7 @@ service "ssh", group: "nodes" with {
 service "k8s-cluster", target: "masters"
 service "k8s-master", name: "node-0" with {
     bind secure: "192.168.56.200"
+    kubelet address: "192.168.56.200"
     nodes << "masters"
     nodes << "nodes"
     plugin "canal"

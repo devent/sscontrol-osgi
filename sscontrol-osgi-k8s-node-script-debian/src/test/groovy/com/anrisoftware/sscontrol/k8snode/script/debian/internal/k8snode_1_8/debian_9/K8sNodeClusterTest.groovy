@@ -49,7 +49,9 @@ service "ssh", group: "nodes" with {
 }
 service "k8s-cluster", target: "masters"
 targets['nodes'].eachWithIndex { host, i ->
+println host.hostAddress
     service "k8s-node", target: host, name: "node-${i+1}" with {
+        kubelet address: host.hostAddress
         cluster host: "masters", join: joinCommand
         nodes.labels[i].each { label << it }
         nodes.taints[i].each { taint << it }
@@ -81,7 +83,7 @@ targets['nodes'].eachWithIndex { host, i ->
      * kubeadm token create $token --print-join-command --ttl=0
      * <pre>
      */
-    static final String joinCommand = 'kubeadm join --token 91c898.a37b307a4a83f9ff 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:1207b308a0dbca72a34a2c2b3288b11de81fe1e144eb56a4e985a37f40017c6f'
+    static final String joinCommand = 'kubeadm join --token 2ccc55.779eedb3afaff8e2 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:21f76c871a24fb7bf1d95708ec70883174a7688d2cac7dcbf4d1f2a7d39eb2ac'
 
     static final Map sockets = [
         masters: [

@@ -80,7 +80,6 @@ service "k8s-master" with {
                 K8s s = services.getServices('k8s-master')[0] as K8s
                 assert s.targets.size() == 0
                 assert s.cluster.name == 'master-0'
-                assert s.cluster.hosts.containsAll("default")
                 assert s.cluster.advertiseAddress == '192.168.0.1'
                 assert s.cluster.serviceRange == '10.3.0.0/24'
                 assert s.cluster.podRange == '10.2.0.0/16'
@@ -160,15 +159,14 @@ service "k8s-master" with {
     }
 
     @Test
-    void "kubelet"() {
+    void "kubelet with statements"() {
         def test = [
-            name: 'kubelet',
             input: '''
 service "k8s-master" with {
     kubelet.with {
         tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"
         preferred types: "InternalIP,Hostname,ExternalIP"
-        bind port: 10250
+        bind address: "192.168.56.200", port: 10250
     }
 }
 ''',
@@ -179,11 +177,30 @@ service "k8s-master" with {
                 assert s.kubelet.tls.cert.toString() =~ /.*cert\.pem/
                 assert s.kubelet.tls.key.toString() =~ /.*key\.pem/
                 assert s.kubelet.preferredAddressTypes.size() == 3
+                assert s.kubelet.address == "192.168.56.200"
                 assert s.kubelet.port == 10250
                 def k = -1
                 assert s.kubelet.preferredAddressTypes[++k] == "InternalIP"
                 assert s.kubelet.preferredAddressTypes[++k] == "Hostname"
                 assert s.kubelet.preferredAddressTypes[++k] == "ExternalIP"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "kubelet bind arguments"() {
+        def test = [
+            input: '''
+service "k8s-master" with {
+    kubelet address: "192.168.56.200", port: 10250
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8s s = services.getServices('k8s-master')[0] as K8s
+                assert s.kubelet.address == "192.168.56.200"
+                assert s.kubelet.port == 10250
             },
         ]
         doTest test
