@@ -28,6 +28,20 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 public interface Kubelet {
 
     /**
+     * Returns the address to bind kubelet to.
+     *
+     * @return {@link String}
+     */
+    String getAddress();
+
+    /**
+     * Returns the port to bind kubelet to.
+     *
+     * @return {@link Integer}
+     */
+    Integer getPort();
+
+    /**
      * Kubelet TLS.
      */
     Tls getTls();
@@ -42,5 +56,4 @@ public interface Kubelet {
      */
     List<String> getPreferredAddressTypes();
 
-    Integer getPort();
 }

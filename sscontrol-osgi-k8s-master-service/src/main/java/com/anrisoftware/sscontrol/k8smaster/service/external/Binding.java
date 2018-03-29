@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.k8smaster.service.external;
 
 /**
- * <i>Binding</i>.
+ * Address and port for the api-server.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

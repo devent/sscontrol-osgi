@@ -35,6 +35,11 @@ public interface K8sMaster extends K8s {
 
     List<String> getAdmissions();
 
+    /**
+     * Returns the address and port for the api-server.
+     *
+     * @return {@link Binding}
+     */
     Binding getBinding();
 
     Account getAccount();

@@ -121,6 +121,30 @@ service "k8s-master", name: "node-0", advertise: targets.all[0] with {
     }
 
     @Test
+    void "explicit kubelet node address"() {
+        def test = [
+            name: "script_kubelet_node_address",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-cluster"
+service "k8s-master", name: "node-0", advertise: '192.168.0.100' with {
+    kubelet address: "192.168.56.200"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 3,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "script_kubelet_labels"() {
         def test = [
             name: "script_kubelet_labels",

@@ -132,6 +132,29 @@ service "k8s-node", name: "node-0", join: 'kubeadm join abc'
         doTest test
     }
 
+    @Test
+    void "explicit kubelet node address"() {
+        def test = [
+            name: "script_kubelet_node_address",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "ssh", host: "etcd-0", socket: localhostSocket, group: "etcd"
+service "k8s-node", name: "node-0", join: 'kubeadm join abc' with {
+    kubelet address: "192.168.56.200"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket, certs: certs],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sNodeScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     @Before
     void checkProfile() {
         checkProfile LOCAL_PROFILE

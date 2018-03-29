@@ -39,7 +39,11 @@ final class KubeletImplLogger extends AbstractLogger {
 
         preferredTypesAdded("Preferred node address types {} added to {}"),
 
-        clientSet("Client {} set for {}");
+        clientSet("Client {} set for {}"),
+
+        portSet("Port {} set for {}"),
+
+        addressSet("Address {} set for {}");
 
         private String name;
 
@@ -70,6 +74,14 @@ final class KubeletImplLogger extends AbstractLogger {
 
     void clientSet(KubeletImpl kubelet, Tls client) {
         debug(clientSet, client, kubelet);
+    }
+
+    void portSet(KubeletImpl kubelet, int port) {
+        debug(m.portSet, port, kubelet);
+    }
+
+    void addressSet(KubeletImpl kubelet, String address) {
+        debug(m.addressSet, address, kubelet);
     }
 
 }
