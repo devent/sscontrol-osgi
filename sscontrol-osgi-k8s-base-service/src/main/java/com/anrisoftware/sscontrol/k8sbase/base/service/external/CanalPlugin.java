@@ -23,4 +23,10 @@ package com.anrisoftware.sscontrol.k8sbase.base.service.external;
  */
 public interface CanalPlugin extends Plugin {
 
+    /**
+     * Returns the interface used by canal for host <-> host communication.
+     *
+     * @return {@link String}
+     */
+    String getIface();
 }
