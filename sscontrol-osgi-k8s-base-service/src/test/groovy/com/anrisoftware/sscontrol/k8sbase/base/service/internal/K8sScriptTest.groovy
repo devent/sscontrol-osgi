@@ -26,6 +26,7 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.CanalPlugin
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.EtcdPlugin
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImpl.K8sImplFactory
@@ -153,6 +154,52 @@ service "k8s-master" with {
                 assert e.name == 'etcd'
                 assert e.endpoints.size() == 1
                 assert e.endpoints[0] == 'http://etcd-0:2379'
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "canal plugin flannel iface with argument"() {
+        def test = [
+            input: """
+service "k8s-master" with {
+    plugin "canal", iface: "enp0s8"
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8s s = services.getServices('k8s-master')[0] as K8s
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.plugins.size() == 1
+                CanalPlugin e = s.plugins.canal
+                assert e.name == 'canal'
+                assert e.iface == "enp0s8"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "canal plugin flannel iface with statement"() {
+        def test = [
+            input: """
+service "k8s-master" with {
+    plugin "canal" with {
+        iface name: "enp0s8"
+    }
+}
+""",
+            expected: { HostServices services ->
+                assert services.getServices('k8s-master').size() == 1
+                K8s s = services.getServices('k8s-master')[0] as K8s
+                assert s.targets.size() == 0
+                assert s.cluster.serviceRange == null
+                assert s.plugins.size() == 1
+                CanalPlugin e = s.plugins.canal
+                assert e.name == 'canal'
+                assert e.iface == "enp0s8"
             },
         ]
         doTest test
