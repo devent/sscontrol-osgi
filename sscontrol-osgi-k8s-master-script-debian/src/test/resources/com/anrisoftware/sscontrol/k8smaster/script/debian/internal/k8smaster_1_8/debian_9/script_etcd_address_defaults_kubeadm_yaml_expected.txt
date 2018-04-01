@@ -10,7 +10,7 @@ networking:
   dnsDomain: cluster.local
   serviceSubnet: 10.96.0.0/12
   podSubnet: 10.244.0.0/16
-kubernetesVersion: v1.8.8
+kubernetesVersion: v1.9.6
 nodeName: andrea-cluster
 selfHosted: true
 certificatesDir: /tmp/junit/junit/etc/kubernetes/pki

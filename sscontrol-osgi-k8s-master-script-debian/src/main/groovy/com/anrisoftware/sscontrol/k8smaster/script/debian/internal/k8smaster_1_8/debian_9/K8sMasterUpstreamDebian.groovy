@@ -15,11 +15,13 @@
  */
 package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_8.debian_9
 
+import static org.apache.commons.lang3.StringUtils.*
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.CanalPlugin
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.debian.debian_9.AbstractK8sUpstreamDebian
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 import com.anrisoftware.sscontrol.k8smaster.service.external.K8sMaster
@@ -132,10 +134,18 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
 
     def installCanalNetwork() {
         log.debug 'Installs canal as the pod network for {}', service
-        shell """
+        K8sMaster service = service
+        CanalPlugin canal = service.plugins.canal
+        withRemoteTempFile { File tmp ->
+            def replace = ""
+            replace += isNoneBlank(canal.iface) ? "sed -ie 's/  canal_iface: \"\"/  canal_iface: \"${canal.iface}\"/' ${tmp}" : ""
+            shell """
+wget -O ${tmp} https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+${replace}
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+kubectl apply -f ${tmp}
 """ call()
+        }
     }
 
     @Inject

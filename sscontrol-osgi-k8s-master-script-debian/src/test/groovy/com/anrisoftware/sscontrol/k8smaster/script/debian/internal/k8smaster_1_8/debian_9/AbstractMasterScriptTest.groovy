@@ -62,6 +62,7 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'ufw',
             'modprobe',
             'kubeadm',
+            'sed'
         ]
     }
 }
