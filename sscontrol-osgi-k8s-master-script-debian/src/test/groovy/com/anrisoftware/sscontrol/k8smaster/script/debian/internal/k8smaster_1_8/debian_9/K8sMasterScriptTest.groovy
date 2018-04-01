@@ -331,6 +331,28 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
         doTest test
     }
 
+    @Test
+    void "canal iface network"() {
+        def test = [
+            name: "script_canal_iface_network",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
+    plugin "canal", iface: "enp0s8"
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource K8sMasterScriptTest, dir, "sed.out", "${args.test.name}_sed_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
     //@Test
     void "script_taints_labels"() {
         def test = [

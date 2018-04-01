@@ -67,9 +67,7 @@ service "k8s-master", name: "node-0" with {
     kubelet address: "192.168.56.200"
     nodes << "masters"
     nodes << "nodes"
-    plugin "canal" with {
-        flannel iface: "enp0s8"
-    }
+    plugin "canal", iface: "enp0s8"
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
     }

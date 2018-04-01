@@ -273,14 +273,20 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Fetch command.
+     * Fetches a file from the remote the local.
+     * <pre>
+     * fetch "source.txt" call()
+     * </pre>
      */
     Fetch fetch(String src) {
         fetch([src: src])
     }
 
     /**
-     * Fetch command.
+     * Fetches a file from the remote the local.
+     * <pre>
+     * fetch src: "source.txt", dest: "dest.txt" call()
+     * </pre>
      */
     Fetch fetch(Map args) {
         def a = setupArgs(args, 'fetch')
@@ -289,7 +295,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Copy command.
+     * Copies a file from the local to the remote.
      * <p>
      * <pre>
      * copy dest: '/etc/config' call()
@@ -303,7 +309,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Copy command.
+     * Copies a file from the local to the remote.
      */
     Copy copy(Map args) {
         def a = setupArgs(args, 'copy')
