@@ -1,0 +1,57 @@
+/*
+ * Mandatory:
+ *
+ * vars.iperf.image.name
+ * vars.iperf.image.version
+ * vars.iperf.limits.cpu
+ * vars.iperf.limits.memory
+ * vars.iperf.requests.cpu
+ * vars.iperf.requests.memory
+ */
+
+iperf-ds-yaml(parent, vars) ::= <<
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-test
+
+---
+
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: iperf-server
+  namespace: kube-test
+  labels:
+    component: iperf-server
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: iperf-server
+      namespace: kube-test
+      labels:
+        component: iperf-server
+    spec:
+      containers:
+      - name: iperf
+        image: <vars.iperf.image.name>:<vars.iperf.image.version>
+        args:
+        - -s
+        resources:
+          limits:
+            cpu: <vars.iperf.limits.cpu>
+            memory: <vars.iperf.limits.memory>
+          requests:
+            cpu: <vars.iperf.requests.cpu>
+            memory: <vars.iperf.requests.memory>
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Equal
+
+---
+>>

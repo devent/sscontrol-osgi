@@ -18,54 +18,33 @@ package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.de
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux.AbstractK8sNodeCheckPodConnectivityIperfLinux
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
 
 import groovy.util.logging.Slf4j
 
 /**
- * K8s-Master Debian.
+ * Checks the pod connectivity between nodes with iperf3.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class K8sNodeDebian extends ScriptBase {
+class K8sNodeCheckPodConnectivityIperfDebian extends AbstractK8sNodeCheckPodConnectivityIperfLinux {
 
     @Inject
     K8sNodeDebianProperties debianPropertiesProvider
 
-    K8sNodeUpstreamDebian upstream
+    KubectlClusterDebian kubectlClusterLinux
 
     @Inject
-    K8sNodeUfwDebianFactory ufwFactory
-
-    @Inject
-    K8sNodeCheckPodConnectivityIperfDebianFactory podConnectivityFactory
-
-    DebianUtils debian
-
-    @Inject
-    void setDebian(Debian_9_UtilsFactory factory) {
-        this.debian = factory.create this
-    }
-
-    @Inject
-    void setK8sNodeUpstreamDebianFactory(K8sNodeUpstreamDebianFactory factory) {
-        this.upstream = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    void setKubectlClusterLinuxFactory(KubectlClusterDebianFactory factory) {
+        this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
-    def run() {
-        debian.installPackages()
-        debian.enableModules()
-        upstream.setupDefaults()
-        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
-        upstream.installKubeadm()
-        upstream.createService()
-        upstream.joinNode()
-        upstream.postInstall()
+    AbstractKubectlLinux getKubectlCluster() {
+        kubectlClusterLinux
     }
 
     @Override

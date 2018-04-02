@@ -56,6 +56,7 @@ targets['nodes'].eachWithIndex { host, i ->
         nodes.taints[i].each { taint << it }
     }
 }
+service "k8s-node-pod-connectivity", target: "nodes"
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
             expectedServicesSize: 3,

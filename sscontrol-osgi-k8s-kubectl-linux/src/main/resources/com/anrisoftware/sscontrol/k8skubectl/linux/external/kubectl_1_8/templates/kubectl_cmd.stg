@@ -147,7 +147,7 @@ kubeKey(parent, vars) ::= <%
 
 kubectlCmd(parent, vars) ::= <<
 <setupKubectl(parent, vars)>
-<parent.kubectlCmd> <vars.args>
+<parent.kubectlCmd> <vars.args;separator=" ">
 
 >>
 
