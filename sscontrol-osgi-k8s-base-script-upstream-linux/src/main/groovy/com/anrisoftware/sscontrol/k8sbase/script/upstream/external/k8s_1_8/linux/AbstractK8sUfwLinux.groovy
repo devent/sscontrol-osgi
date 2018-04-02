@@ -93,7 +93,10 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
     def openNodesPorts() {
         K8s service = this.service
         if (service.hasProperty("nodes")) {
-            ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
+            if (service.plugins.containsKey("canal")) {
+                ufw.allowUdpPortsOnNodes nodes, nodesAddresses, canalPrivateUdpPorts, this
+            }
+            ufw.allowTcpPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
         }
     }
 
@@ -113,6 +116,10 @@ abstract class AbstractK8sUfwLinux extends ScriptBase {
 
     List getPrivateTcpPorts() {
         getScriptListProperty 'private_tcp_ports'
+    }
+
+    List getCanalPrivateUdpPorts() {
+        getScriptListProperty 'canal_private_udp_ports'
     }
 
     List getNodes() {
