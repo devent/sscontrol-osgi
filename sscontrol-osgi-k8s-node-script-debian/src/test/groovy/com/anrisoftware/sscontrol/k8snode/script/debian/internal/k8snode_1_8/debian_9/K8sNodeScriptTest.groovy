@@ -108,7 +108,7 @@ service "k8s-node", name: "node-0", join: 'kubeadm join abc' with {
     }
 
     @Test
-    void "script_nodes_ufw"() {
+    void "open ports for node via ufw"() {
         def test = [
             name: "script_nodes_ufw",
             script: '''

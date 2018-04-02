@@ -76,8 +76,15 @@ abstract class UfwUtils {
     /**
      * Allows ports on all nodes.
      */
-    def allowPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, Object script) {
+    def allowTcpPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, Object script) {
         allowPortsOnNodes nodes, nodesAddresses, ports, "tcp", script
+    }
+
+    /**
+     * Allows ports on all nodes.
+     */
+    def allowUdpPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, Object script) {
+        allowPortsOnNodes nodes, nodesAddresses, ports, "udp", script
     }
 
     /**

@@ -226,7 +226,7 @@ service "k8s-master", name: "node-0", advertise: '192.168.0.100' with {
     }
 
     @Test
-    void "script_master_ufw"() {
+    void "open ports for master via ufw"() {
         def test = [
             name: "script_master_ufw",
             script: '''
@@ -255,7 +255,7 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
     }
 
     @Test
-    void "script_nodes_ufw"() {
+    void "open ports between nodes via ufw"() {
         def test = [
             name: "script_nodes_ufw",
             script: '''
