@@ -74,6 +74,8 @@ public class FromRepositoryImpl implements FromRepository {
 
     private String destination;
 
+    private boolean dryrun;
+
     @Inject
     FromRepositoryImpl(FromRepositoryImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -85,6 +87,7 @@ public class FromRepositoryImpl implements FromRepository {
         this.repos = new ArrayList<>();
         this.registries = new ArrayList<>();
         this.vars = new HashMap<>();
+        this.dryrun = false;
         parseArgs(args);
     }
 
@@ -214,6 +217,16 @@ public class FromRepositoryImpl implements FromRepository {
         return "from-repository";
     }
 
+    public void setDryrun(boolean dryrun) {
+        this.dryrun = dryrun;
+        log.dryrunSet(this, dryrun);
+    }
+
+    @Override
+    public boolean getDryrun() {
+        return dryrun;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -229,6 +242,14 @@ public class FromRepositoryImpl implements FromRepository {
         parseRepos(args);
         parseRegistries(args);
         parseDestination(args);
+        parseDryrun(args);
+    }
+
+    private void parseDryrun(Map<String, Object> args) {
+        Object v = args.get("dryrun");
+        if (v != null) {
+            setDryrun((boolean) v);
+        }
     }
 
     private void parseDestination(Map<String, Object> args) {

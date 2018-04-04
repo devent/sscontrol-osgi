@@ -45,7 +45,9 @@ final class FromRepositoryImplLogger extends AbstractLogger {
 
         registriesAdded("Repositories {} added to {}"),
 
-        destinationSet("Manifests destination {} set for {}");
+        destinationSet("Manifests destination {} set for {}"),
+
+        dryrunSet("Dry-run {} set for {}");
 
         private String name;
 
@@ -80,5 +82,9 @@ final class FromRepositoryImplLogger extends AbstractLogger {
 
     void destinationSet(FromRepositoryImpl from, String dest) {
         debug(m.destinationSet, dest, from);
+    }
+
+    void dryrunSet(FromRepositoryImpl from, boolean dryrun) {
+        debug(m.dryrunSet, dryrun, from);
     }
 }

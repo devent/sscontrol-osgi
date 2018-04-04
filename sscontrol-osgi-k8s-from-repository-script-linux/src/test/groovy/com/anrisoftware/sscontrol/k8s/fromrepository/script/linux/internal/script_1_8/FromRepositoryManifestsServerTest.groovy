@@ -226,6 +226,36 @@ service "from-repository", repo: "wordpress-app", dest: "/tmp/addon/wordpress" w
         doTest test
     }
 
+    @Test
+    void "dry run templates"() {
+        def test = [
+            name: "server_dry_run",
+            script: '''
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "/tmp/wordpress-app"
+    property << "checkout_directory=${checkoutDir}"
+}
+service "from-repository", repo: "wordpress-app", dryrun: true with {
+    property << "kubectl_cmd=/tmp/kubectl"
+}
+''',
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                checkoutDir: '/tmp/w'
+            ],
+            expectedServicesSize: 4,
+            before: { Map test -> setupServer test: test, zipArchive: wordpressStgZip },
+            after: { Map test ->
+                tearDownServer test: test
+            },
+            expected: { Map args ->
+            },
+        ]
+        doTest test
+    }
+
     def setupServer(Map args) {
         def createArchiveFile = ""
         def archiveStream = null

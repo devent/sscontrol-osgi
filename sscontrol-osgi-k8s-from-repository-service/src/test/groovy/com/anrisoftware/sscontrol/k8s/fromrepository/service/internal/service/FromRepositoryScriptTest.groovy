@@ -257,6 +257,33 @@ service "from-repository", repo: "wordpress-app" with {
         doTest test
     }
 
+    @Test
+    void "dry-run to see the generated templates"() {
+        def test = [
+            script: '''
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app", dryrun: true
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 0
+                assert s.dryrun == true
+            },
+        ]
+        doTest test
+    }
+
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test
         test.before(test)
