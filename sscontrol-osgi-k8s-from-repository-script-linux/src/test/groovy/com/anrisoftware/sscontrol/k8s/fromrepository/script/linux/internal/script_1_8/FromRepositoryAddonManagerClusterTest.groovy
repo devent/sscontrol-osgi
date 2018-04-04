@@ -50,8 +50,7 @@ service "from-repository", repo: "kube-addon-manager" with {
     vars << [
         addonManager: [
             image: [name: 'k8s.gcr.io/kube-addon-manager', version: 'v8.6'],
-            limits: [cpu: '5m', memory: '50Mi'],
-            requests: [cpu: '5m', memory: '50Mi'],
+            limits: [cpu: '0.25', memory: '50Mi'],
         ]
     ]
 }
