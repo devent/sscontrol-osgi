@@ -51,4 +51,10 @@ public interface FromRepository extends ClusterService {
      * Returns the manifests destination directory or <code>null</code>.
      */
     String getDestination();
+
+    /**
+     * Returns true if it should just output the generated manifests but not run
+     * anything.
+     */
+    boolean getDryrun();
 }

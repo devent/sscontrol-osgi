@@ -136,10 +136,10 @@ class FromRepositoryLinux extends ScriptBase {
             copy src: tmp, dest: destTmp call()
             log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
             FromRepository service = service
-            if (service.destination) {
+            if (service.destination && !service.dryrun) {
                 deployToDestination name, destTmp, service.destination
             } else {
-                kubectlClusterLinux.runKubectl chdir: dir, args: "apply -f $destTmp"
+                kubectlClusterLinux.runKubectl chdir: dir, args: "apply ${service.dryrun ? "--dry-run=true" : ""} -f $destTmp"
             }
         }
     }
