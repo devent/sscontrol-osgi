@@ -56,7 +56,7 @@ service "repo-git", group: "heapster-influxdb-grafana-monitoring" with {
     remote url: "git@github.com:robobee-repos/heapster-influxdb-grafana-monitoring.git"
     credentials "ssh", key: robobeeKey
 }
-service "from-repository", repo: "heapster-influxdb-grafana-monitoring" with {
+service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "/etc/kubernetes/addons/cluster-monitoring" with {
     vars << [
         heapster: [
             image: [name: "k8s.gcr.io/heapster-amd64", version: "v1.5.2"],
