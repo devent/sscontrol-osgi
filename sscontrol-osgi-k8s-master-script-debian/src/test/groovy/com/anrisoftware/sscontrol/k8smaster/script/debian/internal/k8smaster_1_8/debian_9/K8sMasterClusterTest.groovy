@@ -71,6 +71,8 @@ service "k8s-master", name: "node-0" with {
     plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
         tls certs.etcd
     }
+    label << "robobeerun.com/heapster=required"
+    label << "robobeerun.com/dashboard=required"
 }
 ''',
             scriptVars: [sockets: sockets, certs: robobeetestCerts],
