@@ -179,8 +179,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     /**
      * <pre>
      * vars << [heketi: [snapshot: [limit: 32]]]
-     * vars << [tolerations: [toleration: [key: 'robobeerun.com/dedicated', effect: 'NoSchedule']]]
-     * vars << [tolerations: [toleration: [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']]]
+     * vars << [tolerations: [toleration: [key: 'node-role.kubernetes.io/master', effect: 'NoSchedule']]]
      * </pre>
      */
     @Override
