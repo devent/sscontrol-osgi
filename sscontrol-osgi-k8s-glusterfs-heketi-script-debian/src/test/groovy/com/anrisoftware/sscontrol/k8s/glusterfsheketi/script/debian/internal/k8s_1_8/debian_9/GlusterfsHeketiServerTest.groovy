@@ -44,9 +44,7 @@ class GlusterfsHeketiServerTest extends AbstractGlusterfsHeketiRunnerTest {
             name: "json_topology_server",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
-}
+service "k8s-cluster"
 service "repo-git", group: "glusterfs-heketi" with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
@@ -55,13 +53,10 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs", nodes: 
     admin key: "MySecret"
     user key: "MyVolumeSecret"
     storage address: "10.2.35.3:8080"
-    vars << [tolerations: [
-        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
-        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
-    ]]
     property << "gluster_kubernetes_deploy_command=/tmp/gk-deploy"
     property << "kubectl_command=/tmp/kubectl"
     property << "commands_quiet=false"
+    property << "node_packages=lvm2:,thin-provisioning-tools:"
     topology parse: """
 {
   "clusters":[
