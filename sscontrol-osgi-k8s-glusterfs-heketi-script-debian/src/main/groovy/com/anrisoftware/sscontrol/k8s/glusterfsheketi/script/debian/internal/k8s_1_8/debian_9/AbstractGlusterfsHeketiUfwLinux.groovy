@@ -73,7 +73,7 @@ abstract class AbstractGlusterfsHeketiUfwLinux extends ScriptBase {
      */
     def updateFirewall() {
         GlusterfsHeketi service = this.service
-        ufw.allowPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
+        ufw.allowTcpPortsOnNodes nodes, nodesAddresses, privateTcpPorts, this
     }
 
     List getNodes() {
