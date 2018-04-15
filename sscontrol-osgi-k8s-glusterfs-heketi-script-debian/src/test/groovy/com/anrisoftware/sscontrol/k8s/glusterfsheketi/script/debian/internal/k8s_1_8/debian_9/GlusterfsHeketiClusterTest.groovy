@@ -54,9 +54,6 @@ service "repo-git", group: "glusterfs-heketi", target: targets.default[0] with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-def glusterNode = targets.default.inject([]) { list, host ->
-    list << host.hostAddress
-}
 service "shell", privileged: true with {
     script << """
 set -e
@@ -109,10 +106,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[0]}"
+                "${glusterNodes[0]}"
               ],
               "storage":[
-                "${glusterNode[0]}"
+                "${glusterNodes[0]}"
               ]
             },
             "zone":1
@@ -125,10 +122,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[1]}"
+                "${glusterNodes[1]}"
               ],
               "storage":[
-                "${glusterNode[1]}"
+                "${glusterNodes[1]}"
               ]
             },
             "zone":2
@@ -141,10 +138,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[2]}"
+                "${glusterNodes[2]}"
               ],
               "storage":[
-                "${glusterNode[2]}"
+                "${glusterNodes[2]}"
               ]
             },
             "zone":3
@@ -160,7 +157,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
 """
 }
 ''',
-            scriptVars: [sockets: sockets, size_M: "40000", robobeeKey: robobeeKey],
+            scriptVars: [
+                sockets: sockets, size_M: "40000", robobeeKey: robobeeKey,
+                glusterNodes: glusterNodes
+            ],
             expectedServicesSize: 5,
             expected: { Map args ->
             },
@@ -176,8 +176,15 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
             "/tmp/robobee@robobee-test:22",
             "/tmp/robobee@robobee-1-test:22",
             "/tmp/robobee@robobee-2-test:22",
-        ]
+        ],
     ]
+
+    static final List glusterNodes = [
+        "node-0",
+        "node-1",
+        "node-2",
+    ]
+
 
     @Before
     void beforeMethod() {
