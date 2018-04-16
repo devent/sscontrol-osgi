@@ -753,6 +753,19 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
+     * Calls the callback on a created remote temporary directory.
+     * The temporary directory is deleted after the callback returns.
+     */
+    def withRemoteTempDir(def callback, Map args=[:]) {
+        File tmp = createTmpDir(args)
+        try {
+            return callback(tmp)
+        } finally {
+            deleteTmpFile tmp
+        }
+    }
+
+    /**
      * Creates and returns a temporary file.
      */
     File createTmpFile(Map args=[:]) {

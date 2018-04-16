@@ -33,13 +33,21 @@ fi
  */
 testStorageClass(parent, vars) ::= <<
 set -xe
+
+function delete_pvc {
+    if <parent.kubectlCmd> get pvc test; then
+        <parent.kubectlCmd> delete pvc test
+    fi
+}
+
 pvc_yaml=`mktemp`
-trap "rm -f $pvc_yaml" EXIT
+trap "rm -f $pvc_yaml; delete_pvc" EXIT
 
 cat \<\<EOF > $pvc_yaml
 <pvcManifest(parent, vars)>
 EOF
 
+delete_pvc
 <parent.kubectlCmd> create -f $pvc_yaml
 s=300
 until <parent.kubectlCmd> get pvc -l robobeerun.com/group=glusterfs-heketi-test|grep Bound && [[ ${s} -ne 0 ]]; do
@@ -48,10 +56,8 @@ until <parent.kubectlCmd> get pvc -l robobeerun.com/group=glusterfs-heketi-test|
 done
 
 if [[ ${s} -eq 0 ]]; then
-    <parent.kubectlCmd> delete -f $pvc_yaml
     exit 1
 else
-    <parent.kubectlCmd> delete -f $pvc_yaml
     exit 0
 fi
 
@@ -74,6 +80,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: <parent.service.minBrickSizeGb>Gi
 
 >>
