@@ -97,6 +97,12 @@ class GlusterfsHeketiDebian extends ScriptBase {
         if (service.storage.isDefault == null) {
             service.storage.isDefault = defaultStorageClassIsDefault
         }
+        if (!service.minBrickSizeGb) {
+            service.minBrickSizeGb = scriptNumberProperties.default_min_brick_size_gb
+        }
+        if (!service.maxBrickSizeGb) {
+            service.maxBrickSizeGb = scriptNumberProperties.default_max_brick_size_gb
+        }
         def vars = service.vars
         vars.heketi = vars.heketi ?: [:]
         vars.heketi.image = vars.heketi.image ?: [:]
@@ -156,7 +162,6 @@ class GlusterfsHeketiDebian extends ScriptBase {
         def glusterfsScript = this
         fromRepository.metaClass.kubeFiles = {File dir ->
             def cluster = fromRepositoryService.clusterHost
-            println cluster
             deployGlusterfsHeketi dir, cluster, glusterfsScript
         }
         fromRepository.run()
@@ -171,28 +176,23 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     def installGlusterKubernetesDeploy() {
         log.info 'Installs gluster-kubernetes-deploy.'
-        def tmp = createTmpDir()
-        try {
+        withRemoteTempDir { File tmp ->
             def name = glusterKubernetesDeployArchiveFile
             copy src: glusterKubernetesDeployArchive, hash: glusterKubernetesDeployArchiveHash, dest: "$tmp/$name", direct: true, timeout: timeoutLong call()
             shell timeout: timeoutMiddle, resource: installResource, name: 'installGlusterKubernetesDeployCmd',
             vars: [parentDir: tmp] call()
-        } finally {
-            deleteTmpFile tmp
         }
     }
 
     def deployGlusterfsHeketi(File dir, ClusterHost cluster, GlusterfsHeketiDebian glusterfsScript) {
-        def topologyFile = glusterfsScript.deployTopologyFile()
-        try {
+        withRemoteTempFile { File topologyFile ->
+            glusterfsScript.deployTopologyFile(topologyFile)
             shell target: cluster.target, timeout: timeoutMiddle, resource: gkdeployResource, name: 'gkdeployCmd',
             vars: [
                 glusterfsScript: glusterfsScript,
                 templatesDir: dir,
                 topologyFile: topologyFile
             ] call()
-        } finally {
-            deleteTmpFile topologyFile as File
         }
     }
 
@@ -200,17 +200,10 @@ class GlusterfsHeketiDebian extends ScriptBase {
      * Deploys the topology json file.
      * @return the path of the file.
      */
-    String deployTopologyFile() {
+    void deployTopologyFile(File file) {
         GlusterfsHeketi service = service
         def topology = JsonOutput.toJson(service.topology)
-        def tmp = createTmpFile()
-        try {
-            copyString str: topology, dest: tmp
-            return tmp
-        }  catch (e) {
-            deleteTmpFile tmp
-            throw e
-        }
+        copyString str: topology, dest: file
     }
 
     /**

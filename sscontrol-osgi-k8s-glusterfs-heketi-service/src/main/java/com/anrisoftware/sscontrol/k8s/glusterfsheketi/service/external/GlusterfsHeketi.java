@@ -67,6 +67,16 @@ public interface GlusterfsHeketi extends ClusterService {
      */
     List<Object> getNodes();
 
+    /**
+     * Returns the maximum allowed brick size in GB.
+     */
+    Integer getMaxBrickSizeGb();
+
+    /**
+     * Returns the minimum allowed brick size in GB.
+     */
+    Integer getMinBrickSizeGb();
+
     RepoHost getRepo();
 
     void addRepos(List<RepoHost> list);

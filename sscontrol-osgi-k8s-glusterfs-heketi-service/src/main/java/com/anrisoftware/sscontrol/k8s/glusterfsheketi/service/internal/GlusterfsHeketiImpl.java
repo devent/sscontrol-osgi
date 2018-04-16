@@ -100,6 +100,10 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private transient StorageImplFactory storageFactory;
 
+    private Integer maxBrickSizeGb;
+
+    private Integer minBrickSizeGb;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -214,6 +218,11 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
                 });
     }
 
+    public void brick(Map<String, Object> args) {
+        parseMaxBrickSizeGb(args);
+        parseMinBrickSizeGb(args);
+    }
+
     @Override
     public TargetHost getTarget() {
         return getTargets().get(0);
@@ -326,6 +335,24 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         return storage;
     }
 
+    public void setMinBrickSizeGb(int minBrickSizeGb) {
+        this.minBrickSizeGb = minBrickSizeGb;
+    }
+
+    @Override
+    public Integer getMinBrickSizeGb() {
+        return minBrickSizeGb;
+    }
+
+    public void setMaxBrickSizeGb(int maxBrickSizeGb) {
+        this.maxBrickSizeGb = maxBrickSizeGb;
+    }
+
+    @Override
+    public Integer getMaxBrickSizeGb() {
+        return maxBrickSizeGb;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -383,6 +410,20 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         Object v = args.get("repos");
         assertThat("repos=null", v, notNullValue());
         addRepos((List<RepoHost>) v);
+    }
+
+    private void parseMinBrickSizeGb(Map<String, Object> args) {
+        Object v = args.get("min");
+        if (v != null) {
+            setMinBrickSizeGb(((Number) v).intValue());
+        }
+    }
+
+    private void parseMaxBrickSizeGb(Map<String, Object> args) {
+        Object v = args.get("max");
+        if (v != null) {
+            setMaxBrickSizeGb(((Number) v).intValue());
+        }
     }
 
 }

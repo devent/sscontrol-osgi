@@ -93,6 +93,7 @@ service "repo-git", group: "glusterfs-heketi" with {
 service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
+    brick min: 1, max: 50
     vars << [heketi: [snapshot: [limit: 32]]]
     vars << [tolerations: [
         [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
@@ -109,6 +110,8 @@ service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
                 assert s.clusterHosts.size() == 1
                 assert s.clusterHosts[0].target.host == "localhost"
                 assert s.nodes.size() == 0
+                assert s.minBrickSizeGb == 1
+                assert s.maxBrickSizeGb == 50
                 assert s.repo.repo.group == "glusterfs-heketi"
                 assert s.labelName == 'glusterfs'
                 assert s.vars.size() == 2
