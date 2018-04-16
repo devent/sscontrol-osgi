@@ -48,7 +48,7 @@ class FromRepositoryHeapsterGrafanaEphemeralClusterTest extends AbstractFromRepo
         def test = [
             name: "heapster_grafana_ephemeral",
             script: '''
-service "ssh", host: "andrea-master.robobee-test.test", socket: robobeeSocket
+service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
 service "k8s-cluster" with {
     credentials type: 'cert', name: 'default-admin', ca: certs.worker.ca, cert: certs.worker.cert, key: certs.worker.key
 }
