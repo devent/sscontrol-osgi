@@ -97,14 +97,21 @@ class GlusterfsHeketiDebian extends ScriptBase {
         if (service.storage.isDefault == null) {
             service.storage.isDefault = defaultStorageClassIsDefault
         }
+        if (!service.storage.restAddress) {
+            service.storage.restAddress = scriptProperties.default_rest_address
+        }
         if (!service.minBrickSizeGb) {
             service.minBrickSizeGb = scriptNumberProperties.default_min_brick_size_gb
         }
         if (!service.maxBrickSizeGb) {
             service.maxBrickSizeGb = scriptNumberProperties.default_max_brick_size_gb
         }
+        if (!service.serviceAddress) {
+            service.serviceAddress = scriptProperties.default_service_address
+        }
         def vars = service.vars
         vars.heketi = vars.heketi ?: [:]
+        vars.heketi.clusterIP = service.serviceAddress
         vars.heketi.image = vars.heketi.image ?: [:]
         vars.heketi.image.name = vars.heketi.image.name ?: scriptProperties.default_heketi_image_name
         vars.heketi.image.version = vars.heketi.image.version ?: scriptProperties.default_heketi_image_version

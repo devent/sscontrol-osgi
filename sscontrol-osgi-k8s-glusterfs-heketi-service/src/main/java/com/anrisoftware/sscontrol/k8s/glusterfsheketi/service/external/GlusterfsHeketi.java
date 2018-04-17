@@ -85,4 +85,9 @@ public interface GlusterfsHeketi extends ClusterService {
 
     Storage getStorage();
 
+    /**
+     * Returns the address of heketi service for the storage class.
+     */
+    String getServiceAddress();
+
 }

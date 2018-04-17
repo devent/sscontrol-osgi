@@ -104,6 +104,8 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private Integer minBrickSizeGb;
 
+    private String serviceAddress;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -218,9 +220,23 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
                 });
     }
 
+    /**
+     * <pre>
+     * brick min: 1, max: 50
+     * </pre>
+     */
     public void brick(Map<String, Object> args) {
         parseMaxBrickSizeGb(args);
         parseMinBrickSizeGb(args);
+    }
+
+    /**
+     * <pre>
+     * service address: "10.96.10.10"
+     * </pre>
+     */
+    public void service(Map<String, Object> args) {
+        parseServiceAddress(args);
     }
 
     @Override
@@ -353,6 +369,15 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         return maxBrickSizeGb;
     }
 
+    public void setServiceAddress(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
+
+    @Override
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -423,6 +448,13 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         Object v = args.get("max");
         if (v != null) {
             setMaxBrickSizeGb(((Number) v).intValue());
+        }
+    }
+
+    private void parseServiceAddress(Map<String, Object> args) {
+        Object v = args.get("address");
+        if (v != null) {
+            setServiceAddress(v.toString());
         }
     }
 
