@@ -67,12 +67,12 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "
     vars << [
         nanny: [
             limits: [cpu: '25m', memory: '60Mi'],
-            requests: [cpu: '25m', memory: '60Mi'],
+            requests: [],
         ]
     ]
     vars << [
         metrics: [
-            baseCpu: '25m', extraCpu: '0', baseMemory: '40Mi', extraMemory: '5Mi',
+            baseCpu: '25m', extraCpu: '0', baseMemory: '40Mi', extraMemory: '1Mi',
         ]
     ]
     vars << [
@@ -86,7 +86,7 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "
         influxdb: [
             image: [name: 'k8s.gcr.io/heapster-influxdb-amd64', version: 'v1.3.3'],
             limits: [cpu: '50m', memory: '100Mi'],
-            requests: [cpu: '50m', memory: '100Mi'],
+            requests: [],
             persistent: [share: true, storage: [class: "slow", size: "1Gi"]],
         ]
     ]
@@ -94,7 +94,7 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "
         grafana: [
             image: [name: 'k8s.gcr.io/heapster-grafana-amd64', version: 'v4.4.3'],
             limits: [cpu: '50m', memory: '50Mi'],
-            requests: [cpu: '50m', memory: '50Mi'],
+            requests: [],
             auth: [basic: true, anonymous: false],
         ]
     ]
