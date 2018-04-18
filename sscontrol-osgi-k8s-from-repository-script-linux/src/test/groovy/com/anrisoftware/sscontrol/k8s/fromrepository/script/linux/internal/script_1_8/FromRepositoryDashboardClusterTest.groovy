@@ -52,8 +52,8 @@ service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dash
             image: [name: "k8s.gcr.io/kubernetes-dashboard-amd64", version: "v1.8.3"],
             affinity: [key: "robobeerun.com/dashboard", name: "required", required: true],
             allowOnMaster: true,
-            limits: [cpu: '100m', memory: '300Mi'],
-            requests: [cpu: '50m', memory: '100Mi'],
+            limits: [cpu: '100m', memory: '100Mi'],
+            requests: [],
         ]
     ]
 }
