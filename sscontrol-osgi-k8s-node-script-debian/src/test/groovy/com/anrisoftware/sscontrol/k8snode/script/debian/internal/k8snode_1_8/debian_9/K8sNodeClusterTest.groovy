@@ -98,10 +98,13 @@ targets['nodes'].eachWithIndex { host, i ->
         labels: [
             [
                 "robobeerun.com/role=edge-router",
-                "muellerpublic.de/role=web"
+                "muellerpublic.de/role=web",
+                "robobeerun.com/heapster=required"
             ],
             [
-                "muellerpublic.de/role=dev"]
+                "muellerpublic.de/role=dev",
+                "robobeerun.com/dashboard=required"
+            ]
         ],
         taints: [
             [],
