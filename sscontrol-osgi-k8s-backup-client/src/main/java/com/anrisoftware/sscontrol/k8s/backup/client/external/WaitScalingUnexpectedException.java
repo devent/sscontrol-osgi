@@ -24,11 +24,10 @@ package com.anrisoftware.sscontrol.k8s.backup.client.external;
 @SuppressWarnings("serial")
 public class WaitScalingUnexpectedException extends BackupClientException {
 
-    public WaitScalingUnexpectedException(Throwable cause, String namespace,
-            String name, int replicas) {
+    public WaitScalingUnexpectedException(Throwable cause, Service service,
+            int replicas) {
         super("Scaling deployment timeout", cause);
-        addContextValue("namespace", namespace);
-        addContextValue("name", name);
+        addContextValue("service", service);
         addContextValue("replicas", replicas);
     }
 }

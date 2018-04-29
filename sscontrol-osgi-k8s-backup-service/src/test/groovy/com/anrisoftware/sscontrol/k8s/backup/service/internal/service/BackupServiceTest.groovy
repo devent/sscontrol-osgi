@@ -96,7 +96,8 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.client.config =~ 'ProxyCommand'
             },
         ]
@@ -139,7 +140,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.client.key.toString() == 'file:id_rsa'
                 assert s.client.proxy == true
             },
@@ -162,7 +164,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.client.timeout == Duration.standardMinutes(60)
             },
         ]
@@ -184,7 +187,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.client.timeout == Duration.standardMinutes(60)
             },
         ]
@@ -206,7 +210,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.destination.type == 'dir'
                 assert s.destination.arguments == '-c --delete'
                 assert s.destination.dir == '/mnt/backup' as File
@@ -230,7 +235,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.sources.size() == 1
                 assert s.sources[0].source == '/data'
             },
@@ -254,7 +260,8 @@ service "backup" with {
                 assert services.getServices('backup').size() == 1
                 Backup s = services.getServices('backup')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
                 assert s.sources.size() == 2
                 assert s.sources[0].source == '/data'
                 assert s.sources[1].source == '/html'

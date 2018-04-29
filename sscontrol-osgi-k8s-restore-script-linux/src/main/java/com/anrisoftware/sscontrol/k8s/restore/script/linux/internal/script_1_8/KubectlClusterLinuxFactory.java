@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.client.external;
+package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8;
 
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -23,7 +23,6 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface DeploymentFactory {
-
-    Deployment create(ClusterHost host, Object kubectl, Service service);
+public interface KubectlClusterLinuxFactory
+        extends HostServiceScriptService {
 }
