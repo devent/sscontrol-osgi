@@ -119,11 +119,6 @@
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-multibindings</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
-            <type>bundle</type>
-        </dependency>
 
         <!-- own bundles dependencies -->
         <dependency>

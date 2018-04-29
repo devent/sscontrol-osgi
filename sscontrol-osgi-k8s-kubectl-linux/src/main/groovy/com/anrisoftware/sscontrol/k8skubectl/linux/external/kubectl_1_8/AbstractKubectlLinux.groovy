@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -106,21 +107,45 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     }
 
     /**
-     * Runs kubectl.
+     * Runs kubectl on each of the hosts.
      *
      * @param vars
      * <ul>
      * <li>args: kubectl arguments.
      * </ul>
+     *
+     * @return {@link List} of {@link ProcessTask}
      */
-    def runKubectl(Map vars) {
+    List<ProcessTask> runKubectl(Map vars) {
         log.info 'Run kubectl with {}', vars
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.service = service
         v.resource = kubectlTemplate
         v.name = 'kubectlCmd'
-        runShellOnHosts v
+        runShell v
+    }
+
+    /**
+     * Deletes a resources if the resources exists.
+     *
+     * @param vars
+     * <ul>
+     * <li>namespace: the namespace of the resource.
+     * <li>type: the type of the resource.
+     * <li>name: the name of the resource.
+     * </ul>
+     *
+     * @return {@link List} of {@link ProcessTask}
+     */
+    List<ProcessTask> deleteResourceIfExists(Map vars) {
+        log.info 'Run kubectl with {}', vars
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.service = service
+        v.resource = kubectlTemplate
+        v.name = 'deleteResourceIfExists'
+        runShell v
     }
 
     /**
@@ -136,7 +161,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeAvailableCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -152,7 +177,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeReadyCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -170,7 +195,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.taints = taints
         v.resource = kubectlTemplate
         v.name = 'applyTaintsCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -188,19 +213,24 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.labels = labels
         v.resource = kubectlTemplate
         v.name = 'applyLabelsCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
-     * Runs kubectl on the cluster hosts.
+     * Runs kubectl on the cluster hosts and returns the process from each.
+     *
+     * @return {@link List} of {@link ProcessTask}
      */
-    def runShellOnHosts(Map vars) {
+    List<ProcessTask> runShell(Map vars) {
         Map v = new HashMap(vars)
+        List<ProcessTask> ret = []
         cluster.each { ClusterHost it ->
             v.vars.cluster = it.cluster
             v.target = it.target
-            shell v call()
+            def process = shell v call()
+            ret << process
         }
+        return ret
     }
 
     /**

@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
+import static com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractService.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -49,34 +50,36 @@ class BackupLinux extends ScriptBase {
     @Inject
     K8sClusterFactory clusterFactory
 
-    Deployment deployment
+    @Inject
+    BackupWorkerImplFactory backupWorkerFactory
+
+    Deployment deploy
+
+    Deployment rsync
 
     RsyncClient rsyncClient
 
     @Inject
-    BackupWorkerImplFactory backupWorkerFactory
-
-    @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
         Backup service = service
-        this.deployment = factory.create(service.cluster)
+        this.deploy = factory.create(service.cluster, kubectl, service.service)
+        this.rsync = factory.create(service.cluster, kubectl, createService([namespace: service.service.namespace, name: "rsync-${service.service.name}"]))
     }
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
         Backup service = service
-        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.destination)
+        this.rsyncClient = factory.create(this, service.service, service.clusterHosts, service.client, service.destination)
     }
 
     @Override
     def run() {
         setupDefaults()
         Backup service = service
-        assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
+        assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
         setupHost service.cluster
-        deployment = deployment.createClient()
         def sources = service.sources
-        backupWorkerFactory.create(service, deployment).with {
+        backupWorkerFactory.create(service, deploy, rsync).with {
             init()
             try {
                 before()

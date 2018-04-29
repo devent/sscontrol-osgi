@@ -15,14 +15,12 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import java.net.URI;
+import java.util.List;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl;
-
-import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation;
 
 /**
  * Logging for {@link DeploymentImpl}.
@@ -35,15 +33,19 @@ final class DeploymentLogger extends AbstractLogger {
 
     enum m {
 
-        createdClient("Client {} created."),
+        replicasReturned("Replicas {} returned for {}"),
 
-        scaledDeployment("Deployment scaled to {}: {}"),
+        deploymentScaled("Scaled to {}: {}"),
 
-        createPublicService("Public service {}/{} created."),
+        deployExposed("Service {} exposed for {}."),
 
-        deleteService("Service {}/{} deleted."),
+        nodePortReturned("Node port {} for {} returned for {}."),
 
-        commandExecuted("Command executed for {}: {}");
+        serviceDeleted("Service {} deleted for {}."),
+
+        commandExecuted("Command executed for pod {} for {}: {}"),
+
+        podsListed("Pods listed for {}: {}");
 
         private String name;
 
@@ -64,24 +66,31 @@ final class DeploymentLogger extends AbstractLogger {
         super(DeploymentImpl.class);
     }
 
-    void createdClient(URI url) {
-        debug(m.createdClient, url);
+    void replicasReturned(DeploymentImpl deploy, int replicas) {
+        debug(m.replicasReturned, replicas, deploy);
     }
 
-    @SuppressWarnings("rawtypes")
-    void scaledDeployment(HasMetadataOperation deploy, int replicas) {
-        debug(m.scaledDeployment, replicas, deploy);
+    void deploymentScaled(DeploymentImpl deploy, int replicas) {
+        debug(m.deploymentScaled, replicas, deploy);
     }
 
-    void createPublicService(String namespace, String name) {
-        debug(m.createPublicService, namespace, name);
+    void deployExposed(DeploymentImpl deploy, String name) {
+        debug(m.deployExposed, name, deploy);
     }
 
-    void deleteService(String namespace, String name) {
-        debug(m.deleteService, namespace, name);
+    void nodePortReturned(DeploymentImpl deploy, String name, int port) {
+        debug(m.nodePortReturned, port, name, deploy);
     }
 
-    void commandExecuted(Object deployOp, String cmd) {
-        debug(m.commandExecuted, cmd, deployOp);
+    void serviceDeleted(DeploymentImpl deploy, String name) {
+        debug(m.serviceDeleted, name, deploy);
+    }
+
+    void podsListed(DeploymentImpl deploy, List<String> pods) {
+        debug(m.podsListed, deploy, pods);
+    }
+
+    void commandExecuted(DeploymentImpl deploy, String pod, String cmd) {
+        debug(m.commandExecuted, pod, deploy, cmd);
     }
 }

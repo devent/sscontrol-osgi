@@ -15,10 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import java.net.URI;
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
+import org.joda.time.Duration;
 
 /**
  *
@@ -28,29 +27,21 @@ import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
  */
 public interface Deployment {
 
-    Deployment createClient();
+    int getReplicas();
 
-    Object getDeployment(String namespace, String name);
+    int getReadyReplicas();
 
-    Object getService(String namespace, String name);
+    void scaleDeploy(int replicas);
 
-    void scaleDeployment(Object deploy, int replicas);
+    void waitScaleDeploy(int replicas, Duration timeout);
 
-    void scaleDeployment(Object deploy, int replicas, boolean deleteOnError);
+    void waitExposeDeploy(String name);
 
-    void waitScaleUp(Object deploy, boolean deleteOnError);
+    int getNodePort(String name);
 
-    void waitScaleZero(Object deployOp);
+    void deleteService(String name);
 
-    List<?> getPods(String namespace, String name);
+    List<String> getPods();
 
-    Object createPublicService(Object deploy);
-
-    void deleteService(Object service);
-
-    Object buildConfig(URI hostUrl, Credentials credentials);
-
-    List<?> waitDeploy(Object deploy, int replicas, boolean ready);
-
-    void execCommand(Object deployOp, String... cmd);
+    void execCommand(String pod, String... cmd);
 }

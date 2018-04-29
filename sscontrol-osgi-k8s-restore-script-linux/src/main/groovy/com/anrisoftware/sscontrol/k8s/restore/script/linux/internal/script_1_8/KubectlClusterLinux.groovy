@@ -17,28 +17,34 @@ package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractBackupWorker
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
-import com.google.inject.assistedinject.Assisted
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.AbstractKubectlLinux
+
+import groovy.util.logging.Slf4j
 
 /**
- * Starts the restore.
+ * Kubectl service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-class RestoreWorkerImpl extends AbstractBackupWorker {
+@Slf4j
+class KubectlClusterLinux extends AbstractKubectlLinux {
 
     @Inject
-    @Assisted
-    ClusterService cluster
+    RestoreLinuxProperties propertiesProvider
 
-    @Inject
-    @Assisted("deploy")
-    Deployment deploy
+    @Override
+    Object run() {
+    }
 
-    @Inject
-    @Assisted("rsync")
-    Deployment rsync
+    @Override
+    ContextProperties getDefaultProperties() {
+        propertiesProvider.get()
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

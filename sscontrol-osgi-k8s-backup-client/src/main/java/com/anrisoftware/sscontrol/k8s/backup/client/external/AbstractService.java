@@ -28,7 +28,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class AbstractService implements Service {
+public abstract class AbstractService implements Service {
+
+    public static Service createService(Map<String, Object> args) {
+        return new AbstractService(args) {
+        };
+    }
 
     private String name;
 

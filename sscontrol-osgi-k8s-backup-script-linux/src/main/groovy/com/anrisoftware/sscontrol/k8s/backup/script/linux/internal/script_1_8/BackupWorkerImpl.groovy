@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractBackupWorker
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
 import com.google.inject.assistedinject.Assisted
 
 /**
@@ -32,9 +32,13 @@ class BackupWorkerImpl extends AbstractBackupWorker {
 
     @Inject
     @Assisted
-    Backup service
+    ClusterService cluster
 
     @Inject
-    @Assisted
+    @Assisted("deploy")
     Deployment deploy
+
+    @Inject
+    @Assisted("rsync")
+    Deployment rsync
 }

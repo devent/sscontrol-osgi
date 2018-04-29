@@ -49,12 +49,14 @@ class RestoreLinux extends ScriptBase {
     @Inject
     K8sClusterFactory clusterFactory
 
+    @Inject
+    RestoreWorkerImplFactory restoreWorkerFactory
+
     DeploymentImpl deployment
 
     RsyncClient rsyncClient
 
-    @Inject
-    RestoreWorkerImplFactory restoreWorkerFactory
+    KubectlClusterLinux kubectlClusterLinux
 
     @Inject
     void setDeploymentFactory(DeploymentFactory factory) {
@@ -68,13 +70,17 @@ class RestoreLinux extends ScriptBase {
         this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.origin)
     }
 
+    @Inject
+    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+        this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
     @Override
     def run() {
-        setupDefaults()
         Restore service = service
-        assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
-        setupHost service.cluster
-        deployment = deployment.createClient()
+        assertThat "cluster hosts > 0 for $service", service.clusterHosts.size(), greaterThan(0)
+        setupDefaults()
+        setupHosts()
         def origins = service.sources
         restoreWorkerFactory.create(service, deployment).with {
             init()
@@ -112,7 +118,14 @@ class RestoreLinux extends ScriptBase {
     }
 
     /**
-     * Setups the host.
+     * Setups the hosts.
+     */
+    def setupHosts() {
+        service.clusterHosts.each { setupHost it }
+    }
+
+    /**
+     * Setups the hosts.
      */
     def setupHost(ClusterHost host) {
         Credentials c = host.credentials

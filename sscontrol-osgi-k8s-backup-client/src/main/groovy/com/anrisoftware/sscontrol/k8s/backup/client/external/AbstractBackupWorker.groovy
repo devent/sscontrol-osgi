@@ -35,28 +35,43 @@ abstract class AbstractBackupWorker implements BackupWorker {
 
     int rsyncPort
 
-    Integer oldScale
+    int oldReplicasCount
 
-    abstract ClusterService getService()
+    /**
+     * Returns the cluster service for kubectl.
+     *
+     * @return {@link ClusterService}
+     */
+    abstract ClusterService getCluster()
 
+    /**
+     * Returns the deployment to backup.
+     *
+     * @return {@link Deployment}
+     */
     abstract Deployment getDeploy()
+
+    /**
+     * Returns the rsync deployment.
+     *
+     * @return {@link Deployment}
+     */
+    abstract Deployment getRsync()
 
     @Override
     void init() {
-        deploy.with {
-            this.rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
-            this.serviceDeploy = getDeployment service.service.namespace, service.service.name
-            this.oldScale = getReplicas serviceDeploy
-            scaleRsync rsyncDeploy, 1
-            this.rsyncService = createPublicService rsyncDeploy
-            this.rsyncPort = rsyncService.spec.ports[0].nodePort
+        deploy.with { this.oldReplicasCount = replicas }
+        rsync.with {
+            waitScaleDeploy 1
+            this.rsyncService = waitExposeDeploy "rsync-service"
+            this.rsyncPort = getNodePort "rsync-service"
         }
     }
 
     @Override
     void before() {
-        if (oldScale) {
-            deploy.scaleDeployment serviceDeploy, 0
+        if (oldReplicasCount) {
+            deploy.with { waitScaleDeploy 0 }
         }
     }
 
@@ -67,31 +82,16 @@ abstract class AbstractBackupWorker implements BackupWorker {
 
     @Override
     void after() {
-        if (oldScale) {
-            deploy.scaleDeployment serviceDeploy, oldScale, false
+        if (oldReplicasCount) {
+            deploy.with { waitScaleDeploy oldReplicasCount }
         }
     }
 
     @Override
     void finally1() {
-        deploy.with {
-            deleteService rsyncService
-            scaleDeployment rsyncDeploy, 0
-        }
-    }
-
-    Integer getReplicas(def deployOps) {
-        def deploy = deployOps.get()
-        deploy == null ? null : deploy.spec.replicas
-    }
-
-    def scaleRsync(def rsyncDeploy, int replicas) {
-        deploy.with {
-            try {
-                scaleDeployment rsyncDeploy, replicas
-            } catch (e) {
-                scaleDeployment rsyncDeploy, replicas
-            }
+        rsync.with {
+            deleteService "rsync-service"
+            waitScaleDeploy 0
         }
     }
 }
