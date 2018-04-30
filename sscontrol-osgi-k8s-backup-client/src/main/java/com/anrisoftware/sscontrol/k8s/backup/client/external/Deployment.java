@@ -27,6 +27,8 @@ import org.joda.time.Duration;
  */
 public interface Deployment {
 
+	Service getService();
+
     int getReplicas();
 
     int getReadyReplicas();
@@ -43,5 +45,5 @@ public interface Deployment {
 
     List<String> getPods();
 
-    void execCommand(String pod, String... cmd);
+	void execCommand(String... cmd);
 }
