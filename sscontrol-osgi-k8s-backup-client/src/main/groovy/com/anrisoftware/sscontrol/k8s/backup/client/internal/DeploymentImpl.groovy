@@ -44,125 +44,131 @@ import com.google.inject.assistedinject.Assisted
  */
 class DeploymentImpl implements Deployment {
 
-    @Inject
-    transient DeploymentLogger log
+	@Inject
+	transient DeploymentLogger log
 
-    private final ClusterHost host
+	private final ClusterHost host
 
-    private final def kubectl
+	private final def kubectl
 
-    private final Service service
+	private final Service service
 
-    @Inject
-    DeploymentImpl(@Assisted ClusterHost host, @Assisted Object kubectl, @Assisted Service service) {
-        this.host = host
-        this.kubectl = kubectl
-        this.service = service
-    }
+	@Inject
+	DeploymentImpl(@Assisted ClusterHost host, @Assisted Object kubectl, @Assisted Service service) {
+		this.host = host
+		this.kubectl = kubectl
+		this.service = service
+	}
 
-    @Override
-    int getReplicas() {
-        def command = "-n ${service.namespace} get deploy ${service.name} -o jsonpath='{.spec.replicas}'"
-        def ret = kubectl.runKubectl args: command, outString: true
-        String output = ret[0].out
-        int replicas = Integer.parseInt(output)
-        log.replicasReturned this, replicas
-        return replicas
-    }
+	@Override
+	Service getService() {
+		return service;
+	}
 
-    @Override
-    void scaleDeploy(int replicas) {
-        def command = "-n ${service.namespace} scale deploy ${service.name} --replicas=${replicas}"
-        kubectl.runKubectl args: command
-        log.deploymentScaled this, replicas
-    }
+	@Override
+	int getReplicas() {
+		def command = "-n ${service.namespace} get deploy ${service.name} -o jsonpath='{.spec.replicas}'"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		int replicas = Integer.parseInt(output)
+		log.replicasReturned this, replicas
+		return replicas
+	}
 
-    @Override
-    int getReadyReplicas() {
-        def command = "-n ${service.namespace} get deploy ${service.name} -o jsonpath='{.status.readyReplicas}'"
-        def ret = kubectl.runKubectl args: command, outString: true
-        String output = ret[0].out
-        int replicas = Integer.parseInt(output)
-        log.replicasReturned this, replicas
-        return replicas
-    }
+	@Override
+	void scaleDeploy(int replicas) {
+		def command = "-n ${service.namespace} scale deploy ${service.name} --replicas=${replicas}"
+		kubectl.runKubectl args: command
+		log.deploymentScaled this, replicas
+	}
 
-    @Override
-    void waitScaleDeploy(int replicas, Duration timeout) {
-        scaleDeploy service, replicas
-        def executor = Executors.newSingleThreadExecutor()
-        def canceled = false
-        def future = executor.submit([call: {
-                while (!canceled) {
-                    int current = getReadyReplicas service
-                    if (current == replicas) {
-                        return true
-                    }
-                    Thread.sleep 5000
-                }
-                return false
-            }] as Callable)
+	@Override
+	int getReadyReplicas() {
+		def command = "-n ${service.namespace} get deploy ${service.name} -o jsonpath='{.status.readyReplicas}'"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		int replicas = Integer.parseInt(output)
+		log.replicasReturned this, replicas
+		return replicas
+	}
 
-        try {
-            boolean result = future.get(timeout.standardSeconds, TimeUnit.SECONDS)
-            log.deploymentScaled this, replicas
-            if (!result) {
-                throw new ErrorScalingDeployException(service, replicas)
-            }
-        }
-        catch (TimeoutException e) {
-            throw new WaitScalingTimeoutException(service, replicas, timeout)
-        }
-        catch (e) {
-            throw new WaitScalingUnexpectedException(e, service, replicas)
-        }
-        finally {
-            executor.shutdownNow()
-        }
-    }
+	@Override
+	void waitScaleDeploy(int replicas, Duration timeout) {
+		scaleDeploy service, replicas
+		def executor = Executors.newSingleThreadExecutor()
+		def canceled = false
+		def future = executor.submit([call: {
+				while (!canceled) {
+					int current = getReadyReplicas service
+					if (current == replicas) {
+						return true
+					}
+					Thread.sleep 5000
+				}
+				return false
+			}] as Callable)
 
-    @Override
-    void waitExposeDeploy(String name) {
-        def command = "-n ${service.namespace} expose deploy ${service.name} --name=${name} --type=NodePort"
-        kubectl.runKubectl args: command
-        log.deployExposed this, name
-    }
+		try {
+			boolean result = future.get(timeout.standardSeconds, TimeUnit.SECONDS)
+			log.deploymentScaled this, replicas
+			if (!result) {
+				throw new ErrorScalingDeployException(service, replicas)
+			}
+		}
+		catch (TimeoutException e) {
+			throw new WaitScalingTimeoutException(service, replicas, timeout)
+		}
+		catch (e) {
+			throw new WaitScalingUnexpectedException(e, service, replicas)
+		}
+		finally {
+			executor.shutdownNow()
+		}
+	}
 
-    @Override
-    int getNodePort(String name) {
-        def command = "-n ${service.namespace} get svc ${service.name} -o jsonpath='{.spec.ports[0].nodePort}'"
-        def ret = kubectl.runKubectl args: command, outString: true
-        String output = ret[0].out
-        int port = Integer.parseInt(output)
-        log.nodePortReturned this, name, port
-        return port
-    }
+	@Override
+	void waitExposeDeploy(String name) {
+		def command = "-n ${service.namespace} expose deploy ${service.name} --name=${name} --type=NodePort"
+		kubectl.runKubectl args: command
+		log.deployExposed this, name
+	}
 
-    @Override
-    void deleteService(String name) {
-        kubectl.deleteResource namespace: service.namespace, type: "svc", name: name, checkExists: true
-        log.serviceDeleted this, name
-    }
+	@Override
+	int getNodePort(String name) {
+		def command = "-n ${service.namespace} get svc ${service.name} -o jsonpath='{.spec.ports[0].nodePort}'"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		int port = Integer.parseInt(output)
+		log.nodePortReturned this, name, port
+		return port
+	}
 
-    @Override
-    List<String> getPods() {
-        def command = "-n ${service.namespace} get pods -l app=${service.name} --no-headers  -o name"
-        def ret = kubectl.runKubectl args: command, outString: true
-        String[] names = ret[0].out.split("\n")
-        def list = Arrays.asList(names)
-        log.podsListed this, list
-        return list
-    }
+	@Override
+	void deleteService(String name) {
+		kubectl.deleteResource namespace: service.namespace, type: "svc", name: name, checkExists: true
+		log.serviceDeleted this, name
+	}
 
-    @Override
-    void execCommand(String pod, String... cmd) {
-        def command = "-n ${service.namespace} exec ${cmd.join(' ')}"
-        def ret = kubectl.runKubectl args: command, outString: true
-        log.commandExecuted(this, pod, Arrays.toString(cmd))
-    }
+	@Override
+	List<String> getPods() {
+		def command = "-n ${service.namespace} get pods -l app=${service.name} --no-headers  -o name"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String[] names = ret[0].out.split("\n")
+		def list = Arrays.asList(names)
+		log.podsListed this, list
+		return list
+	}
 
-    @Override
-    String toString() {
-        ToStringBuilder.reflectionToString(this)
-    }
+	@Override
+	void execCommand(String... cmd) {
+		def pod = pods[0]
+		def command = "-n ${service.namespace} exec ${pod} ${cmd.join(' ')}"
+		def ret = kubectl.runKubectl args: command, outString: true
+		log.commandExecuted(this, pod, Arrays.toString(cmd))
+	}
+
+	@Override
+	String toString() {
+		ToStringBuilder.reflectionToString(this)
+	}
 }

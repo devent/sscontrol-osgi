@@ -27,71 +27,74 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
  */
 abstract class AbstractBackupWorker implements BackupWorker {
 
-    def rsyncDeploy
+	def rsyncDeploy
 
-    def serviceDeploy
+	def serviceDeploy
 
-    def rsyncService
+	def rsyncService
 
-    int rsyncPort
+	int rsyncPort
 
-    int oldReplicasCount
+	int oldReplicasCount
 
-    /**
-     * Returns the cluster service for kubectl.
-     *
-     * @return {@link ClusterService}
-     */
-    abstract ClusterService getCluster()
+	String rsyncServiceName
 
-    /**
-     * Returns the deployment to backup.
-     *
-     * @return {@link Deployment}
-     */
-    abstract Deployment getDeploy()
+	/**
+	 * Returns the cluster service for kubectl.
+	 *
+	 * @return {@link ClusterService}
+	 */
+	abstract ClusterService getCluster()
 
-    /**
-     * Returns the rsync deployment.
-     *
-     * @return {@link Deployment}
-     */
-    abstract Deployment getRsync()
+	/**
+	 * Returns the deployment to backup.
+	 *
+	 * @return {@link Deployment}
+	 */
+	abstract Deployment getDeploy()
 
-    @Override
-    void init() {
-        deploy.with { this.oldReplicasCount = replicas }
-        rsync.with {
-            waitScaleDeploy 1
-            this.rsyncService = waitExposeDeploy "rsync-service"
-            this.rsyncPort = getNodePort "rsync-service"
-        }
-    }
+	/**
+	 * Returns the rsync deployment.
+	 *
+	 * @return {@link Deployment}
+	 */
+	abstract Deployment getRsync()
 
-    @Override
-    void before() {
-        if (oldReplicasCount) {
-            deploy.with { waitScaleDeploy 0 }
-        }
-    }
+	@Override
+	void init() {
+		this.rsyncServiceName = "${rsync.service.name}-service"
+		deploy.with { this.oldReplicasCount = replicas }
+		rsync.with {
+			waitScaleDeploy 1
+			this.rsyncService = waitExposeDeploy rsyncServiceName
+			this.rsyncPort = getNodePort rsyncServiceName
+		}
+	}
 
-    @Override
-    void start(def client) {
-        client(rsyncPort: rsyncPort)
-    }
+	@Override
+	void before() {
+		if (oldReplicasCount) {
+			deploy.with { waitScaleDeploy 0 }
+		}
+	}
 
-    @Override
-    void after() {
-        if (oldReplicasCount) {
-            deploy.with { waitScaleDeploy oldReplicasCount }
-        }
-    }
+	@Override
+	void start(def client) {
+		client(rsyncPort: rsyncPort)
+	}
 
-    @Override
-    void finally1() {
-        rsync.with {
-            deleteService "rsync-service"
-            waitScaleDeploy 0
-        }
-    }
+	@Override
+	void after() {
+		if (oldReplicasCount) {
+			deploy.with { waitScaleDeploy oldReplicasCount }
+		}
+	}
+
+	@Override
+	void finally1() {
+		rsync.with {
+			deleteService rsyncServiceName
+			waitScaleDeploy 0
+		}
+	}
 }
