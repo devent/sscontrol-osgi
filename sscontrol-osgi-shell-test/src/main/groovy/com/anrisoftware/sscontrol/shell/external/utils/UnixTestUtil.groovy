@@ -171,4 +171,6 @@ class UnixTestUtil {
     static final URL idCommand = UnixTestUtil.class.getResource('id_cmd.txt')
 
     static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
+
+    static final URL robobeePub = UnixTestUtil.class.getResource('robobee.pub')
 }
