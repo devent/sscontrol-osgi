@@ -73,10 +73,10 @@ service "from-repository", repo: "wordpress" with {
     ]
     vars << [
         nginx: [
-            image: [name: "robobeerun/nginx", version: "v1.13.6-r3"],
+            image: [name: "robobeerun/nginx", version: "v1.13.12-r1"],
             limits: [cpu: "100m", memory: "100Mi"],
             hosts: ["www.interscalar.test"],
-            revision: "r3",
+            revision: "r4",
             workerProcesses: "128",
             workerConnections: "1",
             clientMaxBodySize: "8M"
