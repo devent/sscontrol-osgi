@@ -23,12 +23,13 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
 import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Source
+import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.cluster.external.Credentials
@@ -53,35 +54,43 @@ class BackupLinux extends ScriptBase {
     @Inject
     BackupWorkerImplFactory backupWorkerFactory
 
-    Deployment deploy
+    @Inject
+    DeploymentFactory deployFactory
 
-    Deployment rsync
+    @Inject
+    ServiceImplFactory serviceFactory
+
+    DeploymentImpl deploy
+
+    DeploymentImpl rsync
 
     RsyncClient rsyncClient
 
-    @Inject
-    void setDeploymentFactory(DeploymentFactory factory) {
-        Backup service = service
-        this.deploy = factory.create(service.cluster, kubectl, service.service)
-        this.rsync = factory.create(service.cluster, kubectl, createService([namespace: service.service.namespace, name: "rsync-${service.service.name}"]))
-    }
+    KubectlClusterLinux kubectl
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
         Backup service = service
-        this.rsyncClient = factory.create(this, service.service, service.clusterHosts, service.client, service.destination)
+        this.rsyncClient = factory.create(this, service.service, service.clusterHost, service.client, service.destination)
+    }
+
+    @Inject
+    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+        this.kubectl = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
     def run() {
-        setupDefaults()
         Backup service = service
         assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
-        setupHost service.cluster
+        this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
+        this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
+        setupDefaults()
+        setupHosts()
         def sources = service.sources
-        backupWorkerFactory.create(service, deploy, rsync).with {
-            init()
+        backupWorkerFactory.create(this, service, deploy, rsync).with {
             try {
+                init()
                 before()
                 start { Map args ->
                     sources.each { Source source ->
@@ -109,10 +118,22 @@ class BackupLinux extends ScriptBase {
     }
 
     /**
-     * Setups the host.
+     * Setups the hosts.
+     */
+    def setupHosts() {
+        Backup service = service
+        service.clusterHosts.each { setupHost it }
+    }
+
+    /**
+     * Setups the hosts.
      */
     def setupHost(ClusterHost host) {
-        Credentials c = host.credentials
+        host.credentials.each { setupCredentials host, it }
+        return host
+    }
+
+    def setupCredentials(ClusterHost host, Credentials c) {
         if (!host.proto) {
             if (c.hasProperty('tls') && c.tls.ca) {
                 host.proto = defaultServerProtoSecured
@@ -127,7 +148,6 @@ class BackupLinux extends ScriptBase {
                 host.port = defaultServerPortUnsecured
             }
         }
-        return host
     }
 
     @Override
