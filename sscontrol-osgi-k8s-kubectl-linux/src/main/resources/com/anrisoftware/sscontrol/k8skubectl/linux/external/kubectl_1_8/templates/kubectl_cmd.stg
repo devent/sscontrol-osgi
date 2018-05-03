@@ -89,11 +89,16 @@ taintValueEffect(taint) ::= <%
  * vars.namespace: the namespace of the resource.
  * vars.type: the type of the resource.
  * vars.name: the name of the resource.
+ * vars.checkExists: set to true to check first if the resource exist.
  */
-deleteResourceIfExists(parent, vars) ::= <<
+deleteResource(parent, vars) ::= <<
+<if(vars.checkExists)>
 if <parent.kubectlCmd> -n <vars.namespace> get <vars.type> <vars.name>; then
+<endif>
     <parent.kubectlCmd> -n <vars.namespace> delete <vars.type> <vars.name>
+<if(vars.checkExists)>
 fi
+<endif>
 >>
 
 /*

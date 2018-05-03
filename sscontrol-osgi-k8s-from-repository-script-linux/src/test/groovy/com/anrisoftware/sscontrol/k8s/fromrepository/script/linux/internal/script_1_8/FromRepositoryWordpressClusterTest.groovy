@@ -103,8 +103,8 @@ service "from-repository", repo: "wordpress" with {
     ]
     vars << [
         rsync: [
-            image: [name: "robobeerun/rsync", version: "v3.1.2-r1"],
-            limits: [cpu: "10m", memory: "10Mi"],
+            image: [name: "robobeerun/rsync", version: "v3.1.2-r2"],
+            limits: [cpu: "20m", memory: "20Mi"],
             publicKey: robobeePub,
         ]
     ]

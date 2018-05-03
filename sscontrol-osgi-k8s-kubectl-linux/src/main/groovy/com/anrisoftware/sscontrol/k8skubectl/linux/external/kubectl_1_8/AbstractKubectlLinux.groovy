@@ -127,24 +127,25 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     }
 
     /**
-     * Deletes a resources if the resources exists.
+     * Deletes the resource.
      *
      * @param vars
      * <ul>
      * <li>namespace: the namespace of the resource.
      * <li>type: the type of the resource.
      * <li>name: the name of the resource.
+     * <li>checkExists: set to true to check first if the resource exist.
      * </ul>
      *
      * @return {@link List} of {@link ProcessTask}
      */
-    List<ProcessTask> deleteResourceIfExists(Map vars) {
+    List<ProcessTask> deleteResource(Map vars) {
         log.info 'Run kubectl with {}', vars
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.service = service
         v.resource = kubectlTemplate
-        v.name = 'deleteResourceIfExists'
+        v.name = 'deleteResource'
         runShell v
     }
 
