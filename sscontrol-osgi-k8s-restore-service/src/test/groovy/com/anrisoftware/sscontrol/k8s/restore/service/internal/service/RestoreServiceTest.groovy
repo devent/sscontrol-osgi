@@ -83,7 +83,7 @@ class RestoreServiceTest {
 service "k8s-cluster"
 service "restore" with {
     service namespace: "wordpress", name: "db"
-    origin dir: "/mnt/backup"
+    origin dir: "/mnt/backup", arguments: "--delete"
     client key: "id_rsa", config: """
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
@@ -96,8 +96,9 @@ ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHost.host == 'localhost'
                 assert s.origin.dir.toString() == '/mnt/backup'
+                assert s.origin.arguments == '--delete'
                 assert s.client.config =~ 'ProxyCommand'
                 assert s.client.key.toString() == 'file:id_rsa'
             },

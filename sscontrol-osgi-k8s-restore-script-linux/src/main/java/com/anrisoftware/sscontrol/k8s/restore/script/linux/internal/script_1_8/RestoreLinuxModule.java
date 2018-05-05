@@ -39,6 +39,9 @@ public class RestoreLinuxModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostServiceScript.class, KubectlClusterLinux.class)
                 .build(KubectlClusterLinuxFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
+                .build(KubectlClusterLinuxFactory.class));
     }
 
 }

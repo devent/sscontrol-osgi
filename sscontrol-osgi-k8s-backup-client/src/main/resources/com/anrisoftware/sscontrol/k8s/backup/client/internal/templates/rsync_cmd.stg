@@ -11,6 +11,7 @@
  *
  * Optional:
  *
+ * vars.rsync.arguments
  * vars.config
  * vars.proxy
  * vars.proxy.socket

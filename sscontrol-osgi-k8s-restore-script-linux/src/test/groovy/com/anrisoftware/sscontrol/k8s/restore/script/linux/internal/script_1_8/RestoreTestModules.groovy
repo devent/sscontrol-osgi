@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.k8s.backup.client.internal.BackupClientModule
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreModule
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
 import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxModule
@@ -64,6 +65,7 @@ class RestoreTestModules {
             new KubectlLinuxModule(),
             new RestoreModule(),
             new RestoreLinuxModule(),
+            new BackupClientModule(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

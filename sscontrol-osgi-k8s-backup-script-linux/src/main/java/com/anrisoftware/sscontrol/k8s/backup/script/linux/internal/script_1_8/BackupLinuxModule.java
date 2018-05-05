@@ -37,8 +37,7 @@ public class BackupLinuxModule extends AbstractModule {
                 .implement(BackupWorker.class, BackupWorkerImpl.class)
                 .build(BackupWorkerImplFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        KubectlClusterLinux.class)
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
                 .build(KubectlClusterLinuxFactory.class));
     }
 

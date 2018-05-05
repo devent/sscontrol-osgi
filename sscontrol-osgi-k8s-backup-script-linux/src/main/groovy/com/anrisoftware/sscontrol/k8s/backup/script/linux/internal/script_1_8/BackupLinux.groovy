@@ -31,8 +31,6 @@ import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 
 import groovy.util.logging.Slf4j
 
@@ -86,7 +84,7 @@ class BackupLinux extends ScriptBase {
         this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
         this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
         setupDefaults()
-        setupHosts()
+        kubectl.setupHosts service.clusterHosts
         def sources = service.sources
         backupWorkerFactory.create(this, service, deploy, rsync).with {
             try {
@@ -117,58 +115,9 @@ class BackupLinux extends ScriptBase {
         }
     }
 
-    /**
-     * Setups the hosts.
-     */
-    def setupHosts() {
-        Backup service = service
-        service.clusterHosts.each { setupHost it }
-    }
-
-    /**
-     * Setups the hosts.
-     */
-    def setupHost(ClusterHost host) {
-        host.credentials.each { setupCredentials host, it }
-        return host
-    }
-
-    def setupCredentials(ClusterHost host, Credentials c) {
-        if (!host.proto) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.proto = defaultServerProtoSecured
-            } else {
-                host.proto = defaultServerProtoUnsecured
-            }
-        }
-        if (!host.port) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.port = defaultServerPortSecured
-            } else {
-                host.port = defaultServerPortUnsecured
-            }
-        }
-    }
-
     @Override
     ContextProperties getDefaultProperties() {
         propertiesProvider.get()
-    }
-
-    int getDefaultServerPortUnsecured() {
-        getScriptNumberProperty 'default_server_port_unsecured'
-    }
-
-    int getDefaultServerPortSecured() {
-        getScriptNumberProperty 'default_server_port_secured'
-    }
-
-    String getDefaultServerProtoUnsecured() {
-        getScriptProperty 'default_server_proto_unsecured'
-    }
-
-    String getDefaultServerProtoSecured() {
-        getScriptProperty 'default_server_proto_secured'
     }
 
     String getDefaultServiceSource() {

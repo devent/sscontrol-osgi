@@ -37,6 +37,8 @@ import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingUnexpect
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.google.inject.assistedinject.Assisted
 
+import groovy.json.JsonSlurper
+
 /**
  *
  *
@@ -143,17 +145,25 @@ class DeploymentImpl implements Deployment {
 
     @Override
     void waitExposeDeploy(String name) {
+        if (getNodePort(name) != null) {
+            return
+        }
         def command = "-n ${service.namespace} expose deploy ${service.name} --name=${name} --type=NodePort"
         kubectl.runKubectl args: command
         log.deployExposed this, name
     }
 
     @Override
-    int getNodePort(String name) {
-        def command = "-n ${service.namespace} get svc ${name} -o jsonpath='{.spec.ports[0].nodePort}'"
+    Integer getNodePort(String name) {
+        def command = "-n ${service.namespace} get svc -l app=${service.name} -o json"
         def ret = kubectl.runKubectl args: command, outString: true
         String output = ret[0].out
-        int port = Integer.parseInt(output)
+        def jsonSlurper = new JsonSlurper()
+        def out = jsonSlurper.parseText(ret[0].out)
+        if (out.items.size == 0) {
+            return null
+        }
+        int port = out.items[0].spec.ports[0].nodePort
         log.nodePortReturned this, name, port
         return port
     }
@@ -168,17 +178,19 @@ class DeploymentImpl implements Deployment {
     List<String> getPods() {
         def command = "-n ${service.namespace} get pods -l app=${service.name} --no-headers  -o name"
         def ret = kubectl.runKubectl args: command, outString: true
-        String[] names = ret[0].out.split("\n")
-        def list = Arrays.asList(names)
-        log.podsListed this, list
-        return list
+        def names = ret[0].out.split("\n").inject([]) { List result, String name ->
+            def podName = name.split("\\/")
+            result << podName[1]
+        }
+        log.podsListed this, names
+        return names
     }
 
     @Override
     void execCommand(String... cmd) {
         def pod = pods[0]
-        def command = "-n ${service.namespace} exec ${pod} ${cmd.join(' ')}"
-        def ret = kubectl.runKubectl args: command, outString: true
+        def command = "-n ${service.namespace} exec ${pod} -- ${cmd.join(' ')}"
+        kubectl.runKubectl args: command
         log.commandExecuted(this, pod, Arrays.toString(cmd))
     }
 

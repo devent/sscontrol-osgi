@@ -27,7 +27,7 @@ import org.joda.time.Duration;
  */
 public interface Deployment {
 
-	Service getService();
+    Service getService();
 
     int getReplicas();
 
@@ -39,11 +39,17 @@ public interface Deployment {
 
     void waitExposeDeploy(String name);
 
-    int getNodePort(String name);
+    /**
+     * Returns the exposed node port for a service.
+     *
+     * @return the {@link Integer} node port or <code>null</code> if the service
+     *         was not exposed.
+     */
+    Integer getNodePort(String name);
 
     void deleteService(String name);
 
     List<String> getPods();
 
-	void execCommand(String... cmd);
+    void execCommand(String... cmd);
 }

@@ -17,6 +17,9 @@ package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
 import javax.inject.Inject
 
+import org.joda.time.Duration
+
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractBackupWorker
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
@@ -32,6 +35,10 @@ class RestoreWorkerImpl extends AbstractBackupWorker {
 
     @Inject
     @Assisted
+    ScriptBase script
+
+    @Inject
+    @Assisted
     ClusterService cluster
 
     @Inject
@@ -41,4 +48,8 @@ class RestoreWorkerImpl extends AbstractBackupWorker {
     @Inject
     @Assisted("rsync")
     Deployment rsync
+
+    Duration getScaleTimeout() {
+        script.timeoutLong
+    }
 }

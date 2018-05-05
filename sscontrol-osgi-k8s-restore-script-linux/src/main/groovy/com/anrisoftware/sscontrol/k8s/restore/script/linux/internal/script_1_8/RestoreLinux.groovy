@@ -30,8 +30,6 @@ import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
 import com.anrisoftware.sscontrol.k8s.restore.service.external.Restore
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.ServiceImpl.ServiceImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 
 import groovy.util.logging.Slf4j
 
@@ -68,16 +66,9 @@ class RestoreLinux extends ScriptBase {
     KubectlClusterLinux kubectl
 
     @Inject
-    void setDeploymentFactory(DeploymentFactory factory) {
-        Restore service = service
-        this.deploy = factory.create(service.cluster, kubectl, service.service)
-        this.rsync = factory.create(service.cluster, kubectl, createService([namespace: service.service.namespace, name: "rsync-${service.service.name}"]))
-    }
-
-    @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
         Restore service = service
-        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.origin)
+        this.rsyncClient = factory.create(this, service.service, service.clusterHost, service.client, service.origin)
     }
 
     @Inject
@@ -88,25 +79,25 @@ class RestoreLinux extends ScriptBase {
     @Override
     def run() {
         Restore service = service
-        assertThat "cluster hosts > 0 for $service", service.clusterHosts.size(), greaterThan(0)
+        assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
         this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
         this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
         setupDefaults()
-        setupHosts()
+        kubectl.setupHosts service.clusterHosts
         def origins = service.sources
-        restoreWorkerFactory.create(service, deploy).with {
-            init()
+        restoreWorkerFactory.create(this, service, deploy, rsync).with {
             try {
+                init()
                 before()
                 start { Map args ->
                     origins.each { Source origin ->
                         rsyncClient.start(backup: false, path: origin.target, dir: service.origin.dir, port: args.rsyncPort)
                         rsync.with {
                             if (origin.chown) {
-                                execCommand rsyncDeploy, "chown", "${origin.chown}", "-R", "${origin.target}"
+                                execCommand "chown", "${origin.chown}", "-R", "${origin.target}"
                             }
                             if (origin.chmod) {
-                                execCommand rsyncDeploy, "chmod", "${origin.chmod}", "-R", "${origin.target}"
+                                execCommand "chmod", "${origin.chmod}", "-R", "${origin.target}"
                             }
                         }
                     }
@@ -129,56 +120,14 @@ class RestoreLinux extends ScriptBase {
         if (service.sources.size() == 0) {
             service.source defaultServiceTarget
         }
-    }
-
-    /**
-     * Setups the hosts.
-     */
-    def setupHosts() {
-        service.clusterHosts.each { setupHost it }
-    }
-
-    /**
-     * Setups the hosts.
-     */
-    def setupHost(ClusterHost host) {
-        Credentials c = host.credentials
-        if (!host.proto) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.proto = defaultServerProtoSecured
-            } else {
-                host.proto = defaultServerProtoUnsecured
-            }
+        if (service.origin.hasProperty("arguments") && service.origin.arguments == null) {
+            service.origin.arguments =  scriptListProperties.default_origin_arguments
         }
-        if (!host.port) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.port = defaultServerPortSecured
-            } else {
-                host.port = defaultServerPortUnsecured
-            }
-        }
-        return host
     }
 
     @Override
     ContextProperties getDefaultProperties() {
         propertiesProvider.get()
-    }
-
-    int getDefaultServerPortUnsecured() {
-        properties.getNumberProperty 'default_server_port_unsecured', defaultProperties
-    }
-
-    int getDefaultServerPortSecured() {
-        properties.getNumberProperty 'default_server_port_secured', defaultProperties
-    }
-
-    String getDefaultServerProtoUnsecured() {
-        properties.getProperty 'default_server_proto_unsecured', defaultProperties
-    }
-
-    String getDefaultServerProtoSecured() {
-        properties.getProperty 'default_server_proto_secured', defaultProperties
     }
 
     String getDefaultServiceTarget() {

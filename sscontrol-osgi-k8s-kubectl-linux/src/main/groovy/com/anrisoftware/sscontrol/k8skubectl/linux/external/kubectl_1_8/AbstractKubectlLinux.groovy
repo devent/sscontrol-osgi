@@ -282,6 +282,34 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         getClusterTls()
     }
 
+    /**
+     * Setups the hosts.
+     */
+    def setupHosts(List<ClusterHost> clusterHosts) {
+        clusterHosts.each { ClusterHost host ->
+            host.credentials.each { Credentials c ->
+                setupCredentials host, c
+            }
+        }
+    }
+
+    def setupCredentials(ClusterHost host, Credentials c) {
+        if (!host.proto) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.proto = defaultServerProtoSecured
+            } else {
+                host.proto = defaultServerProtoUnsecured
+            }
+        }
+        if (!host.port) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.port = defaultServerPortSecured
+            } else {
+                host.port = defaultServerPortUnsecured
+            }
+        }
+    }
+
     File getKubectlCmd() {
         getScriptFileProperty 'kubectl_cmd'
     }
@@ -292,6 +320,22 @@ abstract class AbstractKubectlLinux extends ScriptBase {
 
     String getKubernetesLabelHostname() {
         getScriptProperty 'kubernetes_label_hostname'
+    }
+
+    int getDefaultServerPortUnsecured() {
+        getScriptNumberProperty 'default_server_port_unsecured'
+    }
+
+    int getDefaultServerPortSecured() {
+        getScriptNumberProperty 'default_server_port_secured'
+    }
+
+    String getDefaultServerProtoUnsecured() {
+        getScriptProperty 'default_server_proto_unsecured'
+    }
+
+    String getDefaultServerProtoSecured() {
+        getScriptProperty 'default_server_proto_secured'
     }
 
     @Override
