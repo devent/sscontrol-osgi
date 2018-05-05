@@ -16,8 +16,10 @@
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -59,6 +61,10 @@ public class AbstractDirDestination implements Destination {
         log.argumentsSet(this, arguments);
     }
 
+    public void setArguments(List<String> arguments) {
+        setArguments(StringUtils.join(arguments, " "));
+    }
+
     public String getArguments() {
         return arguments;
     }
@@ -76,7 +82,13 @@ public class AbstractDirDestination implements Destination {
     private void parseArguments(Map<String, Object> args) {
         Object v = args.get("arguments");
         if (v != null) {
-            setArguments(v.toString());
+            if (v instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<String> list = (List<String>) v;
+                setArguments(list);
+            } else {
+                setArguments(v.toString());
+            }
         }
     }
 

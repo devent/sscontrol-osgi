@@ -1048,6 +1048,14 @@ echo \$file
                 }
     }
 
+    Map getScriptListProperties() {
+        new HashMap() {
+                    def get(def name) {
+                        ScriptBase.this.getScriptListProperty name
+                    }
+                }
+    }
+
     /**
      * Returns a list script property.
      */
