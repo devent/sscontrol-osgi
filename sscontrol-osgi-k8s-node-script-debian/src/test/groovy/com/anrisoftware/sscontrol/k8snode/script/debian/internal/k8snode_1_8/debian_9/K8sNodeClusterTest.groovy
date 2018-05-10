@@ -34,11 +34,11 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class K8sNodeClusterTest extends AbstractNodeRunnerTest {
 
-	@Test
-	void "nodes_tls"() {
-		def test = [
-			name: "nodes_tls",
-			script: '''
+    @Test
+    void "nodes_tls"() {
+        def test = [
+            name: "nodes_tls",
+            script: '''
 service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "ssh", group: "masters" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
@@ -57,69 +57,67 @@ targets['nodes'].eachWithIndex { host, i ->
     }
 }
 ''',
-			scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
-			expectedServicesSize: 3,
-			generatedDir: folder.newFolder(),
-			expected: { Map args ->
-				File dir = args.dir
-				File gen = args.test.generatedDir
-			},
-		]
-		doTest test
-	}
+            scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
+            expectedServicesSize: 3,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+            },
+        ]
+        doTest test
+    }
 
-	static final Map robobeetestCerts = [
-		etcd: [
-			ca: K8sNodeClusterTest.class.getResource('robobee_test_etcd_ca.pem'),
-			cert: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
-			key: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
-		]
-	]
+    static final Map robobeetestCerts = [
+        etcd: [
+            ca: K8sNodeClusterTest.class.getResource('robobee_test_etcd_ca.pem'),
+            cert: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
+            key: K8sNodeClusterTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
+        ]
+    ]
 
-	/**
-	 * <pre>
-	 * token=$(kubeadm token generate)
-	 * kubeadm token create $token --print-join-command --ttl=0
-	 * <pre>
-	 */
-	static final String joinCommand = 'kubeadm join --token 8c30c4.80630b3fbb2c2586 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:17b2d872a9bda88cd58beb39ac291faf17bd7bedad2bc97e3096ff72a9d0d079'
+    /**
+     * <pre>
+     * token=$(kubeadm token generate)
+     * kubeadm token create $token --print-join-command --ttl=0
+     * <pre>
+     */
+    static final String joinCommand = 'kubeadm join --token 8c30c4.80630b3fbb2c2586 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:17b2d872a9bda88cd58beb39ac291faf17bd7bedad2bc97e3096ff72a9d0d079'
 
-	static final Map sockets = [
-		masters: [
-			"/tmp/robobee@robobee-test:22"
-		],
-		nodes: [
-			"/tmp/robobee@robobee-1-test:22",
-			"/tmp/robobee@robobee-2-test:22",
-		]
-	]
+    static final Map sockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
 
-	static final Map nodes = [
-		labels: [
-			[
-				"robobeerun.com/role=edge-router",
-				"muellerpublic.de/role=web",
-				"robobeerun.com/heapster=required"
-			],
-			[
-				"muellerpublic.de/role=dev",
-				"robobeerun.com/dashboard=required"
-			]
-		],
-		taints: [
-			[],
-			[]]
-	]
+    static final Map nodes = [
+        labels: [
+            [
+                "robobeerun.com/role=edge-router",
+                "muellerpublic.de/role=web",
+                "robobeerun.com/heapster=required",
+                "robobeerun.com/cert-manager=required"
+            ],
+            [
+                "muellerpublic.de/role=dev",
+                "robobeerun.com/dashboard=required"
+            ]
+        ],
+        taints: [[], []]]
 
-	@Before
-	void beforeMethod() {
-		assumeSocketsExists sockets.nodes
-	}
+    @Before
+    void beforeMethod() {
+        assumeSocketsExists sockets.nodes
+    }
 
-	void createDummyCommands(File dir) {
-	}
+    void createDummyCommands(File dir) {
+    }
 
-	Map getScriptEnv(Map args) {
-		getEmptyScriptEnv args
-	}
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
+    }
 }
