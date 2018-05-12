@@ -3,11 +3,13 @@ factsCmd(parent, vars) ::= <<
 >>
 
 catRelease(vars) ::= <<
-cat /etc/*release
+if [[ -f /etc/os-release ]]; then
+  cat /etc/os-release
+fi
 >>
 
 lsbRelease(vars) ::= <<
 if which lsb_release >/dev/null; then
-    lsb_release -a
+  lsb_release -a
 fi
 >>
