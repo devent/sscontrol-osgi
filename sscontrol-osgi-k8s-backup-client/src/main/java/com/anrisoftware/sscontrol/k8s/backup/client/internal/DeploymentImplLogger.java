@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8s.backup.client.external;
+package com.anrisoftware.sscontrol.k8s.backup.client.internal;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl;
  * @since 1.0
  */
 @Singleton
-final class DeploymentLogger extends AbstractLogger {
+final class DeploymentImplLogger extends AbstractLogger {
 
     enum m {
 
@@ -62,7 +62,7 @@ final class DeploymentLogger extends AbstractLogger {
     /**
      * Sets the context of the logger to {@link RestoreImpl}.
      */
-    DeploymentLogger() {
+    DeploymentImplLogger() {
         super(DeploymentImpl.class);
     }
 
