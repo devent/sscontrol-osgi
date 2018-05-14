@@ -1,7 +1,0 @@
-setupMysql(parent, vars) ::= <<
-<if(vars.plugin.database.adminUser)>
-mysql -u<vars.plugin.database.adminUser> -p<vars.plugin.database.adminPassword> <vars.plugin.database.database> \< <parent.idoMysqlSchemaScriptFile>
-<else>
-mysql -u<vars.plugin.database.user> -p<vars.plugin.database.password> <vars.plugin.database.database> \< <parent.idoMysqlSchemaScriptFile>
-<endif>
->>

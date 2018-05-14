@@ -49,9 +49,6 @@
         <module>../sscontrol-osgi-hostname-service</module>
         <module>../sscontrol-osgi-hosts-script-linux</module>
         <module>../sscontrol-osgi-hosts-service</module>
-        <module>../sscontrol-osgi-icinga-service</module>
-        <module>../sscontrol-osgi-icinga-script-debian</module>
-        <module>../sscontrol-osgi-icinga-script-icinga2</module>
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
