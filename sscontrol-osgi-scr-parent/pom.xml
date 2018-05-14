@@ -100,7 +100,6 @@
         <module>../sscontrol-osgi-types-ssh</module>
         <module>../sscontrol-osgi-utils-centos</module>
         <module>../sscontrol-osgi-utils-debian</module>
-        <module>../sscontrol-osgi-utils-fabric-test</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-st-durationrenderer</module>
         <module>../sscontrol-osgi-utils-st-miscrenderers</module>
