@@ -100,31 +100,4 @@ service "k8s-cluster", target: 'default' with {
         ]
         doTest test
     }
-
-    @Test
-    void "script with client certificate authenfication"() {
-        def test = [
-            name: "client_cert",
-            input: '''
-service "ssh", host: "localhost", socket: localhostSocket
-service "k8s-cluster", target: 'default' with {
-    cluster name: 'default-cluster'
-    context name: 'default-system'
-    credentials type: 'cert', name: 'default-admin', ca: cert.ca, cert: cert.cert, key: cert.key
-}
-''',
-            scriptVars: [localhostSocket: localhostSocket, cert: [ca: certCaPem, cert: certCertPem, key: certKeyPem]],
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
-                assertFileResource ClusterScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource ClusterScriptTest, dir, "cp.out", "${args.test.name}_cp_expected.txt"
-            },
-        ]
-        doTest test
-    }
 }
