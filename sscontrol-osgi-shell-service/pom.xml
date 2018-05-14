@@ -18,7 +18,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.shell.service</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.shell</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
