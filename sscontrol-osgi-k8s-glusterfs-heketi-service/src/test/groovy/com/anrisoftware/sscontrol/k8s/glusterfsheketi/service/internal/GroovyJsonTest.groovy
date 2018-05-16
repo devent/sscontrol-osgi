@@ -101,6 +101,6 @@ class GroovyJsonTest {
         assert object.clusters.nodes.size() == 1
         assert object.clusters.nodes[0].node.size() == 3
 
-        assert JsonOutput.toJson(object) == '{"clusters":[{"nodes":[{"node":{"hostnames":{"manage":["node0"],"storage":["192.168.10.100"]},"zone":1},"devices":["/dev/vdb","/dev/vdc","/dev/vdd"]},{"node":{"hostnames":{"manage":["node1"],"storage":["192.168.10.101"]},"zone":1},"devices":["/dev/vdb","/dev/vdc","/dev/vdd"]},{"node":{"hostnames":{"manage":["node2"],"storage":["192.168.10.102"]},"zone":1},"devices":["/dev/vdb","/dev/vdc","/dev/vdd"]}]}]}'
+        assert JsonOutput.toJson(object) == '{"clusters":[{"nodes":[{"devices":["/dev/vdb","/dev/vdc","/dev/vdd"],"node":{"hostnames":{"manage":["node0"],"storage":["192.168.10.100"]},"zone":1}},{"devices":["/dev/vdb","/dev/vdc","/dev/vdd"],"node":{"hostnames":{"manage":["node1"],"storage":["192.168.10.101"]},"zone":1}},{"devices":["/dev/vdb","/dev/vdc","/dev/vdd"],"node":{"hostnames":{"manage":["node2"],"storage":["192.168.10.102"]},"zone":1}}]}]}'
     }
 }
