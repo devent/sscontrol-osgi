@@ -171,7 +171,7 @@ service "restore" with {
                 assert s.service.namespace == 'wordpress'
                 assert s.service.name == 'db'
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHost.host == 'localhost'
                 assert s.client.key.toString() == 'file:id_rsa'
                 assert s.client.proxy == true
             },
@@ -194,7 +194,7 @@ service "restore" with {
                 assert services.getServices('restore').size() == 1
                 Restore s = services.getServices('restore')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHost.host == 'localhost'
                 assert s.client.timeout == Duration.standardMinutes(60)
             },
         ]
@@ -216,7 +216,7 @@ service "restore" with {
                 assert services.getServices('restore').size() == 1
                 Restore s = services.getServices('restore')[0]
                 assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
+                assert s.clusterHost.host == 'localhost'
                 assert s.client.timeout == Duration.standardMinutes(60)
             },
         ]
