@@ -18,7 +18,7 @@
     <description>Configures the Sshd service for Debian systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sshd.script.debian.sshd</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sshd.script.debian</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
