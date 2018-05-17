@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.debian.debian_9
+package com.anrisoftware.sscontrol.k8sbase.script.upstream.debian.external.k8s_1_8.debian.debian_9
 
 import javax.inject.Inject
 
