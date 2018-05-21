@@ -35,85 +35,87 @@ import groovy.transform.ToString
 @ToString
 class SshFactory implements Ssh {
 
-    static Ssh localhost(Injector injector) {
-        def ssh = injector.getInstance(SshFactory)
-        ssh.hosts = [
-            [
-                getHost: { 'localhost' },
-                getUser: { System.getProperty('user.name') },
-                getPort: { 22 },
-                getProto: { null },
-                getKey: { },
-                getHostAddress: { '127.0.0.1' },
-                getSocket: {
-                }
+	static Ssh localhost(Injector injector) {
+		def ssh = injector.getInstance(SshFactory)
+		ssh.hosts = [
+			[
+				getHost: { 'localhost' },
+				getUser: { System.getProperty('user.name') },
+				getPort: { 22 },
+				getProto: { null },
+				getKey: { },
+				getHostAddress: { '127.0.0.1' },
+				getSocket: {
+				}
 
-            ] as SshHost
-        ]
-        return ssh
-    }
+			] as SshHost
+		]
+		return ssh
+	}
 
-    static Ssh testServer(Injector injector) {
-        def ssh = injector.getInstance(SshFactory)
-        ssh.hosts = [
-            [
-                getHost: { 'robobee-test' },
-                getUser: { 'robobee' },
-                getPort: { 22 },
-                getProto: { null },
-                getKey: { UnixTestUtil.robobeeKey.toURI() },
-                getHostAddress: { InetAddress.getByName('robobee').getHostAddress() },
-                getSocket: {
-                }
-            ] as SshHost
-        ]
-        return ssh
-    }
+	static Ssh testServer(Injector injector) {
+		def ssh = injector.getInstance(SshFactory)
+		ssh.hosts = [
+			[
+				getHost: { 'robobee-test' },
+				getUser: { 'robobee' },
+				getPort: { 22 },
+				getProto: { null },
+				getKey: { UnixTestUtil.robobeeKey.toURI() },
+				getHostAddress: { InetAddress.getByName('robobee').getHostAddress() },
+				getSocket: {
+				}
+			] as SshHost
+		]
+		return ssh
+	}
 
-    List<SshHost> hosts
+	List<SshHost> hosts = []
 
-    def serviceProperties
+	List<SshHost> targets = []
 
-    @Inject
-    SshFactory(HostServicePropertiesService propertiesService) {
-        this.serviceProperties = propertiesService.create()
-    }
+	def serviceProperties
 
-    @Override
-    String getName() {
-        return "ssh"
-    }
+	@Inject
+	SshFactory(HostServicePropertiesService propertiesService) {
+		this.serviceProperties = propertiesService.create()
+	}
 
-    @Override
-    DebugLogging getDebugLogging() {
-    }
+	@Override
+	String getName() {
+		return "ssh"
+	}
 
-    @Override
-    SshHost getTarget() {
-        targets[0]
-    }
+	@Override
+	DebugLogging getDebugLogging() {
+	}
 
-    @Override
-    List<SshHost> getTargets() {
-        targets
-    }
+	@Override
+	SshHost getTarget() {
+		targets[0]
+	}
 
-    @Override
-    String getGroup() {
-        'default'
-    }
+	@Override
+	List<SshHost> getTargets() {
+		targets
+	}
 
-    void setHosts(List<SshHost> hosts) {
-        this.hosts = hosts
-    }
+	@Override
+	String getGroup() {
+		'default'
+	}
 
-    @Override
-    List<SshHost> getHosts() {
-        hosts
-    }
+	void setHosts(List<SshHost> hosts) {
+		this.hosts = hosts
+	}
 
-    @Override
-    HostServiceProperties getServiceProperties() {
-        return serviceProperties
-    }
+	@Override
+	List<SshHost> getHosts() {
+		hosts
+	}
+
+	@Override
+	HostServiceProperties getServiceProperties() {
+		return serviceProperties
+	}
 }

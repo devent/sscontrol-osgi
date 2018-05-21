@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.services.internal.targets;
 
-import static com.anrisoftware.sscontrol.services.internal.targets.AbstractTargetsImplLogger._.addHosts;
 
 import javax.inject.Singleton;
 
@@ -30,13 +29,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 final class AbstractTargetsImplLogger extends AbstractLogger {
 
-    enum _ {
+	enum m {
 
         addHosts("Add hosts '{}':={} to {}");
 
         private String name;
 
-        private _(String name) {
+		private m(String name) {
             this.name = name;
         }
 
@@ -54,6 +53,6 @@ final class AbstractTargetsImplLogger extends AbstractLogger {
     }
 
     public void addHosts(AbstractTargetsImpl<?, ?> targets, Object ssh, String group) {
-        debug(addHosts, group, ssh, targets);
+		debug(m.addHosts, group, ssh, targets);
     }
 }

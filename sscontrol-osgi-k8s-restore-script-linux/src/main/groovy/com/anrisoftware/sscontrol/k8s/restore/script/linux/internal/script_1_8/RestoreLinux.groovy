@@ -42,100 +42,121 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class RestoreLinux extends ScriptBase {
 
-    @Inject
-    RestoreLinuxProperties propertiesProvider
+	@Inject
+	RestoreLinuxProperties propertiesProvider
 
-    @Inject
-    K8sClusterFactory clusterFactory
+	@Inject
+	K8sClusterFactory clusterFactory
 
-    @Inject
-    RestoreWorkerImplFactory restoreWorkerFactory
+	@Inject
+	RestoreWorkerImplFactory restoreWorkerFactory
 
-    @Inject
-    DeploymentFactory deployFactory
+	@Inject
+	DeploymentFactory deployFactory
 
-    @Inject
-    ServiceImplFactory serviceFactory
+	@Inject
+	ServiceImplFactory serviceFactory
 
-    DeploymentImpl deploy
+	DeploymentImpl deploy
 
-    DeploymentImpl rsync
+	DeploymentImpl rsync
 
-    RsyncClient rsyncClient
+	RsyncClient rsyncClient
 
-    KubectlClusterLinux kubectl
+	KubectlClusterLinux kubectl
 
-    @Inject
-    void setRsyncClientFactory(RsyncClientFactory factory) {
-        Restore service = service
-        this.rsyncClient = factory.create(this, service.service, service.clusterHost, service.client, service.origin)
-    }
+	@Inject
+	void setRsyncClientFactory(RsyncClientFactory factory) {
+		Restore service = service
+		this.rsyncClient = factory.create(this, service.service, service.clusterHost, service.client, service.origin)
+	}
 
-    @Inject
-    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
-        this.kubectl = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
+	@Inject
+	void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+		this.kubectl = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+	}
 
-    @Override
-    def run() {
-        Restore service = service
-        assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
-        this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
-        this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
-        setupDefaults()
-        kubectl.setupHosts service.clusterHosts
-        def origins = service.sources
-        restoreWorkerFactory.create(this, service, deploy, rsync).with {
-            try {
-                init()
-                before()
-                start { Map args ->
-                    origins.each { Source origin ->
-                        rsyncClient.start(backup: false, path: origin.target, dir: service.origin.dir, port: args.rsyncPort)
-                        rsync.with {
-                            if (origin.chown) {
-                                execCommand "chown", "${origin.chown}", "-R", "${origin.target}"
-                            }
-                            if (origin.chmod) {
-                                execCommand "chmod", "${origin.chmod}", "-R", "${origin.target}"
-                            }
-                        }
-                    }
-                }
-            } finally {
-                try {
-                    after()
-                } finally {
-                    finally1()
-                }
-            }
-        }
-    }
+	@Override
+	def run() {
+		Restore service = service
+		assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
+		this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
+		this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
+		setupDefaults()
+		kubectl.setupHosts service.clusterHosts
+		def origins = service.sources
+		restoreWorkerFactory.create(this, service, deploy, rsync).with {
+			try {
+				init()
+				before()
+				start { Map args ->
+					origins.each { Source origin ->
+						rsyncClient.start(backup: false, path: origin.target, dir: service.origin.dir, port: args.rsyncPort, dryrun: service.dryrun)
+						rsync.with {
+							if (origin.chown) {
+								def cmd = [
+									"chown",
+									"${origin.chown}",
+									"-R",
+									"${origin.target}"
+								]
+								dryrunCommand cmd
+								execCommand(cmd as String[])
+							}
+							if (origin.chmod) {
+								def cmd = [
+									"chmod",
+									"${origin.chmod}",
+									"-R",
+									"${origin.target}"
+								]
+								dryrunCommand cmd
+								execCommand(cmd as String[])
+							}
+						}
+					}
+				}
+			} finally {
+				try {
+					after()
+				} finally {
+					finally1()
+				}
+			}
+		}
+	}
 
-    def setupDefaults() {
-        Restore service = service
-        if (!service.client.timeout) {
-            service.client.timeout = timeoutLong
-        }
-        if (service.sources.size() == 0) {
-            service.source defaultServiceTarget
-        }
-        if (service.origin.hasProperty("arguments") && service.origin.arguments == null) {
-            service.origin.arguments =  scriptListProperties.default_origin_arguments
-        }
-    }
+	def dryrunCommand(def cmd) {
+		if (service.dryrun) {
+			cmd.add(0, "echo")
+		}
+		return cmd
+	}
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
-    }
+	def setupDefaults() {
+		Restore service = service
+		if (!service.client.timeout) {
+			service.client.timeout = timeoutLong
+		}
+		if (service.sources.size() == 0) {
+			service.source defaultServiceTarget
+		}
+		if (service.origin.hasProperty("arguments") && service.origin.arguments == null) {
+			service.origin.arguments =  scriptListProperties.default_origin_arguments
+		}
+	}
 
-    String getDefaultServiceTarget() {
-        properties.getProperty 'default_service_target', defaultProperties
-    }
+	@Override
+	ContextProperties getDefaultProperties() {
+		propertiesProvider.get()
+	}
 
-    @Override
-    def getLog() {
-        log
-    }
+	String getDefaultServiceTarget() {
+		properties.getProperty 'default_service_target', defaultProperties
+	}
+
+	@Override
+	def getLog() {
+		log
+	}
 }
