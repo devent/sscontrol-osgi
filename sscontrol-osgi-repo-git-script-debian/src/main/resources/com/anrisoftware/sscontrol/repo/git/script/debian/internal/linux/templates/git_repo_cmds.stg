@@ -1,0 +1,36 @@
+gitCloneScript(parent, vars) ::= <<
+<vars.script.script>
+setup
+mkdir -p "<vars.dir>"
+cd "<vars.dir>"
+<gitCloneCommand(parent, vars)>
+
+>>
+
+gitCloneCommand(parent, vars) ::= <<
+git clone \\
+--recurse-submodules \\
+<if(vars.repo.repo.checkout.branch)> --branch <vars.repo.repo.checkout.branch> \\
+<elseif(vars.checkout.tag)> --branch <vars.checkout.tag> \\
+<endif> \\
+--depth 1 <vars.path> .
+>>
+
+gitCredentialsSetupScript(parent, vars) ::= <<
+function setup() {
+    cat \<\<"EOF" > "<vars.ret.sshWrapper>"
+#!/bin/bash
+ssh-keyscan <vars.repo.repo.remote.uri.host> > "<vars.ret.knownHostsFile>"
+ssh -o UserKnownHostsFile="<vars.ret.knownHostsFile>" -i "<vars.ret.idRsaFile>" $1 $2
+EOF
+    chmod +x "<vars.ret.sshWrapper>"
+    export GIT_SSH="<vars.ret.sshWrapper>"
+}
+
+function cleanup() {
+    rm <vars.ret.idRsaFile>
+    rm <vars.ret.knownHostsFile>
+    rm <vars.ret.sshWrapper>
+}
+
+>>

@@ -15,9 +15,12 @@
  */
 package com.anrisoftware.sscontrol.repo.git.script.debian.internal.linux
 
-import org.apache.commons.io.IOUtils
-import org.stringtemplate.v4.ST
+import javax.inject.Inject
 
+import org.apache.commons.io.IOUtils
+
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.repo.git.service.external.Credentials
 import com.anrisoftware.sscontrol.repo.git.service.external.GitRepo
@@ -34,6 +37,14 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class GitRepoLinux extends ScriptBase {
 
+    TemplateResource gitRepoCommandsTemplate
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('GitRepoLinuxTemplates')
+        this.gitRepoCommandsTemplate = templates.getResource('git_repo_cmds')
+    }
+
     @Override
     def run() {
         GitRepo service = this.service
@@ -45,29 +56,21 @@ abstract class GitRepoLinux extends ScriptBase {
      * Checkouts the repository and returns the base directory.
      */
     File checkoutRepo(Map vars) {
-        RepoHost repo = vars.repo
+        Map v = [:] << vars
+        RepoHost repo = v.repo
         log.info 'Checkout repository {}', repo
-        File dir = vars.dir
+        File dir = v.dir
         if (!dir) {
             dir = checkoutDirectory
             if (!dir) {
                 dir = createTmpDir()
             }
         }
-        vars.dir = dir
-        def c = setupCredentials vars
-        def path = toPath repo.repo.remote.uri
+        v.dir = dir
+        v.script = setupCredentials v
+        v.path = toPath repo.repo.remote.uri
         try {
-            def gitCommand = new ST("""\
-git clone <if(checkout.branch)>--branch <checkout.branch><elseif(checkout.tag)>--branch <checkout.tag><endif> --depth 1 ${path} .""")
-                    .add("checkout", repo.repo.checkout).render()
-            shell """
-${c.script}
-setup
-mkdir -p "${dir}"
-cd "${dir}"
-$gitCommand
-""" call()
+            shell resource: gitRepoCommandsTemplate, name: 'gitCloneScript', vars: v call()
             return dir
         } catch (e) {
             shell """
@@ -76,7 +79,7 @@ rm -r "${dir}"
             throw e
         } finally {
             shell """
-${c.script}
+${v.script.script}
 cleanup
 """ call()
         }
@@ -127,23 +130,8 @@ function cleanup() {
         } finally {
             tmp.delete()
         }
-        ret.script = """\
-function setup() {
-    cat <<"EOF" > "${ret.sshWrapper}"
-#!/bin/bash
-ssh-keyscan ${repo.repo.remote.uri.host} > "${ret.knownHostsFile}"
-ssh -o UserKnownHostsFile="${ret.knownHostsFile}" -i "${ret.idRsaFile}" \$1 \$2
-EOF
-    chmod +x "${ret.sshWrapper}"
-    export GIT_SSH="${ret.sshWrapper}"
-}
-
-function cleanup() {
-    rm ${ret.idRsaFile}
-    rm ${ret.knownHostsFile}
-    rm ${ret.sshWrapper}
-}
-"""
+        Map v = [ret: ret] << vars
+        ret.script = gitRepoCommandsTemplate.getText(true, "gitCredentialsSetupScript", "parent", this, "vars", v)
         return ret
     }
 
