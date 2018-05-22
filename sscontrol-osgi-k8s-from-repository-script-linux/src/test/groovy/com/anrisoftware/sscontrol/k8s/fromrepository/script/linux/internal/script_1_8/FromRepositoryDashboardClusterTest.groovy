@@ -35,23 +35,13 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class FromRepositoryDashboardClusterTest extends AbstractFromRepositoryRunnerTest {
 
-    static final Map certs = [
-        worker: [
-            ca: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_key.pem'),
-        ],
-    ]
-
     @Test
     void "dashboard addon to cluster"() {
         def test = [
             name: "dashboard_cluster",
             script: '''
 service "ssh", host: "andrea-master.robobee-test.test", socket: robobeeSocket
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', ca: certs.worker.ca, cert: certs.worker.cert, key: certs.worker.key
-}
+service "k8s-cluster"
 service "repo-git", group: "dashboard" with {
     remote url: "git@github.com:robobee-repos/dashboard.git"
     credentials "ssh", key: robobeeKey
@@ -62,8 +52,8 @@ service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dash
             image: [name: "k8s.gcr.io/kubernetes-dashboard-amd64", version: "v1.8.3"],
             affinity: [key: "robobeerun.com/dashboard", name: "required", required: true],
             allowOnMaster: true,
-            limits: [cpu: '100m', memory: '300Mi'],
-            requests: [cpu: '50m', memory: '100Mi'],
+            limits: [cpu: '100m', memory: '100Mi'],
+            requests: [],
         ]
     ]
 }
@@ -71,7 +61,6 @@ service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dash
             scriptVars: [
                 robobeeSocket: robobeeSocket,
                 robobeeKey: robobeeKey,
-                certs: certs,
             ],
             expectedServicesSize: 4,
             expected: { Map args ->

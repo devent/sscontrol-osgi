@@ -50,4 +50,10 @@ public interface Restore extends ClusterService {
      * Returns the backup targets.
      */
     List<Source> getSources();
+
+	/**
+	 * Returns true if it should just simulate the restoration and actually not
+	 * transfer any files.
+	 */
+	boolean getDryrun();
 }

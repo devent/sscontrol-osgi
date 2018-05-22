@@ -17,36 +17,26 @@ package com.anrisoftware.sscontrol.k8s.backup.client.internal
 
 import static java.nio.charset.StandardCharsets.*
 
-import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 import javax.inject.Inject
 
+import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
-import com.anrisoftware.sscontrol.k8s.backup.client.external.CreateClientException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
-import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
-import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentLogger
-import com.anrisoftware.sscontrol.k8s.backup.client.external.GetDeploymentsException
-import com.anrisoftware.sscontrol.k8s.backup.client.external.GetServicesException
+import com.anrisoftware.sscontrol.k8s.backup.client.external.ErrorScalingDeployException
+import com.anrisoftware.sscontrol.k8s.backup.client.external.Service
 import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingTimeoutException
 import com.anrisoftware.sscontrol.k8s.backup.client.external.WaitScalingUnexpectedException
-import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost
-import com.anrisoftware.sscontrol.tls.external.Tls
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials
-import com.anrisoftware.sscontrol.utils.st.base64renderer.external.UriBase64Renderer
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.google.inject.assistedinject.Assisted
-import com.google.inject.assistedinject.AssistedInject
 
-import io.fabric8.kubernetes.api.model.Pod
-import io.fabric8.kubernetes.api.model.Service
-import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient
-import io.fabric8.kubernetes.client.ConfigBuilder
-import io.fabric8.kubernetes.client.NamespacedKubernetesClient
-import io.fabric8.kubernetes.client.dsl.base.HasMetadataOperation
-import io.fabric8.kubernetes.client.dsl.internal.ExecWebSocketListener
-import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl
+import groovy.json.JsonSlurper
 
 /**
  *
@@ -56,201 +46,155 @@ import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl
  */
 class DeploymentImpl implements Deployment {
 
-    @Inject
-    DeploymentLogger log
+	@Inject
+	transient DeploymentImplLogger log
 
-    @Inject
-    UriBase64Renderer uriBase64Renderer
+	private final ClusterHost host
 
-    @Inject
-    DeploymentFactory deploymentFactory
+	private final def kubectl
 
-    private final NamespacedKubernetesClient client
+	private final Service service
 
-    private final K8sClusterHost host
+	@Inject
+	DeploymentImpl(@Assisted ClusterHost host, @Assisted Object kubectl, @Assisted Service service) {
+		this.host = host
+		this.kubectl = kubectl
+		this.service = service
+	}
 
-    @Inject
-    @AssistedInject
-    DeploymentImpl(@Assisted K8sClusterHost host) {
-        this.host = host
-        this.client = null
-    }
+	@Override
+	Service getService() {
+		return service
+	}
 
-    @Inject
-    @AssistedInject
-    DeploymentImpl(@Assisted K8sClusterHost host, @Assisted NamespacedKubernetesClient client) {
-        this.host = host
-        this.client = client
-    }
+	@Override
+	int getReplicas() {
+		def command = "-n ${service.namespace} get deploy ${service.name} -o jsonpath='{.spec.replicas}'"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		int replicas = Integer.parseInt(output)
+		log.replicasReturned this, replicas
+		return replicas
+	}
 
-    @Override
-    Deployment createClient() {
-        try  {
-            def config = buildConfig host.url, host.credentials
-            def client = new AutoAdaptableKubernetesClient(config)
-            log.createdClient host.url
-            return deploymentFactory.create(host, client)
-        } catch (Exception e) {
-            throw new CreateClientException(this, e)
-        }
-    }
+	@Override
+	void scaleDeploy(int replicas) {
+		def command = "-n ${service.namespace} scale deploy ${service.name} --replicas=${replicas}"
+		kubectl.runKubectl args: command
+		log.deploymentScaled this, replicas
+	}
 
-    @Override
-    def getDeployment(String namespace, String name) {
-        try  {
-            return client.extensions().deployments().inNamespace(namespace).withName(name)
-        } catch (Exception e) {
-            throw new GetDeploymentsException(this, namespace, name, e)
-        }
-    }
+	@Override
+	int getReadyReplicas() {
+		def command = "-n ${service.namespace} get pods -l app=${service.name} --no-headers"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		if (output.trim().isEmpty()) {
+			return 0
+		}
+		String[] pods = StringUtils.split(output, "\n")
+		int replicas = pods.inject(0) { int result, String pod ->
+			String[] podProperties = StringUtils.split(pod)
+			String[] readyReplicas = StringUtils.split(podProperties[1], "/")
+			int ready = Integer.parseInt(readyReplicas[0])
+			int containers = Integer.parseInt(readyReplicas[1])
+			if (ready == containers) {
+				return result + 1
+			} else {
+				return result
+			}
+		}
+		log.replicasReturned this, replicas
+		return replicas
+	}
 
-    @Override
-    def getService(String namespace, String name) {
-        try  {
-            return client.services().inNamespace(namespace).withName(name)
-        } catch (Exception e) {
-            throw new GetServicesException(this, namespace, name, e)
-        }
-    }
+	@Override
+	void waitScaleDeploy(int replicas, Duration timeout) {
+		scaleDeploy replicas
+		def executor = Executors.newSingleThreadExecutor()
+		def canceled = false
+		def future = executor.submit([call: {
+				while (!canceled) {
+					int current = readyReplicas
+					if (current == replicas) {
+						return true
+					}
+					Thread.sleep 5000
+				}
+				return false
+			}] as Callable)
 
-    @Override
-    void scaleDeployment(Object deployOp, int replicas) {
-        scaleDeployment deployOp, replicas, true
-    }
+		try {
+			boolean result = future.get(timeout.standardSeconds, TimeUnit.SECONDS)
+			log.deploymentScaled this, replicas
+			if (!result) {
+				throw new ErrorScalingDeployException(service, replicas)
+			}
+		}
+		catch (TimeoutException e) {
+			throw new WaitScalingTimeoutException(service, replicas, timeout)
+		}
+		catch (e) {
+			throw new WaitScalingUnexpectedException(e, service, replicas)
+		}
+		finally {
+			executor.shutdownNow()
+		}
+	}
 
-    @Override
-    void scaleDeployment(Object deployOp, int replicas, boolean deleteOnError) {
-        deployOp = deployOp as HasMetadataOperation
-        deployOp.scale replicas, true
-        if (replicas > 0) {
-            waitScaleUp deployOp, deleteOnError
-        } else {
-            waitScaleZero deployOp
-        }
-        log.scaledDeployment deployOp, replicas
-    }
+	@Override
+	void waitExposeDeploy(String name) {
+		if (getNodePort(name) != null) {
+			return
+		}
+		def command = "-n ${service.namespace} expose deploy ${service.name} --name=${name} --type=NodePort"
+		kubectl.runKubectl args: command
+		log.deployExposed this, name
+	}
 
-    @Override
-    void waitScaleUp(Object deployOp, boolean deleteOnError) {
-        def waitTime = Duration.standardHours 1
-        try {
-            deployOp = deployOp as HasMetadataOperation
-            deployOp.waitUntilReady waitTime.standardSeconds * 1000, TimeUnit.MILLISECONDS
-        } catch (e) {
-            def deploy = deployOp.get()
-            def ex = new WaitScalingTimeoutException(e, deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
-            if (deleteOnError) {
-                scaleDeployment deployOp, 0
-            }
-            throw ex
-        }
-    }
+	@Override
+	Integer getNodePort(String name) {
+		def command = "-n ${service.namespace} get svc -l app=${service.name} -o json"
+		def ret = kubectl.runKubectl args: command, outString: true
+		String output = ret[0].out
+		def jsonSlurper = new JsonSlurper()
+		def out = jsonSlurper.parseText(ret[0].out)
+		if (out.items.size == 0) {
+			return null
+		}
+		int port = out.items[0].spec.ports[0].nodePort
+		log.nodePortReturned this, name, port
+		return port
+	}
 
-    @Override
-    void waitScaleZero(Object deployOp) {
-        deployOp = deployOp as HasMetadataOperation
-        def deploy = deployOp.get()
-        def namespace = deploy.metadata.namespace
-        def name = deploy.metadata.name
-        def countDown = new CountDownLatch(1)
-        def waitTime = Duration.standardMinutes 5
-        def ex = null
-        Thread.start {
-            try {
-                while (getPods(namespace, name).size() > 0) {
-                    def pods = getPods(namespace, name)
-                    Thread.sleep 1000
-                }
-            }
-            catch(e) {
-                ex = e
-            }
-            finally {
-                countDown.countDown()
-            }
-        }
-        if (!countDown.await(waitTime.standardSeconds, TimeUnit.SECONDS)) {
-            throw new WaitScalingTimeoutException(deploy.metadata.namespace, deploy.metadata.name, 0, waitTime)
-        }
-        if (ex) {
-            throw new WaitScalingUnexpectedException(ex,deploy.metadata.namespace, deploy.metadata.name, 0)
-        }
-    }
+	@Override
+	void deleteService(String name) {
+		kubectl.deleteResource namespace: service.namespace, type: "svc", name: name, checkExists: true
+		log.serviceDeleted this, name
+	}
 
-    @Override
-    List<?> getPods(String namespace, String name) {
-        client.pods().inNamespace(namespace).withLabel("app", name).list().items
-    }
+	@Override
+	List<String> getPods() {
+		def command = "-n ${service.namespace} get pods -l app=${service.name} --no-headers  -o name"
+		def ret = kubectl.runKubectl args: command, outString: true
+		def names = ret[0].out.split("\n").inject([]) { List result, String name ->
+			def podName = name.split("\\/")
+			result << podName[1]
+		}
+		log.podsListed this, names
+		return names
+	}
 
-    @Override
-    def createPublicService(Object deployOp) {
-        deployOp = deployOp as HasMetadataOperation
-        String namespace = deployOp.get().metadata.namespace
-        String name = deployOp.get().metadata.name
-        String serviceName = "${name}-public"
-        def service = getService namespace, serviceName get()
-        if (service != null) {
-            return service
-        }
-        service = client.services().inNamespace(namespace).createNew()
-                .withNewMetadata()
-                .withName(serviceName)
-                .endMetadata()
-                .withNewSpec()
-                .withSelector([app: name])
-                .withType("NodePort")
-                .addNewPort().withPort(2222)
-                .withNewTargetPort().withIntVal(2222)
-                .endTargetPort()
-                .endPort()
-                .endSpec()
-                .done()
-        log.createPublicService namespace, serviceName
-        return service
-    }
+	@Override
+	void execCommand(String... cmd) {
+		def pod = pods[0]
+		def command = "-n ${service.namespace} exec ${pod} -- ${cmd.join(' ')}"
+		kubectl.runKubectl args: command
+		log.commandExecuted(this, pod, Arrays.toString(cmd))
+	}
 
-    @Override
-    void deleteService(Object service) {
-        service = service as Service
-        String namespace = service.metadata.namespace
-        String name = service.metadata.name
-        client.services().inNamespace(namespace).withName(name).delete()
-        log.deleteService namespace, name
-    }
-
-    @Override
-    def buildConfig(URI hostUrl, Credentials credentials) {
-        def config = new ConfigBuilder().withMasterUrl(hostUrl.toString())
-        if (credentials.hasProperty('tls')) {
-            Tls tls = credentials.tls
-            if (tls.ca) {
-                config.withCaCertData uriBase64Renderer.toString(tls.ca, "base64", null)
-            }
-            if (tls.cert) {
-                config.withClientCertData uriBase64Renderer.toString(tls.cert, "base64", null)
-            }
-            if (tls.key) {
-                config.withClientKeyData uriBase64Renderer.toString(tls.key, "base64", null)
-            }
-        }
-        return config.build()
-    }
-
-    @Override
-    List<?> waitDeploy(Object deployOp, int replicas, boolean ready) {
-        deployOp = deployOp as HasMetadataOperation
-        String namespace = deployOp.get().metadata.namespace
-        String name = deployOp.get().metadata.name
-        client.pods().inNamespace(namespace).withLabel("app", name).list().items
-    }
-
-    @Override
-    void execCommand(Object deployOp, String... cmd) {
-        //def scmd = URLEncoder.encode(cmd, UTF_8.name())
-        deployOp = deployOp as HasMetadataOperation
-        Pod pod = getPods(deployOp.namespace, deployOp.name)[0]
-        PodOperationsImpl podOp = client.pods().inNamespace(deployOp.namespace).withName(pod.metadata.name)
-        ExecWebSocketListener watch = podOp.redirectingInput().redirectingOutput().exec(cmd)
-        log.commandExecuted(deployOp, Arrays.toString(cmd))
-    }
+	@Override
+	String toString() {
+		ToStringBuilder.reflectionToString(this)
+	}
 }

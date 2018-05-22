@@ -29,8 +29,6 @@
         <module>../sscontrol-osgi-command-shell-openssh</module>
         <module>../sscontrol-osgi-command-template</module>
         <module>../sscontrol-osgi-debug</module>
-        <module>../sscontrol-osgi-dhclient-script-debian</module>
-        <module>../sscontrol-osgi-dhclient-service</module>
         <module>../sscontrol-osgi-docker-script-debian</module>
         <module>../sscontrol-osgi-docker-script-systemd</module>
         <module>../sscontrol-osgi-docker-service</module>
@@ -51,9 +49,6 @@
         <module>../sscontrol-osgi-hostname-service</module>
         <module>../sscontrol-osgi-hosts-script-linux</module>
         <module>../sscontrol-osgi-hosts-service</module>
-        <module>../sscontrol-osgi-icinga-service</module>
-        <module>../sscontrol-osgi-icinga-script-debian</module>
-        <module>../sscontrol-osgi-icinga-script-icinga2</module>
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
@@ -102,7 +97,6 @@
         <module>../sscontrol-osgi-types-ssh</module>
         <module>../sscontrol-osgi-utils-centos</module>
         <module>../sscontrol-osgi-utils-debian</module>
-        <module>../sscontrol-osgi-utils-fabric-test</module>
         <module>../sscontrol-osgi-utils-st-base64renderer</module>
         <module>../sscontrol-osgi-utils-st-durationrenderer</module>
         <module>../sscontrol-osgi-utils-st-miscrenderers</module>

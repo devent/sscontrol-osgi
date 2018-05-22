@@ -11,9 +11,11 @@
  *
  * Optional:
  *
+ * vars.rsync.arguments
  * vars.config
  * vars.proxy
  * vars.proxy.socket
+ * vars.dryrun
  */
 rsyncCmd(parent, vars) ::= <<
 set -e
@@ -42,7 +44,7 @@ cd "<vars.dir>"
 cd "./<vars.path>"
 <endif>
 
-rsync <sshCommand(parent, vars)> -r -v -z <vars.rsync.arguments> <sourceTarget(parent, vars)>
+rsync <sshCommand(parent, vars)> -r -v -z <if(vars.dryrun)>--dry-run <endif><vars.rsync.arguments> <sourceTarget(parent, vars)>
 
 >>
 

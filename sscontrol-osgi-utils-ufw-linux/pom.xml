@@ -46,6 +46,12 @@
         <!-- own modules -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types-ssh</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-types-host</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
@@ -76,6 +82,11 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-templates</artifactId>
+            <type>bundle</type>
         </dependency>
     </dependencies>
 

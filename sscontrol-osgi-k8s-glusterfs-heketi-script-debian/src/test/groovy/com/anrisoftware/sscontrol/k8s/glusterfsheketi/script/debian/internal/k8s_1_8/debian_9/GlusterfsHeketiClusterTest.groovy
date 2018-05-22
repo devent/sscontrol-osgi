@@ -49,14 +49,10 @@ service "ssh", group: "masters" with {
     host "robobee@andrea-master.robobee-test.test", socket: sockets.masters[0]
 }
 service "k8s-cluster", target: 'masters' with {
-    credentials type: 'cert', name: 'default-admin', cert: certs.worker.cert, key: certs.worker.key
 }
 service "repo-git", group: "glusterfs-heketi", target: targets.default[0] with {
     credentials "ssh", key: robobeeKey
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
-}
-def glusterNode = targets.default.inject([]) { list, host ->
-    list << host.hostAddress
 }
 service "shell", privileged: true with {
     script << """
@@ -96,24 +92,19 @@ systemctl start glusterfs-lo
 systemctl enable glusterfs-lo
 """
 }
+def glusterNodesHosts = [
+    "node-0",
+    "node-1",
+    "node-2",
+]
+def glusterNodesAddresses = targets.default.inject([]) { list, host ->
+    list << host.hostAddress
+}
 service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
     property << "commands_quiet=false"
     property << "debug_gk_deploy=true"
-    admin key: "MySecret"
-    user key: "MyVolumeSecret"
-    vars << [gluster: [
-            limits: [cpu: '0.5', memory: '256Mi'],
-            requests: [cpu: '0.5', memory: '256Mi']
-    ]]
-    vars << [heketi: [
-            limits: [cpu: '0', memory: '0'],
-            requests: [cpu: '0', memory: '0']
-    ]]
-    vars << [tolerations: [
-        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
-        [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
-        [key: 'dedicated', effect: 'NoSchedule'],
-    ]]
+    admin key: "cai7jie5vooqu8uF"
+    user key: "Aif1reigei2ooth4"
     topology parse: """
 {
   "clusters":[
@@ -123,10 +114,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[0]}"
+                "${glusterNodesHosts[0]}"
               ],
               "storage":[
-                "${glusterNode[0]}"
+                "${glusterNodesAddresses[0]}"
               ]
             },
             "zone":1
@@ -139,10 +130,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[1]}"
+                "${glusterNodesHosts[1]}"
               ],
               "storage":[
-                "${glusterNode[1]}"
+                "${glusterNodesAddresses[1]}"
               ]
             },
             "zone":2
@@ -155,10 +146,10 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
           "node":{
             "hostnames":{
               "manage":[
-                "${glusterNode[2]}"
+                "${glusterNodesHosts[2]}"
               ],
               "storage":[
-                "${glusterNode[2]}"
+                "${glusterNodesAddresses[2]}"
               ]
             },
             "zone":3
@@ -174,7 +165,9 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
 """
 }
 ''',
-            scriptVars: [sockets: sockets, size_M: "40000", certs: certs, robobeeKey: robobeeKey],
+            scriptVars: [
+                sockets: sockets, size_M: "20000", robobeeKey: robobeeKey,
+            ],
             expectedServicesSize: 5,
             expected: { Map args ->
             },
@@ -190,14 +183,6 @@ service "glusterfs-heketi", target: "masters", repo: "glusterfs-heketi", name: "
             "/tmp/robobee@robobee-test:22",
             "/tmp/robobee@robobee-1-test:22",
             "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
-
-    static final Map certs = [
-        worker: [
-            ca: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_ca.txt'),
-            cert: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_admin_cert.txt'),
-            key: GlusterfsHeketiClusterTest.class.getResource('robobee_test_kube_admin_key.txt'),
         ],
     ]
 

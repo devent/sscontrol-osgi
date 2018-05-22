@@ -15,10 +15,9 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import java.net.URI;
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
+import org.joda.time.Duration;
 
 /**
  *
@@ -28,29 +27,29 @@ import com.anrisoftware.sscontrol.types.cluster.external.Credentials;
  */
 public interface Deployment {
 
-    Deployment createClient();
+    Service getService();
 
-    Object getDeployment(String namespace, String name);
+    int getReplicas();
 
-    Object getService(String namespace, String name);
+    int getReadyReplicas();
 
-    void scaleDeployment(Object deploy, int replicas);
+    void scaleDeploy(int replicas);
 
-    void scaleDeployment(Object deploy, int replicas, boolean deleteOnError);
+    void waitScaleDeploy(int replicas, Duration timeout);
 
-    void waitScaleUp(Object deploy, boolean deleteOnError);
+    void waitExposeDeploy(String name);
 
-    void waitScaleZero(Object deployOp);
+    /**
+     * Returns the exposed node port for a service.
+     *
+     * @return the {@link Integer} node port or <code>null</code> if the service
+     *         was not exposed.
+     */
+    Integer getNodePort(String name);
 
-    List<?> getPods(String namespace, String name);
+    void deleteService(String name);
 
-    Object createPublicService(Object deploy);
+    List<String> getPods();
 
-    void deleteService(Object service);
-
-    Object buildConfig(URI hostUrl, Credentials credentials);
-
-    List<?> waitDeploy(Object deploy, int replicas, boolean ready);
-
-    void execCommand(Object deployOp, String... cmd);
+    void execCommand(String... cmd);
 }

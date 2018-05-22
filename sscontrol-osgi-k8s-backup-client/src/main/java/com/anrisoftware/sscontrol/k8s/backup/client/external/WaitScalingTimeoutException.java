@@ -26,21 +26,12 @@ import org.joda.time.Duration;
 @SuppressWarnings("serial")
 public class WaitScalingTimeoutException extends BackupClientException {
 
-    public WaitScalingTimeoutException(String namespace, String name,
-            int replicas, Duration timeout) {
+    public WaitScalingTimeoutException(Service service, int replicas,
+            Duration timeout) {
         super("Scaling deployment timeout");
-        addContextValue("namespace", namespace);
-        addContextValue("name", name);
+        addContextValue("service", service);
         addContextValue("replicas", replicas);
         addContextValue("timeout", timeout);
     }
 
-    public WaitScalingTimeoutException(Throwable cause, String namespace,
-            String name, int replicas, Duration timeout) {
-        super("Scaling deployment timeout", cause);
-        addContextValue("namespace", namespace);
-        addContextValue("name", name);
-        addContextValue("replicas", replicas);
-        addContextValue("timeout", timeout);
-    }
 }

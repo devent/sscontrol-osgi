@@ -25,8 +25,9 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.FromRepository
 import com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.external.GlusterfsHeketi
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsListFactory
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
@@ -96,17 +97,44 @@ class GlusterfsHeketiDebian extends ScriptBase {
         if (service.storage.isDefault == null) {
             service.storage.isDefault = defaultStorageClassIsDefault
         }
+        if (!service.storage.restAddress) {
+            service.storage.restAddress = scriptProperties.default_rest_address
+        }
+        if (!service.minBrickSizeGb) {
+            service.minBrickSizeGb = scriptNumberProperties.default_min_brick_size_gb
+        }
+        if (!service.maxBrickSizeGb) {
+            service.maxBrickSizeGb = scriptNumberProperties.default_max_brick_size_gb
+        }
+        if (!service.serviceAddress) {
+            service.serviceAddress = scriptProperties.default_service_address
+        }
         def vars = service.vars
         vars.heketi = vars.heketi ?: [:]
+        vars.heketi.clusterIP = service.serviceAddress
         vars.heketi.image = vars.heketi.image ?: [:]
-        vars.heketi.image.name = vars.heketi.image.name ?: heketiImageName
-        vars.heketi.image.version = vars.heketi.image.version ?: heketiImageVersion
+        vars.heketi.image.name = vars.heketi.image.name ?: scriptProperties.default_heketi_image_name
+        vars.heketi.image.version = vars.heketi.image.version ?: scriptProperties.default_heketi_image_version
+        vars.heketi.limits = vars.heketi.limits ?: [:]
+        vars.heketi.limits.cpu = vars.heketi.limits.cpu ?: scriptProperties.default_heketi_limits_cpu
+        vars.heketi.limits.memory = vars.heketi.limits.memory ?: scriptProperties.default_heketi_limits_memory
+        vars.heketi.requests = vars.heketi.requests ?: [:]
+        vars.heketi.requests.cpu = vars.heketi.requests.cpu ?: scriptProperties.default_heketi_requests_cpu
+        vars.heketi.requests.memory = vars.heketi.requests.memory ?: scriptProperties.default_heketi_requests_memory
         vars.heketi.snapshot = vars.heketi.snapshot ?: [:]
-        vars.heketi.snapshot.limit = vars.heketi.snapshot.limit ?: heketiSnapshotLimit
+        vars.heketi.snapshot.limit = vars.heketi.snapshot.limit ?: scriptNumberProperties.default_heketi_snapshot_limit
+        vars.heketi.allowOnMaster = vars.heketi.allowOnMaster != null ?: scriptBooleanProperties.default_heketi_allowonmaster
         vars.gluster = vars.gluster ?: [:]
         vars.gluster.image = vars.gluster.image ?: [:]
-        vars.gluster.image.name = vars.gluster.image.name ?: glusterImageName
-        vars.gluster.image.version = vars.gluster.image.version ?: glusterImageVersion
+        vars.gluster.image.name = vars.gluster.image.name ?: scriptProperties.default_gluster_image_name
+        vars.gluster.image.version = vars.gluster.image.version ?: scriptProperties.default_gluster_image_version
+        vars.gluster.limits = vars.gluster.limits ?: [:]
+        vars.gluster.limits.cpu = vars.gluster.limits.cpu ?: scriptProperties.default_gluster_limits_cpu
+        vars.gluster.limits.memory = vars.gluster.limits.memory ?: scriptProperties.default_gluster_limits_memory
+        vars.gluster.requests = vars.gluster.requests ?: [:]
+        vars.gluster.requests.cpu = vars.gluster.requests.cpu ?: scriptProperties.default_gluster_requests_cpu
+        vars.gluster.requests.memory = vars.gluster.requests.memory ?: scriptProperties.default_gluster_requests_memory
+        vars.gluster.allowOnMaster = vars.gluster.allowOnMaster != null ?: scriptBooleanProperties.default_gluster_allowonmaster
     }
 
     /**
@@ -134,12 +162,13 @@ class GlusterfsHeketiDebian extends ScriptBase {
         args.targets = service.targets
         args.clusters = service.clusters
         args.repos = service.repos
-        def fromRepositoryService = findAvailableService 'from-repository' create args
+        FromRepository fromRepositoryService = findAvailableService 'from-repository' create args
         fromRepositoryService.vars << service.vars
         fromRepositoryService.serviceProperties = service.serviceProperties
         def fromRepository = createScript 'from-repository', fromRepositoryService
         def glusterfsScript = this
-        fromRepository.metaClass.kubeFiles = {File dir, HostServiceScript cluster ->
+        fromRepository.metaClass.kubeFiles = {File dir ->
+            def cluster = fromRepositoryService.clusterHost
             deployGlusterfsHeketi dir, cluster, glusterfsScript
         }
         fromRepository.run()
@@ -154,28 +183,23 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     def installGlusterKubernetesDeploy() {
         log.info 'Installs gluster-kubernetes-deploy.'
-        def tmp = createTmpDir()
-        try {
+        withRemoteTempDir { File tmp ->
             def name = glusterKubernetesDeployArchiveFile
             copy src: glusterKubernetesDeployArchive, hash: glusterKubernetesDeployArchiveHash, dest: "$tmp/$name", direct: true, timeout: timeoutLong call()
             shell timeout: timeoutMiddle, resource: installResource, name: 'installGlusterKubernetesDeployCmd',
             vars: [parentDir: tmp] call()
-        } finally {
-            deleteTmpFile tmp
         }
     }
 
-    def deployGlusterfsHeketi(File dir, HostServiceScript cluster, GlusterfsHeketiDebian glusterfsScript) {
-        def topologyFile = glusterfsScript.deployTopologyFile()
-        try {
-            shell timeout: timeoutMiddle, resource: gkdeployResource, name: 'gkdeployCmd',
+    def deployGlusterfsHeketi(File dir, ClusterHost cluster, GlusterfsHeketiDebian glusterfsScript) {
+        withRemoteTempFile { File topologyFile ->
+            glusterfsScript.deployTopologyFile(topologyFile)
+            shell target: cluster.target, timeout: timeoutMiddle, resource: gkdeployResource, name: 'gkdeployCmd',
             vars: [
                 glusterfsScript: glusterfsScript,
                 templatesDir: dir,
                 topologyFile: topologyFile
             ] call()
-        } finally {
-            deleteTmpFile topologyFile as File
         }
     }
 
@@ -183,17 +207,10 @@ class GlusterfsHeketiDebian extends ScriptBase {
      * Deploys the topology json file.
      * @return the path of the file.
      */
-    String deployTopologyFile() {
+    void deployTopologyFile(File file) {
         GlusterfsHeketi service = service
         def topology = JsonOutput.toJson(service.topology)
-        def tmp = createTmpFile()
-        try {
-            copyString str: topology, dest: tmp
-            return tmp
-        }  catch (e) {
-            deleteTmpFile tmp
-            throw e
-        }
+        copyString str: topology, dest: file
     }
 
     /**
@@ -204,7 +221,7 @@ class GlusterfsHeketiDebian extends ScriptBase {
         if (!deployDefaultStorageClass) {
             return
         }
-        def target = service.cluster.cluster.target
+        def target = service.target
         if (!service.storage.restAddress) {
             def ret = shell outString: true, target: target, resource: installResource, name: 'getHeketiAddress', vars: [:] call()
             def address = ret.out[0..-2]
@@ -233,26 +250,6 @@ class GlusterfsHeketiDebian extends ScriptBase {
 
     String getDefaultNamespace() {
         properties.getProperty 'default_namespace', defaultProperties
-    }
-
-    String getHeketiImageName() {
-        properties.getProperty 'default_heketi_image_name', defaultProperties
-    }
-
-    String getHeketiImageVersion() {
-        properties.getProperty 'default_heketi_image_version', defaultProperties
-    }
-
-    int getHeketiSnapshotLimit() {
-        properties.getNumberProperty 'default_heketi_snapshot_limit', defaultProperties
-    }
-
-    String getGlusterImageName() {
-        properties.getProperty 'default_gluster_image_name', defaultProperties
-    }
-
-    String getGlusterImageVersion() {
-        properties.getProperty 'default_gluster_image_version', defaultProperties
     }
 
     URI getGlusterKubernetesDeployArchive() {

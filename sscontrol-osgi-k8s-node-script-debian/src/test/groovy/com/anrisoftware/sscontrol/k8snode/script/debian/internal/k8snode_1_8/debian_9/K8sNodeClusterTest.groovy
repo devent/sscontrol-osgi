@@ -82,7 +82,7 @@ targets['nodes'].eachWithIndex { host, i ->
      * kubeadm token create $token --print-join-command --ttl=0
      * <pre>
      */
-    static final String joinCommand = 'kubeadm join --token 78abf7.2d734ef6a7deef7f 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:acebdfc85c1f43ffeb534e6f6f8dad76fad20846d77dbdf38be5fd5c312179c9'
+    static final String joinCommand = 'kubeadm join --token 8c30c4.80630b3fbb2c2586 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:17b2d872a9bda88cd58beb39ac291faf17bd7bedad2bc97e3096ff72a9d0d079'
 
     static final Map sockets = [
         masters: [
@@ -98,15 +98,16 @@ targets['nodes'].eachWithIndex { host, i ->
         labels: [
             [
                 "robobeerun.com/role=edge-router",
-                "muellerpublic.de/role=web"
+                "muellerpublic.de/role=web",
+                "robobeerun.com/heapster=required",
+                "robobeerun.com/cert-manager=required"
             ],
             [
-                "muellerpublic.de/role=dev"]
+                "muellerpublic.de/role=dev",
+                "robobeerun.com/dashboard=required"
+            ]
         ],
-        taints: [
-            [],
-            []]
-    ]
+        taints: [[], []]]
 
     @Before
     void beforeMethod() {

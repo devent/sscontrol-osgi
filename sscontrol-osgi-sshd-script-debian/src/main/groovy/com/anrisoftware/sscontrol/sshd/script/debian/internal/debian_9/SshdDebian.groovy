@@ -66,10 +66,6 @@ class SshdDebian extends SshdSystemd {
         }
     }
 
-    def getDefaultLogLevel() {
-        getScriptNumberProperty 'default_log_level' intValue()
-    }
-
     def getDefaultPort() {
         getScriptNumberProperty 'default_port' intValue()
     }

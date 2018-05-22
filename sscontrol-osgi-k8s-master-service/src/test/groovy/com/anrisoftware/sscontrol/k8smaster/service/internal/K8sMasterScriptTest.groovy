@@ -65,7 +65,7 @@ class K8sMasterScriptTest {
             name: 'cluster args',
             input: """
 service "k8s-master" with {
-    cluster advertise: '192.168.0.1', hostname: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', dns: '10.3.0.10', api: 'http://localhost:8080'
+    cluster advertise: '192.168.0.1', hostname: '192.168.0.1', service: '10.3.0.0/24', pod: '10.2.0.0/16', api: 'http://localhost:8080'
 }
 """,
             expected: { HostServices services ->
@@ -75,7 +75,6 @@ service "k8s-master" with {
                 assert s.cluster.advertiseAddress == '192.168.0.1'
                 assert s.cluster.serviceRange == '10.3.0.0/24'
                 assert s.cluster.podRange == '10.2.0.0/16'
-                assert s.cluster.dnsAddress == '10.3.0.10'
                 assert s.cluster.apiServers.size() == 1
                 assert s.cluster.apiServers[0] == 'http://localhost:8080'
             },

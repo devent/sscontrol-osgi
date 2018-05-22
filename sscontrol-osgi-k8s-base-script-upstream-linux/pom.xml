@@ -18,7 +18,7 @@
     <description>Installs Kubernetes from the upstream source for Linux.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8sbase.script.upstream.linux</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linux</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -68,6 +68,12 @@
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-utils-ufw-linux</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
 
         <!-- compile dependencies -->
         <dependency>
@@ -89,12 +95,6 @@
         <dependency>
             <groupId>com.anrisoftware.resources</groupId>
             <artifactId>resources-templates</artifactId>
-            <type>bundle</type>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-utils-ufw-linux</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
     </dependencies>

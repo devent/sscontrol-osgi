@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
+import static com.anrisoftware.sscontrol.k8s.backup.client.external.AbstractService.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -22,15 +23,14 @@ import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment
 import com.anrisoftware.sscontrol.k8s.backup.client.external.DeploymentFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClient
 import com.anrisoftware.sscontrol.k8s.backup.client.external.RsyncClientFactory
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Source
+import com.anrisoftware.sscontrol.k8s.backup.client.internal.DeploymentImpl
 import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup
+import com.anrisoftware.sscontrol.k8s.backup.service.internal.ServiceImpl.ServiceImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost
-import com.anrisoftware.sscontrol.types.cluster.external.Credentials
 
 import groovy.util.logging.Slf4j
 
@@ -49,36 +49,46 @@ class BackupLinux extends ScriptBase {
     @Inject
     K8sClusterFactory clusterFactory
 
-    Deployment deployment
-
-    RsyncClient rsyncClient
-
     @Inject
     BackupWorkerImplFactory backupWorkerFactory
 
     @Inject
-    void setDeploymentFactory(DeploymentFactory factory) {
-        Backup service = service
-        this.deployment = factory.create(service.cluster)
-    }
+    DeploymentFactory deployFactory
+
+    @Inject
+    ServiceImplFactory serviceFactory
+
+    DeploymentImpl deploy
+
+    DeploymentImpl rsync
+
+    RsyncClient rsyncClient
+
+    KubectlClusterLinux kubectl
 
     @Inject
     void setRsyncClientFactory(RsyncClientFactory factory) {
         Backup service = service
-        this.rsyncClient = factory.create(this, service.service, service.cluster, service.client, service.destination)
+        this.rsyncClient = factory.create(this, service.service, service.clusterHost, service.client, service.destination)
+    }
+
+    @Inject
+    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+        this.kubectl = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
     def run() {
-        setupDefaults()
         Backup service = service
-        assertThat "clusters=0 for $service", service.clusters.size(), greaterThan(0)
-        setupHost service.cluster
-        deployment = deployment.createClient()
+        assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
+        this.deploy = deployFactory.create(service.clusterHost, kubectl, service.service)
+        this.rsync = deployFactory.create(service.clusterHost, kubectl, serviceFactory.create([name: "rsync-${service.service.name}", namespace: service.service.namespace]))
+        setupDefaults()
+        kubectl.setupHosts service.clusterHosts
         def sources = service.sources
-        backupWorkerFactory.create(service, deployment).with {
-            init()
+        backupWorkerFactory.create(this, service, deploy, rsync).with {
             try {
+                init()
                 before()
                 start { Map args ->
                     sources.each { Source source ->
@@ -105,47 +115,9 @@ class BackupLinux extends ScriptBase {
         }
     }
 
-    /**
-     * Setups the host.
-     */
-    def setupHost(ClusterHost host) {
-        Credentials c = host.credentials
-        if (!host.proto) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.proto = defaultServerProtoSecured
-            } else {
-                host.proto = defaultServerProtoUnsecured
-            }
-        }
-        if (!host.port) {
-            if (c.hasProperty('tls') && c.tls.ca) {
-                host.port = defaultServerPortSecured
-            } else {
-                host.port = defaultServerPortUnsecured
-            }
-        }
-        return host
-    }
-
     @Override
     ContextProperties getDefaultProperties() {
         propertiesProvider.get()
-    }
-
-    int getDefaultServerPortUnsecured() {
-        getScriptNumberProperty 'default_server_port_unsecured'
-    }
-
-    int getDefaultServerPortSecured() {
-        getScriptNumberProperty 'default_server_port_secured'
-    }
-
-    String getDefaultServerProtoUnsecured() {
-        getScriptProperty 'default_server_proto_unsecured'
-    }
-
-    String getDefaultServerProtoSecured() {
-        getScriptProperty 'default_server_proto_secured'
     }
 
     String getDefaultServiceSource() {

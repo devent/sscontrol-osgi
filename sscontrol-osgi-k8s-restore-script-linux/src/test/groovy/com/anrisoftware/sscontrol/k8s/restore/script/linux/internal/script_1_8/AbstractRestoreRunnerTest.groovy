@@ -23,7 +23,6 @@ import javax.inject.Inject
 import org.apache.commons.io.IOUtils
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8.RestoreLinuxFactory
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -59,6 +58,8 @@ abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
     ]
 
     static final def KUBECTL_COMMAND = { IOUtils.toString(AbstractRestoreRunnerTest.class.getResource('kubectl_command.txt').openStream(), UTF_8) }
+
+    static final URL rsyncKey = AbstractRestoreRunnerTest.class.getResource("robobee")
 
     @Inject
     RunScriptImplFactory runnerFactory

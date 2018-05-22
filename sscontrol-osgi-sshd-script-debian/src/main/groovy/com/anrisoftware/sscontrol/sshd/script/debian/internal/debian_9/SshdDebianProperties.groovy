@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9;
+package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
@@ -26,9 +26,9 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
  */
 class SshdDebianProperties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = SshdDebianProperties.class.getResource("/sshd_debian_9.properties");
+    private static final URL RESOURCE = SshdDebianProperties.class.getResource("/sshd_debian_9.properties")
 
     SshdDebianProperties() {
-        super(SshdDebianProperties.class, RESOURCE);
+        super(SshdDebianProperties.class, RESOURCE)
     }
 }

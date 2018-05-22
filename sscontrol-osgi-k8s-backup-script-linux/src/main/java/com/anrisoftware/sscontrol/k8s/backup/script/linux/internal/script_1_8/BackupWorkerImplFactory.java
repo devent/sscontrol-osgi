@@ -15,9 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8;
 
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
 import com.anrisoftware.sscontrol.k8s.backup.client.external.Deployment;
-import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  *
@@ -27,5 +29,7 @@ import com.anrisoftware.sscontrol.k8s.backup.service.external.Backup;
  */
 public interface BackupWorkerImplFactory {
 
-    BackupWorker create(Backup service, Deployment deployment);
+    BackupWorker create(ScriptBase script, ClusterService cluster,
+            @Assisted("deploy") Deployment deploy,
+            @Assisted("rsync") Deployment rsync);
 }

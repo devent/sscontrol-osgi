@@ -94,6 +94,8 @@ public class RestoreImpl implements Restore {
 
     private final List<Source> sources;
 
+	private boolean dryrun;
+
     @Inject
     RestoreImpl(RestoreImplLogger log, HostServicePropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
@@ -102,6 +104,7 @@ public class RestoreImpl implements Restore {
         this.targets = new ArrayList<>();
         this.clusters = new ArrayList<>();
         this.sources = new ArrayList<>();
+		this.dryrun = false;
         parseArgs(args);
     }
 
@@ -260,7 +263,17 @@ public class RestoreImpl implements Restore {
         return sources;
     }
 
+	public void setDryrun(boolean dryrun) {
+		this.dryrun = dryrun;
+		log.dryrunSet(this, dryrun);
+	}
+
     @Override
+	public boolean getDryrun() {
+		return dryrun;
+	}
+
+	@Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
                 .append("targets", getTargets())
@@ -270,6 +283,14 @@ public class RestoreImpl implements Restore {
     private void parseArgs(Map<String, Object> args) {
         parseTargets(args);
         parseClusters(args);
+		parseDryrun(args);
+	}
+
+	private void parseDryrun(Map<String, Object> args) {
+		Object v = args.get("dryrun");
+		if (v != null) {
+			setDryrun((boolean) v);
+		}
     }
 
     @SuppressWarnings("unchecked")

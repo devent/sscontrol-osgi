@@ -82,25 +82,54 @@ class GlusterfsHeketiTest {
     GlusterfsHeketiImplFactory glusterfsHeketiFactory
 
     @Test
-    void "json topology"() {
+    void "json topology, implicit default cluster, implicit default nodes"() {
         def test = [
             name: 'json topology',
             script: '''
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin'
-}
+service "k8s-cluster"
 service "repo-git", group: "glusterfs-heketi" with {
     remote url: "git@github.com:robobee-repos/glusterfs-heketi.git"
 }
-service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: "glusterfs", nodes: "default" with {
+service "glusterfs-heketi", repo: "glusterfs-heketi", name: "glusterfs" with {
     admin key: "MySecret"
     user key: "MyVolumeSecret"
+    brick min: 1, max: 50
+    service address: "10.96.10.10"
     vars << [heketi: [snapshot: [limit: 32]]]
     vars << [tolerations: [
         [key: 'robobeerun.com/dedicated', effect: 'NoSchedule'],
-        [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule'],
+        [key: 'node-role.kubernetes.io/master', effect: 'NoSchedule'],
     ]]
-    topology parse: """
+    topology parse: topologyJson
+}
+''',
+            before: { },
+            scriptVars: [topologyJson: topologyJson],
+            expected: { HostServices services ->
+                assert services.getServices('glusterfs-heketi').size() == 1
+                GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
+                assert s.nodes.size() == 0
+                assert s.minBrickSizeGb == 1
+                assert s.maxBrickSizeGb == 50
+                assert s.serviceAddress == "10.96.10.10"
+                assert s.repo.repo.group == "glusterfs-heketi"
+                assert s.labelName == 'glusterfs'
+                assert s.vars.size() == 2
+                assert s.vars.tolerations[0].key == "robobeerun.com/dedicated"
+                assert s.vars.tolerations[0].effect == "NoSchedule"
+                assert s.vars.tolerations[1].key == "node-role.kubernetes.io/master"
+                assert s.vars.tolerations[1].effect == "NoSchedule"
+                assert s.admin.key == 'MySecret'
+                assert s.user.key == 'MyVolumeSecret'
+                assert s.topology.size() == 1
+            },
+        ]
+        doTest test
+    }
+
+    def topologyJson = """
 {
   "clusters":[
     {
@@ -164,26 +193,6 @@ service "glusterfs-heketi", cluster: "default", repo: "glusterfs-heketi", name: 
   ]
 }
 """
-}
-''',
-            before: { },
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('glusterfs-heketi').size() == 1
-                GlusterfsHeketi s = services.getServices('glusterfs-heketi')[0]
-                assert s.cluster.clusterName == 'default'
-                assert s.nodes.size() == 1
-                assert s.nodes[0] == 'default'
-                assert s.repo.repo.group == "glusterfs-heketi"
-                assert s.labelName == 'glusterfs'
-                assert s.vars.size() == 2
-                assert s.admin.key == 'MySecret'
-                assert s.user.key == 'MyVolumeSecret'
-                assert s.topology.size() == 1
-            },
-        ]
-        doTest test
-    }
 
     void doTest(Map test) {
         log.info '\n######### {} #########\ncase: {}', test.name, test

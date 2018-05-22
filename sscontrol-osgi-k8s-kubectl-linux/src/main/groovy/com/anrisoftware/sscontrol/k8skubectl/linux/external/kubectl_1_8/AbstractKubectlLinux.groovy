@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
@@ -106,21 +107,46 @@ abstract class AbstractKubectlLinux extends ScriptBase {
     }
 
     /**
-     * Runs kubectl.
+     * Runs kubectl on each of the hosts.
      *
      * @param vars
      * <ul>
      * <li>args: kubectl arguments.
      * </ul>
+     *
+     * @return {@link List} of {@link ProcessTask}
      */
-    def runKubectl(Map vars) {
+    List<ProcessTask> runKubectl(Map vars) {
         log.info 'Run kubectl with {}', vars
         Map v = new HashMap(vars)
         v.vars = new HashMap(vars)
         v.vars.service = service
         v.resource = kubectlTemplate
         v.name = 'kubectlCmd'
-        runShellOnHosts v
+        runShell v
+    }
+
+    /**
+     * Deletes the resource.
+     *
+     * @param vars
+     * <ul>
+     * <li>namespace: the namespace of the resource.
+     * <li>type: the type of the resource.
+     * <li>name: the name of the resource.
+     * <li>checkExists: set to true to check first if the resource exist.
+     * </ul>
+     *
+     * @return {@link List} of {@link ProcessTask}
+     */
+    List<ProcessTask> deleteResource(Map vars) {
+        log.info 'Run kubectl with {}', vars
+        Map v = new HashMap(vars)
+        v.vars = new HashMap(vars)
+        v.vars.service = service
+        v.resource = kubectlTemplate
+        v.name = 'deleteResource'
+        runShell v
     }
 
     /**
@@ -136,7 +162,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeAvailableCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -152,7 +178,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.node = node
         v.resource = kubectlTemplate
         v.name = 'waitNodeReadyCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -170,7 +196,7 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.taints = taints
         v.resource = kubectlTemplate
         v.name = 'applyTaintsCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
@@ -188,19 +214,24 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         v.vars.labels = labels
         v.resource = kubectlTemplate
         v.name = 'applyLabelsCmd'
-        runShellOnHosts v
+        runShell v
     }
 
     /**
-     * Runs kubectl on the cluster hosts.
+     * Runs kubectl on the cluster hosts and returns the process from each.
+     *
+     * @return {@link List} of {@link ProcessTask}
      */
-    def runShellOnHosts(Map vars) {
+    List<ProcessTask> runShell(Map vars) {
         Map v = new HashMap(vars)
+        List<ProcessTask> ret = []
         cluster.each { ClusterHost it ->
             v.vars.cluster = it.cluster
             v.target = it.target
-            shell v call()
+            def process = shell v call()
+            ret << process
         }
+        return ret
     }
 
     /**
@@ -251,6 +282,34 @@ abstract class AbstractKubectlLinux extends ScriptBase {
         getClusterTls()
     }
 
+    /**
+     * Setups the hosts.
+     */
+    def setupHosts(List<ClusterHost> clusterHosts) {
+        clusterHosts.each { ClusterHost host ->
+            host.credentials.each { Credentials c ->
+                setupCredentials host, c
+            }
+        }
+    }
+
+    def setupCredentials(ClusterHost host, Credentials c) {
+        if (!host.proto) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.proto = defaultServerProtoSecured
+            } else {
+                host.proto = defaultServerProtoUnsecured
+            }
+        }
+        if (!host.port) {
+            if (c.hasProperty('tls') && c.tls.ca) {
+                host.port = defaultServerPortSecured
+            } else {
+                host.port = defaultServerPortUnsecured
+            }
+        }
+    }
+
     File getKubectlCmd() {
         getScriptFileProperty 'kubectl_cmd'
     }
@@ -261,6 +320,22 @@ abstract class AbstractKubectlLinux extends ScriptBase {
 
     String getKubernetesLabelHostname() {
         getScriptProperty 'kubernetes_label_hostname'
+    }
+
+    int getDefaultServerPortUnsecured() {
+        getScriptNumberProperty 'default_server_port_unsecured'
+    }
+
+    int getDefaultServerPortSecured() {
+        getScriptNumberProperty 'default_server_port_secured'
+    }
+
+    String getDefaultServerProtoUnsecured() {
+        getScriptProperty 'default_server_proto_unsecured'
+    }
+
+    String getDefaultServerProtoSecured() {
+        getScriptProperty 'default_server_proto_secured'
     }
 
     @Override

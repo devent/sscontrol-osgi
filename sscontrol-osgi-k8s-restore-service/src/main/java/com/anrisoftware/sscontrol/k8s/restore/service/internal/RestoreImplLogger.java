@@ -47,7 +47,9 @@ final class RestoreImplLogger extends AbstractLogger {
 
         sourceSet("Source {} set for {}"),
 
-        clientSet("Client {} set for {}");
+		clientSet("Client {} set for {}"),
+
+		dryrunSet("Dry-run {} set for {}");
 
         private String name;
 
@@ -83,4 +85,8 @@ final class RestoreImplLogger extends AbstractLogger {
     void clientSet(RestoreImpl backup, Client client) {
         debug(clientSet, client, backup);
     }
+
+	void dryrunSet(RestoreImpl backup, boolean dryrun) {
+		debug(m.dryrunSet, dryrun, backup);
+	}
 }

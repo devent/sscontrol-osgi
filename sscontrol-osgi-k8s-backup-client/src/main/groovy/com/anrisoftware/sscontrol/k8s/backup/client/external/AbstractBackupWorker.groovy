@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.k8s.backup.client.external
 
 import static org.hamcrest.Matchers.*
 
+import org.joda.time.Duration
+
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
 
 /**
@@ -27,71 +29,76 @@ import com.anrisoftware.sscontrol.types.cluster.external.ClusterService
  */
 abstract class AbstractBackupWorker implements BackupWorker {
 
-    def rsyncDeploy
+	def rsyncDeploy
 
-    def serviceDeploy
+	def serviceDeploy
 
-    def rsyncService
+	def rsyncService
 
-    int rsyncPort
+	int rsyncPort
 
-    Integer oldScale
+	int oldReplicasCount
 
-    abstract ClusterService getService()
+	String rsyncServiceName
 
-    abstract Deployment getDeploy()
+	/**
+	 * Returns the cluster service for kubectl.
+	 *
+	 * @return {@link ClusterService}
+	 */
+	abstract ClusterService getCluster()
 
-    @Override
-    void init() {
-        deploy.with {
-            this.rsyncDeploy = getDeployment service.service.namespace, "rsync-${service.service.name}"
-            this.serviceDeploy = getDeployment service.service.namespace, service.service.name
-            this.oldScale = getReplicas serviceDeploy
-            scaleRsync rsyncDeploy, 1
-            this.rsyncService = createPublicService rsyncDeploy
-            this.rsyncPort = rsyncService.spec.ports[0].nodePort
-        }
-    }
+	/**
+	 * Returns the deployment to backup.
+	 *
+	 * @return {@link Deployment}
+	 */
+	abstract Deployment getDeploy()
 
-    @Override
-    void before() {
-        if (oldScale) {
-            deploy.scaleDeployment serviceDeploy, 0
-        }
-    }
+	/**
+	 * Returns the rsync deployment.
+	 *
+	 * @return {@link Deployment}
+	 */
+	abstract Deployment getRsync()
 
-    @Override
-    void start(def client) {
-        client(rsyncPort: rsyncPort)
-    }
+	@Override
+	void init() {
+		this.rsyncServiceName = "${rsync.service.name}-public"
+		deploy.with { this.oldReplicasCount = replicas }
+		if (oldReplicasCount) {
+			deploy.with { waitScaleDeploy 0, scaleTimeout }
+		}
+	}
 
-    @Override
-    void after() {
-        if (oldScale) {
-            deploy.scaleDeployment serviceDeploy, oldScale, false
-        }
-    }
+	@Override
+	void before() {
+		rsync.with {
+			waitScaleDeploy 1, scaleTimeout
+			this.rsyncService = waitExposeDeploy rsyncServiceName
+			this.rsyncPort = getNodePort rsyncServiceName
+		}
+	}
 
-    @Override
-    void finally1() {
-        deploy.with {
-            deleteService rsyncService
-            scaleDeployment rsyncDeploy, 0
-        }
-    }
+	@Override
+	void start(def client) {
+		client(rsyncPort: rsyncPort)
+	}
 
-    Integer getReplicas(def deployOps) {
-        def deploy = deployOps.get()
-        deploy == null ? null : deploy.spec.replicas
-    }
+	@Override
+	void after() {
+		rsync.with {
+			deleteService rsyncServiceName
+			waitScaleDeploy 0, scaleTimeout
+		}
+	}
 
-    def scaleRsync(def rsyncDeploy, int replicas) {
-        deploy.with {
-            try {
-                scaleDeployment rsyncDeploy, replicas
-            } catch (e) {
-                scaleDeployment rsyncDeploy, replicas
-            }
-        }
-    }
+	@Override
+	void finally1() {
+		if (oldReplicasCount) {
+			deploy.with { waitScaleDeploy oldReplicasCount, scaleTimeout }
+		}
+	}
+
+	abstract Duration getScaleTimeout()
 }

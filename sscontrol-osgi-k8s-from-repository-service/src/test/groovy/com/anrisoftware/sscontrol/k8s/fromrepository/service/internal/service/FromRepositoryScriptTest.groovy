@@ -104,6 +104,8 @@ service "from-repository", repo: "wordpress-app"
                 FromRepository s = services.getServices('from-repository')[0]
                 assert s.repo.repo.remote.uri.toString() == 'ssh://git@github.com/devent/wordpress-app.git'
                 assert s.repo.repo.credentials.type == 'ssh'
+                assert s.clusterHosts.size() == 1
+                assert s.clusterHosts[0].target.host == "localhost"
             },
         ]
         doTest test

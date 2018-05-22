@@ -100,6 +100,12 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
 
     private transient StorageImplFactory storageFactory;
 
+    private Integer maxBrickSizeGb;
+
+    private Integer minBrickSizeGb;
+
+    private String serviceAddress;
+
     @Inject
     GlusterfsHeketiImpl(GlusterfsHeketiImplLogger log,
             HostServicePropertiesService propertiesService,
@@ -179,8 +185,7 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
     /**
      * <pre>
      * vars << [heketi: [snapshot: [limit: 32]]]
-     * vars << [tolerations: [toleration: [key: 'robobeerun.com/dedicated', effect: 'NoSchedule']]]
-     * vars << [tolerations: [toleration: [key: 'node.alpha.kubernetes.io/ismaster', effect: 'NoSchedule']]]
+     * vars << [tolerations: [toleration: [key: 'node-role.kubernetes.io/master', effect: 'NoSchedule']]]
      * </pre>
      */
     @Override
@@ -213,6 +218,25 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
                         nodes.add(property);
                     }
                 });
+    }
+
+    /**
+     * <pre>
+     * brick min: 1, max: 50
+     * </pre>
+     */
+    public void brick(Map<String, Object> args) {
+        parseMaxBrickSizeGb(args);
+        parseMinBrickSizeGb(args);
+    }
+
+    /**
+     * <pre>
+     * service address: "10.96.10.10"
+     * </pre>
+     */
+    public void service(Map<String, Object> args) {
+        parseServiceAddress(args);
     }
 
     @Override
@@ -327,6 +351,33 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         return storage;
     }
 
+    public void setMinBrickSizeGb(int minBrickSizeGb) {
+        this.minBrickSizeGb = minBrickSizeGb;
+    }
+
+    @Override
+    public Integer getMinBrickSizeGb() {
+        return minBrickSizeGb;
+    }
+
+    public void setMaxBrickSizeGb(int maxBrickSizeGb) {
+        this.maxBrickSizeGb = maxBrickSizeGb;
+    }
+
+    @Override
+    public Integer getMaxBrickSizeGb() {
+        return maxBrickSizeGb;
+    }
+
+    public void setServiceAddress(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+    }
+
+    @Override
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
@@ -384,6 +435,27 @@ public class GlusterfsHeketiImpl implements GlusterfsHeketi {
         Object v = args.get("repos");
         assertThat("repos=null", v, notNullValue());
         addRepos((List<RepoHost>) v);
+    }
+
+    private void parseMinBrickSizeGb(Map<String, Object> args) {
+        Object v = args.get("min");
+        if (v != null) {
+            setMinBrickSizeGb(((Number) v).intValue());
+        }
+    }
+
+    private void parseMaxBrickSizeGb(Map<String, Object> args) {
+        Object v = args.get("max");
+        if (v != null) {
+            setMaxBrickSizeGb(((Number) v).intValue());
+        }
+    }
+
+    private void parseServiceAddress(Map<String, Object> args) {
+        Object v = args.get("address");
+        if (v != null) {
+            setServiceAddress(v.toString());
+        }
     }
 
 }

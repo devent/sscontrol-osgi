@@ -16,8 +16,6 @@
 package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8;
 
 import com.anrisoftware.sscontrol.k8s.backup.client.external.BackupWorker;
-import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8.RestoreWorkerImpl;
-import com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8.RestoreLinux;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -38,6 +36,12 @@ public class RestoreLinuxModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(BackupWorker.class, RestoreWorkerImpl.class)
                 .build(RestoreWorkerImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
+                .build(KubectlClusterLinuxFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostServiceScript.class, KubectlClusterLinux.class)
+                .build(KubectlClusterLinuxFactory.class));
     }
 
 }

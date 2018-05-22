@@ -15,9 +15,7 @@
  */
 package com.anrisoftware.sscontrol.k8s.backup.client.external;
 
-import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterHost;
-
-import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
+import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 
 /**
  *
@@ -27,7 +25,5 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
  */
 public interface DeploymentFactory {
 
-    Deployment create(K8sClusterHost host);
-
-    Deployment create(K8sClusterHost host, NamespacedKubernetesClient client);
+    Deployment create(ClusterHost host, Object kubectl, Service service);
 }

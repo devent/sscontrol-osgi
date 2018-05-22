@@ -63,204 +63,226 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class RestoreServiceTest {
 
-    @Inject
-    RobobeeScriptFactory robobeeScriptFactory
+	@Inject
+	RobobeeScriptFactory robobeeScriptFactory
 
-    @Inject
-    K8sClusterFactory clusterFactory
+	@Inject
+	K8sClusterFactory clusterFactory
 
-    @Inject
-    RestoreImplFactory serviceFactory
+	@Inject
+	RestoreImplFactory serviceFactory
 
-    @Inject
-    HostServicesImplFactory servicesFactory
+	@Inject
+	HostServicesImplFactory servicesFactory
 
-    @Test
-    void "source_dir_client"() {
-        def test = [
-            name: 'source_dir_client',
-            script: '''
+	@Test
+	void "source_dir_client"() {
+		def test = [
+			name: 'source_dir_client',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     service namespace: "wordpress", name: "db"
-    origin dir: "/mnt/backup"
+    origin dir: "/mnt/backup", arguments: "--delete"
     client key: "id_rsa", config: """
 ProxyCommand ssh -o ControlMaster=auto -o ControlPath=/tmp/robobee@%h:22 robobee@node nc %h %p
 """
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.service.namespace == 'wordpress'
-                assert s.service.name == 'db'
-                assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
-                assert s.origin.dir.toString() == '/mnt/backup'
-                assert s.client.config =~ 'ProxyCommand'
-                assert s.client.key.toString() == 'file:id_rsa'
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.service.namespace == 'wordpress'
+				assert s.service.name == 'db'
+				assert s.target.host == 'localhost'
+				assert s.clusterHost.host == 'localhost'
+				assert s.origin.dir.toString() == '/mnt/backup'
+				assert s.origin.arguments == '--delete'
+				assert s.client.config =~ 'ProxyCommand'
+				assert s.client.key.toString() == 'file:id_rsa'
+			},
+		]
+		doTest test
+	}
 
-    @Test
-    void "service"() {
-        def test = [
-            name: 'service',
-            script: '''
+	@Test
+	void "service"() {
+		def test = [
+			name: 'service',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     service namespace: "wordpress", name: "db"
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.service.namespace == 'wordpress'
-                assert s.service.name == 'db'
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.service.namespace == 'wordpress'
+				assert s.service.name == 'db'
+			},
+		]
+		doTest test
+	}
 
-    @Test
-    void "sources"() {
-        def test = [
-            name: 'sources',
-            script: '''
+	@Test
+	void "sources"() {
+		def test = [
+			name: 'sources',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     source << [target: "/data", chown: "33.33"]
     source << [target: "/html", chown: "33.2014", chmod: "0660"]
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.sources.size() == 2
-                assert s.sources[0].target == '/data'
-                assert s.sources[0].chown == '33.33'
-                assert s.sources[1].target == '/html'
-                assert s.sources[1].chown == '33.2014'
-                assert s.sources[1].chmod == '0660'
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.sources.size() == 2
+				assert s.sources[0].target == '/data'
+				assert s.sources[0].chown == '33.33'
+				assert s.sources[1].target == '/html'
+				assert s.sources[1].chown == '33.2014'
+				assert s.sources[1].chmod == '0660'
+			},
+		]
+		doTest test
+	}
 
-    @Test
-    void "source_dir_proxy"() {
-        def test = [
-            name: 'source_dir_proxy',
-            script: '''
+	@Test
+	void "source_dir_proxy"() {
+		def test = [
+			name: 'source_dir_proxy',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     service namespace: "wordpress", name: "db"
     client key: "id_rsa", proxy: true
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.service.namespace == 'wordpress'
-                assert s.service.name == 'db'
-                assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
-                assert s.client.key.toString() == 'file:id_rsa'
-                assert s.client.proxy == true
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.service.namespace == 'wordpress'
+				assert s.service.name == 'db'
+				assert s.target.host == 'localhost'
+				assert s.clusterHost.host == 'localhost'
+				assert s.client.key.toString() == 'file:id_rsa'
+				assert s.client.proxy == true
+			},
+		]
+		doTest test
+	}
 
-    @Test
-    void "timeout_duration"() {
-        def test = [
-            name: 'timeout_duration',
-            script: '''
+	@Test
+	void "timeout_duration"() {
+		def test = [
+			name: 'timeout_duration',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     client timeout: "PT1H"
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
-                assert s.client.timeout == Duration.standardMinutes(60)
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.target.host == 'localhost'
+				assert s.clusterHost.host == 'localhost'
+				assert s.client.timeout == Duration.standardMinutes(60)
+			},
+		]
+		doTest test
+	}
 
-    @Test
-    void "timeout_simple"() {
-        def test = [
-            name: 'timeout_simple',
-            script: '''
+	@Test
+	void "timeout_simple"() {
+		def test = [
+			name: 'timeout_simple',
+			script: '''
 service "k8s-cluster"
 service "restore" with {
     client timeout: "1h"
 }
 ''',
-            scriptVars: [:],
-            expected: { HostServices services ->
-                assert services.getServices('restore').size() == 1
-                Restore s = services.getServices('restore')[0]
-                assert s.target.host == 'localhost'
-                assert s.cluster.host == 'localhost'
-                assert s.client.timeout == Duration.standardMinutes(60)
-            },
-        ]
-        doTest test
-    }
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.target.host == 'localhost'
+				assert s.clusterHost.host == 'localhost'
+				assert s.client.timeout == Duration.standardMinutes(60)
+			},
+		]
+		doTest test
+	}
 
-    void doTest(Map test) {
-        log.info '\n######### {} #########\ncase: {}', test.name, test
-        def services = servicesFactory.create()
-        services.targets.addTarget SshFactory.localhost(injector)
-        services.putAvailableService 'k8s-cluster', clusterFactory
-        services.putAvailableService 'restore', serviceFactory
-        robobeeScriptFactory.create folder.newFile(), test.script, test.scriptVars, services call()
-        Closure expected = test.expected
-        expected services
-    }
+	@Test
+	void "dry run"() {
+		def test = [
+			name: 'dryrun',
+			script: '''
+service "k8s-cluster"
+service "restore", dryrun: true with {
+}
+''',
+			scriptVars: [:],
+			expected: { HostServices services ->
+				assert services.getServices('restore').size() == 1
+				Restore s = services.getServices('restore')[0]
+				assert s.target.host == 'localhost'
+				assert s.clusterHost.host == 'localhost'
+				assert s.dryrun == true
+			},
+		]
+		doTest test
+	}
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder()
+	void doTest(Map test) {
+		log.info '\n######### {} #########\ncase: {}', test.name, test
+		def services = servicesFactory.create()
+		services.targets.addTarget SshFactory.localhost(injector)
+		services.putAvailableService 'k8s-cluster', clusterFactory
+		services.putAvailableService 'restore', serviceFactory
+		robobeeScriptFactory.create folder.newFile(), test.script, test.scriptVars, services call()
+		Closure expected = test.expected
+		expected services
+	}
 
-    def injector
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder()
 
-    @Before
-    void setupTest() {
-        toStringStyle
-        injector = Guice.createInjector(
-                new K8sModule(),
-                new K8sClusterModule(),
-                new RestoreModule(),
-                new PropertiesModule(),
-                new DebugLoggingModule(),
-                new TypesModule(),
-                new StringsModule(),
-                new HostServicesModule(),
-                new TargetsModule(),
-                new TargetsServiceModule(),
-                new PropertiesUtilsModule(),
-                new ResourcesModule(),
-                new TlsModule(),
-                new RobobeeScriptModule(),
-                new SystemNameMappingsModule(),
-                new DurationFormatModule(),
-                new DurationSimpleFormatModule(),
-                new HostServicePropertiesServiceModule(),
-                )
-        injector.injectMembers(this)
-    }
+	def injector
+
+	@Before
+	void setupTest() {
+		toStringStyle
+		injector = Guice.createInjector(
+				new K8sModule(),
+				new K8sClusterModule(),
+				new RestoreModule(),
+				new PropertiesModule(),
+				new DebugLoggingModule(),
+				new TypesModule(),
+				new StringsModule(),
+				new HostServicesModule(),
+				new TargetsModule(),
+				new TargetsServiceModule(),
+				new PropertiesUtilsModule(),
+				new ResourcesModule(),
+				new TlsModule(),
+				new RobobeeScriptModule(),
+				new SystemNameMappingsModule(),
+				new DurationFormatModule(),
+				new DurationSimpleFormatModule(),
+				new HostServicePropertiesServiceModule(),
+				)
+		injector.injectMembers(this)
+	}
 }

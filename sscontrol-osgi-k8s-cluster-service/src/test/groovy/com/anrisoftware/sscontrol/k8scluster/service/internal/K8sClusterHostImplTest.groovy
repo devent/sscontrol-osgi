@@ -61,8 +61,7 @@ class K8sClusterHostImplTest {
             getProto: {null},
         ] as TargetHost
         def credentials = credentialsAnonFactory.create([type: 'anon'])
-        def context = contextFactory.create([name: 'default'])
-        def host = clusterHostFactory.create(cluster, target, credentials, context)
+        def host = clusterHostFactory.create(cluster, target, [credentials])
         host.proto = 'https'
         host.port = 443
         assert host.url.toString() == 'https://localhost:443'
