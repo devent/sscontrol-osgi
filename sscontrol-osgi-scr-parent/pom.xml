@@ -57,6 +57,8 @@
         <module>../sscontrol-osgi-k8s-base-script-upstream-linux</module>
         <module>../sscontrol-osgi-k8s-cluster-service</module>
         <module>../sscontrol-osgi-k8s-cluster-script-linux</module>
+        <module>../sscontrol-osgi-k8s-from-helm-service</module>
+        <module>../sscontrol-osgi-k8s-from-helm-script-linux</module>
         <module>../sscontrol-osgi-k8s-from-repository-service</module>
         <module>../sscontrol-osgi-k8s-from-repository-script-linux</module>
         <module>../sscontrol-osgi-k8s-glusterfs-heketi-script-debian</module>
