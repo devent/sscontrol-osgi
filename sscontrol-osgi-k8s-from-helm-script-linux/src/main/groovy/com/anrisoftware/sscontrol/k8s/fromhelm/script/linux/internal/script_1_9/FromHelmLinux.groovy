@@ -15,13 +15,11 @@
  */
 package com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_9
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm
 
 /**
@@ -30,48 +28,37 @@ import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class FromHelmLinux extends ScriptBase {
+class FromHelmLinux extends AbstractFromHelmLinux {
 
-	KubectlClusterLinux kubectlClusterLinux
+    KubectlClusterLinux kubectlClusterLinux
 
-	@Inject
-	FromHelmLinuxProperties linuxPropertiesProvider
+    @Inject
+    FromHelmLinuxProperties linuxPropertiesProvider
 
-	@Inject
-	void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
-		this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    @Inject
+    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+	this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
+    @Override
+    def run() {
+	super.run()
+	FromHelm service = service
+	installHelm()
+	if (service.useRepo) {
+	    fromRepo()
+	} else {
+	    fromChart()
 	}
+    }
 
-	@Override
-	def run() {
-		FromHelm service = service
-		assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
-		File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
-		assertThat "checkout-dir=null for $service", dir, notNullValue()
-		try {
-			parseTemplateFiles dir
-			buildDocker dir
-			kubeFiles dir
-		} finally {
-			shell "rm -rf $dir" call()
-		}
-	}
+    @Override
+    ContextProperties getDefaultProperties() {
+	linuxPropertiesProvider.get()
+    }
 
-	@Override
-	ContextProperties getDefaultProperties() {
-		linuxPropertiesProvider.get()
-	}
-
-	List getKubectlFilesPatterns() {
-		getScriptListProperty 'kubectl_files_patterns'
-	}
-
-	List getDockerfileFilesPatterns () {
-		getScriptListProperty 'dockerfiles_files_patterns'
-	}
-
-	@Override
-	def getLog() {
-		log
-	}
+    @Override
+    def getLog() {
+	log
+    }
 }

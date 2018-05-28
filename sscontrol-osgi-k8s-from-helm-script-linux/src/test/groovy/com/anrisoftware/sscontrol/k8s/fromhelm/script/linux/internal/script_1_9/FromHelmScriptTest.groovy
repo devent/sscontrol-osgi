@@ -17,12 +17,10 @@ package com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.Before
 import org.junit.Test
-
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
 
@@ -33,43 +31,33 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class FromHelmWordpressClusterTest extends AbstractFromHelmRunnerTest {
+class FromHelmScriptTest extends AbstractFromHelmScriptTest {
 
     @Test
-    void "wordpress"() {
+    void "script wordpress chart"() {
         def test = [
-            name: "wordpress",
+            name: "script_wordpress_chart",
             script: '''
-service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
+service "ssh", host: "localhost", socket: localhostSocket
 service "k8s-cluster"
 service "from-helm", chart: "stable/mariadb" with {
 }
 ''',
-            scriptVars: [
-                robobeeSocket: robobeeSocket,
-                robobeeKey: robobeeKey,
-                robobeePub: robobeePub,
-            ],
-            expectedServicesSize: 4,
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 3,
+            generatedDir: folder.newFolder(),
             expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource FromHelmScriptTest, dir, "helm.out", "${args.test.name}_helm_expected.txt"
             },
         ]
         doTest test
     }
 
     @Before
-    void beforeMethod() {
-        checkRobobeeSocket()
-    }
-
-    Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
-    }
-
-    void createDummyCommands(File dir) {
-    }
-
-    def setupServiceScript(Map args, HostServiceScript script) {
-        return script
+    void checkProfile() {
+        checkProfile LOCAL_PROFILE
+        checkLocalhostSocket()
     }
 }

@@ -28,43 +28,50 @@ import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
  */
 public interface FromHelm extends ClusterService {
 
-	/**
-	 * Returns the configuration.
-	 */
-	Object getConfigYaml();
+    /**
+     * Returns the configuration.
+     */
+    Object getConfigYaml();
 
-	/**
-	 * Returns the chart to install.
-	 *
-	 * @return the {@link String} chart or <code>null</code>.
-	 */
-	String getChart();
+    /**
+     * Returns the chart to install.
+     *
+     * @return the {@link String} chart or <code>null</code>.
+     */
+    String getChart();
 
-	/**
-	 * Adds the specified source repositories.
-	 *
-	 * @param list
-	 *            the {@link List} of {@link RepoHost}.
-	 */
-	void addRepos(List<RepoHost> list);
+    /**
+     * Adds the specified source repositories.
+     *
+     * @param list
+     *            the {@link List} of {@link RepoHost}.
+     */
+    void addRepos(List<RepoHost> list);
 
-	/**
-	 * Returns the repository host or <code>null</code>.
-	 *
-	 * @return {@link RepoHost} or <code>null</code>.
-	 */
-	RepoHost getRepo();
+    /**
+     * Returns the repository host or <code>null</code>.
+     *
+     * @return {@link RepoHost} or <code>null</code>.
+     */
+    RepoHost getRepo();
 
-	/**
-	 * Returns the repository hosts.
-	 *
-	 * @return {@link List} of {@link RepoHost}.
-	 */
-	List<RepoHost> getRepos();
+    /**
+     * Returns if we use repository instead of a chart.
+     *
+     * @return <code>true</code> if a repository is set.
+     */
+    boolean getUseRepo();
 
-	/**
-	 * Returns true if it should just output the generated manifests but not run
-	 * anything.
-	 */
-	boolean getDryrun();
+    /**
+     * Returns the repository hosts.
+     *
+     * @return {@link List} of {@link RepoHost}.
+     */
+    List<RepoHost> getRepos();
+
+    /**
+     * Returns true if it should just output the generated manifests but not run
+     * anything.
+     */
+    boolean getDryrun();
 }

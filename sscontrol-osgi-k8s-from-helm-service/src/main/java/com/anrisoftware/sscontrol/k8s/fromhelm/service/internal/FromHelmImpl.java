@@ -48,224 +48,229 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class FromHelmImpl implements FromHelm {
 
-	/**
-	 *
-	 *
-	 * @author Erwin Müller <erwin.mueller@deventm.de>
-	 * @version 1.0
-	 */
-	public interface FromHelmImplFactory extends HostServiceService {
+    /**
+     *
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    public interface FromHelmImplFactory extends HostServiceService {
 
+    }
+
+    private final FromHelmImplLogger log;
+
+    private HostServiceProperties serviceProperties;
+
+    private final List<TargetHost> targets;
+
+    private final List<ClusterHost> clusters;
+
+    private final List<RepoHost> repos;
+
+    private Object configYaml;
+
+    private boolean dryrun;
+
+    private String chart;
+
+    @Inject
+    FromHelmImpl(FromHelmImplLogger log, HostServicePropertiesService propertiesService,
+	    @Assisted Map<String, Object> args) {
+	this.log = log;
+	this.serviceProperties = propertiesService.create();
+	this.targets = new ArrayList<>();
+	this.clusters = new ArrayList<>();
+	this.repos = new ArrayList<>();
+	this.dryrun = false;
+	parseArgs(args);
+    }
+
+    /**
+     * <pre>
+     * property << 'name=value'
+     * </pre>
+     */
+    public List<String> getProperty() {
+	return stringListStatement(new ListProperty() {
+
+	    @Override
+	    public void add(String property) {
+		serviceProperties.addProperty(property);
+	    }
+	});
+    }
+
+    @Override
+    public Object getConfigYaml() {
+	return configYaml;
+    }
+
+    @Override
+    public TargetHost getTarget() {
+	return getTargets().get(0);
+    }
+
+    public void addTargets(List<TargetHost> list) {
+	this.targets.addAll(list);
+    }
+
+    @Override
+    public List<TargetHost> getTargets() {
+	return Collections.unmodifiableList(targets);
+    }
+
+    @Override
+    public ClusterHost getClusterHost() {
+	return getClusterHosts().get(0);
+    }
+
+    public void addClusterHosts(List<ClusterHost> list) {
+	this.clusters.addAll(list);
+	log.clustersAdded(this, list);
+    }
+
+    @Override
+    public List<ClusterHost> getClusterHosts() {
+	return Collections.unmodifiableList(clusters);
+    }
+
+    @Override
+    public RepoHost getRepo() {
+	List<RepoHost> repos = getRepos();
+	if (repos.isEmpty()) {
+	    return null;
 	}
+	return repos.get(0);
+    }
 
-	private final FromHelmImplLogger log;
+    @Override
+    public void addRepos(List<RepoHost> list) {
+	this.repos.addAll(list);
+	log.reposAdded(this, list);
+    }
 
-	private HostServiceProperties serviceProperties;
+    @Override
+    public List<RepoHost> getRepos() {
+	return Collections.unmodifiableList(repos);
+    }
 
-	private final List<TargetHost> targets;
+    @Override
+    public boolean getUseRepo() {
+	return !getRepos().isEmpty();
+    }
 
-	private final List<ClusterHost> clusters;
+    public void setServiceProperties(HostServiceProperties serviceProperties) {
+	this.serviceProperties = serviceProperties;
+    }
 
-	private final List<RepoHost> repos;
+    @Override
+    public HostServiceProperties getServiceProperties() {
+	return serviceProperties;
+    }
 
-	private Object configYaml;
+    @Override
+    public String getName() {
+	return "from-helm";
+    }
 
-	private boolean dryrun;
+    /**
+     * <pre>
+     * config << "{mariadbUser: user0, mariadbDatabase: user0db}"
+     * </pre>
+     */
+    public List<String> getConfig() {
+	return stringListStatement(new ListProperty() {
 
-	private String chart;
+	    @Override
+	    public void add(String text) {
+		parseYaml(text);
+	    }
 
-	@Inject
-	FromHelmImpl(FromHelmImplLogger log, HostServicePropertiesService propertiesService,
-			@Assisted Map<String, Object> args) {
-		this.log = log;
-		this.serviceProperties = propertiesService.create();
-		this.targets = new ArrayList<>();
-		this.clusters = new ArrayList<>();
-		this.repos = new ArrayList<>();
-		this.dryrun = false;
-		parseArgs(args);
+	});
+    }
+
+    public void setDryrun(boolean dryrun) {
+	this.dryrun = dryrun;
+	log.dryrunSet(this, dryrun);
+    }
+
+    @Override
+    public boolean getDryrun() {
+	return dryrun;
+    }
+
+    private void setChart(String chart) {
+	this.chart = chart;
+	log.chartSet(this, chart);
+    }
+
+    @Override
+    public String getChart() {
+	return chart;
+    }
+
+    @Override
+    public String toString() {
+	return new ToStringBuilder(this).append("name", getName()).append("targets", getTargets())
+		.append("clusters", getClusterHosts()).append("repos", getRepos()).toString();
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+	parseTargets(args);
+	parseClusters(args);
+	parseRepos(args);
+	parseDryrun(args);
+	parseChart(args);
+    }
+
+    private void parseChart(Map<String, Object> args) {
+	Object v = args.get("chart");
+	if (v != null) {
+	    setChart(v.toString());
 	}
+    }
 
-	/**
-	 * <pre>
-	 * property << 'name=value'
-	 * </pre>
-	 */
-	public List<String> getProperty() {
-		return stringListStatement(new ListProperty() {
-
-			@Override
-			public void add(String property) {
-				serviceProperties.addProperty(property);
-			}
-		});
+    private void parseDryrun(Map<String, Object> args) {
+	Object v = args.get("dryrun");
+	if (v != null) {
+	    setDryrun((boolean) v);
 	}
+    }
 
-	@Override
-	public Object getConfigYaml() {
-		return configYaml;
+    @SuppressWarnings("unchecked")
+    private void parseTargets(Map<String, Object> args) {
+	Object v = args.get("targets");
+	assertThat("targets=null", v, notNullValue());
+	addTargets((List<TargetHost>) v);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseClusters(Map<String, Object> args) {
+	Object v = args.get("clusters");
+	assertThat("clusters=null", v, notNullValue());
+	addClusterHosts((List<ClusterHost>) v);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseRepos(Map<String, Object> args) {
+	Object v = args.get("repos");
+	assertThat("repos=null", v, notNullValue());
+	addRepos((List<RepoHost>) v);
+    }
+
+    private void parseYaml(String text) {
+	StringBuilder b = new StringBuilder();
+	DumperOptions options = new DumperOptions();
+	options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+	Yaml yaml = new Yaml(options);
+	if (configYaml != null) {
+	    String output = yaml.dump(configYaml);
+	    b.append(output);
 	}
-
-	@Override
-	public TargetHost getTarget() {
-		return getTargets().get(0);
-	}
-
-	public void addTargets(List<TargetHost> list) {
-		this.targets.addAll(list);
-	}
-
-	@Override
-	public List<TargetHost> getTargets() {
-		return Collections.unmodifiableList(targets);
-	}
-
-	@Override
-	public ClusterHost getClusterHost() {
-		return getClusterHosts().get(0);
-	}
-
-	public void addClusterHosts(List<ClusterHost> list) {
-		this.clusters.addAll(list);
-		log.clustersAdded(this, list);
-	}
-
-	@Override
-	public List<ClusterHost> getClusterHosts() {
-		return Collections.unmodifiableList(clusters);
-	}
-
-	@Override
-	public RepoHost getRepo() {
-		List<RepoHost> repos = getRepos();
-		if (repos.isEmpty()) {
-			return null;
-		}
-		return repos.get(0);
-	}
-
-	@Override
-	public void addRepos(List<RepoHost> list) {
-		this.repos.addAll(list);
-		log.reposAdded(this, list);
-	}
-
-	@Override
-	public List<RepoHost> getRepos() {
-		return Collections.unmodifiableList(repos);
-	}
-
-	public void setServiceProperties(HostServiceProperties serviceProperties) {
-		this.serviceProperties = serviceProperties;
-	}
-
-	@Override
-	public HostServiceProperties getServiceProperties() {
-		return serviceProperties;
-	}
-
-	@Override
-	public String getName() {
-		return "from-helm";
-	}
-
-	/**
-	 * <pre>
-	 * config << "{mariadbUser: user0, mariadbDatabase: user0db}"
-	 * </pre>
-	 */
-	public List<String> getConfig() {
-		return stringListStatement(new ListProperty() {
-
-			@Override
-			public void add(String text) {
-				parseYaml(text);
-			}
-
-		});
-	}
-
-	public void setDryrun(boolean dryrun) {
-		this.dryrun = dryrun;
-		log.dryrunSet(this, dryrun);
-	}
-
-	@Override
-	public boolean getDryrun() {
-		return dryrun;
-	}
-
-	private void setChart(String chart) {
-		this.chart = chart;
-		log.chartSet(this, chart);
-	}
-
-	@Override
-	public String getChart() {
-		return chart;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("name", getName()).append("targets", getTargets())
-				.append("clusters", getClusterHosts()).append("repos", getRepos()).toString();
-	}
-
-	private void parseArgs(Map<String, Object> args) {
-		parseTargets(args);
-		parseClusters(args);
-		parseRepos(args);
-		parseDryrun(args);
-		parseChart(args);
-	}
-
-	private void parseChart(Map<String, Object> args) {
-		Object v = args.get("chart");
-		if (v != null) {
-			setChart(v.toString());
-		}
-	}
-
-	private void parseDryrun(Map<String, Object> args) {
-		Object v = args.get("dryrun");
-		if (v != null) {
-			setDryrun((boolean) v);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void parseTargets(Map<String, Object> args) {
-		Object v = args.get("targets");
-		assertThat("targets=null", v, notNullValue());
-		addTargets((List<TargetHost>) v);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void parseClusters(Map<String, Object> args) {
-		Object v = args.get("clusters");
-		assertThat("clusters=null", v, notNullValue());
-		addClusterHosts((List<ClusterHost>) v);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void parseRepos(Map<String, Object> args) {
-		Object v = args.get("repos");
-		assertThat("repos=null", v, notNullValue());
-		addRepos((List<RepoHost>) v);
-	}
-
-	private void parseYaml(String text) {
-		StringBuilder b = new StringBuilder();
-		DumperOptions options = new DumperOptions();
-		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-		Yaml yaml = new Yaml(options);
-		if (configYaml != null) {
-			String output = yaml.dump(configYaml);
-			b.append(output);
-		}
-		b.append(text);
-		this.configYaml = yaml.load(b.toString());
-		log.yamlConfigSet(this, configYaml);
-	}
+	b.append(text);
+	this.configYaml = yaml.load(b.toString());
+	log.yamlConfigSet(this, configYaml);
+    }
 
 }
