@@ -31,7 +31,6 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm;
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
@@ -64,8 +63,6 @@ public class FromHelmImpl implements FromHelm {
 
     private final List<TargetHost> targets;
 
-    private final List<ClusterHost> clusters;
-
     private final List<RepoHost> repos;
 
     private Object configYaml;
@@ -80,7 +77,6 @@ public class FromHelmImpl implements FromHelm {
 	this.log = log;
 	this.serviceProperties = propertiesService.create();
 	this.targets = new ArrayList<>();
-	this.clusters = new ArrayList<>();
 	this.repos = new ArrayList<>();
 	this.dryrun = false;
 	parseArgs(args);
@@ -118,21 +114,6 @@ public class FromHelmImpl implements FromHelm {
     @Override
     public List<TargetHost> getTargets() {
 	return Collections.unmodifiableList(targets);
-    }
-
-    @Override
-    public ClusterHost getClusterHost() {
-	return getClusterHosts().get(0);
-    }
-
-    public void addClusterHosts(List<ClusterHost> list) {
-	this.clusters.addAll(list);
-	log.clustersAdded(this, list);
-    }
-
-    @Override
-    public List<ClusterHost> getClusterHosts() {
-	return Collections.unmodifiableList(clusters);
     }
 
     @Override
@@ -213,12 +194,11 @@ public class FromHelmImpl implements FromHelm {
     @Override
     public String toString() {
 	return new ToStringBuilder(this).append("name", getName()).append("targets", getTargets())
-		.append("clusters", getClusterHosts()).append("repos", getRepos()).toString();
+		.append("repos", getRepos()).toString();
     }
 
     private void parseArgs(Map<String, Object> args) {
 	parseTargets(args);
-	parseClusters(args);
 	parseRepos(args);
 	parseDryrun(args);
 	parseChart(args);
@@ -243,13 +223,6 @@ public class FromHelmImpl implements FromHelm {
 	Object v = args.get("targets");
 	assertThat("targets=null", v, notNullValue());
 	addTargets((List<TargetHost>) v);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void parseClusters(Map<String, Object> args) {
-	Object v = args.get("clusters");
-	assertThat("clusters=null", v, notNullValue());
-	addClusterHosts((List<ClusterHost>) v);
     }
 
     @SuppressWarnings("unchecked")

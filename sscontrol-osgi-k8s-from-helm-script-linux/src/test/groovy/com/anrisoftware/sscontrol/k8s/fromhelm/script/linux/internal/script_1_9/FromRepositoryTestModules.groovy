@@ -34,9 +34,6 @@ import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.Find
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.internal.FromHelmModule
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sModule
-import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxModule
-import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxServiceModule
-import com.anrisoftware.sscontrol.k8scluster.service.internal.K8sClusterModule
 import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_8.KubectlLinuxModule
 import com.anrisoftware.sscontrol.registry.docker.script.linux.internal.linux.DockerRegistryLinuxModule
 import com.anrisoftware.sscontrol.registry.docker.service.internal.DockerRegistryModule
@@ -57,42 +54,39 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
  */
 class FromRepositoryTestModules {
 
-	static List getAdditionalModules() {
-		[
-			new SshModule(),
-			new K8sModule(),
-			new K8sClusterModule(),
-			new K8sClusterLinuxModule(),
-			new KubectlLinuxModule(),
-			new FromHelmModule(),
-			new FromHelmLinuxModule(),
-			new GitRepoModule(),
-			new GitRepoDebianModule(),
-			new DockerRegistryModule(),
-			new DockerRegistryLinuxModule(),
-			new DebianUtilsModule(),
-			new DebugLoggingModule(),
-			new TypesModule(),
-			new StringsModule(),
-			new HostServicesModule(),
-			new ShellCmdModule(),
-			new SshShellModule(),
-			new CmdImplModule(),
-			new CmdModule(),
-			new ScpModule(),
-			new CopyModule(),
-			new FetchModule(),
-			new ReplaceModule(),
-			new FactsModule(),
-			new TemplateModule(),
-			new TemplateResModule(),
-			new StModule(),
-			new TokensTemplateModule(),
-			new ResourcesModule(),
-			new TlsModule(),
-			new SystemNameMappingsModule(),
-			new FindModule(),
-			new K8sClusterLinuxServiceModule(),
-		]
-	}
+    static List getAdditionalModules() {
+	[
+	    new SshModule(),
+	    new K8sModule(),
+	    new KubectlLinuxModule(),
+	    new FromHelmModule(),
+	    new FromHelmLinuxModule(),
+	    new GitRepoModule(),
+	    new GitRepoDebianModule(),
+	    new DockerRegistryModule(),
+	    new DockerRegistryLinuxModule(),
+	    new DebianUtilsModule(),
+	    new DebugLoggingModule(),
+	    new TypesModule(),
+	    new StringsModule(),
+	    new HostServicesModule(),
+	    new ShellCmdModule(),
+	    new SshShellModule(),
+	    new CmdImplModule(),
+	    new CmdModule(),
+	    new ScpModule(),
+	    new CopyModule(),
+	    new FetchModule(),
+	    new ReplaceModule(),
+	    new FactsModule(),
+	    new TemplateModule(),
+	    new TemplateResModule(),
+	    new StModule(),
+	    new TokensTemplateModule(),
+	    new ResourcesModule(),
+	    new TlsModule(),
+	    new SystemNameMappingsModule(),
+	    new FindModule(),
+	]
+    }
 }

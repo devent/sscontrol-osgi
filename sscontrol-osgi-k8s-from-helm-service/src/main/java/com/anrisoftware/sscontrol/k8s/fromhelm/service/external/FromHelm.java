@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.k8s.fromhelm.service.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.cluster.external.ClusterService;
+import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface FromHelm extends ClusterService {
+public interface FromHelm extends HostService {
 
     /**
      * Returns the configuration.

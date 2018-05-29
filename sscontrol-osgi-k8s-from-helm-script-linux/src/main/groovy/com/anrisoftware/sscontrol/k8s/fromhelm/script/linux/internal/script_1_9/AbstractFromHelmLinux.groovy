@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.*
 import org.apache.commons.io.FilenameUtils
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm
 
 import groovy.util.logging.Slf4j
 
@@ -35,14 +34,18 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class AbstractFromHelmLinux extends ScriptBase {
 
-    @Override
-    def run() {
-	FromHelm service = service
-	assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
+    /**
+     * Initializes Helm.
+     */
+    def initHelm() {
+	log.info 'Initializes Helm.'
+	shell timeout: timeoutMiddle, """\
+	helm init
+	""" call()
     }
 
     /**
-     * Installs Helm on the cluster hosts.
+     * Downloads Helm.
      */
     def installHelm() {
 	log.info 'Installs Helm.'
@@ -50,12 +53,12 @@ abstract class AbstractFromHelmLinux extends ScriptBase {
 	def archiveFile = FilenameUtils.getName(archive.toString())
 	def archiveName = getBaseName(getBaseName(archive.toString()))
 	shell timeout: timeoutMiddle, """\
-cd /tmp
-tar xf "$archiveFile"
-cd "$archiveName"
-sudo find . -executable -type f -exec cp '{}' '$binDir' \\;
-sudo chmod o+rx '$binDir'/*
-""" call()
+        cd /tmp
+        tar xf "$archiveFile"
+        cd "linux-amd64"
+        sudo find . -executable -type f -exec cp '{}' '$binDir' \\;
+        sudo chmod o+rx '$binDir'/*
+	""" call()
     }
 
     /**

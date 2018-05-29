@@ -36,40 +36,39 @@ import groovy.util.logging.Slf4j
 class FromHelmWordpressClusterTest extends AbstractFromHelmRunnerTest {
 
     @Test
-    void "wordpress"() {
-        def test = [
-            name: "wordpress",
-            script: '''
+    void "cluster wordpress from chart"() {
+	def test = [
+	    name: "cluster_wordpress_chart",
+	    script: '''
 service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
-service "k8s-cluster"
 service "from-helm", chart: "stable/mariadb" with {
 }
 ''',
-            scriptVars: [
-                robobeeSocket: robobeeSocket,
-                robobeeKey: robobeeKey,
-                robobeePub: robobeePub,
-            ],
-            expectedServicesSize: 4,
-            expected: { Map args ->
-            },
-        ]
-        doTest test
+	    scriptVars: [
+		robobeeSocket: robobeeSocket,
+		robobeeKey: robobeeKey,
+		robobeePub: robobeePub,
+	    ],
+	    expectedServicesSize: 2,
+	    expected: { Map args ->
+	    },
+	]
+	doTest test
     }
 
     @Before
     void beforeMethod() {
-        checkRobobeeSocket()
+	checkRobobeeSocket()
     }
 
     Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
+	getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {
     }
 
     def setupServiceScript(Map args, HostServiceScript script) {
-        return script
+	return script
     }
 }

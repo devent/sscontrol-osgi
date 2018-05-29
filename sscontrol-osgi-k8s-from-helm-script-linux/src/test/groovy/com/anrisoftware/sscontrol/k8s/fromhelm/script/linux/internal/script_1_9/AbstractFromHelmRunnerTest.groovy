@@ -22,8 +22,6 @@ import javax.inject.Inject
 import org.junit.Before
 
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.internal.FromHelmImpl.FromHelmImplFactory
-import com.anrisoftware.sscontrol.k8scluster.script.linux.internal.k8scluster_1_8.K8sClusterLinuxFactory
-import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
 import com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9.GitRepoDebianFactory
 import com.anrisoftware.sscontrol.repo.git.service.internal.GitRepoImpl.GitRepoImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -42,65 +40,57 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  */
 abstract class AbstractFromHelmRunnerTest extends AbstractRunnerTestBase {
 
-	static final URL helmCommand = AbstractFromHelmRunnerTest.class.getResource('helm_command.txt')
+    static final URL helmCommand = AbstractFromHelmRunnerTest.class.getResource('helm_command.txt')
 
-	@Inject
-	RunScriptImplFactory runnerFactory
+    @Inject
+    RunScriptImplFactory runnerFactory
 
-	@Inject
-	SshImplFactory sshFactory
+    @Inject
+    SshImplFactory sshFactory
 
-	@Inject
-	Ssh_Linux_Factory sshLinuxFactory
+    @Inject
+    Ssh_Linux_Factory sshLinuxFactory
 
-	@Inject
-	K8sClusterFactory clusterFactory
+    @Inject
+    GitRepoImplFactory gitFactory
 
-	@Inject
-	K8sClusterLinuxFactory clusterLinuxFactory
+    @Inject
+    GitRepoDebianFactory gitDebianFactory
 
-	@Inject
-	GitRepoImplFactory gitFactory
+    @Inject
+    FromHelmImplFactory fromHelmFactory
 
-	@Inject
-	GitRepoDebianFactory gitDebianFactory
+    @Inject
+    FromHelmLinuxFactory fromHelmLinuxFactory
 
-	@Inject
-	FromHelmImplFactory fromHelmFactory
+    def getRunScriptFactory() {
+	runnerFactory
+    }
 
-	@Inject
-	FromHelmLinuxFactory fromHelmLinuxFactory
+    HostServices putServices(HostServices services) {
+	services.putAvailableService 'ssh', sshFactory
+	services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
+	services.putAvailableService 'repo-git', gitFactory
+	services.putAvailableScriptService 'repo-git/debian/9', gitDebianFactory
+	services.putAvailableService 'from-helm', fromHelmFactory
+	services.putAvailableScriptService 'from-helm/linux/0', fromHelmLinuxFactory
+	return services
+    }
 
-	def getRunScriptFactory() {
-		runnerFactory
-	}
-
-	HostServices putServices(HostServices services) {
-		services.putAvailableService 'ssh', sshFactory
-		services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
-		services.putAvailableService 'k8s-cluster', clusterFactory
-		services.putAvailableScriptService 'k8s/cluster/linux/0', clusterLinuxFactory
-		services.putAvailableService 'repo-git', gitFactory
-		services.putAvailableScriptService 'repo-git/debian/9', gitDebianFactory
-		services.putAvailableService 'from-helm', fromHelmFactory
-		services.putAvailableScriptService 'from-helm/linux/0', fromHelmLinuxFactory
-		return services
-	}
-
-	List getAdditionalModules() {
-		def modules = super.additionalModules
-		modules << new RunnerModule()
-		modules << new Ssh_Linux_Module()
-		modules.addAll FromRepositoryTestModules.getAdditionalModules()
-		modules
-	}
+    List getAdditionalModules() {
+	def modules = super.additionalModules
+	modules << new RunnerModule()
+	modules << new Ssh_Linux_Module()
+	modules.addAll FromRepositoryTestModules.getAdditionalModules()
+	modules
+    }
 
 
-	@Before
-	void setupTest() {
-		toStringStyle
-		injector = createInjector()
-		injector.injectMembers(this)
-		this.threads = createThreads()
-	}
+    @Before
+    void setupTest() {
+	toStringStyle
+	injector = createInjector()
+	injector.injectMembers(this)
+	this.threads = createThreads()
+    }
 }

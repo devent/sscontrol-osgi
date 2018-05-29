@@ -42,9 +42,9 @@ class FromHelmLinux extends AbstractFromHelmLinux {
 
     @Override
     def run() {
-	super.run()
 	FromHelm service = service
 	installHelm()
+	initHelm()
 	if (service.useRepo) {
 	    fromRepo()
 	} else {

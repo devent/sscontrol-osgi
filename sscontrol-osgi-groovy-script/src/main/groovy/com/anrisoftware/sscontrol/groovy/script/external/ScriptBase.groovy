@@ -32,6 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import org.joda.time.Duration
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormat
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.command.copy.external.Copy
 import com.anrisoftware.sscontrol.command.copy.external.Copy.CopyFactory
@@ -189,46 +190,46 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     @Inject
     void setScriptEnv(@Assisted Map<String, Object> scriptEnv) {
-        this.scriptEnv = new HashMap(scriptEnv)
-        this.pwd = scriptEnv.pwd
-        this.chdir = scriptEnv.chdir
-        this.base = scriptEnv.base
-        this.sudoChdir = scriptEnv.sudoChdir
-        this.env = scriptEnv.env
-        this.sudoEnv = scriptEnv.sudoEnv
-        this.createTmpFileCallback = scriptEnv.createTmpFileCallback
-        this.filesLocal = scriptEnv.filesLocal
+	this.scriptEnv = new HashMap(scriptEnv)
+	this.pwd = scriptEnv.pwd
+	this.chdir = scriptEnv.chdir
+	this.base = scriptEnv.base
+	this.sudoChdir = scriptEnv.sudoChdir
+	this.env = scriptEnv.env
+	this.sudoEnv = scriptEnv.sudoEnv
+	this.createTmpFileCallback = scriptEnv.createTmpFileCallback
+	this.filesLocal = scriptEnv.filesLocal
     }
 
     @Override
     public <T extends ExecutorService> T getThreads() {
-        threads
+	threads
     }
 
     @Override
     SshHost getTarget() {
-        target
+	target
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 
     @Override
     HostServiceProperties getProperties() {
-        def p = service.serviceProperties
-        notNull p, "serviceProperties=null for $service"
-        return p
+	def p = service.serviceProperties
+	notNull p, "serviceProperties=null for $service"
+	return p
     }
 
     @Override
     String toString() {
-        new ToStringBuilder(this).
-                append('name', getName()).
-                append('system', getSystemName()).
-                append('version', getSystemVersion()).
-                toString()
+	new ToStringBuilder(this).
+		append('name', getName()).
+		append('system', getSystemName()).
+		append('version', getSystemVersion()).
+		toString()
     }
 
     /**
@@ -240,24 +241,24 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * the command factory.
      */
     def createCmd(Map args, def factory) {
-        def a = setupArgs(args, 'shell')
-        factory.create(a, a.target, a.parent, threads, log)
+	def a = setupArgs(args, 'shell')
+	factory.create(a, a.target, a.parent, threads, log)
     }
 
     /**
      * Shell command.
      */
     Shell shell(String command) {
-        shell([:], command)
+	shell([:], command)
     }
 
     /**
      * Shell command.
      */
     Shell shell(Map args, String command) {
-        def a = new HashMap(args)
-        a.command = command
-        shell a
+	def a = new HashMap(args)
+	a.command = command
+	shell a
     }
 
     /**
@@ -268,8 +269,8 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     Shell shell(Map args) {
-        def a = setupArgs(args, 'shell')
-        shell.create(a, a.target, a.parent, threads, log)
+	def a = setupArgs(args, 'shell')
+	shell.create(a, a.target, a.parent, threads, log)
     }
 
     /**
@@ -279,7 +280,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     Fetch fetch(String src) {
-        fetch([src: src])
+	fetch([src: src])
     }
 
     /**
@@ -289,9 +290,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     Fetch fetch(Map args) {
-        def a = setupArgs(args, 'fetch')
-        log.debug 'Fetch file {}', a
-        fetch.create(a, a.target, this, threads, log)
+	def a = setupArgs(args, 'fetch')
+	log.debug 'Fetch file {}', a
+	fetch.create(a, a.target, this, threads, log)
     }
 
     /**
@@ -303,23 +304,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </p>
      */
     Copy copy(Map args, String src) {
-        def a = new HashMap(args)
-        a.src = src
-        copy(a)
+	def a = new HashMap(args)
+	a.src = src
+	copy(a)
     }
 
     /**
      * Copies a file from the local to the remote.
      */
     Copy copy(Map args) {
-        def a = setupArgs(args, 'copy')
-        if (archiveIgnoreKey) {
-            a.sig = null
-            a.server = null
-            a.key = null
-        }
-        log.debug 'Copy file {}', a
-        copy.create(a, a.target, this, threads, log)
+	def a = setupArgs(args, 'copy')
+	if (archiveIgnoreKey) {
+	    a.sig = null
+	    a.server = null
+	    a.key = null
+	}
+	log.debug 'Copy file {}', a
+	copy.create(a, a.target, this, threads, log)
     }
 
     /**
@@ -332,26 +333,26 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     Replace replace(Map args, String search) {
-        def a = new HashMap(args)
-        a.search = search
-        replace(a)
+	def a = new HashMap(args)
+	a.search = search
+	replace(a)
     }
 
     /**
      * Replace command.
      */
     Replace replace(Map args) {
-        def a = setupArgs(args, 'replace')
-        replace.create(a, a.target, this, threads, log)
+	def a = setupArgs(args, 'replace')
+	replace.create(a, a.target, this, threads, log)
     }
 
     /**
      * Template command.
      */
     Template template(Map args, String template) {
-        def a = new HashMap(args)
-        a.template = template
-        template(a)
+	def a = new HashMap(args)
+	a.template = template
+	template(a)
     }
 
     /**
@@ -364,8 +365,8 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </p>
      */
     Template template(Map args) {
-        def a = setupArgs(args, 'template')
-        template.create(a, a.target, this, threads, log)
+	def a = setupArgs(args, 'template')
+	template.create(a, a.target, this, threads, log)
     }
 
     /**
@@ -374,7 +375,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * <code>"uname -a | grep '4.0.0'"</code>
      */
     boolean check(String command) {
-        check([command: command])
+	check([command: command])
     }
 
     /**
@@ -383,26 +384,26 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * <code>uname -a | grep '4.0.0'</code>
      */
     boolean check(Map args) {
-        assertThat "command=null", args.command, not(isEmptyOrNullString())
-        def a = new HashMap(args)
-        a.exitCodes = [0, 1] as int[]
-        def r = shell a call()
-        return r.exitValue == 0
+	assertThat "command=null", args.command, not(isEmptyOrNullString())
+	def a = new HashMap(args)
+	a.exitCodes = [0, 1] as int[]
+	def r = shell a call()
+	return r.exitValue == 0
     }
 
     /**
      * Facts command.
      */
     Facts facts() {
-        facts([:])
+	facts([:])
     }
 
     /**
      * Facts command.
      */
     Facts facts(Map args) {
-        def a = setupArgs(args, 'facts')
-        facts.create(a, a.target, this, threads, log)
+	def a = setupArgs(args, 'facts')
+	facts.create(a, a.target, this, threads, log)
     }
 
     /**
@@ -412,18 +413,18 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     def copyResource(Map args) {
-        URL src = args.src.toURL()
-        log.info 'Upload {} to {}', args.src, args.dest
-        File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
-        try {
-            IOUtils.copy src.openStream(), new FileOutputStream(file)
-            assertThat "resource>0 for $args", file.size(), greaterThan(0l)
-            Map a = new HashMap(args)
-            a.src = file
-            copy a call()
-        } finally {
-            file.delete()
-        }
+	URL src = args.src.toURL()
+	log.info 'Upload {} to {}', args.src, args.dest
+	File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
+	try {
+	    IOUtils.copy src.openStream(), new FileOutputStream(file)
+	    assertThat "resource>0 for $args", file.size(), greaterThan(0l)
+	    Map a = new HashMap(args)
+	    a.src = file
+	    copy a call()
+	} finally {
+	    file.delete()
+	}
     }
 
     /**
@@ -433,18 +434,18 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </pre>
      */
     def copyString(Map args) {
-        String str = args.str.toString()
-        log.info 'Upload string to {}', args.dest
-        File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
-        try {
-            FileUtils.write file, str, charset
-            assertThat "string>0 for $args", file.size(), greaterThan(0l)
-            Map a = new HashMap(args)
-            a.src = file
-            copy a call()
-        } finally {
-            file.delete()
-        }
+	String str = args.str.toString()
+	log.info 'Upload string to {}', args.dest
+	File file = File.createTempFile 'robobee', getBaseName(args.dest.toString())
+	try {
+	    FileUtils.write file, str, charset
+	    assertThat "string>0 for $args", file.size(), greaterThan(0l)
+	    Map a = new HashMap(args)
+	    a.src = file
+	    copy a call()
+	} finally {
+	    file.delete()
+	}
     }
 
     /**
@@ -456,95 +457,118 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * </ul>
      */
     def uploadTlsCerts(Map args) {
-        def tls = args.tls
-        def dest = args.dest ? args.dest : certsDir
-        def name = args.name
-        if (tls) {
-            [
-                [
-                    name: "${name}.ca",
-                    src: tls.ca,
-                    dest: "$dest/$tls.caName",
-                    privileged: true,
-                    fileExists: tls.ca && tls.caName
-                ],
-                [
-                    name: "${name}.cert",
-                    src: tls.cert,
-                    dest: "$dest/$tls.certName",
-                    privileged: true,
-                    fileExists: tls.cert && tls.certName
-                ],
-                [
-                    name: "${name}.key",
-                    src: tls.key,
-                    dest: "$dest/$tls.keyName",
-                    privileged: true,
-                    fileExists: tls.key && tls.keyName
-                ],
-            ].each {
-                if (it.fileExists) {
-                    log.debug 'Upload {} TLS', it.name
-                    copyResource it
-                }
-            }
-        }
+	def tls = args.tls
+	def dest = args.dest ? args.dest : certsDir
+	def name = args.name
+	if (tls) {
+	    [
+		[
+		    name: "${name}.ca",
+		    src: tls.ca,
+		    dest: "$dest/$tls.caName",
+		    privileged: true,
+		    fileExists: tls.ca && tls.caName
+		],
+		[
+		    name: "${name}.cert",
+		    src: tls.cert,
+		    dest: "$dest/$tls.certName",
+		    privileged: true,
+		    fileExists: tls.cert && tls.certName
+		],
+		[
+		    name: "${name}.key",
+		    src: tls.key,
+		    dest: "$dest/$tls.keyName",
+		    privileged: true,
+		    fileExists: tls.key && tls.keyName
+		],
+	    ].each {
+		if (it.fileExists) {
+		    log.debug 'Upload {} TLS', it.name
+		    copyResource it
+		}
+	    }
+	}
     }
 
     /**
      * Finds and creates the script.
      */
     HostServiceScript createScript(String name, HostService service, SystemInfo system=target.system) {
-        def scriptService = findScriptService(name, system)
-        assertThat "service=null for name=$name, system=$system", scriptService, notNullValue()
-        createScript scriptService, service
+	def scriptService = findScriptService(name, system)
+	assertThat "service=null for name=$name, system=$system", scriptService, notNullValue()
+	createScript scriptService, service
     }
 
     /**
      * Finds and creates the script.
      */
     HostServiceScript createScript(String name, HostService service, String systemName) {
-        def scriptService = findScriptService(name, systemName)
-        createScript scriptService, service
+	def scriptService = findScriptService(name, systemName)
+	createScript scriptService, service
     }
 
     /**
      * Finds and creates the script.
      */
     HostServiceScript createScript(HostServiceScriptService scriptService, HostService service) {
-        scriptService.create(scriptsRepository, service, target, threads, scriptEnv)
+	scriptService.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     /**
      * Finds the script.
      */
     public <T extends HostServiceScriptService> T findScriptService(String name, SystemInfo system=target.system) {
-        scriptsRepository.getAvailableScriptService(new AbstractScriptInfo(name, system) { })
+	scriptsRepository.getAvailableScriptService(new AbstractScriptInfo(name, system) { })
     }
 
     /**
      * Finds the script.
      */
     public <T extends HostServiceScriptService> T findScriptService(String name, String systemName) {
-        String scriptName = "$name/${systemName}"
-        scriptsRepository.getAvailableScriptService scriptName
+	String scriptName = "$name/${systemName}"
+	scriptsRepository.getAvailableScriptService scriptName
     }
 
     /**
      * Finds the registered service with the specified name and group.
      */
     public List findService(String name, String group) {
-        def services = scriptsRepository.getServices name
-        services.findAll { HostService s ->
-            s.hasProperty('group') && (s.group == group)
-        }
+	def services = scriptsRepository.getServices name
+	services.findAll { HostService s ->
+	    s.hasProperty('group') && (s.group == group)
+	}
     }
 
     /**
      * Finds available service with the specified name.
      */
     public <T extends HostServiceService> T findAvailableService(String name) {
-        scriptsRepository.getAvailableService name
+	scriptsRepository.getAvailableService name
+    }
+
+    /**
+     * Runs the shell on the hosts and returns the process from each.
+     *
+     * @param vars Map of arguments:
+     * <dl>
+     * <dt>cluster</dt><dd>the list of cluster hosts.</dd>
+     * </dl>
+     *
+     * @return {@link List} of {@link ProcessTask}
+     */
+    List<ProcessTask> runShell(Map vars) {
+	Map v = new HashMap(vars)
+	List<ProcessTask> ret = []
+	def cluster = vars.cluster
+	cluster.each { /*ClusterHost*/ it ->
+	    v.vars.cluster = it.cluster
+	    v.target = it.target
+	    def process = shell v call()
+	    ret << process
+	}
+	return ret
     }
 
     /**
@@ -558,7 +582,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     String getSystemName() {
-        properties.getProperty "system_name", defaultProperties
+	properties.getProperty "system_name", defaultProperties
     }
 
     /**
@@ -572,7 +596,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     String getDistributionName() {
-        properties.getProperty "distribution_name", defaultProperties
+	properties.getProperty "distribution_name", defaultProperties
     }
 
     /**
@@ -586,7 +610,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     String getSystemVersion() {
-        properties.getProperty "system_version", defaultProperties
+	properties.getProperty "system_version", defaultProperties
     }
 
     /**
@@ -600,7 +624,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     String getRepositoryString() {
-        properties.getProperty "repository_string", defaultProperties
+	properties.getProperty "repository_string", defaultProperties
     }
 
     /**
@@ -613,7 +637,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     List getPackages() {
-        properties.getListProperty "packages", defaultProperties
+	properties.getListProperty "packages", defaultProperties
     }
 
     /**
@@ -626,7 +650,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     List getServices() {
-        properties.getListProperty "services", defaultProperties
+	properties.getListProperty "services", defaultProperties
     }
 
     /**
@@ -639,7 +663,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     Charset getCharset() {
-        properties.getCharsetProperty "charset", defaultProperties
+	properties.getCharsetProperty "charset", defaultProperties
     }
 
     /**
@@ -652,39 +676,39 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getConfigFile() {
-        def file = getFileProperty "config_file", configDir
+	def file = getFileProperty "config_file", configDir
     }
 
     URI getArchive() {
-        properties.getURIProperty 'archive', defaultProperties
+	properties.getURIProperty 'archive', defaultProperties
     }
 
     String getArchiveHash() {
-        properties.getProperty 'archive_hash', defaultProperties
+	properties.getProperty 'archive_hash', defaultProperties
     }
 
     String getArchiveSig() {
-        properties.getProperty 'archive_sig', defaultProperties
+	properties.getProperty 'archive_sig', defaultProperties
     }
 
     String getArchiveServer() {
-        properties.getProperty 'archive_server', defaultProperties
+	properties.getProperty 'archive_server', defaultProperties
     }
 
     String getArchiveKey() {
-        properties.getProperty 'archive_key', defaultProperties
+	properties.getProperty 'archive_key', defaultProperties
     }
 
     Boolean getArchiveIgnoreKey() {
-        properties.getBooleanProperty 'archive_ignore_key', defaultProperties
+	properties.getBooleanProperty 'archive_ignore_key', defaultProperties
     }
 
     File getBinDir() {
-        properties.getFileProperty "bin_dir", base, defaultProperties
+	properties.getFileProperty "bin_dir", base, defaultProperties
     }
 
     File getOptDir() {
-        properties.getFileProperty "opt_dir", base, defaultProperties
+	properties.getFileProperty "opt_dir", base, defaultProperties
     }
 
     /**
@@ -697,7 +721,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getConfigDir() {
-        getFileProperty "config_dir"
+	getFileProperty "config_dir"
     }
 
     /**
@@ -710,7 +734,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getSysConfigDir() {
-        def dir = properties.getFileProperty "sys_config_dir", base, defaultProperties
+	def dir = properties.getFileProperty "sys_config_dir", base, defaultProperties
     }
 
     /**
@@ -723,7 +747,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @see #getDefaultProperties()
      */
     File getCertsDir() {
-        properties.getFileProperty "certs_dir", base, defaultProperties
+	properties.getFileProperty "certs_dir", base, defaultProperties
     }
 
     /**
@@ -731,12 +755,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * is deleted after the callback returns.
      */
     def withLocalTempFile(def name, def callback) {
-        File tmp = File.createTempFile(name, null)
-        try {
-            return callback(tmp)
-        } finally {
-            tmp.delete()
-        }
+	File tmp = File.createTempFile(name, null)
+	try {
+	    return callback(tmp)
+	} finally {
+	    tmp.delete()
+	}
     }
 
     /**
@@ -744,12 +768,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * is deleted after the callback returns.
      */
     def withRemoteTempFile(def callback, Map args=[:]) {
-        File tmp = createTmpFile(args)
-        try {
-            return callback(tmp)
-        } finally {
-            deleteTmpFile tmp
-        }
+	File tmp = createTmpFile(args)
+	try {
+	    return callback(tmp)
+	} finally {
+	    deleteTmpFile tmp
+	}
     }
 
     /**
@@ -757,112 +781,112 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * The temporary directory is deleted after the callback returns.
      */
     def withRemoteTempDir(def callback, Map args=[:]) {
-        File tmp = createTmpDir(args)
-        try {
-            return callback(tmp)
-        } finally {
-            deleteTmpFile tmp
-        }
+	File tmp = createTmpDir(args)
+	try {
+	    return callback(tmp)
+	} finally {
+	    deleteTmpFile tmp
+	}
     }
 
     /**
      * Creates and returns a temporary file.
      */
     File createTmpFile(Map args=[:]) {
-        def file
-        if (createTmpFileCallback) {
-            file = createTmpFileCallback(args)
-        } else {
-            def a = new HashMap(args)
-            a.outString = true
-            a.command = """
+	def file
+	if (createTmpFileCallback) {
+	    file = createTmpFileCallback(args)
+	} else {
+	    def a = new HashMap(args)
+	    a.outString = true
+	    a.command = """
 file=\$(mktemp)
 chmod o-rw \$file
 echo \$file
 """
-            def ret = shell a call()
-            file = new File(ret.out[0..-2])
-        }
-        file
+	    def ret = shell a call()
+	    file = new File(ret.out[0..-2])
+	}
+	file
     }
 
     /**
      * Creates and returns a temporary directory.
      */
     File createTmpDir(Map args=[:]) {
-        def file
-        if (createTmpFileCallback) {
-            file = createTmpFileCallback(args)
-            file.delete()
-            file.mkdirs()
-        } else {
-            def a = new HashMap(args)
-            a.outString = true
-            a.command = """
+	def file
+	if (createTmpFileCallback) {
+	    file = createTmpFileCallback(args)
+	    file.delete()
+	    file.mkdirs()
+	} else {
+	    def a = new HashMap(args)
+	    a.outString = true
+	    a.command = """
 file=\$(mktemp -d)
 chmod o-rwx \$file
 echo \$file
 """
-            def ret = shell a call()
-            file = new File(ret.out[0..-2])
-        }
-        file
+	    def ret = shell a call()
+	    file = new File(ret.out[0..-2])
+	}
+	file
     }
 
     /**
      * Deletes the temporary file.
      */
     void deleteTmpFile(File file) {
-        deleteTmpFile file: file
+	deleteTmpFile file: file
     }
 
     /**
      * Deletes the temporary file.
      */
     void deleteTmpFile(Map args) {
-        File file = args.file
-        if (createTmpFileCallback) {
-            file.isFile() ? file.delete() : file.deleteDir()
-        } else {
-            def a = new HashMap(args)
-            a.command = "rm -rf ${file.absolutePath}"
-            shell a call()
-        }
+	File file = args.file
+	if (createTmpFileCallback) {
+	    file.isFile() ? file.delete() : file.deleteDir()
+	} else {
+	    def a = new HashMap(args)
+	    a.command = "rm -rf ${file.absolutePath}"
+	    shell a call()
+	}
     }
 
     Duration getTimeoutShort() {
-        properties.getDurationProperty('command_timeout_short', defaultProperties)
+	properties.getDurationProperty('command_timeout_short', defaultProperties)
     }
 
     Duration getTimeoutMiddle() {
-        properties.getDurationProperty('command_timeout_middle', defaultProperties)
+	properties.getDurationProperty('command_timeout_middle', defaultProperties)
     }
 
     Duration getTimeoutLong() {
-        properties.getDurationProperty('command_timeout_long', defaultProperties)
+	properties.getDurationProperty('command_timeout_long', defaultProperties)
     }
 
     Duration getTimeoutVeryLong() {
-        properties.getDurationProperty('command_timeout_very_long', defaultProperties)
+	properties.getDurationProperty('command_timeout_very_long', defaultProperties)
     }
 
     public void putState(String name, Object state) {
-        scriptsRepository.putState(name, state)
+	scriptsRepository.putState(name, state)
     }
 
     public <T> T getState(String name) {
-        return (T) scriptsRepository.getState(name)
+	return (T) scriptsRepository.getState(name)
     }
 
     public <T> Map<String, T> getStates() {
-        new HashMap<String, T>() {
-                    T get(Object key) {
-                        return getState(key)
-                    }
-                    T put(String key, T value) {
-                        putState(key, value)
-                    }
-                }
+	new HashMap<String, T>() {
+		    T get(Object key) {
+			return getState(key)
+		    }
+		    T put(String key, T value) {
+			putState(key, value)
+		    }
+		}
     }
 
     /**
@@ -876,7 +900,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryKey() {
-        properties.getProperty "apt_packages_repository_key", defaultProperties
+	properties.getProperty "apt_packages_repository_key", defaultProperties
     }
 
     /**
@@ -890,7 +914,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryUrl() {
-        properties.getProperty "apt_packages_pepository_url", defaultProperties
+	properties.getProperty "apt_packages_pepository_url", defaultProperties
     }
 
     /**
@@ -904,7 +928,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     File getPackagesRepositoryListFile() {
-        getFileProperty "apt_packages_repository_list_file", base, defaultProperties
+	getFileProperty "apt_packages_repository_list_file", base, defaultProperties
     }
 
     /**
@@ -918,7 +942,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryComponent() {
-        properties.getProperty "apt_packages_repository_component", defaultProperties
+	properties.getProperty "apt_packages_repository_component", defaultProperties
     }
 
     /**
@@ -932,7 +956,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     String getBackportsRepositoryUrl() {
-        properties.getProperty "apt_backports_repository_url", defaultProperties
+	properties.getProperty "apt_backports_repository_url", defaultProperties
     }
 
     /**
@@ -946,7 +970,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     File getBackportsRepositoryListFile() {
-        getFileProperty "apt_backports_repository_list_file", base, defaultProperties
+	getFileProperty "apt_backports_repository_list_file", base, defaultProperties
     }
 
     /**
@@ -960,7 +984,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     String getBackportsRepositoryComponent() {
-        script.properties.getProperty "apt_backports_repository_component", defaultProperties
+	script.properties.getProperty "apt_backports_repository_component", defaultProperties
     }
 
     /**
@@ -973,8 +997,8 @@ echo \$file
      * @see #getDefaultProperties()
      */
     boolean getCommandsQuiet() {
-        def v = properties.getBooleanProperty 'commands_quiet', defaultProperties
-        v != null ? v : true
+	def v = properties.getBooleanProperty 'commands_quiet', defaultProperties
+	v != null ? v : true
     }
 
     /**
@@ -987,7 +1011,7 @@ echo \$file
      * @see #getDefaultProperties()
      */
     int getDefaultLogLevel() {
-        getScriptNumberProperty('default_log_level').intValue()
+	getScriptNumberProperty('default_log_level').intValue()
     }
 
     /**
@@ -1005,195 +1029,195 @@ echo \$file
      * specified parent directory.
      */
     public File getFileProperty(String key,
-            File parent=base,
-            ContextProperties defaults=defaultProperties,
-            boolean useAbsolute=true) {
-        File file
-        if (useAbsolute) {
-            if (!parent) {
-                file = properties.getFileProperty key, base, defaults
-            } else {
-                file = properties.getFileProperty key, parent, defaults
-            }
-        } else {
-            file = properties.getFileProperty key, parent, defaults
-        }
-        return file
+	    File parent=base,
+	    ContextProperties defaults=defaultProperties,
+	    boolean useAbsolute=true) {
+	File file
+	if (useAbsolute) {
+	    if (!parent) {
+		file = properties.getFileProperty key, base, defaults
+	    } else {
+		file = properties.getFileProperty key, parent, defaults
+	    }
+	} else {
+	    file = properties.getFileProperty key, parent, defaults
+	}
+	return file
     }
 
     def getScriptProperty(String name) {
-        properties.getProperty name, defaultProperties
+	properties.getProperty name, defaultProperties
     }
 
     Map getScriptProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptProperty name
-                    }
-                }
+	new HashMap() {
+		    def get(def name) {
+			ScriptBase.this.getScriptProperty name
+		    }
+		}
     }
 
     public File getScriptFileProperty(String key,
-            File parent=base,
-            ContextProperties defaults=defaultProperties,
-            boolean useAbsolute=true) {
-        return getFileProperty(key, parent, defaults, useAbsolute)
+	    File parent=base,
+	    ContextProperties defaults=defaultProperties,
+	    boolean useAbsolute=true) {
+	return getFileProperty(key, parent, defaults, useAbsolute)
     }
 
     File getScriptFileProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptFileProperty name
-                    }
-                }
+	new HashMap() {
+		    def get(def name) {
+			ScriptBase.this.getScriptFileProperty name
+		    }
+		}
     }
 
     Map getScriptListProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptListProperty name
-                    }
-                }
+	new HashMap() {
+		    def get(def name) {
+			ScriptBase.this.getScriptListProperty name
+		    }
+		}
     }
 
     /**
      * Returns a list script property.
      */
     List getScriptListProperty(String key,
-            ContextProperties defaults=defaultProperties) {
-        properties.getListProperty key, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getListProperty key, defaults
     }
 
     /**
      * Returns a list script property.
      */
     List getScriptListProperty(String key, String separatorChars,
-            ContextProperties defaults=defaultProperties) {
-        properties.getListProperty key, separatorChars, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getListProperty key, separatorChars, defaults
     }
 
     /**
      * Returns a number script property.
      */
     Number getScriptNumberProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        properties.getNumberProperty name, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getNumberProperty name, defaults
     }
 
     Map getScriptNumberProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptNumberProperty name
-                    }
-                }
+	new HashMap() {
+		    def get(def name) {
+			ScriptBase.this.getScriptNumberProperty name
+		    }
+		}
     }
 
     /**
      * Returns a boolean script property.
      */
     boolean getScriptBooleanProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        properties.getBooleanProperty name, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getBooleanProperty name, defaults
     }
 
     Map getScriptBooleanProperties() {
-        new HashMap() {
-                    def get(def name) {
-                        ScriptBase.this.getScriptBooleanProperty name
-                    }
-                }
+	new HashMap() {
+		    def get(def name) {
+			ScriptBase.this.getScriptBooleanProperty name
+		    }
+		}
     }
 
     /**
      * Returns a duration script property.
      */
     Duration getScriptDurationProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        properties.getDurationProperty name, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getDurationProperty name, defaults
     }
 
     /**
      * Returns a URI script property.
      */
     URI getScriptURIProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        properties.getURIProperty name, defaults
+	    ContextProperties defaults=defaultProperties) {
+	properties.getURIProperty name, defaults
     }
 
     /**
      * Returns a Map script property.
      */
     Map getScriptMapProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        def v = getScriptListProperty name, defaults
-        v.inject([:]) { result, s ->
-            String[] ss = s.split(":")
-            if (ss.length == 2) {
-                result."${ss[0]}" = ss[1].toString()
-            }
-            if (ss.length == 1) {
-                result."${ss[0]}" = null
-            }
-            result
-        }
+	    ContextProperties defaults=defaultProperties) {
+	def v = getScriptListProperty name, defaults
+	v.inject([:]) { result, s ->
+	    String[] ss = s.split(":")
+	    if (ss.length == 2) {
+		result."${ss[0]}" = ss[1].toString()
+	    }
+	    if (ss.length == 1) {
+		result."${ss[0]}" = null
+	    }
+	    result
+	}
     }
 
     /**
      * Returns a List of [name=version] tupels.
      */
     List getScriptPackagesVersionsProperty(String name,
-            ContextProperties defaults=defaultProperties) {
-        def v = getScriptMapProperty name, defaults
-        v.inject([]) { result, s ->
-            result << [name: s.key, version: s.value]
-        }
+	    ContextProperties defaults=defaultProperties) {
+	def v = getScriptMapProperty name, defaults
+	v.inject([]) { result, s ->
+	    result << [name: s.key, version: s.value]
+	}
     }
 
     private setupArgs(Map args, String name='') {
-        Map a = new HashMap(args)
-        a = replaceMapValues env, a, "env"
-        if (!args.containsKey('parent')) {
-            a.parent = this
-        }
-        if (args.get('target') == null) {
-            a.target = target
-        }
-        if (!a.containsKey('chdir')) {
-            a.chdir = chdir
-        }
-        if (!a.containsKey('sudoChdir')) {
-            a.sudoChdir = sudoChdir
-        }
-        if (!a.containsKey('pwd')) {
-            a.pwd = pwd
-        }
-        if (!a.containsKey('sudoEnv')) {
-            a.sudoEnv = sudoEnv
-        } else {
-            a.sudoEnv.putAll sudoEnv
-        }
-        if (!a.containsKey('quiet')) {
-            a.quiet = commandsQuiet
-        }
-        if (createTmpFileCallback) {
-            args.cmdName = name
-            a.tmpFile = createTmpFileCallback(args)
-        }
-        def v = args.timeout
-        if (v) {
-            if (!(v instanceof Duration)) {
-                v = DurationFormat.create().parse v.toString()
-                a.timeout = v
-            }
-        }
-        a.filesLocal = filesLocal
-        return a
+	Map a = new HashMap(args)
+	a = replaceMapValues env, a, "env"
+	if (!args.containsKey('parent')) {
+	    a.parent = this
+	}
+	if (args.get('target') == null) {
+	    a.target = target
+	}
+	if (!a.containsKey('chdir')) {
+	    a.chdir = chdir
+	}
+	if (!a.containsKey('sudoChdir')) {
+	    a.sudoChdir = sudoChdir
+	}
+	if (!a.containsKey('pwd')) {
+	    a.pwd = pwd
+	}
+	if (!a.containsKey('sudoEnv')) {
+	    a.sudoEnv = sudoEnv
+	} else {
+	    a.sudoEnv.putAll sudoEnv
+	}
+	if (!a.containsKey('quiet')) {
+	    a.quiet = commandsQuiet
+	}
+	if (createTmpFileCallback) {
+	    args.cmdName = name
+	    a.tmpFile = createTmpFileCallback(args)
+	}
+	def v = args.timeout
+	if (v) {
+	    if (!(v instanceof Duration)) {
+		v = DurationFormat.create().parse v.toString()
+		a.timeout = v
+	    }
+	}
+	a.filesLocal = filesLocal
+	return a
     }
 
     private replaceMapValues(Map replace, Map args, String key) {
-        def map = new HashMap(replace)
-        map.putAll(args[key] != null ? args[key] : [:])
-        args[key] = map
-        return args
+	def map = new HashMap(replace)
+	map.putAll(args[key] != null ? args[key] : [:])
+	args[key] = map
+	return args
     }
 }

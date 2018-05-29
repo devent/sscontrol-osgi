@@ -45,30 +45,30 @@ import com.google.inject.AbstractModule;
 @Service(HostServiceService.class)
 public class FromHelmServiceImpl implements K8sService {
 
-	@Inject
-	private K8sImplFactory sshFactory;
+    @Inject
+    private K8sImplFactory sshFactory;
 
-	@Reference
-	private ToStringService toStringService;
+    @Reference
+    private ToStringService toStringService;
 
-	@Override
-	public String getName() {
-		return "from-helm";
-	}
+    @Override
+    public String getName() {
+	return "from-helm";
+    }
 
-	@Override
-	public HostService create(Map<String, Object> args) {
-		return sshFactory.create(args);
-	}
+    @Override
+    public HostService create(Map<String, Object> args) {
+	return sshFactory.create(args);
+    }
 
-	@Activate
-	protected void start() {
-		createInjector(new K8sModule(), new AbstractModule() {
+    @Activate
+    protected void start() {
+	createInjector(new K8sModule(), new AbstractModule() {
 
-			@Override
-			protected void configure() {
-				bind(ToStringService.class).toProvider(of(toStringService));
-			}
-		}).injectMembers(this);
-	}
+	    @Override
+	    protected void configure() {
+		bind(ToStringService.class).toProvider(of(toStringService));
+	    }
+	}).injectMembers(this);
+    }
 }
