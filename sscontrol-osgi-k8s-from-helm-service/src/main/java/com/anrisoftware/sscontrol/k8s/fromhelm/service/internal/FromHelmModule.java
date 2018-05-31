@@ -26,10 +26,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 public class FromHelmModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(HostService.class, FromHelmImpl.class)
-				.build(FromHelmImplFactory.class));
-	}
+    @Override
+    protected void configure() {
+	install(new FactoryModuleBuilder().implement(HostService.class, FromHelmImpl.class)
+		.build(FromHelmImplFactory.class));
+    }
 
 }
