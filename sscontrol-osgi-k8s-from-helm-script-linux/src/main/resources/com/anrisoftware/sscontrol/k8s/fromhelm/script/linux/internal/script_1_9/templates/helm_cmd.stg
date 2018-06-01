@@ -1,0 +1,7 @@
+helmInstallCmd(parent, vars) ::= <<
+helm install -f <vars.args.config> <vars.service.chart> \\
+	<if(vars.service.version)> --version <vars.service.version><endif> \\
+	<if(vars.service.release.namespace)> --namespace <vars.service.release.namespace><endif> \\
+	<if(vars.service.release.name)> --name <vars.service.release.name><endif>
+
+>>

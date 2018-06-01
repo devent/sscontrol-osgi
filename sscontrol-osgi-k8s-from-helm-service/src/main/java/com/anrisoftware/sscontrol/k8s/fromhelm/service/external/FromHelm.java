@@ -41,11 +41,25 @@ public interface FromHelm extends HostService {
     String getChart();
 
     /**
-     * Adds the specified source repositories.
-     *
-     * @param list
-     *            the {@link List} of {@link RepoHost}.
-     */
+	 * Returns the chart version to install.
+	 *
+	 * @return the {@link String} chart version or <code>null</code>.
+	 */
+	String getVersion();
+
+	/**
+	 * Returns the Helm release.
+	 *
+	 * @return the {@link Release}.
+	 */
+	Release getRelease();
+
+	/**
+	 * Adds the specified source repositories.
+	 *
+	 * @param list
+	 *            the {@link List} of {@link RepoHost}.
+	 */
     void addRepos(List<RepoHost> list);
 
     /**

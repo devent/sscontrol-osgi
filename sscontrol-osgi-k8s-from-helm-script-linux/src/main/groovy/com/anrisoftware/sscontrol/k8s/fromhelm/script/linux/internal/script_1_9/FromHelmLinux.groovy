@@ -30,35 +30,40 @@ import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm
  */
 class FromHelmLinux extends AbstractFromHelmLinux {
 
-    KubectlClusterLinux kubectlClusterLinux
+	KubectlClusterLinux kubectlClusterLinux
 
-    @Inject
-    FromHelmLinuxProperties linuxPropertiesProvider
+	@Inject
+	FromHelmLinuxProperties linuxPropertiesProvider
 
-    @Inject
-    void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
-	this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
-
-    @Override
-    def run() {
-	FromHelm service = service
-	installHelm()
-	initHelm()
-	if (service.useRepo) {
-	    fromRepo()
-	} else {
-	    fromChart()
+	@Inject
+	void setKubectlClusterLinuxFactory(KubectlClusterLinuxFactory factory) {
+		this.kubectlClusterLinux = factory.create(scriptsRepository, service, target, threads, scriptEnv)
 	}
-    }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-	linuxPropertiesProvider.get()
-    }
+	@Override
+	def run() {
+		FromHelm service = service
+		installHelm()
+		initHelm()
+		def file = createConfig()
+		try {
+			if (service.useRepo) {
+				fromRepo(config: file)
+			} else {
+				fromChart(config: file)
+			}
+		} finally {
+			deleteTmpFile file
+		}
+	}
 
-    @Override
-    def getLog() {
-	log
-    }
+	@Override
+	ContextProperties getDefaultProperties() {
+		linuxPropertiesProvider.get()
+	}
+
+	@Override
+	def getLog() {
+		log
+	}
 }

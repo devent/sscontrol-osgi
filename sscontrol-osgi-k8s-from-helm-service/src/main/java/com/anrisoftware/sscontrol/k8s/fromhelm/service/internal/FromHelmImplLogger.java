@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.Release;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
@@ -51,7 +52,11 @@ final class FromHelmImplLogger extends AbstractLogger {
 
 		yamlConfigSet("Yaml config set for {}: {}"),
 
-		chartSet("Chart {} set for {}");
+		chartSet("Chart {} set for {}"),
+
+		versionSet("Version {} set for {}"),
+
+		releaseSet("Release {} set for {}");
 
 		private String name;
 
@@ -98,5 +103,13 @@ final class FromHelmImplLogger extends AbstractLogger {
 
 	void chartSet(FromHelmImpl from, String chart) {
 		debug(m.chartSet, chart, from);
+	}
+
+	void versionSet(FromHelmImpl from, String version) {
+		debug(m.versionSet, version, from);
+	}
+
+	void releaseSet(FromHelmImpl from, Release release) {
+		debug(m.releaseSet, release, from);
 	}
 }
