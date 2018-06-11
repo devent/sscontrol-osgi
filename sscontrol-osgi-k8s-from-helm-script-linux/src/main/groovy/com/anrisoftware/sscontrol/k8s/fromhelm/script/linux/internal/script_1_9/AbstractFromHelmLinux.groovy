@@ -22,14 +22,13 @@ import static org.hamcrest.Matchers.*
 import javax.inject.Inject
 
 import org.apache.commons.io.FilenameUtils
-import org.yaml.snakeyaml.DumperOptions
-import org.yaml.snakeyaml.Yaml
 
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.external.FromHelm
 
+import groovy.json.JsonOutput
 import groovy.util.logging.Slf4j
 
 /**
@@ -103,9 +102,7 @@ helm repo update
 	def createConfig() {
 		FromHelm service = this.service
 		def file = createTmpFile()
-		def options = new DumperOptions()
-		options.defaultFlowStyle = DumperOptions.FlowStyle.FLOW
-		copyString str: new Yaml(options).dump(service.configYaml), dest: file
+		copyString str: JsonOutput.toJson(service.configYaml), dest: file
 		return file
 	}
 
@@ -126,10 +123,29 @@ helm repo update
 		assertThat "args.config != null for $service", args.config, notNullValue()
 		def v = [:]
 		v.resource = helmCmdTemplate
-		v.name = "helmInstallCmd"
 		v.timeout = timeoutMiddle
 		v.vars = [args: args, service: service]
+		if (releaseExists) {
+			v.name = "helmUpgradeCmd"
+		} else {
+			v.name = "helmInstallCmd"
+		}
 		shell v call()
+	}
+
+	/**
+	 * Checks if a release exists.
+	 */
+	boolean isReleaseExists() {
+		FromHelm service = this.service
+		def v = [:]
+		v.resource = helmCmdTemplate
+		v.name = "helmReleaseCmd"
+		v.timeout = timeoutShort
+		v.exitCodes = [0, 1] as int[]
+		v.vars = [service: service, status: "DEPLOYED"]
+		def p = shell v call()
+		return p.exitValue == 0
 	}
 
 	@Override
