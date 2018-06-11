@@ -11,7 +11,7 @@ gitCloneCommand(parent, vars) ::= <<
 git clone \\
 --recurse-submodules \\
 <if(vars.repo.repo.checkout.branch)> --branch <vars.repo.repo.checkout.branch> \\
-<elseif(vars.checkout.tag)> --branch <vars.checkout.tag> \\
+<elseif(vars.repo.repo.checkout.tag)> --branch <vars.repo.repo.checkout.tag> \\
 <endif> \\
 --depth 1 <vars.path> .
 >>
