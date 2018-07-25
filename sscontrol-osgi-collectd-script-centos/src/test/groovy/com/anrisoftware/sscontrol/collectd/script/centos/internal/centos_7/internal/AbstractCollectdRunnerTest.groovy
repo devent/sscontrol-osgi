@@ -26,10 +26,9 @@ import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.Collect
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
-import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory
-import com.anrisoftware.sscontrol.ssh.linux.external.Ssh_Linux_Factory
-import com.anrisoftware.sscontrol.ssh.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
+import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
+import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
 /**
@@ -49,9 +48,6 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     SshImplFactory sshFactory
 
     @Inject
-    SshPreScriptImplFactory sshPreFactory
-
-    @Inject
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
@@ -61,31 +57,30 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     Collectd_Centos_7_Factory collectdCentosFactory
 
     def getRunScriptFactory() {
-        runnerFactory
+	runnerFactory
     }
 
     HostServices putServices(HostServices services) {
-        services.putAvailableService 'ssh', sshFactory
-        services.putAvailablePreService 'ssh', sshPreFactory
-        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'collectd', collectdFactory
-        services.putAvailableScriptService 'collectd-5.7/centos/7', collectdCentosFactory
-        return services
+	services.putAvailableService 'ssh', sshFactory
+	services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+	services.putAvailableService 'collectd', collectdFactory
+	services.putAvailableScriptService 'collectd-5.7/centos/7', collectdCentosFactory
+	return services
     }
 
     List getAdditionalModules() {
-        def modules = super.additionalModules
-        modules << new RunnerModule()
-        modules << new Ssh_Linux_Module()
-        modules.addAll CollectdModules.getAdditionalModules()
-        modules
+	def modules = super.additionalModules
+	modules << new RunnerModule()
+	modules << new Ssh_Linux_Module()
+	modules.addAll CollectdModules.getAdditionalModules()
+	modules
     }
 
     @Before
     void setupTest() {
-        toStringStyle
-        injector = createInjector()
-        injector.injectMembers(this)
-        this.threads = createThreads()
+	toStringStyle
+	injector = createInjector()
+	injector.injectMembers(this)
+	this.threads = createThreads()
     }
 }

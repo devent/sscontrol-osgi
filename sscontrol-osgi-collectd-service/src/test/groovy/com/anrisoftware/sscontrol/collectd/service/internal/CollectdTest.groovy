@@ -25,19 +25,15 @@ import org.junit.Test
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.collectd.service.external.Collectd
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesServiceModule
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
-import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesImpl.HostServicesImplFactory
-import com.anrisoftware.sscontrol.services.internal.ssh.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.targets.TargetsServiceModule
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
-import com.anrisoftware.sscontrol.types.ssh.external.TargetsService
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
-import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 import groovy.util.logging.Slf4j
@@ -59,9 +55,9 @@ class CollectdTest {
 
     @Test
     void "config_shift"() {
-        def test = [
-            name: 'config_shift',
-            input: '''
+	def test = [
+	    name: 'config_shift',
+	    input: '''
 service "collectd", version: "5.7" with {
     config << [name: "99-write_graphite", script: """
 LoadPlugin "write_graphite"
@@ -82,23 +78,23 @@ LoadPlugin "write_graphite"
 """]
 }
 ''',
-            expected: { HostServices services ->
-                assert services.getServices('collectd').size() == 1
-                Collectd collectd = services.getServices('collectd')[0]
-                assert collectd.version == '5.7'
-                assert collectd.configs.size() == 1
-                assert collectd.configs[0].name == '99-write_graphite'
-                assert collectd.configs[0].script =~ /LoadPlugin.*/
-            },
-        ]
-        doTest test
+	    expected: { HostServices services ->
+		assert services.getServices('collectd').size() == 1
+		Collectd collectd = services.getServices('collectd')[0]
+		assert collectd.version == '5.7'
+		assert collectd.configs.size() == 1
+		assert collectd.configs[0].name == '99-write_graphite'
+		assert collectd.configs[0].script =~ /LoadPlugin.*/
+	    },
+	]
+	doTest test
     }
 
     @Test
     void "config_args"() {
-        def test = [
-            name: 'config_args',
-            input: '''
+	def test = [
+	    name: 'config_args',
+	    input: '''
 service "collectd", version: "5.7" with {
     config name: "99-write_graphite", script: """
 LoadPlugin "write_graphite"
@@ -119,46 +115,40 @@ LoadPlugin "write_graphite"
 """
 }
 ''',
-            expected: { HostServices services ->
-                assert services.getServices('collectd').size() == 1
-                Collectd collectd = services.getServices('collectd')[0]
-                assert collectd.version == '5.7'
-                assert collectd.configs.size() == 1
-                assert collectd.configs[0].name == '99-write_graphite'
-                assert collectd.configs[0].script =~ /LoadPlugin.*/
-            },
-        ]
-        doTest test
+	    expected: { HostServices services ->
+		assert services.getServices('collectd').size() == 1
+		Collectd collectd = services.getServices('collectd')[0]
+		assert collectd.version == '5.7'
+		assert collectd.configs.size() == 1
+		assert collectd.configs[0].name == '99-write_graphite'
+		assert collectd.configs[0].script =~ /LoadPlugin.*/
+	    },
+	]
+	doTest test
     }
 
     void doTest(Map test) {
-        log.info '\n######### {} #########\ncase: {}', test.name, test
-        def services = servicesFactory.create()
-        services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
-        services.putAvailableService 'collectd', serviceFactory
-        Eval.me 'service', services, test.input as String
-        Closure expected = test.expected
-        expected services
+	log.info '\n######### {} #########\ncase: {}', test.name, test
+	def services = servicesFactory.create()
+	services.targets.addTarget([getGroup: {'default'}, getHosts: { []}] as Ssh)
+	services.putAvailableService 'collectd', serviceFactory
+	Eval.me 'service', services, test.input as String
+	Closure expected = test.expected
+	expected services
     }
 
     @Before
     void setupTest() {
-        toStringStyle
-        Guice.createInjector(
-                new CollectdModule(),
-                new HostServicesModule(),
-                new TargetsModule(),
-                new TargetsServiceModule(),
-                new PropertiesModule(),
-                new PropertiesUtilsModule(),
-                new SystemNameMappingsModule(),
-                new AbstractModule() {
-
-                    @Override
-                    protected void configure() {
-                        bind TargetsService to TargetsImplFactory
-                        bind(HostServicePropertiesService).to(HostServicePropertiesImplFactory)
-                    }
-                }).injectMembers(this)
+	toStringStyle
+	Guice.createInjector(
+		new CollectdModule(),
+		new HostServicesModule(),
+		new TargetsModule(),
+		new TargetsServiceModule(),
+		new PropertiesModule(),
+		new PropertiesUtilsModule(),
+		new SystemNameMappingsModule(),
+		new HostServicePropertiesServiceModule(),
+		).injectMembers(this)
     }
 }

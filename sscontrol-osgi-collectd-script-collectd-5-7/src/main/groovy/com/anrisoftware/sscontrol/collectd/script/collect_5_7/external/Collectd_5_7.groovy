@@ -36,37 +36,37 @@ abstract class Collectd_5_7 extends ScriptBase {
     }
 
     def deployConfiguration() {
-        Collectd service = this.service
-        replace privileged: true, dest: configFile with {
-            line "s~(?m)^${collectdIncludeLineSearch}~${collectdIncludeLineReplace}~"
-            line "s~(?m)^#?FQDNLookup.*~FQDNLookup ${fqdnLookup}~"
-            it
-        }()
-        service.configs.each { Config config ->
-            def file = getConfigFile config
-            copyString privileged: true, str: config.script, dest: file
-        }
+	Collectd service = this.service
+	replace privileged: true, dest: configFile with {
+	    line "s~(?m)^${collectdIncludeLineSearch}~${collectdIncludeLineReplace}~"
+	    line "s~(?m)^#?FQDNLookup.*~FQDNLookup ${fqdnLookup}~"
+	    it
+	}()
+	service.configs.each { Config config ->
+	    def file = getConfigFile config
+	    copyString privileged: true, str: config.script, dest: file
+	}
     }
 
     File getConfigFile(Config config) {
-        def s = properties.getProperty 'config_file_template', defaultProperties
-        new File((File)base, new SimpleTemplateEngine().createTemplate(s).make([name: config.name]).toString())
+	def s = getScriptProperty "config_file_template"
+	new File((File)base, new SimpleTemplateEngine().createTemplate(s).make([name: config.name]).toString())
     }
 
     String getCollectdIncludeLineSearch() {
-        properties.getProperty 'collectd_include_line_search', defaultProperties
+	getScriptProperty "collectd_include_line_search"
     }
 
     String getCollectdIncludeLineReplace() {
-        properties.getProperty 'collectd_include_line_replace', defaultProperties
+	getScriptProperty "collectd_include_line_replace"
     }
 
     boolean getFqdnLookup() {
-        properties.getProperty 'collectd_fqdn_lookup', defaultProperties
+	getScriptBooleanProperty "collectd_fqdn_lookup"
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 }
