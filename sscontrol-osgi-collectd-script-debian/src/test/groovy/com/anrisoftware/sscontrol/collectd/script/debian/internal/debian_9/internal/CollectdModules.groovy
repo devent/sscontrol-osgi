@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.internal
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.internal
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.Collectd_Debian_8_Module
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Module
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdModule
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
@@ -55,7 +55,7 @@ class CollectdModules {
 	[
 	    new SshModule(),
 	    new CollectdModule(),
-	    new Collectd_Debian_8_Module(),
+	    new Collectd_Debian_9_Module(),
 	    new DebianUtilsModule(),
 	    new SystemdUtilsModule(),
 	    new DebugLoggingModule(),

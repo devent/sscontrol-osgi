@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9
 
-import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.Collectd_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.external.TemplateResource
-import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.collectd.script.collect_5_7.external.Collectd_5_7
 
 import groovy.util.logging.Slf4j
@@ -33,28 +31,28 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Collectd_5_7_Debian_8 extends Collectd_5_7 {
+class Collectd_5_7_Debian_9 extends Collectd_5_7 {
 
     @Inject
-    Collectd_Debian_8_Properties propertiesProvider
+    Collectd_Debian_9_Properties propertiesProvider
 
     @Override
     ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
+	propertiesProvider.get()
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 
     @Override
     String getSystemName() {
-        SYSTEM_NAME
+	SYSTEM_NAME
     }
 
     @Override
     String getSystemVersion() {
-        SYSTEM_VERSION
+	SYSTEM_VERSION
     }
 }

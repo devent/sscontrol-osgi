@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.internal
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import org.junit.Before
 
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.Collectd_Debian_8_Factory
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -52,7 +52,7 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     CollectdImplFactory collectdFactory
 
     @Inject
-    Collectd_Debian_8_Factory collectdDebianFactory
+    Collectd_Debian_9_Factory collectdDebianFactory
 
     def getRunScriptFactory() {
 	runnerFactory

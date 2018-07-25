@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9
 
-import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_8.Collectd_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Service.*
 
 import javax.inject.Inject
 
@@ -33,55 +33,55 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Collectd_Debian_8 extends Collectd_Debian {
+class Collectd_Debian_9 extends Collectd_Debian {
 
     @Inject
-    Collectd_Debian_8_Properties propertiesProvider
+    Collectd_Debian_9_Properties propertiesProvider
 
-    Collectd_5_7_Debian_8 collectd
+    Collectd_5_7_Debian_9 collectd
 
     SystemdUtils systemd
 
     @Inject
-    void setCollectd_5_7_Centos_7_Factory(Collectd_5_7_Debian_8_Factory factory) {
-        this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    void setCollectd_5_7_Centos_7_Factory(Collectd_5_7_Debian_9_Factory factory) {
+	this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Inject
     void setSystemdUtilsFactory(SystemdUtilsFactory factory) {
-        this.systemd = factory.create(this)
+	this.systemd = factory.create(this)
     }
 
     @Override
     def run() {
-        systemd.stopService collectdService
-        installPackages()
-        collectd.deployConfiguration()
-        systemd.startService collectdService
-        systemd.enableService collectdService
+	systemd.stopService collectdService
+	installPackages()
+	collectd.deployConfiguration()
+	systemd.startService collectdService
+	systemd.enableService collectdService
     }
 
     String getCollectdService() {
-        properties.getProperty 'collectd_service', defaultProperties
+	properties.getProperty 'collectd_service', defaultProperties
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
+	propertiesProvider.get()
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 
     @Override
     String getSystemName() {
-        SYSTEM_NAME
+	SYSTEM_NAME
     }
 
     @Override
     String getSystemVersion() {
-        SYSTEM_VERSION
+	SYSTEM_VERSION
     }
 }
