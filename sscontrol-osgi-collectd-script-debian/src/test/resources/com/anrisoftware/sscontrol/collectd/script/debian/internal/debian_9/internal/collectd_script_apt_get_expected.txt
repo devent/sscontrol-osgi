@@ -1,1 +1,2 @@
--y install -t jessie-backports collectd
+update
+-y install collectd

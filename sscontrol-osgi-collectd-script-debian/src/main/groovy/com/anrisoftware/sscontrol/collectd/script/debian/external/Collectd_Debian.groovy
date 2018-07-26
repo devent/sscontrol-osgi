@@ -36,7 +36,7 @@ abstract class Collectd_Debian extends ScriptBase {
 
     @Inject
     void setDebianFactory(Debian_9_UtilsFactory factory) {
-        this.debian = factory.create(this)
+	this.debian = factory.create(this)
     }
 
     @Override
@@ -44,12 +44,12 @@ abstract class Collectd_Debian extends ScriptBase {
     }
 
     void installPackages() {
-        log.info "Installing packages {}.", packages
-        debian.installBackportsPackages()
+	log.info "Installing packages {}.", packages
+	debian.installPackages()
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 }

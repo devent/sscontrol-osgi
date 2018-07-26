@@ -54,15 +54,11 @@ class Collectd_Debian_9 extends Collectd_Debian {
 
     @Override
     def run() {
-	systemd.stopService collectdService
+	systemd.stopServices()
 	installPackages()
 	collectd.deployConfiguration()
-	systemd.startService collectdService
-	systemd.enableService collectdService
-    }
-
-    String getCollectdService() {
-	properties.getProperty 'collectd_service', defaultProperties
+	systemd.startServices()
+	systemd.enableServices()
     }
 
     @Override
