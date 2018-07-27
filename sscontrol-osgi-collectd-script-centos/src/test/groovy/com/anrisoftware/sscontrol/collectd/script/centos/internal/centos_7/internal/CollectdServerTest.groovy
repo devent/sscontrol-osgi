@@ -35,10 +35,10 @@ class CollectdServerTest extends AbstractCollectdRunnerTest {
 
     @Test
     void "collectd_server"() {
-        def test = [
-            name: "collectd_server",
-            script: '''
-service "ssh", host: "robobee@192.168.56.230", socket: collectdSocket
+	def test = [
+	    name: "collectd_server",
+	    script: '''
+service "ssh", host: "robobee@192.168.56.230", socket: robobeeSocket
 service "collectd", version: "5.7" with {
     config name: "99-write-graphite", script: """
 LoadPlugin "write_graphite"
@@ -57,22 +57,28 @@ LoadPlugin "write_graphite"
 </Node>
 </Plugin>
 """
+    config name: "99-write-influxdb", script: """
+LoadPlugin "network"
+<Plugin "network">
+  Server "myinfluxdb.com" "25826"
+</Plugin>
+"""
 }
 ''',
-            scriptVars: [collectdSocket: collectdSocket],
-            expectedServicesSize: 2,
-            generatedDir: folder.newFolder(),
-            expected: { Map args ->
-                //assertStringResource ZimbraServerTest, checkRemoteFiles('/opt/zimbra/*'), "${args.test.name}_zimbra_dir_expected.txt"
-            },
-        ]
-        doTest test
+	    scriptVars: [robobeeSocket: centosSocket],
+	    expectedServicesSize: 2,
+	    generatedDir: folder.newFolder(),
+	    expected: { Map args ->
+		assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd.d/99-write-graphite.conf', "mail.robobee.test"), "${args.test.name}_write_graphite_conf_expected.txt"
+		assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd.d/99-write-influxdb.conf', "mail.robobee.test"), "${args.test.name}_write_influxdb_conf_expected.txt"
+	    },
+	]
+	doTest test
     }
 
     @Before
     void beforeMethod() {
-        assumeTrue "$collectdSocket available", new File(collectdSocket).exists()
-        //assumeTrue zimbraHostAvailable
+	assumeTrue "$centosSocket available", new File(centosSocket).exists()
     }
 
     @Override
@@ -81,6 +87,6 @@ LoadPlugin "write_graphite"
 
     @Override
     Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
+	getEmptyScriptEnv args
     }
 }

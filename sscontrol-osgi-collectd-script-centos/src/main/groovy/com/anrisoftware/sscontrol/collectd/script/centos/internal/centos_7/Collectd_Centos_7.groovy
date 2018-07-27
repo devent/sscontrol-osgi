@@ -44,45 +44,45 @@ class Collectd_Centos_7 extends Collectd_Centos {
 
     @Inject
     void setCollectd_5_7_Centos_7_Factory(Collectd_5_7_Centos_7_Factory factory) {
-        this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+	this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Inject
     void setSystemdUtilsFactory(SystemdUtilsFactory factory) {
-        this.systemd = factory.create(this)
+	this.systemd = factory.create(this)
     }
 
     @Override
     def run() {
-        systemd.stopService collectdService
-        installPackages()
-        collectd.deployConfiguration()
-        collectd.configureSELinux()
-        systemd.startService collectdService
-        systemd.enableService collectdService
+	systemd.stopServices()
+	installPackages()
+	collectd.deployConfiguration()
+	collectd.configureSELinux()
+	systemd.startServices()
+	systemd.enableServices()
     }
 
     String getCollectdService() {
-        properties.getProperty 'collectd_service', defaultProperties
+	properties.getProperty 'collectd_service', defaultProperties
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
+	propertiesProvider.get()
     }
 
     @Override
     def getLog() {
-        log
+	log
     }
 
     @Override
     String getSystemName() {
-        SYSTEM_NAME
+	SYSTEM_NAME
     }
 
     @Override
     String getSystemVersion() {
-        SYSTEM_VERSION
+	SYSTEM_VERSION
     }
 }
