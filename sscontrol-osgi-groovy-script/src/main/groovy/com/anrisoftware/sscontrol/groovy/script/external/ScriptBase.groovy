@@ -20,7 +20,6 @@ import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-import java.lang.invoke.MethodHandleImpl.BindCaller.T
 import java.nio.charset.Charset
 import java.util.concurrent.ExecutorService
 
@@ -879,11 +878,11 @@ echo \$file
 	}
 
 	public <T> Map<String, T> getStates() {
-		new HashMap<String, T>() {
-					T get(Object key) {
+		new HashMap<String, Object>() {
+					Object get(Object key) {
 						return getState(key)
 					}
-					T put(String key, T value) {
+					Object put(String key, Object value) {
 						putState(key, value)
 					}
 				}
