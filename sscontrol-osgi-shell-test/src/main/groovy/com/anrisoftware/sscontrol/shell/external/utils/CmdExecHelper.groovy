@@ -31,65 +31,54 @@ import com.google.inject.Injector
  */
 class CmdExecHelper {
 
-    /**
-     * Factory to create the helper to execute a specific command.
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface CmdExecHelperFactory {
+	/**
+	 * Executes ssh to create a master socket.
+	 */
+	static File createSshSocket(Map args, Injector injector) {
+		def idFile = args.idFile
+		def host = args.host
+		def socketFile = File.createTempFile("robobee", ".socket")
+		def idArg = idFile != null ? "-i $idFile" : ""
+		socketFile.delete()
+		injector.getInstance CmdExecHelperFactory create() cmd("ssh",
+				idArg,
+				"-o \"ControlMaster=yes\"",
+				"-o \"ControlPath=$socketFile\"",
+				"-o \"ControlPersist=60\"", host, "sleep 60")
+		return socketFile
+	}
 
-        CmdExecHelper create()
-    }
+	@Inject
+	CommandLineFactory commandLineFactory
 
-    /**
-     * Executes ssh to create a master socket.
-     */
-    static File createSshSocket(Map args, Injector injector) {
-        def idFile = args.idFile
-        def host = args.host
-        def socketFile = File.createTempFile("robobee", ".socket")
-        def idArg = idFile != null ? "-i $idFile" : ""
-        socketFile.delete()
-        injector.getInstance CmdExecHelperFactory create() cmd("ssh",
-                idArg,
-                "-o \"ControlMaster=yes\"",
-                "-o \"ControlPath=$socketFile\"",
-                "-o \"ControlPersist=60\"", host, "sleep 60")
-        return socketFile
-    }
+	@Inject
+	CommandExecFactory commandExecFactory
 
-    @Inject
-    CommandLineFactory commandLineFactory
+	Threads threads
 
-    @Inject
-    CommandExecFactory commandExecFactory
+	@Inject
+	void createThreads(PropertiesThreadsFactory threadsFactory,
+			ThreadsTestPropertiesProvider threadsProperties) {
+		def threads = threadsFactory.create()
+		threads.setProperties threadsProperties.get()
+		threads.setName("cmd_exec_helper")
+		this.threads = threads
+	}
 
-    Threads threads
-
-    @Inject
-    void createThreads(PropertiesThreadsFactory threadsFactory,
-            ThreadsTestPropertiesProvider threadsProperties) {
-        def threads = threadsFactory.create()
-        threads.setProperties threadsProperties.get()
-        threads.setName("cmd_exec_helper")
-        this.threads = threads
-    }
-
-    /**
-     * Runs the specified command.
-     *
-     * @param args
-     * the command and plus additional arguments.
-     */
-    def cmd(String... args) {
-        def line = commandLineFactory.create(args[0])
-        (1..(args.size()-1)).each { int i ->
-            line.add args[i]
-        }
-        def exec = commandExecFactory.create()
-        exec.setThreads threads
-        def task = exec.exec line
-        task.get()
-    }
+	/**
+	 * Runs the specified command.
+	 *
+	 * @param args
+	 * the command and plus additional arguments.
+	 */
+	def cmd(String... args) {
+		def line = commandLineFactory.create(args[0])
+		(1..(args.size()-1)).each { int i ->
+			line.add args[i]
+		}
+		def exec = commandExecFactory.create()
+		exec.setThreads threads
+		def task = exec.exec line
+		task.get()
+	}
 }

@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.shell.external.utils
 
-import com.anrisoftware.sscontrol.shell.external.utils.CmdExecHelper.CmdExecHelperFactory
 import com.google.inject.AbstractModule
 import com.google.inject.assistedinject.FactoryModuleBuilder
 
@@ -27,9 +26,9 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  */
 class CmdExecHelperModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(CmdExecHelper.class,
-                CmdExecHelper.class).build(CmdExecHelperFactory.class))
-    }
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(CmdExecHelper.class,
+				CmdExecHelper.class).build(CmdExecHelperFactory.class))
+	}
 }
