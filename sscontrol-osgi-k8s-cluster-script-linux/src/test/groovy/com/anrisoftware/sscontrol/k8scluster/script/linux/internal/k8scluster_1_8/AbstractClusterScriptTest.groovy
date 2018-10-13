@@ -5,7 +5,7 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -139,7 +139,7 @@ abstract class AbstractClusterScriptTest extends AbstractScriptTestBase {
         ]
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

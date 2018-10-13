@@ -3,7 +3,7 @@ package com.anrisoftware.sscontrol.shell.linux.internal
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 

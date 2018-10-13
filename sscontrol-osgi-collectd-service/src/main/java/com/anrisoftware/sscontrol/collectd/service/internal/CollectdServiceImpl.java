@@ -7,11 +7,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.anrisoftware.sscontrol.collectd.service.external.Collectd;
 import com.anrisoftware.sscontrol.collectd.service.external.CollectdService;
@@ -21,6 +19,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.host.external.HostServicesService;
 import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
 import com.google.inject.AbstractModule;
+import com.google.j2objc.annotations.Property;
 
 /**
  * Creates the collectd service.
@@ -28,8 +27,7 @@ import com.google.inject.AbstractModule;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(HostServiceService.class)
+@Component(service = HostServiceService.class)
 public class CollectdServiceImpl implements CollectdService {
 
     static final String SERVICE_NAME = "collectd";
@@ -67,11 +65,9 @@ public class CollectdServiceImpl implements CollectdService {
 
             @Override
             protected void configure() {
-                bind(HostServicesService.class)
-                        .toProvider(of(hostServicesService));
+                bind(HostServicesService.class).toProvider(of(hostServicesService));
                 bind(TargetsService.class).toProvider(of(targetsService));
-                bind(HostServicePropertiesService.class)
-                        .toProvider(of(hostPropertiesService));
+                bind(HostServicePropertiesService.class).toProvider(of(hostPropertiesService));
             }
         }).injectMembers(this);
     }

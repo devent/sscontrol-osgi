@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.rkt.script.debian.internal.rkt_1_2x.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -50,7 +50,7 @@ service "rkt", version: "1.29"
         ]
     ]
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketsExists sockets.nodes
     }

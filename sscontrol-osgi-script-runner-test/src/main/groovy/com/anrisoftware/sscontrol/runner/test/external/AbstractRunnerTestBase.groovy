@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.runner.test.external
 
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
 import java.nio.charset.Charset
 

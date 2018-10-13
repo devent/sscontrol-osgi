@@ -7,10 +7,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
@@ -20,6 +18,7 @@ import com.anrisoftware.sscontrol.types.host.external.ScriptInfo;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractScriptInfo;
 import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemInfo;
+import com.google.j2objc.annotations.Property;
 
 /**
  *
@@ -27,8 +26,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.AbstractSystemIn
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@Component
-@Service(HostServiceScriptService.class)
+@Component(service = HostServiceScriptService.class)
 public class DockerRegistryLinuxService implements HostServiceScriptService {
 
     static final String SERVICE_NAME = "git";
@@ -55,16 +53,14 @@ public class DockerRegistryLinuxService implements HostServiceScriptService {
     private DockerRegistryLinuxFactory scriptFactory;
 
     public ScriptInfo getSystem() {
-        return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(
-                SYSTEM_SYSTEM, SYSTEM_NAME, SYSTEM_VERSION) {
+        return new AbstractScriptInfo(SERVICE_NAME, new AbstractSystemInfo(SYSTEM_SYSTEM, SYSTEM_NAME, SYSTEM_VERSION) {
         }) {
         };
     }
 
     @Override
-    public HostServiceScript create(HostServices repository,
-            HostService service, TargetHost target, ExecutorService threads,
-            Map<String, Object> env) {
+    public HostServiceScript create(HostServices repository, HostService service, TargetHost target,
+            ExecutorService threads, Map<String, Object> env) {
         return scriptFactory.create(repository, service, target, threads, env);
     }
 

@@ -19,6 +19,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.facts</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.command.facts.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>

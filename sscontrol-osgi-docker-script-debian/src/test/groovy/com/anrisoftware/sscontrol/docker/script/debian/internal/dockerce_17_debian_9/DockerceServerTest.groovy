@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_deb
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
@@ -41,7 +41,7 @@ service "docker"
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketExists robobeeSocket
     }

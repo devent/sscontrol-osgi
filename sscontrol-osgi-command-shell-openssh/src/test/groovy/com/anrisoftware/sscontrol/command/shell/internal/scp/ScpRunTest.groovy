@@ -1,29 +1,47 @@
+/*-
+ * #%L
+ * sscontrol-osgi - command-shell-openssh
+ * %%
+ * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package com.anrisoftware.sscontrol.command.shell.internal.scp
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
 import javax.inject.Inject
 import javax.inject.Provider
 
 import org.joda.time.Duration
-import org.junit.Before
-import org.junit.BeforeClass
+import org.junit.jupiter.api.BeforeAll
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
-import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpRunTest
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.ThreadsTestPropertiesProvider
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.scp.ScpRun.ScpRunFactory
 import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshShellModule
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.ThreadsTestPropertiesProvider
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -35,6 +53,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class ScpRunTest {
 
     @Test
@@ -320,12 +339,12 @@ class ScpRunTest {
     @Inject
     ScpRunFactory scpRunFactory
 
-    @Before
+    @BeforeEach
     void setupTest() {
         injector.injectMembers(this)
     }
 
-    @BeforeClass
+    @BeforeAll
     static void setupInjector() {
         toStringStyle
         this.injector = Guice.createInjector(
@@ -338,7 +357,7 @@ class ScpRunTest {
         this.threads = createThreads()
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         def localTests = System.getProperty('project.custom.local.tests.enabled')
         assumeTrue localTests == 'true'

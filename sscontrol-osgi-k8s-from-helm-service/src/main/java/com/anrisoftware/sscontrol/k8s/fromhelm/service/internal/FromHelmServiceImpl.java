@@ -7,10 +7,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.anrisoftware.globalpom.core.strings.ToStringService;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8sService;
@@ -26,8 +25,7 @@ import com.google.inject.AbstractModule;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(HostServiceService.class)
+@Component(service = HostServiceService.class)
 public class FromHelmServiceImpl implements K8sService {
 
     @Inject
@@ -38,22 +36,22 @@ public class FromHelmServiceImpl implements K8sService {
 
     @Override
     public String getName() {
-	return "from-helm";
+        return "from-helm";
     }
 
     @Override
     public HostService create(Map<String, Object> args) {
-	return sshFactory.create(args);
+        return sshFactory.create(args);
     }
 
     @Activate
     protected void start() {
-	createInjector(new K8sModule(), new AbstractModule() {
+        createInjector(new K8sModule(), new AbstractModule() {
 
-	    @Override
-	    protected void configure() {
-		bind(ToStringService.class).toProvider(of(toStringService));
-	    }
-	}).injectMembers(this);
+            @Override
+            protected void configure() {
+                bind(ToStringService.class).toProvider(of(toStringService));
+            }
+        }).injectMembers(this);
     }
 }

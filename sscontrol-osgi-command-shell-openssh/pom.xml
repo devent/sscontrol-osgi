@@ -17,6 +17,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.shell</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.command.shell.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>
@@ -25,6 +26,11 @@
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-migrationsupport</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -2,13 +2,13 @@ package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.scri
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
 import java.nio.charset.StandardCharsets
 
 import org.apache.commons.io.IOUtils
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -288,7 +288,7 @@ rm -r /tmp/wordpress-app
 """
     }
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         checkRobobeeSocket()
     }

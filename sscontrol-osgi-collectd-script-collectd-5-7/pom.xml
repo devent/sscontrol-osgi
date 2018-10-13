@@ -19,6 +19,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.collectd.script.collect_5_7</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.collectd.script.collect_5_7.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>

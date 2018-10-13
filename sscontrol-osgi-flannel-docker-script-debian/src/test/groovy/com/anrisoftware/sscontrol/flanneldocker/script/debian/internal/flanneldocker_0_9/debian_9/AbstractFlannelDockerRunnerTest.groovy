@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.flanneldocker.script.debian.internal.flanneldocker_0_9.debian_9.FlannelDockerDebianFactory
 import com.anrisoftware.sscontrol.flanneldocker.service.internal.FlannelDockerImpl.FlannelDockerImplFactory
@@ -66,7 +66,7 @@ abstract class AbstractFlannelDockerRunnerTest extends AbstractRunnerTestBase {
     }
 
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

@@ -5,8 +5,8 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenMarker
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokenTemplate
@@ -105,7 +105,7 @@ ff02::2 ip6-allrouters
     @Inject
     TokensTemplateFactory factory
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(new TokensTemplateModule()).injectMembers(this)

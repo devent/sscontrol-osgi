@@ -20,8 +20,8 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.hosts.internal.HostsModule
@@ -148,7 +148,7 @@ service "hosts" with {
         ]
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

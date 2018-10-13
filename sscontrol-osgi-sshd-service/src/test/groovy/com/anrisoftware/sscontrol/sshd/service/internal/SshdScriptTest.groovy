@@ -4,8 +4,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
@@ -119,7 +119,7 @@ service "sshd" with {
         expected services
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(

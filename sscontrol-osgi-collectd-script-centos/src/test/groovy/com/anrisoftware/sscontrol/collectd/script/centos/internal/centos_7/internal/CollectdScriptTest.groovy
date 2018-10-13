@@ -3,8 +3,8 @@ package com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.inte
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -59,7 +59,7 @@ LoadPlugin "write_graphite"
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         checkProfile LOCAL_PROFILE
         checkLocalhostSocket()

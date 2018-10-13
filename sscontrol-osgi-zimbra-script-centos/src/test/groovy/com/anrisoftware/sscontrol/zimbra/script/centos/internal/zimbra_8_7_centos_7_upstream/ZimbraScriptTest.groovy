@@ -3,8 +3,8 @@ package com.anrisoftware.sscontrol.zimbra.script.centos.internal.zimbra_8_7_cent
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -67,7 +67,7 @@ service "zimbra", version: "8.7" with {
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         checkProfile LOCAL_PROFILE
         checkLocalhostSocket()

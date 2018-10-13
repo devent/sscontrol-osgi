@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.k8s.glusterfsheketi.service.internal
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper

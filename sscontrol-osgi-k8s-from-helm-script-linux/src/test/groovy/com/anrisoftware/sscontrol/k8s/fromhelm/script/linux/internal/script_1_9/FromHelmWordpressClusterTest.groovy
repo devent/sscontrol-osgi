@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -41,7 +41,7 @@ service "from-helm", chart: "stable/mariadb" with {
 	doTest test
     }
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
 	checkRobobeeSocket()
     }

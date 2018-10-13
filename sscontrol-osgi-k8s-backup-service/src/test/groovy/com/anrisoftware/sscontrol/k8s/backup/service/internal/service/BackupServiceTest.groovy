@@ -5,9 +5,10 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import javax.inject.Inject
 
 import org.joda.time.Duration
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
@@ -50,6 +51,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class BackupServiceTest {
 
     @Inject
@@ -271,7 +273,7 @@ service "backup" with {
 
     def injector
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = Guice.createInjector(

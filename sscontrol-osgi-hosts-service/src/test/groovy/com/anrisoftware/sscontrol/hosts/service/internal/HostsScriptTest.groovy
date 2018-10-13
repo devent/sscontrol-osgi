@@ -4,8 +4,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.hosts.service.external.Host
@@ -120,7 +120,7 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1",
         expected services
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(

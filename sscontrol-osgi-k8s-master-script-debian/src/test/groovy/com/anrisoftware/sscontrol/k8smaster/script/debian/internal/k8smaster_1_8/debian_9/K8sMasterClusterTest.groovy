@@ -17,10 +17,10 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -81,7 +81,7 @@ service "k8s-master", name: "node-0" with {
         ]
     ]
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketsExists sockets.nodes
     }

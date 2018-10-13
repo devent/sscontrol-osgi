@@ -6,7 +6,7 @@ import static java.nio.charset.StandardCharsets.*
 import javax.inject.Inject
 
 import org.apache.commons.io.IOUtils
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.k8s.restore.service.internal.RestoreImpl.RestoreImplFactory
 import com.anrisoftware.sscontrol.k8scluster.service.external.K8sClusterFactory
@@ -86,7 +86,7 @@ abstract class AbstractRestoreRunnerTest extends AbstractRunnerTestBase {
     }
 
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

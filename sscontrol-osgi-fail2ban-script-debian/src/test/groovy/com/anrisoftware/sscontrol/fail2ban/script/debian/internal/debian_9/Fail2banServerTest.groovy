@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -43,7 +43,7 @@ service "fail2ban" with {
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketExists robobeeSocket
     }

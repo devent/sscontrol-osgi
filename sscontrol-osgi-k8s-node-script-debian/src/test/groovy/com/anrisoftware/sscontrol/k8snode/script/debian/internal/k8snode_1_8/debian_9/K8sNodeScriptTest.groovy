@@ -3,9 +3,10 @@ package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.de
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
+import static org.junit.jupiter.api.Assertions.assertThrows
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -18,7 +19,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class K8sNodeScriptTest extends AbstractNodeScriptTest {
 
-    @Test(expected=AssertionError)
+    @Test
     void "script_no_join"() {
         def test = [
             name: "script_no_join",
@@ -35,7 +36,7 @@ service "k8s-node", name: "node-0"
                 File gen = args.test.generatedDir
             },
         ]
-        doTest test
+        assertThrows AssertionError.class, { doTest test }
     }
 
     @Test
@@ -140,7 +141,7 @@ service "k8s-node", name: "node-0", join: 'kubeadm join abc' with {
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         checkProfile LOCAL_PROFILE
         checkLocalhostSocket()

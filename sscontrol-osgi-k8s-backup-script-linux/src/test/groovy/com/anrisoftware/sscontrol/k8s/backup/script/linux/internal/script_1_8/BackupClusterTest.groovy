@@ -2,11 +2,12 @@ package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
@@ -20,6 +21,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class BackupClusterTest extends AbstractBackupRunnerTest {
 
     @Test
@@ -58,7 +60,7 @@ service "backup", target: "backup" with {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         checkRobobeeSocket()
     }

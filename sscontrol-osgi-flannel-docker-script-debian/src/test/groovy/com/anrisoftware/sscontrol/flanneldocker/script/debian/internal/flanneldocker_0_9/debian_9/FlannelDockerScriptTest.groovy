@@ -4,8 +4,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -165,7 +165,7 @@ service "flannel-docker", check: targets.default[0] with {
         doTest test
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         checkProfile LOCAL_PROFILE
         checkLocalhostSocket()

@@ -8,10 +8,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
@@ -26,8 +25,7 @@ import com.google.inject.Guice;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(ParserService.class)
+@Component(service = ParserService.class)
 public class ParserServiceImpl implements ParserService {
 
     @Inject
@@ -40,8 +38,7 @@ public class ParserServiceImpl implements ParserService {
     }
 
     @Override
-    public Parser create(URI[] roots, String name,
-            Map<String, Object> variables, HostServices hostServices) {
+    public Parser create(URI[] roots, String name, Map<String, Object> variables, HostServices hostServices) {
         return scriptsFactory.create(roots, name, variables, hostServices);
     }
 

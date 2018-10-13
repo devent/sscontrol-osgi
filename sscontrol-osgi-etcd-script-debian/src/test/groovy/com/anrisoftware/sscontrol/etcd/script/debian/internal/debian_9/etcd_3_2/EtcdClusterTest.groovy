@@ -2,10 +2,10 @@ package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -91,7 +91,7 @@ service "etcd", target: host with {
         ]
     ]
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketsExists sockets.nodes
     }

@@ -2,9 +2,8 @@ package com.anrisoftware.sscontrol.docker.service.internal;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.docker.service.external.DockerPreScriptService;
 import com.anrisoftware.sscontrol.docker.service.internal.DockerPreScriptImpl.DockerPreScriptImplFactory;
@@ -18,8 +17,7 @@ import com.google.inject.Guice;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(DockerPreScriptService.class)
+@Component(service = DockerPreScriptService.class)
 public class DockerPreScriptServiceImpl implements DockerPreScriptService {
 
     @Inject

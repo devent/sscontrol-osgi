@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.internal.FromHelmImpl.FromHelmImplFactory
 import com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9.GitRepoDebianFactory
@@ -71,7 +71,7 @@ abstract class AbstractFromHelmRunnerTest extends AbstractRunnerTestBase {
     }
 
 
-    @Before
+    @BeforeEach
     void setupTest() {
 	toStringStyle
 	injector = createInjector()

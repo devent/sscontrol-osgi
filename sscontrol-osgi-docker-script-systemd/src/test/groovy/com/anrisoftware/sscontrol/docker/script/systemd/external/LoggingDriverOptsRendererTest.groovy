@@ -1,6 +1,6 @@
 package com.anrisoftware.sscontrol.docker.script.systemd.external
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 /**
  * @see LoggingDriverOptsRenderer

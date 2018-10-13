@@ -2,7 +2,7 @@ package com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_8.linu
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.EtcdPluginImpl.EtcdPluginImplFactory
 import com.google.inject.Guice
@@ -29,7 +29,7 @@ class PluginTargetsMapTest {
         etcdPluginFactory
     }
 
-    @Before
+    @BeforeEach
     void injectDependencies() {
         Guice.createInjector(
                 new K8sUpstreamModule()

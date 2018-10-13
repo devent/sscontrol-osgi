@@ -2,9 +2,9 @@ package com.anrisoftware.sscontrol.app.main.internal.args
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.sscontrol.app.main.internal.args.AppArgs.AppArgsFactory
@@ -38,7 +38,7 @@ class AppArgsTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
-    @Before
+    @BeforeEach
     void injectDependencies() {
         Guice.createInjector(new ArgsModule()).injectMembers(this)
     }

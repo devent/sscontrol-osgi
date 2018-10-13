@@ -19,6 +19,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.copy</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.command.copy.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>

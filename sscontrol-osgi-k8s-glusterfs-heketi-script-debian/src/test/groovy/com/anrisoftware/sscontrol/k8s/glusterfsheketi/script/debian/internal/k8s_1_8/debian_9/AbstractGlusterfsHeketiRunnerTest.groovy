@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FromRepositoryLinuxFactory
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.FromRepositoryImpl.FromRepositoryImplFactory
@@ -119,7 +119,7 @@ abstract class AbstractGlusterfsHeketiRunnerTest extends AbstractRunnerTestBase 
     }
 
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

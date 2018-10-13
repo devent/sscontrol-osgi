@@ -2,13 +2,13 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
 import java.nio.charset.StandardCharsets
 
 import org.apache.commons.io.IOUtils
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -100,7 +100,7 @@ sudo systemctl restart sshd
 
     static final sshdConfig = { IOUtils.toString(SshdServerTest.class.getResource("sshd_config.txt").openStream(), StandardCharsets.UTF_8) }
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketExists robobeeSocket
     }

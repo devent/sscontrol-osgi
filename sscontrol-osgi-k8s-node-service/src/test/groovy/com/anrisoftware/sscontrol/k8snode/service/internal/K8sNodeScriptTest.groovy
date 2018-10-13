@@ -4,9 +4,10 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
@@ -42,6 +43,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class K8sNodeScriptTest {
 
     @Rule
@@ -160,7 +162,7 @@ service "k8s-node" with {
         expected services
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(

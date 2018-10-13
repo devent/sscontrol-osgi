@@ -4,7 +4,7 @@ import static org.ops4j.pax.exam.CoreOptions.*
 
 import javax.inject.Inject
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.ops4j.pax.exam.Option
 import org.ops4j.pax.exam.junit.PaxExam

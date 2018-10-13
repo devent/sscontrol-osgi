@@ -19,8 +19,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 
 import com.anrisoftware.globalpom.durationformat.DurationFormatModule
@@ -91,7 +91,7 @@ service "inline" with {
         }
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(

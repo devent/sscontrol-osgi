@@ -6,7 +6,7 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtil
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
@@ -110,7 +110,7 @@ abstract class AbstractTestHostname extends AbstractScriptTestBase {
         ]
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

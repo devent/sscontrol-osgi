@@ -6,9 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.docker.service.external.DockerService;
 import com.anrisoftware.sscontrol.docker.service.internal.DockerImpl.DockerImplFactory;
@@ -21,8 +20,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(HostServiceService.class)
+@Component(service = HostServiceService.class)
 public class DockerServiceImpl implements DockerService {
 
     @Inject

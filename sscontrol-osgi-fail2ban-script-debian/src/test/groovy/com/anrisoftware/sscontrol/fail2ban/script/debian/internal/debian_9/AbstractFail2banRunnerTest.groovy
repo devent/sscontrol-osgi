@@ -5,7 +5,7 @@ import static java.nio.charset.StandardCharsets.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.fail2ban.service.internal.Fail2banImpl.Fail2banImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -60,7 +60,7 @@ abstract class AbstractFail2banRunnerTest extends AbstractRunnerTestBase {
     }
 
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

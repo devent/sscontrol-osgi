@@ -5,8 +5,8 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import javax.inject.Inject
 
 import org.joda.time.Duration
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -299,7 +299,7 @@ service "fail2ban" with {
         }
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         Guice.createInjector(

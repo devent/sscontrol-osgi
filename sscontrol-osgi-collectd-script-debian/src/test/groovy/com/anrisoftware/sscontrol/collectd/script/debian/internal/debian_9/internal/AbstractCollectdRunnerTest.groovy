@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
@@ -59,7 +59,7 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
 	modules
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
 	toStringStyle
 	injector = createInjector()

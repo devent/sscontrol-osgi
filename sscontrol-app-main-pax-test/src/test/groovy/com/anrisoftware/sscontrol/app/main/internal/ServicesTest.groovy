@@ -2,7 +2,7 @@ package com.anrisoftware.sscontrol.app.main.internal
 
 import static org.ops4j.pax.exam.CoreOptions.*
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.ops4j.pax.exam.Option
 import org.ops4j.pax.exam.junit.PaxExam

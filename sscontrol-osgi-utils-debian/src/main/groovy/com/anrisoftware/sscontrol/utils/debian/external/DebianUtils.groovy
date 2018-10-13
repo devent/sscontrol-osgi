@@ -1,3 +1,22 @@
+/*-
+ * #%L
+ * sscontrol-osgi - utils-debian
+ * %%
+ * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package com.anrisoftware.sscontrol.utils.debian.external
 
 import static org.apache.commons.io.FilenameUtils.*
@@ -24,7 +43,7 @@ abstract class DebianUtils {
     final HostServiceScript script
 
     protected DebianUtils(HostServiceScript script) {
-	this.script = script
+        this.script = script
     }
 
     /**
@@ -42,12 +61,12 @@ abstract class DebianUtils {
      * installed.
      */
     boolean checkPackagesVersion(List packages) {
-	assertThat "name=null", packages[0], hasKey('name')
-	assertThat "version=null", packages[0], hasKey('version')
-	def failed = packages.find { Map m ->
-	    !checkPackage(m)
-	}
-	return failed == null
+        assertThat "name=null", packages[0], hasKey('name')
+        assertThat "version=null", packages[0], hasKey('version')
+        def failed = packages.find { Map m ->
+            !checkPackage(m)
+        }
+        return failed == null
     }
 
     /**
@@ -55,7 +74,7 @@ abstract class DebianUtils {
      * packages from the profile property {@code packages}.
      */
     boolean checkPackages(List packages=packages) {
-	checkPackages(packages: packages)
+        checkPackages(packages: packages)
     }
 
     /**
@@ -63,13 +82,13 @@ abstract class DebianUtils {
      * packages from the profile property {@code packages}.
      */
     boolean checkPackages(Map args) {
-	List packages = args.packages
-	def found = packages.findAll {
-	    def a = new HashMap(args)
-	    a.name = it
-	    checkPackage a
-	}
-	return found.size() == packages.size()
+        List packages = args.packages
+        def found = packages.findAll {
+            def a = new HashMap(args)
+            a.name = it
+            checkPackage a
+        }
+        return found.size() == packages.size()
     }
 
     /**
@@ -80,19 +99,19 @@ abstract class DebianUtils {
      * </ul>
      */
     boolean checkPackage(Map args) {
-	log.info "Check installed packages {}.", args
-	assertThat "args.name=null", args, hasKey('name')
-	def a = new HashMap(args)
-	a.timeout = args.timeout ? args.timeout : script.timeoutShort
-	a.exitCodes = [0, 1] as int[]
-	a.vars = new HashMap(args)
-	a.vars.package = args.name
-	a.vars.nameInstalled = grepPackageNameInstalled
-	a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
-	a.resource = commandsTemplate
-	a.name = 'checkPackage'
-	def ret = script.shell a call()
-	return ret.exitValue == 0
+        log.info "Check installed packages {}.", args
+        assertThat "args.name=null", args, hasKey('name')
+        def a = new HashMap(args)
+        a.timeout = args.timeout ? args.timeout : script.timeoutShort
+        a.exitCodes = [0, 1] as int[]
+        a.vars = new HashMap(args)
+        a.vars.package = args.name
+        a.vars.nameInstalled = grepPackageNameInstalled
+        a.vars.versionInstalled = getGrepPackageVersionInstalled(args.version)
+        a.resource = commandsTemplate
+        a.name = 'checkPackage'
+        def ret = script.shell a call()
+        return ret.exitValue == 0
     }
 
     /**
@@ -104,7 +123,7 @@ abstract class DebianUtils {
      * @param timeout the timeout Duration. Defaults to {@code timeoutLong}.
      */
     void installPackages(List packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
-	installPackages packages: packages, timeout: timeout, checkInstalled: checkInstalled
+        installPackages packages: packages, timeout: timeout, checkInstalled: checkInstalled
     }
 
     /**
@@ -121,35 +140,35 @@ abstract class DebianUtils {
      * </ul>
      */
     void installPackages(Map args) {
-	log.info "Installing packages {}.", args
-	List packages = args.packages
-	if (packages.empty) {
-	    return
-	}
-	def a = new HashMap(args)
-	a.timeout = a.timeout ? a.timeout : script.timeoutLong
-	a.privileged = true
-	a.vars = new HashMap(args)
-	a.vars.nameInstalled = grepPackageNameInstalled
-	a.vars.checkInstalled = a.vars.checkInstalled != null ? a.vars.checkInstalled : true
-	a.vars.update = a.vars.update != null ? a.vars.update : defaultUpdatePackages
-	a.resource = commandsTemplate
-	a.name = 'installPackage'
-	a.parent = this
-	packages.eachWithIndex { it, i ->
-	    Map b = new HashMap(a)
-	    if (it instanceof Map) {
-		b.vars.package = it.name
-		b.vars.version = it.version
-		b.vars.versionInstalled = getGrepPackageVersionInstalled(it.version)
-	    } else {
-		b.vars.package = it
-	    }
-	    if (i > 0) {
-		b.vars.update = false
-	    }
-	    script.shell b call()
-	}
+        log.info "Installing packages {}.", args
+        List packages = args.packages
+        if (packages.empty) {
+            return
+        }
+        def a = new HashMap(args)
+        a.timeout = a.timeout ? a.timeout : script.timeoutLong
+        a.privileged = true
+        a.vars = new HashMap(args)
+        a.vars.nameInstalled = grepPackageNameInstalled
+        a.vars.checkInstalled = a.vars.checkInstalled != null ? a.vars.checkInstalled : true
+        a.vars.update = a.vars.update != null ? a.vars.update : defaultUpdatePackages
+        a.resource = commandsTemplate
+        a.name = 'installPackage'
+        a.parent = this
+        packages.eachWithIndex { it, i ->
+            Map b = new HashMap(a)
+            if (it instanceof Map) {
+                b.vars.package = it.name
+                b.vars.version = it.version
+                b.vars.versionInstalled = getGrepPackageVersionInstalled(it.version)
+            } else {
+                b.vars.package = it
+            }
+            if (i > 0) {
+                b.vars.update = false
+            }
+            script.shell b call()
+        }
     }
 
     /**
@@ -157,13 +176,13 @@ abstract class DebianUtils {
      * installs the packages from the profile property {@code packages}.
      */
     void installBackportsPackages(def packages=script.packages, boolean checkInstalled=true, def timeout=script.timeoutLong) {
-	def args = [:]
-	args.packages = packages
-	args.timeout = timeout
-	args.vars = [:]
-	args.vars.backport = "${script.distributionName}-backports"
-	args.vars.checkInstalled = checkInstalled
-	installPackages args
+        def args = [:]
+        args.packages = packages
+        args.timeout = timeout
+        args.vars = [:]
+        args.vars.backport = "${script.distributionName}-backports"
+        args.vars.checkInstalled = checkInstalled
+        installPackages args
     }
 
     /**
@@ -185,20 +204,20 @@ abstract class DebianUtils {
      * @see #getPackagesRepositoryListFile()
      */
     def addPackagesRepository(Map args=[:]) {
-	args.key = args.key ? args.key : script.packagesRepositoryKey
-	args.key = args.key ? args.key : packagesRepositoryKey
-	args.url = args.url ? args.url : script.packagesRepositoryUrl
-	args.url = args.url ? args.url : packagesRepositoryUrl
-	args.name = args.name ? args.name : script.distributionName
-	args.comp = args.comp ? args.comp : script.packagesRepositoryComponent
-	args.comp = args.comp ? args.comp : packagesRepositoryComponent
-	args.file = args.file ? args.file : script.packagesRepositoryListFile
-	args.file = args.file ? args.file : packagesRepositoryListFile
-	args.target = args.target ? args.target : script.target
-	assertThat "url=null", args.url, notNullValue()
-	assertThat "comp=null", args.comp, notNullValue()
-	assertThat "file=null", args.file, notNullValue()
-	script.shell target: args.target, """
+        args.key = args.key ? args.key : script.packagesRepositoryKey
+        args.key = args.key ? args.key : packagesRepositoryKey
+        args.url = args.url ? args.url : script.packagesRepositoryUrl
+        args.url = args.url ? args.url : packagesRepositoryUrl
+        args.name = args.name ? args.name : script.distributionName
+        args.comp = args.comp ? args.comp : script.packagesRepositoryComponent
+        args.comp = args.comp ? args.comp : packagesRepositoryComponent
+        args.file = args.file ? args.file : script.packagesRepositoryListFile
+        args.file = args.file ? args.file : packagesRepositoryListFile
+        args.target = args.target ? args.target : script.target
+        assertThat "url=null", args.url, notNullValue()
+        assertThat "comp=null", args.comp, notNullValue()
+        assertThat "file=null", args.file, notNullValue()
+        script.shell target: args.target, """
 key_file=`mktemp`
 trap "rm -f \$key_file" EXIT
 wget -O \$key_file ${args.key}
@@ -223,11 +242,11 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getBackportsRepositoryListFile()
      */
     def addBackportsRepository(Map args=[:]) {
-	args.url = args.url ? args.url : backportsRepositoryUrl
-	args.name = args.name ? args.name : "${script.distributionName}-backports"
-	args.comp = args.comp ? args.comp : backportsRepositoryComponent
-	args.file = args.file ? args.file : backportsRepositoryListFile
-	script.shell """
+        args.url = args.url ? args.url : backportsRepositoryUrl
+        args.name = args.name ? args.name : "${script.distributionName}-backports"
+        args.comp = args.comp ? args.comp : backportsRepositoryComponent
+        args.file = args.file ? args.file : backportsRepositoryListFile
+        script.shell """
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 """ call()
     }
@@ -239,18 +258,18 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @param target the target to which the modules to install, defaults to the property {@code "script#target"}
      */
     def enableModules(List modules=modules, def target=script.target) {
-	if (modules.empty) {
-	    return
-	}
-	log.debug 'Setup kernel modules for node {}', target
-	script.shell target: target, privileged: true, vars: [modules: modules], st: """
+        if (modules.empty) {
+            return
+        }
+        log.debug 'Setup kernel modules for node {}', target
+        script.shell target: target, privileged: true, vars: [modules: modules], st: """
 <vars.modules:{m|modprobe <m>};separator="\\n">
 """ call()
-	script.replace target: target, privileged: true, dest: modulesFile with {
-	    modules.each { module -> //
-		line "s/(?m)^#?${module}/${module}/" }
-	    it
-	}()
+        script.replace target: target, privileged: true, dest: modulesFile with {
+            modules.each { module -> //
+                line "s/(?m)^#?${module}/${module}/" }
+            it
+        }()
     }
 
     /**
@@ -264,10 +283,10 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     boolean getDefaultUpdatePackages() {
-	def p = script.getScriptBooleanProperty "default_update_packages"
-	if (!p) {
-	    p = script.properties.getBooleanProperty "default_update_packages", defaultProperties
-	}
+        def p = script.getScriptBooleanProperty "default_update_packages"
+        if (!p) {
+            p = script.properties.getBooleanProperty "default_update_packages", defaultProperties
+        }
     }
 
     /**
@@ -281,7 +300,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryKey() {
-	script.properties.getProperty "apt_packages_repository_key", defaultProperties
+        script.properties.getProperty "apt_packages_repository_key", defaultProperties
     }
 
     /**
@@ -295,7 +314,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryUrl() {
-	script.properties.getProperty "apt_packages_pepository_url", defaultProperties
+        script.properties.getProperty "apt_packages_pepository_url", defaultProperties
     }
 
     /**
@@ -309,7 +328,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getPackagesRepositoryListFile() {
-	script.getFileProperty "apt_packages_repository_list_file", sourcesListDir, defaultProperties
+        script.getFileProperty "apt_packages_repository_list_file", sourcesListDir, defaultProperties
     }
 
     /**
@@ -323,7 +342,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getSourcesListDir() {
-	script.getFileProperty "apt_sources_list_dir", script.base, defaultProperties
+        script.getFileProperty "apt_sources_list_dir", script.base, defaultProperties
     }
 
     /**
@@ -337,7 +356,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     String getPackagesRepositoryComponent() {
-	script.properties.getProperty "apt_packages_repository_component", defaultProperties
+        script.properties.getProperty "apt_packages_repository_component", defaultProperties
     }
 
     /**
@@ -351,7 +370,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     String getBackportsRepositoryUrl() {
-	script.properties.getProperty "apt_backports_repository_url", defaultProperties
+        script.properties.getProperty "apt_backports_repository_url", defaultProperties
     }
 
     /**
@@ -365,7 +384,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getBackportsRepositoryListFile() {
-	script.getFileProperty "apt_backports_repository_list_file", script.base, defaultProperties
+        script.getFileProperty "apt_backports_repository_list_file", script.base, defaultProperties
     }
 
     /**
@@ -379,19 +398,19 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     String getBackportsRepositoryComponent() {
-	script.properties.getProperty "apt_backports_repository_component", defaultProperties
+        script.properties.getProperty "apt_backports_repository_component", defaultProperties
     }
 
     String getGrepPackageNameInstalled() {
-	script.properties.getProperty 'grep_apt_package_name_installed', defaultProperties
+        script.properties.getProperty 'grep_apt_package_name_installed', defaultProperties
     }
 
     String getGrepPackageVersionInstalled(String version) {
-	if (version == null) {
-	    return null
-	}
-	def s = script.properties.getProperty 'grep_apt_package_version_installed', defaultProperties
-	new ST(s).add('version', version).render()
+        if (version == null) {
+            return null
+        }
+        def s = script.properties.getProperty 'grep_apt_package_version_installed', defaultProperties
+        new ST(s).add('version', version).render()
     }
 
     /**
@@ -404,7 +423,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see script#getDefaultProperties()
      */
     List getModules() {
-	script.getScriptListProperty "modules"
+        script.getScriptListProperty "modules"
     }
 
     /**
@@ -417,7 +436,7 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     File getModulesFile() {
-	script.getScriptFileProperty "modules_file", script.base, defaultProperties
+        script.getScriptFileProperty "modules_file", script.base, defaultProperties
     }
 
     /**
@@ -431,6 +450,6 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      * @see #getDefaultProperties()
      */
     List getAptLockFiles() {
-	script.getScriptListProperty "apt_lock_files", defaultProperties
+        script.getScriptListProperty "apt_lock_files", defaultProperties
     }
 }

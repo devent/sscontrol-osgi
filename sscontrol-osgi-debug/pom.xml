@@ -14,6 +14,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.debug</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.debug.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <artifactId>sscontrol-osgi-debug</artifactId>

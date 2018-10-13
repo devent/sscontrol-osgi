@@ -7,9 +7,9 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FileTemplateModule
@@ -200,7 +200,7 @@ spec:
 
     Injector injector
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         this.injector = createInjector()

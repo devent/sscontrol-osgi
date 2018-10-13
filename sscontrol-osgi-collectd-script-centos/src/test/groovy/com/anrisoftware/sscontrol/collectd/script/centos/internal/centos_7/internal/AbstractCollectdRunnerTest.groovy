@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.Collectd_Centos_7_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
@@ -42,30 +42,30 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     Collectd_Centos_7_Factory collectdCentosFactory
 
     def getRunScriptFactory() {
-	runnerFactory
+        runnerFactory
     }
 
     HostServices putServices(HostServices services) {
-	services.putAvailableService 'ssh', sshFactory
-	services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-	services.putAvailableService 'collectd', collectdFactory
-	services.putAvailableScriptService 'collectd-5.7/centos/7', collectdCentosFactory
-	return services
+        services.putAvailableService 'ssh', sshFactory
+        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableService 'collectd', collectdFactory
+        services.putAvailableScriptService 'collectd-5.7/centos/7', collectdCentosFactory
+        return services
     }
 
     List getAdditionalModules() {
-	def modules = super.additionalModules
-	modules << new RunnerModule()
-	modules << new Ssh_Linux_Module()
-	modules.addAll CollectdModules.getAdditionalModules()
-	modules
+        def modules = super.additionalModules
+        modules << new RunnerModule()
+        modules << new Ssh_Linux_Module()
+        modules.addAll CollectdModules.getAdditionalModules()
+        modules
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
-	toStringStyle
-	injector = createInjector()
-	injector.injectMembers(this)
-	this.threads = createThreads()
+        toStringStyle
+        injector = createInjector()
+        injector.injectMembers(this)
+        this.threads = createThreads()
     }
 }

@@ -6,9 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.external.find.FindFiles;
@@ -23,16 +22,14 @@ import com.google.inject.AbstractModule;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(FindFilesService.class)
+@Component(service = FindFilesService.class)
 public class FactsServiceImpl implements FindFilesService {
 
     @Inject
     private FindFilesFactory filesFactory;
 
     @Override
-    public FindFiles create(Map<String, Object> args, SshHost ssh,
-            Object parent, Threads threads, Object log) {
+    public FindFiles create(Map<String, Object> args, SshHost ssh, Object parent, Threads threads, Object log) {
         return filesFactory.create(args, ssh, parent, threads, log);
     }
 

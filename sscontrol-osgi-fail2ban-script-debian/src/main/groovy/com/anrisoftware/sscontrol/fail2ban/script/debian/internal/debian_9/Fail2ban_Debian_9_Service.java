@@ -7,9 +7,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
@@ -25,8 +24,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@Component
-@Service(HostServiceScriptService.class)
+@Component(service = HostServiceScriptService.class)
 public class Fail2ban_Debian_9_Service implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
@@ -45,11 +43,9 @@ public class Fail2ban_Debian_9_Service implements HostServiceScriptService {
     }
 
     @Override
-    public HostServiceScript create(HostServices repository,
-            HostService service, TargetHost target, ExecutorService threads,
-            Map<String, Object> env) {
-        return hostnameFactory.create(repository, service, target, threads,
-                env);
+    public HostServiceScript create(HostServices repository, HostService service, TargetHost target,
+            ExecutorService threads, Map<String, Object> env) {
+        return hostnameFactory.create(repository, service, target, threads, env);
     }
 
     @Activate
@@ -58,9 +54,7 @@ public class Fail2ban_Debian_9_Service implements HostServiceScriptService {
 
             @Override
             protected void configure() {
-                install(new FactoryModuleBuilder()
-                        .implement(HostServiceScript.class,
-                                Fail2ban_Debian_9.class)
+                install(new FactoryModuleBuilder().implement(HostServiceScript.class, Fail2ban_Debian_9.class)
                         .build(Fail2ban_Debian_9_Factory.class));
             }
         }).injectMembers(this);

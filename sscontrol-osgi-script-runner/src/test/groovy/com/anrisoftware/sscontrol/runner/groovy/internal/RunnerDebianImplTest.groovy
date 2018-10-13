@@ -6,8 +6,8 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtil
 
 import javax.inject.Inject
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Factory
 import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Module
@@ -69,7 +69,7 @@ class RunnerDebianImplTest extends AbstractRunnerTestBase {
         doTest test, 0
     }
 
-    @Before
+    @BeforeEach
     void checkProfile() {
         checkProfile LOCAL_PROFILE
     }
@@ -116,7 +116,7 @@ class RunnerDebianImplTest extends AbstractRunnerTestBase {
         modules << new DebianUtilsModule()
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()

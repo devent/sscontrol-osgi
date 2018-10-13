@@ -6,9 +6,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServices;
@@ -22,8 +21,7 @@ import com.google.inject.AbstractModule;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(RunScriptService.class)
+@Component(service = RunScriptService.class)
 public class RunScriptServiceImpl implements RunScriptService {
 
     @Inject

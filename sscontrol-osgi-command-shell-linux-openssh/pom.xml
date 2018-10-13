@@ -17,6 +17,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.command.shell.linux.openssh</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.command.shell.linux.openssh.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>

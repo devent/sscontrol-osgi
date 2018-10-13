@@ -3,10 +3,10 @@ package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.de
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
-import static org.junit.Assume.*
+import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import groovy.util.logging.Slf4j
 
@@ -94,7 +94,7 @@ targets['nodes'].eachWithIndex { host, i ->
         ],
         taints: [[], []]]
 
-    @Before
+    @BeforeEach
     void beforeMethod() {
         assumeSocketsExists sockets.nodes
     }

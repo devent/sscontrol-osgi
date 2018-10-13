@@ -7,9 +7,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
@@ -23,10 +22,8 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@Component
-@Service(HostServiceScriptService.class)
-public class FlannelDockerDebianService
-        implements HostServiceScriptService {
+@Component(service = HostServiceScriptService.class)
+public class FlannelDockerDebianService implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";
 
@@ -44,16 +41,14 @@ public class FlannelDockerDebianService
     }
 
     @Override
-    public HostServiceScript create(HostServices repository,
-            HostService service, TargetHost target, ExecutorService threads,
-            Map<String, Object> env) {
+    public HostServiceScript create(HostServices repository, HostService service, TargetHost target,
+            ExecutorService threads, Map<String, Object> env) {
         return scriptFactory.create(repository, service, target, threads, env);
     }
 
     @Activate
     protected void start() {
-        createInjector(new FlannelDockerDebianModule())
-                .injectMembers(this);
+        createInjector(new FlannelDockerDebianModule()).injectMembers(this);
     }
 
 }

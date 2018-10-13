@@ -4,7 +4,7 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 
 import javax.inject.Inject
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 import com.anrisoftware.sscontrol.rkt.service.internal.RktImpl.RktImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
@@ -58,7 +58,7 @@ abstract class AbstractRktRunnerTest extends AbstractRunnerTestBase {
         modules
     }
 
-    @Before
+    @BeforeEach
     void setupTest() {
         toStringStyle
         injector = createInjector()
