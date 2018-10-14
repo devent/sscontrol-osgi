@@ -9,9 +9,9 @@ package com.anrisoftware.sscontrol.shell.external.utils;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,25 +39,20 @@ public class SysStreamsLogger {
     public static final PrintStream sysout = System.out;
     public static final PrintStream syserr = System.err;
 
-    protected static final String LINE_SEPERATOR = System
-            .getProperty("line.separator");
+    protected static final String LINE_SEPERATOR = System.getProperty("line.separator");
 
     public static PrintStream getOutputStream() {
-        return new PrintStream(new LoggingOutputStream(sysOutLogger, false),
-                true);
+        return new PrintStream(new LoggingOutputStream(sysOutLogger, false), true);
     }
 
     public static PrintStream getErrorStream() {
-        return new PrintStream(new LoggingOutputStream(sysErrLogger, true),
-                true);
+        return new PrintStream(new LoggingOutputStream(sysErrLogger, true), true);
     }
 
     public static void bindSystemStreams() {
         // Enable autoflush
-        System.setOut(new PrintStream(
-                new LoggingOutputStream(sysOutLogger, false), true));
-        System.setErr(new PrintStream(
-                new LoggingOutputStream(sysErrLogger, true), true));
+        System.setOut(new PrintStream(new LoggingOutputStream(sysOutLogger, false), true));
+        System.setErr(new PrintStream(new LoggingOutputStream(sysErrLogger, true), true));
     }
 
     public static void unbindSystemStreams() {
@@ -81,10 +76,9 @@ public class SysStreamsLogger {
         protected byte[] buf;
 
         /**
-         * The number of valid bytes in the buffer. This value is always in the
-         * range <tt>0</tt> through <tt>buf.length</tt>; elements
-         * <tt>buf[0]</tt> through <tt>buf[count-1]</tt> contain valid byte
-         * data.
+         * The number of valid bytes in the buffer. This value is always in the range
+         * <tt>0</tt> through <tt>buf.length</tt>; elements <tt>buf[0]</tt> through
+         * <tt>buf[count-1]</tt> contain valid byte data.
          */
         protected int count;
 
@@ -105,18 +99,14 @@ public class SysStreamsLogger {
 
         /**
          * Creates the LoggingOutputStream to flush to the given Category.
-         * 
-         * @param log
-         *            the Logger to write to
-         * 
-         * @param isError
-         *            the if true write to error, else info
-         * 
-         * @exception IllegalArgumentException
-         *                if cat == null or priority == null
+         *
+         * @param log     the Logger to write to
+         *
+         * @param isError the if true write to error, else info
+         *
+         * @exception IllegalArgumentException if cat == null or priority == null
          */
-        public LoggingOutputStream(Logger log, boolean isError)
-                throws IllegalArgumentException {
+        public LoggingOutputStream(Logger log, boolean isError) throws IllegalArgumentException {
             if (log == null) {
                 throw new IllegalArgumentException("log == null");
             }
@@ -129,10 +119,10 @@ public class SysStreamsLogger {
         }
 
         /**
-         * Closes this output stream and releases any system resources
-         * associated with this stream. The general contract of
-         * <code>close</code> is that it closes the output stream. A closed
-         * stream cannot perform output operations and cannot be reopened.
+         * Closes this output stream and releases any system resources associated with
+         * this stream. The general contract of <code>close</code> is that it closes the
+         * output stream. A closed stream cannot perform output operations and cannot be
+         * reopened.
          */
         @Override
         public void close() {
@@ -141,14 +131,12 @@ public class SysStreamsLogger {
         }
 
         /**
-         * Writes the specified byte to this output stream. The general contract
-         * for <code>write</code> is that one byte is written to the output
-         * stream. The byte to be written is the eight low-order bits of the
-         * argument <code>b</code>. The 24 high-order bits of <code>b</code> are
-         * ignored.
-         * 
-         * @param b
-         *            the <code>byte</code> to write
+         * Writes the specified byte to this output stream. The general contract for
+         * <code>write</code> is that one byte is written to the output stream. The byte
+         * to be written is the eight low-order bits of the argument <code>b</code>. The
+         * 24 high-order bits of <code>b</code> are ignored.
+         *
+         * @param b the <code>byte</code> to write
          */
         @Override
         public void write(final int b) throws IOException {
@@ -178,11 +166,11 @@ public class SysStreamsLogger {
         }
 
         /**
-         * Flushes this output stream and forces any buffered output bytes to be
-         * written out. The general contract of <code>flush</code> is that
-         * calling it is an indication that, if any bytes previously written
-         * have been buffered by the implementation of the output stream, such
-         * bytes should immediately be written to their intended destination.
+         * Flushes this output stream and forces any buffered output bytes to be written
+         * out. The general contract of <code>flush</code> is that calling it is an
+         * indication that, if any bytes previously written have been buffered by the
+         * implementation of the output stream, such bytes should immediately be written
+         * to their intended destination.
          */
         @Override
         public void flush() {
@@ -194,15 +182,13 @@ public class SysStreamsLogger {
             // don't print out blank lines; flushing from PrintStream puts out
             // these
             if (count == LINE_SEPERATOR.length()) {
-                if (((char) buf[0]) == LINE_SEPERATOR.charAt(0) && ((count == 1)
-                        || // <-
-                           // Unix
-                           // &
-                           // Mac,
-                           // ->
-                           // Windows
-                        ((count == 2) && ((char) buf[1]) == LINE_SEPERATOR
-                                .charAt(1)))) {
+                if (((char) buf[0]) == LINE_SEPERATOR.charAt(0) && ((count == 1) || // <-
+                                                                                    // Unix
+                                                                                    // &
+                                                                                    // Mac,
+                                                                                    // ->
+                                                                                    // Windows
+                        ((count == 2) && ((char) buf[1]) == LINE_SEPERATOR.charAt(1)))) {
                     reset();
                     return;
                 }

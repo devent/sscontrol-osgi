@@ -19,6 +19,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.groovy.script</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.groovy.script.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>
