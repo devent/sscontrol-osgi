@@ -20,8 +20,8 @@ package com.anrisoftware.sscontrol.debug.internal;
  * #L%
  */
 
-import static com.anrisoftware.sscontrol.debug.internal.DebugModuleImplLogger._.debugSet;
-import static com.anrisoftware.sscontrol.debug.internal.DebugModuleImplLogger._.propertyPut;
+import static com.anrisoftware.sscontrol.debug.internal.DebugModuleImplLogger.m.debugSet;
+import static com.anrisoftware.sscontrol.debug.internal.DebugModuleImplLogger.m.propertyPut;
 
 import java.util.Map;
 
@@ -38,7 +38,7 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 final class DebugModuleImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         debugSet("Module {} set for {}."),
 
@@ -46,7 +46,7 @@ final class DebugModuleImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

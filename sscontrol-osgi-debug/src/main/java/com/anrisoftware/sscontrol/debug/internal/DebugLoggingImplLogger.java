@@ -20,8 +20,8 @@ package com.anrisoftware.sscontrol.debug.internal;
  * #L%
  */
 
-import static com.anrisoftware.sscontrol.debug.internal.DebugLoggingImplLogger._.modulePut;
-import static com.anrisoftware.sscontrol.debug.internal.DebugLoggingImplLogger._.moduleRemoved;
+import static com.anrisoftware.sscontrol.debug.internal.DebugLoggingImplLogger.m.modulePut;
+import static com.anrisoftware.sscontrol.debug.internal.DebugLoggingImplLogger.m.moduleRemoved;
 
 import javax.inject.Singleton;
 
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugModule;
 @Singleton
 final class DebugLoggingImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         modulePut("Module {} put to {}"),
 
@@ -45,7 +45,7 @@ final class DebugLoggingImplLogger extends AbstractLogger {
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 

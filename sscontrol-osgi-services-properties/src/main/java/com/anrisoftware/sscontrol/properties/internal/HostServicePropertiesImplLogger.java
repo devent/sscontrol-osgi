@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.properties.internal;
  * #L%
  */
 
-import static com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImplLogger._.propertyAdded;
+import static com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImplLogger.m.propertyAdded;
 
 import javax.inject.Singleton;
 
@@ -35,13 +35,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 @Singleton
 final class HostServicePropertiesImplLogger extends AbstractLogger {
 
-    enum _ {
+    enum m {
 
         propertyAdded("Property {} = {} added to {}");
 
         private String name;
 
-        private _(String name) {
+        private m(String name) {
             this.name = name;
         }
 
