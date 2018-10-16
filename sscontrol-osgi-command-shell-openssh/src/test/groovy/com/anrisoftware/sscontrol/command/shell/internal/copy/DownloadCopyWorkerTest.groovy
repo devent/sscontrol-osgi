@@ -25,9 +25,10 @@ import static org.junit.jupiter.api.Assumptions.*
 
 import javax.inject.Inject
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.Rule
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
@@ -49,6 +50,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class DownloadCopyWorkerTest extends AbstractCmdTestBase {
 
     static Threads threads
