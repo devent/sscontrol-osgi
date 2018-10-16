@@ -43,6 +43,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.ShellTestResources
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.google.inject.Module
@@ -68,9 +69,9 @@ class FactsTest extends AbstractCmdTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     @Test
-    void "cat_release"() {
+    void "debian_8_cat_release"() {
         def test = [
-            name: "cat_release",
+            name: "debian_8_cat_release",
             args: [:],
             expected: { Map args ->
                 Facts facts = args.cmd
@@ -82,18 +83,18 @@ class FactsTest extends AbstractCmdTestBase {
                 String name = args.name as String
                 def catOut = fileToStringReplace(new File(dir, 'cat.out'))
                 catOut = catOut.replaceAll("/etc/.*release", '/etc/release')
-                assertStringContent catOut, resourceToString(FactsTest.class.getResource('cat_release_cat_expected.txt'))
+                assertStringContent catOut, resourceToString(FactsTest.class.getResource("${args.test.name}_cat_expected.txt"))
             },
         ]
         log.info '\n######### {} #########\ncase: {}', test.name, test
         def tmp = folder.newFolder()
         test.host = SshFactory.localhost(injector).hosts[0]
+        createCommand ShellTestResources.debian8CatCommand, tmp, 'cat'
         doTest test, tmp
     }
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = copyFactory.create test.args, test.host, this, threads, log
-        createDebianJessieCatCommand tmp, 'cat'
         createEchoCommands tmp, [
             'mkdir',
             'chown',
