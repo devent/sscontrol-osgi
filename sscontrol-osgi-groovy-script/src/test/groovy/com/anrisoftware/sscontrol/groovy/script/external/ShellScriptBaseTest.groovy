@@ -40,25 +40,11 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell basic"() {
         def test = [
             name: 'shell basic',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 def run() {
                     shell "echo 'test shell'" call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
@@ -76,27 +62,13 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell env x=y"() {
         def test = [
             name: 'shell env x=y',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 @CompileDynamic
                 def run() {
                     shell "echo \"test shell \$STRING\"" with { //
                         env "STRING=hello" } call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
@@ -114,27 +86,13 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell env single quote"() {
         def test = [
             name: 'shell env single quote',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 @CompileDynamic
                 def run() {
                     shell "echo \"test shell \$STRING\"" with { //
                         env "STRING='hello'" } call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
@@ -152,27 +110,13 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell env var expansion"() {
         def test = [
             name: 'shell env var expansion',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 @CompileDynamic
                 def run() {
                     shell "echo \"test shell \$STRING\"" with { //
                         env "STRING=\"hello \$HOSTNAME\"" } call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
@@ -190,11 +134,7 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell env args expansion"() {
         def test = [
             name: 'shell env args expansion',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 @CompileDynamic
@@ -202,16 +142,6 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
                     shell "echo \"test shell \$STRING\"" with {
                         env name: "STRING", value: "hello world"
                     } call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
@@ -229,11 +159,7 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
     void "shell env args no expansion"() {
         def test = [
             name: 'shell env args no expansion',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 @CompileDynamic
@@ -241,16 +167,6 @@ class ShellScriptBaseTest extends AbstractScriptBaseTest {
                     shell "echo \"test shell \$STRING\"" with {
                         env name: "STRING", value: "hello \$HOSTNAME", literally: false
                     } call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {

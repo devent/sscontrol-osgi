@@ -24,6 +24,9 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.Test
 
+import com.anrisoftware.sscontrol.types.host.external.HostService
+import com.anrisoftware.sscontrol.types.host.external.HostServices
+
 import groovy.util.logging.Slf4j
 
 /**
@@ -39,30 +42,11 @@ class CopyScriptBaseTest extends AbstractScriptBaseTest {
     void "copy Named arguments syntax"() {
         def test = [
             name: 'copy Named arguments syntax.',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 def run() {
                     copy src: 'main.cf', dest: '/etc/postfix/main.cf' call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
-                }
-
-                @Override
-                Boolean getArchiveIgnoreKey() {
-                    false
                 }
             },
             expected: {
@@ -80,30 +64,11 @@ class CopyScriptBaseTest extends AbstractScriptBaseTest {
     void "copy Short syntax"() {
         def test = [
             name: 'copy Short syntax.',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 def run() {
                     copy 'main.cf', dest: '/etc/postfix/main.cf' call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
-                }
-
-                @Override
-                Boolean getArchiveIgnoreKey() {
-                    false
                 }
             },
             expected: {

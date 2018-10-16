@@ -42,33 +42,11 @@ class ReplaceScriptBaseTest extends AbstractScriptBaseTest {
     void "replace Named arguments"() {
         def test = [
             name: 'replace Named arguments',
-            input: new ScriptBase() {
-
-                @Override
-                Properties getDefaultProperties() {
-                }
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
                 def run() {
                     replace "s/(?m)^define\\('DB_NAME', '.*?'\\);/define('DB_NAME', 'db');/", dest: '/var/www/wordpress/wp-config.php' call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
-                }
-
-                @Override
-                HostService getService() {
-                }
-
-                @Override
-                HostServices getScriptsRepository() {
                 }
             },
             expected: {

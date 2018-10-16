@@ -39,25 +39,11 @@ class FetchScriptBaseTest extends AbstractScriptBaseTest {
     void "fetch basic"() {
         def test = [
             name: 'fetch basic',
-            input: new ScriptBase() {
+            input: new AbstractDefaultScriptBase() {
 
                 @Override
-                Properties getDefaultProperties() {
-                }
-
-                @Override
-                def run() {
+                public Object run() {
                     fetch '/etc/postfix/main.cf' call()
-                }
-
-                @Override
-                String getSystemName() {
-                    ''
-                }
-
-                @Override
-                String getSystemVersion() {
-                    ''
                 }
             },
             expected: {
