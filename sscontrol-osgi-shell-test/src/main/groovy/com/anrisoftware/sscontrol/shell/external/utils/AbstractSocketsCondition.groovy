@@ -26,35 +26,38 @@ import org.junit.jupiter.api.extension.ExecutionCondition
 import org.junit.jupiter.api.extension.ExtensionContext
 
 /**
- * Checks that a socket is available for tests.
+ * Checks that the given sockets are all available for tests.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-abstract class AbstractSocketCondition implements ExecutionCondition {
+abstract class AbstractSocketsCondition implements ExecutionCondition {
 
-    def final socket
-    
-    AbstractSocketCondition(def socket) {
-        this.socket = socket
+    def final sockets
+
+    AbstractSocketsCondition(List sockets) {
+        this.sockets = sockets
     }
 
     @Override
     ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-        evaluateSocket socket
+        evaluateSockets sockets
     }
 
     /**
      * Checks if the socket is available.
      */
-    ConditionEvaluationResult evaluateSocket(def socket) {
-        checkSocket(socket) ? enabled("Socket ${socket} available.") : disabled("Socket ${socket} not available.")
+    ConditionEvaluationResult evaluateSockets(def sockets) {
+        checkSockets(sockets) ? enabled("Sockets ${sockets} available.") : disabled("Sockets ${sockets} not available.")
     }
 
     /**
      * Checks if the socket is available.
      */
-    boolean checkSocket(def socket) {
-        new File(socket).exists()
+    boolean checkSockets(def sockets) {
+        def notexists = sockets.find {
+            new File(it).exists() == false
+        }
+        return notexists == null
     }
 }

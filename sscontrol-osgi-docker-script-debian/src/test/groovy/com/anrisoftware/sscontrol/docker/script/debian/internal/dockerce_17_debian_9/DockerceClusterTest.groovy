@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_deb
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
@@ -29,7 +30,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
-import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -42,8 +43,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
-@ExtendWith(LocalhostSocketCondition.class)
+@ExtendWith(Nodes3AvailableCondition.class)
 class DockerceClusterTest extends AbstractDockerceRunnerTest {
 
     @Test
@@ -58,7 +58,7 @@ service "ssh" with {
 }
 service "docker"
 ''',
-            scriptVars: [sockets: sockets, certs: certs],
+            scriptVars: [sockets: nodesSockets, certs: certs],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
@@ -80,24 +80,13 @@ service "docker" with {
     property << "native_cgroupdriver=systemd"
 }
 ''',
-            scriptVars: [sockets: sockets, certs: certs],
+            scriptVars: [sockets: nodesSockets, certs: certs],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
         ]
         doTest test
     }
-
-    static final Map sockets = [
-        masters: [
-            "/tmp/robobee@robobee-test:22"
-        ],
-        nodes: [
-            "/tmp/robobee@robobee-test:22",
-            "/tmp/robobee@robobee-1-test:22",
-            "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
 
     static final Map certs = [
         ca: DockerceClusterTest.class.getResource('registry_robobee_test_test_ca.pem'),

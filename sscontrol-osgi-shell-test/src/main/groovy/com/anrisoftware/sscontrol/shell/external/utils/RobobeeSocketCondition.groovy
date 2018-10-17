@@ -31,12 +31,12 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class RobobeeSocketCondition extends AbstractSocketCondition {
+class RobobeeSocketCondition extends AbstractSocketsCondition {
 
     static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
     
     RobobeeSocketCondition() {
-        super(robobeeSocket)
+        super([robobeeSocket])
     }
 
 }

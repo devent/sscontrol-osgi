@@ -26,17 +26,30 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
- * Checks that a socket to localhost is available for tests.
+ * Checks that the sockets to the cluster nodes are available for tests. Nodes:
+ * <ul>
+ * <li>node-0.robobee-test.test
+ * <li>node-1.robobee-test.test
+ * <li>node-2.robobee-test.test
+ * </ul>
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class LocalhostSocketCondition extends AbstractSocketsCondition {
+class Nodes3AvailableCondition extends AbstractSocketsCondition {
 
-    static final String localhostSocket = "/tmp/${System.getProperty('user.name')}@localhost:22"
-    
-    LocalhostSocketCondition() {
-        super([localhostSocket])
+    static final Map nodesSockets = [
+        masters: [
+            "/tmp/robobee@robobee-test:22"
+        ],
+        nodes: [
+            "/tmp/robobee@robobee-test:22",
+            "/tmp/robobee@robobee-1-test:22",
+            "/tmp/robobee@robobee-2-test:22",
+        ]
+    ]
+
+    Nodes3AvailableCondition() {
+        super(nodesSockets.nodes)
     }
-
 }
