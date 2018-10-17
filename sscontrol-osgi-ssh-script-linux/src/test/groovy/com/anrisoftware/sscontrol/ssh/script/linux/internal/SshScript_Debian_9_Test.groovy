@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -65,7 +66,8 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-class Ssh_Debian_9_Test extends AbstractScriptTestBase {
+@EnabledIfSystemProperty(named = SshScript_Debian_9_Test.LOCAL_PROFILE, matches = "true")
+class SshScript_Debian_9_Test extends AbstractScriptTestBase {
 
     @Inject
     SshImplFactory sshFactory
@@ -107,11 +109,6 @@ service "ssh", host: "localhost", socket: "$socketFile"
             },
         ]
         doTest test
-    }
-
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
     }
 
     String getServiceName() {
