@@ -21,10 +21,14 @@ package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(RobobeeSocketCondition.class)
 class EtcdServerTest extends AbstractEtcdRunnerTest {
 
     @Test
@@ -189,11 +194,6 @@ service "etcd" with {
             },
         ]
         doTest test
-    }
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
     }
 
     void createDummyCommands(File dir) {

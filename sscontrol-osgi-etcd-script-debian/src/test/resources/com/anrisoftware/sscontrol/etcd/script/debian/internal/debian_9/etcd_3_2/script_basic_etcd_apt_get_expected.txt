@@ -1,3 +1,5 @@
+update
 -y install wget
 -y install gnupg
 -y install dirmngr
+-y install lsof

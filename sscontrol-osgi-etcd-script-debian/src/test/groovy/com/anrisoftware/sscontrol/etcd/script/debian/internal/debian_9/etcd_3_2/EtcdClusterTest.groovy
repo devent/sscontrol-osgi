@@ -21,10 +21,15 @@ package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +40,8 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@ExtendWith(Nodes3AvailableCondition.class)
 class EtcdClusterTest extends AbstractEtcdRunnerTest {
 
     @Test
@@ -65,7 +72,7 @@ service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with 
 }
 }
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestEtcdCerts],
+            scriptVars: [sockets: nodesSockets, certs: robobeetestEtcdCerts],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
@@ -91,28 +98,12 @@ service "etcd", target: host with {
 }
 }
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestEtcdCerts],
+            scriptVars: [sockets: nodesSockets, certs: robobeetestEtcdCerts],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
         ]
         doTest test
-    }
-
-    static final Map sockets = [
-        masters: [
-            "/tmp/robobee@robobee-test:22"
-        ],
-        nodes: [
-            "/tmp/robobee@robobee-test:22",
-            "/tmp/robobee@robobee-1-test:22",
-            "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
-
-    @BeforeEach
-    void beforeMethod() {
-        assumeSocketsExists sockets.nodes
     }
 
     void createDummyCommands(File dir) {
