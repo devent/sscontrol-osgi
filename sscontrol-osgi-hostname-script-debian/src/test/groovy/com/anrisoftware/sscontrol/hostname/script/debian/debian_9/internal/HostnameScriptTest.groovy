@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
 import groovy.util.logging.Slf4j
 

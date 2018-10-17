@@ -26,6 +26,7 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
 import org.junit.Rule
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
@@ -71,6 +72,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 abstract class AbstractScriptTestBase {
 
     static final String LOCAL_PROFILE = 'project.custom.local.tests.enabled'
