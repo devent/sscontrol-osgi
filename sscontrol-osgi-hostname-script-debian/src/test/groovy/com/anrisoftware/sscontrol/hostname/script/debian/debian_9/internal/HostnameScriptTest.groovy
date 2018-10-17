@@ -21,10 +21,14 @@ package com.anrisoftware.sscontrol.hostname.script.debian.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +39,8 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnabledIfSystemProperty(named = HostnameScriptTest.LOCAL_PROFILE, matches = "true")
+@ExtendWith(LocalhostSocketCondition.class)
 class HostnameScriptTest extends AbstractTestHostname {
 
     @Test
@@ -78,9 +84,4 @@ service "hostname" with {
         doTest test
     }
 
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
-        checkLocalhostSocket()
-    }
 }

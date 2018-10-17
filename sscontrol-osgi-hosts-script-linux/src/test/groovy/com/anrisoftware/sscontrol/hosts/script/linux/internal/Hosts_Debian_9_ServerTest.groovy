@@ -21,9 +21,13 @@ package com.anrisoftware.sscontrol.hosts.script.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -34,6 +38,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(RobobeeSocketCondition.class)
 class Hosts_Debian_9_ServerTest extends AbstractTestHosts {
 
     @Test
@@ -52,11 +57,6 @@ service "hosts" with {
             },
         ]
         doTest test
-    }
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
     }
 
     void createDummyCommands(File dir) {
