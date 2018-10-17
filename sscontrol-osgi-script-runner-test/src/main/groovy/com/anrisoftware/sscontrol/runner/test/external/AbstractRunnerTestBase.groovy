@@ -19,8 +19,6 @@
  */
 package com.anrisoftware.sscontrol.runner.test.external
 
-import static org.junit.Assume.*
-
 import java.nio.charset.Charset
 
 import javax.inject.Inject

@@ -19,11 +19,16 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.runner.test</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.runner.test.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>
 
         <!-- compile dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-migrationsupport</artifactId>
+        </dependency>
 
         <!-- own bundles dependencies -->
         <dependency>
