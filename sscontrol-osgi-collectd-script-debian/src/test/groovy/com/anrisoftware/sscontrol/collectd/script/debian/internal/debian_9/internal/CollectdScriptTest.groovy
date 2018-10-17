@@ -2,9 +2,15 @@ package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.inte
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -15,6 +21,9 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = CollectdScriptTest.LOCAL_PROFILE, matches = "true")
+@ExtendWith(LocalhostSocketCondition.class)
 class CollectdScriptTest extends AbstractCollectdScriptTest {
 
     @Test
@@ -59,9 +68,4 @@ LoadPlugin "write_graphite"
         doTest test
     }
 
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
-        checkLocalhostSocket()
-    }
 }

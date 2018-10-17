@@ -1,2 +1,2 @@
-/tmp/junit/junit/hosts /var/lib/robobee/tmp
-/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/hosts
+/tmp/junit/junit/etc/hosts /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/hosts

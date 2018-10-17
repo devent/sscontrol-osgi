@@ -1,6 +1,8 @@
+package com.anrisoftware.sscontrol.shell.external.utils;
+
 /*-
  * #%L
- * sscontrol-osgi - utils-centos
+ * sscontrol-osgi - shell-test
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -17,31 +19,24 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.utils.centos.external
 
-import javax.inject.Inject
-
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
-import com.google.inject.assistedinject.Assisted
+import static org.junit.jupiter.api.extension.ConditionEvaluationResult.*
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
- * CentOS 7 utilities.
+ * Checks that a socket to robobee@robobee-test is available for tests.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Centos_7_Utils extends CentosUtils {
+class RobobeeSocketCondition extends AbstractSocketCondition {
 
-    @Inject
-    Centos_7_Properties propertiesProvider
-
-    @Inject
-    Centos_7_Utils(@Assisted HostServiceScript script) {
-        super(script)
+    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
+    
+    RobobeeSocketCondition() {
+        super(robobeeSocket)
     }
 
-    @Override
-    public Properties getDefaultProperties() {
-        propertiesProvider.get()
-    }
 }

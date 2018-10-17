@@ -75,13 +75,7 @@ import groovy.util.logging.Slf4j
 @EnableRuleMigrationSupport
 abstract class AbstractScriptTestBase {
 
-    static final String LOCAL_PROFILE = 'project.custom.local.tests.enabled'
-
-    static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
-
-    static final String localhostSocket = "/tmp/${System.getProperty('user.name')}@localhost:22"
-
-    static final String robobeeLocalhostSocket = "/tmp/robobee@localhost:22"
+    public static final String LOCAL_PROFILE = 'project.custom.local.tests.enabled'
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
@@ -101,20 +95,6 @@ abstract class AbstractScriptTestBase {
     PropertiesThreadsFactory threadsFactory
 
     Threads threads
-
-    /**
-     * Checks if #localhostSocket is available.
-     */
-    void checkLocalhostSocket() {
-        assumeTrue new File(localhostSocket).exists(), "$localhostSocket available"
-    }
-
-    /**
-     * Checks if #robobeeSocket is available.
-     */
-    void checkRobobeeSocket() {
-        assumeTrue new File(robobeeSocket).exists(), "$robobeeSocket available"
-    }
 
     static boolean isTestHostAvailable() {
         return isHostAvailable('robobee-test')
@@ -140,16 +120,6 @@ abstract class AbstractScriptTestBase {
             log.info 'Test host `{}` not available.', host
         }
         return a
-    }
-
-    /**
-     * Checks if the profile with the specified name is activated.
-     *
-     * see #LOCAL_PROFILE
-     */
-    void checkProfile(String name) {
-        def localTests = System.getProperty(name)
-        assumeTrue localTests == "true"
     }
 
     /**
