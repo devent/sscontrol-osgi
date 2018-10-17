@@ -41,7 +41,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@EnabledIfSystemProperty(named = CollectdScriptTest.LOCAL_PROFILE, matches = "true")
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
 @ExtendWith(LocalhostSocketCondition.class)
 class CollectdScriptTest extends AbstractCollectdScriptTest {
 
