@@ -27,6 +27,8 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
 import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Factory
 import com.anrisoftware.sscontrol.hostname.script.debian.internal.debian_9.Hostname_Debian_9_Module
@@ -53,6 +55,8 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = RunnerDebianImplTest.LOCAL_PROFILE, matches = "true")
 class RunnerDebianImplTest extends AbstractRunnerTestBase {
 
     @Inject
@@ -86,11 +90,6 @@ class RunnerDebianImplTest extends AbstractRunnerTestBase {
             },
         ]
         doTest test, 0
-    }
-
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
     }
 
     def getRunScriptFactory() {
