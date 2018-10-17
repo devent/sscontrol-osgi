@@ -25,6 +25,11 @@ import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -36,6 +41,9 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
+@ExtendWith(LocalhostSocketCondition.class)
 class DockerceClusterTest extends AbstractDockerceRunnerTest {
 
     @Test
@@ -94,11 +102,6 @@ service "docker" with {
     static final Map certs = [
         ca: DockerceClusterTest.class.getResource('registry_robobee_test_test_ca.pem'),
     ]
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
-    }
 
     void createDummyCommands(File dir) {
     }

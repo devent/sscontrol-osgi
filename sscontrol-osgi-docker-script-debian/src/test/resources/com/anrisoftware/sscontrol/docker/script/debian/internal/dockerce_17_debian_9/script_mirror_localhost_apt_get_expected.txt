@@ -1,3 +1,4 @@
+update
 -y install curl
 -y install apt-transport-https
 -y install ca-certificates
