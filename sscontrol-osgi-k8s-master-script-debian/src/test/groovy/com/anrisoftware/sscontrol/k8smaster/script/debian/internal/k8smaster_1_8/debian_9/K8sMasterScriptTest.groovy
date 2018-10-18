@@ -21,10 +21,16 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +41,9 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = 'true')
+@ExtendWith(LocalhostSocketCondition.class)
 class K8sMasterScriptTest extends AbstractMasterScriptTest {
 
     @Test
@@ -386,9 +395,4 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
         doTest test
     }
 
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
-        checkLocalhostSocket()
-    }
 }

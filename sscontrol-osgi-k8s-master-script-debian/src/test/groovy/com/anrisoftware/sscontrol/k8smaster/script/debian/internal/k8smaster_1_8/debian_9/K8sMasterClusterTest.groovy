@@ -21,10 +21,14 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,6 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(Nodes3AvailableCondition.class)
 class K8sMasterClusterTest extends AbstractMasterRunnerTest {
 
     @Test
@@ -65,29 +70,13 @@ service "k8s-master", name: "node-0" with {
     label << "robobeerun.com/dashboard=required"
 }
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestCerts],
+            scriptVars: [sockets: nodesSockets, certs: robobeetestCerts],
             generatedDir: folder.newFolder(),
             expectedServicesSize: 3,
             expected: { Map args ->
             },
         ]
         doTest test
-    }
-
-    static final Map sockets = [
-        masters: [
-            "/tmp/robobee@robobee-test:22"
-        ],
-        nodes: [
-            "/tmp/robobee@robobee-test:22",
-            "/tmp/robobee@robobee-1-test:22",
-            "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
-
-    @BeforeEach
-    void beforeMethod() {
-        assumeSocketsExists sockets.nodes
     }
 
     void createDummyCommands(File dir) {
