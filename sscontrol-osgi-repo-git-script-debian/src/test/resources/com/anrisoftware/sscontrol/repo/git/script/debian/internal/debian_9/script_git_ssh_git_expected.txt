@@ -1,1 +1,1 @@
-clone --depth 1 git://git@github.com/user/wordpress-app .
+clone --recurse-submodules --depth 1 git://git@github.com/user/wordpress-app .

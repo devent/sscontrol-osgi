@@ -20,10 +20,16 @@
 package com.anrisoftware.sscontrol.repo.git.script.debian.internal.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -34,6 +40,9 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = 'true')
+@ExtendWith(LocalhostSocketCondition.class)
 class GitRepoScriptTest extends AbstractGitScriptTest {
 
     @Test
@@ -87,9 +96,4 @@ service "repo-git", group: 'wordpress-app' with {
         doTest test
     }
 
-    @BeforeEach
-    void checkProfile() {
-        checkProfile LOCAL_PROFILE
-        checkLocalhostSocket()
-    }
 }

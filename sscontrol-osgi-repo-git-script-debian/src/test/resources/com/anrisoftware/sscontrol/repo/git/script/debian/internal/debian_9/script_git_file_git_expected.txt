@@ -1,1 +1,1 @@
-clone --depth 1 /user/wordpress-app.git .
+clone --recurse-submodules --depth 1 /user/wordpress-app.git .
