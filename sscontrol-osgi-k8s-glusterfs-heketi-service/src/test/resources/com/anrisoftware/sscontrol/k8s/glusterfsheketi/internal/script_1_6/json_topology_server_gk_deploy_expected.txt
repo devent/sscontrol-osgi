@@ -1,1 +1,0 @@
--g --yes -c kubectl -t /tmp/tmp.tmp --admin-key MySecret --user-key MyVolumeSecret -n kube-system --daemonset-label glusterfs /tmp/tmp.tmp

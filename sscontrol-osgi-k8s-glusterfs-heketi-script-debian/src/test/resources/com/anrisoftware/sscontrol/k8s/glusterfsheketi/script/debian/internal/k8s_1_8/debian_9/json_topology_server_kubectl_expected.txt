@@ -1,5 +1,0 @@
-get sc slow
-create -f /tmp/tmp.tmp
-create -f /tmp/tmp.tmp
-get pvc -l robobeerun.com/group=glusterfs-heketi-test
-delete -f /tmp/tmp.tmp

@@ -1,1 +1,0 @@
--rwxr-xr-x 1 root root 46040834 date /tmp/junit/junit/usr/local/bin/heketi-cli
