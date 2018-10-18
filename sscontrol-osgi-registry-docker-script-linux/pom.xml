@@ -18,6 +18,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.registry.docker.script.linux</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.registry.docker.script.linux.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>
@@ -26,6 +27,11 @@
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-migrationsupport</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

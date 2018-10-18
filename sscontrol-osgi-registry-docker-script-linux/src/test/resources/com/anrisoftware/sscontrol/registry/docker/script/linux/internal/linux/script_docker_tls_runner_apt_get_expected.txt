@@ -1,1 +1,2 @@
+update
 -y install git
