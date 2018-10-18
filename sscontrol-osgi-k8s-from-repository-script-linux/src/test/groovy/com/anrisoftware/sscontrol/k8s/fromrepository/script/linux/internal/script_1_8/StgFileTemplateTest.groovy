@@ -26,13 +26,12 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 import org.apache.commons.io.FileUtils
-import org.junit.jupiter.api.BeforeEach
 import org.junit.Rule
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.FileTemplateModule
-import com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8.StgFileTemplateParser
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -45,6 +44,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class StgFileTemplateTest {
 
     @Inject

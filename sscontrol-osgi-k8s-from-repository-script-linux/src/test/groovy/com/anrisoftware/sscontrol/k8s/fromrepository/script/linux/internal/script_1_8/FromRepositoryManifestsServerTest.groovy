@@ -20,15 +20,17 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import java.nio.charset.StandardCharsets
 
 import org.apache.commons.io.IOUtils
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -40,6 +42,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(RobobeeSocketCondition.class)
 class FromRepositoryManifestsServerTest extends AbstractFromRepositoryRunnerTest {
 
     static final URL wordpressZip = FromRepositoryManifestsServerTest.class.getResource('wordpress-app_zip.txt')
@@ -305,11 +308,6 @@ rm /tmp/tmp/kubectl.out
 rm -rf "${args.test.scriptVars.checkoutDir}"
 rm -r /tmp/wordpress-app
 """
-    }
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
     }
 
     Map getScriptEnv(Map args) {
