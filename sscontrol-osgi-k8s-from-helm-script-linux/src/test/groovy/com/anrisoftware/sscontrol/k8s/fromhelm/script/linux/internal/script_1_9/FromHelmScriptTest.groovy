@@ -21,10 +21,16 @@ package com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
+
+import com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,32 +41,33 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = 'true')
+@ExtendWith(LocalhostSocketCondition.class)
 class FromHelmScriptTest extends AbstractFromHelmScriptTest {
 
     @Test
     void "script wordpress from chart"() {
-	def test = [
-	    name: "script_wordpress_chart",
-	    script: '''
+        def test = [
+            name: "script_wordpress_chart",
+            script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "from-helm", chart: "stable/mariadb" with {
 }
 ''',
-	    scriptVars: [localhostSocket: localhostSocket],
-	    expectedServicesSize: 2,
-	    generatedDir: folder.newFolder(),
-	    expected: { Map args ->
-		File dir = args.dir
-		File gen = args.test.generatedDir
-		assertFileResource FromHelmScriptTest, dir, "helm.out", "${args.test.name}_helm_expected.txt"
-	    },
-	]
-	doTest test
-    }
-
-    @BeforeEach
-    void checkProfile() {
-	checkProfile LOCAL_PROFILE
-	checkLocalhostSocket()
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                try {
+                    assertFileResource FromHelmScriptTest, dir, "helm.out", "${args.test.name}_helm_expected.txt"
+                } catch (AssertionError e) {
+                    assertFileResource FromHelmScriptTest, dir, "helm.out", "${args.test.name}_helm_expected_1.txt"
+                }
+            },
+        ]
+        doTest test
     }
 }

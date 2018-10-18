@@ -20,12 +20,14 @@
 package com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -37,42 +39,38 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(RobobeeSocketCondition.class)
 class FromHelmWordpressClusterTest extends AbstractFromHelmRunnerTest {
 
     @Test
     void "cluster wordpress from chart"() {
-	def test = [
-	    name: "cluster_wordpress_chart",
-	    script: '''
+        def test = [
+            name: "cluster_wordpress_chart",
+            script: '''
 service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
 service "from-helm", chart: "stable/mariadb" with {
 }
 ''',
-	    scriptVars: [
-		robobeeSocket: robobeeSocket,
-		robobeeKey: robobeeKey,
-		robobeePub: robobeePub,
-	    ],
-	    expectedServicesSize: 2,
-	    expected: { Map args ->
-	    },
-	]
-	doTest test
-    }
-
-    @BeforeEach
-    void beforeMethod() {
-	checkRobobeeSocket()
+            scriptVars: [
+                robobeeSocket: robobeeSocket,
+                robobeeKey: robobeeKey,
+                robobeePub: robobeePub,
+            ],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+            },
+        ]
+        doTest test
     }
 
     Map getScriptEnv(Map args) {
-	getEmptyScriptEnv args
+        getEmptyScriptEnv args
     }
 
     void createDummyCommands(File dir) {
     }
 
     def setupServiceScript(Map args, HostServiceScript script) {
-	return script
+        return script
     }
 }

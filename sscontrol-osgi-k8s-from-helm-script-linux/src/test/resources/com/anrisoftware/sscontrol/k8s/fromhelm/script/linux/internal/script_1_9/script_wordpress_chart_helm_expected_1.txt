@@ -1,3 +1,4 @@
 init --service-account tiller
 repo update
+ls
 upgrade -f /tmp/junit/junit.tmp stable/mariadb
