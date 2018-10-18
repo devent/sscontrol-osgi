@@ -1,8 +1,0 @@
-run -d -p 5201:5201 moutten/iperf:latest
-inspect -f {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest
-run -d -p 5201:5201 moutten/iperf:latest
-inspect -f {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest
-run --rm moutten/iperf:latest iperf3 -c /tmp/junit/junit/docker inspect -f {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest
-run --rm moutten/iperf:latest iperf3 -c /tmp/junit/junit/docker inspect -f {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest
-rm -f /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest
-rm -f /tmp/junit/junit/docker run -d -p 5201:5201 moutten/iperf:latest

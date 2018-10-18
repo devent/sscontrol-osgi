@@ -1,8 +1,0 @@
-stop docker
-list-units
-stop flanneld
-daemon-reload
-start flanneld
-status flanneld
-start docker
-status docker

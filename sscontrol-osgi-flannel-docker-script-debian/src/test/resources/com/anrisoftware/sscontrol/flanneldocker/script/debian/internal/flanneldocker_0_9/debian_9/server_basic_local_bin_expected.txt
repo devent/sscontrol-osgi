@@ -1,1 +1,0 @@
--r-xr-xr-x 1 root root 34499960 date /usr/local/bin/flanneld
