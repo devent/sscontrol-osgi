@@ -21,11 +21,14 @@ package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -37,6 +40,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(RobobeeSocketCondition.class)
 class BackupServerTest extends AbstractBackupRunnerTest {
 
     @Test
@@ -95,11 +99,6 @@ rm /tmp/kubectl
 rm /tmp/kubectl.out
 rm -rf "${args.test.scriptVars.backupDir}"
 """
-    }
-
-    @BeforeEach
-    void beforeMethod() {
-        assumeSocketExists robobeeSocket
     }
 
     Map getScriptEnv(Map args) {

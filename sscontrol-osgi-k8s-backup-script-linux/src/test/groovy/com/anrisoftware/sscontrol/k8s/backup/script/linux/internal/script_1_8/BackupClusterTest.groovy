@@ -21,14 +21,17 @@ package com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -41,6 +44,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
+@ExtendWith(RobobeeSocketCondition.class)
 class BackupClusterTest extends AbstractBackupRunnerTest {
 
     @Test
@@ -78,11 +82,6 @@ service "backup", target: "backup" with {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
-    }
 
     Map getScriptEnv(Map args) {
         getEmptyScriptEnv args
