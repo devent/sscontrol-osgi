@@ -27,6 +27,7 @@ import javax.inject.Inject
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 import org.yaml.snakeyaml.composer.ComposerException
 
@@ -64,6 +65,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@EnableRuleMigrationSupport
 class FromHelmScriptTest {
 
     @Inject
