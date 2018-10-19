@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,12 +20,14 @@
 package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -37,6 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(Nodes3AvailableCondition.class)
 class SshdClusterTest extends AbstractSshdRunnerTest {
 
     @Test
@@ -51,28 +54,12 @@ service "ssh" with {
 }
 service "sshd"
 ''',
-            scriptVars: [sockets: sockets],
+            scriptVars: [sockets: nodesSockets],
             expectedServicesSize: 2,
             expected: { Map args ->
             },
         ]
         doTest test
-    }
-
-    static final Map sockets = [
-        masters: [
-            "/tmp/robobee@robobee-test:22"
-        ],
-        nodes: [
-            "/tmp/robobee@robobee-test:22",
-            "/tmp/robobee@robobee-1-test:22",
-            "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
-
-    @BeforeEach
-    void beforeMethod() {
-        assumeSocketsExists sockets.nodes
     }
 
     Map getScriptEnv(Map args) {
