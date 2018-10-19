@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 package com.anrisoftware.sscontrol.k8s.restore.script.linux.internal.script_1_8
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
@@ -27,11 +28,12 @@ import java.nio.charset.StandardCharsets
 
 import org.apache.commons.io.FileUtils
 import org.junit.Rule
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -44,6 +46,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
+@ExtendWith(RobobeeSocketCondition.class)
 class RestoreClusterTest extends AbstractRestoreRunnerTest {
 
     @Test
@@ -84,11 +87,6 @@ service "restore", target: "backup" with {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
-
-    @BeforeEach
-    void beforeMethod() {
-        checkRobobeeSocket()
-    }
 
     Map getScriptEnv(Map args) {
         getEmptyScriptEnv args
