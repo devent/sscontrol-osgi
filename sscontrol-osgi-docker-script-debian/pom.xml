@@ -16,11 +16,34 @@
     <packaging>bundle</packaging>
     <name>sscontrol-osgi - docker-debian</name>
     <description>Configures the Etcd service for Debian GNU/Linux systems.</description>
+    <url>https://javadoc.anrisoftware.com/${project.groupId}/${project.artifactId}/${project.version}/</url>
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.docker.script.debian</project.custom.bundle.namespace>
         <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.docker.script.debian.internal</project.custom.bundle.namespace.internal>
     </properties>
+
+    <scm>
+        <connection>${project.custom.scm.pub}</connection>
+        <developerConnection>${project.custom.scm.dev}</developerConnection>
+        <url>${project.custom.scm.url}</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <site>
+            <id>site-ssh</id>
+            <url>${site.ssh.url}</url>
+        </site>
+        <repository>
+            <id>public_releases</id>
+            <url>https://maven.anrisoftware.com/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>public_snapshots</id>
+            <url>https://maven.anrisoftware.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
 

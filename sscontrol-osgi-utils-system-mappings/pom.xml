@@ -15,9 +15,11 @@
     <artifactId>sscontrol-osgi-utils-system-mappings</artifactId>
     <name>sscontrol-osgi - utils-system-mappings</name>
     <packaging>bundle</packaging>
+    <url>https://javadoc.anrisoftware.com/${project.groupId}/${project.artifactId}/${project.version}/</url>
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.utils.systemmappings</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.utils.systemmappings.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>
