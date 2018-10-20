@@ -27,6 +27,13 @@
         <project.custom.bundles.propertiesutils.version>4.5.0</project.custom.bundles.propertiesutils.version>
     </properties>
 
+    <scm>
+        <connection>${project.custom.scm.pub}</connection>
+        <developerConnection>${project.custom.scm.dev}</developerConnection>
+        <url>${project.custom.scm.url}</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>../sscontrol-osgi-scr-parent</module>
         <module>../sscontrol-osgi-shell-test</module>

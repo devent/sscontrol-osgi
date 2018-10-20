@@ -1,8 +1,8 @@
 /*-
  * #%L
- * sscontrol-osgi - shell-test
+ * Global POM Logging
  * %%
- * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
+ * Copyright (C) 2011 - 2018 Advanced Natural Research Institute
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,8 +104,4 @@ ul, ol, dl {
     margin-right: 0px;
     margin-bottom: 16px;
     margin-left: 35px;
-}
-
-div.section > img {
-    margin-bottom: 1em;
 }
