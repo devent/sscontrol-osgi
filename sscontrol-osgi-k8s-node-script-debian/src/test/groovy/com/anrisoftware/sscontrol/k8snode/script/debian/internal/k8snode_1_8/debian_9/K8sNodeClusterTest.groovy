@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,12 +20,15 @@
 package com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_8.debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -36,6 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
+@ExtendWith(Nodes3AvailableCondition.class)
 class K8sNodeClusterTest extends AbstractNodeRunnerTest {
 
     @Test
@@ -61,7 +65,7 @@ targets['nodes'].eachWithIndex { host, i ->
     }
 }
 ''',
-            scriptVars: [sockets: sockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
+            scriptVars: [sockets: nodesSockets, certs: robobeetestCerts, nodes: nodes, joinCommand: joinCommand],
             expectedServicesSize: 3,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -88,16 +92,6 @@ targets['nodes'].eachWithIndex { host, i ->
      */
     static final String joinCommand = 'kubeadm join --token 8c30c4.80630b3fbb2c2586 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:17b2d872a9bda88cd58beb39ac291faf17bd7bedad2bc97e3096ff72a9d0d079'
 
-    static final Map sockets = [
-        masters: [
-            "/tmp/robobee@robobee-test:22"
-        ],
-        nodes: [
-            "/tmp/robobee@robobee-1-test:22",
-            "/tmp/robobee@robobee-2-test:22",
-        ]
-    ]
-
     static final Map nodes = [
         labels: [
             [
@@ -112,11 +106,6 @@ targets['nodes'].eachWithIndex { host, i ->
             ]
         ],
         taints: [[], []]]
-
-    @BeforeEach
-    void beforeMethod() {
-        assumeSocketsExists sockets.nodes
-    }
 
     void createDummyCommands(File dir) {
     }
