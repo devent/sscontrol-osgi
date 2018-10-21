@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
         <artifactId>sscontrol-osgi-scr-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
@@ -37,35 +37,35 @@
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-script-runner-test</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-hostname-script-debian</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-hosts-script-linux</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-ssh-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-ssh-script-linux</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
@@ -105,19 +105,19 @@
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-types-run</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-types-parser</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-services-repository</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
 
