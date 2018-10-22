@@ -44,9 +44,6 @@
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
-        <module>../sscontrol-osgi-hostname-script-debian</module>
-        <module>../sscontrol-osgi-hostname-script-systemd</module>
-        <module>../sscontrol-osgi-hostname-service</module>
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>

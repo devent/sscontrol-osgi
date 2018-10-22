@@ -1,3 +1,0 @@
-update
--y install dbus
--y install systemd
