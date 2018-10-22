@@ -98,6 +98,23 @@ service "etcd" with {
     }
 
     @Test
+    void "archive_ignore_key"() {
+        def test = [
+            name: 'archive_ignore_key',
+            input: '''
+service "etcd" with {
+    property << "archive_ignore_key=true"
+}
+''',
+            expected: { HostServices services ->
+                assert services.getServices('etcd').size() == 1
+                Etcd s = services.getServices('etcd')[0]
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "bind"() {
         def test = [
             name: 'bind',

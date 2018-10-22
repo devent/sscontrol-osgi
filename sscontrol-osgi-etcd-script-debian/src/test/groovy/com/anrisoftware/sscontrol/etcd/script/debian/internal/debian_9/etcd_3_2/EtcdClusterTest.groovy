@@ -69,6 +69,7 @@ service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with 
         tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
         authentication "cert", ca: certs.ca
     }
+    property << "archive_ignore_key=true"
 }
 }
 ''',
