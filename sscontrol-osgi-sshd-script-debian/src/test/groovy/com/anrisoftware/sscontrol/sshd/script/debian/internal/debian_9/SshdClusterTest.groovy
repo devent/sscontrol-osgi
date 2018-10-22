@@ -43,9 +43,9 @@ import groovy.util.logging.Slf4j
 class SshdClusterTest extends AbstractSshdRunnerTest {
 
     @Test
-    void "cluster"() {
+    void "cluster basic"() {
         def test = [
-            name: "cluster",
+            name: "cluster_basic",
             script: '''
 service "ssh" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
@@ -57,6 +57,9 @@ service "sshd"
             scriptVars: [sockets: nodesSockets],
             expectedServicesSize: 2,
             expected: { Map args ->
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-0.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-1.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-2.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
             },
         ]
         doTest test
