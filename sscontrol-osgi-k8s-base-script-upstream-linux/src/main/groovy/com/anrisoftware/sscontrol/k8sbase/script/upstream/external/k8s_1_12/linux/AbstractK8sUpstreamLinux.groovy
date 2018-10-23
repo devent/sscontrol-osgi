@@ -65,7 +65,7 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 	@Inject
 	void loadTemplates(TemplatesFactory templatesFactory) {
 		def attr = [renderers: [new UriBase64Renderer()]]
-		def templates = templatesFactory.create('K8s_1_8_UpstreamLinuxTemplates', attr)
+		def templates = templatesFactory.create('K8s_1_12_UpstreamLinuxTemplates', attr)
 		this.kubeadmConfigTemplate = templates.getResource('kubeadm_config')
 		this.kubeletConfigTemplate = templates.getResource('kubelet_config')
 	}
