@@ -21,13 +21,14 @@ package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.scri
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -40,7 +41,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(RobobeeSocketCondition.class)
+@ExtendWith(Nodes3AvailableCondition.class)
 class FromRepositoryDashboardClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
@@ -48,16 +49,17 @@ class FromRepositoryDashboardClusterTest extends AbstractFromRepositoryRunnerTes
         def test = [
             name: "dashboard_cluster",
             script: '''
-service "ssh", host: "andrea-master.robobee-test.test", socket: robobeeSocket
+service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "k8s-cluster"
 service "repo-git", group: "dashboard" with {
     remote url: "git@github.com:robobee-repos/dashboard.git"
+    checkout branch: "master"
     credentials "ssh", key: robobeeKey
 }
 service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dashboard" with {
     vars << [
         dashboard: [
-            image: [name: "k8s.gcr.io/kubernetes-dashboard-amd64", version: "v1.8.3"],
+            image: [name: "k8s.gcr.io/kubernetes-dashboard-amd64", version: "v1.10.0"],
             affinity: [key: "robobeerun.com/dashboard", name: "required", required: true],
             allowOnMaster: true,
             limits: [cpu: '100m', memory: '100Mi'],
@@ -66,10 +68,7 @@ service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dash
     ]
 }
 ''',
-            scriptVars: [
-                robobeeSocket: robobeeSocket,
-                robobeeKey: robobeeKey,
-            ],
+            scriptVars: [sockets: nodesSockets, robobeeKey: robobeeKey],
             expectedServicesSize: 4,
             expected: { Map args ->
             },
