@@ -20,7 +20,7 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_12
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
@@ -40,7 +41,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(RobobeeSocketCondition.class)
+@ExtendWith(Nodes3AvailableCondition.class)
 class FromRepositoryAddonManagerClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
@@ -57,24 +58,13 @@ service "repo-git", group: "kube-addon-manager" with {
 service "from-repository", repo: "kube-addon-manager" with {
     vars << [
         addonManager: [
-            image: [name: 'k8s.gcr.io/kube-addon-manager', version: 'v8.6'],
+            image: [name: 'k8s.gcr.io/kube-addon-manager', version: 'v8.8'],
             limits: [cpu: '0.25', memory: '50Mi'],
         ]
     ]
 }
 ''',
-            scriptVars: [
-                sockets: [
-                    masters: [
-                        "/tmp/robobee@robobee-test:22"
-                    ],
-                    nodes: [
-                        "/tmp/robobee@robobee-test:22",
-                        "/tmp/robobee@robobee-1-test:22"
-                    ]
-                ],
-                robobeeKey: robobeeKey,
-            ],
+            scriptVars: [sockets: nodesSockets, robobeeKey: robobeeKey],
             expectedServicesSize: 4,
             expected: { Map args ->
             },
