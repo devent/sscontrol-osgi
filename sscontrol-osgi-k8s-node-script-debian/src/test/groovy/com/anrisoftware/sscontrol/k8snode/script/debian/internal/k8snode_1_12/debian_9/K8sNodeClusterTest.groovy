@@ -52,8 +52,8 @@ service "ssh", group: "masters" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 }
 service "ssh", group: "nodes" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[0]
-    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "k8s-cluster", target: "masters"
 targets['nodes'].eachWithIndex { host, i ->
@@ -90,7 +90,7 @@ targets['nodes'].eachWithIndex { host, i ->
      * kubeadm token create $token --print-join-command --ttl=0
      * <pre>
      */
-    static final String joinCommand = 'kubeadm join --token 8c30c4.80630b3fbb2c2586 192.168.56.200:6443 --discovery-token-ca-cert-hash sha256:17b2d872a9bda88cd58beb39ac291faf17bd7bedad2bc97e3096ff72a9d0d079'
+    static final String joinCommand = 'kubeadm join 192.168.56.200:6443 --token 1g7ibm.clh3sn8h2mu8ptyl --discovery-token-ca-cert-hash sha256:24e8d06713fd7768a6bcad8b650f07b49a6855a87d2692f00aaed7b48e9ad4b4'
 
     static final Map nodes = [
         labels: [
