@@ -52,8 +52,8 @@ class FromRepositoryDashboardClusterTest extends AbstractFromRepositoryRunnerTes
 service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "k8s-cluster"
 service "repo-git", group: "dashboard" with {
-    remote url: "git@github.com:robobee-repos/dashboard.git"
-    checkout branch: "master"
+    remote url: "git@github.com:robobee-repos/kube-dashboard.git"
+    checkout tag: "v1.10.0-r.0"
     credentials "ssh", key: robobeeKey
 }
 service "from-repository", repo: "dashboard", dest: "/etc/kubernetes/addons/dashboard" with {
