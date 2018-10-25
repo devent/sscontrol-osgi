@@ -578,6 +578,14 @@ kubeadm token create \$token --print-join-command
 		getFileProperty 'apt_kubernetes_list_file'
 	}
 
+    URI getCanalRbacUrl() {
+        getScriptURIProperty 'canal_rbac_url'
+    }
+
+    URI getCanalInstallUrl() {
+        getScriptURIProperty 'canal_install_url'
+    }
+
 	@Override
 	def getLog() {
 		log

@@ -366,7 +366,7 @@ service "k8s-master", name: "andrea-cluster", advertise: '192.168.0.100' with {
         doTest test
     }
 
-    //@Test
+    @Test
     void "script_taints_labels"() {
         def test = [
             name: "script_taints_labels",
@@ -388,11 +388,10 @@ service "k8s-master", name: "master-0", advertise: '192.168.0.100' with {
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource K8sMasterScriptTest, new File(gen, '/etc/sysconfig'), "kubelet", "${args.test.name}_kubelet_conf_expected.txt"
-                assertFileResource K8sMasterScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected.txt"
+                assertFileResource K8sMasterScriptTest, new File(gen, "kubelet.service.d"), "20-robobee.conf", "${args.test.name}_kubelet_extra_conf_expected.txt"
+                //assertFileResource K8sMasterScriptTest, dir, "kubectl.out", "${args.test.name}_kubectl_expected_0.txt"
             },
         ]
         doTest test
     }
-
 }

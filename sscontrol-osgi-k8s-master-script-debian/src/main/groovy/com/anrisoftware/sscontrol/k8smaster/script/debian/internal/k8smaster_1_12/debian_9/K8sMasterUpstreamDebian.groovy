@@ -145,9 +145,9 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
             def replace = ""
             replace += isNoneBlank(canal.iface) ? "sed -ie 's/  canal_iface: \"\"/  canal_iface: \"${canal.iface}\"/' ${tmp}" : ""
             shell """
-wget -O ${tmp} https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+wget -O ${tmp} ${canalInstallUrl}
 ${replace}
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
+kubectl apply -f ${canalRbacUrl}
 kubectl apply -f ${tmp}
 """ call()
         }
