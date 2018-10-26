@@ -63,6 +63,9 @@
         <module>../sscontrol-osgi-k8s-node-script-debian</module>
         <module>../sscontrol-osgi-k8s-restore-script-linux</module>
         <module>../sscontrol-osgi-k8s-restore-service</module>
+        <module>../sscontrol-osgi-nfs-script-centos</module>
+        <module>../sscontrol-osgi-nfs-script-debian</module>
+        <module>../sscontrol-osgi-nfs-script-nfs-5-7</module>
         <module>../sscontrol-osgi-nfs-service</module>
         <module>../sscontrol-osgi-registry-docker-service</module>
         <module>../sscontrol-osgi-registry-docker-script-linux</module>

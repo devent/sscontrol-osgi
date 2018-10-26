@@ -1,0 +1,26 @@
+collectdRules(parent, vars) ::= <<
+module collectd_t 1.0;
+
+require {
+        type collectd_t;
+        type unreserved_port_t;
+        type usr_t;
+        type logrotate_t;
+        class passwd passwd;
+        class tcp_socket name_connect;
+        class file write;
+}
+
+#============= collectd_t ==============
+
+#!!!! This avc can be allowed using one of the these booleans:
+#     nis_enabled, collectd_tcp_network_connect
+allow collectd_t unreserved_port_t:tcp_socket name_connect;
+
+#============= logrotate_t ==============
+allow logrotate_t self:passwd passwd;
+
+#!!!! WARNING: 'usr_t' is a base type.
+allow logrotate_t usr_t:file write;
+
+>>
