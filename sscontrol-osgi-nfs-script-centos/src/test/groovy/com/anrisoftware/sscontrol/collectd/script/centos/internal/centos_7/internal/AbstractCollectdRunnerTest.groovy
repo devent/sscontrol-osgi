@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.internal
+package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -25,8 +25,8 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.Collectd_Centos_7_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
+import com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Collectd_Centos_7_Factory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -41,7 +41,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
+com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7tBase {
 
     static final String centosSocket = '/tmp/robobee@mail.robobee.test:22'
 

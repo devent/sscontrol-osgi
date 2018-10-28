@@ -64,9 +64,10 @@ class NfsTest {
             name: 'service_defaults',
             input: '''
 service "nfs", version: "1.3" with {
-    export << "/nfsfileshare/0"
-    host << "andrea-node-0.muellerpublic.de"
-    host name: "andrea-node-1.muellerpublic.de", options: "rw,sync,no_root_squash"
+    export dir: "/nfsfileshare/0" with {
+        host << "andrea-node-0.muellerpublic.de"
+        host name: "andrea-node-1.muellerpublic.de", options: "rw,sync,no_root_squash"
+    }
 }
 ''',
             expected: { HostServices services ->
@@ -75,11 +76,11 @@ service "nfs", version: "1.3" with {
                 assert collectd.version == '1.3'
                 assert collectd.exports.size() == 1
                 assert collectd.exports[0].dir == '/nfsfileshare/0'
-                assert collectd.hosts.size() == 2
-                assert collectd.hosts[0].name == 'andrea-node-0.muellerpublic.de'
-                assert collectd.hosts[0].options == null
-                assert collectd.hosts[1].name == 'andrea-node-1.muellerpublic.de'
-                assert collectd.hosts[1].options == 'rw,sync,no_root_squash'
+                assert collectd.exports[0].hosts.size() == 2
+                assert collectd.exports[0].hosts[0].name == 'andrea-node-0.muellerpublic.de'
+                assert collectd.exports[0].hosts[0].options == null
+                assert collectd.exports[0].hosts[1].name == 'andrea-node-1.muellerpublic.de'
+                assert collectd.exports[0].hosts[1].options == 'rw,sync,no_root_squash'
             },
         ]
         doTest test

@@ -95,7 +95,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-nfs-script-nfs-5-7</artifactId>
+            <artifactId>sscontrol-osgi-nfs-script-nfs-1-3</artifactId>
             <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>

@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.nfs.service.external;
+package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7;
 
 /*-
  * #%L
- * sscontrol-osgi - collectd-service
+ * sscontrol-osgi - collectd-script-centos
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -20,26 +20,13 @@ package com.anrisoftware.sscontrol.nfs.service.external;
  * #L%
  */
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * NFS service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface Nfs extends HostService {
-
-    /**
-     * Returns the version of the service.
-     */
-    String getVersion();
-
-    /**
-     * Returns the exports.
-     */
-    List<Export> getExports();
-
+public interface Nfs_Centos_7_Factory extends HostServiceScriptService {
 }

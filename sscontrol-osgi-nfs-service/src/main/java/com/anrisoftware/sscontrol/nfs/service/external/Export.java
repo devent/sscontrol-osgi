@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.nfs.service.external;
 
+import java.util.List;
+
 /*-
  * #%L
  * sscontrol-osgi - collectd-service
@@ -33,4 +35,8 @@ public interface Export {
      */
     String getDir();
 
+    /**
+     * Returns the hosts.
+     */
+    List<Host> getHosts();
 }

@@ -1,8 +1,6 @@
-package com.anrisoftware.sscontrol.nfs.service.external;
-
 /*-
  * #%L
- * sscontrol-osgi - collectd-service
+ * sscontrol-osgi - collectd-script-centos
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -19,27 +17,22 @@ package com.anrisoftware.sscontrol.nfs.service.external;
  * limitations under the License.
  * #L%
  */
+package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.host.external.HostService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * NFS service.
+ * Nfs CentOS 7 properties provider from
+ * {@code "/nfs_centos_7.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface Nfs extends HostService {
+class Nfs_Centos_7_Properties extends AbstractContextPropertiesProvider {
 
-    /**
-     * Returns the version of the service.
-     */
-    String getVersion();
+    private static final URL RESOURCE = Nfs_Centos_7_Properties.class.getResource("/nfs_centos_7.properties")
 
-    /**
-     * Returns the exports.
-     */
-    List<Export> getExports();
-
+    Nfs_Centos_7_Properties() {
+        super(Nfs_Centos_7_Properties.class, RESOURCE)
+    }
 }
