@@ -21,12 +21,12 @@ package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.CentosSocketCondition.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.CentosSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -37,47 +37,27 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(RobobeeSocketCondition.class)
+@ExtendWith(CentosSocketCondition.class)
 class NfsServerTest extends AbstractNfsRunnerTest {
 
     @Test
-    void "collectd_server"() {
+    void "nfs_server_exports"() {
         def test = [
-            name: "collectd_server",
+            name: "nfs_server_exports",
             script: '''
 service "ssh", host: "robobee@192.168.56.230", socket: robobeeSocket
-service "collectd", version: "5.7" with {
-    config name: "99-write-graphite", script: """
-LoadPlugin "write_graphite"
-<Plugin "write_graphite">
-<Node "graphite">
-  Host "graphite"
-  Port "2003"
-  Prefix "collectd."
-  #Postfix ""
-  Protocol "tcp"
-  LogSendErrors true
-  EscapeCharacter "_"
-  SeparateInstances true
-  StoreRates true
-  AlwaysAppendDS false
-</Node>
-</Plugin>
-"""
-    config name: "99-write-influxdb", script: """
-LoadPlugin "network"
-<Plugin "network">
-  Server "myinfluxdb.com" "25826"
-</Plugin>
-"""
+service "nfs", version: "1.3" with {
+    export dir: "/nfsfileshare/0" with {
+        host << "andrea-node-0.muellerpublic.de"
+        host name: "andrea-node-1.muellerpublic.de", options: "rw,sync,no_root_squash"
+    }
 }
 ''',
             scriptVars: [robobeeSocket: centosSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource NfsServerTest, readRemoteFile('/etc/collectd.d/99-write-graphite.conf', "mail.robobee.test"), "${args.test.name}_write_graphite_conf_expected.txt"
-                assertStringResource NfsServerTest, readRemoteFile('/etc/collectd.d/99-write-influxdb.conf', "mail.robobee.test"), "${args.test.name}_write_influxdb_conf_expected.txt"
+                assertStringResource NfsServerTest, readRemoteFile('/etc/exports', "mail.robobee.test"), "${args.test.name}_exports_expected.txt"
             },
         ]
         doTest test

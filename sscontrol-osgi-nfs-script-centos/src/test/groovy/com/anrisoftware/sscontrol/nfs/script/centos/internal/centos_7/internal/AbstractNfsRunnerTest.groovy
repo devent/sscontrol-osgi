@@ -43,8 +43,6 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  */
 abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
     
-    static final String centosSocket = '/tmp/robobee@mail.robobee.test:22'
-
     @Inject
     RunScriptImplFactory runnerFactory
 

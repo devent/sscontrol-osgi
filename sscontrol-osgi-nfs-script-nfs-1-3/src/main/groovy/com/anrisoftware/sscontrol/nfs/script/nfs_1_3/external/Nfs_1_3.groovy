@@ -50,7 +50,7 @@ abstract class Nfs_1_3 extends ScriptBase {
      */
     def deployExports() {
         Nfs service = this.service
-        template resource: exportsTemplate, name: 'exportsConfig', vars: [:], dest: configFile call()
+        template privileged: true, resource: exportsTemplate, name: 'exportsConfig', vars: [:], dest: configFile call()
     }
 
     @Override
