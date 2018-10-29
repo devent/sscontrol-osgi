@@ -1,0 +1,1 @@
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/exports user@localhost:/var/lib/robobee/tmp/exports

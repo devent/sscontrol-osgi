@@ -1,0 +1,1 @@
+/nfsfileshare/0 andrea-node-0.muellerpublic.de andrea-node-1.muellerpublic.de(rw,sync,no_root_squash)

@@ -1,4 +1,0 @@
-/tmp/junit/junit/etc/collectd.conf /var/lib/robobee/tmp
-/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/collectd.conf
-/var/lib/robobee/tmp/robobee-write-graphite /tmp/junit/junit/etc/collectd.d/99-write-graphite.conf
-/var/lib/robobee/tmp/collectd_t.te /tmp/junit/junit.tmp/collectd_t.te

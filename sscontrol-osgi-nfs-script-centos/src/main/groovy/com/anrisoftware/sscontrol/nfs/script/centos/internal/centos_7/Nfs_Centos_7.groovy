@@ -19,7 +19,7 @@
  */
 package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7
 
-import static com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs_Centos_7_Service.*
+import static com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs_1_3_Centos_7_Service.*
 
 import javax.inject.Inject
 
@@ -32,61 +32,36 @@ import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Collectd for CentOS 7.
+ * Nfs for CentOS 7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Collectd_Centos_7 extends Nfs_Centos {
-
-    Nfs_Centos_7_Properties propertiesProvider
-
-    Nfs_1_3_Centos_7 collectd
+abstract class Nfs_Centos_7 extends Nfs_Centos {
 
     SystemdUtils systemd
-
-    @Inject
-    void setCollectd_5_7_Centos_7_Factory(Nfs_1_3_Centos_7_Factory factory) {
-        this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
-    }
 
     @Inject
     void setSystemdUtilsFactory(SystemdUtilsFactory factory) {
         this.systemd = factory.create(this)
     }
 
-    @Override
-    def run() {
+    def stopServices() {
         systemd.stopServices()
-        installPackages()
-        collectd.deployConfiguration()
-        collectd.configureSELinux()
+    }
+    
+    def startServices() {
         systemd.startServices()
+    }
+    
+    def enableServices() {
         systemd.enableServices()
     }
-
-    String getCollectdService() {
-        properties.getProperty 'collectd_service', defaultProperties
-    }
-
-    @Override
-    ContextProperties getDefaultProperties() {
-        propertiesProvider.get()
-    }
-
+    
     @Override
     def getLog() {
         log
     }
 
-    @Override
-    String getSystemName() {
-        SYSTEM_NAME
-    }
-
-    @Override
-    String getSystemVersion() {
-        SYSTEM_VERSION
-    }
 }

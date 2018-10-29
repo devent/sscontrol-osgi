@@ -19,53 +19,47 @@
  */
 package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7
 
-import static com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs_Centos_7_Service.*
+import static com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs_1_3_Centos_7_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.resources.templates.external.TemplateResource
-import com.anrisoftware.resources.templates.external.TemplatesFactory
+import com.anrisoftware.sscontrol.nfs.script.centos.external.Nfs_Centos
 import com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external.Nfs_1_3
 
 import groovy.util.logging.Slf4j
 
 /**
- * Collectd 5.7. for CentOS 7.
+ * Nfs 1.3. for CentOS 7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class Nfs_1_3_Centos_7 extends Nfs_1_3 {
+class Nfs_1_3_Centos_7 extends Nfs_Centos_7 {
     
-    Nfs_Centos_7_Properties propertiesProvider
-
-    TemplateResource collectdRulesTemplate
+    @Inject
+    Nfs_1_3_Centos_7_Properties propertiesProvider
+    
+    Nfs_1_3 nfs
 
     @Inject
-    void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Collectd_5_7_Centos_7_Templates')
-        this.collectdRulesTemplate = templates.getResource('collectd_rules')
-    }
-
-    def configureSELinux() {
-        log.info 'Configure SELinux rules.'
-        def tmp = createTmpDir()
-        try {
-            template resource: collectdRulesTemplate, name: 'collectdRules', vars: [:], dest: "$tmp/collectd_t.te" call()
-            shell privileged: true, sudoChdir: tmp, """
-make -f /usr/share/selinux/devel/Makefile
-semodule -i "collectd_t.pp"
-""" call()
-        } finally {
-            deleteTmpFile privileged: true, file: tmp
-        }
+    void setNfsFactory(Nfs_1_3_Factory factory) {
+        this.nfs = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
     ContextProperties getDefaultProperties() {
         propertiesProvider.get()
+    }
+
+    @Override
+    def run() {
+        stopServices()
+        installPackages()
+        nfs.deployExports()
+        startServices()
+        enableServices()
     }
 
     @Override

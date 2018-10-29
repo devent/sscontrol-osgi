@@ -1,6 +1,6 @@
 /*-
  * #%L
- * sscontrol-osgi - collectd-script-debian
+ * sscontrol-osgi - collectd-script-centos
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.internal
+package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -25,8 +25,8 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Factory
-import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
+import com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs_1_3_Centos_7_Factory
+import com.anrisoftware.sscontrol.nfs.service.internal.NfsImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
 import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
@@ -41,7 +41,9 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
+abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
+    
+    static final String centosSocket = '/tmp/robobee@mail.robobee.test:22'
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -53,10 +55,10 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     Ssh_Linux_Factory ssh_Linux_Factory
 
     @Inject
-    CollectdImplFactory collectdFactory
+    NfsImplFactory nfsFactory
 
     @Inject
-    Collectd_Debian_9_Factory collectdDebianFactory
+    Nfs_1_3_Centos_7_Factory nfsCentosFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -65,8 +67,8 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-        services.putAvailableService 'collectd', collectdFactory
-        services.putAvailableScriptService 'collectd-5.7/debian/9', collectdDebianFactory
+        services.putAvailableService 'nfs', nfsFactory
+        services.putAvailableScriptService 'nfs-1.3/centos/7', nfsCentosFactory
         return services
     }
 
@@ -74,7 +76,7 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
         def modules = super.additionalModules
         modules << new RunnerModule()
         modules << new Ssh_Linux_Module()
-        modules.addAll CollectdModules.getAdditionalModules()
+        modules.addAll NfsModules.getAdditionalModules()
         modules
     }
 

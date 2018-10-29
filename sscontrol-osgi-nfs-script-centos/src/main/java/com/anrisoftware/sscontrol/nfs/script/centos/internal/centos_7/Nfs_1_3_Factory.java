@@ -20,9 +20,7 @@ package com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7;
  * #L%
  */
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -30,14 +28,5 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class Nfs_Centos_7_Module extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Nfs_1_3_Impl.class)
-                .build(Nfs_1_3_Factory.class));
-        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Nfs_1_3_Centos_7.class)
-                .build(Nfs_1_3_Centos_7_Factory.class));
-    }
-
+public interface Nfs_1_3_Factory extends HostServiceScriptService {
 }

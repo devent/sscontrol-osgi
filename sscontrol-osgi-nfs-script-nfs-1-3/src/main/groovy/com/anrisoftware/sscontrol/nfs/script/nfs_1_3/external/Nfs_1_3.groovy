@@ -19,6 +19,10 @@
  */
 package com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external
 
+import javax.inject.Inject
+
+import com.anrisoftware.resources.templates.external.TemplateResource
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.nfs.service.external.Nfs
 
@@ -33,24 +37,20 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Nfs_1_3 extends ScriptBase {
 
-    @Override
-    def run() {
+    TemplateResource exportsTemplate
+
+    @Inject
+    void loadTemplates(TemplatesFactory templatesFactory) {
+        def templates = templatesFactory.create('Nfs_1_3_Templates')
+        this.exportsTemplate = templates.getResource('exports')
     }
 
-    def deployConfiguration() {
+    /**
+     * Deploys the Nfs exports to {@code /etc/exports}.
+     */
+    def deployExports() {
         Nfs service = this.service
-    }
-
-    String getCollectdIncludeLineSearch() {
-        getScriptProperty "collectd_include_line_search"
-    }
-
-    String getCollectdIncludeLineReplace() {
-        getScriptProperty "collectd_include_line_replace"
-    }
-
-    boolean getFqdnLookup() {
-        getScriptBooleanProperty "collectd_fqdn_lookup"
+        template resource: exportsTemplate, name: 'exportsConfig', vars: [:], dest: configFile call()
     }
 
     @Override

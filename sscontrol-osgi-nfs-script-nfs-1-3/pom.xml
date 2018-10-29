@@ -98,6 +98,11 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-templates</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-templates</artifactId>
+            <type>bundle</type>
+        </dependency>
     </dependencies>
 
 </project>
