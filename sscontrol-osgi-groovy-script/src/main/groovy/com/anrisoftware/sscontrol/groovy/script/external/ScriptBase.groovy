@@ -881,6 +881,7 @@ echo \$file
         return (T) scriptsRepository.getState(name)
     }
 
+    @SuppressWarnings("serial")
     public <T> Map<String, T> getStates() {
         new HashMap<String, Object>() {
                     Object get(Object key) {
@@ -1052,6 +1053,7 @@ echo \$file
         properties.getProperty name, defaultProperties
     }
 
+    @SuppressWarnings("serial")
     Map getScriptProperties() {
         new HashMap() {
                     def get(def name) {
@@ -1067,6 +1069,7 @@ echo \$file
         return getFileProperty(key, parent, defaults, useAbsolute)
     }
 
+    @SuppressWarnings("serial")
     File getScriptFileProperties() {
         new HashMap() {
                     def get(def name) {
@@ -1075,6 +1078,7 @@ echo \$file
                 }
     }
 
+    @SuppressWarnings("serial")
     Map getScriptListProperties() {
         new HashMap() {
                     def get(def name) {
@@ -1107,6 +1111,7 @@ echo \$file
         properties.getNumberProperty name, defaults
     }
 
+    @SuppressWarnings("serial")
     Map getScriptNumberProperties() {
         new HashMap() {
                     def get(def name) {
@@ -1123,6 +1128,7 @@ echo \$file
         properties.getBooleanProperty name, defaults
     }
 
+    @SuppressWarnings("serial")
     Map getScriptBooleanProperties() {
         new HashMap() {
                     def get(def name) {
