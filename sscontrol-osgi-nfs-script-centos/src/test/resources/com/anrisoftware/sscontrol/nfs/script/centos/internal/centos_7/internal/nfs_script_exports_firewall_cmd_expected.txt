@@ -1,4 +1,4 @@
---permanent --new-zone=nfs
+--get-zones
 --permanent --zone=nfs --add-service=mountd
 --permanent --zone=nfs --add-service=rpc-bind
 --permanent --zone=nfs --add-service=nfs

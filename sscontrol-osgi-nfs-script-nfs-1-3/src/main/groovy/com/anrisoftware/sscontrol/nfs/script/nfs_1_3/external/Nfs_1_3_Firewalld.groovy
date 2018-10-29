@@ -41,7 +41,7 @@ abstract class Nfs_1_3_Firewalld extends ScriptBase {
     def configureFilewalld() {
         Nfs service = this.service
             shell privileged: true, """
-if !firewall-cmd --get-zones | grep nfs; then
+if ! firewall-cmd --get-zones | grep nfs; then
     firewall-cmd --permanent --new-zone=nfs
 fi
 firewall-cmd --permanent --zone=nfs --add-service=mountd
