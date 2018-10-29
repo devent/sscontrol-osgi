@@ -1,0 +1,4 @@
+list installed nfs-utils
+install -y nfs-utils
+list installed libnfsidmap
+install -y libnfsidmap

@@ -19,6 +19,7 @@
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.utils.ufw.linux</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace.internal>com.anrisoftware.sscontrol.utils.ufw.linux.internal</project.custom.bundle.namespace.internal>
     </properties>
 
     <dependencies>

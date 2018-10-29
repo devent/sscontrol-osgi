@@ -1,0 +1,5 @@
+list-units
+stop collectd
+start collectd
+status collectd
+enable collectd
