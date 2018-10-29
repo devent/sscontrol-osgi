@@ -57,7 +57,7 @@ abstract class Nfs_1_3_Ufw extends ScriptBase {
         service.exports.each { Export export ->
             export.hosts.each { Host host ->
             shell privileged: true, """
-ufw allow from ${InetAddress.getByName(host.name).hostAddress} app NFS to any
+ufw allow from ${InetAddress.getByName(host.name).hostAddress} to any port nfs
 """ call()
             }
         }

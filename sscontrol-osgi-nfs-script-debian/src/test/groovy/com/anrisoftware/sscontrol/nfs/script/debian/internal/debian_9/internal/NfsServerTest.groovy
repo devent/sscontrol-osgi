@@ -21,12 +21,12 @@ package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.shell.external.utils.CentosSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.CentosSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -37,7 +37,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(CentosSocketCondition.class)
+@ExtendWith(RobobeeSocketCondition.class)
 class NfsServerTest extends AbstractNfsRunnerTest {
 
     @Test
@@ -45,7 +45,7 @@ class NfsServerTest extends AbstractNfsRunnerTest {
         def test = [
             name: "nfs_server_exports",
             script: '''
-service "ssh", host: "robobee@192.168.56.230", socket: robobeeSocket
+service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "nfs", version: "1.3" with {
     export dir: "/nfsfileshare/0" with {
         host << "andrea-node-0.muellerpublic.de"
@@ -53,11 +53,11 @@ service "nfs", version: "1.3" with {
     }
 }
 ''',
-            scriptVars: [robobeeSocket: centosSocket],
+            scriptVars: [robobeeSocket: robobeeSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource NfsServerTest, readRemoteFile('/etc/exports', "mail.robobee.test"), "${args.test.name}_exports_expected.txt"
+                assertStringResource NfsServerTest, readRemoteFile('/etc/exports', "robobee-test"), "${args.test.name}_exports_expected.txt"
             },
         ]
         doTest test

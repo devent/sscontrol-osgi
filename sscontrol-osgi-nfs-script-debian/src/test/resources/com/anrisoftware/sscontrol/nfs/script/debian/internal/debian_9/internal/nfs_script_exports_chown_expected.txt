@@ -1,2 +1,2 @@
 -R /tmp/junit/junit/id -u /var/lib/robobee/tmp
-nobody.root -R /nfsfileshare/0
+nobody.nogroup -R /nfsfileshare/0
