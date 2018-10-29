@@ -1,4 +1,3 @@
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.internal;
 /*-
  * #%L
  * sscontrol-osgi - collectd-script-centos
@@ -26,7 +25,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Centos_7_Factory
+import com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Factory
 import com.anrisoftware.sscontrol.nfs.service.internal.NfsImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -42,7 +41,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9tBase {
+abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
     
     @Inject
     RunScriptImplFactory runnerFactory
@@ -57,7 +56,7 @@ com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9tBase {
     NfsImplFactory nfsFactory
 
     @Inject
-    Nfs_1_3_Centos_7_Factory nfsCentosFactory
+    Nfs_1_3_Debian_9_Factory nfsCentosFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -67,7 +66,7 @@ com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9tBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'nfs', nfsFactory
-        services.putAvailableScriptService 'nfs-1.3/centos/7', nfsCentosFactory
+        services.putAvailableScriptService 'nfs-1.3/debian/9', nfsCentosFactory
         return services
     }
 

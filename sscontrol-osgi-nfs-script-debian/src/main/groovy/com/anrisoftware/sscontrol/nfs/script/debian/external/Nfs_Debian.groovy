@@ -36,16 +36,16 @@ import groovy.util.logging.Slf4j
 @Slf4j
 abstract class Nfs_Debian extends ScriptBase {
 
-    DebianUtils centos
+    DebianUtils debian
 
     @Inject
     void setDebianFactory(Debian_9_UtilsFactory factory) {
-        this.centos = factory.create(this)
+        this.debian = factory.create(this)
     }
 
     void installPackages() {
         log.info "Installing packages {}.", packages
-        centos.installPackages()
+        debian.installPackages()
     }
 
     @Override

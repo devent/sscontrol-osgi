@@ -51,7 +51,7 @@ abstract class Nfs_1_3_Ufw extends ScriptBase {
      */
     def configureFilewall() {
         Nfs service = this.service
-        if (!ufw.isUfwActive) {
+        if (!ufw.ufwActive) {
             return
         }
         service.exports.each { Export export ->

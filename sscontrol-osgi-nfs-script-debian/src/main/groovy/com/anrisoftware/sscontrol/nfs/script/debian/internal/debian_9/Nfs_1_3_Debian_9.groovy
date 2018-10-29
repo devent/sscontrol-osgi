@@ -65,7 +65,7 @@ class Nfs_1_3_Debian_9 extends Nfs_Debian_9 {
         nfs.setupDefaultOptions()
         stopServices()
         installPackages()
-        nfsUfw.configureFilewalld()
+        nfsUfw.configureFilewall()
         nfs.deployExports()
         nfs.createExports()
         startServices()

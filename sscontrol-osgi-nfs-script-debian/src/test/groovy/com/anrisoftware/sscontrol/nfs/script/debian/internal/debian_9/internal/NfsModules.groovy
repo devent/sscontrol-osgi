@@ -40,9 +40,10 @@ import com.anrisoftware.sscontrol.nfs.service.internal.NfsModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
-import com.anrisoftware.sscontrol.utils.centos.external.CentosUtilsModule
+import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
+import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
 
 /**
  *
@@ -50,12 +51,15 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9 {
+class NfsModules {
+    
+    static List getAdditionalModules() {
 	[
 	    new SshModule(),
 	    new NfsModule(),
 	    new Nfs_Debian_9_Module(),
-	    new CentosUtilsModule(),
+	    new DebianUtilsModule(),
+        new UfwUtilsModule(),
 	    new SystemdUtilsModule(),
 	    new DebugLoggingModule(),
 	    new TypesModule(),

@@ -22,15 +22,15 @@ package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Nfs 1.3 CentOS 7 properties provider from
- * {@code "/nfs_1_3_centos_7.properties"}.
+ * Nfs 1.3 Debian 9 properties provider from
+ * {@code "/nfs_1_3_debian_9.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class Nfs_1_3_Debian_9_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Nfs_1_3_Debian_9_Properties.class.getResource("/nfs_1_3_centos_7.properties")
+    private static final URL RESOURCE = Nfs_1_3_Debian_9_Properties.class.getResource("/nfs_1_3_debian_9.properties")
 
     Nfs_1_3_Debian_9_Properties() {
         super(Nfs_1_3_Debian_9_Properties.class, RESOURCE)

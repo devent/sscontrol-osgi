@@ -21,8 +21,7 @@ package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-
-import com.anrisoftware.sscontrol.utils.centos.external.CentosTestUtils
+import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtils.*
 
 /**
  *
@@ -34,8 +33,9 @@ abstract class AbstractNfsScriptTest extends AbstractNfsRunnerTest {
 
     @Override
     void createDummyCommands(File dir) {
-        createCommand CentosTestUtils.yumCommand, dir, 'yum'
-        createCommand CentosTestUtils.catCommand, dir, 'cat'
+        createCommand ufwActiveCommand, dir, 'ufw'
+        createCommand catCommand, dir, 'cat'
+        createCommand grepCommand, dir, 'grep'
         createEchoCommands dir, [
             'mkdir',
             'chown',
@@ -49,13 +49,7 @@ abstract class AbstractNfsScriptTest extends AbstractNfsRunnerTest {
             'id',
             'mv',
             'basename',
-            'wget',
-            'useradd',
-            'tar',
-            'grep',
-            'make',
-            'semodule',
-            'firewall-cmd'
+            'apt-get'
         ]
     }
 }
