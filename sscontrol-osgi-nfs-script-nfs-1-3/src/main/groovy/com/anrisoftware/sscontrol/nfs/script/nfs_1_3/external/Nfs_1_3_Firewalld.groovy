@@ -60,34 +60,6 @@ firewall-cmd --reload
 """ call()
     }
 
-    /**
-     * Returns the default options for exports, for example {@code rw,sync,no_root_squash}.
-     */
-    String getDefaultExportsOptions() {
-        getScriptProperty "default_exports_options"
-    }
-
-    /**
-     * Returns the nfs-nobody user.
-     */
-    String getNfsnobodyUser() {
-        getScriptProperty "nfsnobody_user"
-    }
-
-    /**
-     * Returns the nfs-nobody group.
-     */
-    String getNfsnobodyGroup() {
-        getScriptProperty "nfsnobody_group"
-    }
-
-    /**
-     * Returns the Nfs export directories permissions to set.
-     */
-    String getNfsExportsPermissions() {
-        getScriptProperty "nfs_exports_permissions"
-    }
-
     @Override
     def getLog() {
         log
