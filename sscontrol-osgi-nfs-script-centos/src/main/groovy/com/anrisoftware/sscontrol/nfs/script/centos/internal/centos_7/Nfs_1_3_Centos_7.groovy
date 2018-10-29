@@ -24,8 +24,8 @@ import static com.anrisoftware.sscontrol.nfs.script.centos.internal.centos_7.Nfs
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.nfs.script.centos.external.Nfs_Centos
 import com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external.Nfs_1_3
+import com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external.Nfs_1_3_Firewalld
 
 import groovy.util.logging.Slf4j
 
@@ -43,9 +43,16 @@ class Nfs_1_3_Centos_7 extends Nfs_Centos_7 {
     
     Nfs_1_3 nfs
 
+    Nfs_1_3_Firewalld nfsFilewalld
+
     @Inject
     void setNfsFactory(Nfs_1_3_Factory factory) {
         this.nfs = factory.create(scriptsRepository, service, target, threads, scriptEnv)
+    }
+
+    @Inject
+    void setNfsFirewalldFactory(Nfs_1_3_Firewalld_Factory factory) {
+        this.nfsFilewalld = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Override
@@ -58,6 +65,7 @@ class Nfs_1_3_Centos_7 extends Nfs_Centos_7 {
         nfs.setupDefaultOptions()
         stopServices()
         installPackages()
+        nfsFilewalld.configureFilewalld()
         nfs.deployExports()
         nfs.createExports()
         startServices()

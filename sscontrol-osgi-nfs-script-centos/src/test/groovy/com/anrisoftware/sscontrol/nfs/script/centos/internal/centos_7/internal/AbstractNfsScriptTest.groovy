@@ -54,7 +54,8 @@ abstract class AbstractNfsScriptTest extends AbstractNfsRunnerTest {
             'tar',
             'grep',
             'make',
-            'semodule'
+            'semodule',
+            'firewall-cmd'
         ]
     }
 }

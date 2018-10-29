@@ -70,6 +70,7 @@ service "nfs", version: "1.3" with {
                 assertFileResource NfsScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource NfsScriptTest, dir, "chown.out", "${args.test.name}_chown_expected.txt"
                 assertFileResource NfsScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource NfsScriptTest, dir, "firewall-cmd.out", "${args.test.name}_firewall_cmd_expected.txt"
                 assertFileResource NfsScriptTest, gen, "/etc/exports", "${args.test.name}_exports_expected.txt"
                 //assertFileResource CollectdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
             },
