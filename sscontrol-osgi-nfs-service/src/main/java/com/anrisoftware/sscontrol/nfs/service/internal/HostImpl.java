@@ -85,7 +85,7 @@ public class HostImpl implements Host {
     }
 
     public void setOptions(String options) {
-        this.name = options;
+        this.options = options;
     }
 
     @Override

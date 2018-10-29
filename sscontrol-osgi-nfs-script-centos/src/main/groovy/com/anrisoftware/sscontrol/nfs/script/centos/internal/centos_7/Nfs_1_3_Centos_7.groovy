@@ -55,6 +55,7 @@ class Nfs_1_3_Centos_7 extends Nfs_Centos_7 {
 
     @Override
     def run() {
+        nfs.setupDefaultOptions()
         stopServices()
         installPackages()
         nfs.deployExports()

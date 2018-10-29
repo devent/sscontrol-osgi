@@ -24,6 +24,8 @@ import javax.inject.Inject
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.nfs.service.external.Export
+import com.anrisoftware.sscontrol.nfs.service.external.Host
 import com.anrisoftware.sscontrol.nfs.service.external.Nfs
 
 import groovy.util.logging.Slf4j
@@ -46,11 +48,33 @@ abstract class Nfs_1_3 extends ScriptBase {
     }
 
     /**
+     * Setups the default options for hosts without options.
+     */
+    def setupDefaultOptions() {
+        Nfs service = this.service
+        service.exports.each { Export export ->
+            def hosts = export.hosts.findAll { Host host -> host.options == null }
+            hosts.each { Host host ->
+                if (host.options == null) {
+                    host.options = defaultExportsOptions
+                }
+            }
+        }
+    }
+
+    /**
      * Deploys the Nfs exports to {@code /etc/exports}.
      */
     def deployExports() {
         Nfs service = this.service
         template privileged: true, resource: exportsTemplate, name: 'exportsConfig', vars: [:], dest: configFile call()
+    }
+
+    /**
+     * Returns the default options for exports, for example {@code rw,sync,no_root_squash}.
+     */
+    String getDefaultExportsOptions() {
+        getScriptProperty "default_exports_options"
     }
 
     @Override
