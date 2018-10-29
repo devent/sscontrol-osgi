@@ -1,3 +1,0 @@
-start collectd
-status collectd
-enable collectd
