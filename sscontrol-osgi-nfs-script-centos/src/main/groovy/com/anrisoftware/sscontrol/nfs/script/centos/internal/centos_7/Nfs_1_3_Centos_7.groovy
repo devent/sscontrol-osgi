@@ -59,6 +59,7 @@ class Nfs_1_3_Centos_7 extends Nfs_Centos_7 {
         stopServices()
         installPackages()
         nfs.deployExports()
+        nfs.createExports()
         startServices()
         enableServices()
     }
