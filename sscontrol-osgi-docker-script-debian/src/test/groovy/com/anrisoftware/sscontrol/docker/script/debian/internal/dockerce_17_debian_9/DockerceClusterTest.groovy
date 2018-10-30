@@ -61,9 +61,9 @@ service "docker"
             scriptVars: [sockets: nodesSockets, certs: certs],
             expectedServicesSize: 2,
             expected: { Map args ->
-                assertStringResource DockerceClusterTest, remoteCommand('sudo docker version', 'node-0.robobee-test.test'), "${args.test.name}_docker_info_node_0_expected.txt"
-                assertStringResource DockerceClusterTest, remoteCommand('sudo docker version', 'node-1.robobee-test.test'), "${args.test.name}_docker_info_node_1_expected.txt"
-                assertStringResource DockerceClusterTest, remoteCommand('sudo docker version', 'node-2.robobee-test.test'), "${args.test.name}_docker_info_node_2_expected.txt"
+                assertStringResource DockerceClusterTest, remoteCommand('sudo docker info', 'node-0.robobee-test.test'), "${args.test.name}_docker_info_node_0_expected.txt"
+                assertStringResource DockerceClusterTest, remoteCommand('sudo docker info', 'node-1.robobee-test.test'), "${args.test.name}_docker_info_node_1_expected.txt"
+                assertStringResource DockerceClusterTest, remoteCommand('sudo docker info', 'node-2.robobee-test.test'), "${args.test.name}_docker_info_node_2_expected.txt"
             },
         ]
         doTest test
