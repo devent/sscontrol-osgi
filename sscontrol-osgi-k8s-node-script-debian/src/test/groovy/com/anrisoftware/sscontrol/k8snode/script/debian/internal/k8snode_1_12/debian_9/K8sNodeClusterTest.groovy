@@ -58,6 +58,7 @@ service "ssh", group: "nodes" with {
 service "k8s-cluster", target: "masters"
 targets['nodes'].eachWithIndex { host, i ->
     service "k8s-node", target: host, name: "node-${i+1}" with {
+        plugin "nfs-client"
         kubelet address: host.hostAddress
         cluster host: "masters", join: joinCommand
         nodes.labels[i].each { label << it }

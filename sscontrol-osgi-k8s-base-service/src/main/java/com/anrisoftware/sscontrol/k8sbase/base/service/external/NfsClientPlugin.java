@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_12.debian_9;
+package com.anrisoftware.sscontrol.k8sbase.base.service.external;
 
 /*-
  * #%L
- * sscontrol-osgi - k8s-master-script-debian
+ * sscontrol-osgi - k8s-base-service
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -20,13 +20,12 @@ package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_
  * #L%
  */
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
-
 /**
- *
+ * <i>Nfs-Client</i> plugin.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface K8sMasterUpstreamDebianFactory extends HostServiceScriptService {
+public interface NfsClientPlugin extends Plugin {
+
 }

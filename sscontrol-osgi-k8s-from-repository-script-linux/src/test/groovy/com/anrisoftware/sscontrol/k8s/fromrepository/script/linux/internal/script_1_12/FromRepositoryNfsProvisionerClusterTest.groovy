@@ -1,6 +1,6 @@
 /*-
  * #%L
- * sscontrol-osgi - k8s-master-script-debian
+ * sscontrol-osgi - k8s-from-repository-script-linux
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_12.debian_9
+package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_12
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -29,6 +29,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
 
@@ -40,50 +42,50 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @ExtendWith(Nodes3AvailableCondition.class)
-class K8sMasterClusterTest extends AbstractMasterRunnerTest {
+class FromRepositoryNfsProvisionerClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
-    void "cluster external etcd, canal"() {
+    void "dashboard addon to cluster"() {
         def test = [
-            name: "cluster_external_etcd_canal",
+            name: "dashboard_cluster",
             script: '''
 service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
-service "ssh", group: "masters" with {
-    host "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
+service "k8s-cluster"
+service "repo-git", group: "nfs" with {
+    remote url: "git@github.com:robobee-repos/kube-nfs-provisioner.git"
+    checkout branch: "feature/v3.1.0-k8s1.11"
+    credentials "ssh", key: robobeeKey
 }
-service "ssh", group: "nodes" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
-    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
-}
-service "k8s-cluster", target: "masters" with {
-}
-service "k8s-master", name: "node-0" with {
-    bind secure: "192.168.56.200"
-    kubelet address: "192.168.56.200"
-    nodes << "masters"
-    nodes << "nodes"
-    plugin "canal", iface: "enp0s8"
-    plugin "etcd", endpoint: "https://10.10.10.7:22379" with {
-        tls certs.etcd
-    }
-    label << "robobeerun.com/heapster=required"
-    label << "robobeerun.com/dashboard=required"
-    label << "robobeerun.com/nfs=required"
+service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with {
+    vars << [
+        nfs: [
+            image: [name: "quay.io/external_storage/nfs-client-provisioner", version: "v3.1.0-k8s1.11"],
+            affinity: [key: "robobeerun.com/nfs", name: "required", required: true],
+            allowOnMaster: true,
+            limits: [cpu: '100m', memory: '100Mi'],
+            requests: [cpu: '100m', memory: '100Mi'],
+            options: [archiveOnDelete: true],
+            server: [address: "192.168.56.200", export: "/nfsfileshare/0"],
+        ]
+    ]
 }
 ''',
-            scriptVars: [sockets: nodesSockets, certs: robobeetestCerts],
-            generatedDir: folder.newFolder(),
-            expectedServicesSize: 3,
+            scriptVars: [sockets: nodesSockets, robobeeKey: robobeeKey],
+            expectedServicesSize: 4,
             expected: { Map args ->
             },
         ]
         doTest test
     }
 
+    Map getScriptEnv(Map args) {
+        getEmptyScriptEnv args
+    }
+
     void createDummyCommands(File dir) {
     }
 
-    Map getScriptEnv(Map args) {
-        getEmptyScriptEnv args
+    def setupServiceScript(Map args, HostServiceScript script) {
+        return script
     }
 }

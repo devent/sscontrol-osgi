@@ -69,6 +69,7 @@ class K8sNodeUpstreamDebian extends AbstractK8sUpstreamDebian {
     def postInstall() {
         applyLabels()
         applyTaints()
+        installPlugins()
     }
 
     @Inject

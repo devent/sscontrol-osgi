@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.k8sbase.script.upstream.debian.external.k8s_1
 
 import javax.inject.Inject
 
+import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_12.linux.AbstractK8sUpstreamLinux
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
@@ -65,6 +66,17 @@ EOF
         debian.installPackages packages: kubeadmPackages, update: true
     }
 
+    def installPlugins() {
+        K8s service = service
+        if (service.plugins.containsKey("nfs-client")) {
+            installNfsClinetPlugin()
+        }
+    }
+    
+    def installNfsClinetPlugin() {
+        debian.installPackages getScriptListProperty("nfs_client_packages")
+    }
+    
     @Override
     def getLog() {
         log
