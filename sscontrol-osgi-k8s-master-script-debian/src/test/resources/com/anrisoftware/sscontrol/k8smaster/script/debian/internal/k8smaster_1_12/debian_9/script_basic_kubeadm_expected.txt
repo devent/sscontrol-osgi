@@ -1,3 +1,4 @@
 token list
+init --config /root/kubeadm.yaml
 token generate
 token create --print-join-command

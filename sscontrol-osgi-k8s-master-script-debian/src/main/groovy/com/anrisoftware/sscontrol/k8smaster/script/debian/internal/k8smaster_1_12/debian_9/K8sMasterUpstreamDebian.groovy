@@ -132,7 +132,7 @@ class K8sMasterUpstreamDebian extends AbstractK8sUpstreamDebian {
     def installNetwork() {
         log.debug 'Installs pod network for {}', service
         K8sMaster service = service
-        if (service.plugins.containsKey("canal")) {
+        if (havePluginCanal) {
             installCanalNetwork()
         }
     }

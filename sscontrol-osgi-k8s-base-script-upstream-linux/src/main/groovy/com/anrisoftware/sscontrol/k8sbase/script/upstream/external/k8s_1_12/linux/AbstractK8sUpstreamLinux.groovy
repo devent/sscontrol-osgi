@@ -237,6 +237,13 @@ kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
 fi
 """ call()
 	}
+    
+    def getKubeadmArgs() {
+        if (havePluginCanal) {
+            return "--pod-network-cidr=${clusterCidr}"
+        }
+        return ""
+    }
 
 	def joinNode() {
 		K8s service = service
@@ -337,6 +344,16 @@ sudo chown \$(id -u):\$(id -g) \$HOME/.kube/config
 		log.info 'Apply node labels {} for {}.', service.labels, node
 		kubectlCluster.applyNodeLabels([:], node, service.labels)
 	}
+    
+    /**
+     * Returns the cluster CIDR for kubeproxy.
+     */
+    def getClusterCidr() {
+        if (havePluginCanal) {
+            return getScriptProperty("canal_cidr")
+        }
+        return ""
+    }
 
 	def getJoinCommand() {
 		shell privileged: true, outString: true, timeout: timeoutShort, """
@@ -482,9 +499,9 @@ kubeadm token create \$token --print-join-command
 		pluginTargetsMapFactory.create service, scriptsRepository, service.plugins
 	}
 
-	boolean getHavePluginCalico() {
+	boolean getHavePluginCanal() {
 		K8s service = service
-		service.plugins.containsKey('calico')
+		service.plugins.containsKey('canal')
 	}
 
 	Tls getPluginEtcdTls() {

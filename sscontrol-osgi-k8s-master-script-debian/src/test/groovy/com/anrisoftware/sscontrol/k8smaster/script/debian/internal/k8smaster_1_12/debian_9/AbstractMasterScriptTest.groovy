@@ -37,10 +37,13 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
         key: AbstractMasterScriptTest.class.getResource('cert_key.txt'),
     ]
 
+    static final URL kubeadmCommand = AbstractMasterScriptTest.class.getResource('script_kubeadm_command.txt')
+    
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createCommand whichufwnotfoundCommand, dir, 'which'
+        createCommand kubeadmCommand, dir, 'kubeadm'
         new File(dir, "/etc/apt/sources.list.d").mkdirs()
         createIdCommand dir
         createEchoCommands dir, [
@@ -65,7 +68,6 @@ abstract class AbstractMasterScriptTest extends AbstractMasterRunnerTest {
             'kubectl',
             'ufw',
             'modprobe',
-            'kubeadm',
             'sed'
         ]
     }
