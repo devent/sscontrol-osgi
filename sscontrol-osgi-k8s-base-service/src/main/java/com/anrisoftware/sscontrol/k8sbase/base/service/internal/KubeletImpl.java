@@ -73,6 +73,8 @@ public class KubeletImpl implements Kubelet {
 
     private String address;
 
+    private Integer readOnlyPort;
+
     @AssistedInject
     KubeletImpl(KubeletImplLogger log, TlsFactory tlsFactory) {
         this(log, tlsFactory, new HashMap<String, Object>());
@@ -124,7 +126,16 @@ public class KubeletImpl implements Kubelet {
     public Integer getPort() {
         return port;
     }
+    
+    public void setReadOnlyPort(Integer readOnlyPort) {
+        this.readOnlyPort = readOnlyPort;
+    }
 
+    @Override
+    public Integer getReadOnlyPort() {
+        return readOnlyPort;
+    }
+    
     /**
      * <pre>
      * tls ca: "ca.pem", cert: "cert.pem", key: "key.pem"

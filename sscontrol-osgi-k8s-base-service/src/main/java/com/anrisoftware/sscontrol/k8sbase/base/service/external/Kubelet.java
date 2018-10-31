@@ -47,6 +47,13 @@ public interface Kubelet {
     Integer getPort();
 
     /**
+     * Returns the read-only port.
+     *
+     * @return {@link Integer}
+     */
+    Integer getReadOnlyPort();
+
+    /**
      * Kubelet TLS.
      */
     Tls getTls();

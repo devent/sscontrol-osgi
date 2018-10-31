@@ -149,6 +149,9 @@ abstract class AbstractK8sUpstreamLinux extends ScriptBase {
 		if (!service.kubelet.port) {
 			service.kubelet.port = defaultKubeletPort
 		}
+        if (!service.kubelet.readOnlyPort) {
+            service.kubelet.readOnlyPort = scriptNumberProperties.default_kubelet_read_only_port
+        }
 		if (service.kubelet.preferredAddressTypes.size() == 0) {
 			service.kubelet.preferredAddressTypes.addAll defaultPreferredAddressTypes
 		}
@@ -567,6 +570,10 @@ kubeadm token create \$token --print-join-command
 	boolean getFailSwapOn() {
 		getScriptBooleanProperty 'fail_swap_on'
 	}
+
+    int getKubeletReadOnlyPort() {
+        scriptNumberProperties
+    }
 
 	Map getFeatureGates() {
 		getScriptMapProperty 'feature_gates'
