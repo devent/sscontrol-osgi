@@ -51,34 +51,28 @@ class FromRepositoryHeapsterGrafanaPersistentClusterTest extends AbstractFromRep
 service "ssh", host: "node-0.robobee-test.test", socket: sockets.masters[0]
 service "k8s-cluster"
 service "repo-git", group: "heapster-influxdb-grafana-monitoring" with {
-    remote url: "git@github.com:robobee-repos/heapster-influxdb-grafana-monitoring.git"
+    remote url: "git@github.com:robobee-repos/kube-cluster-monitoring.git"
     credentials "ssh", key: robobeeKey
+    checkout branch: "feature/v1.6.0-beta.1-r.0"
 }
 service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "/etc/kubernetes/addons/cluster-monitoring" with {
     vars << [
         heapster: [
-            image: [name: "k8s.gcr.io/heapster-amd64", version: "v1.5.2"],
+            image: [name: "k8s.gcr.io/heapster-amd64", version: "v1.6.0-beta.1"],
             affinity: [key: "robobeerun.com/heapster", name: "required", required: true],
-            allowOnMaster: true
-        ]
-    ]
-    vars << [
+            allowOnMaster: true,
+            minClusterSize: 3
+        ],
         eventer: [
             baseCpu: '25m', extraCpu: '0', baseMemory: '40Mi', extraMemory: '5Mi',
-        ]
-    ]
-    vars << [
+        ],
         resizer: [
-            image: [name: 'k8s.gcr.io/addon-resizer', version: '1.8.1']
-        ]
-    ]
-    vars << [
+            image: [name: 'k8s.gcr.io/addon-resizer', version: '1.8.3']
+        ],
         nanny: [
             limits: [cpu: '25m', memory: '60Mi'],
-            requests: [],
-        ]
-    ]
-    vars << [
+            requests: [cpu: '25m', memory: '60Mi'],
+        ],
         metrics: [
             baseCpu: '25m', extraCpu: '0', baseMemory: '40Mi', extraMemory: '1Mi',
         ]
@@ -94,16 +88,28 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "
         influxdb: [
             image: [name: 'k8s.gcr.io/heapster-influxdb-amd64', version: 'v1.3.3'],
             limits: [cpu: '50m', memory: '100Mi'],
-            requests: [],
-            persistent: [share: true, storage: [class: "slow", size: "1Gi"]],
+            requests: [cpu: '50m', memory: '100Mi'],
+            persistent: [share: true, storage: [class: "managed-nfs-storage", size: "1Gi"]],
+            revision: "r1",
         ]
     ]
     vars << [
         grafana: [
             image: [name: 'k8s.gcr.io/heapster-grafana-amd64', version: 'v4.4.3'],
             limits: [cpu: '50m', memory: '50Mi'],
-            requests: [],
+            requests: [cpu: '50m', memory: '50Mi'],
+            revision: "r1",
             auth: [basic: true, anonymous: false],
+            port: 3000,
+        ]
+    ]
+    vars << [
+        rsync: [
+            image: [name: 'robobeerun/rsync', version: 'v3.1.2-r2'],
+            limits: [cpu: '100m', memory: '100Mi'],
+            requests: [cpu: '50m', memory: '50Mi'],
+            affinity: [key: "robobeerun.com/influx", name: "required", required: true],
+            ssh: [revision: "r1", publicKey: "xx"],
         ]
     ]
 }
