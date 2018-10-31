@@ -204,6 +204,12 @@ class FromRepositoryLinux extends ScriptBase {
      * Deploy manifests to the destination directory.
      */
     def deployToDestination(String name, File destTmp, String destination) {
+        def p = shell exitCodes: [0, 1] as int[], outString: true, errString: true,
+        "kubectl create --dry-run -f ${destTmp}" call()
+        if (p.exitValue == 1) {
+            def manifest = shell outString: true, "cat ${destTmp}" call() out
+            throw new ManifestErrorsException(name, p.out, p.err, manifest)
+        }
         shell privileged: true, """
 mkdir -p ${destination}
 mv ${destTmp} ${destination}/${name}

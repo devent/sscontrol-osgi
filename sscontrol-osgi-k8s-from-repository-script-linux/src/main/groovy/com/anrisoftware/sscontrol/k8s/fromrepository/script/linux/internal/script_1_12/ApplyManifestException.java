@@ -24,6 +24,12 @@ import java.io.File;
 
 import com.anrisoftware.sscontrol.types.app.external.AppException;
 
+/**
+ * Thrown if there was an error applying the manifest.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 @SuppressWarnings("serial")
 public class ApplyManifestException extends AppException {
 
