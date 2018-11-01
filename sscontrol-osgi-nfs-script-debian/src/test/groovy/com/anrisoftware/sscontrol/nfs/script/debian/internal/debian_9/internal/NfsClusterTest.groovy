@@ -48,9 +48,9 @@ class NfsClusterTest extends AbstractNfsRunnerTest {
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "nfs", version: "1.3" with {
     export dir: "/nfsfileshare/0" with {
-        host << "node-0.robobee-test.test"
-        host << "node-1.robobee-test.test"
-        host << "node-2.robobee-test.test"
+        host << "192.168.56.200"
+        host << "192.168.56.201"
+        host << "192.168.56.202"
     }
 }
 ''',

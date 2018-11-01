@@ -45,9 +45,9 @@ import groovy.util.logging.Slf4j
 class FromRepositoryNfsProvisionerClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
-    void "dashboard addon to cluster"() {
+    void "nfs client addon to cluster"() {
         def test = [
-            name: "dashboard_cluster",
+            name: "cluster_nfs_addon_cluster",
             script: '''
 service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters[0]
 service "k8s-cluster"
