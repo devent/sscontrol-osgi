@@ -1,0 +1,4 @@
+
+status
+allow from 185.24.220.41 to any port nfs
+allow from 37.252.124.149 to any port nfs
