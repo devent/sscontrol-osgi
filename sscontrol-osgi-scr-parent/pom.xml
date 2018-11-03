@@ -44,6 +44,9 @@
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
+        <module>../sscontrol-osgi-haproxy-script-haproxy-1-8</module>
+        <module>../sscontrol-osgi-haproxy-script-debian</module>
+        <module>../sscontrol-osgi-haproxy-service</module>
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
