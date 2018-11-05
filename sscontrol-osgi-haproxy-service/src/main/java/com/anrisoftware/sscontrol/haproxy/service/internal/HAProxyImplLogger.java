@@ -24,7 +24,7 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.haproxy.service.external.Proxy;
-import com.anrisoftware.sscontrol.haproxy.service.external.Target;
+import com.anrisoftware.sscontrol.haproxy.service.external.Frontend;
 
 /**
  * Logging for {@link HAProxyImpl}.
@@ -64,7 +64,7 @@ final class HAProxyImplLogger extends AbstractLogger {
         debug(m.exportAdded, export, nfs);
     }
 
-    void hostAdded(HAProxyImpl nfs, Target host) {
+    void hostAdded(HAProxyImpl nfs, Frontend host) {
         debug(m.hostAdded, host, nfs);
     }
 

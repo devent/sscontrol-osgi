@@ -21,25 +21,11 @@ package com.anrisoftware.sscontrol.haproxy.service.external;
  */
 
 /**
- * HAProxy proxy.
+ * Proxy backend.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Proxy {
+public interface Backend extends Target {
 
-    /**
-     * Returns the name of the proxy.
-     */
-    String getName();
-
-    /**
-     * Returns the proxy frontend.
-     */
-    Frontend getFrontend();
-
-    /**
-     * Returns the proxy backend.
-     */
-    Backend getBackend();
 }

@@ -64,12 +64,16 @@ class HAProxyTest {
             name: 'service_defaults',
             input: '''
 service "haproxy", version: "1.8" with {
-    proxy "http"
+    proxy "http" with {
+        backend address: "192.168.56.201", port: 30000
+    }
     proxy "https" with {
-        target address: "192.168.56.201", port: 30001
+        frontend name: "andrea-node-1", address: "192.168.56.201"
+        backend address: "192.168.56.201", port: 30001
     }
     proxy "ssh" with {
-        target address: "192.168.56.201", port: 30022
+        frontend name: "andrea-node-1", address: "192.168.56.201", port: 22
+        backend address: "192.168.56.201", port: 30022
     }
 }
 ''',
@@ -80,15 +84,23 @@ service "haproxy", version: "1.8" with {
                 assert haproxy.proxies.size() == 3
                 int k = 0
                 assert haproxy.proxies[k].name == 'http'
-                assert haproxy.proxies[k].target == null
+                assert haproxy.proxies[k].frontend == null
+                assert haproxy.proxies[k].backend.address == '192.168.56.201'
+                assert haproxy.proxies[k].backend.port == 30000
                 k++
                 assert haproxy.proxies[k].name == 'https'
-                assert haproxy.proxies[k].target.address == '192.168.56.201'
-                assert haproxy.proxies[k].target.port == 30001
+                assert haproxy.proxies[k].frontend.name == 'andrea-node-1'
+                assert haproxy.proxies[k].frontend.address == '192.168.56.201'
+                assert haproxy.proxies[k].frontend.port == null
+                assert haproxy.proxies[k].backend.address == '192.168.56.201'
+                assert haproxy.proxies[k].backend.port == 30001
                 k++
                 assert haproxy.proxies[k].name == 'ssh'
-                assert haproxy.proxies[k].target.address == '192.168.56.201'
-                assert haproxy.proxies[k].target.port == 30022
+                assert haproxy.proxies[k].frontend.name == 'andrea-node-1'
+                assert haproxy.proxies[k].frontend.address == '192.168.56.201'
+                assert haproxy.proxies[k].frontend.port == 22
+                assert haproxy.proxies[k].backend.address == '192.168.56.201'
+                assert haproxy.proxies[k].backend.port == 30022
             },
         ]
         doTest test

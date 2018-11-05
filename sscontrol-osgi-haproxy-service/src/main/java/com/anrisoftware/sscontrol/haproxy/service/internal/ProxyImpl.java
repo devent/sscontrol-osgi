@@ -29,9 +29,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.haproxy.service.external.Backend;
+import com.anrisoftware.sscontrol.haproxy.service.external.Frontend;
 import com.anrisoftware.sscontrol.haproxy.service.external.Proxy;
-import com.anrisoftware.sscontrol.haproxy.service.external.Target;
-import com.anrisoftware.sscontrol.haproxy.service.internal.TargetImpl.TargetImplFactory;
+import com.anrisoftware.sscontrol.haproxy.service.internal.BackendImpl.BackendImplFactory;
+import com.anrisoftware.sscontrol.haproxy.service.internal.FrontendImpl.FrontendImplFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -56,11 +58,16 @@ public class ProxyImpl implements Proxy {
     private final ProxyImplLogger log;
 
     @Inject
-    private transient TargetImplFactory targetFactory;
+    private transient BackendImplFactory backendFactory;
+
+    @Inject
+    private transient FrontendImplFactory frontendFactory;
 
     private String name;
 
-    private Target target;
+    private Frontend frontend;
+
+    private Backend backend;
 
     @Inject
     ProxyImpl(ProxyImplLogger log, @Assisted Map<String, Object> args) {
@@ -76,13 +83,24 @@ public class ProxyImpl implements Proxy {
 
     /**
      * <pre>
-     * target address: "192.168.56.201", port: 30001
+     * frontend name: "foo", address: "192.168.56.201", port: 443
      * </pre>
      */
-    public void target(Map<String, Object> args) {
-        Target target = targetFactory.create(args);
-        this.target = target;
-        log.targetSet(this, target);
+    public void frontend(Map<String, Object> args) {
+        Frontend frontend = frontendFactory.create(args);
+        this.frontend = frontend;
+        log.frontendSet(this, frontend);
+    }
+
+    /**
+     * <pre>
+     * backend address: "192.168.56.201", port: 30001
+     * </pre>
+     */
+    public void backend(Map<String, Object> args) {
+        Backend backend = backendFactory.create(args);
+        this.backend = backend;
+        log.backendSet(this, backend);
     }
 
     @Override
@@ -90,14 +108,23 @@ public class ProxyImpl implements Proxy {
         return name;
     }
 
-    public void setTarget(Target target) {
-        this.target = target;
-        log.targetSet(this, target);
+    public void setFrontend(Frontend target) {
+        this.frontend = target;
+        log.frontendSet(this, target);
     }
 
     @Override
-    public Target getTarget() {
-        return target;
+    public Frontend getFrontend() {
+        return frontend;
+    }
+    
+    public void setBackend(Backend backend) {
+        this.backend = backend;
+    }
+    
+    @Override
+    public Backend getBackend() {
+        return backend;
     }
 
     @Override

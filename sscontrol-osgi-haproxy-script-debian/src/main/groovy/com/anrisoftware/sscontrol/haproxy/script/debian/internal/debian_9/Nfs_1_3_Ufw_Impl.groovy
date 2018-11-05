@@ -1,6 +1,6 @@
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9;
+package com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9;
 
-import static com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
 
 import javax.inject.Inject
 
@@ -15,10 +15,7 @@ import groovy.util.logging.Slf4j
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-class Nfs_1_3_Ufw_Impl extends Nfs_1_3_Ufw {
-
-    @Inject
+com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9ct
     Nfs_1_3_Debian_9_Properties propertiesProvider
     
     @Override

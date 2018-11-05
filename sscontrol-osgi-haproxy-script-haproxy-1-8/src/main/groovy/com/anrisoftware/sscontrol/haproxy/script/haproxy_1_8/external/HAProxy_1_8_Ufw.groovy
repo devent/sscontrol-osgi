@@ -17,27 +17,26 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external
+package com.anrisoftware.sscontrol.haproxy.script.haproxy_1_8.external
 
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.nfs.service.external.Export
-import com.anrisoftware.sscontrol.nfs.service.external.Host
-import com.anrisoftware.sscontrol.nfs.service.external.Nfs
+import com.anrisoftware.sscontrol.haproxy.service.external.HAProxy
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
+import com.anrisoftware.sscontrol.haproxy.service.external.Proxy
 
 import groovy.util.logging.Slf4j
 
 /**
- * Nfs 1.3 Ufw.
+ * HAProxy 1.8 Ufw.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class Nfs_1_3_Ufw extends ScriptBase {
+abstract class HAProxy_1_8_Ufw extends ScriptBase {
 
     UfwUtils ufw
 
@@ -47,19 +46,17 @@ abstract class Nfs_1_3_Ufw extends ScriptBase {
     }
 
     /**
-     * Configures Ufw to allow connections from Nfs hosts.
+     * Configures Ufw to allow connections to the frontends.
      */
     def configureFilewall() {
-        Nfs service = this.service
+        HAProxy service = this.service
         if (!ufw.ufwActive) {
             return
         }
-        service.exports.each { Export export ->
-            export.hosts.each { Host host ->
+        service.proxies.each { Proxy proxy ->
             shell privileged: true, """
-ufw allow from ${InetAddress.getByName(host.name).hostAddress} to any port nfs
+ufw allow from ${target.hostAddress} to ${proxy.frontend.address} port ${proxy.frontend.port}
 """ call()
-            }
         }
     }
 

@@ -17,70 +17,47 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external
+package com.anrisoftware.sscontrol.haproxy.script.haproxy_1_8.external
 
 import javax.inject.Inject
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.nfs.service.external.Export
-import com.anrisoftware.sscontrol.nfs.service.external.Host
-import com.anrisoftware.sscontrol.nfs.service.external.Nfs
+import com.anrisoftware.sscontrol.haproxy.service.external.HAProxy
+import com.anrisoftware.sscontrol.haproxy.service.external.Proxy
 
 import groovy.util.logging.Slf4j
 
 /**
- * Nfs 1.3.
+ * HAProxy 1 8.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class Nfs_1_3 extends ScriptBase {
+abstract class HAProxy_1_8 extends ScriptBase {
 
     TemplateResource exportsTemplate
 
     @Inject
+    Map<String, ApplyProxyDefaults> applyProxyDefaults
+    
+    @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
-        def templates = templatesFactory.create('Nfs_1_3_Templates')
-        this.exportsTemplate = templates.getResource('exports')
+        def templates = templatesFactory.create('HAProxy_1_8_Templates')
+        this.exportsTemplate = templates.getResource('haproxy_config')
     }
 
     /**
      * Setups the default options for hosts without options.
      */
     def setupDefaultOptions() {
-        Nfs service = this.service
-        service.exports.each { Export export ->
-            def hosts = export.hosts.findAll { Host host -> host.options == null }
-            hosts.each { Host host ->
-                if (host.options == null) {
-                    host.options = defaultExportsOptions
-                }
-            }
-        }
-    }
-
-    /**
-     * Deploys the Nfs exports to {@code /etc/exports}.
-     */
-    def deployExports() {
-        Nfs service = this.service
-        template privileged: true, resource: exportsTemplate, name: 'exportsConfig', vars: [:], dest: configFile call()
-    }
-
-    /**
-     * Creates the export directories.
-     */
-    def createExports() {
-        Nfs service = this.service
-        service.exports.each { Export export ->
-            shell privileged: true, """
-mkdir -p ${export.dir}
-chown ${nfsnobodyUser}.${nfsnobodyGroup} -R ${export.dir}
-chmod ${nfsExportsPermissions} ${export.dir}
-""" call()
+        HAProxy service = this.service
+        service.proxies.each { Proxy proxy ->
+            applyProxyDefaults[proxy.name].applyDefaults(this)
         }
     }
 
@@ -92,21 +69,21 @@ chmod ${nfsExportsPermissions} ${export.dir}
     }
 
     /**
-     * Returns the nfs-nobody user.
+     * Returns the HAProxy-nobody user.
      */
     String getNfsnobodyUser() {
         getScriptProperty "nfsnobody_user"
     }
 
     /**
-     * Returns the nfs-nobody group.
+     * Returns the HAProxy-nobody group.
      */
     String getNfsnobodyGroup() {
         getScriptProperty "nfsnobody_group"
     }
 
     /**
-     * Returns the Nfs export directories permissions to set.
+     * Returns the HAProxy export directories permissions to set.
      */
     String getNfsExportsPermissions() {
         getScriptProperty "nfs_exports_permissions"

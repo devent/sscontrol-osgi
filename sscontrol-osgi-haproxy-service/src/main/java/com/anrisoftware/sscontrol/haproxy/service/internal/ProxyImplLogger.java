@@ -23,7 +23,8 @@ package com.anrisoftware.sscontrol.haproxy.service.internal;
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.haproxy.service.external.Target;
+import com.anrisoftware.sscontrol.haproxy.service.external.Backend;
+import com.anrisoftware.sscontrol.haproxy.service.external.Frontend;
 
 /**
  * Logging for {@link ProxyImpl}.
@@ -36,7 +37,9 @@ final class ProxyImplLogger extends AbstractLogger {
 
     enum m {
 
-        targetSet("Target {} set to {}");
+        frontendSet("Frontend {} set to {}"),
+
+        backendSet("Backend {} set to {}");
 
         private String name;
 
@@ -57,8 +60,12 @@ final class ProxyImplLogger extends AbstractLogger {
         super(ProxyImpl.class);
     }
 
-    void targetSet(ProxyImpl nfs, Target host) {
-        debug(m.targetSet, host, nfs);
+    void frontendSet(ProxyImpl nfs, Frontend frontend) {
+        debug(m.frontendSet, frontend, nfs);
+    }
+
+    void backendSet(ProxyImpl nfs, Backend backend) {
+        debug(m.backendSet, backend, nfs);
     }
 
 }

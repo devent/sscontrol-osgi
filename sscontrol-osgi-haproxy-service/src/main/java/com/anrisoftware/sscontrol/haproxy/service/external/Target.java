@@ -29,6 +29,11 @@ package com.anrisoftware.sscontrol.haproxy.service.external;
 public interface Target {
 
     /**
+     * Returns the name.
+     */
+    String getName();
+
+    /**
      * Returns the address.
      */
     String getAddress();

@@ -17,15 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9
 
-import static com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Factory
 import com.anrisoftware.sscontrol.nfs.script.debian.external.Nfs_Debian
-import com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Factory
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
@@ -37,10 +37,7 @@ import groovy.util.logging.Slf4j
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-abstract class Nfs_Debian_9 extends Nfs_Debian {
-
-    SystemdUtils systemd
+com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9ystemdUtils systemd
 
     @Inject
     void setSystemdUtilsFactory(SystemdUtilsFactory factory) {

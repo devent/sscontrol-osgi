@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.internal
+package com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Factory
+import com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Factory
 import com.anrisoftware.sscontrol.nfs.service.internal.NfsImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -41,7 +41,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
+com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9tBase {
     
     @Inject
     RunScriptImplFactory runnerFactory

@@ -1,6 +1,8 @@
+package com.anrisoftware.sscontrol.haproxy.service.external;
+
 /*-
  * #%L
- * sscontrol-osgi - collectd-script-centos
+ * sscontrol-osgi - collectd-service
  * %%
  * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
  * %%
@@ -17,22 +19,13 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9
-
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Nfs 1.3 Debian 9 properties provider from
- * {@code "/nfs_1_3_debian_9.properties"}.
+ * Proxy frondend.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Nfs_1_3_Debian_9_Properties extends AbstractContextPropertiesProvider {
+public interface Frontend extends Target {
 
-    private static final URL RESOURCE = Nfs_1_3_Debian_9_Properties.class.getResource("/nfs_1_3_debian_9.properties")
-
-    Nfs_1_3_Debian_9_Properties() {
-        super(Nfs_1_3_Debian_9_Properties.class, RESOURCE)
-    }
 }

@@ -1,11 +1,11 @@
-package com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9
 
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.nfs.script.nfs_1_3.external.Nfs_1_3
 
 import groovy.util.logging.Slf4j
 
-import static com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.Nfs_1_3_Debian_9_Service.*
 
 import javax.inject.Inject
 
@@ -15,11 +15,7 @@ import javax.inject.Inject
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-class Nfs_1_3_Impl extends Nfs_1_3 {
-    
-    @Inject
-    Nfs_1_3_Debian_9_Properties propertiesProvider
+com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9   Nfs_1_3_Debian_9_Properties propertiesProvider
     
     @Override
     ContextProperties getDefaultProperties() {

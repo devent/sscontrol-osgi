@@ -109,6 +109,10 @@
             <artifactId>resources-templates</artifactId>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
