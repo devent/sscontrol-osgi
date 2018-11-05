@@ -1,2 +1,4 @@
 o-rwx /var/lib/robobee/tmp
-u=rwX,g=rwX,o-rwX /nfsfileshare/0
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp

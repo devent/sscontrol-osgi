@@ -1,4 +1,5 @@
 
 status
-allow from 185.24.220.41 to any port nfs
-allow from 37.252.124.149 to any port nfs
+allow from 127.0.0.1 to apt-get apt-get.out basename cat cat.out chmod chown cp etc grep grep.out id id.out mkdir mv rm scp sudo sudo.out systemctl systemctl.out ufw ufw.out which which.out port 80
+allow from 127.0.0.1 to 192.168.56.201 port 443
+allow from 127.0.0.1 to 192.168.56.201 port 22

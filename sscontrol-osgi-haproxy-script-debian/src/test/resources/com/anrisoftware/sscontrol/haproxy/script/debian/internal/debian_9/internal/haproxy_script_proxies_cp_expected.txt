@@ -1,1 +1,4 @@
-/var/lib/robobee/tmp/exports /tmp/junit/junit/etc/exports
+/var/lib/robobee/tmp/haproxy.cfg /tmp/junit/junit/etc/haproxy/haproxy.cfg
+/var/lib/robobee/tmp/http.cfg /tmp/junit/junit/etc/haproxy/conf.d/http.cfg
+/var/lib/robobee/tmp/https.cfg /tmp/junit/junit/etc/haproxy/conf.d/https.cfg
+/var/lib/robobee/tmp/ssh.cfg /tmp/junit/junit/etc/haproxy/conf.d/ssh.cfg

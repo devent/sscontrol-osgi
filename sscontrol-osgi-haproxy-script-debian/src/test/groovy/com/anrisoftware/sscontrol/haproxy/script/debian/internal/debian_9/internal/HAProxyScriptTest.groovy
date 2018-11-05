@@ -71,6 +71,9 @@ service "haproxy", version: "1.8" with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/haproxy.cfg", "${args.test.name}_haproxy_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/http.cfg", "${args.test.name}_http_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/https.cfg", "${args.test.name}_https_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/ssh.cfg", "${args.test.name}_ssh_cfg_expected.txt"
                 assertFileResource HAProxyScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource HAProxyScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource HAProxyScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"

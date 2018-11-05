@@ -9,3 +9,10 @@ bash -c echo "deb http://ftp.de.debian.org/debian stretch-backports main" > /tmp
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s

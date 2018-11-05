@@ -1,6 +1,5 @@
-httpConfig(parent, vars) ::= <<
 frontend http-in
-    bind            <vars.proxy.frontend.address>:<vars.proxy.frontend.port> name <vars.proxy.frontend.name>
+    bind            *:80 name node-http
     mode            http
     redirect scheme https code 301 unless { path_beg /.well-known/acme-challenge/ }
     default_backend nodes-http
@@ -10,8 +9,6 @@ backend nodes-http
     option          forwardfor
     http-request    set-header X-Forwarded-Port %[dst_port]
     http-request    add-header X-Forwarded-Proto https if { ssl_fc }
-    option          httpchk HEAD / HTTP/1.1<\u005C><\u005C>r<\u005C><\u005C>nHost:<\u005C><\u005C> <vars.proxy.target.address>:<vars.proxy.target.port>
+    option          httpchk HEAD / HTTP/1.1\r\nHost:\ 192.168.56.201:30000
     http-check      expect rstatus ((2|3)[0-9][0-9]|404)
-    server          ingress01-http <vars.proxy.target.address>:<vars.proxy.target.port> check inter 1000 send-proxy
-
->>
+    server          ingress01-http 192.168.56.201:30000 check inter 1000 send-proxy

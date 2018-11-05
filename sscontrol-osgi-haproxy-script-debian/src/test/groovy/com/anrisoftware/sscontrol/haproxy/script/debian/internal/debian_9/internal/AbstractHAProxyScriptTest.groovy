@@ -31,11 +31,15 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_9_TestUtil
  */
 abstract class AbstractHAProxyScriptTest extends AbstractHAProxyRunnerTest {
 
+    static final URL haproxyCfg = AbstractHAProxyScriptTest.class.getResource('haproxy_cfg.txt')
+    
     @Override
     void createDummyCommands(File dir) {
         createCommand ufwActiveCommand, dir, 'ufw'
         createCommand catCommand, dir, 'cat'
         createCommand grepCommand, dir, 'grep'
+        new File(dir, '/etc/haproxy').mkdirs()
+        createFile haproxyCfg, new File(dir, '/etc/haproxy'), 'haproxy.cfg'
         createEchoCommands dir, [
             'mkdir',
             'chown',

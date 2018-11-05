@@ -1,4 +1,4 @@
-httpConfig(parent, vars) ::= <<
+haproxyConfig(parent, vars) ::= <<
 frontend ssh-in
     bind            <vars.proxy.frontend.address>:<vars.proxy.frontend.port> name <vars.proxy.frontend.name>
     mode            tcp

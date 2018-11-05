@@ -44,11 +44,17 @@ abstract class HAProxy_1_8 extends ScriptBase {
 
     @Inject
     Map<String, ApplyProxyDefaults> applyProxyDefaults
-    
+
+    Map<String, TemplateResource> proxyConfigResources
+
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('HAProxy_1_8_Templates')
         this.exportsTemplate = templates.getResource('haproxy_config')
+        this.proxyConfigResources = [:]
+        proxyConfigResources.http = templates.getResource('http_config')
+        proxyConfigResources.https = templates.getResource('https_config')
+        proxyConfigResources.ssh = templates.getResource('ssh_config')
     }
 
     /**
@@ -60,9 +66,18 @@ abstract class HAProxy_1_8 extends ScriptBase {
             applyProxyDefaults[proxy.name].applyDefaults(this, proxy)
         }
     }
-    
+
     def deployConfig() {
-        template privileged: true, resource: exportsTemplate, name: 'haproxyConfig', vars: [:], dest: configFile call()
+        HAProxy service = this.service
+        template privileged: true, resource: exportsTemplate, name: 'haproxyConfig', dest: configFile call()
+        def dir = new File(configDir, "conf.d/")
+        service.proxies.each { Proxy proxy ->
+            shell privileged: true, "mkdir -p ${dir}" call()
+            def file = new File(dir, "${proxy.name}.cfg")
+            def t = proxyConfigResources[proxy.name]
+            template resource: t, name: 'haproxyConfig', vars: [proxy: proxy], dest: file call()
+        }
+        shell privileged: true, "cat ${dir}/*.cfg >> ${configFile}" call()
     }
 
     @Override
