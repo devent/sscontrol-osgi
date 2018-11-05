@@ -64,7 +64,7 @@ service "haproxy", version: "1.8" with {
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource HAProxyServerTest, readRemoteFile('/etc/haproxy', "haproxy.cfg"), "${args.test.name}_haproxy_cfg_expected.txt"
+                assertStringResource HAProxyServerTest, readRemoteFile('/etc/haproxy/haproxy.cfg'), "${args.test.name}_haproxy_cfg_expected.txt"
             },
         ]
         doTest test

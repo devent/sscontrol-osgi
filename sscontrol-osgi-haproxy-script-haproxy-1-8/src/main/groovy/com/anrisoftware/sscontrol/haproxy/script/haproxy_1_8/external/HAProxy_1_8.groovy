@@ -75,7 +75,7 @@ abstract class HAProxy_1_8 extends ScriptBase {
             shell privileged: true, "mkdir -p ${dir}" call()
             def file = new File(dir, "${proxy.name}.cfg")
             def t = proxyConfigResources[proxy.name]
-            template resource: t, name: 'haproxyConfig', vars: [proxy: proxy], dest: file call()
+            template privileged: true, resource: t, name: 'haproxyConfig', vars: [proxy: proxy], dest: file call()
         }
         shell privileged: true, "cat ${dir}/*.cfg >> ${configFile}" call()
     }
