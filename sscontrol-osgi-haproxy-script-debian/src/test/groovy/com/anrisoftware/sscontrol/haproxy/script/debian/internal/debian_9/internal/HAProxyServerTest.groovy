@@ -41,15 +41,22 @@ import groovy.util.logging.Slf4j
 class HAProxyServerTest extends AbstractHAProxyRunnerTest {
 
     @Test
-    void "nfs_server_exports"() {
+    void "haproxy_server_proxies"() {
         def test = [
-            name: "nfs_server_exports",
+            name: "haproxy_server_proxies",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-service "nfs", version: "1.3" with {
-    export dir: "/nfsfileshare/0" with {
-        host << "andrea-node-0.muellerpublic.de"
-        host name: "andrea-node-1.muellerpublic.de", options: "rw,sync,no_root_squash"
+service "haproxy", version: "1.8" with {
+    proxy "http" with {
+        backend address: "192.168.56.200", port: 30000
+    }
+    proxy "https" with {
+        frontend name: "andrea-node-1", address: "192.168.56.200"
+        backend address: "192.168.56.200", port: 30001
+    }
+    proxy "ssh" with {
+        frontend name: "andrea-node-1", address: "192.168.56.200", port: 22
+        backend address: "192.168.56.200", port: 30022
     }
 }
 ''',
@@ -57,7 +64,7 @@ service "nfs", version: "1.3" with {
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource HAProxyServerTest, readRemoteFile('/etc/exports', "robobee-test"), "${args.test.name}_exports_expected.txt"
+                assertStringResource HAProxyServerTest, readRemoteFile('/etc/haproxy', "haproxy.cfg"), "${args.test.name}_haproxy_cfg_expected.txt"
             },
         ]
         doTest test

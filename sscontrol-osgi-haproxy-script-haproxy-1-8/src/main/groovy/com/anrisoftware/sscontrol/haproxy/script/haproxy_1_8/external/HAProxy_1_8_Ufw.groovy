@@ -54,9 +54,9 @@ abstract class HAProxy_1_8_Ufw extends ScriptBase {
             return
         }
         service.proxies.each { Proxy proxy ->
-            println proxy
+            def address = proxy.frontend.address == "*" ? "any" : proxy.frontend.address
             shell privileged: true, """
-ufw allow from ${target.hostAddress} to ${proxy.frontend.address} port ${proxy.frontend.port}
+ufw allow from ${target.hostAddress} to ${address} port ${proxy.frontend.port}
 """ call()
         }
     }
