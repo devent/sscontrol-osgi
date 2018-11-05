@@ -1,2 +1,2 @@
 update
--y install haproxy
+-y install -t stretch-backports haproxy

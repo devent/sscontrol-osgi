@@ -167,6 +167,7 @@ abstract class DebianUtils {
             if (i > 0) {
                 b.vars.update = false
             }
+            println "installPackages " + b
             script.shell b call()
         }
     }
@@ -179,9 +180,8 @@ abstract class DebianUtils {
         def args = [:]
         args.packages = packages
         args.timeout = timeout
-        args.vars = [:]
-        args.vars.backport = "${script.distributionName}-backports"
-        args.vars.checkInstalled = checkInstalled
+        args.backport = "${script.distributionName}-backports"
+        args.checkInstalled = checkInstalled
         installPackages args
     }
 
