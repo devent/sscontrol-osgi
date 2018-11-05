@@ -57,36 +57,12 @@ abstract class HAProxy_1_8 extends ScriptBase {
     def setupDefaultOptions() {
         HAProxy service = this.service
         service.proxies.each { Proxy proxy ->
-            applyProxyDefaults[proxy.name].applyDefaults(this)
+            applyProxyDefaults[proxy.name].applyDefaults(this, proxy)
         }
     }
-
-    /**
-     * Returns the default options for exports, for example {@code rw,sync,no_root_squash}.
-     */
-    String getDefaultExportsOptions() {
-        getScriptProperty "default_exports_options"
-    }
-
-    /**
-     * Returns the HAProxy-nobody user.
-     */
-    String getNfsnobodyUser() {
-        getScriptProperty "nfsnobody_user"
-    }
-
-    /**
-     * Returns the HAProxy-nobody group.
-     */
-    String getNfsnobodyGroup() {
-        getScriptProperty "nfsnobody_group"
-    }
-
-    /**
-     * Returns the HAProxy export directories permissions to set.
-     */
-    String getNfsExportsPermissions() {
-        getScriptProperty "nfs_exports_permissions"
+    
+    def deployConfig() {
+        template privileged: true, resource: exportsTemplate, name: 'haproxyConfig', vars: [:], dest: configFile call()
     }
 
     @Override

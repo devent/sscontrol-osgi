@@ -1,0 +1,11 @@
+/bin/bash -s
+bash -c echo "deb http://ftp.de.debian.org/debian stretch-backports main" > /tmp/junit/junit/etc/apt/sources.list.d/backports.list
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s

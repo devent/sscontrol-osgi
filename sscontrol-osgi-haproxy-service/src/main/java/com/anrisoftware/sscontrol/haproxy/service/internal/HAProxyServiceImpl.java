@@ -41,7 +41,7 @@ import com.google.inject.AbstractModule;
 import com.google.j2objc.annotations.Property;
 
 /**
- * Creates the NFS service.
+ * Creates the HAProxy service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -49,7 +49,7 @@ import com.google.j2objc.annotations.Property;
 @Component(service = HostServiceService.class)
 public class HAProxyServiceImpl implements HAProxyService {
 
-    static final String SERVICE_NAME = "nfs";
+    static final String SERVICE_NAME = "haproxy";
 
     @Property(value = SERVICE_NAME)
     static final String NAME_PROPERTY = "service.name";

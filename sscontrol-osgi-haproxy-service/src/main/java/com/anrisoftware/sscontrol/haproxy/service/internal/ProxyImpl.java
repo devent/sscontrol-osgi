@@ -55,7 +55,7 @@ public class ProxyImpl implements Proxy {
         Proxy create(Map<String, Object> args);
     }
 
-    private final ProxyImplLogger log;
+    private transient ProxyImplLogger log;
 
     @Inject
     private transient BackendImplFactory backendFactory;

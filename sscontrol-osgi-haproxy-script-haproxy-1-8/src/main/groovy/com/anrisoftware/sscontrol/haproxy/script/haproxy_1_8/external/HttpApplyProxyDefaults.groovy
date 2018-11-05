@@ -18,9 +18,9 @@ class HttpApplyProxyDefaults implements ApplyProxyDefaults {
         assertThat "Proxy backend cannot be null.", proxy.backend, notNullValue()
         proxy.frontend == null ? {
             proxy.frontend name: "node-http", address: "*", port: getDefaultProxyFrontendPort(parent)
-        } : {
+        }() : {
             proxy.frontend.port = proxy.frontend.port == null ? getDefaultProxyFrontendPort(parent) : proxy.frontend.port
-        }
+        }()
     }
 
     @Override
