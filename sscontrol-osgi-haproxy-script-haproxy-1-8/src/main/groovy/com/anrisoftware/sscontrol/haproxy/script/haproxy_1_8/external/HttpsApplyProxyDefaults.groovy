@@ -6,27 +6,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /**
-* Apply defaults to HTTPS proxy.
-*
-* @author Erwin Müller <erwin.mueller@deventm.de>
-* @version 1.0
-*/
+ * Apply defaults to HTTPS proxy.
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 class HttpsApplyProxyDefaults implements ApplyProxyDefaults {
 
     @Override
     void applyDefaults(ScriptBase parent, Proxy proxy) {
         assertThat "Proxy backend cannot be null.", proxy.backend, notNullValue()
-        proxy.frontend == null ? {
-            proxy.frontend name: "node-https", address: "*", port: getDefaultProxyFrontendPort(parent)
-        }() : {
-            proxy.frontend.port = proxy.frontend.port == null ? getDefaultProxyFrontendPort(parent) : proxy.frontend.port
-        }()
-        println "proxy.frontend: " + proxy.frontend.port
+        if (proxy.frontend == null) {
+            proxy.frontend name: getDefaultProxyFrontendName(parent), address: "*", port: getDefaultProxyFrontendPort(parent)
+        }
+        proxy.frontend.name = proxy.frontend.name == null ? getDefaultProxyFrontendName(parent) : proxy.frontend.name
+        proxy.frontend.port = proxy.frontend.port == null ? getDefaultProxyFrontendPort(parent) : proxy.frontend.port
     }
 
     @Override
     String getName() {
         'https'
+    }
+
+    String getDefaultProxyFrontendName(ScriptBase parent) {
+        parent.scriptProperties.default_proxy_https_frontend_name
     }
 
     int getDefaultProxyFrontendPort(ScriptBase parent) {

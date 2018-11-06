@@ -87,4 +87,75 @@ service "haproxy", version: "1.8" with {
         ]
         doTest test
     }
+
+    @Test
+    void "script_default_frontends"() {
+        def test = [
+            name: "script_default_frontends",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "haproxy", version: "1.8" with {
+    proxy "http" with {
+        backend address: "192.168.56.201", port: 30000
+    }
+    proxy "https" with {
+        backend address: "192.168.56.201", port: 30001
+    }
+    proxy "ssh" with {
+        backend address: "192.168.56.201", port: 30022
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            generatedDir: folder.newFolder(),
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/haproxy.cfg", "${args.test.name}_haproxy_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/http.cfg", "${args.test.name}_http_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/https.cfg", "${args.test.name}_https_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/ssh.cfg", "${args.test.name}_ssh_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_address_frontends"() {
+        def test = [
+            name: "script_address_frontends",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "haproxy", version: "1.8" with {
+    proxy "http" with {
+        frontend address: "192.168.56.201"
+        backend address: "192.168.56.201", port: 30000
+    }
+    proxy "https" with {
+        frontend address: "192.168.56.201"
+        backend address: "192.168.56.201", port: 30001
+    }
+    proxy "ssh" with {
+        frontend address: "192.168.56.201"
+        backend address: "192.168.56.201", port: 30022
+    }
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            generatedDir: folder.newFolder(),
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/haproxy.cfg", "${args.test.name}_haproxy_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/http.cfg", "${args.test.name}_http_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/https.cfg", "${args.test.name}_https_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, gen, "/etc/haproxy/conf.d/ssh.cfg", "${args.test.name}_ssh_cfg_expected.txt"
+                assertFileResource HAProxyScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }

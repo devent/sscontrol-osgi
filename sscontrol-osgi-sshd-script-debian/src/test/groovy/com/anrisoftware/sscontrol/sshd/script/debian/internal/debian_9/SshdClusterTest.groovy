@@ -47,19 +47,29 @@ class SshdClusterTest extends AbstractSshdRunnerTest {
         def test = [
             name: "cluster_basic",
             script: '''
-service "ssh" with {
+service "ssh", group: "masters" with {
     host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+}
+
+service "ssh", group: "nodes" with {
     host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
     host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
-service "sshd"
+
+service "sshd", target: "masters" with {
+    bind port: 22
+}
+
+service "sshd", target: "nodes"  with {
+    bind port: nodesSshPort
+}
 ''',
-            scriptVars: [sockets: nodesSockets],
+            scriptVars: [sockets: nodesSockets, nodesSshPort: 22222],
             expectedServicesSize: 2,
             expected: { Map args ->
-                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-0.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
-                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-1.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
-                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-2.robobee-test.test'), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-0.robobee-test.test', 22), "${args.test.name}_sshd_config_node_0_expected.txt"
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-1.robobee-test.test', 22222), "${args.test.name}_sshd_config_node_1_expected.txt"
+                assertStringResource SshdClusterTest, readRemoteFile('/etc/ssh/sshd_config', 'node-2.robobee-test.test', 22222), "${args.test.name}_sshd_config_node_2_expected.txt"
             },
         ]
         doTest test

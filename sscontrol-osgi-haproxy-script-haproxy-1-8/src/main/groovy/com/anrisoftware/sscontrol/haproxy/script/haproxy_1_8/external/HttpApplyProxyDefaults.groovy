@@ -16,18 +16,23 @@ class HttpApplyProxyDefaults implements ApplyProxyDefaults {
     @Override
     void applyDefaults(ScriptBase parent, Proxy proxy) {
         assertThat "Proxy backend cannot be null.", proxy.backend, notNullValue()
-        proxy.frontend == null ? {
-            proxy.frontend name: "node-http", address: "*", port: getDefaultProxyFrontendPort(parent)
-        }() : {
-            proxy.frontend.port = proxy.frontend.port == null ? getDefaultProxyFrontendPort(parent) : proxy.frontend.port
-        }()
+        if (proxy.frontend == null) {
+            proxy.frontend name: getDefaultProxyFrontendName(parent), address: "*", port: getDefaultProxyFrontendPort(parent)
+        }
+
+        proxy.frontend.name = proxy.frontend.name == null ? getDefaultProxyFrontendName(parent) : proxy.frontend.name
+        proxy.frontend.port = proxy.frontend.port == null ? getDefaultProxyFrontendPort(parent) : proxy.frontend.port
     }
 
     @Override
     String getName() {
         'http'
     }
-    
+
+    String getDefaultProxyFrontendName(ScriptBase parent) {
+        parent.scriptProperties.default_proxy_http_frontend_name
+    }
+
     int getDefaultProxyFrontendPort(ScriptBase parent) {
         parent.scriptNumberProperties.default_proxy_http_frontend_port
     }

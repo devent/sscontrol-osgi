@@ -167,7 +167,6 @@ abstract class DebianUtils {
             if (i > 0) {
                 b.vars.update = false
             }
-            println "installPackages " + b
             script.shell b call()
         }
     }
