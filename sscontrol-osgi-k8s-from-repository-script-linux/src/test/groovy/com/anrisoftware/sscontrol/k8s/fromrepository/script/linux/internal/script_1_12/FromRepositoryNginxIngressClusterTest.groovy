@@ -20,16 +20,14 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_12
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -41,7 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(Nodes3AvailableCondition.class)
+@ExtendWith(Nodes3Port22222AvailableCondition.class)
 class FromRepositoryNginxIngressClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
@@ -51,24 +49,28 @@ class FromRepositoryNginxIngressClusterTest extends AbstractFromRepositoryRunner
             script: '''
 def edgeNodeTargetHttpPort = 30000
 def edgeNodeTargetHttpsPort = 30001
-def edgeNodeTargetSshPort = 30022
 
 service "ssh" with {
-    host "robobee@node-0.robobee-test.test", socket: sockets.node[0]
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
 }
+
 service "ssh", group: "edge-nodes" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.node[1]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
 }
+
 service "k8s-cluster" with {
 }
+
 service "repo-git", group: "nginx-ingress" with {
-    remote url: "git@github.com:robobee-repos/nginx-ingress.git"
+    remote url: "git@github.com:robobee-repos/kube-nginx-ingress.git"
     credentials "ssh", key: robobeeKey
+    checkout branch: "feature/4155-Update-to-nginx-0.20.0"
 }
+
 service "from-repository", repo: "nginx-ingress", dest: "/etc/kubernetes/addons/ingress-nginx" with {
     vars << [
         nginxIngressController: [
-            image: [name: 'quay.io/kubernetes-ingress-controller/nginx-ingress-controller', version: '0.14.0'],
+            image: [name: 'quay.io/kubernetes-ingress-controller/nginx-ingress-controller', version: '0.20.0'],
             limits: [cpu: '0', memory: '200Mi'],
             requests: [cpu: '0', memory: '200Mi'],
             affinity: [key: "robobeerun.com/ingress-nginx", name: "required", required: true],
@@ -86,89 +88,6 @@ service "from-repository", repo: "nginx-ingress", dest: "/etc/kubernetes/addons/
             affinity: [key: "robobeerun.com/ingress-nginx", name: "required", required: true],
         ]
     ]
-
-def edgeNodeTargetAddress = targets["edge-nodes"][0].hostAddress
-
-service "shell", target: "edge-nodes" with {
-    script timeout: "PT10M", privileged: true, """
-if systemctl list-units | grep haproxy.service | grep running; then
-systemctl stop haproxy
-fi
-"""
-}
-
-service "shell", target: "edge-nodes" with {
-    script timeout: "PT1H", privileged: true, """
-echo "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/backports.list
-export DEBIAN_FRONTEND=noninteractive
-apt-get -y update
-apt-get -y -t stretch-backports install haproxy
-"""
-    script privileged: true, """
-cat <<'EOF' > /etc/haproxy/haproxy.cfg
-${IOUtils.toString(haproxyDefaultConfig, "UTF-8")}
-EOF
-cat <<'EOF' >> /etc/haproxy/haproxy.cfg
-frontend http-in
-    bind *:80
-    mode http
-    redirect scheme https code 301 unless { path_beg /.well-known/acme-challenge/ }
-    default_backend nodes-http
-backend nodes-http
-    mode http
-    balance roundrobin
-    option forwardfor
-    http-request set-header X-Forwarded-Port %[dst_port]
-    http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    option httpchk HEAD / HTTP/1.1\\\\r\\\\nHost:\\\\ 37.252.124.149:30000
-    http-check expect rstatus ((2|3)[0-9][0-9]|404)
-    server ingress01 ${edgeNodeTargetAddress}:${edgeNodeTargetHttpPort} check send-proxy
-EOF
-cat <<'EOF' >> /etc/haproxy/haproxy.cfg
-frontend https-in
-    bind            ${edgeNodeTargetAddress}:443 name andrea-node-1
-    mode            tcp
-    option          tcplog
-    tcp-request     inspect-delay 5s
-    tcp-request     content accept if { req.ssl_hello_type 1 }
-    acl proto_tls   req.ssl_hello_type 1
-    use_backend nodes-https if proto_tls
-    default_backend nodes-https
-backend nodes-https
-    mode            tcp
-    log             global
-    stick-table     type ip size 512k expire 30m
-    stick on        dst
-    balance         roundrobin
-    server          ingress01-https ${edgeNodeTargetAddress}:${edgeNodeTargetHttpsPort} check inter 1000 send-proxy
-
-EOF
-cat <<'EOF' >> /etc/haproxy/haproxy.cfg
-frontend ssh-in
-    bind            ${edgeNodeTargetAddress} name andrea-node-1
-    mode            tcp
-    default_backend nodes-ssh
-backend nodes-ssh
-    mode            tcp
-    log             global
-    stick-table     type ip size 512k expire 30m
-    stick on        dst
-    balance         roundrobin
-    retries         3
-    option          tcplog
-    server          ingress01-ssh ${edgeNodeTargetAddress}:${edgeNodeTargetSshPort} check inter 1000
-EOF
-cat <<'EOF' >> /etc/haproxy/haproxy.cfg
-listen stats
-    bind ${edgeNodeTargetAddress}:9000
-    mode http
-    stats enable
-    stats realm Haproxy\\\\ Statistics
-    stats uri /
-    stats auth oot1Yaok:cah8Eeka
-
-EOF
-"""
 }
 ''',
             scriptVars: [sockets: nodesSockets, robobeeKey: robobeeKey],

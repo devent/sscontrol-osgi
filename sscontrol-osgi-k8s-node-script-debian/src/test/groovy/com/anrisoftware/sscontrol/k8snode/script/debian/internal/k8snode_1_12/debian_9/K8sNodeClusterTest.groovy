@@ -96,9 +96,9 @@ targets['nodes'].eachWithIndex { host, i ->
     static final Map nodes = [
         labels: [
             [
-                "robobeerun.com/role=edge-router",
+                "robobeerun.com/ingress-nginx=required",
+                "robobeerun.com/cert-manager=required",
                 "muellerpublic.de/role=web",
-                "robobeerun.com/cert-manager=required"
             ],
             [
                 "muellerpublic.de/role=dev",

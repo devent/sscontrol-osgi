@@ -53,8 +53,8 @@ service "ssh", host: "robobee@node-0.robobee-test.test", socket: sockets.masters
 service "k8s-cluster"
 service "repo-git", group: "nfs" with {
     remote url: "git@github.com:robobee-repos/kube-nfs-provisioner.git"
-    checkout branch: "feature/v3.1.0-k8s1.11"
     credentials "ssh", key: robobeeKey
+    checkout branch: "feature/v3.1.0-k8s1.11"
 }
 service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with {
     vars << [

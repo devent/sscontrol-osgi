@@ -87,8 +87,8 @@ service "from-repository", repo: "heapster-influxdb-grafana-monitoring", dest: "
     vars << [
         influxdb: [
             image: [name: 'k8s.gcr.io/heapster-influxdb-amd64', version: 'v1.3.3'],
-            limits: [cpu: '50m', memory: '100Mi'],
-            requests: [cpu: '50m', memory: '100Mi'],
+            limits: [cpu: '0', memory: '300Mi'],
+            requests: [cpu: '0', memory: '300Mi'],
             persistent: [share: true, storage: [class: "managed-nfs-storage", size: "1Gi"]],
             revision: "r1",
         ]
