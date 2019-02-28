@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
         <artifactId>sscontrol-osgi-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
         <relativePath>../sscontrol-osgi-parent</relativePath>
     </parent>
 
@@ -44,11 +44,9 @@
         <module>../sscontrol-osgi-groovy-parser</module>
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
-        <module>../sscontrol-osgi-hostname-script-debian</module>
-        <module>../sscontrol-osgi-hostname-script-systemd</module>
-        <module>../sscontrol-osgi-hostname-service</module>
-        <module>../sscontrol-osgi-hosts-script-linux</module>
-        <module>../sscontrol-osgi-hosts-service</module>
+        <module>../sscontrol-osgi-haproxy-script-haproxy-1-8</module>
+        <module>../sscontrol-osgi-haproxy-script-debian</module>
+        <module>../sscontrol-osgi-haproxy-service</module>
         <module>../sscontrol-osgi-k8s-backup-client</module>
         <module>../sscontrol-osgi-k8s-backup-script-linux</module>
         <module>../sscontrol-osgi-k8s-backup-service</module>
@@ -68,6 +66,10 @@
         <module>../sscontrol-osgi-k8s-node-script-debian</module>
         <module>../sscontrol-osgi-k8s-restore-script-linux</module>
         <module>../sscontrol-osgi-k8s-restore-service</module>
+        <module>../sscontrol-osgi-nfs-script-centos</module>
+        <module>../sscontrol-osgi-nfs-script-debian</module>
+        <module>../sscontrol-osgi-nfs-script-nfs-1-3</module>
+        <module>../sscontrol-osgi-nfs-service</module>
         <module>../sscontrol-osgi-registry-docker-service</module>
         <module>../sscontrol-osgi-registry-docker-script-linux</module>
         <module>../sscontrol-osgi-repo-git-service</module>

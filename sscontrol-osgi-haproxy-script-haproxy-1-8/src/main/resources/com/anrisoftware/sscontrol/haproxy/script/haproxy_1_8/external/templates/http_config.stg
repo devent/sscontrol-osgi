@@ -1,0 +1,17 @@
+haproxyConfig(parent, vars) ::= <<
+frontend http-in
+    bind            <vars.proxy.frontend.address>:<vars.proxy.frontend.port> name <vars.proxy.frontend.name>
+    mode            http
+    redirect scheme https code 301 unless { path_beg /.well-known/acme-challenge/ }
+    default_backend nodes-http
+backend nodes-http
+    mode            http
+    balance         roundrobin
+    option          forwardfor
+    http-request    set-header X-Forwarded-Port %[dst_port]
+    http-request    add-header X-Forwarded-Proto https if { ssl_fc }
+    option          httpchk HEAD / HTTP/1.1<\u005C>r<\u005C>nHost:<\u005C> <vars.proxy.backend.address>:<vars.proxy.backend.port>
+    http-check      expect rstatus ((2|3)[0-9][0-9]|404)
+    server          ingress01-http <vars.proxy.backend.address>:<vars.proxy.backend.port> check inter 1000 send-proxy
+
+>>

@@ -59,30 +59,30 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
     Collectd_Debian_9_Factory collectdDebianFactory
 
     def getRunScriptFactory() {
-	runnerFactory
+        runnerFactory
     }
 
     HostServices putServices(HostServices services) {
-	services.putAvailableService 'ssh', sshFactory
-	services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
-	services.putAvailableService 'collectd', collectdFactory
-	services.putAvailableScriptService 'collectd-5.7/debian/9', collectdDebianFactory
-	return services
+        services.putAvailableService 'ssh', sshFactory
+        services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
+        services.putAvailableService 'collectd', collectdFactory
+        services.putAvailableScriptService 'collectd-5.7/debian/9', collectdDebianFactory
+        return services
     }
 
     List getAdditionalModules() {
-	def modules = super.additionalModules
-	modules << new RunnerModule()
-	modules << new Ssh_Linux_Module()
-	modules.addAll CollectdModules.getAdditionalModules()
-	modules
+        def modules = super.additionalModules
+        modules << new RunnerModule()
+        modules << new Ssh_Linux_Module()
+        modules.addAll CollectdModules.getAdditionalModules()
+        modules
     }
 
     @BeforeEach
     void setupTest() {
-	toStringStyle
-	injector = createInjector()
-	injector.injectMembers(this)
-	this.threads = createThreads()
+        toStringStyle
+        injector = createInjector()
+        injector.injectMembers(this)
+        this.threads = createThreads()
     }
 }

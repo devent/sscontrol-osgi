@@ -1,0 +1,19 @@
+haproxyConfig(parent, vars) ::= <<
+frontend https-in
+    bind            <vars.proxy.frontend.address>:<vars.proxy.frontend.port> name <vars.proxy.frontend.name>
+    mode            tcp
+    option          tcplog
+    tcp-request     inspect-delay 5s
+    tcp-request     content accept if { req.ssl_hello_type 1 }
+    acl proto_tls   req.ssl_hello_type 1
+    use_backend     nodes-https if proto_tls
+    default_backend nodes-https
+backend nodes-https
+    mode            tcp
+    log             global
+    stick-table     type ip size 512k expire 30m
+    stick on        dst
+    balance         roundrobin
+    server          ingress01-https <vars.proxy.backend.address>:<vars.proxy.backend.port> check inter 1000 send-proxy
+
+>>

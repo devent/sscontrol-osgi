@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.anrisoftware.sscontrol</groupId>
         <artifactId>sscontrol-osgi-scr-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
         <relativePath>../sscontrol-osgi-scr-parent</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-services-repository</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
@@ -70,31 +70,31 @@
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-types-cluster</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-debug</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-services-properties</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-k8s-base-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-utils-tls</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
 

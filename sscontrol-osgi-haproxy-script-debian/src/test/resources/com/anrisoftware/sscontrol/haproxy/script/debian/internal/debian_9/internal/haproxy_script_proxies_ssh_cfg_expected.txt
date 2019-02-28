@@ -1,0 +1,13 @@
+frontend ssh-in
+    bind            192.168.56.201:22 name andrea-node-1
+    mode            tcp
+    default_backend nodes-ssh
+backend nodes-ssh
+    mode            tcp
+    log             global
+    stick-table     type ip size 512k expire 30m
+    stick on        dst
+    balance         roundrobin
+    retries         3
+    option          tcplog
+    server          ingress01-ssh 192.168.56.201:30022 check inter 1000

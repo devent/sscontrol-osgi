@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.internal.ClusterImpl.Clus
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.EtcdPluginImpl.EtcdPluginImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.K8sImpl.K8sImplFactory;
 import com.anrisoftware.sscontrol.k8sbase.base.service.internal.KubeletImpl.KubeletImplFactory;
+import com.anrisoftware.sscontrol.k8sbase.base.service.internal.NfsClientPluginImpl.NfsClientPluginImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -51,40 +52,28 @@ public class K8sModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, K8sImpl.class)
-                .build(K8sImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Cluster.class, ClusterImpl.class)
-                .build(ClusterImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Kubelet.class, KubeletImpl.class)
-                .build(KubeletImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Label.class, LabelImpl.class)
-                .build(LabelFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Taint.class, TaintImpl.class)
-                .build(TaintFactory.class));
+        install(new FactoryModuleBuilder().implement(HostService.class, K8sImpl.class).build(K8sImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Cluster.class, ClusterImpl.class).build(ClusterImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Kubelet.class, KubeletImpl.class).build(KubeletImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Label.class, LabelImpl.class).build(LabelFactory.class));
+        install(new FactoryModuleBuilder().implement(Taint.class, TaintImpl.class).build(TaintFactory.class));
         bindPlugins();
     }
 
     private void bindPlugins() {
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, EtcdPluginImpl.class)
+        install(new FactoryModuleBuilder().implement(Plugin.class, EtcdPluginImpl.class)
                 .build(EtcdPluginImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, CanalPluginImpl.class)
+        install(new FactoryModuleBuilder().implement(Plugin.class, CanalPluginImpl.class)
                 .build(CanalPluginImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Plugin.class, AddonManagerPluginImpl.class)
+        install(new FactoryModuleBuilder().implement(Plugin.class, AddonManagerPluginImpl.class)
                 .build(AddonManagerPluginImplFactory.class));
-        MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(),
-                String.class, PluginFactory.class);
+        install(new FactoryModuleBuilder().implement(Plugin.class, NfsClientPluginImpl.class)
+                .build(NfsClientPluginImplFactory.class));
+        MapBinder<String, PluginFactory> mapbinder = newMapBinder(binder(), String.class, PluginFactory.class);
         mapbinder.addBinding("etcd").to(EtcdPluginImplFactory.class);
         mapbinder.addBinding("canal").to(CanalPluginImplFactory.class);
-        mapbinder.addBinding("addon-manager")
-                .to(AddonManagerPluginImplFactory.class);
+        mapbinder.addBinding("addon-manager").to(AddonManagerPluginImplFactory.class);
+        mapbinder.addBinding("nfs-client").to(NfsClientPluginImplFactory.class);
     }
 
 }

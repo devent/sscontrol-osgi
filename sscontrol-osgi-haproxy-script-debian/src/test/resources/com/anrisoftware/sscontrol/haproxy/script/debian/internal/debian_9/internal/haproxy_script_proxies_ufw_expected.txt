@@ -1,0 +1,5 @@
+
+status
+allow from 127.0.0.1 to any port 80
+allow from 127.0.0.1 to 192.168.56.201 port 443
+allow from 127.0.0.1 to 192.168.56.201 port 22

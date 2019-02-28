@@ -1,3 +1,0 @@
-# auto-generated from robobee-run
-[Service]
-Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false --node-labels=some-label=value,robobeerun.com/node=node-0"

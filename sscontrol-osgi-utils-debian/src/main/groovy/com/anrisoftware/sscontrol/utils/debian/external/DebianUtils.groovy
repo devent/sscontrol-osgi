@@ -179,9 +179,8 @@ abstract class DebianUtils {
         def args = [:]
         args.packages = packages
         args.timeout = timeout
-        args.vars = [:]
-        args.vars.backport = "${script.distributionName}-backports"
-        args.vars.checkInstalled = checkInstalled
+        args.backport = "${script.distributionName}-backports"
+        args.checkInstalled = checkInstalled
         installPackages args
     }
 

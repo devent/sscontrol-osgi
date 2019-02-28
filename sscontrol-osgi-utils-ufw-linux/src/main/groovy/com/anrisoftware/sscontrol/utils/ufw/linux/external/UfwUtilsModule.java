@@ -33,8 +33,7 @@ public class UfwUtilsModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(UfwUtils.class, UfwLinuxUtils.class)
+        install(new FactoryModuleBuilder().implement(UfwUtils.class, UfwLinuxUtils.class)
                 .build(UfwLinuxUtilsFactory.class));
     }
 

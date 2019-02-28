@@ -1,0 +1,16 @@
+haproxyConfig(parent, vars) ::= <<
+frontend ssh-in
+    bind            <vars.proxy.frontend.address>:<vars.proxy.frontend.port> name <vars.proxy.frontend.name>
+    mode            tcp
+    default_backend nodes-ssh
+backend nodes-ssh
+    mode            tcp
+    log             global
+    stick-table     type ip size 512k expire 30m
+    stick on        dst
+    balance         roundrobin
+    retries         3
+    option          tcplog
+    server          ingress01-ssh <vars.proxy.backend.address>:<vars.proxy.backend.port> check inter 1000
+
+>>

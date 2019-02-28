@@ -44,14 +44,14 @@ import groovy.util.logging.Slf4j
 class Fail2banClusterTest extends AbstractFail2banRunnerTest {
 
     @Test
-    void "server_ssh"() {
+    void "cluster_ssh"() {
         def test = [
-            name: "server_ssh",
+            name: "cluster_ssh",
             script: '''
 service "ssh", group: "servers" with {
-    host "robobee@robobee-test", socket: "/tmp/robobee@robobee-test:22"
-    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-1-test:22"
-    host "robobee@robobee-1-test", socket: "/tmp/robobee@robobee-2-test:22"
+    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
+    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
+    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
 }
 service "fail2ban", target: "servers" with {
     debug "debug", level: 4
@@ -59,9 +59,12 @@ service "fail2ban", target: "servers" with {
     jail "sshd"
 }
 ''',
-            scriptVars: [:],
+            scriptVars: [sockets: nodesSockets],
             expectedServicesSize: 2,
             expected: { Map args ->
+                assertStringResource Fail2banServerTest, readRemoteFile('/etc/fail2ban/fail2ban.local', 'robobee-test.test'), "${args.test.name}_fail2ban_local_expected.txt"
+                assertStringResource Fail2banServerTest, readRemoteFile('/etc/fail2ban/jail.local', 'robobee-test.test'), "${args.test.name}_jail_local_expected.txt"
+                assertStringResource Fail2banServerTest, readRemoteFile('/etc/fail2ban/action.d/ufw.conf', 'robobee-test.test'), "${args.test.name}_ufw_conf_expected.txt"
             },
         ]
         doTest test

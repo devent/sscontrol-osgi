@@ -1,0 +1,7 @@
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/haproxy/conf.d
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/haproxy/conf.d
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/haproxy/conf.d
+-p /var/lib/robobee/tmp

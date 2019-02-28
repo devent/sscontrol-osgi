@@ -1,0 +1,51 @@
+kubeadmConfig(parent, vars) ::= <<
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: InitConfiguration
+apiEndpoint:
+  advertiseAddress: <parent.advertiseAddress>
+  bindPort: <parent.service.cluster.port>
+nodeRegistration:
+  name: <parent.service.cluster.name>
+---
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: ClusterConfiguration
+networking:
+  dnsDomain: <parent.service.cluster.dnsDomain>
+  serviceSubnet: <parent.service.cluster.serviceRange>
+  podSubnet: <parent.service.cluster.podRange>
+kubernetesVersion: <parent.kubernetesVersion>
+certificatesDir: <parent.certsDir>
+<etcdPluginIf(parent, vars)>
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+clusterCIDR: "<parent.clusterCidr>"
+
+>>
+
+etcdPluginIf(parent, vars) ::= <%
+<if(parent.pluginsTargets.etcd)>
+<etcdPlugin(parent, vars)>
+<etcdTlsFilesIf(parent, vars)>
+<endif>
+%>
+
+etcdPlugin(parent, vars) ::= <<
+etcd:
+  external:
+    endpoints:
+    <parent.pluginsTargets.etcd:{h|- <h.protocol>://<h.host>:<h.port>};separator="\n">
+>>
+
+etcdTlsFilesIf(parent, vars) ::= <%
+<if(parent.etcdTls.ca||parent.etcdTls.cert||parent.etcdTls.key)>
+<etcdTlsFiles(parent, vars)>
+<endif>
+%>
+
+etcdTlsFiles(parent, vars) ::= <<
+
+    <if(parent.etcdTls.ca)>caFile: <parent.certsDir>/<parent.etcdTls.caName><endif>
+    <if(parent.etcdTls.cert)>certFile: <parent.certsDir>/<parent.etcdTls.certName><endif>
+    <if(parent.etcdTls.key)>keyFile: <parent.certsDir>/<parent.etcdTls.keyName><endif>
+>>
