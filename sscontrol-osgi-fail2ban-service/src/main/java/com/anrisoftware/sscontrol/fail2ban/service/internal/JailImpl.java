@@ -55,6 +55,8 @@ public class JailImpl implements Jail {
 
     private static final String SERVICE_ARG = "service";
 
+    private static final String PORT_ARG = "port";
+
     /**
      *
      *
@@ -79,6 +81,8 @@ public class JailImpl implements Jail {
 
     private String notify;
 
+    private Integer port;
+
     @AssistedInject
     JailImpl(BanningImplFactory banningFactory, @Assisted String service) {
         this.service = service;
@@ -86,21 +90,19 @@ public class JailImpl implements Jail {
         this.ignoreAddresses = new ArrayList<>();
         this.enabled = null;
         this.banning = banningFactory.create();
+        this.port = null;
     }
 
     @SuppressWarnings("unchecked")
     @AssistedInject
-    JailImpl(BanningImplFactory banningFactory,
-            @Assisted Map<String, Object> args) {
+    JailImpl(BanningImplFactory banningFactory, @Assisted Map<String, Object> args) {
         this.service = args.get(SERVICE_ARG).toString();
-        this.notify = args.get(NOTIFY_ARG) == null ? null
-                : args.get(NOTIFY_ARG).toString();
-        this.ignoreAddresses = args.get(IGNORE_ARG) == null
-                ? new ArrayList<String>()
+        this.notify = args.get(NOTIFY_ARG) == null ? null : args.get(NOTIFY_ARG).toString();
+        this.ignoreAddresses = args.get(IGNORE_ARG) == null ? new ArrayList<String>()
                 : new ArrayList<>((List<String>) args.get(IGNORE_ARG));
-        this.enabled = args.get(ENABLED_ARG) == null ? null
-                : (Boolean) args.get(ENABLED_ARG);
+        this.enabled = args.get(ENABLED_ARG) == null ? null : (Boolean) args.get(ENABLED_ARG);
         this.banning = banningFactory.create(args);
+        this.port = args.get(PORT_ARG) == null ? null : (Integer) args.get(PORT_ARG);
     }
 
     public void enabled(Boolean enabled) throws ParseException {
@@ -114,6 +116,19 @@ public class JailImpl implements Jail {
         Object v;
         v = a.get("enabled");
         this.enabled = (Boolean) v;
+    }
+
+    public void port(Integer port) throws ParseException {
+        Map<String, Object> a = new HashMap<>();
+        a.put("number", port);
+        port(a);
+    }
+
+    public void port(Map<String, Object> args) throws ParseException {
+        Map<String, Object> a = new HashMap<>(args);
+        Object v;
+        v = a.get("number");
+        this.port = (Integer) v;
     }
 
     public void notify(String address) throws ParseException {
@@ -164,6 +179,11 @@ public class JailImpl implements Jail {
     }
 
     @Override
+    public Integer getPort() {
+        return port;
+    }
+
+    @Override
     public String getNotify() {
         return notify;
     }
@@ -180,10 +200,8 @@ public class JailImpl implements Jail {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(service)
-                .append(ENABLED_ARG, enabled).append(NOTIFY_ARG, notify)
-                .append(IGNORE_ARG, ignoreAddresses).append("banning", banning)
-                .toString();
+        return new ToStringBuilder(this).append(service).append(ENABLED_ARG, enabled).append(NOTIFY_ARG, notify)
+                .append(IGNORE_ARG, ignoreAddresses).append("banning", banning).toString();
     }
 
 }

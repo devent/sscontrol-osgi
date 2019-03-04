@@ -1,0 +1,15 @@
+[DEFAULT]
+bantime = 36000
+backend = auto
+banaction = ufw
+maxretry = 3
+action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
+destemail = root@localhost
+app = 
+
+[apache]
+port = 22222
+enabled = true
+banaction = ufw
+app = WWW Full
+

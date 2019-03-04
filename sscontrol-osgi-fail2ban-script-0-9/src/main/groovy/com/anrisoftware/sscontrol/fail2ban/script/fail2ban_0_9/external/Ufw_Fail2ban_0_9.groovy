@@ -122,6 +122,9 @@ ufw -f enable
             if (jail.notify) {
                 properties.setProperty "destemail", jail.notify
             }
+            if (jail.port) {
+                properties.setProperty "port", jail.port.toString()
+            }
             if (jail.ignoreAddresses && jail.ignoreAddresses.size() > 0) {
                 properties.setProperty "ignoreip", jail.ignoreAddresses.join(" ")
             }

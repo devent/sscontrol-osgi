@@ -26,8 +26,6 @@ import javax.inject.Inject
 import org.joda.time.Duration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty
-import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.globalpom.core.durationformat.DurationFormatModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -306,6 +304,40 @@ service "fail2ban" with {
                     Jail j = fail.jails[0]
                     assert j.service == "apache"
                     assert j.banning.app == "Apache"
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache", port: 22222
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "DEFAULT"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.port == 22222
+                },
+            ],
+            [
+                input: """
+service "fail2ban" with {
+    jail "apache" with {
+        port number: 22222
+    }
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('fail2ban').size() == 1
+                    Fail2ban fail = services.getServices('fail2ban')[0] as Fail2ban
+                    assert fail.defaultJail.service == "DEFAULT"
+                    assert fail.jails.size() == 1
+                    Jail j = fail.jails[0]
+                    assert j.service == "apache"
+                    assert j.port == 22222
                 },
             ],
         ]
