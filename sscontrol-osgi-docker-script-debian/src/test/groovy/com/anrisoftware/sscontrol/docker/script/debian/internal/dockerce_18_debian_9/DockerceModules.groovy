@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -35,6 +35,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9.Dockerce_18_Debian_9_Module
 import com.anrisoftware.sscontrol.docker.service.internal.DockerModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
@@ -59,7 +60,7 @@ class DockerceModules {
         [
             new SshModule(),
             new DockerModule(),
-            new Dockerce_17_Debian_9_Module(),
+            new Dockerce_18_Debian_9_Module(),
             new DebugLoggingModule(),
             new TypesModule(),
             new StringsModule(),

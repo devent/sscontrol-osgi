@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*

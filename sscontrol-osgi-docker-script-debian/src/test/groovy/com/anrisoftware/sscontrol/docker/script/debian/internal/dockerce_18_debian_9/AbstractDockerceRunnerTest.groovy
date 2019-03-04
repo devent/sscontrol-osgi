@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
+import com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9.Dockerce_18_Debian_9_Factory
 import com.anrisoftware.sscontrol.docker.service.internal.DockerImpl.DockerImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -55,7 +56,7 @@ abstract class AbstractDockerceRunnerTest extends AbstractRunnerTestBase {
     DockerImplFactory serviceFactory
 
     @Inject
-    Dockerce_17_Debian_9_Factory scriptFactory
+    Dockerce_18_Debian_9_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory

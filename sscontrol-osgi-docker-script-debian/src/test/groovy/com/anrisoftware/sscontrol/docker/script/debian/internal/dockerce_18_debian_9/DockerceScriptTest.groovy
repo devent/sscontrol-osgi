@@ -17,15 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_17_debian_9
+package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
@@ -41,7 +39,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
+//@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
 @ExtendWith(LocalhostSocketCondition.class)
 class DockerceScriptTest extends AbstractDockerceScriptTest {
 

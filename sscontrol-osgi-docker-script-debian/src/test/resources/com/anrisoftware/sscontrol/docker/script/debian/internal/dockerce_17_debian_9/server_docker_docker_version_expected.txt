@@ -1,1 +1,0 @@
-Docker version 17.03.2-ce, build f5ec1e2
