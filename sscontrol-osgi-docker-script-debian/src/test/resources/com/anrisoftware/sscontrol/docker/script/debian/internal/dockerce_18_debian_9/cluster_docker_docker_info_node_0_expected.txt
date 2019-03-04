@@ -3,24 +3,24 @@ Containers: 0
  Paused: 0
  Stopped: 0
 Images: 0
-Server Version: 17.03.3-ce
-Storage Driver: aufs
- Root Dir: /var/lib/docker/aufs
+Server Version: 18.06.3-ce
+Storage Driver: overlay2
  Backing Filesystem: extfs
- Dirs: 0
- Dirperm1 Supported: true
+ Supports d_type: true
+ Native Overlay Diff: true
 Logging Driver: json-file
 Cgroup Driver: cgroupfs
-Plugins: 
+Plugins:
  Volume: local
  Network: bridge host macvlan null overlay
+ Log: awslogs fluentd gcplogs gelf journald json-file logentries splunk syslog
 Swarm: inactive
 Runtimes: runc
 Default Runtime: runc
 Init Binary: docker-init
-containerd version: 6c463891b1ad274d505ae3bb738e530d1df2b3c7
-runc version: 54296cf40ad8143b62dbcaa1d90e520a2136ddfe
-init version: 949e6fa
+containerd version: 468a545b9edcd5932818eb9de8e72413e616e86e
+runc version: a592beb5bc4c4092b1b1bac971afed27687340c5
+init version: fec3683
 Security Options:
  seccomp
   Profile: default
@@ -29,13 +29,14 @@ Operating System: Debian GNU/Linux 9 (stretch)
 OSType: linux
 Architecture: x86_64
 CPUs: 2
-Total Memory: 1.957 GiB
+Total Memory: 1.43GiB
 Name: node-0
-ID: FNRS:CVQJ:D7NS:EKSX:W2GQ:5MY2:ARYK:AILE:WE6J:NU4J:CEK5:W4TZ
+ID: ID
 Docker Root Dir: /var/lib/docker
 Debug Mode (client): false
 Debug Mode (server): false
 Registry: https://index.docker.io/v1/
+Labels:
 Experimental: false
 Insecure Registries:
  127.0.0.0/8

@@ -20,17 +20,15 @@
 package com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
-import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -43,7 +41,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@ExtendWith(Nodes3AvailableCondition.class)
+@ExtendWith(Nodes3Port22222AvailableCondition.class)
 class DockerceCluster22222Test extends AbstractDockerceRunnerTest {
 
     @Test
@@ -58,42 +56,16 @@ service "ssh" with {
 }
 service "docker"
 ''',
-            scriptVars: [sockets: nodesSockets, certs: certs],
+            scriptVars: [sockets: nodesSockets],
             expectedServicesSize: 2,
             expected: { Map args ->
-                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-0.robobee-test.test'), "${args.test.name}_docker_info_node_0_expected.txt"
-                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-1.robobee-test.test'), "${args.test.name}_docker_info_node_1_expected.txt"
-                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-2.robobee-test.test'), "${args.test.name}_docker_info_node_2_expected.txt"
+                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-0.robobee-test.test').replaceAll("(?m)^ID: .*", "ID: ID"), "${args.test.name}_docker_info_node_0_expected.txt"
+                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-1.robobee-test.test', 22222).replaceAll("(?m)^ID: .*", "ID: ID"), "${args.test.name}_docker_info_node_1_expected.txt"
+                assertStringResource DockerceCluster22222Test, remoteCommand('sudo docker info', 'node-2.robobee-test.test', 22222).replaceAll("(?m)^ID: .*", "ID: ID"), "${args.test.name}_docker_info_node_2_expected.txt"
             },
         ]
         doTest test
     }
-
-    @Test
-    void "cluster_docker_native_cgroupdriver"() {
-        def test = [
-            name: "cluster_docker_native_cgroupdriver",
-            script: '''
-service "ssh" with {
-    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
-    host "robobee@node-2.robobee-test.test", socket: sockets.nodes[2]
-}
-service "docker" with {
-    property << "native_cgroupdriver=systemd"
-}
-''',
-            scriptVars: [sockets: nodesSockets, certs: certs],
-            expectedServicesSize: 2,
-            expected: { Map args ->
-            },
-        ]
-        doTest test
-    }
-
-    static final Map certs = [
-        ca: DockerceCluster22222Test.class.getResource('registry_robobee_test_test_ca.pem'),
-    ]
 
     void createDummyCommands(File dir) {
     }
