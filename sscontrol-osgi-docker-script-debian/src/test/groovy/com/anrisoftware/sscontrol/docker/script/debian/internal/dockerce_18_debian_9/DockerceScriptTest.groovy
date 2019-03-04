@@ -24,6 +24,7 @@ import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCon
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport
 
@@ -39,7 +40,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-//@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
+@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
 @ExtendWith(LocalhostSocketCondition.class)
 class DockerceScriptTest extends AbstractDockerceScriptTest {
 
@@ -161,5 +162,4 @@ service "docker" with {
         ]
         doTest test
     }
-
 }
