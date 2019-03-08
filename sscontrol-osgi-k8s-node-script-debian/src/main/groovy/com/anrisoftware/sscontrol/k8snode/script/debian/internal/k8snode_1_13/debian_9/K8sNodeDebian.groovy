@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * K8s-Master Debian.
+ * K8s-Node Debian.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
