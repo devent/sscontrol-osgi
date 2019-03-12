@@ -1,5 +1,8 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.service.internal;
 
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.Crd;
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.CrdImpl.CrdImplFactory;
+
 /*-
  * #%L
  * sscontrol-osgi - k8s-from-repository-service
@@ -33,9 +36,9 @@ public class FromRepositoryModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, FromRepositoryImpl.class)
+        install(new FactoryModuleBuilder().implement(HostService.class, FromRepositoryImpl.class)
                 .build(FromRepositoryImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Crd.class, CrdImpl.class).build(CrdImplFactory.class));
     }
 
 }

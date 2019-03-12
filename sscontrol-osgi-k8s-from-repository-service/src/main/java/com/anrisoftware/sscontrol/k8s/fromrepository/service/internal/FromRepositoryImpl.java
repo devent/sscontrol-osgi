@@ -9,9 +9,9 @@ package com.anrisoftware.sscontrol.k8s.fromrepository.service.internal;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.Crd;
 import com.anrisoftware.sscontrol.k8s.fromrepository.service.external.FromRepository;
+import com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.CrdImpl.CrdImplFactory;
 import com.anrisoftware.sscontrol.types.cluster.external.ClusterHost;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
@@ -65,6 +67,8 @@ public class FromRepositoryImpl implements FromRepository {
 
     private final FromRepositoryImplLogger log;
 
+    private final CrdImplFactory crdFactory;
+
     private HostServiceProperties serviceProperties;
 
     private final List<TargetHost> targets;
@@ -81,10 +85,11 @@ public class FromRepositoryImpl implements FromRepository {
 
     private boolean dryrun;
 
+    private final List<Crd> crds;
+
     @Inject
-    FromRepositoryImpl(FromRepositoryImplLogger log,
-            HostServicePropertiesService propertiesService,
-            @Assisted Map<String, Object> args) {
+    FromRepositoryImpl(FromRepositoryImplLogger log, HostServicePropertiesService propertiesService,
+            CrdImplFactory crdFactory, @Assisted Map<String, Object> args) {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<>();
@@ -93,6 +98,8 @@ public class FromRepositoryImpl implements FromRepository {
         this.registries = new ArrayList<>();
         this.vars = new HashMap<>();
         this.dryrun = false;
+        this.crds = new ArrayList<>();
+        this.crdFactory = crdFactory;
         parseArgs(args);
     }
 
@@ -130,6 +137,18 @@ public class FromRepositoryImpl implements FromRepository {
         Object v = args.get("dir");
         assertThat("dir=null", v, notNullValue());
         setDestination(v.toString());
+    }
+
+    /**
+     * <pre>
+     * crds kind: "ServiceMonitor", version: "monitoring.coreos.com/v1"
+     * </pre>
+     */
+    public void crds(Map<String, Object> args) {
+        Crd crd = crdFactory.create(args);
+        log.crdsAdded(this, crd);
+        crds.add(crd);
+
     }
 
     @Override
@@ -233,12 +252,15 @@ public class FromRepositoryImpl implements FromRepository {
     }
 
     @Override
+    public List<Crd> getCrd() {
+        return crds;
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", getName())
-                .append("targets", getTargets())
-                .append("clusters", getClusterHosts())
-                .append("repos", getRepos())
-                .append("registries", getRegistries()).toString();
+        return new ToStringBuilder(this).append("name", getName()).append("targets", getTargets())
+                .append("clusters", getClusterHosts()).append("repos", getRepos()).append("registries", getRegistries())
+                .toString();
     }
 
     private void parseArgs(Map<String, Object> args) {

@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.types.registry.external.RegistryHost;
 import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 
 /**
- * From repository service.
+ * From repository cluster service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -62,4 +62,9 @@ public interface FromRepository extends ClusterService {
      * anything.
      */
     boolean getDryrun();
+
+    /**
+     * Returns the custom resource definitions that should be ignored.
+     */
+    List<Crd> getCrd();
 }
