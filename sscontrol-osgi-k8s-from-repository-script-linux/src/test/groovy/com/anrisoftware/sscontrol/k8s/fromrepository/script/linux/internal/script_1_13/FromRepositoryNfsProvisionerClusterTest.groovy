@@ -20,16 +20,14 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_13
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
 import static org.junit.jupiter.api.Assumptions.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -41,7 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(Nodes3AvailableCondition.class)
+@ExtendWith(Nodes3Port22222AvailableCondition.class)
 class FromRepositoryNfsProvisionerClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
@@ -54,7 +52,7 @@ service "k8s-cluster"
 service "repo-git", group: "nfs" with {
     remote url: "git@github.com:robobee-repos/kube-nfs-provisioner.git"
     credentials "ssh", key: robobeeKey
-    checkout branch: "feature/v3.1.0-k8s1.11"
+    checkout branch: "v5.2.0-k8s1.13"
 }
 service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with {
     vars << [
@@ -63,7 +61,6 @@ service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with 
             affinity: [key: "robobeerun.com/nfs", name: "required", required: true],
             allowOnMaster: true,
             limits: [cpu: '100m', memory: '100Mi'],
-            requests: [cpu: '100m', memory: '100Mi'],
             options: [archiveOnDelete: true],
             server: [address: "192.168.56.200", export: "/nfsfileshare/0"],
         ]
