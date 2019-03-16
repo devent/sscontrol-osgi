@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,6 +43,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class FromRepositoryLinux extends ScriptBase {
+
     @Inject
     FromRepositoryLinuxProperties linuxPropertiesProvider
 
@@ -65,12 +66,30 @@ class FromRepositoryLinux extends ScriptBase {
         assertThat "clusters=0 for $service", service.clusterHosts.size(), greaterThan(0)
         File dir = getState "${service.repo.type}-${service.repo.repo.group}-dir"
         assertThat "checkout-dir=null for $service", dir, notNullValue()
+        setupDefaults()
         try {
             parseTemplateFiles dir
             buildDocker dir
             kubeFiles dir
         } finally {
             shell "rm -rf $dir" call()
+        }
+    }
+
+    def setupDefaults() {
+        setupDefaultCrds()
+    }
+
+    def setupDefaultCrds() {
+        FromRepository service = service
+        ignoreCrds.each { val ->
+            String[] split = val.split(":")
+            String kind = split[0]
+            String version = ".*";
+            if (split.length > 1) {
+                version = split[1]
+            }
+            service.crds([kind: kind, version: version])
         }
     }
 
@@ -201,16 +220,33 @@ class FromRepositoryLinux extends ScriptBase {
      * Deploy manifests to the destination directory.
      */
     def deployToDestination(String name, File destTmp, String destination) {
-        def p = shell exitCodes: [0, 1] as int[], outString: true, errString: true,
-        "kubectl create --dry-run -f ${destTmp}" call()
-        if (p.exitValue == 1) {
-            def manifest = shell outString: true, "cat ${destTmp}" call() out
-            throw new ManifestErrorsException(name, p.out, p.err, manifest)
-        }
+        checkManifestByKubectl name, destTmp
         shell privileged: true, """
 mkdir -p ${destination}
 mv ${destTmp} ${destination}/${name}
 """ call()
+    }
+
+    /**
+     * <p>Checks the manifest by using kubectl --dry-run.
+     * <p>If the encountered manifest is returning errors in the pattern of
+     * 'no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"'
+     * and the kind and version is in the ignore_crds list then the check of the manifest
+     * is skipped.
+     */
+    def checkManifestByKubectl(String name, File destTmp) {
+        FromRepository service = this.service
+        def p = shell exitCodes: [0, 1] as int[], outString: true, errString: true,
+        "kubectl create --dry-run -f ${destTmp}" call()
+        if (p.exitValue == 1) {
+            def found = service.crds.find { p.err.matches(".*no matches for kind \"${it.kind}\" in version \"${it.version}\"") }
+            if (found) {
+                log.debug "Ignore unknown CRD: {}", found
+            } else {
+                def manifest = shell outString: true, "cat ${destTmp}" call() out
+                throw new ManifestErrorsException(name, p.out, p.err, manifest)
+            }
+        }
     }
 
     @Override
@@ -224,6 +260,13 @@ mv ${destTmp} ${destination}/${name}
 
     List getDockerfileFilesPatterns () {
         getScriptListProperty 'dockerfiles_files_patterns'
+    }
+
+    /**
+     * Returns the property {@code ignore_crds}.
+     */
+    List getIgnoreCrds() {
+        getScriptListProperty 'ignore_crds'
     }
 
     @Override

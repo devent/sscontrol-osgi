@@ -252,7 +252,7 @@ public class FromRepositoryImpl implements FromRepository {
     }
 
     @Override
-    public List<Crd> getCrd() {
+    public List<Crd> getCrds() {
         return crds;
     }
 

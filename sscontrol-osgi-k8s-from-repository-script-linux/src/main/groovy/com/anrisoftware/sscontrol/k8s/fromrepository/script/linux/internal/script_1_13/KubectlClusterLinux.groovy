@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.k8skubectl.linux.external.kubectl_1_13.Abstrac
 import groovy.util.logging.Slf4j
 
 /**
- * Kubectl service.
+ * Kubectl service for Linux. Provides the kubectl service properties for GNU/Linux systems.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

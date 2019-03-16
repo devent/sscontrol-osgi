@@ -66,5 +66,5 @@ public interface FromRepository extends ClusterService {
     /**
      * Returns the custom resource definitions that should be ignored.
      */
-    List<Crd> getCrd();
+    List<Crd> getCrds();
 }
