@@ -35,6 +35,6 @@ class ThreadsTestPropertiesProvider extends AbstractContextPropertiesProvider {
     private static final URL RES = ThreadsTestPropertiesProvider.class.getResource("threads_test.properties")
 
     ThreadsTestPropertiesProvider() {
-        super('com.anrisoftware.globalpom.threads.properties.internal', RES)
+        super('com.anrisoftware.globalpom.threads.properties.external', RES)
     }
 }

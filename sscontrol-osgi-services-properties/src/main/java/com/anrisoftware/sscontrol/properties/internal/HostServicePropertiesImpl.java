@@ -9,9 +9,9 @@ package com.anrisoftware.sscontrol.properties.internal;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,8 +47,8 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.propertiesutils.JodaDateTypedProperties;
 import com.anrisoftware.propertiesutils.StringToType;
-import com.anrisoftware.propertiesutils.TypedAllProperties;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.sscontrol.types.app.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
@@ -64,8 +64,7 @@ import groovy.util.Eval;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostServicePropertiesImpl extends GroovyObjectSupport
-        implements HostServiceProperties {
+public class HostServicePropertiesImpl extends GroovyObjectSupport implements HostServiceProperties {
 
     /**
      *
@@ -73,8 +72,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface HostServicePropertiesImplFactory
-            extends HostServicePropertiesService {
+    public interface HostServicePropertiesImplFactory extends HostServicePropertiesService {
 
     }
 
@@ -82,7 +80,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     private final TypedAllPropertiesFactory typedAllPropertiesFactory;
 
-    private final TypedAllProperties typedProperties;
+    private final JodaDateTypedProperties typedProperties;
 
     @Inject
     private HostServicePropertiesImplLogger log;
@@ -110,8 +108,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
     }
 
     @Override
-    public void setProperty(String name, String value)
-            throws ArgumentInvalidException {
+    public void setProperty(String name, String value) throws ArgumentInvalidException {
         checkBlankArg(name, "name");
         properties.put(name, value);
         log.propertyAdded(this, name, value);
@@ -154,41 +151,34 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getPeriodProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getPeriodProperty(key);
         }
     }
 
-    public Period getPeriodProperty(String key, PeriodFormatter formatter,
-            ContextProperties defaults) {
+    public Period getPeriodProperty(String key, PeriodFormatter formatter, ContextProperties defaults) {
         Period value = typedProperties.getPeriodProperty(key, formatter);
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getPeriodProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getPeriodProperty(key);
         }
     }
 
-    public Duration getDurationProperty(String key,
-            ContextProperties defaults) {
+    public Duration getDurationProperty(String key, ContextProperties defaults) {
         Duration value = typedProperties.getDurationProperty(key);
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getDurationProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getDurationProperty(key);
         }
     }
 
-    public Duration getDurationProperty(String key, PeriodFormatter formatter,
-            ContextProperties defaults) {
+    public Duration getDurationProperty(String key, PeriodFormatter formatter, ContextProperties defaults) {
         Duration value = typedProperties.getDurationProperty(key, formatter);
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getDurationProperty(key, formatter);
+            return typedAllPropertiesFactory.create(defaults).getDurationProperty(key, formatter);
         }
     }
 
@@ -197,8 +187,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getBooleanProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getBooleanProperty(key);
         }
     }
 
@@ -207,8 +196,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getNumberProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getNumberProperty(key);
         }
     }
 
@@ -217,8 +205,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getCharProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getCharProperty(key);
         }
     }
 
@@ -227,30 +214,25 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getCharsetProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getCharsetProperty(key);
         }
     }
 
-    public URL getURLProperty(String key, ContextProperties defaults)
-            throws MalformedURLException {
+    public URL getURLProperty(String key, ContextProperties defaults) throws MalformedURLException {
         URL value = typedProperties.getURLProperty(key);
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getURLProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getURLProperty(key);
         }
     }
 
-    public URI getURIProperty(String key, ContextProperties defaults)
-            throws URISyntaxException {
+    public URI getURIProperty(String key, ContextProperties defaults) throws URISyntaxException {
         URI value = typedProperties.getURIProperty(key);
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getURIProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getURIProperty(key);
         }
     }
 
@@ -259,29 +241,24 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         if (value != null) {
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getFileProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getFileProperty(key);
         }
     }
 
     /**
-     * Returns the profile path property. If the profile property was not set
-     * return the default value from the default properties. The path is assumed
-     * to be under the specified parent directory.
+     * Returns the profile path property. If the profile property was not set return
+     * the default value from the default properties. The path is assumed to be
+     * under the specified parent directory.
      *
-     * @param key
-     *            the key of the profile property.
+     * @param key    the key of the profile property.
      *
-     * @param parent
-     *            the parent {@link File} directory.
+     * @param parent the parent {@link File} directory.
      *
-     * @param p
-     *            default {@link ContextProperties} properties.
+     * @param p      default {@link ContextProperties} properties.
      *
      * @return the profile file {@link File} path or {@code null}.
      */
-    public File getFileProperty(String key, File parent,
-            ContextProperties defaults) {
+    public File getFileProperty(String key, File parent, ContextProperties defaults) {
         Object value = getProperty(key, defaults);
         if (value == null) {
             return null;
@@ -295,92 +272,74 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
         return new File(parent, path.getPath());
     }
 
-    public <T> T getTypedProperty(String key, Format format,
-            ContextProperties defaults) throws ParseException {
+    public <T> T getTypedProperty(String key, Format format, ContextProperties defaults) throws ParseException {
         if (properties.containsKey(key)) {
             T value = typedProperties.getTypedProperty(key, format);
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getTypedProperty(key, format);
+            return typedAllPropertiesFactory.create(defaults).getTypedProperty(key, format);
         }
     }
 
-    public <T> List<T> getTypedListProperty(String key, Format format,
-            ContextProperties defaults) throws ParseException {
+    public <T> List<T> getTypedListProperty(String key, Format format, ContextProperties defaults)
+            throws ParseException {
         if (properties.containsKey(key)) {
             List<T> value = typedProperties.getTypedListProperty(key, format);
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getTypedListProperty(key, format);
+            return typedAllPropertiesFactory.create(defaults).getTypedListProperty(key, format);
         }
     }
 
-    public <T> List<T> getTypedListProperty(String key, Format format,
-            String separatorChars, ContextProperties defaults)
-            throws ParseException {
-        if (properties.containsKey(key)) {
-            List<T> value = typedProperties.getTypedListProperty(key, format,
-                    separatorChars);
-            return value;
-        } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getTypedListProperty(key, format, separatorChars);
-        }
-    }
-
-    public <T> List<T> getTypedListProperty(String key,
-            StringToType<T> stringToType, ContextProperties defaults)
-            throws ParseException {
-        if (properties.containsKey(key)) {
-            List<T> value = typedProperties.getTypedListProperty(key,
-                    stringToType);
-            return value;
-        } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getTypedListProperty(key, stringToType);
-        }
-    }
-
-    public <T> List<T> getTypedListProperty(String key,
-            StringToType<T> stringToType, String separatorChars,
+    public <T> List<T> getTypedListProperty(String key, Format format, String separatorChars,
             ContextProperties defaults) throws ParseException {
         if (properties.containsKey(key)) {
-            List<T> value = typedProperties.getTypedListProperty(key,
-                    stringToType, separatorChars);
+            List<T> value = typedProperties.getTypedListProperty(key, format, separatorChars);
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getTypedListProperty(key, stringToType, separatorChars);
+            return typedAllPropertiesFactory.create(defaults).getTypedListProperty(key, format, separatorChars);
         }
     }
 
-    public List<String> getListProperty(String key,
-            ContextProperties defaults) {
+    public <T> List<T> getTypedListProperty(String key, StringToType<T> stringToType, ContextProperties defaults)
+            throws ParseException {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key, stringToType);
+            return value;
+        } else {
+            return typedAllPropertiesFactory.create(defaults).getTypedListProperty(key, stringToType);
+        }
+    }
+
+    public <T> List<T> getTypedListProperty(String key, StringToType<T> stringToType, String separatorChars,
+            ContextProperties defaults) throws ParseException {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key, stringToType, separatorChars);
+            return value;
+        } else {
+            return typedAllPropertiesFactory.create(defaults).getTypedListProperty(key, stringToType, separatorChars);
+        }
+    }
+
+    public List<String> getListProperty(String key, ContextProperties defaults) {
         if (properties.containsKey(key)) {
             List<String> value = typedProperties.getListProperty(key);
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getListProperty(key);
+            return typedAllPropertiesFactory.create(defaults).getListProperty(key);
         }
     }
 
-    public List<String> getListProperty(String key, String separatorChars,
-            ContextProperties defaults) {
+    public List<String> getListProperty(String key, String separatorChars, ContextProperties defaults) {
         if (properties.containsKey(key)) {
-            List<String> value = typedProperties.getListProperty(key,
-                    separatorChars);
+            List<String> value = typedProperties.getListProperty(key, separatorChars);
             return value;
         } else {
-            return typedAllPropertiesFactory.create(defaults)
-                    .getListProperty(key, separatorChars);
+            return typedAllPropertiesFactory.create(defaults).getListProperty(key, separatorChars);
         }
     }
 
-    public Map<String, Object> getMapProperty(String key,
-            ContextProperties defaults) {
+    public Map<String, Object> getMapProperty(String key, ContextProperties defaults) {
         String v = null;
         if (properties.containsKey(key)) {
             v = properties.getProperty(key);
@@ -394,7 +353,6 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("properties", properties.size())
-                .toString();
+        return new ToStringBuilder(this).append("properties", properties.size()).toString();
     }
 }

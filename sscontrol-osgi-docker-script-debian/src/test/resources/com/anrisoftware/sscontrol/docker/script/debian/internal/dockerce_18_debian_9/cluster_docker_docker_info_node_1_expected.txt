@@ -24,12 +24,12 @@ init version: fec3683
 Security Options:
  seccomp
   Profile: default
-Kernel Version: 4.9.0-6-amd64
+Kernel Version: 4.9.0-3-amd64
 Operating System: Debian GNU/Linux 9 (stretch)
 OSType: linux
 Architecture: x86_64
 CPUs: 2
-Total Memory: 1.43GiB
+Total Memory: 1.957GiB
 Name: node-1
 ID: ID
 Docker Root Dir: /var/lib/docker
