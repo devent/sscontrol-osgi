@@ -83,16 +83,19 @@ targets['nodes'].eachWithIndex { host, i ->
      * kubeadm token create $token --print-join-command --ttl=24h
      * <pre>
      */
-    static final String joinCommand = 'kubeadm join 192.168.56.200:6443 --token v6hes3.t27yljo966l0yopd --discovery-token-ca-cert-hash sha256:5481cb80b5a4265935e471651be2fd50f06a617dda6692f0142d24ac5f289932'
+    static final String joinCommand = 'kubeadm join 192.168.56.200:6443 --token d7tjs4.tfdwugtlai2j5qf9 --discovery-token-ca-cert-hash sha256:953a58596463f2f1bda76c0de2ea9621213a688c2814aa26b06c3762ff1b404e'
 
     static final Map nodes = [
         labels: [
             [
                 "robobeerun.com/ingress-nginx=required",
                 "robobeerun.com/cert-manager=required",
+                "robobeerun.com/grafana=required",
+                "robobeerun.com/prometheus=required",
                 "muellerpublic.de/role=web",
             ],
             [
+                "robobeerun.com/prometheus=required",
                 "muellerpublic.de/role=dev",
             ]
         ],

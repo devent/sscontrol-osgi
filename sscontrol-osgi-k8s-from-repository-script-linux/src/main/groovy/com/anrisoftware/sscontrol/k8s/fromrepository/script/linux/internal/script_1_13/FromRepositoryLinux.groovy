@@ -85,7 +85,7 @@ class FromRepositoryLinux extends ScriptBase {
         ignoreCrds.each { val ->
             String[] split = val.split(":")
             String kind = split[0]
-            String version = ".*";
+            String version = ".*"
             if (split.length > 1) {
                 version = split[1]
             }
@@ -157,6 +157,7 @@ class FromRepositoryLinux extends ScriptBase {
         withRemoteTempFile { File destTmp ->
             copy src: tmp, dest: destTmp call()
             log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
+            log.debug 'Apply manifest {}/{}', dir, name
             FromRepository service = service
             if (service.destination && !service.dryrun) {
                 deployToDestination name, destTmp, service.destination

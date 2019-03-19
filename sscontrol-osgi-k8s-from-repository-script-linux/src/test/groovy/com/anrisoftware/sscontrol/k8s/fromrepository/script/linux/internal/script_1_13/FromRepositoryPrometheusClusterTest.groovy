@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,10 +54,10 @@ service "repo-git", group: "prometheus" with {
     credentials "ssh", key: robobeeKey
     checkout branch: "release/v0.29.0-k8s1.13"
 }
-service "from-repository", repo: "prometheus", dest: "/etc/kubernetes/addons/prometheus" with {
+service "from-repository", repo: "prometheus" with {
     vars << [
         prometheusOperator: [
-            image: [name: "quay.io/coreos/prometheus-operator", version: "v0.28.0"],
+            image: [name: "quay.io/coreos/prometheus-operator", version: "v0.29.0"],
             affinity: [key: "robobeerun.com/prometheus", name: "required", required: true],
             allowOnMaster: true,
             limits: [cpu: '100m', memory: '100Mi'],
