@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,14 @@
 package com.anrisoftware.sscontrol.k8s.fromrepository.script.linux.internal.script_1_13
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition
+import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -39,7 +39,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(Nodes3Port22222AvailableCondition.class)
+@ExtendWith(RobobeeSocketCondition.class)
 class FromRepositoryNginxIngressClusterTest extends AbstractFromRepositoryRunnerTest {
 
     @Test
@@ -50,27 +50,17 @@ class FromRepositoryNginxIngressClusterTest extends AbstractFromRepositoryRunner
 def edgeNodeTargetHttpPort = 30000
 def edgeNodeTargetHttpsPort = 30001
 
-service "ssh" with {
-    host "robobee@node-0.robobee-test.test", socket: sockets.nodes[0]
-}
-
-service "ssh", group: "edge-nodes" with {
-    host "robobee@node-1.robobee-test.test", socket: sockets.nodes[1]
-}
-
-service "k8s-cluster" with {
-}
-
+service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
+service "k8s-cluster"
 service "repo-git", group: "nginx-ingress" with {
     remote url: "git@github.com:robobee-repos/kube-nginx-ingress.git"
     credentials "ssh", key: robobeeKey
-    checkout branch: "feature/4155-Update-to-nginx-0.20.0"
+    checkout branch: "release/nginx-0.23.0-r.1"
 }
-
 service "from-repository", repo: "nginx-ingress", dest: "/etc/kubernetes/addons/ingress-nginx" with {
     vars << [
         nginxIngressController: [
-            image: [name: 'quay.io/kubernetes-ingress-controller/nginx-ingress-controller', version: '0.20.0'],
+            image: [name: 'quay.io/kubernetes-ingress-controller/nginx-ingress-controller', version: '0.23.0'],
             limits: [cpu: '0', memory: '200Mi'],
             requests: [cpu: '0', memory: '200Mi'],
             affinity: [key: "robobeerun.com/ingress-nginx", name: "required", required: true],
@@ -90,7 +80,7 @@ service "from-repository", repo: "nginx-ingress", dest: "/etc/kubernetes/addons/
     ]
 }
 ''',
-            scriptVars: [sockets: nodesSockets, robobeeKey: robobeeKey],
+            scriptVars: [robobeeSocket: robobeeSocket, robobeeKey: robobeeKey],
             expectedServicesSize: 4,
             expected: { Map args ->
             },
