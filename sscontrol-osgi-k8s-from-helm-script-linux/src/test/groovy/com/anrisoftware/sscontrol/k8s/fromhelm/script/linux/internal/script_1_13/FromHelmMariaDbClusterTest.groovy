@@ -48,19 +48,25 @@ class FromHelmMariaDbClusterTest extends AbstractFromHelmRunnerTest {
             name: "cluster_mariadb_chart",
             script: '''
 service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
+def vars = [
+  root: [password: 'ba6aikahXi7ya0moothieLohb9eesi6u'],
+  replicator: [password: 'ieChuicahCoChuo8siif5aeshaiSh6co'],
+  master: [resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
+  slave: [replicas: 1, resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
+]
 service "from-helm", chart: "stable/mariadb", version: "5.11.0" with {
-    release ns: "mariadb", name: "mariadb"
+    release ns: "robobeerun-com-mariadb", name: "mariadb"
     config << """
 image:
   registry: docker.io
   repository: bitnami/mariadb
   tag: 10.1.38
 rootUser:
-  password:
+  password: ${vars.root.password}
 replication:
   enabled: true
   user: replicator
-  password:
+  password: ${vars.replicator.password}
   forcePassword: true
 master:
   affinity:
@@ -76,9 +82,15 @@ master:
   persistence:
     enabled: true
     size: 8Gi
-  resources: {}
+  resources:
+    limits:
+      cpu: ${vars.master.resources.limits.cpu}
+      memory: ${vars.master.resources.limits.memory}
+    requests:
+      cpu: ${vars.master.resources.requests.cpu}
+      memory: ${vars.master.resources.requests.memory}
 slave:
-  replicas: 2
+  replicas: ${vars.slave.replicas}
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -90,14 +102,26 @@ slave:
             - required
   persistence:
     size: 8Gi
-  resources: {}
+  resources:
+    limits:
+      cpu: ${vars.slave.resources.limits.cpu}
+      memory: ${vars.slave.resources.limits.memory}
+    requests:
+      cpu: ${vars.slave.resources.requests.cpu}
+      memory: ${vars.slave.resources.requests.memory}
 metrics:
-  enabled: true
+  enabled: false
   image:
     registry: docker.io
     repository: prom/mysqld-exporter
-    tag: v0.10.0
-  resources: {}
+    tag: v0.11.0
+  resources:
+    limits:
+      cpu: 0.2
+      memory: 200Mi
+    requests:
+      cpu: 0.2
+      memory: 200Mi
   annotations:
     prometheus.io/scrape: "true"
 prometheus.io/port: "9104"
