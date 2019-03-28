@@ -69,6 +69,10 @@ service "from-repository", repo: "prometheus" with {
             affinity: [key: "robobeerun.com/grafana", name: "required", required: true],
             allowOnMaster: true,
             limits: [cpu: '100m', memory: '100Mi'],
+            ingress: [enabled: true],
+            hosts: "grafana.robobee-test.com",
+            port: 3000,
+            issuer: "selfsigning-issuer",
         ]
     ]
     vars << [

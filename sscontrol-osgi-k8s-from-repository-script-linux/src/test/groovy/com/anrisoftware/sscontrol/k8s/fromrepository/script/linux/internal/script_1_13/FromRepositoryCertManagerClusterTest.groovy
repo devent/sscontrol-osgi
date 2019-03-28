@@ -56,6 +56,9 @@ service "repo-git", group: "cert-manager" with {
 }
 service "from-repository", repo: "cert-manager" with {
     vars << [
+        clusterIssuer: [selfsigning: [enabled: true ]]
+    ]
+    vars << [
         certManager: [
             limits: [cpu: '0.1', memory: '50Mi'],
             requests: [cpu: '0.1', memory: '50Mi'],

@@ -52,7 +52,7 @@ def vars = [
   root: [password: 'ba6aikahXi7ya0moothieLohb9eesi6u'],
   replicator: [password: 'ieChuicahCoChuo8siif5aeshaiSh6co'],
   master: [resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
-  slave: [replicas: 1, resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
+  slave: [replicas: 2, resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
 ]
 service "from-helm", chart: "stable/mariadb", version: "5.11.0" with {
     release ns: "robobeerun-com-mariadb", name: "mariadb"
@@ -74,11 +74,14 @@ master:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: robobeerun.com/mariadb
+          - key: robobeerun.com/mariadb-master
             operator: In
             values:
             - required
-  tolerations: []
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Equal
   persistence:
     enabled: true
     size: 8Gi
@@ -96,10 +99,14 @@ slave:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          - key: robobeerun.com/mariadb
+          - key: robobeerun.com/mariadb-slave
             operator: In
             values:
             - required
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Equal
   persistence:
     size: 8Gi
   resources:
@@ -118,10 +125,10 @@ metrics:
   resources:
     limits:
       cpu: 0.2
-      memory: 200Mi
+      memory: 20Mi
     requests:
       cpu: 0.2
-      memory: 200Mi
+      memory: 20Mi
   annotations:
     prometheus.io/scrape: "true"
 prometheus.io/port: "9104"

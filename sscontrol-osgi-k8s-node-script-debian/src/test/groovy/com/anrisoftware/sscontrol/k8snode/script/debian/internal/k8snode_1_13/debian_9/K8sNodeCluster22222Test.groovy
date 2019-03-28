@@ -92,10 +92,12 @@ targets['nodes'].eachWithIndex { host, i ->
                 "robobeerun.com/cert-manager=required",
                 "robobeerun.com/grafana=required",
                 "robobeerun.com/prometheus=required",
+                "robobeerun.com/mariadb=required",
                 "muellerpublic.de/role=web",
             ],
             [
                 "robobeerun.com/prometheus=required",
+                "robobeerun.com/mariadb=required",
                 "muellerpublic.de/role=dev",
             ]
         ],
