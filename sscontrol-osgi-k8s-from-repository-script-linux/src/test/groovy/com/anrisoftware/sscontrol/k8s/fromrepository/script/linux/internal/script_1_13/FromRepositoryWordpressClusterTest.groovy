@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,57 +42,42 @@ import groovy.util.logging.Slf4j
 @ExtendWith(RobobeeSocketCondition.class)
 class FromRepositoryWordpressClusterTest extends AbstractFromRepositoryRunnerTest {
 
-    static final Map certs = [
-        worker: [
-            ca: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_ca.pem'),
-            cert: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_cert.pem'),
-            key: FromRepositoryManifestsServerTest.class.getResource('robobee_test_kube_admin_key.pem'),
-        ],
-    ]
-
     @Test
     void "wordpress"() {
         def test = [
             name: "wordpress",
             script: '''
 service "ssh", host: "node-0.robobee-test.test", socket: robobeeSocket
-service "k8s-cluster" with {
-    credentials type: 'cert', name: 'default-admin', ca: certs.worker.ca, cert: certs.worker.cert, key: certs.worker.key
-}
+service "k8s-cluster"
 service "repo-git", group: "wordpress" with {
-    remote url: "git@github.com:robobee-repos/interscalar-com-wordpress.git"
+    remote url: "git@github.com:robobee-repos/muellerpublic-de-wordpress-deploy.git"
     credentials "ssh", key: robobeeKey
+    checkout branch: "release/r2"
 }
 service "from-repository", repo: "wordpress" with {
     vars << [
         volume: [
-            storage: "1Gi"
+            storage: "10Gi"
         ]
     ]
     vars << [
         db: [
-            image: [name: "bitnami/mariadb", version: "10.2.14-r13"],
-            limits: [cpu: "100m", memory: "100Mi"],
-            affinity: [key: "muellerpublic.de/web", name: "interscalar", required: true],
-            root: [user: "mysql", password: "1234"],
+            root: [user: "root", password: "ba6aikahXi7ya0moothieLohb9eesi6u"],
             wordpress: [database: "wordpressdb", user: "wordpress", password: "wordpress"],
         ]
     ]
     vars << [
-        nginx: [
-            image: [name: "robobeerun/nginx", version: "v1.13.12-r1"],
-            limits: [cpu: "100m", memory: "100Mi"],
-            hosts: ["www.interscalar.test"],
-            revision: "r4",
-            workerProcesses: "128",
-            workerConnections: "1",
-            clientMaxBodySize: "8M"
+        mariadb: [
+            image: [name: "bitnami/mariadb", version: "10.1.38"],
+            host: "mariadb.robobeerun-com-mariadb.svc",
+            port: "3306",
         ]
     ]
     vars << [
         wordpress: [
-            image: [name: "erwin82/interscalar-com-wordpress", version: "v5-r1"],
-            limits: [cpu: "100m", memory: "200Mi"],
+            image: [name: "erwin82/muellerpublic-de-wordpress", version: "v5.1.1-php7.1-fpm-r.1"],
+            limits: [cpu: "100m", memory: "300Mi"],
+            issuer: "selfsigning-issuer",
             php: [
                 memoryLimit: "32M",
                 maxExecutionTime: 300,
@@ -109,10 +94,24 @@ service "from-repository", repo: "wordpress" with {
         ]
     ]
     vars << [
+        nginx: [
+            image: [name: "robobeerun/nginx", version: "v1.13.12-r1"],
+            limits: [cpu: "100m", memory: "100Mi"],
+            hosts: ["www.muellerpublic.de.robobee.test"],
+            revision: "r1",
+            workerProcesses: "128",
+            workerConnections: "1",
+            clientMaxBodySize: "8M"
+        ]
+    ]
+    vars << [
         rsync: [
             image: [name: "robobeerun/rsync", version: "v3.1.2-r2"],
             limits: [cpu: "20m", memory: "20Mi"],
-            publicKey: robobeePub,
+            ssh: [
+                revision: "r1",
+                publicKey: robobeePub,
+            ],
         ]
     ]
 }
@@ -121,7 +120,6 @@ service "from-repository", repo: "wordpress" with {
                 robobeeSocket: robobeeSocket,
                 robobeeKey: robobeeKey,
                 robobeePub: robobeePub,
-                certs: certs,
             ],
             expectedServicesSize: 4,
             expected: { Map args ->
