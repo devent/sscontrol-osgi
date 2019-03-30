@@ -79,17 +79,18 @@ service "from-repository", repo: "wordpress" with {
             limits: [cpu: "100m", memory: "300Mi"],
             issuer: "selfsigning-issuer",
             php: [
-                memoryLimit: "32M",
+                memoryLimit: "200M",
                 maxExecutionTime: 300,
                 maxChildren: 4,
                 startServers: 1,
                 minSpareServers: 1,
                 maxSpareServers: 1,
+                maxRequests: 10000,
                 slowlogTimeout: 0,
                 catchWorkersOutput: 1,
                 opcacheEnable: 1,
                 opcacheEnableCLI: 1,
-                opcacheMemoryConsumption: "12M"
+                opcacheMemoryConsumption: "24M"
             ],
         ]
     ]
@@ -98,9 +99,9 @@ service "from-repository", repo: "wordpress" with {
             image: [name: "robobeerun/nginx", version: "v1.13.12-r1"],
             limits: [cpu: "100m", memory: "100Mi"],
             hosts: ["www.muellerpublic.de.robobee.test"],
-            revision: "r1",
-            workerProcesses: "128",
-            workerConnections: "1",
+            revision: "r2",
+            workerProcesses: "1",
+            workerConnections: "512",
             clientMaxBodySize: "8M"
         ]
     ]
