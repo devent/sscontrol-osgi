@@ -99,7 +99,8 @@ service "from-repository", repo: "wordpress" with {
             image: [name: "robobeerun/nginx", version: "v1.13.12-r1"],
             limits: [cpu: "100m", memory: "100Mi"],
             hosts: ["www.muellerpublic.de.robobee.test"],
-            revision: "r2",
+            httpHeaders: [[name: "Host", value: "www.muellerpublic.de.robobee.test"]],
+            revision: "r3",
             workerProcesses: "1",
             workerConnections: "512",
             clientMaxBodySize: "8M"
