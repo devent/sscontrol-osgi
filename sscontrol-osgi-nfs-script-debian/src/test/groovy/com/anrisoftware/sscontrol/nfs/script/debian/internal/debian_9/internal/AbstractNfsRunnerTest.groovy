@@ -56,7 +56,7 @@ abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
     NfsImplFactory nfsFactory
 
     @Inject
-    Nfs_1_3_Debian_9_Factory nfsCentosFactory
+    Nfs_1_3_Debian_9_Factory nfsDebianFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -66,7 +66,7 @@ abstract class AbstractNfsRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'nfs', nfsFactory
-        services.putAvailableScriptService 'nfs-1.3/debian/9', nfsCentosFactory
+        services.putAvailableScriptService 'nfs-1.3/debian/9', nfsDebianFactory
         return services
     }
 
