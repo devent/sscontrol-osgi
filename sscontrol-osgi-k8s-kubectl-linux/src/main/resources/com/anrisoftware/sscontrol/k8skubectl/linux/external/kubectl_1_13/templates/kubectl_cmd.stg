@@ -12,10 +12,10 @@ getKubernetesHostnameLabel(parent, vars) ::= <%
 
 grepNodeFunctions(parent, vars) ::= <<
 function node_on_label() {
-    <getNodeRobobeeLabel(parent, vars)>|grep "<vars.node>"
+    <getNodeRobobeeLabel(parent, vars)>
 }
 function node_on_hostname() {
-    <getKubernetesHostnameLabel(parent, vars)>|grep "<vars.node>"
+    <getKubernetesHostnameLabel(parent, vars)>
 }
 >>
 
