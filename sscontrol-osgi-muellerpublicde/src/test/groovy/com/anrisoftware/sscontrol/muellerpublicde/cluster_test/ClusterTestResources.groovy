@@ -120,27 +120,52 @@ public class ClusterTestResources {
     ]
 
     static final Map k8s_vars = [
-        joinCommand: "kubeadm join --token 733471.e9d3a2f2370e0915 185.24.220.41:6443 --discovery-token-ca-cert-hash sha256:2c18995abbf9ba44f93d7b8c364c447bc3473abe7b372a11b82c0a9a9dadae70",
+        /**
+         * <pre>
+         * token=$(kubeadm token generate)
+         * kubeadm token create $token --print-join-command --ttl=24h
+         * <pre>
+         */
+        joinCommand: "kubeadm join 192.168.56.200:6443 --token p2a6v1.lpzzgjcdq1miu904 --discovery-token-ca-cert-hash sha256:dd04f8ef36582ea02aa5da2578196dc700ee5486269a84f174f4683f54ab7b41",
         nodes: [
             [
+                // node-0
                 labels: [
-                    "robobeerun.com/heapster=required",
-                    "robobeerun.com/dashboard=required"
+                    "robobeerun.com/nfs=required",
+                    "robobeerun.com/prometheus=required",
+                    "robobeerun.com/mariadb-master=required",
+                    "robobeerun.com/mariadb-slave=required",
+                    "robobeerun.com/postgres-master=required",
+                    "robobeerun.com/postgres-slave=required",
+                    "robobeerun.com/keycloak=required",
                 ],
                 taints: [],
             ],
             [
+                // node-1
                 labels: [
-                    "robobeerun.com/edge-router=required",
-                    "muellerpublic.de/interscalar-com=required",
-                    "robobeerun.com/cert-manager=required",
                     "robobeerun.com/ingress-nginx=required",
+                    "robobeerun.com/cert-manager=required",
+                    "robobeerun.com/grafana=required",
+                    "robobeerun.com/prometheus=required",
+                    "robobeerun.com/mariadb-master=required",
+                    "robobeerun.com/mariadb-slave=required",
+                    "robobeerun.com/postgres-master=required",
+                    "robobeerun.com/postgres-slave=required",
+                    "www.interscalar.com=required",
+                    "www.muellerpublic.de=required",
                 ],
                 taints: [],
             ],
             [
+                // node-2
                 labels: [
-                    "muellerpublic.de/anrisoftware-com=required"
+                    "robobeerun.com/prometheus=required",
+                    "robobeerun.com/mariadb-master=required",
+                    "robobeerun.com/mariadb-slave=required",
+                    "robobeerun.com/postgres-master=required",
+                    "robobeerun.com/postgres-slave=required",
+                    "project.anrisoftware.com=required"
                 ],
                 taints: [],
             ],
