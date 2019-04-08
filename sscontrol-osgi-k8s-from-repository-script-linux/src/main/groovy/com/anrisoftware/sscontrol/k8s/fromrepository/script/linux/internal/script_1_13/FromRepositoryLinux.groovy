@@ -150,6 +150,10 @@ class FromRepositoryLinux extends ScriptBase {
     def readApplyManifest(File dir, def name, File tmp) {
         fetch src: "$dir/$name", dest: tmp call()
         def s = FileUtils.readFileToString(tmp, charset)
+        if (s.isBlank()) {
+            log.debug 'Skip empty manifest {}/{}', dir, name
+            return
+        }
         withRemoteTempFile { File destTmp ->
             copy src: tmp, dest: destTmp call()
             log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
