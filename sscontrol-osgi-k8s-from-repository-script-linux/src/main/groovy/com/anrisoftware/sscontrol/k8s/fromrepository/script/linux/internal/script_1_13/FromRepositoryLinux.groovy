@@ -156,8 +156,8 @@ class FromRepositoryLinux extends ScriptBase {
         }
         withRemoteTempFile { File destTmp ->
             copy src: tmp, dest: destTmp call()
-            log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
             log.debug 'Apply manifest {}/{}', dir, name
+            log.trace 'Apply manifest {}/{}: ```\n{}```', dir, name, s
             FromRepository service = service
             if (service.destination && !service.dryrun) {
                 deployToDestination name, destTmp, service.destination
