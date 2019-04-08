@@ -57,8 +57,8 @@ targets.nodes.eachWithIndex { host, i ->
         plugin "nfs-client"
         kubelet address: target.hostAddress
         cluster host: "masters", join: k8sVars.joinCommand
-        label.addAll k8sVars.nodes[i].labels
-        taint.addAll k8sVars.nodes[i].taints
+        label.addAll k8sVars.nodes[i+1].labels
+        taint.addAll k8sVars.nodes[i+1].taints
         property << "fail_swap_on=false"
     }
 }
