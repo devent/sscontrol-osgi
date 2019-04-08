@@ -126,7 +126,7 @@ public class ClusterTestResources {
          * kubeadm token create $token --print-join-command --ttl=24h
          * <pre>
          */
-        joinCommand: "kubeadm join 192.168.56.200:6443 --token p2a6v1.lpzzgjcdq1miu904 --discovery-token-ca-cert-hash sha256:dd04f8ef36582ea02aa5da2578196dc700ee5486269a84f174f4683f54ab7b41",
+        joinCommand: "kubeadm join 192.168.56.200:6443 --token boaoo6.e1p1ofzfs7p3p8k2 --discovery-token-ca-cert-hash sha256:48f187ff659cd3add6fed41814f4c557bf74dfd56073c47a8be339f3d14b375e",
         nodes: [
             [
                 // node-0

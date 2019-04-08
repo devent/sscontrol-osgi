@@ -53,7 +53,7 @@ service "ssh", group: "nodes" with {
 service "k8s-cluster", target: 'masters' with {
 }
 targets.nodes.eachWithIndex { host, i ->
-    service "k8s-node", target: host, name: "andrea-node-${i+1}" with {
+    service "k8s-node", target: host, name: "andrea-node-${i+1}.muellerpublic.de" with {
         kubelet address: target.hostAddress
         cluster host: "masters", join: k8sVars.joinCommand
         label.addAll k8sVars.nodes[i].labels
