@@ -228,9 +228,10 @@ chmod o-rx '$certsDir'
     }
 
     def installKube() {
+        K8s service = service
         shell privileged: true, timeout: timeoutLong, """
 if ! kubeadm token list; then
-kubeadm init --config /root/kubeadm.yaml ${ignoreChecksErrors}
+kubeadm init --node-name=${service.cluster.name} --config /root/kubeadm.yaml ${ignoreChecksErrors}
 fi
 """ call()
     }
@@ -248,7 +249,7 @@ fi
         assert StringUtils.isNotBlank(joinCommand) : "No join command for node ${target}"
         shell privileged: true, timeout: timeoutLong, """
 if ! ls /etc/kubernetes/kubelet.conf&>/dev/null; then
-${joinCommand} ${ignoreChecksErrors}
+${joinCommand} --node-name=${service.cluster.name} ${ignoreChecksErrors}
 fi
 """ call()
     }
