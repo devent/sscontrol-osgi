@@ -19,6 +19,7 @@ import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Colle
 import com.anrisoftware.sscontrol.docker.script.debian.internal.dockerce_18_debian_9.Dockerce_18_Debian_9_Module
 import com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianModule
 import com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_9.Fail2ban_Debian_9_Module
+import com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.HAProxy_Debian_9_Module
 import com.anrisoftware.sscontrol.k8smaster.script.debian.internal.k8smaster_1_13.debian_9.K8sMasterDebianModule
 import com.anrisoftware.sscontrol.k8snode.script.debian.internal.k8snode_1_13.debian_9.K8sNodeDebianModule
 import com.anrisoftware.sscontrol.nfs.script.debian.internal.debian_9.Nfs_Debian_9_Module
@@ -51,6 +52,7 @@ class DebianModules {
             new GitRepoDebianModule(),
             new DockerRegistryModule(),
             new DebianUtilsModule(),
+            new HAProxy_Debian_9_Module(),
         ]
     }
 }

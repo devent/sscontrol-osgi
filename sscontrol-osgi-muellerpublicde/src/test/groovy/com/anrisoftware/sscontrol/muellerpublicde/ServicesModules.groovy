@@ -20,6 +20,7 @@ import com.anrisoftware.sscontrol.docker.service.internal.DockerModule
 import com.anrisoftware.sscontrol.etcd.service.internal.BindingModule
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdModule
 import com.anrisoftware.sscontrol.fail2ban.service.internal.Fail2banModule
+import com.anrisoftware.sscontrol.haproxy.service.internal.HAProxyModule
 import com.anrisoftware.sscontrol.k8s.backup.client.internal.BackupClientModule
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupModule
 import com.anrisoftware.sscontrol.k8s.fromhelm.service.internal.FromHelmModule
@@ -69,6 +70,7 @@ class ServicesModules {
             new GitRepoModule(),
             new DockerRegistryModule(),
             new ShellModule(),
+            new HAProxyModule(),
         ]
     }
 }

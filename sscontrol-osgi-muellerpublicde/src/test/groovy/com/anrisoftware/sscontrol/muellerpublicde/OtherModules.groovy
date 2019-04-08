@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.command.shell.linux.openssh.internal.find.FindModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.haproxy.script.haproxy_1_8.external.HAProxy_1_8_Module
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_13.linux.K8sUpstreamModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
@@ -55,6 +56,7 @@ class OtherModules {
     static List getModules() {
         [
             new K8sUpstreamModule(),
+            new HAProxy_1_8_Module(),
             new SystemdUtilsModule(),
             new DebugLoggingModule(),
             new TypesModule(),

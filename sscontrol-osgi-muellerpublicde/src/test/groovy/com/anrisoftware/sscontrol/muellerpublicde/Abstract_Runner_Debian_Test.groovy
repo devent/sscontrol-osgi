@@ -27,6 +27,8 @@ import com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.
 import com.anrisoftware.sscontrol.etcd.service.internal.EtcdImpl.EtcdImplFactory
 import com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_9.Fail2ban_Debian_9_Factory
 import com.anrisoftware.sscontrol.fail2ban.service.internal.Fail2banImpl.Fail2banImplFactory
+import com.anrisoftware.sscontrol.haproxy.script.debian.internal.debian_9.HAProxy_1_8_Debian_9_Factory
+import com.anrisoftware.sscontrol.haproxy.service.internal.HAProxyImplFactory
 import com.anrisoftware.sscontrol.k8s.backup.script.linux.internal.script_1_13.BackupLinuxFactory
 import com.anrisoftware.sscontrol.k8s.backup.service.internal.BackupImpl.BackupImplFactory
 import com.anrisoftware.sscontrol.k8s.fromhelm.script.linux.internal.script_1_13.FromHelmLinuxFactory
@@ -171,6 +173,12 @@ abstract class Abstract_Runner_Debian_Test extends Abstract_Runner_Andrea_Test {
     @Inject
     Collectd_Debian_9_Factory collectdDebianFactory
 
+    @Inject
+    HAProxyImplFactory haproxyFactory
+
+    @Inject
+    HAProxy_1_8_Debian_9_Factory haproxyDebianFactory
+
     HostServices putServices(HostServices services) {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', sshLinuxFactory
@@ -206,6 +214,8 @@ abstract class Abstract_Runner_Debian_Test extends Abstract_Runner_Andrea_Test {
         services.putAvailableScriptService 'backup/linux/0', backupLinuxFactory
         services.putAvailableService 'restore', restoreFactory
         services.putAvailableScriptService 'restore/linux/0', restoreLinuxFactory
+        services.putAvailableService 'haproxy', haproxyFactory
+        services.putAvailableScriptService 'haproxy-1.8/debian/9', haproxyDebianFactory
         return services
     }
 
