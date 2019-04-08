@@ -21,8 +21,10 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
+import com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -33,6 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
+@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
 class B_04_NginxIngressInstallTest extends Abstract_Runner_Debian_Test {
 
     @Test
