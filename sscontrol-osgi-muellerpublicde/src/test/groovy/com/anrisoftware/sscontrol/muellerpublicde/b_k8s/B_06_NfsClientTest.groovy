@@ -31,40 +31,50 @@ import groovy.util.logging.Slf4j
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
 @Slf4j
 @ExtendWith(ClusterTestMastersNodesSocketCondition.class)
-class B_02_K8sNodeTest extends Abstract_Runner_Debian_Test {
+class B_06_NfsClientTest extends Abstract_Runner_Debian_Test {
 
     @Test
-    void "install nodes"() {
+    void "nfs-client"() {
         def test = [
-            name: "install nodes",
+            name: "nfs-client",
             script: '''
-service "ssh", group: "masters" with {
+service "ssh" with {
     host targetHosts.masters[0], socket: socketFiles.masters[0]
 }
-service "ssh", group: "nodes" with {
-    host targetHosts.nodes[0], socket: socketFiles.nodes[0]
-    host targetHosts.nodes[1], socket: socketFiles.nodes[1]
+service "k8s-cluster" with {
 }
-service "k8s-cluster", target: 'masters' with {
+service "repo-git", group: "nfs" with {
+    remote url: "git@github.com:robobee-repos/kube-nfs-provisioner.git"
+    credentials "ssh", key: robobeeKey
+    checkout branch: "release/v5.2.0-k8s1.13-r.1"
 }
-targets.nodes.eachWithIndex { host, i ->
-    service "k8s-node", target: host, name: "andrea-node-${i+1}.muellerpublic.de" with {
-        plugin "nfs-client"
-        kubelet address: target.hostAddress
-        cluster host: "masters", join: k8sVars.joinCommand
-        label.addAll k8sVars.nodes[i].labels
-        taint.addAll k8sVars.nodes[i].taints
-        property << "fail_swap_on=false"
+service "nfs", version: "1.3" with {
+    export dir: "/nfsfileshare/0" with {
+        host << "192.168.56.200"
+        host << "192.168.56.201"
+        host << "192.168.56.202"
     }
 }
+service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with {
+    vars << [
+        nfs: [
+            image: [name: "quay.io/external_storage/nfs-client-provisioner", version: "v3.1.0-k8s1.11"],
+            affinity: [key: "robobeerun.com/nfs", name: "required", required: true],
+            allowOnMaster: true,
+            limits: [cpu: '100m', memory: '100Mi'],
+            options: [default: true, archiveOnDelete: true],
+            server: [address: "192.168.56.200", export: "/nfsfileshare/0"],
+        ]
+    ]
+}
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars],
-            expectedServicesSize: 3,
+            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
+            expectedServicesSize: 5,
             expected: { Map args ->
             },
         ]
