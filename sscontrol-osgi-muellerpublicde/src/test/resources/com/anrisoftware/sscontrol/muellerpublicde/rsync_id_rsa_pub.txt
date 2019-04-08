@@ -1,1 +1,17 @@
+====
+    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLKbNUFB1/z4kA23lqhKU4PmhRzDxmUBbk6/u77PKc6EEX0nY5uLj5Qw9a3JxEYxIQr6VIcYzor69HoZZgJIGdMPIHLHt50DpTBPiWPnAEV5jgUUwes/z8Q2rrLS5yfeFwXK0/LQNMH15tmISIy0Q2taz4MyLNoJlDbZQ5ds9ivNkZU1KjvcrDz0NW25zEhq1wKlRKn3t4YURZuY+rUPifpze9uD70gbFkPHBRK3SWmKUqpUcjVP8D2Uz1xZj8a5uBLMTZ4DTr7ArTr/ol7Qc5KaDGtwXP3ERDKjxLL96cF5pLMEFQrbwl9kY4S3E0n6bFQNTHplyVukSXAp+mwQpl erwin@muellerpublic.de
