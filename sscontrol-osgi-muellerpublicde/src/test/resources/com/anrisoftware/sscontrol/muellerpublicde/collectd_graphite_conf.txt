@@ -1,0 +1,14 @@
+LoadPlugin "write_graphite"
+<Plugin "write_graphite">
+<Node "graphite">
+  Host "185.24.220.41"
+  Port "32003"
+  Prefix "collectd."
+  Protocol "tcp"
+  LogSendErrors true
+  EscapeCharacter "_"
+  SeparateInstances true
+  StoreRates true
+  AlwaysAppendDS false
+</Node>
+</Plugin>

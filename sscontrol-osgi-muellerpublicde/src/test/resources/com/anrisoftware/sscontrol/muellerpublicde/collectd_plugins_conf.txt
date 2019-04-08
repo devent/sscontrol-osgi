@@ -1,0 +1,31 @@
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin processes
+LoadPlugin swap
+LoadPlugin uptime
+LoadPlugin users
+<Plugin df>
+    # ignore rootfs; else, the root file-system would appear twice, causing
+    # one of the updates to fail and spam the log
+    FSType rootfs
+    # ignore the usual virtual / temporary file-systems
+    FSType sysfs
+    FSType proc
+    FSType devtmpfs
+    FSType devpts
+    FSType tmpfs
+    FSType fusectl
+    FSType cgroup
+    FSType overlay
+    FSType shm
+    MountPoint "/var/lib"
+    IgnoreSelected true
+    ReportByDevice false
+    ReportInodes false
+    ValuesAbsolute true
+    ValuesPercentage false
+</Plugin>
+<Plugin swap>
+    ReportByDevice false
+    ReportBytes true
+</Plugin>
