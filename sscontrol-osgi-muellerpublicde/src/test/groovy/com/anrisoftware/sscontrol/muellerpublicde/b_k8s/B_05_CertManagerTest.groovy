@@ -16,15 +16,15 @@
 package com.anrisoftware.sscontrol.muellerpublicde.b_k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.MuellerpublicdeResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.MuellerpublicdeResources
+import com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,54 +35,61 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
+@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
 class B_05_CertManagerTest extends Abstract_Runner_Debian_Test {
 
-	@Test
-	void "cert-manager"() {
-		def test = [
-			name: "cert-manager",
-			script: '''
+    @Test
+    void "cert-manager"() {
+        def test = [
+            name: "cert-manager",
+            script: '''
 service "ssh" with {
-    host "robobee@andrea-node-0.muellerpublic.de", socket: socketFiles.masters[0]
+    host targetHosts.masters[0], socket: socketFiles.masters[0]
 }
 service "k8s-cluster" with {
 }
 service "repo-git", group: "cert-manager" with {
     remote url: "git@github.com:robobee-repos/cert-manager.git"
     credentials "ssh", key: robobeeKey
-	checkout branch: "release/v0.4.1-r1"
+    checkout branch: "release/v0.7.0-k8s1.13-r.1"
 }
-service "from-repository", repo: "cert-manager", dest: "/etc/kubernetes/addons/cert-manager" with {
+service "from-repository", repo: "cert-manager" with {
     vars << [
-        certManager: [
-            image: [version: 'v0.4.1'],
-            limits: [cpu: '0', memory: '50Mi'],
-            requests: [cpu: '0', memory: '50Mi'],
-            allowOnMaster: false,
-            affinity: [key: "robobeerun.com/cert-manager", name: "required", required: true],
-        ],
+        clusterIssuer: [
+            selfsigning: [enabled: true],
+            letsencrypt: [
+                prod: [enabled: true],
+                staging: [enabled: true],
+                email: "admin@muellerpublic.de",
+            ]
+        ]
     ]
     vars << [
-        acme: [
-            email: 'admin@muellerpublic.de',
+        certManager: [
+            limits: [cpu: '0.1', memory: '50Mi'],
+            requests: [cpu: '0.1', memory: '50Mi'],
+            affinity: [key: "robobeerun.com/cert-manager", name: "required", required: true],
+        ]
+    ]
+    vars << [
+        certManagerCainjector: [
+            limits: [cpu: '0.1', memory: '50Mi'],
+            requests: [cpu: '0.1', memory: '50Mi'],
+        ]
+    ]
+    vars << [
+        certManagerWebhook: [
+            limits: [cpu: '0.1', memory: '50Mi'],
+            requests: [cpu: '0.1', memory: '50Mi'],
         ]
     ]
 }
 ''',
-			scriptVars: [
-				socketFiles: socketFiles,
-				robobeeKey: robobeeKey,
-			],
-			expectedServicesSize: 4,
-			expected: { Map args ->
-			},
-		]
-		doTest test
-	}
-
-	@Before
-	void checkProfile() {
-		assumeMastersExists()
-		assumeNodesExists()
-	}
+            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
+            expectedServicesSize: 4,
+            expected: { Map args ->
+            },
+        ]
+        doTest test
+    }
 }
