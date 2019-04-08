@@ -236,7 +236,7 @@ mv ${destTmp} ${destination}/${name}
         def p = shell exitCodes: [0, 1] as int[], outString: true, errString: true,
         "kubectl create --dry-run -f ${destTmp}" call()
         if (p.exitValue == 1) {
-            def found = service.crds.find { p.err.matches(".*no matches for kind \"${it.kind}\" in version \"${it.version}\"") }
+            def found = service.crds.find { p.err.contains("no matches for kind \"${it.kind}\" in version \"${it.version}\"") }
             if (found) {
                 log.debug "Ignore unknown CRD: {}", found
             } else {
