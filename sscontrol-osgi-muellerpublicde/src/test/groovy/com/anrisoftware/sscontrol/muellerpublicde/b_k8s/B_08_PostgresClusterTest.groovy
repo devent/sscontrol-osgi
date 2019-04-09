@@ -47,16 +47,15 @@ service "ssh" with {
     host targetHosts.masters[0], socket: socketFiles.masters[0]
 }
 def vars = [
-  root: [password: 'ochae6chiez5Wicheb8OiKooVeequu6o'],
-  resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]],
+    limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"],
 ]
 service "from-helm", chart: "stable/postgresql", version: "3.15.0" with {
     release ns: "robobeerun-com-postgres", name: "robobeerun-com-postgres"
     config << """
 image:
   registry: docker.io
-  repository: bitnami/postgresql
-  tag: 10.7.0
+  repository: ${postgresVars.image.name}
+  tag: ${postgresVars.image.version}
 replication:
   enabled: true
   user: repl_user
@@ -70,8 +69,8 @@ replication:
   numSynchronousReplicas: 1
   ## Replication Cluster application name. Useful for defining multiple replication policies
   applicationName: my_application
-postgresqlUsername: postgres
-postgresqlPassword: ${vars.root.password}
+postgresqlUsername: ${postgresVars.admin.user}
+postgresqlPassword: ${postgresVars.admin.password}
 persistence:
   enabled: true
   size: 8Gi
@@ -105,11 +104,11 @@ slave:
     operator: Equal
 resources:
   limits:
-    cpu: ${vars.resources.limits.cpu}
-    memory: ${vars.resources.limits.memory}
+    cpu: ${vars.limits.cpu}
+    memory: ${vars.limits.memory}
   requests:
-    cpu: ${vars.resources.requests.cpu}
-    memory: ${vars.resources.requests.memory}
+    cpu: ${vars.requests.cpu}
+    memory: ${vars.requests.memory}
 metrics:
   enabled: false
   # resources: {}
@@ -120,7 +119,8 @@ metrics:
 """
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
+            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                postgresVars: postgresVars],
             expectedServicesSize: 2,
             expected: { Map args ->
             },

@@ -182,4 +182,18 @@ public class ClusterTestResources {
             publicKey: ClusterTestResources.class.getResource('rsync_id_rsa_pub.txt'),
         ]
     ]
+
+    static final postgresVars = [
+        image: [name: "bitnami/postgresql", version: "10.7.0-debian-9-r48"],
+        admin: [user: "postgres", password: "ochae6chiez5Wicheb8OiKooVeequu6o"],
+        host: "robobeerun-com-postgres-postgresql.robobeerun-com-postgres.svc",
+        port: 5432
+    ]
+
+    static final pgbouncerVars = [
+        image: [name: "crunchydata/crunchy-pgbouncer", version: "centos7-10.7-2.3.1"],
+    ]
+
+    static final keycloakVars = [
+        hosts: ["keycloak.robobee.test"]]
 }
