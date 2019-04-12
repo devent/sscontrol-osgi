@@ -184,7 +184,7 @@ public class ClusterTestResources {
     ]
 
     static final postgresVars = [
-        image: [name: "bitnami/postgresql", version: "10.7.0-debian-9-r48"],
+        image: [name: "bitnami/postgresql", version: "10.7.0-debian-9-r57"],
         admin: [user: "postgres", password: "ochae6chiez5Wicheb8OiKooVeequu6o"],
         host: "robobeerun-com-postgres-postgresql.robobeerun-com-postgres.svc",
         port: 5432
