@@ -56,6 +56,8 @@ image:
   registry: docker.io
   repository: ${postgresVars.image.name}
   tag: ${postgresVars.image.version}
+volumePermissions:
+  enabled: false
 replication:
   enabled: true
   user: repl_user
