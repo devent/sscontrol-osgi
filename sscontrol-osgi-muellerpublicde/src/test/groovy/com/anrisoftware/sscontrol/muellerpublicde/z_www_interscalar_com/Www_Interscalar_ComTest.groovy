@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.muellerpublicde
+package com.anrisoftware.sscontrol.muellerpublicde.z_www_interscalar_com
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.MuellerpublicdeResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
+import com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -32,13 +34,14 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class D_01_InterscalarWordpressTest extends Abstract_Runner_Debian_Test {
+@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+class Www_Interscalar_ComTest extends Abstract_Runner_Debian_Test {
 
-	@Test
-	void "interscalar-com-wordpress"() {
-		def test = [
-			name: "interscalar-com-wordpress",
-			script: '''
+    @Test
+    void "interscalar-com-wordpress"() {
+        def test = [
+            name: "interscalar-com-wordpress",
+            script: '''
 service "ssh" with {
     host "robobee@andrea-node-0.muellerpublic.de", socket: socketFiles.masters[0]
 }
@@ -47,30 +50,32 @@ service "k8s-cluster" with {
 service "repo-git", group: "interscalar-com-wordpress" with {
     remote url: "git@github.com:robobee-repos/interscalar-com-wordpress.git"
     credentials "ssh", key: robobeeKey
-	checkout branch: "release/r2"
+	checkout branch: "release/r3"
 }
-service "from-repository", repo: "interscalar-com-wordpress" with {
+service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with {
     vars << [
-        volume: [class: "managed-nfs-storage", storage: "5Gi"]
+        volume: [storage: "5Gi"]
     ]
     vars << [
         db: [
-            image: [name: 'mariadb', version: '10.3.8-bionic'],
-            limits: [cpu: '100m', memory: '200Mi'],
-            requests: [cpu: '100m', memory: '200Mi'],
-            affinity: [key: "muellerpublic.de/interscalar-com", name: "required", required: true],
-            root: [user: 'root', password: 'ugeepaemiemiemeith5Voh8eekoopoog'],
-            wordpress: [database: 'wordpressdb', user: 'wordpressdb', password: 'sooga5Jea3UGhie3eeboopoomo9beada'],
+            image: mariadbVars.image,
+            admin: mariadbVars.admin,
+            host: mariadbVars.host,
+            port: mariadbVars.port,
+            database: 'wordpressdb',
+            user: 'wordpressdb',
+            password: "sooga5Jea3UGhie3eeboopoomo9beada",
+            revision: revision
         ]
     ]
     vars << [
         wordpress: [
-            image: [name: 'erwin82/interscalar-com-wordpress', version: 'v5-r1'],
+            image: [name: 'robobeerun/wordpress', version: 'v5.1.1-php7.1-fpm-r.1'],
             limits: [cpu: '500m', memory: '500Mi'],
             requests: [cpu: '500m', memory: '500Mi'],
-            affinity: [key: "muellerpublic.de/interscalar-com", name: "required", required: true],
+            affinity: [key: "www.interscalar.com", name: "required", required: true],
 			httpHeaders: [[name: "Host", value: "www.interscalar.com"]],
-			revision: "r4",
+			revision: revision,
             php: [
                 memoryLimit: "200M",
                 maxExecutionTime: 600,
@@ -92,6 +97,7 @@ service "from-repository", repo: "interscalar-com-wordpress" with {
                 'interscalar.space', 'www.interscalar.space',
                 'interscalar.com',
             ],
+            issuer: "selfsigning-issuer",
         ]
     ]
     vars << [
@@ -99,8 +105,7 @@ service "from-repository", repo: "interscalar-com-wordpress" with {
             image: [name: 'robobeerun/nginx', version: 'v1.13.12-r1'],
             limits: [cpu: '100m', memory: '100Mi'],
             requests: [cpu: '100m', memory: '100Mi'],
-            affinity: [key: "muellerpublic.de/interscalar-com", name: "required", required: true],
-			revision: "r2",
+			revision: revision,
             workerProcesses: 4,
             workerConnections: 4096,
             clientMaxBodySize: '64m',
@@ -112,23 +117,17 @@ service "from-repository", repo: "interscalar-com-wordpress" with {
             image: [name: 'robobeerun/rsync', version: 'v3.1.2-r2'],
             limits: [cpu: '50m', memory: '50Mi'],
             requests: [cpu: '50m', memory: '50Mi'],
-            affinity: [key: "muellerpublic.de/interscalar-com", name: "required", required: true],
             ssh: [revision: "r1", publicKey: k8sVars.rsync.publicKey],
         ]
     ]
 }
 ''',
-			scriptVars: [socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
-			expectedServicesSize: 4,
-			expected: { Map args ->
-			},
-		]
-		doTest test
-	}
-
-	@Before
-	void checkProfile() {
-		assumeMastersExists()
-		assumeNodesExists()
-	}
+            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                mariadbVars: mariadbVars, revision: "r1"],
+            expectedServicesSize: 4,
+            expected: { Map args ->
+            },
+        ]
+        doTest test
+    }
 }

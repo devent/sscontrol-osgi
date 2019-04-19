@@ -178,8 +178,8 @@ public class ClusterTestResources {
             ]
         ],
         rsync: [
-            key: ClusterTestResources.class.getResource('rsync_id_rsa.txt'),
-            publicKey: ClusterTestResources.class.getResource('rsync_id_rsa_pub.txt'),
+            key: "/com/anrisoftware/sscontrol/muellerpublicde/rsync_id_rsa.txt",
+            publicKey: "/com/anrisoftware/sscontrol/muellerpublicde/rsync_id_rsa_pub.txt",
         ]
     ]
 
@@ -196,4 +196,12 @@ public class ClusterTestResources {
 
     static final keycloakVars = [
         hosts: ["keycloak.robobee.test"]]
+
+    static final mariadbVars = [
+        image: [name: "bitnami/mariadb", version: "10.1.38"],
+        admin: [user: "root", password: "wooSh6ohrah2AiCiY7uchoh5Leisee4x"],
+        host: "robobeerun-com-mariadb.robobeerun-com-mariadb.svc",
+        port: 3306
+    ]
+
 }

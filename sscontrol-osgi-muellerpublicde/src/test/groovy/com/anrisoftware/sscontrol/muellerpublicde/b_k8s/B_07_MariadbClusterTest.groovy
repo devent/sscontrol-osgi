@@ -47,20 +47,20 @@ service "ssh" with {
     host targetHosts.masters[0], socket: socketFiles.masters[0]
 }
 def vars = [
-  root: [password: 'wooSh6ohrah2AiCiY7uchoh5Leisee4x'],
-  replicator: [password: 'eir7Shoom5eidoobaequo6ReeSie1ohn'],
-  master: [resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
-  slave: [replicas: 2, resources: [limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"]]],
+    replicas: 2,
+    replicator: [password: "eir7Shoom5eidoobaequo6ReeSie1ohn"],
+    limits: [cpu: "0.5", memory: "200Mi"],
+    requests: [cpu: "0.5", memory: "200Mi"],
 ]
 service "from-helm", chart: "stable/mariadb", version: "5.11.0" with {
     release ns: "robobeerun-com-mariadb", name: "robobeerun-com-mariadb"
     config << """
 image:
   registry: docker.io
-  repository: bitnami/mariadb
-  tag: 10.1.38
+  repository: ${mariadbVars.image.name}
+  tag: ${mariadbVars.image.version}
 rootUser:
-  password: ${vars.root.password}
+  password: ${mariadbVars.admin.password}
 replication:
   enabled: true
   user: replicator
@@ -85,13 +85,13 @@ master:
     size: 8Gi
   resources:
     limits:
-      cpu: ${vars.master.resources.limits.cpu}
-      memory: ${vars.master.resources.limits.memory}
+      cpu: ${vars.limits.cpu}
+      memory: ${vars.limits.memory}
     requests:
-      cpu: ${vars.master.resources.requests.cpu}
-      memory: ${vars.master.resources.requests.memory}
+      cpu: ${vars.requests.cpu}
+      memory: ${vars.requests.memory}
 slave:
-  replicas: ${vars.slave.replicas}
+  replicas: ${vars.replicas}
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -109,11 +109,11 @@ slave:
     size: 8Gi
   resources:
     limits:
-      cpu: ${vars.slave.resources.limits.cpu}
-      memory: ${vars.slave.resources.limits.memory}
+      cpu: ${vars.limits.cpu}
+      memory: ${vars.limits.memory}
     requests:
-      cpu: ${vars.slave.resources.requests.cpu}
-      memory: ${vars.slave.resources.requests.memory}
+      cpu: ${vars.requests.cpu}
+      memory: ${vars.requests.memory}
 metrics:
   enabled: false
   image:
@@ -133,7 +133,8 @@ prometheus.io/port: "9104"
 """
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
+            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                mariadbVars: mariadbVars],
             expectedServicesSize: 2,
             expected: { Map args ->
             },

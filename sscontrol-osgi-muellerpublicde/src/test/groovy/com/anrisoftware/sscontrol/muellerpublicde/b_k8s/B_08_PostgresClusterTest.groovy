@@ -47,7 +47,9 @@ service "ssh" with {
     host targetHosts.masters[0], socket: socketFiles.masters[0]
 }
 def vars = [
-    limits: [cpu: "0.5", memory: "200Mi"], requests: [cpu: "0.5", memory: "200Mi"],
+    replicas: 2,
+    limits: [cpu: "0.5", memory: "200Mi"],
+    requests: [cpu: "0.5", memory: "200Mi"],
 ]
 service "from-helm", chart: "stable/postgresql", version: "3.15.0" with {
     release ns: "robobeerun-com-postgres", name: "robobeerun-com-postgres"
@@ -62,7 +64,7 @@ replication:
   enabled: true
   user: repl_user
   password: repl_password
-  slaveReplicas: 2
+  slaveReplicas: ${vars.replicas}
   ## Set synchronous commit mode: on, off, remote_apply, remote_write and local
   ## ref: https://www.postgresql.org/docs/9.6/runtime-config-wal.html#GUC-WAL-LEVEL
   synchronousCommit: "on"
