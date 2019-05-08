@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.b_k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 

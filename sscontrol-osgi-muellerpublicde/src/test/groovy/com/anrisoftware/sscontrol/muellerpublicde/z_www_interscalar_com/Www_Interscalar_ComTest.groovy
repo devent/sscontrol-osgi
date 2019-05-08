@@ -16,14 +16,14 @@
 package com.anrisoftware.sscontrol.muellerpublicde.z_www_interscalar_com
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 

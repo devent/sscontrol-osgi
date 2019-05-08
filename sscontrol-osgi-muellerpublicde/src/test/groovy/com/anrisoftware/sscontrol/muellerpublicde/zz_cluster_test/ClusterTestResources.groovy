@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.muellerpublicde.cluster_test
+package com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test
 
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
