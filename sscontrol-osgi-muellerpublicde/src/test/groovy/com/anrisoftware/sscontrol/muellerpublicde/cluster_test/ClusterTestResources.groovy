@@ -198,7 +198,7 @@ public class ClusterTestResources {
         hosts: ["keycloak.robobee.test"]]
 
     static final mariadbVars = [
-        image: [name: "bitnami/mariadb", version: "10.1.38"],
+        image: [name: "bitnami/mariadb", version: "10.1.38-debian-9-r65"],
         admin: [user: "root", password: "wooSh6ohrah2AiCiY7uchoh5Leisee4x"],
         host: "robobeerun-com-mariadb.robobeerun-com-mariadb.svc",
         port: 3306
