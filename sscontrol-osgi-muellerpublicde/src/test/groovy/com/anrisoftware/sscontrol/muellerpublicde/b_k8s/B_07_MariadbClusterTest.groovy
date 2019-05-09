@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.b_k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
 class B_07_MariadbClusterTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -49,8 +49,8 @@ service "ssh" with {
 def vars = [
     replicas: 2,
     replicator: [password: "eir7Shoom5eidoobaequo6ReeSie1ohn"],
-    limits: [cpu: "0.5", memory: "200Mi"],
-    requests: [cpu: "0.5", memory: "200Mi"],
+    limits: [cpu: "0.25", memory: "250Mi"],
+    requests: [cpu: "0.25", memory: "250Mi"],
 ]
 service "from-helm", chart: "stable/mariadb", version: "5.11.0" with {
     release ns: "robobeerun-com-mariadb", name: "robobeerun-com-mariadb"
@@ -115,17 +115,17 @@ slave:
       cpu: ${vars.requests.cpu}
       memory: ${vars.requests.memory}
 metrics:
-  enabled: false
+  enabled: true
   image:
     registry: docker.io
     repository: prom/mysqld-exporter
     tag: v0.11.0
   resources:
     limits:
-      cpu: 0.2
+      cpu: 0.1
       memory: 20Mi
     requests:
-      cpu: 0.2
+      cpu: 0.1
       memory: 20Mi
   annotations:
     prometheus.io/scrape: "true"
@@ -133,8 +133,11 @@ prometheus.io/port: "9104"
 """
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-                mariadbVars: mariadbVars],
+            scriptVars: [
+                targetHosts: [masters: mastersHosts, nodes: nodesHosts],
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                mariadbVars: mariadbVars
+            ],
             expectedServicesSize: 2,
             expected: { Map args ->
             },

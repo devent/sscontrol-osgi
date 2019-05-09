@@ -16,14 +16,14 @@
 package com.anrisoftware.sscontrol.muellerpublicde.z_www_interscalar_com
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersOnlySocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -34,7 +34,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersOnlySocketCondition.class)
 class Www_Interscalar_ComTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -62,9 +62,9 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             admin: mariadbVars.admin,
             host: mariadbVars.host,
             port: mariadbVars.port,
-            database: 'wordpressdb',
-            user: 'wordpressdb',
-            password: "sooga5Jea3UGhie3eeboopoomo9beada",
+            database: 'interscalardb',
+            user: 'interscalardb',
+            password: "Ievoo0ohhah6oShooneekaeF2aibevae",
             revision: revision
         ]
     ]
@@ -74,7 +74,6 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             limits: [cpu: '500m', memory: '500Mi'],
             requests: [cpu: '500m', memory: '500Mi'],
             affinity: [key: "www.interscalar.com", name: "required", required: true],
-			httpHeaders: [[name: "Host", value: "www.interscalar.com"]],
 			revision: revision,
             php: [
                 memoryLimit: "200M",
@@ -97,7 +96,7 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
                 'interscalar.space', 'www.interscalar.space',
                 'interscalar.com',
             ],
-            issuer: "selfsigning-issuer",
+            issuer: "letsencrypt-prod",
         ]
     ]
     vars << [
@@ -106,6 +105,8 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             limits: [cpu: '100m', memory: '100Mi'],
             requests: [cpu: '100m', memory: '100Mi'],
 			revision: revision,
+            readinessProbeEnabled: false,
+            httpHeaders: [[name: "Host", value: "www.interscalar.com"]],
             workerProcesses: 4,
             workerConnections: 4096,
             clientMaxBodySize: '64m',
@@ -122,8 +123,11 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
     ]
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-                mariadbVars: mariadbVars, revision: "r1"],
+            scriptVars: [
+                targetHosts: [masters: mastersHosts, nodes: nodesHosts],
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                mariadbVars: mariadbVars, revision: "r1"
+            ],
             expectedServicesSize: 4,
             expected: { Map args ->
             },

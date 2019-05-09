@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.c_basics
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersOnlySocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersOnlySocketCondition.class)
 class C_01_KeycloakTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -60,15 +60,15 @@ service "from-repository", repo: "anrisoftware-com", dryrun: false with {
             admin: postgresVars.admin,
             host: postgresVars.host,
             port: postgresVars.port,
-            database: "keycloakdb", user: "keycloakdb", password: "pie1zuroiXa5Aish6caeT8gaex6uthi2",
+            database: "keycloakdb", user: "keycloakdb", password: "oot3AhcoogahgohNgi0ang4veiwahb9A",
         ]
     ]
     vars << [
         keycloak: [
             image: [name: "jboss/keycloak", version: "5.0.0"],
-            limits: [cpu: "500m", memory: "600Mi"],
-            requests: [cpu: "500m", memory: "600Mi"],
-            issuer: "selfsigning-issuer",
+            limits: [cpu: "0.5", memory: "600Mi"],
+            requests: [cpu: "0.5", memory: "600Mi"],
+            issuer: "letsencrypt-prod",
             revision: revision,
             java: [heapStart: "200m", heapMax: "200m", metaspaceStart: "200m", metaspaceMax: "200m"],
             adminUser: "admin",
@@ -81,14 +81,17 @@ service "from-repository", repo: "anrisoftware-com", dryrun: false with {
     vars << [
         pgbouncer: [
             image: pgbouncerVars.image,
-            limits: [cpu: "100m", memory: "100Mi"],
-            requests: [cpu: '100m', memory: '100Mi'],
+            limits: [cpu: "0.1", memory: "100Mi"],
+            requests: [cpu: '0.1', memory: '100Mi'],
         ]
     ]
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-                postgresVars: postgresVars, revision: "r1", keycloakVars: keycloakVars, pgbouncerVars: pgbouncerVars],
+            scriptVars: [
+                targetHosts: [masters: mastersHosts, nodes: nodesHosts],
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                postgresVars: postgresVars, revision: "r1", keycloakVars: keycloakVars, pgbouncerVars: pgbouncerVars
+            ],
             expectedServicesSize: 4,
             expected: { Map args ->
             },

@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.b_k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
 class B_06_NfsClientTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -53,13 +53,6 @@ service "repo-git", group: "nfs" with {
     credentials "ssh", key: robobeeKey
     checkout branch: "release/v5.2.0-k8s1.13-r.1"
 }
-service "nfs", version: "1.3" with {
-    export dir: "/nfsfileshare/0" with {
-        host << "192.168.56.200"
-        host << "192.168.56.201"
-        host << "192.168.56.202"
-    }
-}
 service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with {
     vars << [
         nfs: [
@@ -68,13 +61,17 @@ service "from-repository", repo: "nfs", dest: "/etc/kubernetes/addons/nfs" with 
             allowOnMaster: true,
             limits: [cpu: '100m', memory: '100Mi'],
             options: [default: true, archiveOnDelete: true],
-            server: [address: "192.168.56.200", export: "/nfsfileshare/0"],
+            server: [address: nfsServer, export: "/nfsfileshare/2"],
         ]
     ]
 }
 ''',
-            scriptVars: [targetHosts: [masters: mastersHosts, nodes: nodesHosts], socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey],
-            expectedServicesSize: 5,
+            scriptVars: [
+                targetHosts: [masters: mastersHosts, nodes: nodesHosts],
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                nfsServer: nfsServer
+            ],
+            expectedServicesSize: 4,
             expected: { Map args ->
             },
         ]

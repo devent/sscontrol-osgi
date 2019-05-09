@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.a_infra
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,8 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+//@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
 class A_02_Fail2banTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -51,11 +52,11 @@ service "ssh", group: "nodes" with {
     host targetHosts.nodes[1], socket: socketFiles.nodes[1]
 }
 service "fail2ban", target: "masters" with {
-    banning time: "PT1M"
+    banning time: "P7D"
     jail "sshd"
 }
 service "fail2ban", target: "nodes" with {
-    banning time: "PT1M"
+    banning time: "P7D"
     jail "sshd", port: nodesSshPort
 }
 ''',

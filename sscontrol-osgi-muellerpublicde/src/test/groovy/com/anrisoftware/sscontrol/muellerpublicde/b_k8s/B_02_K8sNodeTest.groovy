@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.b_k8s
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
 class B_02_K8sNodeTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -59,7 +59,6 @@ targets.nodes.eachWithIndex { host, i ->
         cluster host: "masters", join: k8sVars.joinCommand
         label.addAll k8sVars.nodes[i+1].labels
         taint.addAll k8sVars.nodes[i+1].taints
-        property << "fail_swap_on=false"
     }
 }
 ''',

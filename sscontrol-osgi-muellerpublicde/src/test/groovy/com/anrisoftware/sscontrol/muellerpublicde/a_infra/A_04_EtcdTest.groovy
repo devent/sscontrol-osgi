@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.muellerpublicde.a_infra
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestResources.*
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static org.junit.Assume.*
 
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_cluster_test.ClusterTestMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(ClusterTestMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
 class A_04_EtcdTest extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -52,14 +52,14 @@ targets.etcd.eachWithIndex { host, i ->
     service "etcd", target: host, member: "etcd-${i}", check: targets.etcd[-1] with {
         debug "debug", level: 1
         bind "https://${host.hostAddress}:2379"
-        advertise "https://etcd-${i}.robobee-test.test:2379"
+        advertise "https://etcd-${i}.muellerpublic.de:2379"
         client etcdVars.client
         tls cert: etcdVars.nodes[i].cert, key: etcdVars.nodes[i].key
         authentication "cert", ca: etcdVars.nodes[i].ca
-        peer state: "new", advertise: "https://etcd-${i}.robobee-test.test:2380", listen: "https://${host.hostAddress}:2380", token: "XuSeich3" with {
-            cluster << "etcd-0=https://etcd-0.robobee-test.test:2380"
-            cluster << "etcd-1=https://etcd-1.robobee-test.test:2380"
-            cluster << "etcd-2=https://etcd-2.robobee-test.test:2380"
+        peer state: "new", advertise: "https://etcd-${i}.muellerpublic.de:2380", listen: "https://${host.hostAddress}:2380", token: "aVaeT1tu2quohkai" with {
+            cluster << "etcd-0=https://etcd-0.muellerpublic.de:2380"
+            cluster << "etcd-1=https://etcd-1.muellerpublic.de:2380"
+            cluster << "etcd-2=https://etcd-2.muellerpublic.de:2380"
             tls cert: etcdVars.nodes[i].cert, key: etcdVars.nodes[i].key
             authentication "cert", ca: etcdVars.nodes[i].ca
         }
@@ -69,7 +69,7 @@ targets.etcd.eachWithIndex { host, i ->
 targets.etcd.eachWithIndex { host, i ->
     service "etcd", target: host, check: targets.etcd[-1] with {
         bind network: "${mainNetwork}:1", "https://10.10.10.7:22379"
-        gateway endpoints: "https://etcd-${i}.robobee-test.test:2379"
+        gateway endpoints: "https://etcd-${i}.muellerpublic.de:2379"
         client etcdVars.client
         property << "archive_ignore_key=true"
     }
