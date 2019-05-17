@@ -70,7 +70,7 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
     ]
     vars << [
         wordpress: [
-            image: [name: 'robobeerun/wordpress', version: 'v5.1.1-php7.1-fpm-r.1'],
+            image: [name: 'robobeerun/wordpress', version: 'v5.2.0-php7.1-fpm-r.2'],
             limits: [cpu: '500m', memory: '500Mi'],
             requests: [cpu: '500m', memory: '500Mi'],
             affinity: [key: "www.interscalar.com", name: "required", required: true],
