@@ -50,7 +50,7 @@ service "k8s-cluster" with {
 service "repo-git", group: "muellerpublic-de-wordpress" with {
     remote url: "git@github.com:robobee-repos/muellerpublic-de-wordpress-deploy.git"
     credentials "ssh", key: robobeeKey
-	checkout branch: "release/r2"
+	checkout branch: "release/r3"
 }
 service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false with {
     vars << [
@@ -108,6 +108,12 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
             workerConnections: 4096,
             clientMaxBodySize: '64m',
 			readTimeout: 600,
+        ]
+    ]
+    vars << [
+        exporter: [
+            limits: [cpu: '50m', memory: '20Mi'],
+            requests: [cpu: '50m', memory: '20Mi'],
         ]
     ]
     vars << [

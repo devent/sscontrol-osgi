@@ -70,7 +70,10 @@ service "from-repository", repo: "nginx-ingress", dest: "/etc/kubernetes/addons/
             nodePort: [http: edgeNodeTargetHttpPort, https: edgeNodeTargetHttpsPort],
             config: [
                 useProxyProtocol: true,
-            ]
+            ],
+			prometheus: [
+			    enabled: true,
+			],
         ]
     ]
     vars << [
