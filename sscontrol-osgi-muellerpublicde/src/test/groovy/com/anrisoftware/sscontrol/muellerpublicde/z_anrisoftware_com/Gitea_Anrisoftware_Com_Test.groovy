@@ -77,7 +77,7 @@ service "from-repository", repo: "gitea-anrisoftware-com", dryrun: false with {
 			livenessProbe: [port: "http", initialDelaySeconds: 100],
 			readinessProbe: [port: "http", initialDelaySeconds: 100],
             httpHeaders: [[name: "Host", value: "gitea.anrisoftware.com"]],
-            revision: "r2",
+            revision: "r6",
             hosts: [
                 'gitea.anrisoftware.com', // main domain
             ],
@@ -85,6 +85,8 @@ service "from-repository", repo: "gitea-anrisoftware-com", dryrun: false with {
             appName: "Anrisoftware Projects",
             runMode: "prod",
             googleAnalyticsTag: "UA-119767261-1",
+			secretKey: "eijaigiet0eel3mi5foh9ieJ5aawi7sh",
+			email: [host: emailVars.host, from: "git@anrisoftware.com", user: "git@anrisoftware.com", password: "oPheezahKo2quur8"],
         ]
     ]
     vars << [
@@ -119,7 +121,9 @@ service "from-repository", repo: "gitea-anrisoftware-com", dryrun: false with {
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-                postgresVars: postgresVars, pgbouncerVars: pgbouncerVars
+                postgresVars: postgresVars,
+				pgbouncerVars: pgbouncerVars,
+				emailVars: emailVars,
             ],
             expectedServicesSize: 4,
             expected: { Map args ->

@@ -206,5 +206,9 @@ public class AndreaClusterResources {
         host: "robobeerun-com-mariadb.robobeerun-com-mariadb.svc",
         port: 3306
     ]
+	
+	static final emailVars = [
+		host: "andrea-mail-0.muellerpublic.de:465",
+	]
 
 }
