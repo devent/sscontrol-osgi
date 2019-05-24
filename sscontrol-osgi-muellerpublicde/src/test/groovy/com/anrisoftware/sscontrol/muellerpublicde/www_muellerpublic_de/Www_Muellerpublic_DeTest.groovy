@@ -50,7 +50,7 @@ service "k8s-cluster" with {
 service "repo-git", group: "muellerpublic-de-wordpress" with {
     remote url: "git@github.com:robobee-repos/muellerpublic-de-wordpress-deploy.git"
     credentials "ssh", key: robobeeKey
-	checkout branch: "release/r3"
+	checkout tag: "r3"
 }
 service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false with {
     vars << [
@@ -91,7 +91,9 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
             ],
             hosts: [
                 'www.muellerpublic.de', // main domain
+                'muellerpublic.de',
                 'www.mueller-public.de',
+                'mueller-public.de',
             ],
             issuer: "letsencrypt-prod",
         ]
@@ -130,7 +132,7 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
                 mariadbVars: mariadbVars,
-				revision: "r1"
+                revision: "r2"
             ],
             expectedServicesSize: 4,
             expected: { Map args ->
