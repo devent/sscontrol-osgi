@@ -77,7 +77,7 @@ service "from-repository", repo: "gitea-anrisoftware-com", dryrun: false with {
 			livenessProbe: [port: "http", initialDelaySeconds: 100],
 			readinessProbe: [port: "http", initialDelaySeconds: 100],
             httpHeaders: [[name: "Host", value: "gitea.anrisoftware.com"]],
-            revision: "r6",
+            revision: "r7",
             hosts: [
                 'gitea.anrisoftware.com', // main domain
             ],
