@@ -68,7 +68,7 @@ service "from-repository", repo: "kube-prometheus", dryrun: false with {
             image: [name: 'grafana/grafana', version: '6.0.1'],
             limits: [cpu: '200m', memory: '200Mi'],
             requests: [cpu: '200m', memory: '200Mi'],
-			revision: "r1",
+			revision: "r6",
             affinity: [key: "robobeerun.com/grafana", name: "required", required: true],
 			allowOnMaster: false,
 			storage: [size: "1Gi"],
@@ -85,6 +85,7 @@ service "from-repository", repo: "kube-prometheus", dryrun: false with {
 				tokenUrl: "https://sso.andrea.muellerpublic.de/auth/realms/public/protocol/openid-connect/token",
 				apiUrl: "https://sso.andrea.muellerpublic.de/auth/realms/public/protocol/openid-connect/userinfo",
 			] ],
+			email: [enabled: true, host: emailVars.host, port: emailVars.port, user: "alerts@muellerpublic.de", password: "Thie6theike4choh"],
         ]
     ]
     vars << [
@@ -124,7 +125,8 @@ service "from-repository", repo: "kube-prometheus", dryrun: false with {
 ''',
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
-                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+				emailVars: emailVars,
             ],
             expectedServicesSize: 4,
             expected: { Map args ->

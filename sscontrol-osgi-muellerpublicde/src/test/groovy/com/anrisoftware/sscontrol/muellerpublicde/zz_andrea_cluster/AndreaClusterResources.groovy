@@ -208,7 +208,8 @@ public class AndreaClusterResources {
     ]
 	
 	static final emailVars = [
-		host: "andrea-mail-0.muellerpublic.de:465",
+		host: "andrea-mail-0.muellerpublic.de",
+		port: 465,
 	]
 
 }
