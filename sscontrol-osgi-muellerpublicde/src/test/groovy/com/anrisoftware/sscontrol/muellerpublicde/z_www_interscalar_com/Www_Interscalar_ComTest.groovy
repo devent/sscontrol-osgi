@@ -114,6 +114,12 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
         ]
     ]
     vars << [
+        exporter: [
+            limits: [cpu: '50m', memory: '20Mi'],
+            requests: [cpu: '50m', memory: '20Mi'],
+        ]
+    ]
+    vars << [
         rsync: [
             image: [name: 'robobeerun/rsync', version: 'v3.1.2-r2'],
             limits: [cpu: '50m', memory: '50Mi'],
