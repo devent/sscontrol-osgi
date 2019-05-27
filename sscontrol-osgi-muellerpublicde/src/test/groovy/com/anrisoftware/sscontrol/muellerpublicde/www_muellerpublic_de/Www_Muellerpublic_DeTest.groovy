@@ -71,8 +71,8 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
     vars << [
         wordpress: [
             image: [name: 'robobeerun/wordpress', version: 'v5.2.0-php7.1-fpm-r.2'],
-            limits: [cpu: '500m', memory: '500Mi'],
-            requests: [cpu: '500m', memory: '500Mi'],
+            limits: [cpu: '250m', memory: '500Mi'],
+            requests: [cpu: '250m', memory: '500Mi'],
             affinity: [key: "www.muellerpublic.de", name: "required", required: true],
 			revision: revision,
             php: [
