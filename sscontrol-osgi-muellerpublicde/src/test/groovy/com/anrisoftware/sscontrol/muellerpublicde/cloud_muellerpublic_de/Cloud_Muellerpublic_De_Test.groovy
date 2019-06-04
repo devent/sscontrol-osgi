@@ -72,34 +72,34 @@ service "from-repository", repo: "cloud-muellerpublic-de-nextcloud-deploy" with 
     vars << [
         nextcloud: [
             image: [name: 'robobeerun/nextcloud', version: 'v16.0.1-fpm-r.1'],
-            limits: [cpu: '250m', memory: '500Mi'],
-            requests: [cpu: '250m', memory: '500Mi'],
+            limits: [cpu: '250m', memory: '1024Mi'],
+            requests: [cpu: '250m', memory: '1024Mi'],
             cron: [schedule: "0 4 * * *"],
             affinity: [key: "cloud.muellerpublic.de", name: "required", required: true],
-            revision: "r2",
+            revision: "r3",
             hosts: [
                 'cloud.muellerpublic.de', // main domain
             ],
             issuer: "letsencrypt-prod",
             php: [
-                memoryLimit: "200M",
+                memoryLimit: "512M",
                 maxExecutionTime: 600,
                 maxChildren: 2,
-                startServers: 1,
+                startServers: 2,
                 minSpareServers: 1,
-                maxSpareServers: 1,
-                maxRequests: 500,
+                maxSpareServers: 2,
+                maxRequests: 1000,
                 slowlogTimeout: 0,
                 catchWorkersOutput: 1,
                 opcacheEnable: 1,
                 opcacheEnableCLI: 1,
-                opcacheMemoryConsumption: "64"
+                opcacheMemoryConsumption: "128"
             ],
             email: [
                 host: emailVars.host,
                 port: emailVars.port,
-                user: "admin@muellerpublic.de",
-                password: "xaip0oW0Aingooha",
+                user: "cloud@muellerpublic.de",
+                password: "roh7buko7eiYar3w",
                 secure: "ssl",
                 authType: "LOGIN",
                 from: "admin@muellerpublic.de",
@@ -120,7 +120,7 @@ service "from-repository", repo: "cloud-muellerpublic-de-nextcloud-deploy" with 
             image: [name: 'robobeerun/nginx', version: 'v1.15.12-r.1'],
             limits: [cpu: '100m', memory: '100Mi'],
             requests: [cpu: '100m', memory: '100Mi'],
-            revision: "r1",
+            revision: "r2",
             readinessProbeEnabled: true,
             httpHeaders: [[name: "Host", value: "cloud.muellerpublic.de"]],
             workerProcesses: 4,
