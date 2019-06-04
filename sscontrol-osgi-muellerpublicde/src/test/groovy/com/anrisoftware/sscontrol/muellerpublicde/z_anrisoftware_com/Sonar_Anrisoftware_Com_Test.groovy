@@ -54,8 +54,8 @@ service "repo-git", group: "sonar-anrisoftware-com-deploy" with {
     checkout branch: "master"
 }
 def v = [
-    limits: [cpu: "0.20", memory: "1000Mi"],
-    requests: [cpu: "0.20", memory: "1000Mi"],
+    limits: [cpu: "0.20", memory: "1500Mi"],
+    requests: [cpu: "0.20", memory: "1500Mi"],
     db: [revision: "r1", database: "sonardb", user: "sonardb", password: "Ohleisheeshuok8nipet6bey0nohg1ni",],
 ]
 service "from-repository", repo: "sonar-anrisoftware-com-deploy" with {
@@ -103,10 +103,13 @@ affinity:
           operator: In
           values:
           - required
+readinessProbe:
+  initialDelaySeconds: 300
 livenessProbe:
-  initialDelaySeconds: 200
+  initialDelaySeconds: 300
 extraEnv:
-  ES_JAVA_OPTS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+  sonar.web.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+  sonar.search.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
 resources:
   limits:
     cpu: ${v.limits.cpu}
@@ -114,6 +117,10 @@ resources:
   requests:
     cpu: ${v.requests.cpu}
     memory: ${v.requests.memory}
+plugins:
+  install:
+    - "https://github.com/SonarSource/sonar-scm-git/archive/1.8.0.1574.zip"
+    - "https://github.com/SonarSource/sonar-auth-saml/archive/1.1.0.181.zip"
 persistence:
   enabled: true
   accessMode: "ReadWriteOnce"
