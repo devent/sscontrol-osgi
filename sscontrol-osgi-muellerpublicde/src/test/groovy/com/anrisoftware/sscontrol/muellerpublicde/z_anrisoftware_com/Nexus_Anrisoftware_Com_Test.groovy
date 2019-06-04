@@ -93,10 +93,10 @@ nexus:
   securityContext:
     fsGroup: 2000
   livenessProbe:
-    initialDelaySeconds: 300
+    initialDelaySeconds: 600
     path: /
   readinessProbe:
-    initialDelaySeconds: 300
+    initialDelaySeconds: 600
     path: /
   affinity:
     nodeAffinity:
