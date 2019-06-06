@@ -60,6 +60,12 @@ service "from-repository", repo: "jenkins-anrisoftware-com-deploy" with {
                 'jenkins.anrisoftware.com', // main domain
             ],
             issuer: "letsencrypt-prod",
+            ssh: [
+                hosts: "",
+                id_rsa: "",
+                user: "",
+                pass: "",
+            ],
         ]
     ]
     vars << [
