@@ -110,6 +110,7 @@ livenessProbe:
 extraEnv:
   sonar.web.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
   sonar.search.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+  sonar.forceAuthentication: "true"
 resources:
   limits:
     cpu: ${v.limits.cpu}
@@ -117,10 +118,6 @@ resources:
   requests:
     cpu: ${v.requests.cpu}
     memory: ${v.requests.memory}
-plugins:
-  install:
-    - "https://github.com/SonarSource/sonar-scm-git/archive/1.8.0.1574.zip"
-    - "https://github.com/SonarSource/sonar-auth-saml/archive/1.1.0.181.zip"
 persistence:
   enabled: true
   accessMode: "ReadWriteOnce"
