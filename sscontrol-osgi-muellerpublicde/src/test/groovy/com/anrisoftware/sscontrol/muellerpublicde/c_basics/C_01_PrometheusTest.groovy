@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersOnlySocketCondition
 
 import groovy.util.logging.Slf4j
@@ -110,8 +109,8 @@ service "from-repository", repo: "kube-prometheus", dryrun: false with {
     ]
     vars << [
         prometheus: [
-            limits: [cpu: '250m', memory: '400Mi'],
-            requests: [cpu: '250m', memory: '400Mi'],
+            limits: [cpu: '250m', memory: '800Mi'],
+            requests: [cpu: '250m', memory: '800Mi'],
             affinity: [key: "robobeerun.com/prometheus", name: "required", required: true],
 			allowOnMaster: true,
 			replicas: 1,
@@ -126,7 +125,7 @@ service "from-repository", repo: "kube-prometheus", dryrun: false with {
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-				emailVars: emailVars,
+                emailVars: emailVars,
             ],
             expectedServicesSize: 4,
             expected: { Map args ->
