@@ -78,6 +78,8 @@ service "from-helm", chart: "stable/sonatype-nexus", version: "1.18.3" with {
     config << """
 replicaCount: 1
 nexus:
+  imageName: erwin82/nexus
+  imageTag: travelaudience-docker-nexus-3.15.2-r.1
   env:
     - name: install4jAddVmParams
       value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
@@ -134,6 +136,7 @@ persistence:
   enabled: true
   accessMode: "ReadWriteOnce"
   size: "8Gi"
+    
 """
 }
 ''',
