@@ -69,7 +69,6 @@ service "from-repository", repo: "jenkins-anrisoftware-com-deploy" with {
     ]
 }
 def vars = [
-    replicas: 2,
     limits: [cpu: "0.20", memory: "500Mi"],
     requests: [cpu: "0.20", memory: "500Mi"],
 ]
@@ -94,13 +93,16 @@ master:
   targetPort: 8080
   serviceType: ClusterIP
   installPlugins:
-    - kubernetes:1.15.5
+    - kubernetes:1.15.6
     - workflow-job:2.32
     - workflow-aggregator:2.6
     - credentials-binding:1.19
     - git:3.10.0
     - oic-auth:1.6
     - matrix-auth:2.4.2
+    - sonar:2.9
+    - config-file-provider:3.6
+    - gitea:1.1.2
   podLabels:
     app: jenkins
   healthProbeLivenessInitialDelay: 200
