@@ -65,7 +65,7 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
             database: 'muellerpublicdb',
             user: 'muellerpublicdb',
             password: "diephei2eithi5ietoNoh0huepeefael",
-            revision: revision
+            revision: "r2"
         ]
     ]
     vars << [
@@ -74,20 +74,20 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
             limits: [cpu: '250m', memory: '500Mi'],
             requests: [cpu: '250m', memory: '500Mi'],
             affinity: [key: "www.muellerpublic.de", name: "required", required: true],
-			revision: revision,
+			revision: "r4",
             php: [
                 memoryLimit: "200M",
                 maxExecutionTime: 600,
-                maxChildren: 2,
-                startServers: 1,
-                minSpareServers: 1,
-                maxSpareServers: 1,
-				maxRequests: 500,
+                maxChildren: 4,
+                startServers: 2,
+                minSpareServers: 2,
+                maxSpareServers: 4,
+				maxRequests: 1000,
 				slowlogTimeout: 0,
 				catchWorkersOutput: 1,
                 opcacheEnable: 1,
                 opcacheEnableCLI: 1,
-                opcacheMemoryConsumption: "64"
+                opcacheMemoryConsumption: "128"
             ],
             hosts: [
                 'www.muellerpublic.de', // main domain
@@ -103,7 +103,7 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
             image: [name: 'robobeerun/nginx', version: 'v1.15.12-r.1'],
             limits: [cpu: '100m', memory: '100Mi'],
             requests: [cpu: '100m', memory: '100Mi'],
-			revision: revision,
+			revision: "r2",
             readinessProbeEnabled: true,
             httpHeaders: [[name: "Host", value: "www.muellerpublic.de"]],
             workerProcesses: 4,
@@ -132,7 +132,6 @@ service "from-repository", repo: "muellerpublic-de-wordpress", dryrun: false wit
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
                 mariadbVars: mariadbVars,
-                revision: "r2"
             ],
             expectedServicesSize: 4,
             expected: { Map args ->

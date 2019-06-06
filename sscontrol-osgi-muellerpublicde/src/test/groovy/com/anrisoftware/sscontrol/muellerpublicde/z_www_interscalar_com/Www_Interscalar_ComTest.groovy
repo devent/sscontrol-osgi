@@ -65,7 +65,7 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             database: 'interscalardb',
             user: 'interscalardb',
             password: "Ievoo0ohhah6oShooneekaeF2aibevae",
-            revision: revision
+            revision: "r1"
         ]
     ]
     vars << [
@@ -74,20 +74,20 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             limits: [cpu: '500m', memory: '500Mi'],
             requests: [cpu: '500m', memory: '500Mi'],
             affinity: [key: "www.interscalar.com", name: "required", required: true],
-			revision: revision,
+			revision: "r2",
             php: [
                 memoryLimit: "200M",
                 maxExecutionTime: 600,
-                maxChildren: 2,
-                startServers: 1,
-                minSpareServers: 1,
-                maxSpareServers: 1,
-				maxRequests: 500,
+                maxChildren: 4,
+                startServers: 2,
+                minSpareServers: 2,
+                maxSpareServers: 4,
+				maxRequests: 1000,
 				slowlogTimeout: 0,
 				catchWorkersOutput: 1,
                 opcacheEnable: 1,
                 opcacheEnableCLI: 1,
-                opcacheMemoryConsumption: "64"
+                opcacheMemoryConsumption: "128"
             ],
             hosts: [
                 'www.interscalar.com', // main domain
@@ -101,11 +101,11 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
     ]
     vars << [
         nginx: [
-            image: [name: 'robobeerun/nginx', version: 'v1.13.12-r1'],
+            image: [name: 'robobeerun/nginx', version: 'v1.15.12-r.1'],
             limits: [cpu: '100m', memory: '100Mi'],
             requests: [cpu: '100m', memory: '100Mi'],
-			revision: revision,
-            readinessProbeEnabled: false,
+			revision: "r1",
+            readinessProbeEnabled: true,
             httpHeaders: [[name: "Host", value: "www.interscalar.com"]],
             workerProcesses: 4,
             workerConnections: 4096,
@@ -132,7 +132,7 @@ service "from-repository", repo: "interscalar-com-wordpress", dryrun: false with
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
-                mariadbVars: mariadbVars, revision: "r1"
+                mariadbVars: mariadbVars
             ],
             expectedServicesSize: 4,
             expected: { Map args ->
