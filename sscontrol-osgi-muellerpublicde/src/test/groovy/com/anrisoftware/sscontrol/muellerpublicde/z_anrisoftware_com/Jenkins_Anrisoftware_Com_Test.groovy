@@ -61,11 +61,12 @@ service "from-repository", repo: "jenkins-anrisoftware-com-deploy" with {
             ],
             issuer: "letsencrypt-prod",
             ssh: [
-                hosts: "",
-                id_rsa: "",
-                user: "",
+                hosts: "anrisoftware.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiaHO9JCCCsjIaE0FpkMaEUrQPan2sevgdNsD6DhJ8dBDDssxZ0tD4A5FnutUpZOaFqLK8ly/EtTSqdfCX5D47xNV4PQ+KrCzYPWCumSc98ZQEKlp8LPS1qcD4dsN6yNnCZvfyzLmg02Ih0PNLBsvOcYMM4TLxpVxFXfMNSv71P4cujYlL3/AqUpx6j6CEnf2jyScUweVf8JxNv8byXisSpe7XAp0RcacZBqOkyKXWl7cfnvdjrg8mCYX9wfuTohe/EnHux9+02jV/0isHxwwYNHq1rBLWuaq9L66vMf3ahBtN9Yxv59OrV5m7u58zc2zB/6gDOekZRiezYLzq1AMx",
+                id_rsa: jenkinsIdRsa,
+                user: "jenkins",
                 pass: "",
             ],
+            volume: [storage: "2Gi"]
         ]
     ]
     vars << [
@@ -75,8 +76,8 @@ service "from-repository", repo: "jenkins-anrisoftware-com-deploy" with {
     ]
 }
 def vars = [
-    limits: [cpu: "0.20", memory: "500Mi"],
-    requests: [cpu: "0.20", memory: "500Mi"],
+    limits: [cpu: "0.25", memory: "1000Mi"],
+    requests: [cpu: "0.25", memory: "1000Mi"],
 ]
 service "from-helm", chart: "stable/jenkins", version: "1.1.23" with {
     release ns: "jenkins-anrisoftware-com", name: "jenkins-anrisoftware-com"
@@ -109,9 +110,10 @@ master:
     - sonar:2.9
     - config-file-provider:3.6
     - gitea:1.1.2
+    - pipeline-maven:3.7.1
   podLabels:
     app: jenkins
-  healthProbeLivenessInitialDelay: 200
+  healthProbeLivenessInitialDelay: 600
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -153,6 +155,7 @@ persistence:
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
+                jenkinsIdRsa: AndreaClusterMastersNodesSocketCondition.class.getResource("jenkins_id_rsa.txt"),
             ],
             expectedServicesSize: 5,
             expected: { Map args ->
