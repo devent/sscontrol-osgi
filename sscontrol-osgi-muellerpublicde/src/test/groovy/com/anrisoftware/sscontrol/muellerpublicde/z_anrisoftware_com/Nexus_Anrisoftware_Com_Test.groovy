@@ -61,7 +61,7 @@ service "from-repository", repo: "nexus-anrisoftware-com-deploy" with {
     vars << [
         nexus: [
             hosts: [
-                'nexus.anrisoftware.com', // main domain
+                'maven.anrisoftware.com', // main domain
             ],
             port: 8080,
             issuer: "letsencrypt-prod",
@@ -112,8 +112,8 @@ nexus:
 nexusProxy:
   enabled: true
   env:
-    nexusDockerHost: "nexus.anrisoftware.com"
-    nexusHttpHost: "nexus.anrisoftware.com"
+    nexusDockerHost: "maven.anrisoftware.com"
+    nexusHttpHost: "maven.anrisoftware.com"
     enforceHttps: true
     cloudIamAuthEnabled: false
 ## If cloudIamAuthEnabled is set to true uncomment the variables below and remove this line
@@ -136,7 +136,7 @@ persistence:
   enabled: true
   accessMode: "ReadWriteOnce"
   size: "8Gi"
-    
+
 """
 }
 ''',
