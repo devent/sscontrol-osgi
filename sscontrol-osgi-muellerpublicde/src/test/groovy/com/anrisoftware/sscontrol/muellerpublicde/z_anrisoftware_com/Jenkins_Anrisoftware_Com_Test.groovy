@@ -61,7 +61,10 @@ service "from-repository", repo: "jenkins-anrisoftware-com-deploy" with {
             ],
             issuer: "letsencrypt-prod",
             ssh: [
-                hosts: "anrisoftware.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiaHO9JCCCsjIaE0FpkMaEUrQPan2sevgdNsD6DhJ8dBDDssxZ0tD4A5FnutUpZOaFqLK8ly/EtTSqdfCX5D47xNV4PQ+KrCzYPWCumSc98ZQEKlp8LPS1qcD4dsN6yNnCZvfyzLmg02Ih0PNLBsvOcYMM4TLxpVxFXfMNSv71P4cujYlL3/AqUpx6j6CEnf2jyScUweVf8JxNv8byXisSpe7XAp0RcacZBqOkyKXWl7cfnvdjrg8mCYX9wfuTohe/EnHux9+02jV/0isHxwwYNHq1rBLWuaq9L66vMf3ahBtN9Yxv59OrV5m7u58zc2zB/6gDOekZRiezYLzq1AMx",
+                hosts: """anrisoftware.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiaHO9JCCCsjIaE0FpkMaEUrQPan2sevgdNsD6DhJ8dBDDssxZ0tD4A5FnutUpZOaFqLK8ly/EtTSqdfCX5D47xNV4PQ+KrCzYPWCumSc98ZQEKlp8LPS1qcD4dsN6yNnCZvfyzLmg02Ih0PNLBsvOcYMM4TLxpVxFXfMNSv71P4cujYlL3/AqUpx6j6CEnf2jyScUweVf8JxNv8byXisSpe7XAp0RcacZBqOkyKXWl7cfnvdjrg8mCYX9wfuTohe/EnHux9+02jV/0isHxwwYNHq1rBLWuaq9L66vMf3ahBtN9Yxv59OrV5m7u58zc2zB/6gDOekZRiezYLzq1AMx
+gitea.anrisoftware.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiaHO9JCCCsjIaE0FpkMaEUrQPan2sevgdNsD6DhJ8dBDDssxZ0tD4A5FnutUpZOaFqLK8ly/EtTSqdfCX5D47xNV4PQ+KrCzYPWCumSc98ZQEKlp8LPS1qcD4dsN6yNnCZvfyzLmg02Ih0PNLBsvOcYMM4TLxpVxFXfMNSv71P4cujYlL3/AqUpx6j6CEnf2jyScUweVf8JxNv8byXisSpe7XAp0RcacZBqOkyKXWl7cfnvdjrg8mCYX9wfuTohe/EnHux9+02jV/0isHxwwYNHq1rBLWuaq9L66vMf3ahBtN9Yxv59OrV5m7u58zc2zB/6gDOekZRiezYLzq1AMx
+[javadoc.anrisoftware.com]:30101 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqFbglKzYS8z0zgUJ7rHiibF4BK/BJanaEz8cnl6aWC9Zd5Y4QzqskVrkhx8n4QkspnNM+1utFPQIUeRJ0Op7JVzcKDfqEJ+0IAHP7GRGwkD9Zx2yDd4InZARu1SUzl09XJ65sSdFIkIqo5wWQCFnr00tQRID+zHftwIVbKwViqJPtSZHFwufxQEI+gSmrZOKFfA7UYNCBsnyYQiUC9cSrKPKJaHWSZpVwuGvt0pFddXlUrgbhVB/P2fo+L4dCnH6sFGlBT30lYmmpJsVmuobJANR4zix3dvqQfAr+0cf4tUlg7IhCiHVooJhcpCAZGpP/oWQPd8F9A2sOY8tHMeFj
+""",
                 id_rsa: jenkinsIdRsa,
                 user: "jenkins",
                 pass: "",
@@ -79,7 +82,7 @@ def vars = [
     limits: [cpu: "0.25", memory: "1000Mi"],
     requests: [cpu: "0.25", memory: "1000Mi"],
 ]
-service "from-helm", chart: "stable/jenkins", version: "1.1.23" with {
+/*service "from-helm", chart: "stable/jenkins", version: "1.1.23" with {
     release ns: "jenkins-anrisoftware-com", name: "jenkins-anrisoftware-com"
     config << """
 master:
@@ -111,6 +114,12 @@ master:
     - config-file-provider:3.6
     - gitea:1.1.2
     - pipeline-maven:3.7.1
+    - junit-attachments:1.5
+    - jacoco:3.0.4
+    - warnings-ng:5.1.0
+    - pipeline-utility-steps:2.3.0
+    - groovy-postbuild:2.4.3
+    - embeddable-build-status:2.0.1
   podLabels:
     app: jenkins
   healthProbeLivenessInitialDelay: 600
@@ -150,14 +159,14 @@ persistence:
   size: "8Gi"
 
 """
-}
+}*/
 ''',
             scriptVars: [
                 targetHosts: [masters: mastersHosts, nodes: nodesHosts],
                 socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
                 jenkinsIdRsa: AndreaClusterMastersNodesSocketCondition.class.getResource("jenkins_id_rsa.txt"),
             ],
-            expectedServicesSize: 5,
+            expectedServicesSize: 4,
             expected: { Map args ->
             },
         ]

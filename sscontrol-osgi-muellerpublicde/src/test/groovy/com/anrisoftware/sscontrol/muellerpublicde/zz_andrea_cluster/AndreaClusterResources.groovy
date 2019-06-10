@@ -212,4 +212,6 @@ public class AndreaClusterResources {
 		port: 465,
 	]
 
+	static final jenkinsPublicKey = AndreaClusterResources.class.getResource("jenkins_id_rsa_pub.txt")
+		
 }

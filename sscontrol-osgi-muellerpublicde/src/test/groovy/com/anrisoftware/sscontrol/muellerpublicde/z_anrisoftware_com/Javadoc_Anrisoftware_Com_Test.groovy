@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.muellerpublicde
+package com.anrisoftware.sscontrol.muellerpublicde.z_anrisoftware_com
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.muellerpublicde.MuellerpublicdeResources.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import static com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterResources.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.Assume.*
 
-import org.junit.Before
-import org.junit.Test
+import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -32,9 +32,8 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class D_01_JavadocAnrisoftwareTest extends Abstract_Runner_Debian_Test {
-
-    static final jenkinsPublicKey = D_01_JavadocAnrisoftwareTest.class.getResource("jenkins_id_rsa_pub.txt")
+@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
+class Javadoc_Anrisoftware_Com_Test extends Abstract_Runner_Debian_Test {
 
     @Test
     void "javadoc-anrisoftware-com"() {
@@ -50,31 +49,42 @@ service "k8s-cluster" with {
 service "repo-git", group: "anrisoftware-com" with {
     remote url: "git@github.com:robobee-repos/javadoc-anrisoftware-com-deploy.git"
     credentials "ssh", key: robobeeKey
-	checkout branch: "develop"
+	checkout branch: "release/r1"
 }
 service "from-repository", repo: "anrisoftware-com", dryrun: false with {
     vars << [
         javadoc: [
-            ssh: [revision: "r1", publicKey: jenkins.publicKey],
-            nginx: [revision: "r1"],
+			revision: "r1",
+            ssh: [publicKey: jenkins.publicKey],
+			storage: [name: "javadoc-anrisoftware-com-data", size: "10Gi"],
+            affinity: [key: "javadoc.anrisoftware.com", name: "required", required: true],
+            hosts: [
+                'javadoc.anrisoftware.com', // main domain
+            ],
+			issuer: "letsencrypt-prod",
+			indexHtml: """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titel</title>
+  </head>
+  <body>
+  </body>
+</html>
+"""
         ],
     ]
     vars << [
-        volume: [class: "managed-nfs-storage", storage: "10Gi"],
-    ]
-    vars << [
         nginx: [
-            image: [name: 'robobeerun/nginx', version: 'v1.13.12-r1'],
+            image: [name: 'robobeerun/nginx', version: 'v1.15.12-r.1'],
             limits: [cpu: '50m', memory: '100Mi'],
             requests: [cpu: '50m', memory: '100Mi'],
-            affinity: [key: affinityKey, name: "required", required: true],
             workerProcesses: 2,
             workerConnections: 4096,
             readTimeout: 300,
             clientMaxBodySize: "64m",
-            hosts: [
-                'javadoc.anrisoftware.com', // main domain
-            ],
         ],
     ]
     vars << [
@@ -82,15 +92,13 @@ service "from-repository", repo: "anrisoftware-com", dryrun: false with {
             image: [name: 'robobeerun/rsync', version: 'v3.1.2-r3'],
             limits: [cpu: '50m', memory: '50Mi'],
             requests: [cpu: '50m', memory: '50Mi'],
-            affinity: [key: affinityKey, name: "required", required: true],
         ]
     ]
 }
 ''',
             scriptVars: [
-                socketFiles: socketFiles,
-                k8sVars: k8s_vars,
-                robobeeKey: robobeeKey,
+                targetHosts: [masters: mastersHosts, nodes: nodesHosts],
+                socketFiles: socketFiles, k8sVars: k8s_vars, robobeeKey: robobeeKey,
                 jenkins: [publicKey: jenkinsPublicKey]
             ],
             expectedServicesSize: 4,
@@ -98,11 +106,5 @@ service "from-repository", repo: "anrisoftware-com", dryrun: false with {
             },
         ]
         doTest test
-    }
-
-    @Before
-    void checkProfile() {
-        assumeMastersExists()
-        assumeNodesExists()
     }
 }

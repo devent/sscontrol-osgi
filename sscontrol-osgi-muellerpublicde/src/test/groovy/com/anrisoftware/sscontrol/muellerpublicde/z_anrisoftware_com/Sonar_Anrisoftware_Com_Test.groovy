@@ -54,8 +54,8 @@ service "repo-git", group: "sonar-anrisoftware-com-deploy" with {
     checkout branch: "master"
 }
 def v = [
-    limits: [cpu: "0.20", memory: "1500Mi"],
-    requests: [cpu: "0.20", memory: "1500Mi"],
+    limits: [cpu: "0.20", memory: "2000Mi"],
+    requests: [cpu: "0.20", memory: "2000Mi"],
     db: [revision: "r1", database: "sonardb", user: "sonardb", password: "Ohleisheeshuok8nipet6bey0nohg1ni",],
 ]
 service "from-repository", repo: "sonar-anrisoftware-com-deploy" with {
@@ -110,7 +110,6 @@ livenessProbe:
 extraEnv:
   sonar.web.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
   sonar.search.javaAdditionalOpts: "-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-  sonar.forceAuthentication: "true"
 resources:
   limits:
     cpu: ${v.limits.cpu}
