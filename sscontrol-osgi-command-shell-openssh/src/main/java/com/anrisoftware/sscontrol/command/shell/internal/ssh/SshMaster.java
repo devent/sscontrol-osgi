@@ -33,7 +33,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Executes the SSH shell to create the master.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SshMaster extends AbstractCmdRun {

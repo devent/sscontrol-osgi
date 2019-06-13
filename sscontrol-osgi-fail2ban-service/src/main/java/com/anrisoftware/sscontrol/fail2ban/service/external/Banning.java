@@ -20,7 +20,7 @@ import org.joda.time.Duration;
 /**
  * The jail banning arguments.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Banning {

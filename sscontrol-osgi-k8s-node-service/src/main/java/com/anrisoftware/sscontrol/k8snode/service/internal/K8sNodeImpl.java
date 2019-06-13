@@ -49,7 +49,7 @@ public class K8sNodeImpl implements K8sNode {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface K8sNodeImplFactory extends K8sNodeService {

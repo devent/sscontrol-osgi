@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Backup source.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AbstractSource implements Source {

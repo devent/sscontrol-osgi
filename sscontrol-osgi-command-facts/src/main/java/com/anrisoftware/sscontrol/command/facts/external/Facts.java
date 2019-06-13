@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Facts command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Facts {
@@ -37,7 +37,7 @@ public interface Facts {
     /**
      * Factory to create the facts command.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface FactsFactory {

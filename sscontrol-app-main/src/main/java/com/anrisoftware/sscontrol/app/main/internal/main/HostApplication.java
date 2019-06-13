@@ -39,7 +39,7 @@ import com.google.inject.Injector;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class HostApplication {

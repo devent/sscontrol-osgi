@@ -30,7 +30,7 @@ import com.anrisoftware.globalpom.core.resources.ToURI;
 /**
  * Backup client.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AbstractClient implements Client {

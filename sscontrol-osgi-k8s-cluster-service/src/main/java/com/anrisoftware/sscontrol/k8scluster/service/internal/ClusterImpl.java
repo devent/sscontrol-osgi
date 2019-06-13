@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.AssistedInject;
 /**
  * Cluster.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class ClusterImpl implements Cluster {
@@ -35,7 +35,7 @@ public class ClusterImpl implements Cluster {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ClusterImplFactory {

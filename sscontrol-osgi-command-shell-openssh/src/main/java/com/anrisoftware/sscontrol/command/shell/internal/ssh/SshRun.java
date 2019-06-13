@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SshRun extends AbstractSshRun {
@@ -36,7 +36,7 @@ public class SshRun extends AbstractSshRun {
     /**
      * 
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface SshRunFactory {

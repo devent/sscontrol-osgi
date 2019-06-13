@@ -41,7 +41,7 @@ import com.google.inject.assistedinject.AssistedInject;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SshHostImpl implements SshHost {
@@ -49,7 +49,7 @@ public class SshHostImpl implements SshHost {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface SshHostImplFactory {

@@ -22,7 +22,7 @@ import com.anrisoftware.sscontrol.tls.external.Tls;
 /**
  * Kubelet client.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Kubelet {

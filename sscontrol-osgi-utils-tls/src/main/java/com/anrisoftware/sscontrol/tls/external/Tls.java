@@ -23,7 +23,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * TLS certificates.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Tls {
@@ -31,7 +31,7 @@ public interface Tls {
     /**
      * TLS certificates factory.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface TlsFactory {

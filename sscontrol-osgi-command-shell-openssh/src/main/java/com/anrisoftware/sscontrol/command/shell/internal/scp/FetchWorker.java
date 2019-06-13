@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Fetches a file from the remote destination.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class FetchWorker extends AbstractFileWorker
@@ -46,7 +46,7 @@ public class FetchWorker extends AbstractFileWorker
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface FetchWorkerFactory {

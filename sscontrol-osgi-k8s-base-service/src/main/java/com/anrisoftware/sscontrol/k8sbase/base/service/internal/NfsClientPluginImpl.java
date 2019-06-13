@@ -22,7 +22,7 @@ import com.anrisoftware.sscontrol.k8sbase.base.service.external.NfsClientPlugin;
 /**
  * <i>Nfs-Client</i> plugin.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class NfsClientPluginImpl implements NfsClientPlugin {
@@ -30,7 +30,7 @@ public class NfsClientPluginImpl implements NfsClientPlugin {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface NfsClientPluginImplFactory extends PluginFactory {

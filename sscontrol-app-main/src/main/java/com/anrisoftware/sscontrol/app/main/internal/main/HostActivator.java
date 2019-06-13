@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.types.parser.external.ParserService;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class HostActivator implements BundleActivator, BundleListener {

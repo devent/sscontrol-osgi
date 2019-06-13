@@ -34,7 +34,7 @@ import com.google.inject.AbstractModule;
 /**
  * Properties service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @Component(service = HostServicePropertiesService.class)

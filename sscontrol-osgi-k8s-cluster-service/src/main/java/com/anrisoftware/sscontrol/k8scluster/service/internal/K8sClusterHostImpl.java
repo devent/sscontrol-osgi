@@ -37,7 +37,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * <i>K8s</i> cluster host.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class K8sClusterHostImpl implements K8sClusterHost {

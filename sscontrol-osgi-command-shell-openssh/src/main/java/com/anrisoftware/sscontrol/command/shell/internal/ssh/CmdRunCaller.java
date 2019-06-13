@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshRun.SshRunFactor
 /**
  * Wrapper around command call method.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class CmdRunCaller implements Cmd {

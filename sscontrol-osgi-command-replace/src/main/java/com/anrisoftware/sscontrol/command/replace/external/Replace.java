@@ -25,7 +25,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Replace command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Replace {
@@ -50,7 +50,7 @@ public interface Replace {
     /**
      * Factory to create the replace command.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ReplaceFactory {

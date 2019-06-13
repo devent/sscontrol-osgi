@@ -36,7 +36,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.ssh.SshMaster.SshMaster
 /**
  * Setups the SSH key and executes the command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public abstract class AbstractSshRun extends AbstractCmdRun {

@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.haproxy.service.external;
 /**
  * Proxy frondend.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Frontend extends Target {

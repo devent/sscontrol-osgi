@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.haproxy.service.external.Target;
 /**
  * Proxy target.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AbstractTarget implements Target {

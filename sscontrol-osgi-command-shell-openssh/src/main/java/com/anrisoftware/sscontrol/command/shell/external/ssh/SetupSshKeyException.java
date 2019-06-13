@@ -23,7 +23,7 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @SuppressWarnings("serial")

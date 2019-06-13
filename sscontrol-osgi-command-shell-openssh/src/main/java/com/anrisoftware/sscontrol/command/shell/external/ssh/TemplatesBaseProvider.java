@@ -24,7 +24,7 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class TemplatesBaseProvider implements Provider<Templates> {

@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Service for restore.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class ServiceImpl extends AbstractService {
@@ -34,7 +34,7 @@ public class ServiceImpl extends AbstractService {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ServiceImplFactory {

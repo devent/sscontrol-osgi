@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Backup source.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SourceImpl extends AbstractSource {
@@ -34,7 +34,7 @@ public class SourceImpl extends AbstractSource {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface SourceImplFactory {

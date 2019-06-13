@@ -34,7 +34,7 @@ import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 /**
  * rkt 1.26 for debian 8 service.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @Component(service = HostServiceScriptService.class)

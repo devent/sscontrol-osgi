@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.types.repo.external.RepoHost;
 /**
  * <i>Git</i> code repository host.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface GitRepoHost extends RepoHost {

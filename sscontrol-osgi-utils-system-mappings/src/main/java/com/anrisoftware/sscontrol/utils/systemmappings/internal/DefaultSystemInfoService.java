@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.external.DefaultSystemInf
 /**
  * Information about the host system.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class DefaultSystemInfoService implements DefaultSystemInfoFactory {

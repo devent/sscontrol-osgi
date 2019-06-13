@@ -25,7 +25,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Proxy frontend.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class FrontendImpl extends AbstractTarget implements Frontend {
@@ -33,7 +33,7 @@ public class FrontendImpl extends AbstractTarget implements Frontend {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface FrontendImplFactory {

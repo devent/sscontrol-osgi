@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Collectd configuration.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class ConfigImpl implements Config {
@@ -35,7 +35,7 @@ public class ConfigImpl implements Config {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ConfigImplFactory {

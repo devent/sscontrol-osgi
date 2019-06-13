@@ -35,7 +35,7 @@ public class TargetsImpl extends AbstractTargetsImpl<SshHost, Ssh>
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface TargetsImplFactory extends TargetsService {

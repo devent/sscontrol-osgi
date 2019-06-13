@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Restore client.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class ClientImpl extends AbstractClient {
@@ -37,7 +37,7 @@ public class ClientImpl extends AbstractClient {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ClientImplFactory {

@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * K8s plugin.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Plugin {
@@ -28,7 +28,7 @@ public interface Plugin {
     /**
      * 
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface PluginFactory {

@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.registry.docker.service.external.Credentials;
 /**
  * Access credentials.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public abstract class AbstractCredentials implements Credentials {

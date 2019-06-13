@@ -25,7 +25,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * User credentials.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class UserCredentialsImpl extends AbstractCredentials
@@ -34,7 +34,7 @@ public class UserCredentialsImpl extends AbstractCredentials
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface UserCredentialsImplFactory extends CredentialsFactory {

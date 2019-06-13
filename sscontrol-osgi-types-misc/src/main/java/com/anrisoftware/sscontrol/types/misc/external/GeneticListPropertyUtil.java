@@ -22,7 +22,7 @@ import java.util.List;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class GeneticListPropertyUtil {
@@ -30,7 +30,7 @@ public class GeneticListPropertyUtil {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface GeneticListProperty<T> {

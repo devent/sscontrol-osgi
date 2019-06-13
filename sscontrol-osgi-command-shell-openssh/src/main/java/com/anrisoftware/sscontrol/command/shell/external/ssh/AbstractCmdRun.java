@@ -38,7 +38,7 @@ import com.anrisoftware.sscontrol.command.shell.external.ssh.CmdArgs.CmdArgsFact
 /**
  * Setups the SSH master socket.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public abstract class AbstractCmdRun {

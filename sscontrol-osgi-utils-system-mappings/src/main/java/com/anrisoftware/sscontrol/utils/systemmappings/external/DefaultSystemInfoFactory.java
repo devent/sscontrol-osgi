@@ -22,7 +22,7 @@ import com.anrisoftware.sscontrol.types.host.external.SystemInfo;
 /**
  * Creates information about the host system.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface DefaultSystemInfoFactory {

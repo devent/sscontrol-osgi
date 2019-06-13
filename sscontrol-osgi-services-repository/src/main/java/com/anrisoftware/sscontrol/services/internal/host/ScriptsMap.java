@@ -29,7 +29,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @SuppressWarnings("serial")
@@ -38,7 +38,7 @@ public class ScriptsMap extends HashMap<ScriptInfo, HostServiceScriptService> {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ScriptsMapFactory {
