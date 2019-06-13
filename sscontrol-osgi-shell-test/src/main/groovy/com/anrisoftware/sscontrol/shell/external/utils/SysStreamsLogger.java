@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author http://stackoverflow.com/questions/11187461/redirect-system-out-and-system-err-to-slf4j
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SysStreamsLogger {

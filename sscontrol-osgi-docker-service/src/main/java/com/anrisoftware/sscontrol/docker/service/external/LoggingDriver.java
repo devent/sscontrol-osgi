@@ -22,7 +22,7 @@ import java.util.Map;
  * <a href="https://docs.docker.com/config/containers/logging/">View logs for a
  * container or service.</a>
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface LoggingDriver {

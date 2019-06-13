@@ -70,7 +70,7 @@ public class K8sImpl implements K8s {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface K8sImplFactory extends K8sService {

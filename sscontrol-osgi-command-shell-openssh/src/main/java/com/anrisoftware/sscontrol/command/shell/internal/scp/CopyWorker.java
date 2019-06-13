@@ -36,7 +36,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class CopyWorker extends AbstractFileWorker
@@ -45,7 +45,7 @@ public class CopyWorker extends AbstractFileWorker
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface CopyWorkerFactory {
@@ -78,7 +78,7 @@ public class CopyWorker extends AbstractFileWorker
     /**
      * Checks if the file exists on the remote.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     class CheckFiles implements Callable<ProcessTask> {

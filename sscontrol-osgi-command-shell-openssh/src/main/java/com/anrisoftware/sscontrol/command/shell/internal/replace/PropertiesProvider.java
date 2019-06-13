@@ -22,7 +22,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 /**
  * Provides the default replace command properties.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @SuppressWarnings("serial")

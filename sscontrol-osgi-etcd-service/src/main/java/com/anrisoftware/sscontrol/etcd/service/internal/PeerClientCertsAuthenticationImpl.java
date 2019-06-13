@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * X509 Peer Client Certs.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class PeerClientCertsAuthenticationImpl
@@ -35,7 +35,7 @@ public class PeerClientCertsAuthenticationImpl
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface PeerClientCertsAuthenticationImplFactory

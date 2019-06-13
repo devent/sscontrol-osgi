@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Template command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Template {
@@ -56,7 +56,7 @@ public interface Template {
     /**
      * Factory to create the template command.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface TemplateFactory {

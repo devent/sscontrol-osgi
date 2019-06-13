@@ -22,7 +22,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.SshHost;
 /**
  * Information about the Kubernetes cluster.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Cluster {

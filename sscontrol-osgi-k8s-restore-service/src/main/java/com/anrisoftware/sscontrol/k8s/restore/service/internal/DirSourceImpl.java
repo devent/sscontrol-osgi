@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Local directory backup source.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class DirSourceImpl extends AbstractDirDestination {
@@ -35,7 +35,7 @@ public class DirSourceImpl extends AbstractDirDestination {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface DirSourceImplFactory {

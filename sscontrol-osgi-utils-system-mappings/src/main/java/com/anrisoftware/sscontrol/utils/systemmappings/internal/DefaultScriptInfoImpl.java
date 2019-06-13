@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.AssistedInject;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class DefaultScriptInfoImpl extends AbstractScriptInfo {

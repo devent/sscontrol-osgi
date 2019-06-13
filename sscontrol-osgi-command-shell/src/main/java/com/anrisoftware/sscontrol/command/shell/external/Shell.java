@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Shell command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Shell {
@@ -61,7 +61,7 @@ public interface Shell {
     /**
      * Factory to create the shell command.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ShellFactory {

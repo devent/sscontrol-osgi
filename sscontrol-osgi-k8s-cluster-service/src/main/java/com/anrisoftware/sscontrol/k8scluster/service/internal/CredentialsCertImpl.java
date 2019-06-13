@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Certificate based credentials.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class CredentialsCertImpl extends AbstractCredentials
@@ -37,7 +37,7 @@ public class CredentialsCertImpl extends AbstractCredentials
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface CredentialsCertImplFactory extends CredentialsCertFactory {

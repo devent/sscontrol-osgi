@@ -71,7 +71,7 @@ public class K8sMasterImpl implements K8sMaster {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface K8sMasterImplFactory extends K8sService {

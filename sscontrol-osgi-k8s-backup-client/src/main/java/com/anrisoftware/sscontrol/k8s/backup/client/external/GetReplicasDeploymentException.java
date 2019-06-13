@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @SuppressWarnings("serial")

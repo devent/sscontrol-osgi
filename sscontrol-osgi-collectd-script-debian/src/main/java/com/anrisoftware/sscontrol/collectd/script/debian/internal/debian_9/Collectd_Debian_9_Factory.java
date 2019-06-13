@@ -20,7 +20,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Collectd_Debian_9_Factory extends HostServiceScriptService {

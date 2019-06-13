@@ -53,7 +53,7 @@ public class Fail2banImpl implements Fail2ban {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface Fail2banImplFactory extends Fail2banService {

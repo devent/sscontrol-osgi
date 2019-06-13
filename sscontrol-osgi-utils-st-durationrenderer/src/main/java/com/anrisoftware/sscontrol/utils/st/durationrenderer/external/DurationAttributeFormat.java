@@ -31,7 +31,7 @@ import com.anrisoftware.resources.st.external.AttributeRenderer;
 /**
  *
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 @SuppressWarnings("serial")

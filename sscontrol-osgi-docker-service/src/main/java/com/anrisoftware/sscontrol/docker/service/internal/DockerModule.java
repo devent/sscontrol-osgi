@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 /**
  * <i>Docker</i> script module.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class DockerModule extends AbstractModule {

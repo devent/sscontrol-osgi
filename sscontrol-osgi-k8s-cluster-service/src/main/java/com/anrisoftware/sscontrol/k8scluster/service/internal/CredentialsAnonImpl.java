@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Anonymous.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class CredentialsAnonImpl extends AbstractCredentials
@@ -35,7 +35,7 @@ public class CredentialsAnonImpl extends AbstractCredentials
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface CredentialsAnonImplFactory extends CredentialsCertFactory {

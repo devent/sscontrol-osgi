@@ -27,7 +27,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * SSH credentials.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class SshCredentialsImpl extends AbstractCredentials
@@ -36,7 +36,7 @@ public class SshCredentialsImpl extends AbstractCredentials
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface SshCredentialsImplFactory extends CredentialsFactory {

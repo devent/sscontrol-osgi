@@ -32,7 +32,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Creates a temporary file to work with.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class CreateTempFileWorker implements Callable<File> {
@@ -40,7 +40,7 @@ public class CreateTempFileWorker implements Callable<File> {
     /**
      * 
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface CreateTempFileWorkerFactory {

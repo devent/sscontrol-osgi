@@ -31,7 +31,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * X509 Client Certs.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class ClientCertsAuthenticationImpl
@@ -40,7 +40,7 @@ public class ClientCertsAuthenticationImpl
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface ClientCertsAuthenticationImplFactory

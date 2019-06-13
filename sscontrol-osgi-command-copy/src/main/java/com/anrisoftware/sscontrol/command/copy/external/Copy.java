@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Copy command.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface Copy {
@@ -58,7 +58,7 @@ public interface Copy {
     /**
      * Factory to create the copy command.
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface CopyFactory {

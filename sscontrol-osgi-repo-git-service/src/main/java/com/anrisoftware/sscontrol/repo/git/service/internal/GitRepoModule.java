@@ -34,7 +34,7 @@ import com.google.inject.multibindings.MapBinder;
 /**
  * <i>K8s-Master</i> script module.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class GitRepoModule extends AbstractModule {

@@ -30,7 +30,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * <i>Git</i> code repository host.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class GitRepoHostImpl implements GitRepoHost {
@@ -44,7 +44,7 @@ public class GitRepoHostImpl implements GitRepoHost {
     private Integer port;
 
     /**
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface GitRepoHostImplFactory {

@@ -31,7 +31,7 @@ import com.anrisoftware.globalpom.core.resources.StringToURI;
 /**
  * 
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AppArgs {
@@ -39,7 +39,7 @@ public class AppArgs {
     /**
      * 
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface AppArgsFactory {

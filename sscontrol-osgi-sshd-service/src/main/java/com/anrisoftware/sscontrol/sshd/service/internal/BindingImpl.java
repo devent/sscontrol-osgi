@@ -35,7 +35,7 @@ public class BindingImpl implements Binding {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface BindingImplFactory {

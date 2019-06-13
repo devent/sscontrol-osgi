@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * Contains the host targets.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public interface HostTargets<HostType extends TargetHost, TargetType extends TargetHostService<HostType>> {

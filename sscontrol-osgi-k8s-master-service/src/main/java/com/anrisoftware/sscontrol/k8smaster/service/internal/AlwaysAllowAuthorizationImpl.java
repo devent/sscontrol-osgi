@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Allows all requests.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AlwaysAllowAuthorizationImpl implements AlwaysAllowAuthorization {
@@ -36,7 +36,7 @@ public class AlwaysAllowAuthorizationImpl implements AlwaysAllowAuthorization {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface AlwaysAllowAuthorizationImplFactory

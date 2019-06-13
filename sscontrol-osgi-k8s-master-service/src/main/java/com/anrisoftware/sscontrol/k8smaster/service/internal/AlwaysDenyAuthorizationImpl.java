@@ -28,7 +28,7 @@ import com.google.inject.assistedinject.Assisted;
 /**
  * Blocks all requests.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
 public class AlwaysDenyAuthorizationImpl implements AlwaysDenyAuthorization {
@@ -36,7 +36,7 @@ public class AlwaysDenyAuthorizationImpl implements AlwaysDenyAuthorization {
     /**
      *
      *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
      * @version 1.0
      */
     public interface AlwaysDenyAuthorizationImplFactory
