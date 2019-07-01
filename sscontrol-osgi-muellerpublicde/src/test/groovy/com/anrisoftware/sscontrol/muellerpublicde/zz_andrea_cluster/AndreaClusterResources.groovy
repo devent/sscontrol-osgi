@@ -206,12 +206,28 @@ public class AndreaClusterResources {
         host: "robobeerun-com-mariadb.robobeerun-com-mariadb.svc",
         port: 3306
     ]
-	
-	static final emailVars = [
-		host: "andrea-mail-0.muellerpublic.de",
-		port: 465,
-	]
 
-	static final jenkinsPublicKey = AndreaClusterResources.class.getResource("jenkins_id_rsa_pub.txt")
-		
+    static final emailVars = [
+        host: "andrea-mail-0.muellerpublic.de",
+        port: 465,
+    ]
+
+    static final jenkinsPublicKey = AndreaClusterResources.class.getResource("jenkins_id_rsa_pub.txt")
+
+    static final elasticVars = [
+        cert: [
+            elkCrt: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_node_0_cert.pem"),
+            elkKey: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_node_0_key.pem"),
+            elkRoot: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_ca_cert.pem"),
+            elkPass: "Ki5Uceengev5uZot",
+            adminCrt: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_admin_cert.pem"),
+            adminKey: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_admin_key.pem"),
+            adminRoot: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_ca_cert.pem"),
+            kibanaPass: "eiCaifoh4ruwe9nahf6ooNgaxooru0shec4CoogheeHochaphai9ooPhoo0maikiaghooReik2aikee5Jie1yahZ5Hae2oi1ahT5chohr9eichaiphii1ipahyaesa5a",
+            kibanaCrt: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_kibana_cert.pem"),
+            kibanaKey: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_kibana_key.pem"),
+            kibanaRoot: AndreaClusterResources.class.getResource("andrea_muellerpublicde_es_ca_cert.pem"),
+        ],
+    ]
+
 }
