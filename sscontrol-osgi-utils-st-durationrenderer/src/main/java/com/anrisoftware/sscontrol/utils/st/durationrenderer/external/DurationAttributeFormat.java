@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.core.durationsimpleformat.DurationSimpleFormatFactory;
-import com.anrisoftware.resources.st.external.AttributeRenderer;
+import com.anrisoftware.resources.st.external.StAttributeRenderer;
 
 /**
  *
@@ -35,7 +35,7 @@ import com.anrisoftware.resources.st.external.AttributeRenderer;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public class DurationAttributeFormat implements AttributeRenderer {
+public class DurationAttributeFormat implements StAttributeRenderer {
 
     @Inject
     private DurationSimpleFormatFactory simpleFormatFactory;

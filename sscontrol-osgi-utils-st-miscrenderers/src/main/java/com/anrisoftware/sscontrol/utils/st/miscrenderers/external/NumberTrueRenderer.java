@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.utils.st.miscrenderers.external;
 
 import java.util.Locale;
 
-import com.anrisoftware.resources.st.external.AttributeRenderer;
+import com.anrisoftware.resources.st.external.StAttributeRenderer;
 
 /**
  * Renders a number as a boolean, where 0=false and 1=true.
@@ -26,7 +26,7 @@ import com.anrisoftware.resources.st.external.AttributeRenderer;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class NumberTrueRenderer implements AttributeRenderer {
+public class NumberTrueRenderer implements StAttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {

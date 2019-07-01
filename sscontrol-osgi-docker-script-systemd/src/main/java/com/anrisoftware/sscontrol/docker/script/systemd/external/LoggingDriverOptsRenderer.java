@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.anrisoftware.resources.st.external.AttributeRenderer;
+import com.anrisoftware.resources.st.external.StAttributeRenderer;
 
 /**
  * Renders log driver options.
@@ -28,7 +28,7 @@ import com.anrisoftware.resources.st.external.AttributeRenderer;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public final class LoggingDriverOptsRenderer implements AttributeRenderer {
+public final class LoggingDriverOptsRenderer implements StAttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {

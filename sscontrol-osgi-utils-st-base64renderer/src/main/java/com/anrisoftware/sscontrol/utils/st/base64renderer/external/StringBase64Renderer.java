@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.anrisoftware.resources.st.external.AttributeRenderer;
+import com.anrisoftware.resources.st.external.StAttributeRenderer;
 
 /**
  * Base64-encodes a string it if the format string equals to "base64".
@@ -28,7 +28,7 @@ import com.anrisoftware.resources.st.external.AttributeRenderer;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class StringBase64Renderer implements AttributeRenderer {
+public class StringBase64Renderer implements StAttributeRenderer {
 
     @Override
     public String toString(Object o, String formatString, Locale locale) {
