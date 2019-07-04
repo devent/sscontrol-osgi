@@ -72,9 +72,9 @@ service "from-repository", repo: "cloud-muellerpublic-de-nextcloud-deploy" with 
     vars << [
         nextcloud: [
             image: [name: 'robobeerun/nextcloud', version: 'v16.0.1-fpm-r.1'],
-            limits: [cpu: '250m', memory: '1024Mi'],
-            requests: [cpu: '250m', memory: '1024Mi'],
-            cron: [schedule: "0 4 * * *"],
+            limits: [cpu: '500m', memory: '1500Mi'],
+            requests: [cpu: '500m', memory: '1500Mi'],
+            cron: [schedule: "0 */4 * * *"],
             affinity: [key: "cloud.muellerpublic.de", name: "required", required: true],
             revision: "r3",
             hosts: [
@@ -84,10 +84,10 @@ service "from-repository", repo: "cloud-muellerpublic-de-nextcloud-deploy" with 
             php: [
                 memoryLimit: "512M",
                 maxExecutionTime: 600,
-                maxChildren: 2,
+                maxChildren: 4,
                 startServers: 2,
-                minSpareServers: 1,
-                maxSpareServers: 2,
+                minSpareServers: 2,
+                maxSpareServers: 4,
                 maxRequests: 1000,
                 slowlogTimeout: 0,
                 catchWorkersOutput: 1,
