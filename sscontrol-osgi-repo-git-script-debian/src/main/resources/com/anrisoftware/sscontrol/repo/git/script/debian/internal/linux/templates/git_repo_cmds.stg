@@ -20,7 +20,7 @@ gitCredentialsSetupScript(parent, vars) ::= <<
 function setup() {
     cat \<\<"EOF" > "<vars.ret.sshWrapper>"
 #!/bin/bash
-ssh-keyscan <vars.repo.repo.remote.uri.host> > "<vars.ret.knownHostsFile>"
+ssh-keyscan -4 <vars.repo.repo.remote.uri.host> > "<vars.ret.knownHostsFile>"
 ssh -o UserKnownHostsFile="<vars.ret.knownHostsFile>" -i "<vars.ret.idRsaFile>" $1 $2
 EOF
     chmod +x "<vars.ret.sshWrapper>"
