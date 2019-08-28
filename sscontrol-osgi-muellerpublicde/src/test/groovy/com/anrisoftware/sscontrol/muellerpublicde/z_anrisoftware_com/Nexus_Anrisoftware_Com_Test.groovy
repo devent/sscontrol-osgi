@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 import com.anrisoftware.sscontrol.muellerpublicde.Abstract_Runner_Debian_Test
-import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersNodesSocketCondition
+import com.anrisoftware.sscontrol.muellerpublicde.zz_andrea_cluster.AndreaClusterMastersOnlySocketCondition
 
 import groovy.util.logging.Slf4j
 
@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-@ExtendWith(AndreaClusterMastersNodesSocketCondition.class)
+@ExtendWith(AndreaClusterMastersOnlySocketCondition.class)
 class Nexus_Anrisoftware_Com_Test extends Abstract_Runner_Debian_Test {
 
     @Test
@@ -54,8 +54,8 @@ service "repo-git", group: "nexus-anrisoftware-com-deploy" with {
     checkout branch: "master"
 }
 def v = [
-    limits: [cpu: "0.20", memory: "1500Mi"],
-    requests: [cpu: "0.20", memory: "1500Mi"],
+    limits: [cpu: "2", memory: "2Gi"],
+    requests: [cpu: "0", memory: "0"],
 ]
 service "from-repository", repo: "nexus-anrisoftware-com-deploy" with {
     vars << [
@@ -73,13 +73,13 @@ service "from-repository", repo: "nexus-anrisoftware-com-deploy" with {
         ],
     ]
 }
-service "from-helm", chart: "stable/sonatype-nexus", version: "1.18.3" with {
+service "from-helm", chart: "stable/sonatype-nexus", version: "1.19.0" with {
     release ns: "nexus-anrisoftware-com", name: "nexus-anrisoftware-com"
     config << """
 replicaCount: 1
 nexus:
-  imageName: erwin82/nexus
-  imageTag: travelaudience-docker-nexus-3.15.2-r.1
+  imageName: harbor.andrea.muellerpublic.de/robobeerun/nexus
+  imageTag: travelaudience-docker-nexus-3.17.0-r.2
   env:
     - name: install4jAddVmParams
       value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
@@ -127,11 +127,11 @@ nexusProxy:
   #   password: ""
   resources:
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 50m
+      memory: 200Mi
     limits:
-      cpu: 200m
-      memory: 250Mi
+      cpu: 50m
+      memory: 200Mi
 persistence:
   enabled: true
   accessMode: "ReadWriteOnce"
