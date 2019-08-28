@@ -37,11 +37,11 @@
 
     <properties>
         <!-- Dependencies -->
-        <project.custom.bundles.log.version>4.5.1-SNAPSHOT</project.custom.bundles.log.version>
-        <project.custom.bundles.resources.version>4.5.1-SNAPSHOT</project.custom.bundles.resources.version>
-        <project.custom.bundles.globalpom.version>4.5.1-SNAPSHOT</project.custom.bundles.globalpom.version>
-        <project.custom.bundles.globalpomutils.version>4.5.1-SNAPSHOT</project.custom.bundles.globalpomutils.version>
-        <project.custom.bundles.propertiesutils.version>4.5.1-SNAPSHOT</project.custom.bundles.propertiesutils.version>
+        <project.custom.bundles.log.version>4.5.1</project.custom.bundles.log.version>
+        <project.custom.bundles.resources.version>4.5.1</project.custom.bundles.resources.version>
+        <project.custom.bundles.globalpom.version>4.5.1</project.custom.bundles.globalpom.version>
+        <project.custom.bundles.globalpomutils.version>4.5.1</project.custom.bundles.globalpomutils.version>
+        <project.custom.bundles.propertiesutils.version>4.5.1</project.custom.bundles.propertiesutils.version>
     </properties>
 
     <modules>
