@@ -1,4 +1,0 @@
-get nodes --no-headers -l robobeerun.com/node=node-0
-get nodes --no-headers -l kubernetes.io/hostname=node-0
-label --overwrite nodes robobeerun.com/node=node-0
-get nodes --no-headers -l robobeerun.com/node=node-0

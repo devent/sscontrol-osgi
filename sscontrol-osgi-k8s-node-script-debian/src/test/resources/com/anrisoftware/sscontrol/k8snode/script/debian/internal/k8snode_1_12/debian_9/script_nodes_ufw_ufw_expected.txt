@@ -1,6 +1,0 @@
-
-status
-allow from 10.244.0.0/16 to 127.0.0.1
-allow from any to 127.0.0.1 port 80 proto tcp
-allow from any to 127.0.0.1 port 443 proto tcp
-allow from any to 127.0.0.1 port 30000:32767 proto tcp

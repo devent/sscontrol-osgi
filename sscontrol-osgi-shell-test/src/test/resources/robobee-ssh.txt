@@ -1,0 +1,43 @@
+====
+    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAsKBrJPtXD97sibprvkDr+KH8so72ms32T9838wQ4bDsrfseX
+9CH9ndrnIg4pLh6uUx+kgHJuNUzJywdIwNWaWte+N1ZD9MRmzT8NAbNLqgrSNeTf
+K/s5pkqXXHIpzydzyPOD6xXq5rOxlA1/0JFb79DxrF7vEzSc76W5tGx3kMrNurFS
+14DSlCQ9H/t6DIbifR358nfO3PGyr8qbCKTch+wKrGIFsQpxU2E5o3J8JUmXmfBw
+FQmvgbOPJRJ3dfe6e666Jx6rbdLOX1KZCuzC5kKzFknUV7gvjyaMu2M2r4Yy34qE
+hbBydPMdVCIgNAuQJPMauCQqlHwMUw6HUX8n6QIDAQABAoIBAAc5uMhdg9VBYFnO
+B4RT8ZNNRSIk2Q/CJzZjQk2tuYUr8n6QObYiAdcIUnZBMAwT8zuxSrB6femuR38H
+wEErO9JFiyGGZOdJdY8l6ilMpWbCZJER2NNaxqP33zNH9E/mJEVvONFQJzji1vvg
+hX8Jw0IPQSO1CoC1oUnodK1d1pJUuBLzZW74dWTGq51j+tZJE/k27OUCj49XfWAu
+qOmmaZXx+dxEJPTrMUH+cVVPKG8jH0yi4h8UQbgTkxO7aFvWmpmU2G5fCNwVkY8C
+B4SCp+oJ72J5JIGuAei2Rj02abGmNtYq3AP/3X+VTkfvKAiSoLsHl0uadu+y4bLN
+qL5yEgECgYEA62M2jve1FPXebhOYUemIq0nOjK6jJI3GeMNp2yETkTqRoWz4rbxQ
+1f2LbZsbgsO6izXx5/9gllM1mCfeiqH6cyjM4ZSk2HLoRwoTgFCWdU679U3C6BXY
+jmpN958HkU3foeHGOmvHA9U9xNglroeRrV8hoCkYjAm5nIkPr2Ga8qkCgYEAwBfv
+mq80EqyvYTuYs//crM/rD0/p//hd3HkfPJSnbLA5S7gbNtDnO4tWGZdtcCNwc3Gh
+pWcTG6HoUogW++Q5xn6Slz0Q9ScuW7xpWNfr4+rOIAAMzBhiGojNmyzpEiKK7J9D
+jkrP/DAaYjN4Sx95eZQ63XbpAGZ970tAGqwdE0ECgYBOXAvYkju1C5iNenZ1plG5
+++sHyEdFLvFIWH1P1nYGHcJHQ9iRNaSPaEVXKpCA+pmKKF4shkZoJLEtwvABpKSU
+W5vA6NPrvmz24TLWv30m9hv6MHXW/xbFajwkV8uUIqF06Y0s+54X95AFjJMWw8jK
+N2YhRC0IyWAB7VrMXqjPaQKBgQCsQ8roGT7FkH8m318t7MJlZ4ARF0Vt+7mQwj41
+AcqzOcXoFY6yNd1oFKh+AsJt0hpCLSEdR7ZnDWdevBSAiEcXruKfJnBSqXR1aB3B
+QsGUfzmikOjpDuTLjutzwW6yiK+1S441yPmD20+NyUKTfAJf+YJgoQaLCV7efclb
+IgZhAQKBgHfmeLxJ1m5g+k3YDasnFjCTftiAQP8MUfV1p64yTJ00R2ELPO42TwZ+
+3IXwkE2PpgsMy0318ASPlRinoiOQASBKRVgfYmaR5A+PC0PA2ifA/6AO8Yd72ehj
+f9Y3CF5l07O3nIsMMPvbUdHzOt3OcGqDE0BgbdnQye7mooJb42hT
+-----END RSA PRIVATE KEY-----

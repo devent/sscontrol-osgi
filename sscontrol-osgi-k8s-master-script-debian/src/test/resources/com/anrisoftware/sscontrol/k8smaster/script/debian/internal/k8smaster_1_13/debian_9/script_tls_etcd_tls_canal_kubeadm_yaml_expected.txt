@@ -1,0 +1,43 @@
+====
+    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: InitConfiguration
+apiEndpoint:
+  advertiseAddress: 192.168.0.100
+  bindPort: 6443
+nodeRegistration:
+  name: node-0
+---
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: ClusterConfiguration
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+  podSubnet: 10.244.0.0/16
+kubernetesVersion: v1.13.4
+certificatesDir: /tmp/junit/junit/etc/kubernetes/pki
+etcd:
+  external:
+    endpoints:
+    - https://etcd-0:2379
+    caFile: /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_ca.pem
+    certFile: /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_cert.pem
+    keyFile: /tmp/junit/junit/etc/kubernetes/pki/etcd_tls_key.pem
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+clusterCIDR: "10.244.0.0/16"

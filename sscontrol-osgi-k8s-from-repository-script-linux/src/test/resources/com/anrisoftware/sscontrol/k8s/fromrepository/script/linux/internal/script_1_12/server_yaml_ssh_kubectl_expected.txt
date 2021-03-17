@@ -1,2 +1,0 @@
-apply -f /tmp/tmp.tmp
-apply -f /tmp/tmp.tmp

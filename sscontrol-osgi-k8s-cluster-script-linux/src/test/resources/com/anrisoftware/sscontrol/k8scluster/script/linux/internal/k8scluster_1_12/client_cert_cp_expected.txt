@@ -1,3 +1,0 @@
-/var/lib/robobee/tmp/robobeeclient_ca /tmp/junit/junit/var/robobee/certs/default-cluster/client_ca.pem
-/var/lib/robobee/tmp/robobeeclient_cert /tmp/junit/junit/var/robobee/certs/default-cluster/client_cert.pem
-/var/lib/robobee/tmp/robobeeclient_key /tmp/junit/junit/var/robobee/certs/default-cluster/client_key.pem

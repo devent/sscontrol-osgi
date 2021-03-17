@@ -1,3 +1,0 @@
-/tmp/junit/junit/etc/sysctl.conf /var/lib/robobee/tmp
-/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/sysctl.conf
-/var/lib/robobee/tmp/20-robobee.conf /etc/systemd/system/kubelet.service.d/20-robobee.conf

@@ -1,4 +1,0 @@
-update
-install -y apt-transport-https
-update
-install -y kubeadm kubelet=1.8.8-00 kubernetes-cni=0.5.1-00 kubectl

@@ -1,5 +1,0 @@
-# auto-generated from robobee-run
-[Service]
-Environment="KUBELET_ROBOBEE_ARGS=--fail-swap-on=true --read-only-port=10255 --node-labels=robobeerun.com/dashboard=true,robobeerun.com/dns=true,robobeerun.com/node=master-0 --register-with-taints=dedicated=mail:NoSchedule"
-ExecStart=
-ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS $KUBELET_ROBOBEE_ARGS

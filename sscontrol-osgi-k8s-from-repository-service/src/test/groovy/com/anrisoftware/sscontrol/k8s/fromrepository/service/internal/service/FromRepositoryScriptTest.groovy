@@ -1,21 +1,17 @@
-/*-
- * #%L
- * sscontrol-osgi - k8s-from-repository-service
- * %%
- * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
- * %%
+/**
+ * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * #L%
  */
 package com.anrisoftware.sscontrol.k8s.fromrepository.service.internal.service
 
@@ -287,6 +283,37 @@ service "from-repository", repo: "wordpress-app", dryrun: true
                 FromRepository s = services.getServices('from-repository')[0]
                 assert s.vars.size() == 0
                 assert s.dryrun == true
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "add ignored custom resource definitions"() {
+        def test = [
+            script: '''
+service "k8s-cluster"
+service "repo-git", group: "wordpress-app" with {
+    remote url: "git@github.com:devent/wordpress-app.git"
+    credentials "ssh", key: "id_rsa"
+}
+service "from-repository", repo: "wordpress-app" with {
+    crds kind: "ServiceMonitor", version: "monitoring.coreos.com/v1"
+}
+''',
+            before: { Map args ->
+                def tmp = folder.newFolder()
+                unzip FromRepositoryScriptTest.class.getResource("repo_only_app_zip.txt"), tmp
+                args.tmpRepo = tmp
+            },
+            scriptVars: [:],
+            expected: { HostServices services ->
+                assert services.getServices('from-repository').size() == 1
+                FromRepository s = services.getServices('from-repository')[0]
+                assert s.vars.size() == 0
+                assert s.crds.size() == 1
+                assert s.crds[0].kind == "ServiceMonitor"
+                assert s.crds[0].version == "monitoring.coreos.com/v1"
             },
         ]
         doTest test

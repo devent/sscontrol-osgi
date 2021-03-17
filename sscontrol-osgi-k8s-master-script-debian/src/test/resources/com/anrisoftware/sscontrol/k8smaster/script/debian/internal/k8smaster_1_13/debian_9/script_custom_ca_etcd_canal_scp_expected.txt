@@ -1,0 +1,22 @@
+====
+    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no user@localhost:/var/lib/robobee/tmp/sysctl.conf /tmp/replace.dest
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/replace.dest user@localhost:/var/lib/robobee/tmp/replace.dest
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeca user@localhost:/var/lib/robobee/tmp/robobeeca
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeca user@localhost:/var/lib/robobee/tmp/robobeeca
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/kubeadm.yaml user@localhost:/var/lib/robobee/tmp/kubeadm.yaml
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/kubelet.service.d/20-robobee.conf user@localhost:/var/lib/robobee/tmp/20-robobee.conf

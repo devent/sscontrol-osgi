@@ -1,1 +1,0 @@
--ie s/  canal_iface: ""/  canal_iface: "enp0s8"/ /tmp/junit/junit.tmp

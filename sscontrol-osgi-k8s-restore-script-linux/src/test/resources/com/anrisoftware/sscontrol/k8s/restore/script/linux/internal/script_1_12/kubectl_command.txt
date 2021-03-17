@@ -1,9 +1,0 @@
-#!/bin/bash
-theCommand="$0"
-echo "$theCommand $@"
-echo "$@" >> $theCommand.out
-if [ ! -f "_kubectl" ]; then
-    echo "a" > "_kubectl"
-    echo 'error: no context exists with the name: "xx".'
-    exit 1
-fi

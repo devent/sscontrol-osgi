@@ -1,3 +1,0 @@
--C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeclient_ca user@localhost:/var/lib/robobee/tmp/robobeeclient_ca
--C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeclient_cert user@localhost:/var/lib/robobee/tmp/robobeeclient_cert
--C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/robobeeclient_key user@localhost:/var/lib/robobee/tmp/robobeeclient_key

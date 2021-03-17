@@ -1,0 +1,175 @@
+kubectlKubeconfigCmd(parent, vars) ::= <<
+<parent.kubectlCmd> <vars.args>
+>>
+
+getNodeRobobeeLabel(parent, vars) ::= <%
+<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node>
+%>
+
+getKubernetesHostnameLabel(parent, vars) ::= <%
+<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node>
+%>
+
+grepNodeFunctions(parent, vars) ::= <<
+function node_on_label() {
+    <getNodeRobobeeLabel(parent, vars)>
+}
+function node_on_hostname() {
+    <getKubernetesHostnameLabel(parent, vars)>
+}
+>>
+
+/*
+* Waits until the node is available.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.node: the node name.
+*/
+waitNodeAvailableCmd(parent, vars) ::= <<
+echo "Waiting for node..."
+<setupKubectl(parent, vars)>
+<grepNodeFunctions(parent, vars)>
+until node_on_label || node_on_hostname
+do
+    sleep 5
+done
+>>
+
+/*
+* Waits until the node is ready.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.node: the node name.
+*/
+waitNodeReadyCmd(parent, vars) ::= <<
+echo "Waiting for node..."
+<setupKubectl(parent, vars)>
+<grepNodeFunctions(parent, vars)>
+until node_on_label || node_on_hostname
+do
+    sleep 5
+done
+>>
+
+retrieveNodeNameRobobeeLabel(parent, vars) ::= <%
+<parent.kubectlCmd> get nodes --no-headers -l <parent.robobeeLabelNode>=<vars.node> | cut -f1 -d' '
+%>
+
+retrieveNodeNameKubernetesHostname(parent, vars) ::= <%
+<parent.kubectlCmd> get nodes --no-headers -l <parent.kubernetesLabelHostname>=<vars.node> | cut -f1 -d' '
+%>
+
+/*
+* Applies the taints on the node.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.node: the node name.
+* vars.tains: the taints.
+*/
+applyTaintsCmd(parent, vars) ::= <<
+<waitNodeAvailableCmd(parent, vars)>
+node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
+if [[ -z "$node" ]]; then
+    node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
+fi
+<vars.taints:{k|<parent.kubectlCmd> taint --overwrite nodes $node <k>=<taintValueEffect(vars.taints.(k))>};separator="\n">
+>>
+
+taintValueEffect(taint) ::= <%
+<if(taint.value)><taint.value><endif>:<taint.effect>
+%>
+
+/*
+ * Delete the resource if it already exists.
+ *
+ * parent.kubectlCmd: the kubectl command.
+ * vars.namespace: the namespace of the resource.
+ * vars.type: the type of the resource.
+ * vars.name: the name of the resource.
+ * vars.checkExists: set to true to check first if the resource exist.
+ */
+deleteResource(parent, vars) ::= <<
+<if(vars.checkExists)>
+if <parent.kubectlCmd> -n <vars.namespace> get <vars.type> <vars.name>; then
+<endif>
+    <parent.kubectlCmd> -n <vars.namespace> delete <vars.type> <vars.name>
+<if(vars.checkExists)>
+fi
+<endif>
+>>
+
+/*
+* Applies the labels on the node.
+*
+* parent.kubectlCmd: the kubectl command.
+* parent.robobeeLabelNode: the robobee node name label key.
+* vars.cluster: the kubernetes cluster information.
+* vars.node: the node name.
+* vars.labels: the labels.
+*/
+applyLabelsCmd(parent, vars) ::= <<
+<waitNodeAvailableCmd(parent, vars)>
+node=$(<retrieveNodeNameRobobeeLabel(parent, vars)>)
+if [[ -z "$node" ]]; then
+    node=$(<retrieveNodeNameKubernetesHostname(parent, vars)>)
+fi
+<vars.labels:{k|<parent.kubectlCmd> label --overwrite nodes $node <k>=<vars.labels.(k).value>};separator="\n">
+>>
+
+/*
+* Setups <parent.kubectlCmd> on the host.
+*
+* parent.kubectlCmd: the kubectl command.
+* vars.cluster: the kubernetes cluster information.
+*/
+setupKubectl(parent, vars) ::= <<
+<if(vars.cluster.context.name)>
+if ! <parent.kubectlCmd> config current-context | grep "<vars.cluster.context.name>";
+<setCluster(parent, vars)>
+<setCredentials(parent, vars)>
+<setContext(parent, vars)>
+<parent.kubectlCmd> config use-context <vars.cluster.context.name>
+fi
+<endif>
+
+>>
+
+setCluster(parent, vars) ::= <<
+<parent.kubectlCmd> config set-cluster <vars.cluster.cluster.group> --server="<clusterServer(parent, vars);separator=",">" <kubeCa(parent, vars)>
+
+>>
+
+setCredentials(parent, vars) ::= <<
+<parent.kubectlCmd> config set-credentials <vars.cluster.cluster.group>-<vars.cluster.credentials.name> <kubeCa(parent, vars)> <kubeCert(parent, vars)> <kubeKey(parent, vars)>
+
+>>
+
+setContext(parent, vars) ::= <<
+<parent.kubectlCmd> config set-context <vars.cluster.context.name> --cluster=<vars.cluster.cluster.group> --user=<vars.cluster.cluster.group>-<vars.cluster.credentials.name>
+
+>>
+
+kubeCa(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.ca)>--certificate-authority=<vars.certsDir>/<vars.tls.caName><endif><endif>
+%>
+
+kubeCert(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.cert)>--client-certificate=<vars.certsDir>/<vars.tls.certName><endif><endif>
+%>
+
+kubeKey(parent, vars) ::= <%
+<if(vars.tls)><if(vars.tls.key)>--client-key=<vars.certsDir>/<vars.tls.keyName><endif><endif>
+%>
+
+kubectlCmd(parent, vars) ::= <<
+<setupKubectl(parent, vars)>
+<parent.kubectlCmd> <vars.args>
+
+>>
+
+clusterServer(parent, vars) ::= <%
+<vars.cluster.proto>://<vars.cluster.host>:<vars.cluster.port>
+%>
