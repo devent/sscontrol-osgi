@@ -1,0 +1,15 @@
+#!/bin/bash
+
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+if [ "$#" -gt 0 ]; then
+    if [ "x$1" = "xStatus: install ok installed" ]; then
+        exit 1
+    fi
+    cmd=($1)
+    cmd=${cmd[0]}
+    if command -v -- "$cmd">/dev/null; then
+       $@
+    fi
+fi
