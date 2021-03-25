@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
@@ -33,6 +33,7 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
+import com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10.SshdDebianModule
 import com.anrisoftware.sscontrol.sshd.service.internal.SshdModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule

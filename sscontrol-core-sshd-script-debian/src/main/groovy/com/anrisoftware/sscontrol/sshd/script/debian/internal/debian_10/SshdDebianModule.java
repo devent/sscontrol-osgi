@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9;
+package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -23,5 +25,14 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public interface SshdDebianFactory extends HostServiceScriptService {
+public class SshdDebianModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, SshdDebian.class)
+                .build(SshdDebianFactory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, SshdDebianUfw.class)
+                .build(SshdDebianUfwFactory.class));
+    }
+
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static java.nio.charset.StandardCharsets.*
@@ -28,6 +28,7 @@ import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10.SshdDebianFactory
 import com.anrisoftware.sscontrol.sshd.service.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
