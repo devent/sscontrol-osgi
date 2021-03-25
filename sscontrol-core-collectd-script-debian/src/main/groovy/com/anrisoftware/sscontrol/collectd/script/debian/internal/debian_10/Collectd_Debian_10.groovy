@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10
 
-import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_10_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -34,6 +32,10 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class Collectd_Debian_10 extends Collectd_Debian {
+
+    static final String SYSTEM_VERSION = "9";
+
+    static final String SYSTEM_NAME = "debian";
 
     @Inject
     Collectd_Debian_10_Properties propertiesProvider

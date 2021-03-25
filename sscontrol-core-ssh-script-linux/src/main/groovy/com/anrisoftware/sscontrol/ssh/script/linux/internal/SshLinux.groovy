@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.ssh.script.linux.internal
 
-import static com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Service.*
-
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
@@ -33,6 +31,10 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class SshLinux extends ScriptBase {
+
+    static final String SYSTEM_VERSION = "0";
+
+    static final String SYSTEM_NAME = "linux";
 
     @Inject
     SshLinuxProperties sshProperties

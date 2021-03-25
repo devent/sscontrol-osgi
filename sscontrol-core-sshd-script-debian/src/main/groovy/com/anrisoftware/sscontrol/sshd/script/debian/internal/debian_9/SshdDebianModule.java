@@ -29,11 +29,9 @@ public class SshdDebianModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, SshdDebian.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, SshdDebian.class)
                 .build(SshdDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, SshdDebianUfw.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, SshdDebianUfw.class)
                 .build(SshdDebianUfwFactory.class));
     }
 

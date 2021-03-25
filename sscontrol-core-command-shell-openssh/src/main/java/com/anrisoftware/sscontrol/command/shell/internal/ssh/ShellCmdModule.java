@@ -30,9 +30,7 @@ public class ShellCmdModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(Shell.class, ShellImpl.class)
-                .build(ShellFactory.class));
+        install(new FactoryModuleBuilder().implement(Shell.class, ShellImpl.class).build(ShellFactory.class));
     }
 
 }
