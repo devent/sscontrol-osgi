@@ -65,7 +65,7 @@
 
     <modules>
         <module>sscontrol-core-collectd-script-centos</module>
-        <module>sscontrol-core-collectd-script-collectd-5-7</module>
+        <module>sscontrol-core-collectd-script-collectd-5-x</module>
         <module>sscontrol-core-collectd-script-debian</module>
         <module>sscontrol-core-collectd-service</module>
         <module>sscontrol-core-command-copy</module>
