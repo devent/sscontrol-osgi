@@ -88,8 +88,7 @@ public abstract class AbstractTargetsImpl<HostType extends TargetHost, TargetTyp
     }
 
     private List<HostType> getHosts(String name, List<TargetType> targets) {
-        assertThat(format("size targets(%s)=0", name), targets.size(),
-                greaterThan(0));
+        assertThat(format("size targets(%s)=0", name), targets.size(), greaterThan(0));
         List<HostType> result = new ArrayList<>();
         for (TargetType target : targets) {
             result.addAll(target.getHosts());
@@ -119,13 +118,13 @@ public abstract class AbstractTargetsImpl<HostType extends TargetHost, TargetTyp
         if (isBlank(name)) {
             name = "default";
         }
-        hosts.remove(name);
+        var n = name;
+        hosts.stream().filter(item -> item.getGroup().equals(n)).findFirst().ifPresent(hosts::remove);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("hosts", getGroups())
-                .toString();
+        return new ToStringBuilder(this).append("hosts", getGroups()).toString();
     }
 
     @Override
