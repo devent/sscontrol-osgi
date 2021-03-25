@@ -1,0 +1,2 @@
+update
+-y install collectd

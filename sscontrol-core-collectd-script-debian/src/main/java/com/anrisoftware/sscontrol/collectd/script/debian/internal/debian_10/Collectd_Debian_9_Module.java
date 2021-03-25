@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9;
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10;
 
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_5_7_Debian_9;
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

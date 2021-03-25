@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Collectd Debian 9 properties provider from
- * {@code "/collectd_debian_9.properties"}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ *
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
+ * @version 1.0
  */
-class Collectd_Debian_9_Properties extends AbstractContextPropertiesProvider {
-
-    private static final URL RESOURCE = Collectd_Debian_9_Properties.class.getResource("/collectd_debian_9.properties")
-
-    Collectd_Debian_9_Properties() {
-	super(Collectd_Debian_9_Properties.class, RESOURCE)
-    }
+public interface Collectd_5_7_Debian_9_Factory extends HostServiceScriptService {
 }

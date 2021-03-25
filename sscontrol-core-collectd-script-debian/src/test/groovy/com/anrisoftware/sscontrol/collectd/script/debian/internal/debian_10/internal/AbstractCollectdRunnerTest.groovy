@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.internal
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Factory
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
+com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10tBase {
 
     @Inject
     RunScriptImplFactory runnerFactory

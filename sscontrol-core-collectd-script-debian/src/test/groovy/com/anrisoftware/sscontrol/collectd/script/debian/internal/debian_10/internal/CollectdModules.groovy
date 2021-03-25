@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.internal
+package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.internal
 
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_9.Collectd_Debian_9_Module
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9_Module
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdModule
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
@@ -46,10 +46,7 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class CollectdModules {
-
-    /**
-     * Returns the needed modules.
+com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10
      */
     static List getAdditionalModules() {
 	[
