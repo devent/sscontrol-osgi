@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import org.junit.jupiter.api.BeforeEach
 
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9_Factory
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_10_Factory
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdImpl.CollectdImplFactory
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunnerModule
 import com.anrisoftware.sscontrol.runner.groovy.internal.RunScriptImpl.RunScriptImplFactory
@@ -37,7 +37,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10tBase {
+abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
 
     @Inject
     RunScriptImplFactory runnerFactory
@@ -52,7 +52,7 @@ com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10tBase {
     CollectdImplFactory collectdFactory
 
     @Inject
-    Collectd_Debian_9_Factory collectdDebianFactory
+    Collectd_Debian_10_Factory collectdDebianFactory
 
     def getRunScriptFactory() {
         runnerFactory

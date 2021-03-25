@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.int
 import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9_Module
+import com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_10_Module
 import com.anrisoftware.sscontrol.collectd.service.internal.CollectdModule
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
@@ -46,34 +46,37 @@ import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappin
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10
+class CollectdModules {
+
+    /**
+     * Returns the needed modules.
      */
     static List getAdditionalModules() {
-	[
-	    new SshModule(),
-	    new CollectdModule(),
-	    new Collectd_Debian_9_Module(),
-	    new DebianUtilsModule(),
-	    new SystemdUtilsModule(),
-	    new DebugLoggingModule(),
-	    new TypesModule(),
-	    new StringsModule(),
-	    new HostServicesModule(),
-	    new ShellCmdModule(),
-	    new SshShellModule(),
-	    new CmdImplModule(),
-	    new CmdModule(),
-	    new ScpModule(),
-	    new CopyModule(),
-	    new FetchModule(),
-	    new ReplaceModule(),
-	    new FactsModule(),
-	    new TemplateModule(),
-	    new TemplateResModule(),
-	    new TokensTemplateModule(),
-	    new ResourcesModule(),
-	    new SystemNameMappingsModule(),
-	    new StModule(),
-	]
+        [
+            new SshModule(),
+            new CollectdModule(),
+            new Collectd_Debian_10_Module(),
+            new DebianUtilsModule(),
+            new SystemdUtilsModule(),
+            new DebugLoggingModule(),
+            new TypesModule(),
+            new StringsModule(),
+            new HostServicesModule(),
+            new ShellCmdModule(),
+            new SshShellModule(),
+            new CmdImplModule(),
+            new CmdModule(),
+            new ScpModule(),
+            new CopyModule(),
+            new FetchModule(),
+            new ReplaceModule(),
+            new FactsModule(),
+            new TemplateModule(),
+            new TemplateResModule(),
+            new TokensTemplateModule(),
+            new ResourcesModule(),
+            new SystemNameMappingsModule(),
+            new StModule(),
+        ]
     }
 }

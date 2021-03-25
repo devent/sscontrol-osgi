@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.collectd.script.collect_5_7.external
+package com.anrisoftware.sscontrol.collectd.script.collect_5_8.external
 
 import com.anrisoftware.sscontrol.collectd.service.external.Collectd
 import com.anrisoftware.sscontrol.collectd.service.external.Config
@@ -29,44 +29,44 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-abstract class Collectd_5_7 extends ScriptBase {
+abstract class Collectd_5_8 extends ScriptBase {
 
     @Override
     def run() {
     }
 
     def deployConfiguration() {
-	Collectd service = this.service
-	replace privileged: true, dest: configFile with {
-	    line "s~(?m)^${collectdIncludeLineSearch}~${collectdIncludeLineReplace}~"
-	    line "s~(?m)^#?FQDNLookup.*~FQDNLookup ${fqdnLookup}~"
-	    it
-	}()
-	service.configs.each { Config config ->
-	    def file = getConfigFile config
-	    copyString privileged: true, str: config.script, dest: file
-	}
+        Collectd service = this.service
+        replace privileged: true, dest: configFile with {
+            line "s~(?m)^${collectdIncludeLineSearch}~${collectdIncludeLineReplace}~"
+            line "s~(?m)^#?FQDNLookup.*~FQDNLookup ${fqdnLookup}~"
+            it
+        }()
+        service.configs.each { Config config ->
+            def file = getConfigFile config
+            copyString privileged: true, str: config.script, dest: file
+        }
     }
 
     File getConfigFile(Config config) {
-	def s = getScriptProperty "config_file_template"
-	new File((File)base, new SimpleTemplateEngine().createTemplate(s).make([name: config.name]).toString())
+        def s = getScriptProperty "config_file_template"
+        new File((File)base, new SimpleTemplateEngine().createTemplate(s).make([name: config.name]).toString())
     }
 
     String getCollectdIncludeLineSearch() {
-	getScriptProperty "collectd_include_line_search"
+        getScriptProperty "collectd_include_line_search"
     }
 
     String getCollectdIncludeLineReplace() {
-	getScriptProperty "collectd_include_line_replace"
+        getScriptProperty "collectd_include_line_replace"
     }
 
     boolean getFqdnLookup() {
-	getScriptBooleanProperty "collectd_fqdn_lookup"
+        getScriptBooleanProperty "collectd_fqdn_lookup"
     }
 
     @Override
     def getLog() {
-	log
+        log
     }
 }

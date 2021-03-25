@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.collectd.service.internal;
 
-import static com.anrisoftware.sscontrol.collectd.service.internal.CollectdServiceImpl.SERVICE_NAME;
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static java.lang.String.format;
 
@@ -31,8 +30,8 @@ import com.anrisoftware.sscontrol.collectd.service.external.Collectd;
 import com.anrisoftware.sscontrol.collectd.service.external.CollectdService;
 import com.anrisoftware.sscontrol.collectd.service.external.Config;
 import com.anrisoftware.sscontrol.collectd.service.internal.ConfigImpl.ConfigImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil;
 import com.anrisoftware.sscontrol.types.misc.external.GeneticListPropertyUtil.GeneticListProperty;
@@ -51,6 +50,8 @@ public class CollectdImpl implements Collectd {
     public interface CollectdImplFactory extends CollectdService {
 
     }
+
+    public static final String SERVICE_NAME = "collectd";
 
     private final CollectdImplLogger log;
 

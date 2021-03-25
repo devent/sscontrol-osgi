@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.sshd.service.internal;
 
-import static com.anrisoftware.sscontrol.sshd.service.internal.SshdServiceImpl.SSHD_NAME;
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
@@ -58,6 +57,8 @@ public class SshdImpl implements Sshd {
     public interface SshdImplFactory extends SshdService {
 
     }
+
+    public static final String SSHD_NAME = "sshd";
 
     private final SshdImplLogger log;
 

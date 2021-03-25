@@ -22,7 +22,7 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.resources.templates.external.TemplatesFactory
-import com.anrisoftware.sscontrol.collectd.script.collect_5_7.external.Collectd_5_7
+import com.anrisoftware.sscontrol.collectd.script.collect_5_8.external.Collectd_5_8
 
 import groovy.util.logging.Slf4j
 
@@ -33,7 +33,7 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class Collectd_5_7_Centos_7 extends Collectd_5_7 {
+class Collectd_5_7_Centos_7 extends Collectd_5_8 {
 
     @Inject
     Collectd_Centos_7_Properties propertiesProvider

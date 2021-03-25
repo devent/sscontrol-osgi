@@ -113,19 +113,16 @@
         <module>sscontrol-core-k8s-node-service</module>
         <module>sscontrol-core-k8s-restore-script-linux</module>
         <module>sscontrol-core-k8s-restore-service</module>
-        <module>sscontrol-core-muellerpublicde</module>
         <module>sscontrol-core-nfs-script-centos</module>
         <module>sscontrol-core-nfs-script-debian</module>
         <module>sscontrol-core-nfs-script-nfs-1-3</module>
         <module>sscontrol-core-nfs-service</module>
-        <module>sscontrol-core-parent</module>
         <module>sscontrol-core-registry-docker-script-linux</module>
         <module>sscontrol-core-registry-docker-service</module>
         <module>sscontrol-core-repo-git-script-debian</module>
         <module>sscontrol-core-repo-git-service</module>
         <module>sscontrol-core-script-runner</module>
         <module>sscontrol-core-script-runner-test</module>
-        <module>sscontrol-core-scr-parent</module>
         <module>sscontrol-core-services-properties</module>
         <module>sscontrol-core-services-repository</module>
         <module>sscontrol-core-shell-linux</module>

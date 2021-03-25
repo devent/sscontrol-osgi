@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.shell.internal;
 
-import static com.anrisoftware.sscontrol.shell.internal.ShellServiceImpl.SERVICE_NAME;
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ import com.anrisoftware.sscontrol.shell.external.Script;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.ShellService;
 import com.anrisoftware.sscontrol.shell.internal.ScriptImpl.ScriptImplFactory;
-import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 import com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
@@ -53,6 +52,8 @@ public class ShellImpl implements Shell {
     public interface ShellImplFactory extends ShellService {
 
     }
+
+    public static final String SERVICE_NAME = "shell";
 
     private final ShellImplLogger log;
 

@@ -15,10 +15,8 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.internal
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
-import static org.junit.jupiter.api.Assumptions.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,9 +38,9 @@ class CollectdServerTest extends AbstractCollectdRunnerTest {
 
     @Test
     void "collectd_server"() {
-	def test = [
-	    name: "collectd_server",
-	    script: '''
+        def test = [
+            name: "collectd_server",
+            script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "collectd", version: "5.7" with {
     config name: "99-write-graphite", script: """
@@ -70,20 +68,20 @@ LoadPlugin "network"
 """
 }
 ''',
-	    scriptVars: [robobeeSocket: robobeeSocket],
-	    expectedServicesSize: 2,
-	    generatedDir: folder.newFolder(),
-	    expected: { Map args ->
-		assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-graphite.conf'), "${args.test.name}_write_graphite_conf_expected.txt"
-		assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-influxdb.conf'), "${args.test.name}_write_influxdb_conf_expected.txt"
-	    },
-	]
-	doTest test
+            scriptVars: [robobeeSocket: robobeeSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-graphite.conf'), "${args.test.name}_write_graphite_conf_expected.txt"
+                assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-influxdb.conf'), "${args.test.name}_write_influxdb_conf_expected.txt"
+            },
+        ]
+        doTest test
     }
 
     @BeforeEach
     void beforeMethod() {
-	checkRobobeeSocket()
+        checkRobobeeSocket()
     }
 
     @Override
@@ -92,6 +90,6 @@ LoadPlugin "network"
 
     @Override
     Map getScriptEnv(Map args) {
-	getEmptyScriptEnv args
+        getEmptyScriptEnv args
     }
 }

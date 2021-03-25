@@ -15,11 +15,9 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.internal
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
@@ -82,5 +80,4 @@ LoadPlugin "write_graphite"
         ]
         doTest test
     }
-
 }

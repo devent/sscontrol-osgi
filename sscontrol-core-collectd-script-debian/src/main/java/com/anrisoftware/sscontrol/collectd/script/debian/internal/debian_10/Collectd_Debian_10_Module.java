@@ -15,7 +15,9 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -23,5 +25,14 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public interface Collectd_Debian_9_Factory extends HostServiceScriptService {
+public class Collectd_Debian_10_Module extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Collectd_Debian_10.class)
+                .build(Collectd_Debian_10_Factory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Collectd_5_8_Debian_10.class)
+                .build(Collectd_5_8_Debian_10_Factory.class));
+    }
+
 }

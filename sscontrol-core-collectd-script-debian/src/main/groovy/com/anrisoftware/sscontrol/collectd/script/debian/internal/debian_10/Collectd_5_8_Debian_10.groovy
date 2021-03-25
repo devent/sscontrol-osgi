@@ -15,12 +15,12 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10
 
-import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_9_Service.*
+import static com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.Collectd_Debian_10_Service.*
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.collectd.script.collect_5_7.external.Collectd_5_7
+import com.anrisoftware.sscontrol.collectd.script.collect_5_8.external.Collectd_5_8
 
 import groovy.util.logging.Slf4j
 
@@ -30,26 +30,29 @@ import groovy.util.logging.Slf4j
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10ect
-    Collectd_Debian_9_Properties propertiesProvider
+@Slf4j
+class Collectd_5_8_Debian_10 extends Collectd_5_8 {
+
+    @Inject
+    Collectd_Debian_10_Properties propertiesProvider
 
     @Override
     ContextProperties getDefaultProperties() {
-	propertiesProvider.get()
+        propertiesProvider.get()
     }
 
     @Override
     def getLog() {
-	log
+        log
     }
 
     @Override
     String getSystemName() {
-	SYSTEM_NAME
+        SYSTEM_NAME
     }
 
     @Override
     String getSystemVersion() {
-	SYSTEM_VERSION
+        SYSTEM_VERSION
     }
 }
