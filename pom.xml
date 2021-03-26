@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+    Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -311,11 +311,14 @@
 					<licenseSets>
 						<licenseSet>
 							<excludes>
-								<exclude>*.txt</exclude>
+                                <exclude>header.txt</exclude>
+								<exclude>**/header.txt</exclude>
 								<exclude>**/README</exclude>
 								<exclude>**/README.textile</exclude>
 								<exclude>**/README.md</exclude>
 								<exclude>**/LICENSE.txt</exclude>
+                                <exclude>LICENSE-2.0.txt</exclude>
+                                <exclude>**/LICENSE-2.0.txt</exclude>
 								<exclude>src/test/resources/**</exclude>
 								<exclude>src/main/resources/**</exclude>
 							</excludes>
