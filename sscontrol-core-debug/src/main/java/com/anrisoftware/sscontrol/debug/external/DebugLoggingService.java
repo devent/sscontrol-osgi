@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DebugService {
+public interface DebugLoggingService {
 
     DebugLogging create();
 

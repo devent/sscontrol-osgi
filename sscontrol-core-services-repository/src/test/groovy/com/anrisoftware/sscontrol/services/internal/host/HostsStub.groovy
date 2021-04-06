@@ -20,6 +20,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
@@ -96,26 +97,6 @@ class HostsStub implements HostService {
 
     List<Host> getHosts() {
         hosts;
-
-/*-
- * #%L
- * sscontrol-osgi - services-repository
- * %%
- * Copyright (C) 2016 - 2018 Advanced Natural Research Institute
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
     }
 
     @Override
@@ -129,7 +110,7 @@ class HostsStub implements HostService {
     }
 
     @Override
-    List<SshHost> getTargets() {
+    List<TargetHost> getTargets() {
         targets
     }
 

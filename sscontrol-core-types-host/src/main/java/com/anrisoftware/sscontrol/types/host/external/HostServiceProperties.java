@@ -29,7 +29,7 @@ public interface HostServiceProperties {
 
     void addProperty(String property);
 
-    String getProperty(String name);
+    Object getProperty(String name);
 
     String getProperty(String name, String defaultValue);
 

@@ -169,8 +169,7 @@ service 'ssh' with {
     host "192.168.0.4"
     host "192.168.0.5"
 }
-
-targets 'nodes' eachWithIndex { host, i ->
+targets.call('nodes').eachWithIndex { host, i ->
     service 'hostname', target: host with {
         set "node-${i}.muellerpublic.de"
     }

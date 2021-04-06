@@ -29,8 +29,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class TargetsImpl extends AbstractTargetsImpl<SshHost, Ssh>
-        implements Targets {
+public class TargetsImpl extends AbstractTargetsImpl<SshHost, Ssh> implements Targets {
 
     /**
      *

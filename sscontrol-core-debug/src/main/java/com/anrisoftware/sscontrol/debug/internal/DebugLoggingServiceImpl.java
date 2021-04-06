@@ -15,26 +15,26 @@
  */
 package com.anrisoftware.sscontrol.debug.internal;
 
+import javax.inject.Inject;
+
 import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory;
-import com.anrisoftware.sscontrol.debug.internal.DebugModuleImpl.DebugModuleImplFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
 
 /**
+ * Creates the debug logging.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class DebugLoggingModule extends AbstractModule {
+public class DebugLoggingServiceImpl implements DebugLoggingService {
 
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(DebugLoggingImpl.class, DebugLoggingImpl.class)
-				.build(DebugLoggingImplFactory.class));
-		install(new FactoryModuleBuilder().implement(DebugModuleImpl.class, DebugModuleImpl.class)
-				.build(DebugModuleImplFactory.class));
-        bind(DebugLoggingService.class).to(DebugLoggingServiceImpl.class);
-	}
+    @Inject
+    private DebugLoggingImplFactory debugFactory;
+
+    @Override
+    public DebugLogging create() {
+        return debugFactory.create();
+    }
 
 }

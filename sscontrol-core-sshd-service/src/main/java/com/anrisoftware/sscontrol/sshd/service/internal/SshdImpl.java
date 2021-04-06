@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.sshd.service.external.Binding;
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.service.external.SshdService;
@@ -88,7 +88,7 @@ public class SshdImpl implements Sshd {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 

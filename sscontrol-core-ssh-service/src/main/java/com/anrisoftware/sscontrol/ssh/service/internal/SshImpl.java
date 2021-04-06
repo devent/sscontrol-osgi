@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.globalpom.core.resources.ToURI;
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.ssh.service.external.SshService;
 import com.anrisoftware.sscontrol.ssh.service.internal.SshHostImpl.SshHostImplFactory;
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService;
@@ -84,8 +84,7 @@ public class SshImpl implements Ssh {
     private Object socket;
 
     @AssistedInject
-    SshImpl(SshImplLogger log, HostServicePropertiesService propertiesService,
-            SshHostImplFactory hostFactory,
+    SshImpl(SshImplLogger log, HostServicePropertiesService propertiesService, SshHostImplFactory hostFactory,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<>();
@@ -97,7 +96,7 @@ public class SshImpl implements Ssh {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 
@@ -214,8 +213,7 @@ public class SshImpl implements Ssh {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", getName())
-                .append("group", group).append("hosts", hosts.size())
+        return new ToStringBuilder(this).append("name", getName()).append("group", group).append("hosts", hosts.size())
                 .toString();
     }
 

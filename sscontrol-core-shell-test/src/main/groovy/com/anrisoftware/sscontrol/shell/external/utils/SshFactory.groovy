@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServicePropertiesService
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
 import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
@@ -91,12 +92,12 @@ class SshFactory implements Ssh {
 	}
 
 	@Override
-	SshHost getTarget() {
+	TargetHost getTarget() {
 		targets[0]
 	}
 
 	@Override
-	List<SshHost> getTargets() {
+	List<TargetHost> getTargets() {
 		targets
 	}
 

@@ -73,6 +73,8 @@ class PropertiesStub implements HostService {
 
     HostServiceProperties serviceProperties
 
+    List targets = []
+
     @Inject
     PropertiesStub(HostServicePropertiesService propertiesService, @Assisted Map<String, Object> args) {
         this.serviceProperties = propertiesService.create()
@@ -85,6 +87,7 @@ class PropertiesStub implements HostService {
 
     @Override
     List<TargetHost> getTargets() {
+        targets
     }
 
     @Override

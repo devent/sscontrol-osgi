@@ -20,6 +20,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
@@ -86,7 +87,7 @@ class HostnameStub implements HostService {
     }
 
     @Override
-    List<SshHost> getTargets() {
+    List<TargetHost> getTargets() {
         targets
     }
 
