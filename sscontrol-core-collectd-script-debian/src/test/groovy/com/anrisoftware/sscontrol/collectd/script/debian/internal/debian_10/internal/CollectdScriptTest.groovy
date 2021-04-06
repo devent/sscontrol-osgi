@@ -35,7 +35,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = "true")
+@EnabledIfSystemProperty(named = "project.custom.local.tests.enabled", matches = "true")
 @ExtendWith(LocalhostSocketCondition.class)
 class CollectdScriptTest extends AbstractCollectdScriptTest {
 
@@ -45,7 +45,7 @@ class CollectdScriptTest extends AbstractCollectdScriptTest {
             name: "collectd_script",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
-service "collectd", version: "5.7" with {
+service "collectd", version: "5.8" with {
     config name: "99-write-graphite", script: """
 LoadPlugin "write_graphite"
 <Plugin "write_graphite">

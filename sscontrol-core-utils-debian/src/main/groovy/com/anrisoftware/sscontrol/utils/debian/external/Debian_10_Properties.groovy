@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.debian.external;
+package com.anrisoftware.sscontrol.utils.debian.external
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Debian 8 utilities factory.
+ * Debian 10 properties provider from
+ * {@code "/debian_10_utils.properties"}.
  *
- * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface Debian_9_UtilsFactory {
+class Debian_10_Properties extends AbstractContextPropertiesProvider {
 
-    DebianUtils create(HostServiceScript script);
+    private static final URL RESOURCE = Debian_10_Properties.class.getResource("/debian_10_utils.properties")
+
+    Debian_10_Properties() {
+        super(Debian_10_Properties.class, RESOURCE)
+    }
 }

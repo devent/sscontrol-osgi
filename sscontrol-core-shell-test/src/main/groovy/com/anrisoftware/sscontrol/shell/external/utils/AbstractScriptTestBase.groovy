@@ -194,7 +194,7 @@ abstract class AbstractScriptTestBase {
 
     abstract String getScriptServiceName()
 
-    abstract void createDummyCommands(java.io.File dir)
+    abstract void createDummyCommands(File dir)
 
     abstract HostServices putServices(HostServices services)
 

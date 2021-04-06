@@ -62,7 +62,7 @@ abstract class AbstractCollectdRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'collectd', collectdFactory
-        services.putAvailableScriptService 'collectd-5.7/debian/9', collectdDebianFactory
+        services.putAvailableScriptService 'collectd-5.8/debian/10', collectdDebianFactory
         return services
     }
 

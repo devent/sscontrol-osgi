@@ -18,15 +18,15 @@ package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * Collectd Debian 9 properties provider from
- * {@code "/collectd_debian_9.properties"}.
+ * Collectd Debian 10 properties provider from
+ * {@code "/collectd_debian_10.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class Collectd_Debian_10_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = Collectd_Debian_10_Properties.class.getResource("/collectd_debian_9.properties")
+    private static final URL RESOURCE = Collectd_Debian_10_Properties.class.getResource("/collectd_debian_10.properties")
 
     Collectd_Debian_10_Properties() {
         super(Collectd_Debian_10_Properties.class, RESOURCE)

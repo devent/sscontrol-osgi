@@ -43,7 +43,7 @@ class Collectd_Centos_7 extends Collectd_Centos {
     SystemdUtils systemd
 
     @Inject
-    void setCollectd_5_7_Centos_7_Factory(Collectd_5_7_Centos_7_Factory factory) {
+    void setCollectd_5_7_Centos_7_Factory(Collectd_5_8_Centos_7_Factory factory) {
 	this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 

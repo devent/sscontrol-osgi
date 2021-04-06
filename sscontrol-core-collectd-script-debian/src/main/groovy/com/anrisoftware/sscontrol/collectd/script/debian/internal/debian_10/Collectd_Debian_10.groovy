@@ -33,7 +33,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class Collectd_Debian_10 extends Collectd_Debian {
 
-    static final String SYSTEM_VERSION = "9";
+    static final String SYSTEM_VERSION = "10";
 
     static final String SYSTEM_NAME = "debian";
 

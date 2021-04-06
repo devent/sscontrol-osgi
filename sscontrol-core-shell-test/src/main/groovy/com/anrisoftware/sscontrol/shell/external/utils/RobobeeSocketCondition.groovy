@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 class RobobeeSocketCondition extends AbstractSocketsCondition {
 
     static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
-    
+
     RobobeeSocketCondition() {
         super([robobeeSocket])
     }

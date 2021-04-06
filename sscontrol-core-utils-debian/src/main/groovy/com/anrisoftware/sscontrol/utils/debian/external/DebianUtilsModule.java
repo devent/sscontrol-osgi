@@ -28,8 +28,8 @@ public class DebianUtilsModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(DebianUtils.class, Debian_9_Utils.class)
-                .build(Debian_9_UtilsFactory.class));
+        install(new FactoryModuleBuilder().implement(DebianUtils.class, Debian_10_Utils.class)
+                .build(Debian_10_UtilsFactory.class));
     }
 
 }

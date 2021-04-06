@@ -42,7 +42,7 @@ class CollectdServerTest extends AbstractCollectdRunnerTest {
             name: "collectd_server",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-service "collectd", version: "5.7" with {
+service "collectd", version: "5.8" with {
     config name: "99-write-graphite", script: """
 LoadPlugin "write_graphite"
 <Plugin "write_graphite">

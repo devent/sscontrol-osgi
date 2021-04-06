@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.command.shell.internal.ssh;
 
+import com.anrisoftware.sscontrol.command.shell.external.Cmd;
 import com.google.inject.AbstractModule;
 
 /**
@@ -27,6 +28,7 @@ public class CmdImplModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(Cmd.class).to(CmdImpl.class);
     }
 
 }

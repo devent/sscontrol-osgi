@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public interface Collectd_5_7_Centos_7_Factory extends HostServiceScriptService {
+public interface Collectd_5_8_Centos_7_Factory extends HostServiceScriptService {
 }

@@ -34,9 +34,9 @@ class Collectd_5_8_Debian_10 extends Collectd_5_8 {
     @Inject
     Collectd_Debian_10_Properties propertiesProvider
 
-    public static final String SYSTEM_VERSION = "9";
+    static final String SYSTEM_VERSION = Collectd_Debian_10.SYSTEM_VERSION;
 
-    public static final String SYSTEM_NAME = "debian";
+    static final String SYSTEM_NAME = "debian";
 
     @Override
     ContextProperties getDefaultProperties() {

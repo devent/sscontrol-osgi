@@ -23,27 +23,27 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 import com.google.inject.assistedinject.Assisted
 
 /**
- * Debian 8 utilities.
+ * Debian 10 utilities.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Debian_9_Utils extends DebianUtils {
+class Debian_10_Utils extends DebianUtils {
 
     @Inject
-    Debian_9_Properties propertiesProvider
+    Debian_10_Properties propertiesProvider
 
     TemplateResource commandsTemplate
 
     @Inject
-    Debian_9_Utils(@Assisted HostServiceScript script) {
+    Debian_10_Utils(@Assisted HostServiceScript script) {
         super(script)
     }
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create('DebianUtils')
-        this.commandsTemplate = templates.getResource('debian_9_commands')
+        this.commandsTemplate = templates.getResource('debian_10_commands')
     }
 
     @Override
