@@ -37,7 +37,7 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 @EnableRuleMigrationSupport
-@EnabledIfSystemProperty(named = 'project.custom.local.tests.enabled', matches = 'true')
+@EnabledIfSystemProperty(named = "project.custom.local.tests.enabled", matches = 'true')
 @ExtendWith(LocalhostSocketCondition.class)
 class SshdScriptTest extends AbstractSshdScriptTest {
 
@@ -59,6 +59,7 @@ service "sshd"
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource SshdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource SshdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
             },
         ]
         doTest test

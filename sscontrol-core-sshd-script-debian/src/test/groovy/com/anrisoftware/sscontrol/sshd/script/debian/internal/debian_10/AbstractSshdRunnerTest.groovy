@@ -63,7 +63,7 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'sshd', serviceFactory
-        services.putAvailableScriptService 'sshd/debian/9', scriptFactory
+        services.putAvailableScriptService 'sshd/debian/10', scriptFactory
         return services
     }
 

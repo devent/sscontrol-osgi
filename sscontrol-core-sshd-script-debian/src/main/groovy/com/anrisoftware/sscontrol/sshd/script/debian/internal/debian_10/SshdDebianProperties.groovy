@@ -18,15 +18,15 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
- * <i>Sshd Debian 9</i> properties provider from
- * {@code "/sshd_debian_9.properties"}.
+ * <i>Sshd Debian 10</i> properties provider from
+ * {@code "/sshd_debian_10.properties"}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 class SshdDebianProperties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = SshdDebianProperties.class.getResource("/sshd_debian_9.properties")
+    private static final URL RESOURCE = SshdDebianProperties.class.getResource("/sshd_debian_10.properties")
 
     SshdDebianProperties() {
         super(SshdDebianProperties.class, RESOURCE)
