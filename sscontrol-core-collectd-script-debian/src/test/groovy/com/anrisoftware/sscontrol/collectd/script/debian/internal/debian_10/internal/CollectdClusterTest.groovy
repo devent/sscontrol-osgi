@@ -15,14 +15,10 @@
  */
 package com.anrisoftware.sscontrol.collectd.script.debian.internal.debian_10.internal
 
-import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -33,15 +29,19 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(RobobeeSocketCondition.class)
-class CollectdServerTest extends AbstractCollectdRunnerTest {
+@ExtendWith(Nodes3AvailableCondition.class)
+class CollectdClusterTest extends AbstractCollectdRunnerTest {
 
     @Test
-    void "collectd_server"() {
+    void "collectd_cluster"() {
         def test = [
-            name: "collectd_server",
+            name: "collectd_cluster",
             script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh" with {
+    host "robobee@robobee-test", socket: socketFiles[0]
+    host "robobee@robobee-1-test", socket: socketFiles[1]
+    host "robobee@robobee-2-test", socket: socketFiles[2]
+}
 service "collectd", version: "5.8" with {
     config name: "99-write-graphite", script: """\
 LoadPlugin "write_graphite"
@@ -71,13 +71,14 @@ LoadPlugin "uptime"
 """
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket],
+            scriptVars: [socketFiles: [
+                "/tmp/robobee@robobee-test:22",
+                "/tmp/robobee@robobee-1-test:22",
+                "/tmp/robobee@robobee-2-test:22"
+                ]],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-graphite.conf'), "${args.test.name}_write_graphite_conf_expected.txt"
-                assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/99-write-influxdb.conf'), "${args.test.name}_write_influxdb_conf_expected.txt"
-                assertStringResource CollectdServerTest, readRemoteFile('/etc/collectd/collectd.conf.d/80-extra-plugins.conf'), "${args.test.name}_extra_plugins_conf_expected.txt"
             },
         ]
         doTest test

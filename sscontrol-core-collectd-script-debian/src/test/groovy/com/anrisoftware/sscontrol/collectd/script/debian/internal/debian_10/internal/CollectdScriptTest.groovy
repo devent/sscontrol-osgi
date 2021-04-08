@@ -63,6 +63,12 @@ LoadPlugin "write_graphite"
 </Node>
 </Plugin>
 """
+    config name: "99-write-influxdb", script: """
+LoadPlugin "network"
+<Plugin "network">
+  Server "192.168.56.1" "25826"
+</Plugin>
+"""
 }
 ''',
             scriptVars: [localhostSocket: localhostSocket],

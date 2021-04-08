@@ -1,4 +1,4 @@
 LoadPlugin "network"
 <Plugin "network">
-  Server "myinfluxdb.com" "25826"
+  Server "192.168.56.1" "25826"
 </Plugin>
