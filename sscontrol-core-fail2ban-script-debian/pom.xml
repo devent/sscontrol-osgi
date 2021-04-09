@@ -99,7 +99,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-fail2ban-script-0-9</artifactId>
+            <artifactId>sscontrol-core-fail2ban-script-0-x</artifactId>
             <version>0.14.0-SNAPSHOT</version>
         </dependency>
         <dependency>

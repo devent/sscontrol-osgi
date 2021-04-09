@@ -83,7 +83,7 @@
 		<module>sscontrol-core-etcd-script-debian</module>
 		<module>sscontrol-core-etcd-script-upstream</module>
 		<module>sscontrol-core-etcd-service</module>
-		<module>sscontrol-core-fail2ban-script-0-9</module>
+		<module>sscontrol-core-fail2ban-script-0-x</module>
 		<module>sscontrol-core-fail2ban-script-debian</module>
 		<module>sscontrol-core-fail2ban-service</module>
 		<module>sscontrol-core-groovy-parser</module>
