@@ -41,7 +41,7 @@ public interface Fail2ban extends HostService {
     DebugLogging getDebugLogging();
 
     /**
-     * Returns the jails.
+     * Returns the default jail entry.
      * <p>
      *
      * <pre>

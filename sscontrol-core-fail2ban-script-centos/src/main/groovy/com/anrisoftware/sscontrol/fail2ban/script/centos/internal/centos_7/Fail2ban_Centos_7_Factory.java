@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.centos.external;
+package com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos_7;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
  *
@@ -24,12 +23,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public class CentosUtilsModule extends AbstractModule {
-
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(CentosUtils.class, Centos_7_Utils.class)
-                .build(Centos_7_UtilsFactory.class));
-    }
+public interface Fail2ban_Centos_7_Factory extends HostServiceScriptService {
 
 }

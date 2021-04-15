@@ -1,0 +1,57 @@
+====
+    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+# Fail2Ban action configuration file for ufw
+#
+# You are required to run "ufw enable" before this will have an effect.
+#
+# The insert position should be approprate to block the required traffic.
+# A number after an allow rule to the application won't be much use.
+
+[Definition]
+
+actionstart = 
+
+actionstop = 
+
+actioncheck = 
+
+actionban = [ -n "<application>" ] && app="app <application>" && ufw insert <insertpos> <blocktype> from <ip> to <destination> $app
+
+actionunban = [ -n "<application>" ] && app="app <application>" && ufw delete <blocktype> from <ip> to <destination> $app
+
+[Init]
+# Option: insertpos
+# Notes.:  The postition number in the firewall list to insert the block rule
+insertpos = 1
+
+# Option: blocktype
+# Notes.: reject or deny
+blocktype = reject
+
+# Option: destination
+# Notes.: The destination address to block in the ufw rule
+destination = any
+
+# Option: application
+# Notes.: application from sudo ufw app list
+application = 
+
+# DEV NOTES:
+#
+# Author: Guilhem Lettron
+# Enhancements: Daniel Black
+# Fix actionban and actionunban: Erwin Müller, erwin.mueller@deventm.de

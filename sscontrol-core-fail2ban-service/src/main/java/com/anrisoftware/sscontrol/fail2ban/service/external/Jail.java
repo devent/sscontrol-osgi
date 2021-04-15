@@ -84,6 +84,11 @@ public interface Jail {
     List<String> getIgnoreAddresses();
 
     /**
+     * Returns the ban action. Only for the default jail section.
+     */
+    String getBanAction();
+
+    /**
      * Returns the jail banning arguments.
      * <p>
      *

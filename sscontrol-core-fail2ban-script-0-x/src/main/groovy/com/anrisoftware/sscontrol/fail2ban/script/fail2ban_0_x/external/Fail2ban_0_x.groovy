@@ -15,13 +15,13 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_x.external
 
+import org.apache.commons.text.CaseUtils
 import org.joda.time.Duration
 
 import com.anrisoftware.sscontrol.fail2ban.service.external.Backend
 import com.anrisoftware.sscontrol.fail2ban.service.external.Fail2ban
 import com.anrisoftware.sscontrol.fail2ban.service.external.Type
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
 
@@ -73,10 +73,10 @@ abstract class Fail2ban_0_x extends ScriptBase {
         shell privileged: true, """
 cd '${configDir}'
 if [ ! -f ${fail2banLocalConfigFileName} ]; then
-cp '${fail2banConfigFileName}' '${fail2banLocalConfigFileName}'
+touch '${fail2banLocalConfigFileName}'
 fi
 if [ ! -f ${jailLocalConfigFileName} ]; then
-cp '${jailConfigFileName}' '${jailLocalConfigFileName}'
+touch '${jailLocalConfigFileName}'
 fi
 """ call()
     }
@@ -93,16 +93,12 @@ fi
         }()
     }
 
-    HostServiceScript getFirewallScript() {
-        Fail2ban service = service
-        switch (firewall) {
-            case 'ufw':
-                return ufwScript
-                break
-        }
+    /**
+     * Provides the jail script.
+     */
+    Jail_0_x getJailScript() {
+        "get${CaseUtils.toCamelCase(firewall, true, '-' as char)}JailScript"()
     }
-
-    abstract Ufw_Fail2ban_0_x getUfwScript()
 
     Integer getDebugLogLevel() {
         properties.getNumberProperty('debug_log_level', defaultProperties)

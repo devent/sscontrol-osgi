@@ -1,0 +1,4 @@
+list installed epel-release
+install -y epel-release
+list installed fail2ban
+install -y fail2ban

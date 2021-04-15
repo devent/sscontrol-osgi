@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.centos.external;
+package com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos_7;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * Jail properties provider from
+ * {@code "/fail2ban_centos_7.properties"}.
  *
- *
- * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public class CentosUtilsModule extends AbstractModule {
+class Jail_Centos_7_Properties extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(CentosUtils.class, Centos_7_Utils.class)
-                .build(Centos_7_UtilsFactory.class));
+    private static final URL RESOURCE = Jail_Centos_7_Properties.class.getResource("/fail2ban_centos_7.properties");
+
+    Jail_Centos_7_Properties() {
+        super(Jail_Centos_7_Properties.class, RESOURCE);
     }
-
 }

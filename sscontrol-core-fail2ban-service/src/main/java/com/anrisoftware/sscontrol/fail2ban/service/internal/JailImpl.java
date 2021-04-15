@@ -52,6 +52,8 @@ public class JailImpl implements Jail {
 
     private static final String PORT_ARG = "port";
 
+    private static final String BAN_ACTION_ARG = "banAction";
+
     /**
      *
      *
@@ -78,6 +80,8 @@ public class JailImpl implements Jail {
 
     private Integer port;
 
+    private String banAction;
+
     @AssistedInject
     JailImpl(BanningImplFactory banningFactory, @Assisted String service) {
         this.service = service;
@@ -98,6 +102,7 @@ public class JailImpl implements Jail {
         this.enabled = args.get(ENABLED_ARG) == null ? null : (Boolean) args.get(ENABLED_ARG);
         this.banning = banningFactory.create(args);
         this.port = args.get(PORT_ARG) == null ? null : (Integer) args.get(PORT_ARG);
+        this.banAction = args.get(BAN_ACTION_ARG) == null ? null : args.get(BAN_ACTION_ARG).toString();
     }
 
     public void enabled(Boolean enabled) throws ParseException {
@@ -163,6 +168,10 @@ public class JailImpl implements Jail {
         });
     }
 
+    public void banAction(String banAction) throws ParseException {
+        this.banAction = banAction;
+    }
+
     @Override
     public String getService() {
         return service;
@@ -181,6 +190,11 @@ public class JailImpl implements Jail {
     @Override
     public String getNotify() {
         return notify;
+    }
+
+    @Override
+    public String getBanAction() {
+        return banAction;
     }
 
     @Override

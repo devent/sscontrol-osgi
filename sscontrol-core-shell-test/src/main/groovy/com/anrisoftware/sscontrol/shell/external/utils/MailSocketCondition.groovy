@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.centos.external;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+package com.anrisoftware.sscontrol.shell.external.utils;
 
 /**
+ * Checks that a socket to robobee@mail-0-test:22 is available for tests.
  *
- *
- * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
+ * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CentosUtilsModule extends AbstractModule {
+class MailSocketCondition extends AbstractSocketsCondition {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(CentosUtils.class, Centos_7_Utils.class)
-                .build(Centos_7_UtilsFactory.class));
+    public static final String mailSshHost = 'robobee@mail-0-test:22'
+
+    public static final String mailHost = 'mail-0-test'
+
+    public static final String mailSocket = '/tmp/robobee@mail-0-test:22'
+
+    MailSocketCondition() {
+        super([mailSocket])
     }
-
 }

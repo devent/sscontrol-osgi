@@ -23,7 +23,7 @@ package com.anrisoftware.sscontrol.utils.centos.external
  */
 class CentosTestUtils {
 
-    static final URL yumCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.txt')
+    static final URL yumCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.sh')
 
-    static final URL catCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.txt')
+    static final URL catCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.sh')
 }
