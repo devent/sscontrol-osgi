@@ -299,6 +299,7 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * <p>
      * <pre>
      * copy dest: '/etc/config' call()
+     * copy privileged: true, src: tmp, dest: file call()
      * </pre>
      * </p>
      */

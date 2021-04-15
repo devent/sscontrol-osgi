@@ -28,50 +28,28 @@
         <version>0.14.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>sscontrol-core-fail2ban-script-0-x</artifactId>
-    <name>sscontrol-core - fail2ban-script-0-x</name>
-    <description>Configures the Fail2ban 0.x service.</description>
+    <artifactId>sscontrol-core-utils-iniconfig</artifactId>
+    <name>sscontrol-core - utils-iniconfig</name>
+    <description>INI configuration utilities.</description>
 
     <properties>
     </properties>
 
     <dependencies>
 
-        <!-- own bundles -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-groovy-script</artifactId>
-            <version>0.14.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-fail2ban-service</artifactId>
-            <version>0.14.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-utils-iniconfig</artifactId>
-            <version>0.14.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- compile dependencies -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-assistedinject</artifactId>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-initfileparser</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>

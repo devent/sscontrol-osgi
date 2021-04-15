@@ -1,6 +1,4 @@
-#ROBOBEE_BEGIN
-loglevel = DEBUG
-#ROBOBEE_END
-#ROBOBEE_BEGIN
+[DEFAULT]
 logtarget = SYSLOG
-#ROBOBEE_END
+loglevel = DEBUG
+

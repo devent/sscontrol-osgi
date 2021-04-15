@@ -54,11 +54,6 @@ abstract class Jail_0_x extends ScriptBase {
     @Inject
     SectionFactory sectionFactory
 
-    @Override
-    def getLog() {
-        log
-    }
-
     def configureJail() {
         Fail2ban service = service
         withLocalTempFile "jail.local", { tmp ->
@@ -238,5 +233,10 @@ abstract class Jail_0_x extends ScriptBase {
      */
     File getJailLocalConfigFile() {
         properties.getFileProperty "jail_local_config_file", configDir, defaultProperties
+    }
+
+    @Override
+    def getLog() {
+        log
     }
 }

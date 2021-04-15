@@ -15,6 +15,10 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_x.external
 
+import static org.apache.commons.io.FileUtils.*
+
+import javax.inject.Inject
+
 import org.apache.commons.text.CaseUtils
 import org.joda.time.Duration
 
@@ -22,6 +26,7 @@ import com.anrisoftware.sscontrol.fail2ban.service.external.Backend
 import com.anrisoftware.sscontrol.fail2ban.service.external.Fail2ban
 import com.anrisoftware.sscontrol.fail2ban.service.external.Type
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.utils.iniconfig.external.InitSectionConfigurer
 
 import groovy.util.logging.Slf4j
 
@@ -33,6 +38,9 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 abstract class Fail2ban_0_x extends ScriptBase {
+
+    @Inject
+    InitSectionConfigurer initSection
 
     def setupDefaults() {
         Fail2ban service = service
@@ -86,11 +94,15 @@ fi
         int debugLevel = service.debugLogging.modules['debug'].level
         String level = logLevelMap[debugLevel]
         String debugTarget = service.debugLogging.modules['debug'].target
-        replace privileged: true, dest: fail2banLocalConfigFile with {
-            line "s/(?m)^loglevel\\s*=.*/loglevel = ${level}/"
-            line "s|(?m)^logtarget\\s*=.*|logtarget = ${debugTarget}|"
-            it
-        }()
+        def p = [:]
+        p.loglevel = "${level}"
+        p.logtarget = "${debugTarget}"
+        withLocalTempFile "fail2ban.local", { tmp ->
+            fetch src: fail2banLocalConfigFile, dest: tmp call()
+            def s = initSection.setupConfig tmp, "DEFAULT", p
+            write tmp, s.toString(), charset
+            copy privileged: true, src: tmp, dest: fail2banLocalConfigFile call()
+        }
     }
 
     /**
