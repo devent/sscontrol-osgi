@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,8 +169,7 @@ service 'ssh' with {
     host "192.168.0.4"
     host "192.168.0.5"
 }
-
-targets 'nodes' eachWithIndex { host, i ->
+targets.call('nodes').eachWithIndex { host, i ->
     service 'hostname', target: host with {
         set "node-${i}.muellerpublic.de"
     }

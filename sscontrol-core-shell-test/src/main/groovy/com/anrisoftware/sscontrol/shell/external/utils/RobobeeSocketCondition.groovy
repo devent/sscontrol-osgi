@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 class RobobeeSocketCondition extends AbstractSocketsCondition {
 
     static final String robobeeSocket = '/tmp/robobee@robobee-test:22'
-    
+
     RobobeeSocketCondition() {
         super([robobeeSocket])
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package com.anrisoftware.sscontrol.utils.centos.external
  */
 class CentosTestUtils {
 
-    static final URL yumCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.txt')
+    static final URL yumCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.sh')
 
-    static final URL catCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.txt')
+    static final URL catCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.sh')
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ public class DebianUtilsModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(DebianUtils.class, Debian_9_Utils.class)
-                .build(Debian_9_UtilsFactory.class));
+        install(new FactoryModuleBuilder().implement(DebianUtils.class, Debian_10_Utils.class)
+                .build(Debian_10_UtilsFactory.class));
     }
 
 }

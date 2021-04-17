@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ import com.anrisoftware.sscontrol.types.ssh.external.TargetsService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class TargetsImpl extends AbstractTargetsImpl<SshHost, Ssh>
-        implements Targets {
+public class TargetsImpl extends AbstractTargetsImpl<SshHost, Ssh> implements Targets {
 
     /**
      *

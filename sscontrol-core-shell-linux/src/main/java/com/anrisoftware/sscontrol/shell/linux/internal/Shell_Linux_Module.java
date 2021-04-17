@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package com.anrisoftware.sscontrol.shell.linux.internal;
 
-import com.anrisoftware.sscontrol.shell.linux.external.Shell_Linux_Factory;
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  *
@@ -30,9 +27,6 @@ public class Shell_Linux_Module extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, Shell_Linux.class)
-                .build(Shell_Linux_Factory.class));
     }
 
 }

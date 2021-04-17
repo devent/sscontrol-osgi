@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+    Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-collectd-script-collectd-5-7</artifactId>
+            <artifactId>sscontrol-core-collectd-script-collectd-5-x</artifactId>
             <version>0.14.0-SNAPSHOT</version>
         </dependency>
         <dependency>

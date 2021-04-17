@@ -1,0 +1,283 @@
+[DEFAULT]
+destemail = root@localhost
+sender = fail2ban@localhost
+ignorecommand =
+app =
+ignoreip = 127.0.0.1/8
+protocol = tcp
+action_mwl = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois-lines[name=%(__name__)s, dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s", sendername="%(sendername)s"]
+chain = INPUT
+findtime = 600
+banaction = ufw
+maxretry = 3
+usedns = warn
+bantime = 36000
+action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
+mta = sendmail
+backend = auto
+sendername = Fail2Ban
+action_ = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+action_mw = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]%(mta)s-whois[name=%(__name__)s, dest="%(destemail)s", protocol="%(protocol)s", chain="%(chain)s", sendername="%(sendername)s"]
+
+[ssh]
+port = ssh
+enabled = true
+filter = sshd
+maxretry = 6
+logpath = /var/log/auth.log
+
+[dropbear]
+port = ssh
+enabled = false
+filter = dropbear
+maxretry = 6
+logpath = /var/log/auth.log
+
+[pam-generic]
+port = anyport
+enabled = false
+filter = pam-generic
+banaction = iptables-allports
+maxretry = 6
+logpath = /var/log/auth.log
+
+[xinetd-fail]
+port = all
+enabled = false
+filter = xinetd-fail
+banaction = iptables-multiport-log
+maxretry = 2
+logpath = /var/log/daemon.log
+
+[ssh-ddos]
+port = ssh
+enabled = false
+filter = sshd-ddos
+maxretry = 6
+logpath = /var/log/auth.log
+
+[ssh-route]
+enabled = false
+filter = sshd
+action = route
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[ssh-iptables-ipset4]
+port = ssh
+enabled = false
+filter = sshd
+banaction = iptables-ipset-proto4
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[ssh-iptables-ipset6]
+port = ssh
+enabled = false
+filter = sshd
+banaction = iptables-ipset-proto6
+maxretry = 6
+logpath = /var/log/sshd.log
+
+[apache]
+port = http,https
+enabled = true
+filter = apache-auth
+banaction = ufw
+maxretry = 6
+app = WWW Full
+logpath = /var/log/apache*/*error.log
+
+[apache-multiport]
+port = http,https
+enabled = false
+filter = apache-auth
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-noscript]
+port = http,https
+enabled = false
+filter = apache-noscript
+maxretry = 6
+logpath = /var/log/apache*/*error.log
+
+[apache-overflows]
+port = http,https
+enabled = false
+filter = apache-overflows
+maxretry = 2
+logpath = /var/log/apache*/*error.log
+
+[apache-modsecurity]
+port = http,https
+enabled = false
+filter = apache-modsecurity
+maxretry = 2
+logpath = /var/log/apache*/*error.log
+
+[apache-nohome]
+port = http,https
+enabled = false
+filter = apache-nohome
+maxretry = 2
+logpath = /var/log/apache*/*error.log
+
+[php-url-fopen]
+port = http,https
+enabled = false
+filter = php-url-fopen
+logpath = /var/www/*/logs/access_log
+
+[lighttpd-fastcgi]
+port = http,https
+enabled = false
+filter = lighttpd-fastcgi
+logpath = /var/log/lighttpd/error.log
+
+[lighttpd-auth]
+port = http,https
+enabled = false
+filter = suhosin
+logpath = /var/log/lighttpd/error.log
+
+[nginx-http-auth]
+port = http,https
+enabled = false
+filter = nginx-http-auth
+logpath = /var/log/nginx/error.log
+
+[roundcube-auth]
+port = http,https
+enabled = false
+filter = roundcube-auth
+logpath = /var/log/roundcube/userlogins
+
+[sogo-auth]
+port = http, https
+enabled = false
+filter = sogo-auth
+logpath = /var/log/sogo/sogo.log
+
+[vsftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = vsftpd
+maxretry = 6
+logpath = /var/log/vsftpd.log
+
+[proftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = proftpd
+maxretry = 6
+logpath = /var/log/proftpd/proftpd.log
+
+[pure-ftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = pure-ftpd
+maxretry = 6
+logpath = /var/log/syslog
+
+[wuftpd]
+port = ftp,ftp-data,ftps,ftps-data
+enabled = false
+filter = wuftpd
+maxretry = 6
+logpath = /var/log/syslog
+
+[postfix]
+port = smtp,ssmtp,submission
+enabled = false
+filter = postfix
+logpath = /var/log/mail.log
+
+[couriersmtp]
+port = smtp,ssmtp,submission
+enabled = false
+filter = couriersmtp
+logpath = /var/log/mail.log
+
+[courierauth]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = courierlogin
+logpath = /var/log/mail.log
+
+[sasl]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = postfix-sasl
+logpath = /var/log/mail.log
+
+[dovecot]
+port = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+enabled = false
+filter = dovecot
+logpath = /var/log/mail.log
+
+[mysqld-auth]
+port = 3306
+enabled = false
+filter = mysqld-auth
+logpath = /var/log/mysqld.log
+
+[named-refused-tcp]
+port = domain,953
+enabled = false
+filter = named-refused
+protocol = tcp
+logpath = /var/log/named/security.log
+
+[freeswitch]
+enabled = false
+filter = freeswitch
+maxretry = 10
+action = iptables-multiport[name=freeswitch-tcp, port="5060,5061,5080,5081", protocol=tcp]iptables-multiport[name=freeswitch-udp, port="5060,5061,5080,5081", protocol=udp]
+logpath = /var/log/freeswitch.log
+
+[ejabberd-auth]
+port = xmpp-client
+enabled = false
+filter = ejabberd-auth
+protocol = tcp
+logpath = /var/log/ejabberd/ejabberd.log
+
+[asterisk-tcp]
+port = 5060,5061
+enabled = false
+filter = asterisk
+protocol = tcp
+logpath = /var/log/asterisk/messages
+
+[asterisk-udp]
+port = 5060,5061
+enabled = false
+filter = asterisk
+protocol = udp
+logpath = /var/log/asterisk/messages
+
+[recidive]
+bantime = 604800  ; 1 week
+enabled = false
+filter = recidive
+action = iptables-allports[name=recidive]sendmail-whois-lines[name=recidive, logpath=/var/log/fail2ban.log]
+maxretry = 5
+logpath = /var/log/fail2ban.log
+findtime = 86400   ; 1 day
+
+[ssh-blocklist]
+enabled = false
+filter = sshd
+action = iptables[name=SSH, port=ssh, protocol=tcp]sendmail-whois[name=SSH, dest="%(destemail)s", sender="%(sender)s", sendername="%(sendername)s"]blocklist_de[email="%(sender)s", apikey="xxxxxx", service="%(filter)s"]
+maxretry = 20
+logpath = /var/log/sshd.log
+
+[nagios]
+enabled = false
+filter = nagios
+action = iptables[name=Nagios, port=5666, protocol=tcp]sendmail-whois[name=Nagios, dest="%(destemail)s", sender="%(sender)s", sendername="%(sendername)s"]
+maxretry = 1
+logpath = /var/log/messages     ; nrpe.cfg may define a different log_facility
+

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import com.anrisoftware.sscontrol.types.app.external.AppException;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
@@ -27,8 +27,7 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceService;
 @SuppressWarnings("serial")
 public class NoTargetsForServiceException extends AppException {
 
-    public NoTargetsForServiceException(AssertionError e,
-            HostServiceService service, String target) {
+    public NoTargetsForServiceException(AssertionError e, HostServiceService service, String target) {
         super("No targets", e);
         addContextValue("target", target);
         addContextValue("service", service);

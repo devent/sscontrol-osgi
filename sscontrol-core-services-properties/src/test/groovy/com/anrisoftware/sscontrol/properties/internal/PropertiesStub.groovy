@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,8 @@ class PropertiesStub implements HostService {
 
     HostServiceProperties serviceProperties
 
+    List targets = []
+
     @Inject
     PropertiesStub(HostServicePropertiesService propertiesService, @Assisted Map<String, Object> args) {
         this.serviceProperties = propertiesService.create()
@@ -85,6 +87,7 @@ class PropertiesStub implements HostService {
 
     @Override
     List<TargetHost> getTargets() {
+        targets
     }
 
     @Override

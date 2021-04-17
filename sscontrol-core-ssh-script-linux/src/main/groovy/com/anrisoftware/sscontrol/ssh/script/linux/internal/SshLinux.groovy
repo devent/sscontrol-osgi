@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package com.anrisoftware.sscontrol.ssh.script.linux.internal
-
-import static com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Service.*
 
 import javax.inject.Inject
 
@@ -33,6 +31,10 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class SshLinux extends ScriptBase {
+
+    static final String SYSTEM_VERSION = "0";
+
+    static final String SYSTEM_NAME = "linux";
 
     @Inject
     SshLinuxProperties sshProperties

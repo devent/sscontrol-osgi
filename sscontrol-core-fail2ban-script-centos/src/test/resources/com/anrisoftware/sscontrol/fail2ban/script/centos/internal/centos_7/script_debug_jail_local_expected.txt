@@ -1,0 +1,6 @@
+[DEFAULT]
+bantime = 36000
+destemail = root@localhost
+backend = auto
+maxretry = 3
+

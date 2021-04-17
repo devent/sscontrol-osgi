@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+    Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@
 
     <modules>
         <module>sscontrol-core-collectd-script-centos</module>
-        <module>sscontrol-core-collectd-script-collectd-5-7</module>
+        <module>sscontrol-core-collectd-script-collectd-5-x</module>
         <module>sscontrol-core-collectd-script-debian</module>
         <module>sscontrol-core-collectd-service</module>
         <module>sscontrol-core-command-copy</module>
@@ -83,7 +83,8 @@
         <module>sscontrol-core-etcd-script-debian</module>
         <module>sscontrol-core-etcd-script-upstream</module>
         <module>sscontrol-core-etcd-service</module>
-        <module>sscontrol-core-fail2ban-script-0-9</module>
+        <module>sscontrol-core-fail2ban-script-0-x</module>
+        <module>sscontrol-core-fail2ban-script-centos</module>
         <module>sscontrol-core-fail2ban-script-debian</module>
         <module>sscontrol-core-fail2ban-service</module>
         <module>sscontrol-core-groovy-parser</module>
@@ -113,19 +114,16 @@
         <module>sscontrol-core-k8s-node-service</module>
         <module>sscontrol-core-k8s-restore-script-linux</module>
         <module>sscontrol-core-k8s-restore-service</module>
-        <module>sscontrol-core-muellerpublicde</module>
         <module>sscontrol-core-nfs-script-centos</module>
         <module>sscontrol-core-nfs-script-debian</module>
         <module>sscontrol-core-nfs-script-nfs-1-3</module>
         <module>sscontrol-core-nfs-service</module>
-        <module>sscontrol-core-parent</module>
         <module>sscontrol-core-registry-docker-script-linux</module>
         <module>sscontrol-core-registry-docker-service</module>
         <module>sscontrol-core-repo-git-script-debian</module>
         <module>sscontrol-core-repo-git-service</module>
         <module>sscontrol-core-script-runner</module>
         <module>sscontrol-core-script-runner-test</module>
-        <module>sscontrol-core-scr-parent</module>
         <module>sscontrol-core-services-properties</module>
         <module>sscontrol-core-services-repository</module>
         <module>sscontrol-core-shell-linux</module>
@@ -147,6 +145,7 @@
         <module>sscontrol-core-types-ssh</module>
         <module>sscontrol-core-utils-centos</module>
         <module>sscontrol-core-utils-debian</module>
+        <module>sscontrol-core-utils-iniconfig</module>
         <module>sscontrol-core-utils-st-base64renderer</module>
         <module>sscontrol-core-utils-st-durationrenderer</module>
         <module>sscontrol-core-utils-st-miscrenderers</module>
@@ -243,6 +242,11 @@
                 <artifactId>resources-st</artifactId>
                 <version>${project.custom.resources.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.resources</groupId>
+                <artifactId>resources-texts</artifactId>
+                <version>${project.custom.resources.version}</version>
+            </dependency>
 
             <!-- globalpomutils -->
             <dependency>
@@ -273,52 +277,6 @@
                 <version>${project.custom.propertiesutils.version}</version>
             </dependency>
 
-            <!-- other -->
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-migrationsupport</artifactId>
-                <version>5.3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-                <version>1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-all</artifactId>
-                <version>1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-ssh</artifactId>
-                <version>1.5.2</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fabric8</groupId>
-                <artifactId>kubernetes-server-mock</artifactId>
-                <version>2.6.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>2.8.8</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fabric8</groupId>
-                <artifactId>kubernetes-api</artifactId>
-                <version>2.3.4</version>
-            </dependency>
-            <dependency>
-                <groupId>io.fabric8</groupId>
-                <artifactId>kubernetes-client</artifactId>
-                <version>2.6.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.lingala.zip4j</groupId>
-                <artifactId>zip4j</artifactId>
-                <version>1.3.2</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -349,6 +307,41 @@
                         <configuration>
                             <propertyName>failsafeArgLine</propertyName>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <licenseSets>
+                        <licenseSet>
+                            <excludes>
+                                <exclude>header.txt</exclude>
+                                <exclude>**/header.txt</exclude>
+                                <exclude>**/README</exclude>
+                                <exclude>**/README.textile</exclude>
+                                <exclude>**/README.md</exclude>
+                                <exclude>**/LICENSE.txt</exclude>
+                                <exclude>LICENSE-2.0.txt</exclude>
+                                <exclude>**/LICENSE-2.0.txt</exclude>
+                                <exclude>src/test/resources/**</exclude>
+                                <exclude>src/main/resources/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
+                    <header>${license.custom.license.template}</header>
+                    <properties>
+                        <owner>${license.custom.license.owner}</owner>
+                        <email>${license.custom.license.email}</email>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

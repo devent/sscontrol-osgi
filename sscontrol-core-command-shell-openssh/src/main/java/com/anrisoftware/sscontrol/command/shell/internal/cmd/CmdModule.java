@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * 
+ *
  *
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
@@ -33,15 +33,10 @@ public class CmdModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(CmdArgs.class, CmdArgsImpl.class)
-                .build(CmdArgsFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(SshOptions.class, SshOptions.class)
+        install(new FactoryModuleBuilder().implement(CmdArgs.class, CmdArgsImpl.class).build(CmdArgsFactory.class));
+        install(new FactoryModuleBuilder().implement(SshOptions.class, SshOptions.class)
                 .build(SshOptionsFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(SshArgs.class, SshArgsImpl.class)
-                .build(SshArgsFactory.class));
+        install(new FactoryModuleBuilder().implement(SshArgs.class, SshArgsImpl.class).build(SshArgsFactory.class));
     }
 
 }

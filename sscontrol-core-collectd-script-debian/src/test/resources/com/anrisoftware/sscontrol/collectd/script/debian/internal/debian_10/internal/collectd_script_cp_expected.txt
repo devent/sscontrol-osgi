@@ -1,0 +1,4 @@
+/tmp/junit/junit/etc/collectd/collectd.conf /var/lib/robobee/tmp
+/var/lib/robobee/tmp/replace.dest /tmp/junit/junit/etc/collectd/collectd.conf
+/var/lib/robobee/tmp/robobee-write-graphite /tmp/junit/junit/etc/collectd/collectd.conf.d/99-write-graphite.conf
+/var/lib/robobee/tmp/robobee-write-influxdb /tmp/junit/junit/etc/collectd/collectd.conf.d/99-write-influxdb.conf

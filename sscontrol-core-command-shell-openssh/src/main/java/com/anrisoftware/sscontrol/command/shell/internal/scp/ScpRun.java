@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,7 @@ public class ScpRun extends AbstractSshRun {
      */
     public interface ScpRunFactory {
 
-        ScpRun create(@Assisted Map<String, Object> args,
-                @Assisted Object parent, @Assisted Threads threads);
+        ScpRun create(@Assisted Map<String, Object> args, @Assisted Object parent, @Assisted Threads threads);
 
     }
 
@@ -65,8 +64,7 @@ public class ScpRun extends AbstractSshRun {
     private Map<String, Object> scpArgs;
 
     @Inject
-    ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,
-            @Assisted Threads threads) {
+    ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent, @Assisted Threads threads) {
         super(args, parent, threads);
     }
 
@@ -91,8 +89,7 @@ public class ScpRun extends AbstractSshRun {
     }
 
     @Override
-    protected ProcessTask runCommand(TemplateResource res,
-            Map<String, Object> args) throws CommandExecException {
+    protected ProcessTask runCommand(TemplateResource res, Map<String, Object> args) throws CommandExecException {
         this.scpArgs = new HashMap<>(this.args);
         setupDefaults(scpArgs);
         ProcessTask task = null;
@@ -110,12 +107,10 @@ public class ScpRun extends AbstractSshRun {
     private ProcessTask run(TemplateResource res) throws CommandExecException {
         ProcessTask task = null;
         if (isRemoteSrc(scpArgs)) {
-            return fetch.create(scpArgs, parent, threads, templates.get(), res)
-                    .call();
+            return fetch.create(scpArgs, parent, threads, templates.get(), res).call();
         }
         if (isRemoteDest(scpArgs)) {
-            return push.create(scpArgs, parent, threads, templates.get(), res)
-                    .call();
+            return push.create(scpArgs, parent, threads, templates.get(), res).call();
         }
         return task;
     }

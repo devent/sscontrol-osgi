@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+    Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-core-fail2ban-script-0-9</artifactId>
+            <artifactId>sscontrol-core-fail2ban-script-0-x</artifactId>
             <version>0.14.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -133,6 +133,14 @@
         <dependency>
             <groupId>com.anrisoftware.resources</groupId>
             <artifactId>resources-templates</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-texts</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
         </dependency>
     </dependencies>
 

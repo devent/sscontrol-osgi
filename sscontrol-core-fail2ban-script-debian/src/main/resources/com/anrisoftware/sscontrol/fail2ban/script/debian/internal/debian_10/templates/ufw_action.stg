@@ -1,0 +1,51 @@
+delimiters "%", "%"
+
+ufwAction(parent, vars) ::= <<
+# Fail2Ban action configuration file for ufw
+#
+# You are required to run "ufw enable" before this will have an effect.
+#
+# The insert position should be approprate to block the required traffic.
+# A number after an allow rule to the application won't be much use.
+
+[Definition]
+
+actionstart = 
+
+actionstop = 
+
+actioncheck = 
+
+actionban = if [ -n "<port>" ]; then to="port <port>"; elif [ -n "<application>" ]; then to="app <application>"; fi && ufw insert <insertpos> <blocktype> from <ip> to <destination> $to
+
+actionunban = if [ -n "<port>" ]; then to="port <port>"; elif [ -n "<application>" ]; then to="app <application>"; fi && ufw delete <blocktype> from <ip> to <destination> $to
+
+[Init]
+# Option: insertpos
+# Notes.:  The postition number in the firewall list to insert the block rule
+insertpos = 1
+
+# Option: blocktype
+# Notes.: reject or deny
+blocktype = reject
+
+# Option: destination
+# Notes.: The destination address to block in the ufw rule
+destination = any
+
+# Option: application
+# Notes.: application from sudo ufw app list
+application = 
+
+# Option: port
+# Notes.: numerical port
+port = 
+
+# DEV NOTES:
+#
+# Author: Guilhem Lettron
+# Enhancements: Daniel Black
+# Fix actionban and actionunban: Erwin Müller, erwin.mueller@deventm.de
+# Add port: Erwin Müller, erwin.mueller@deventm.de
+
+>>

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -194,7 +194,7 @@ abstract class AbstractScriptTestBase {
 
     abstract String getScriptServiceName()
 
-    abstract void createDummyCommands(java.io.File dir)
+    abstract void createDummyCommands(File dir)
 
     abstract HostServices putServices(HostServices services)
 

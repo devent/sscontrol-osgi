@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import com.anrisoftware.resources.st.external.StAttributeRenderer;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class NumberTrueRenderer implements StAttributeRenderer {
+public class NumberTrueRenderer implements StAttributeRenderer<Integer> {
 
 	@Override
-	public String toString(Object o, String formatString, Locale locale) {
+	public String toString(Integer o, String formatString, Locale locale) {
 		if (formatString == null) {
 			return o.toString();
 		}
@@ -52,7 +52,7 @@ public class NumberTrueRenderer implements StAttributeRenderer {
 	}
 
 	@Override
-	public Class<?> getAttributeType() {
+	public Class<Integer> getAttributeType() {
 		return Integer.class;
 	}
 

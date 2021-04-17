@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.host.external.HostServiceService
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.google.inject.assistedinject.Assisted
 
@@ -86,7 +87,7 @@ class HostnameStub implements HostService {
     }
 
     @Override
-    List<SshHost> getTargets() {
+    List<TargetHost> getTargets() {
         targets
     }
 

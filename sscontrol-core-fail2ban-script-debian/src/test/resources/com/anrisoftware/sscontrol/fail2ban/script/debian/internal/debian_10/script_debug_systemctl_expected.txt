@@ -1,0 +1,5 @@
+list-units
+stop fail2ban
+enable fail2ban
+start fail2ban
+status fail2ban

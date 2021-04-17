@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,10 +91,8 @@ public class BanningImpl implements Banning {
         this.time = (Duration) args.get(TIME_ARG);
         this.backend = (Backend) args.get(BACKEND_ARG);
         this.type = (Type) args.get(TYPE_ARG);
-        this.app = args.get(APP_ARG) == null ? null
-                : args.get(APP_ARG).toString();
-        this.action = args.get(ACTION_ARG) == null ? null
-                : args.get(ACTION_ARG).toString();
+        this.app = args.get(APP_ARG) == null ? null : args.get(APP_ARG).toString();
+        this.action = args.get(ACTION_ARG) == null ? null : args.get(ACTION_ARG).toString();
     }
 
     public void banning(Map<String, Object> args) throws ParseException {
@@ -162,10 +160,9 @@ public class BanningImpl implements Banning {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(RETRIES_ARG, retries)
-                .append(TIME_ARG, time).append(BACKEND_ARG, backend)
-                .append(TYPE_ARG, type).append(APP_ARG, app)
-                .append(ACTION_ARG, action).toString();
+        return new ToStringBuilder(this).append(RETRIES_ARG, retries).append(TIME_ARG, time)
+                .append(BACKEND_ARG, backend).append(TYPE_ARG, type).append(APP_ARG, app).append(ACTION_ARG, action)
+                .toString();
     }
 
 }

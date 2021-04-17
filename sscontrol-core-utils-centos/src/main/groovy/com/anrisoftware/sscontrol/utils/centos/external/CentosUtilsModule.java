@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,7 @@ public class CentosUtilsModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(CentosUtils.class, Centos_7_Utils.class)
+        install(new FactoryModuleBuilder().implement(CentosUtils.class, Centos_7_Utils.class)
                 .build(Centos_7_UtilsFactory.class));
     }
 

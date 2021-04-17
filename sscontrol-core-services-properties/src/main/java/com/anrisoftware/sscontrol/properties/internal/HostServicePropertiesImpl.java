@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,8 +130,15 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport implements Ho
     }
 
     @Override
-    public String getProperty(String name) {
-        return properties.getProperty(name);
+    public Object getProperty(String name) {
+        Object p = null;
+        if (getMetaClass().hasProperty(this, name) != null) {
+            p = super.getProperty(name);
+        }
+        if (p == null) {
+            p = properties.getProperty(name);
+        }
+        return p;
     }
 
     public String getProperty(String name, ContextProperties defaults) {
@@ -265,11 +272,11 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport implements Ho
      * the default value from the default properties. The path is assumed to be
      * under the specified parent directory.
      *
-     * @param key    the key of the profile property.
+     * @param key      the key of the profile property.
      *
-     * @param parent the parent {@link File} directory.
+     * @param parent   the parent {@link File} directory.
      *
-     * @param p      default {@link ContextProperties} properties.
+     * @param defaults default {@link ContextProperties} properties.
      *
      * @return the profile file {@link File} path or {@code null}.
      */
@@ -355,7 +362,7 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport implements Ho
     }
 
     public Map<String, Object> getMapProperty(String key, ContextProperties defaults) {
-        String v = null;
+        String v;
         if (properties.containsKey(key)) {
             v = properties.getProperty(key);
         } else {

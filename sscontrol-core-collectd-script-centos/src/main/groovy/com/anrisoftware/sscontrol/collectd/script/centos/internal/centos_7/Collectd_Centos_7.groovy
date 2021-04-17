@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class Collectd_Centos_7 extends Collectd_Centos {
     SystemdUtils systemd
 
     @Inject
-    void setCollectd_5_7_Centos_7_Factory(Collectd_5_7_Centos_7_Factory factory) {
+    void setCollectd_5_7_Centos_7_Factory(Collectd_5_8_Centos_7_Factory factory) {
 	this.collectd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 

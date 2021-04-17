@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assumptions.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
-import com.jcabi.ssh.SSH
+import com.jcabi.ssh.Ssh
 import com.jcabi.ssh.Shell
 
 
@@ -132,7 +132,7 @@ class UnixTestUtil {
 
     static def execRemoteFile(String script, InputStream fileStream, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Safe(
-                new SSH(host, port, user, key))
+                new Ssh(host, port, user, key))
                 .exec(script,
                 fileStream,
                 SysStreamsLogger.outputStream,
@@ -156,7 +156,7 @@ class UnixTestUtil {
 
     static String remoteCommand(String cmd, String host='robobee-test', int port=22, String user='robobee', URL key=robobeeKey) {
         new Shell.Plain(
-                new SSH(host, port, user, key))
+                new Ssh(host, port, user, key))
                 .exec(cmd)
     }
 

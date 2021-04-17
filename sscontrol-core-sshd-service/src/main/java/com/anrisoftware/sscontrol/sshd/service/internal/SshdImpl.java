@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.sshd.service.internal;
 
-import static com.anrisoftware.sscontrol.sshd.service.internal.SshdServiceImpl.SSHD_NAME;
 import static com.anrisoftware.sscontrol.types.misc.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
@@ -28,7 +27,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.sshd.service.external.Binding;
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd;
 import com.anrisoftware.sscontrol.sshd.service.external.SshdService;
@@ -59,6 +58,8 @@ public class SshdImpl implements Sshd {
 
     }
 
+    public static final String SSHD_NAME = "sshd";
+
     private final SshdImplLogger log;
 
     private final HostServiceProperties serviceProperties;
@@ -87,7 +88,7 @@ public class SshdImpl implements Sshd {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 

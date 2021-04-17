@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ public interface Copy {
     static final String KEY_ARG = "key";
 
     static final String DIRECT_ARG = "direct";
+
+    static final String CHDIR_ARG = "chdir";
 
     static final String PRIVILEGED_ARG = "privileged";
 

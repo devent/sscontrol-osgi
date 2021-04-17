@@ -1,0 +1,13 @@
+[DEFAULT]
+app = 
+bantime = 60
+banaction = ufw
+destemail = root@localhost
+action = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s", application="%(app)s"]
+backend = auto
+maxretry = 3
+
+[sshd]
+app = SSH
+enabled = true
+

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,9 +58,8 @@ public class ScpCopyWorker implements Copy {
      */
     public interface ScpCopyWorkerFactory {
 
-        ScpCopyWorker create(@Assisted Map<String, Object> args,
-                @Assisted SshHost host, @Assisted("parent") Object parent,
-                @Assisted Threads threads, @Assisted("log") Object log);
+        ScpCopyWorker create(@Assisted Map<String, Object> args, @Assisted SshHost host,
+                @Assisted("parent") Object parent, @Assisted Threads threads, @Assisted("log") Object log);
 
     }
 
@@ -78,9 +77,8 @@ public class ScpCopyWorker implements Copy {
     private ScpRunFactory scpRunFactory;
 
     @Inject
-    ScpCopyWorker(@Assisted Map<String, Object> args, @Assisted SshHost host,
-            @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log) {
+    ScpCopyWorker(@Assisted Map<String, Object> args, @Assisted SshHost host, @Assisted("parent") Object parent,
+            @Assisted Threads threads, @Assisted("log") Object log) {
         this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;

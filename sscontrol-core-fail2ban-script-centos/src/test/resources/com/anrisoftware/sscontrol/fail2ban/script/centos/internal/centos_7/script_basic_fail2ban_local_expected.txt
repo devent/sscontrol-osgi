@@ -1,0 +1,4 @@
+[DEFAULT]
+logtarget = SYSLOG
+loglevel = ERROR
+

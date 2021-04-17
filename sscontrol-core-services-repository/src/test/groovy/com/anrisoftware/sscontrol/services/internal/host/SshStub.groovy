@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.StringUtils
 
-import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
 import com.anrisoftware.sscontrol.types.host.external.HostService
 import com.anrisoftware.sscontrol.types.host.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.host.external.TargetHost
+import com.anrisoftware.sscontrol.types.misc.external.DebugLogging
 import com.anrisoftware.sscontrol.types.ssh.external.Ssh
 import com.anrisoftware.sscontrol.types.ssh.external.SshHost
 import com.anrisoftware.sscontrol.types.ssh.external.TargetServiceService
@@ -79,7 +80,7 @@ class SshStub implements Ssh {
 
     @Inject
     SshStub(@Assisted Map<String, Object> args) {
-        this.targets = args.targets
+        this.targets = args.targets ? args.targets : []
         this.hosts = []
     }
 
@@ -117,7 +118,7 @@ class SshStub implements Ssh {
     }
 
     @Override
-    List<SshHost> getTargets() {
+    List<TargetHost> getTargets() {
         targets
     }
 

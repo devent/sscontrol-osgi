@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,26 @@
  */
 package com.anrisoftware.sscontrol.debug.internal;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory;
 import com.anrisoftware.sscontrol.debug.internal.DebugModuleImpl.DebugModuleImplFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public class DebugLoggingModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(DebugLoggingImpl.class,
-                DebugLoggingImpl.class).build(DebugLoggingImplFactory.class));
-        install(new FactoryModuleBuilder().implement(DebugModuleImpl.class,
-                DebugModuleImpl.class).build(DebugModuleImplFactory.class));
-        bind(DebugService.class).to(DebugServiceImpl.class);
-    }
+	@Override
+	protected void configure() {
+		install(new FactoryModuleBuilder().implement(DebugLoggingImpl.class, DebugLoggingImpl.class)
+				.build(DebugLoggingImplFactory.class));
+		install(new FactoryModuleBuilder().implement(DebugModuleImpl.class, DebugModuleImpl.class)
+				.build(DebugModuleImplFactory.class));
+        bind(DebugLoggingService.class).to(DebugLoggingServiceImpl.class);
+	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 Erwin Müller (erwin.mueller@anrisoftware.com)
+ * Copyright © 2020 Erwin Müller (erwin.mueller@anrisoftware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -35,8 +35,8 @@ abstract class Collectd_Debian extends ScriptBase {
     DebianUtils debian
 
     @Inject
-    void setDebianFactory(Debian_9_UtilsFactory factory) {
-	this.debian = factory.create(this)
+    void setDebianFactory(Debian_10_UtilsFactory factory) {
+        this.debian = factory.create(this)
     }
 
     @Override
@@ -44,12 +44,12 @@ abstract class Collectd_Debian extends ScriptBase {
     }
 
     void installPackages() {
-	log.info "Installing packages {}.", packages
-	debian.installPackages()
+        log.info "Installing packages {}.", packages
+        debian.installPackages()
     }
 
     @Override
     def getLog() {
-	log
+        log
     }
 }
