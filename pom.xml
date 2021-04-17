@@ -242,6 +242,11 @@
                 <artifactId>resources-st</artifactId>
                 <version>${project.custom.resources.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.resources</groupId>
+                <artifactId>resources-texts</artifactId>
+                <version>${project.custom.resources.version}</version>
+            </dependency>
 
             <!-- globalpomutils -->
             <dependency>

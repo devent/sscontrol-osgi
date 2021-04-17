@@ -57,8 +57,7 @@ public abstract class AbstractCmdRun {
     @Inject
     private AbstractCmdRunLogger log;
 
-    protected AbstractCmdRun(Map<String, Object> args, Object parent,
-            Threads threads) {
+    protected AbstractCmdRun(Map<String, Object> args, Object parent, Threads threads) {
         this.argsMap = new HashMap<String, Object>(args);
         this.parent = parent;
         this.threads = threads;
@@ -101,8 +100,7 @@ public abstract class AbstractCmdRun {
         return getBaseName(shell);
     }
 
-    protected ProcessTask runCommand(TemplateResource res,
-            Map<String, Object> args) throws CommandExecException {
+    protected ProcessTask runCommand(TemplateResource res, Map<String, Object> args) throws CommandExecException {
         ProcessTask task;
         task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
         log.commandFinished(parent, task, args);

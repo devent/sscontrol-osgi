@@ -99,7 +99,7 @@ fi
         p.logtarget = "${debugTarget}"
         withLocalTempFile "fail2ban.local", { tmp ->
             fetch src: fail2banLocalConfigFile, dest: tmp call()
-            def s = initSection.setupConfig tmp, "DEFAULT", p
+            def s = initSection.setupConfig tmp, sectionNameDefault, p
             write tmp, s.toString(), charset
             copy privileged: true, src: tmp, dest: fail2banLocalConfigFile call()
         }
@@ -170,6 +170,10 @@ fi
 
     Map getLogLevelMap() {
         Eval.me defaultProperties.getProperty('log_level_map')
+    }
+
+    String getSectionNameDefault() {
+        properties.getProperty "section_name_default", defaultProperties
     }
 
     @Override

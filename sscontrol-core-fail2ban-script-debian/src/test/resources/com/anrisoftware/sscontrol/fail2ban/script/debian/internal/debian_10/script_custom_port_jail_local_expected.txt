@@ -9,7 +9,6 @@ maxretry = 3
 
 [apache]
 app = WWW Full
-banaction = ufw
 port = 22222
 enabled = true
 

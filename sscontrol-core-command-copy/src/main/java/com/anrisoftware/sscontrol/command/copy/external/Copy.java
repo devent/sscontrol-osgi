@@ -49,6 +49,8 @@ public interface Copy {
 
     static final String DIRECT_ARG = "direct";
 
+    static final String CHDIR_ARG = "chdir";
+
     static final String PRIVILEGED_ARG = "privileged";
 
     static final String SIG_REMOTE_ARGS = "sigRemote";

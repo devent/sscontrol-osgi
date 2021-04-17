@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_10;
+package com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_11.external
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_x.external.Ufw_Jail_0_x
+
+import groovy.util.logging.Slf4j
 
 /**
- * Ufw properties provider from
- * {@code "/ufw_fail2ban_debian_10.properties"}.
+ * Configures the <i>Ufw</i> service for <i>Fail2ban 0.11</i>.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Ufw_Fail2ban_Debian_10_Properties extends AbstractContextPropertiesProvider {
+@Slf4j
+abstract class Ufw_Jail_0_11 extends Ufw_Jail_0_x {
 
-    private static final URL RESOURCE = Ufw_Fail2ban_Debian_10_Properties.class.getResource("/ufw_fail2ban_debian_10.properties");
-
-    Ufw_Fail2ban_Debian_10_Properties() {
-        super(Ufw_Fail2ban_Debian_10_Properties.class, RESOURCE);
+    @Override
+    def getLog() {
+        log
     }
 }

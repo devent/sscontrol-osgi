@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian
+package com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_10.external
 
-import static org.joda.time.Duration.*
-
-import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_10.external.Ufw_Fail2ban_0_10
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
+import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_x.external.Ufw_Jail_0_x
 
 import groovy.util.logging.Slf4j
 
 /**
+ * Configures the <i>Ufw</i> service for <i>Fail2ban 0.10</i>.
  *
- *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
 @Slf4j
-abstract class Ufw_Fail2ban_0_10_Debian extends Ufw_Fail2ban_0_10 {
-
-    abstract DebianUtils getDebian()
-
-    def installPackages() {
-        debian.installPackages()
-    }
+abstract class Ufw_Jail_0_10 extends Ufw_Jail_0_x {
 
     @Override
     def getLog() {

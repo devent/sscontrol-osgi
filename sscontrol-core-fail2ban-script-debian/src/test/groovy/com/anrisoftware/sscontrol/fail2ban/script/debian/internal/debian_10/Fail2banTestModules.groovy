@@ -20,6 +20,9 @@ import com.anrisoftware.globalpom.core.resources.ResourcesModule
 import com.anrisoftware.globalpom.core.strings.StringsModule
 import com.anrisoftware.globalpom.core.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.initfileparser.internal.InitFileParserModule
+import com.anrisoftware.resources.binary.internal.binaries.BinariesResourcesModule
+import com.anrisoftware.resources.binary.internal.maps.BinariesDefaultMapsModule
+import com.anrisoftware.resources.texts.internal.texts.TextsResourcesDefaultModule
 import com.anrisoftware.sscontrol.command.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.command.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.command.shell.internal.facts.FactsModule
@@ -33,7 +36,6 @@ import com.anrisoftware.sscontrol.command.shell.internal.st.StModule
 import com.anrisoftware.sscontrol.command.shell.internal.template.TemplateModule
 import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateResModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_10.Fail2ban_Debian_10_Module
 import com.anrisoftware.sscontrol.fail2ban.service.internal.Fail2banModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
@@ -78,6 +80,9 @@ class Fail2banTestModules {
             new TemplateModule(),
             new TemplateResModule(),
             new StModule(),
+            new TextsResourcesDefaultModule(),
+            new BinariesResourcesModule(),
+            new BinariesDefaultMapsModule(),
             new TokensTemplateModule(),
             new ResourcesModule(),
             new TlsModule(),

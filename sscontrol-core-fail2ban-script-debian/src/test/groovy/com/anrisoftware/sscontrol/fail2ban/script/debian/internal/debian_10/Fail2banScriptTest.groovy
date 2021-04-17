@@ -15,11 +15,9 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_10
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
@@ -51,22 +49,16 @@ service "fail2ban"
 ''',
             scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
-            before: { Map test ->
-                def configDir = new File(test.dir, 'etc/fail2ban')
-                configDir.mkdirs()
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
-            },
             expectedServicesSize: 2,
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource Fail2banScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource Fail2banScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
-                //assertFileResource Fail2banScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                assertFileResource Fail2banScriptTest, dir, "etc/fail2ban/fail2ban.local", "${args.test.name}_fail2ban_local_expected.txt"
                 assertFileResource Fail2banScriptTest, dir, "etc/fail2ban/jail.local", "${args.test.name}_jail_local_expected.txt"
+                assertFileResource Fail2banScriptTest, gen, "etc/fail2ban/action.d/ufw.conf", "${args.test.name}_ufw_conf_expected.txt"
+                assertFileResource Fail2banScriptTest, dir, "etc/fail2ban/filter.d/sshd.conf", "${args.test.name}_sshd_conf_expected.txt"
             }
         ]
         doTest test
@@ -84,14 +76,6 @@ service "fail2ban" with {
 ''',
             scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
-            before: { Map test ->
-                def configDir = new File(test.dir, 'etc/fail2ban')
-                configDir.mkdirs()
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
-            },
             expectedServicesSize: 2,
             expected: { Map args ->
                 File dir = args.dir
@@ -118,14 +102,6 @@ service "fail2ban" with {
 ''',
             scriptVars: [localhostSocket: localhostSocket],
             generatedDir: folder.newFolder(),
-            before: { Map test ->
-                def configDir = new File(test.dir, 'etc/fail2ban')
-                configDir.mkdirs()
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
-                IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
-                IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
-            },
             expectedServicesSize: 2,
             expected: { Map args ->
                 File dir = args.dir

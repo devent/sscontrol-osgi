@@ -69,11 +69,14 @@ abstract class Jail_0_x extends ScriptBase {
         }
     }
 
+    /**
+     * Setups the default jail.
+     */
     def setupDefaultJail(Jail jail) {
-        if (properties.haveProperty("action")) {
-            def action = properties.getProperty "action", defaultProperties
-            jail.banning app: " ", action: action
-        }
+        def banaction = properties.getProperty "banAction", defaultProperties
+        jail.banAction(banaction)
+        def action = properties.getProperty "action", defaultProperties
+        jail.banning app: " ", action: action
     }
 
     def configureJail(Jail jail, File jailLocalConfigFile) {
@@ -87,7 +90,7 @@ abstract class Jail_0_x extends ScriptBase {
     }
 
     /**
-     * Setup defaults for the jail.
+     * Setups the jail.
      */
     def setupDefaults(Jail jail) {
     }
@@ -233,6 +236,13 @@ abstract class Jail_0_x extends ScriptBase {
      */
     File getJailLocalConfigFile() {
         properties.getFileProperty "jail_local_config_file", configDir, defaultProperties
+    }
+
+    /**
+     * Returns the default action.
+     */
+    String getAction() {
+        properties.getProperty "action", defaultProperties
     }
 
     @Override

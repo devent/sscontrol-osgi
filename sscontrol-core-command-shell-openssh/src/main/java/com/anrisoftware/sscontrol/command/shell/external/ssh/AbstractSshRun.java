@@ -47,8 +47,7 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
     @Inject
     private SshMasterFactory sshMasterFactory;
 
-    protected AbstractSshRun(Map<String, Object> args, Object parent,
-            Threads threads) {
+    protected AbstractSshRun(Map<String, Object> args, Object parent, Threads threads) {
         super(args, parent, threads);
     }
 

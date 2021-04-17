@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_10
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian.Fail2ban_10_Debian
-import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_10.external.Ufw_Fail2ban_0_10
+import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_10.external.Ufw_Jail_0_10
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 
@@ -37,7 +37,7 @@ class Fail2ban_Debian_10 extends Fail2ban_10_Debian {
     Fail2ban_Debian_10_Properties debianPropertiesProvider
 
     @Inject
-    Ufw_Fail2ban_Debian_10_Factory ufwDebian
+    Ufw_Jail_Debian_10_Factory jail
 
     DebianUtils debian
 
@@ -52,14 +52,13 @@ class Fail2ban_Debian_10 extends Fail2ban_10_Debian {
         stopService()
         installPackages()
         configureService()
-        firewallScript.run()
+        jailScript.run()
         enableService()
         startService()
     }
 
-    @Override
-    Ufw_Fail2ban_0_10 getUfwScript() {
-        ufwDebian.create scriptsRepository, service, target, threads, scriptEnv
+    Ufw_Jail_0_10 getUfwJailScript() {
+        jail.create scriptsRepository, service, target, threads, scriptEnv
     }
 
     @Override

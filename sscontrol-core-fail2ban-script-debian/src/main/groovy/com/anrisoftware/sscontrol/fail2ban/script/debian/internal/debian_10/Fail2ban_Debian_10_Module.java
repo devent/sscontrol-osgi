@@ -31,8 +31,8 @@ public class Fail2ban_Debian_10_Module extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(HostServiceScript.class, Fail2ban_Debian_10.class)
                 .build(Fail2ban_Debian_10_Factory.class));
-        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Ufw_Fail2ban_Debian_10.class)
-                .build(Ufw_Fail2ban_Debian_10_Factory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Ufw_Jail_Debian_10.class)
+                .build(Ufw_Jail_Debian_10_Factory.class));
     }
 
 }

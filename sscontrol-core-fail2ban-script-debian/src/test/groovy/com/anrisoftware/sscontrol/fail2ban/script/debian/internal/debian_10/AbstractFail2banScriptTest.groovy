@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.fail2ban.script.debian.internal.debian_10
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUtils.*
 
@@ -37,13 +36,12 @@ abstract class AbstractFail2banScriptTest extends AbstractFail2banRunnerTest {
         def configDir = new File(dir, 'etc/fail2ban')
         configDir.mkdirs()
         IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.conf"))
-        IOUtils.copy jail2banConf.openStream(), new FileOutputStream(new File(configDir, "fail2ban.local"))
         IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.conf"))
-        IOUtils.copy jailLocal.openStream(), new FileOutputStream(new File(configDir, "jail.local"))
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createIdCommand dir
         createEchoCommands dir, [
+            'touch',
             'mkdir',
             'chown',
             'chmod',
