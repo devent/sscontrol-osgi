@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.external
+package com.anrisoftware.sscontrol.sshd.script.openssh.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.sshd.script.openssh.external.OpensshSystemd
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
@@ -34,12 +32,6 @@ import groovy.util.logging.Slf4j
 abstract class SshdSystemd extends OpensshSystemd {
 
     SystemdUtils systemd
-
-    abstract DebianUtils getDebian()
-
-    void installPackages() {
-        debian.installPackages()
-    }
 
     @Inject
     void setSystemdUtilsFactory(SystemdUtilsFactory factory) {

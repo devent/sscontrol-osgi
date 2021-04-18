@@ -48,6 +48,11 @@
             <artifactId>sscontrol-core-sshd-service</artifactId>
             <version>0.14.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-core-utils-systemd</artifactId>
+            <version>0.14.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- compile dependencies -->
         <dependency>

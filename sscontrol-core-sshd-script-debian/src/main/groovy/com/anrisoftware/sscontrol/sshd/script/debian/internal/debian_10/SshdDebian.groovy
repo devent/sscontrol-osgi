@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.sshd.script.debian.external.SshdSystemd
+import com.anrisoftware.sscontrol.sshd.script.openssh.external.SshdSystemd
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
 import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
@@ -26,7 +26,7 @@ import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> 6 service for Debian 9.
+ * Configures the <i>Sshd</i> service for Debian 10.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -64,6 +64,10 @@ class SshdDebian extends SshdSystemd {
         if (!service.binding.port) {
             service.bind port: defaultPort
         }
+    }
+
+    void installPackages() {
+        debian.installPackages()
     }
 
     def getDefaultPort() {
