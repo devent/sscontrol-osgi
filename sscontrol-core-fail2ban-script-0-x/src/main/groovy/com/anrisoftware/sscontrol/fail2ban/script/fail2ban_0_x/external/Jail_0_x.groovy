@@ -73,7 +73,7 @@ abstract class Jail_0_x extends ScriptBase {
      * Setups the default jail.
      */
     def setupDefaultJail(Jail jail) {
-        def banaction = properties.getProperty "banAction", defaultProperties
+        def banaction = properties.getProperty "banaction", defaultProperties
         jail.banAction(banaction)
         def action = properties.getProperty "action", defaultProperties
         jail.banning app: " ", action: action

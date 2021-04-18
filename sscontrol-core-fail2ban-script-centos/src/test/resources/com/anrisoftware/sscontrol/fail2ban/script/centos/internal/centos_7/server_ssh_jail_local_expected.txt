@@ -1,5 +1,7 @@
 [DEFAULT]
+app = 
 bantime = 60
+banaction = firewallcmd-rich-rules
 destemail = root@localhost
 backend = auto
 maxretry = 3

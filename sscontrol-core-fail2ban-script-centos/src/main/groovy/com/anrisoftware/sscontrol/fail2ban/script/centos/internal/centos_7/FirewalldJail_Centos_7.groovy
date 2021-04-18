@@ -17,27 +17,24 @@ package com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos_7
 
 import javax.inject.Inject
 
-import com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos.Fail2ban_Centos
+import com.anrisoftware.resources.templates.external.TemplatesFactory
 import com.anrisoftware.sscontrol.fail2ban.script.fail2ban_0_x.external.Jail_0_x
 import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
 import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
 
 /**
- * Configures the <i>Fail2ban</i> service for CentOS 7.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-class Fail2ban_Centos_7 extends Fail2ban_Centos {
+class FirewalldJail_Centos_7 extends Jail_0_x {
 
     @Inject
-    Fail2ban_Centos_7_Properties centosPropertiesProvider
+    FirewalldJail_Centos_7_Properties centosPropertiesProvider
 
     @Inject
-    IptablesMultiportJail_Centos_7_Factory iptablesMultiportJail
-
-    @Inject
-    FirewalldJail_Centos_7_Factory firewalldJail
+    TemplatesFactory templatesFactory
 
     CentosUtils centos
 
@@ -48,27 +45,7 @@ class Fail2ban_Centos_7 extends Fail2ban_Centos {
 
     @Override
     def run() {
-        setupDefaults()
-        stopService()
-        installPackages()
-        configureService()
-        jailScript.run()
-        enableService()
-        startService()
-    }
-
-    /**
-     * Provides the jail script for {@code iptables-multiport}.
-     */
-    Jail_0_x getIptablesMultiportJailScript() {
-        iptablesMultiportJail.create scriptsRepository, service, target, threads, scriptEnv
-    }
-
-    /**
-     * Provides the jail script for {@code firewalld}.
-     */
-    Jail_0_x getFirewalldJailScript() {
-        firewalldJail.create scriptsRepository, service, target, threads, scriptEnv
+        configureJail()
     }
 
     @Override

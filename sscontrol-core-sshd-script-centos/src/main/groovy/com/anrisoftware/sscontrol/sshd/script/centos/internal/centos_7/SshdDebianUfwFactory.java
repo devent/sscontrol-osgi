@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos_7;
+package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Jail properties provider from
- * {@code "/fail2ban_centos_7.properties"}.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ *
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
+ * @version 1.0
  */
-class Jail_Centos_7_Properties extends AbstractContextPropertiesProvider {
-
-    private static final URL RESOURCE = Jail_Centos_7_Properties.class.getResource("/fail2ban_centos_7.properties");
-
-    Jail_Centos_7_Properties() {
-        super(Jail_Centos_7_Properties.class, RESOURCE);
-    }
+public interface SshdDebianUfwFactory extends HostServiceScriptService {
 }

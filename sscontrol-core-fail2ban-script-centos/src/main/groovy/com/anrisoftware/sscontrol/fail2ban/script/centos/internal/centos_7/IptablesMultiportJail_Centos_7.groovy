@@ -28,19 +28,19 @@ import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Jail_Centos_7 extends Jail_0_x {
+class IptablesMultiportJail_Centos_7 extends Jail_0_x {
 
     @Inject
-    Jail_Centos_7_Properties centosPropertiesProvider
+    IptablesMultiportJail_Centos_7_Properties centosPropertiesProvider
 
     @Inject
     TemplatesFactory templatesFactory
 
-    CentosUtils debian
+    CentosUtils centos
 
     @Inject
-    void setDebian(Centos_7_UtilsFactory factory) {
-        this.debian = factory.create this
+    void setCentos(Centos_7_UtilsFactory factory) {
+        this.centos = factory.create this
     }
 
     @Override
