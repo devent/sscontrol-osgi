@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public interface SshdDebianUfwFactory extends HostServiceScriptService {
+public interface Sshd_Centos_7_Factory extends HostServiceScriptService {
 }

@@ -15,9 +15,8 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUtils.*
+import static com.anrisoftware.sscontrol.utils.centos.external.Centos_7_TestUtils.*
 
 /**
  *
@@ -29,7 +28,8 @@ abstract class AbstractSshdScriptTest extends AbstractSshdRunnerTest {
 
     void createDummyCommands(File dir) {
         createCommand catCommand, dir, "cat"
-        createCommand grepCommand, dir, 'grep'
+        createCommand yumCommand, dir, "yum"
+        createCommand firewallcmdCommand, dir, "firewall-cmd"
         createWhichCommand dir
         createIdCommand dir
         createEchoCommands dir, [

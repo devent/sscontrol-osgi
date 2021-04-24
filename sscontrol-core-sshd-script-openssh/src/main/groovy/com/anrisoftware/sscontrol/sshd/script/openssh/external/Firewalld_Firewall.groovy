@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
+package com.anrisoftware.sscontrol.sshd.script.openssh.external
 
 import javax.inject.Inject
 
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwLinuxUtilsFactory
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
@@ -26,16 +24,13 @@ import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtils
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Ufw firewall.
+ * Configures firewalld firewall for the Sshd service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class SshdDebianUfw extends ScriptBase {
-
-    @Inject
-    Sshd_Centos_7Properties debianPropertiesProvider
+abstract class Firewalld_Firewall extends Firewall {
 
     UfwUtils ufw
 
@@ -47,8 +42,8 @@ class SshdDebianUfw extends ScriptBase {
     @Override
     Object run() {
         Sshd service = service
-        if (!ufw.ufwActive) {
-            log.debug 'No Ufw available.'
+        if (!active) {
+            log.debug 'No firewalld available.'
             return
         }
         updateFirewall()
@@ -56,18 +51,19 @@ class SshdDebianUfw extends ScriptBase {
 
     def updateFirewall() {
         Sshd service = service
-        if (service.binding.port) {
-            ufw.ufwAllowPortsToAny([service.binding.port], this)
+        if (service.binding.port == 22) {
+            shell privileged: true, "firewall-cmd --zone=public --add-service=ssh" call()
+        } else {
+            shell privileged: true, "firewall-cmd --zone=public --add-port=${service.binding.port}" call()
         }
     }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
+    boolean isActive() {
+        def ret = shell privileged: true, outString: true, exitCodes: [0, 1] as int[], "which firewall-cmd>/dev/null && firewall-cmd --state" call()
+        return ret.exitValue == 0 && (ret.out =~ /running.*/)
     }
 
-    @Override
-    def getLog() {
-        log
+    String getFirewallZone() {
+        getScriptProperty 'firewall_zone'
     }
 }

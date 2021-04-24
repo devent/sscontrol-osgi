@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.fail2ban.script.centos.internal.centos_7
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.utils.centos.external.CentosTestUtils.*
+import static com.anrisoftware.sscontrol.utils.centos.external.Centos_7_TestUtils.*
 
 import org.apache.commons.io.IOUtils
 

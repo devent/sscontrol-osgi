@@ -18,3 +18,4 @@
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s

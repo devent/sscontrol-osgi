@@ -15,10 +15,6 @@
  */
 package com.anrisoftware.sscontrol.utils.ufw.linux.external
 
-import static org.apache.commons.io.FilenameUtils.*
-import static org.apache.commons.lang3.Validate.*
-import static org.hamcrest.Matchers.*
-
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask
 import com.anrisoftware.resources.templates.external.TemplateResource
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
@@ -53,7 +49,7 @@ abstract class UfwUtils {
         script.defaultProperties
     }
 
-    boolean isUfwActive(def target=null) {
+    boolean isActive(def target=null) {
         ProcessTask ret = script.shell target: target, privileged: true, outString: true, exitCodes: [0, 1] as int[], "which ufw>/dev/null && ufw status" call()
         return ret.exitValue == 0 && (ret.out =~ /Status: active.*/)
     }
@@ -92,7 +88,7 @@ abstract class UfwUtils {
      */
     def allowPortsOnNodes(List<SshHost> nodes, List<String> nodesAddresses, List ports, String proto, Object script) {
         nodes.each { SshHost target ->
-            if (isUfwActive(target)) {
+            if (isActive(target)) {
                 script.shell target: target, privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsOnNodes",
                 vars: [nodes: nodesAddresses, ports: getTcpPorts(ports), proto: proto] call()
             }
@@ -118,7 +114,7 @@ abstract class UfwUtils {
     /**
      * Allows ports any.
      */
-    def ufwAllowPortsToAny(List ports, Object script) {
+    def allowPortsToAny(List ports, Object script) {
         script.shell privileged: true, resource: ufwCommandsTemplate, name: "ufwAllowPortsToAny",
         vars: [ports: getTcpPorts(ports)] call()
     }

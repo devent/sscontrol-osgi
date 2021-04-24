@@ -13,17 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.utils.centos.external
+package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
+
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.sshd.script.openssh.external.Firewalld_Firewall
+
+import groovy.util.logging.Slf4j
 
 /**
- * CentOS test utilities.
+ * Configures firewalld firewall for the Sshd service for CentOS 7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class CentosTestUtils {
+@Slf4j
+class Firewalld_Firewall_Centos_7 extends Firewalld_Firewall {
 
-    static final URL yumCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.sh')
+    @Inject
+    Sshd_Centos_7_Properties debianPropertiesProvider
 
-    static final URL catCommand = CentosTestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.sh')
+    @Override
+    ContextProperties getDefaultProperties() {
+        debianPropertiesProvider.get()
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
 }

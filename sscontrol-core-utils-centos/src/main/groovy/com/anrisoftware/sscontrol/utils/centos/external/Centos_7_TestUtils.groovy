@@ -13,34 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
-
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.sshd.script.openssh.external.Ufw_Firewall
-
-import groovy.util.logging.Slf4j
+package com.anrisoftware.sscontrol.utils.centos.external
 
 /**
- * Configures the Ufw firewall for the Sshd service.
+ * CentOS 7 test utilities.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Slf4j
-class SshdDebianUfw extends Ufw_Firewall {
+class Centos_7_TestUtils {
 
-    @Inject
-    SshdDebianProperties debianPropertiesProvider
+    static final URL yumCommand = Centos_7_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/yum_cmd.sh')
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
-    }
-
-    @Override
-    def getLog() {
-        log
-    }
+    static final URL catCommand = Centos_7_TestUtils.class.getResource('/com/anrisoftware/sscontrol/utils/centos/external/tests/centos_7_cat_cmd.sh')
 }

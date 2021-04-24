@@ -33,11 +33,10 @@ import com.anrisoftware.sscontrol.command.shell.internal.templateres.TemplateRes
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.services.internal.host.HostServicesModule
 import com.anrisoftware.sscontrol.ssh.service.internal.SshModule
-import com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10.SshdDebianModule
 import com.anrisoftware.sscontrol.sshd.service.internal.SshdModule
 import com.anrisoftware.sscontrol.tls.internal.TlsModule
 import com.anrisoftware.sscontrol.types.misc.internal.TypesModule
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtilsModule
+import com.anrisoftware.sscontrol.utils.centos.external.CentosUtilsModule
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsModule
 import com.anrisoftware.sscontrol.utils.systemmappings.internal.SystemNameMappingsModule
 import com.anrisoftware.sscontrol.utils.ufw.linux.external.UfwUtilsModule
@@ -57,8 +56,8 @@ class SshdTestModules {
         [
             new SshModule(),
             new SshdModule(),
-            new SshdDebianModule(),
-            new DebianUtilsModule(),
+            new Sshd_Centos_7_Module(),
+            new CentosUtilsModule(),
             new SystemdUtilsModule(),
             new UfwUtilsModule(),
             new DebugLoggingModule(),

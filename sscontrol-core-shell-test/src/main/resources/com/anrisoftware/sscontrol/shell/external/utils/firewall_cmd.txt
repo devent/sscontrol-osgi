@@ -1,0 +1,16 @@
+#!/bin/bash
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+if [ "$#" -gt 0 ]; then
+	if [[ "$1" == "--state" ]]; then
+		echo "running"
+	else
+		echo "success"
+	fi
+    cmd=($1)
+    cmd=${cmd[0]}
+    if command -v -- "$cmd">/dev/null; then
+       $@
+    fi
+fi

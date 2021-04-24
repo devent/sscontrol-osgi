@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
+package com.anrisoftware.sscontrol.sshd.script.openssh.external
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 
 /**
- * <i>Sshd Debian 10</i> properties provider from
- * {@code "/sshd_debian_10.properties"}.
+ * Configures the firewall for the Sshd service.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-class Sshd_Centos_7Properties extends AbstractContextPropertiesProvider {
-
-    private static final URL RESOURCE = Sshd_Centos_7Properties.class.getResource("/sshd_debian_10.properties")
-
-    Sshd_Centos_7Properties() {
-        super(Sshd_Centos_7Properties.class, RESOURCE)
-    }
+abstract class Firewall extends ScriptBase {
 }

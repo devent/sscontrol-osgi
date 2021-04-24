@@ -27,7 +27,6 @@ import com.anrisoftware.sscontrol.runner.test.external.AbstractRunnerTestBase
 import com.anrisoftware.sscontrol.ssh.script.linux.external.Ssh_Linux_Factory
 import com.anrisoftware.sscontrol.ssh.script.linux.internal.Ssh_Linux_Module
 import com.anrisoftware.sscontrol.ssh.service.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10.SshdDebianFactory
 import com.anrisoftware.sscontrol.sshd.service.internal.SshdImpl.SshdImplFactory
 import com.anrisoftware.sscontrol.types.host.external.HostServices
 
@@ -52,7 +51,7 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
     SshdImplFactory serviceFactory
 
     @Inject
-    SshdDebianFactory scriptFactory
+    Sshd_Centos_7_Factory scriptFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -62,7 +61,7 @@ abstract class AbstractSshdRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'sshd', serviceFactory
-        services.putAvailableScriptService 'sshd/debian/10', scriptFactory
+        services.putAvailableScriptService 'sshd/centos/7', scriptFactory
         return services
     }
 

@@ -1,0 +1,2 @@
+--state
+--zone=public --add-service=ssh

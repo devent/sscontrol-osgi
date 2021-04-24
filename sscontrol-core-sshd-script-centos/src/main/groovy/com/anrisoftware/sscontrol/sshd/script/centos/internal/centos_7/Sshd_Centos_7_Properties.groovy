@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7;
+package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * <i>Sshd CentOS 7</i> properties provider from
+ * {@code "/sshd_centos_7.properties"}.
  *
- *
- * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface Sshd_Centos_7Factory extends HostServiceScriptService {
+class Sshd_Centos_7_Properties extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = Sshd_Centos_7_Properties.class.getResource("/sshd_centos_7.properties")
+
+    Sshd_Centos_7_Properties() {
+        super(Sshd_Centos_7_Properties.class, RESOURCE)
+    }
 }

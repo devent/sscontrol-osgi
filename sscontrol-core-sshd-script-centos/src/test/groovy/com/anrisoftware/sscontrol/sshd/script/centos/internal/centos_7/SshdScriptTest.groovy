@@ -15,10 +15,8 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUtils.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
@@ -57,7 +55,8 @@ service "sshd"
                 File gen = args.test.generatedDir
                 assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-                assertFileResource SshdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
+                assertFileResource SshdScriptTest, dir, "yum.out", "${args.test.name}_yum_expected.txt"
+                assertFileResource SshdScriptTest, dir, "firewall-cmd.out", "${args.test.name}_firewall_cmd_expected.txt"
                 assertFileResource SshdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
             },
@@ -82,34 +81,8 @@ service "sshd" with {
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "script_ufw_binding_port"() {
-        def test = [
-            name: "script_ufw_binding_port",
-            script: '''
-service "ssh", host: "localhost", socket: localhostSocket
-service "sshd" with {
-    bind port: 2222
-}
-''',
-            scriptVars: [localhostSocket: localhostSocket],
-            expectedServicesSize: 2,
-            generatedDir: folder.newFolder(),
-            before: { Map test ->
-                File dir = test.dir
-                createEchoCommand dir, 'which'
-                createCommand ufwActiveCommand, test.dir, 'ufw'
-            },
-            expected: { Map args ->
-                File dir = args.dir
-                File gen = args.test.generatedDir
+                assertFileResource SshdScriptTest, dir, "firewall-cmd.out", "${args.test.name}_firewall_cmd_expected.txt"
                 assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
-                assertFileResource SshdScriptTest, dir, "ufw.out", "${args.test.name}_ufw_expected.txt"
             },
         ]
         doTest test

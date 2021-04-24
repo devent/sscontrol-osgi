@@ -15,10 +15,8 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.MailSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.jupiter.api.Assumptions.*
 
 import java.nio.charset.StandardCharsets
 
@@ -26,7 +24,7 @@ import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition
+import com.anrisoftware.sscontrol.shell.external.utils.MailSocketCondition
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript
 
 import groovy.util.logging.Slf4j
@@ -38,7 +36,7 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(RobobeeSocketCondition.class)
+@ExtendWith(MailSocketCondition.class)
 class SshdServerTest extends AbstractSshdRunnerTest {
 
     @Test
@@ -46,13 +44,13 @@ class SshdServerTest extends AbstractSshdRunnerTest {
         def test = [
             name: "server_basic",
             script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh", host: "robobee@${testHost}", socket: testSocket
 service "sshd"
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket],
+            scriptVars: [testHost: mailHost, testSocket: mailSocket],
             expectedServicesSize: 2,
             expected: { Map args ->
-                assertStringResource SshdServerTest, readRemoteFile('/etc/ssh/sshd_config'), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdServerTest, readPrivilegedRemoteFile('/etc/ssh/sshd_config', mailHost), "${args.test.name}_sshd_config_expected.txt"
             },
         ]
         doTest test
@@ -63,12 +61,12 @@ service "sshd"
         def test = [
             name: "server_binding_port",
             script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
+service "ssh", host: "robobee@${testHost}", socket: testSocket
 service "sshd" with {
     bind port: 2222
 }
 ''',
-            scriptVars: [robobeeSocket: robobeeSocket],
+            scriptVars: [testHost: mailHost, testSocket: mailSocket],
             expectedServicesSize: 2,
             after: {  Map args ->
                 remoteCommand """
@@ -81,36 +79,7 @@ sudo systemctl restart sshd
 """, 'robobee-test', 2222
             },
             expected: { Map args ->
-                assertStringResource SshdServerTest, readRemoteFile('/etc/ssh/sshd_config', 'robobee-test', 2222), "${args.test.name}_sshd_config_expected.txt"
-            },
-        ]
-        doTest test
-    }
-
-    @Test
-    void "server_ufw_binding_port"() {
-        def test = [
-            name: "server_ufw_binding_port",
-            script: '''
-service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
-service "sshd" with {
-    bind port: 2222
-}
-''',
-            scriptVars: [robobeeSocket: robobeeSocket],
-            expectedServicesSize: 2,
-            after: {  Map args ->
-                remoteCommand """
-sudo bash -s << eof1
-cat > /etc/ssh/sshd_config << 'EOL'
-${sshdConfig()}
-EOL
-eof1
-sudo systemctl restart sshd
-""", 'robobee-test', 2222
-            },
-            expected: { Map args ->
-                assertStringResource SshdServerTest, readRemoteFile('/etc/ssh/sshd_config', 'robobee-test', 2222), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdServerTest, readPrivilegedRemoteFile('/etc/ssh/sshd_config', mailHost), "${args.test.name}_sshd_config_expected.txt"
             },
         ]
         doTest test

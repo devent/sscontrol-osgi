@@ -25,14 +25,14 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public class Sshd_Centos_7Module extends AbstractModule {
+public class Sshd_Centos_7_Module extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(HostServiceScript.class, Sshd_Centos_7.class)
-                .build(Sshd_Centos_7Factory.class));
-        install(new FactoryModuleBuilder().implement(HostServiceScript.class, SshdDebianUfw.class)
-                .build(SshdDebianUfwFactory.class));
+                .build(Sshd_Centos_7_Factory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Firewalld_Firewall_Centos_7.class)
+                .build(Firewalld_Firewall_Centos_7_Factory.class));
     }
 
 }

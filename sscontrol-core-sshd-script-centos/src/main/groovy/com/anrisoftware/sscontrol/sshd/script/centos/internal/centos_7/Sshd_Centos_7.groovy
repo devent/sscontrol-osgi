@@ -20,13 +20,13 @@ import javax.inject.Inject
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.sshd.script.openssh.external.SshdSystemd
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
-import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
+import com.anrisoftware.sscontrol.utils.centos.external.CentosUtils
+import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Sshd</i> service for Debian 10.
+ * Configures the <i>Sshd</i> service for CentOS 7.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -35,16 +35,16 @@ import groovy.util.logging.Slf4j
 class Sshd_Centos_7 extends SshdSystemd {
 
     @Inject
-    Sshd_Centos_7Properties debianPropertiesProvider
+    Sshd_Centos_7_Properties centosProperties
 
     @Inject
-    SshdDebianUfwFactory ufwFactory
+    Firewalld_Firewall_Centos_7_Factory firewalldFactory
 
-    DebianUtils debian
+    CentosUtils centos
 
     @Inject
-    void setDebianUtilsFactory(Debian_10_UtilsFactory factory) {
-        this.debian = factory.create this
+    void setCentosUtilsFactory(Centos_7_UtilsFactory factory) {
+        this.centos = factory.create this
     }
 
     @Override
@@ -53,7 +53,7 @@ class Sshd_Centos_7 extends SshdSystemd {
         installPackages()
         configureService()
         restartService()
-        ufwFactory.create(scriptsRepository, service, target, threads, scriptEnv).run()
+        firewallScript.run()
     }
 
     def setupDefaults() {
@@ -67,21 +67,20 @@ class Sshd_Centos_7 extends SshdSystemd {
     }
 
     void installPackages() {
-        debian.installPackages()
+        centos.installPackages()
     }
 
     def getDefaultPort() {
         getScriptNumberProperty 'default_port' intValue()
     }
 
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
+    def getFirewalldFirewallScript() {
+        firewalldFactory.create scriptsRepository, service, target, threads, scriptEnv
     }
 
     @Override
-    Sshd getService() {
-        super.getService()
+    ContextProperties getDefaultProperties() {
+        centosProperties.get()
     }
 
     @Override
