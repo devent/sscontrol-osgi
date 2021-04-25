@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
+import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,10 +40,16 @@ import groovy.util.logging.Slf4j
 @ExtendWith(LocalhostSocketCondition.class)
 class SshdScriptTest extends AbstractSshdScriptTest {
 
+    static URL selinuxEnforcingConfig = SshdScriptTest.class.getResource("selinux_enforcing_config.txt")
+
+    static URL selinuxPermissiveConfig = SshdScriptTest.class.getResource("selinux_permissive_config.txt")
+
+    static URL selinuxDisabledConfig = SshdScriptTest.class.getResource("selinux_disabled_config.txt")
+
     @Test
-    void "script_basic"() {
+    void "script_basic_selinux_enforcing"() {
         def test = [
-            name: "script_basic",
+            name: "script_basic_selinux_enforcing",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "sshd"
@@ -50,24 +57,31 @@ service "sshd"
             scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
+            before: {  Map test ->
+                def configDir = new File(test.dir, 'etc/selinux')
+                configDir.mkdirs()
+                IOUtils.copy selinuxEnforcingConfig.openStream(), new FileOutputStream(new File(configDir, "config"))
+                createCommand SshdScriptTest.class.getResource("${test.name}_grep_command.txt"), test.dir, "grep"
+            },
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
-                assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource SshdScriptTest, dir, "yum.out", "${args.test.name}_yum_expected.txt"
                 assertFileResource SshdScriptTest, dir, "firewall-cmd.out", "${args.test.name}_firewall_cmd_expected.txt"
                 assertFileResource SshdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                assertFileResource SshdScriptTest, dir, "semanage.out", "${args.test.name}_semanage_expected.txt"
                 assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
+                assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
             },
         ]
         doTest test
     }
 
     @Test
-    void "script_binding_port"() {
+    void "script_binding_port_selinux_enforcing"() {
         def test = [
-            name: "script_binding_port",
+            name: "script_binding_port_selinux_enforcing",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "sshd" with {
@@ -77,11 +91,18 @@ service "sshd" with {
             scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
+            before: {  Map test ->
+                def configDir = new File(test.dir, 'etc/selinux')
+                configDir.mkdirs()
+                IOUtils.copy selinuxEnforcingConfig.openStream(), new FileOutputStream(new File(configDir, "config"))
+                createCommand SshdScriptTest.class.getResource("${test.name}_grep_command.txt"), test.dir, "grep"
+            },
             expected: { Map args ->
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource SshdScriptTest, dir, "firewall-cmd.out", "${args.test.name}_firewall_cmd_expected.txt"
+                assertFileResource SshdScriptTest, dir, "semanage.out", "${args.test.name}_semanage_expected.txt"
                 assertFileResource SshdScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
             },
         ]

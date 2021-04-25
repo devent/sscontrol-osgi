@@ -75,11 +75,12 @@ cat > /etc/ssh/sshd_config << 'EOL'
 ${sshdConfig()}
 EOL
 eof1
+sudo semanage port -a -t ssh_port_t -p tcp 22
 sudo systemctl restart sshd
-""", 'robobee-test', 2222
+""", mailHost, 2222
             },
             expected: { Map args ->
-                assertStringResource SshdServerTest, readPrivilegedRemoteFile('/etc/ssh/sshd_config', mailHost), "${args.test.name}_sshd_config_expected.txt"
+                assertStringResource SshdServerTest, readPrivilegedRemoteFile('/etc/ssh/sshd_config', mailHost, 2222), "${args.test.name}_sshd_config_expected.txt"
             },
         ]
         doTest test

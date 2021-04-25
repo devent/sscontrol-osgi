@@ -51,9 +51,8 @@ abstract class AbstractSshdScriptTest extends AbstractSshdRunnerTest {
             'dpkg',
             'curl',
             'sleep',
-            'docker',
-            'cat',
-            'kubectl',
+            'file',
+            'semanage'
         ]
     }
 }

@@ -51,6 +51,7 @@ class Sshd_Centos_7 extends SshdSystemd {
     def run() {
         setupDefaults()
         installPackages()
+        setupSelinux()
         configureService()
         restartService()
         firewallScript.run()
@@ -68,6 +69,15 @@ class Sshd_Centos_7 extends SshdSystemd {
 
     void installPackages() {
         centos.installPackages()
+    }
+
+    void setupSelinux() {
+        selinuxActive ? { log.debug "SELinux activated."; configureSelinux() }(): { log.debug "SELinux not activated." }()
+    }
+
+    void configureSelinux() {
+        centos.installPackages selinuxPackages
+        selinuxSshPort ? { }() : { updateSelinuxPort() }()
     }
 
     def getDefaultPort() {

@@ -54,7 +54,7 @@ abstract class Firewalld_Firewall extends Firewall {
         if (service.binding.port == 22) {
             shell privileged: true, "firewall-cmd --zone=public --add-service=ssh" call()
         } else {
-            shell privileged: true, "firewall-cmd --zone=public --add-port=${service.binding.port}" call()
+            shell privileged: true, "firewall-cmd --zone=public --add-port=${service.binding.port}/tcp" call()
         }
     }
 

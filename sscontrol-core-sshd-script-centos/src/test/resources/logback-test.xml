@@ -20,9 +20,9 @@
 
 	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
+		<immediateFlush>true</immediateFlush>
 		<encoder>
 			<pattern>[%level] %date{HH:mm:ss} [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>true</immediateFlush>
 		</encoder>
 	</appender>
 
@@ -34,5 +34,7 @@
     <logger name="com.anrisoftware.globalpom.exec.scriptprocess" level="DEBUG" />
     <logger name="com.anrisoftware.sscontrol" level="INFO" />
     <logger name="com.anrisoftware.sscontrol.groovy.script.external" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.sshd.script.openssh.external" level="DEBUG" />
+    <logger name="com.anrisoftware.sscontrol.sshd.script.centos.internal.centos_7" level="DEBUG" />
 
 </configuration>
