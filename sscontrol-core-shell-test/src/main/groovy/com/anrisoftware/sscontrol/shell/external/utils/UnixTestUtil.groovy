@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assumptions.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 
-import com.jcabi.ssh.Ssh
 import com.jcabi.ssh.Shell
+import com.jcabi.ssh.Ssh
 
 
 /**
@@ -167,6 +167,8 @@ class UnixTestUtil {
     static final URL whichCommand = UnixTestUtil.class.getResource('which_cmd.txt')
 
     static final URL basenameCommand = UnixTestUtil.class.getResource('basename_cmd.txt')
+
+    static final URL firewallcmdCommand = UnixTestUtil.class.getResource('firewall_cmd.txt')
 
     static final URL idCommand = UnixTestUtil.class.getResource('id_cmd.txt')
 

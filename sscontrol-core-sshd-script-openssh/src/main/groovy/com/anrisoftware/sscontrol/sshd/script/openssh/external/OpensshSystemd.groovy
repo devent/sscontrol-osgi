@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.openssh.external
 
+import org.apache.commons.text.CaseUtils
+
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.sshd.service.external.Sshd
 
@@ -41,6 +43,29 @@ abstract class OpensshSystemd extends ScriptBase {
         }
     }
 
+    boolean isSelinuxActive() {
+        def ret = shell privileged: true, outString: true, exitCodes: [0, 1] as int[], """
+file ${selinuxConfigFile}>/dev/null && \
+grep -E '^(SELINUX=(enforcing)|(permissive)|(disabled))' ${selinuxConfigFile}
+        """ call()
+        return ret.exitValue == 0 && ret.out =~ /SELINUX=enforcing/
+    }
+
+    boolean isSelinuxSshPort() {
+        Sshd service = service
+        def ret = shell privileged: true, outString: true, exitCodes: [0, 1] as int[], """
+semanage port -l | grep ssh
+        """ call()
+        return ret.exitValue == 0 && ret.out.trim() =~ /^ssh_port_t\s+tcp\s+${service.binding.port}.*$/
+    }
+
+    void updateSelinuxPort() {
+        Sshd service = service
+        def ret = shell privileged: true, """
+semanage port -a -t ssh_port_t -p tcp ${service.binding.port}
+        """ call()
+    }
+
     Map getLogLevelMap() {
         Eval.me getScriptProperty('log_level_map')
     }
@@ -51,6 +76,29 @@ abstract class OpensshSystemd extends ScriptBase {
 
     String getPasswordAuthentication() {
         getScriptProperty 'password_authentication'
+    }
+
+    /**
+     * Provides the filewall script.
+     */
+    Firewall getFirewallScript() {
+        "get${CaseUtils.toCamelCase(firewall, true, '-' as char)}FirewallScript"()
+    }
+
+    String getFirewall() {
+        getScriptProperty 'firewall'
+    }
+
+    def getSelinuxConfigDir() {
+        getScriptFileProperty 'selinux_config_dir'
+    }
+
+    def getSelinuxConfigFile() {
+        getScriptFileProperty 'selinux_config_file', selinuxConfigDir
+    }
+
+    def getSelinuxPackages() {
+        getScriptListProperty 'selinux_packages'
     }
 
     @Override

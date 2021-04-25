@@ -1,0 +1,6 @@
+list installed openssh-server
+install -y openssh-server
+list installed openssh-clients
+install -y openssh-clients
+list installed policycoreutils-python
+install -y policycoreutils-python

@@ -1,0 +1,19 @@
+#!/bin/bash
+theCommand="$0"
+echo "$theCommand $@"
+echo "$@" >> $theCommand.out
+if [ $# -gt 0 ]; then
+    if [ $# -eq 3 ]; then
+    	echo "SELINUX=enforcing"
+        exit 0
+    fi
+    if [ $# -eq 1 && $1 = "ssh" ]; then
+    	echo "ssh_port_t                     tcp      22"
+        exit 0
+    fi
+    cmd=($1)
+    cmd=${cmd[0]}
+    if command -v -- "$cmd">/dev/null; then
+       $@
+    fi
+fi

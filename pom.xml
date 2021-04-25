@@ -129,6 +129,7 @@
         <module>sscontrol-core-shell-linux</module>
         <module>sscontrol-core-shell-service</module>
         <module>sscontrol-core-shell-test</module>
+        <module>sscontrol-core-sshd-script-centos</module>
         <module>sscontrol-core-sshd-script-debian</module>
         <module>sscontrol-core-sshd-script-openssh</module>
         <module>sscontrol-core-sshd-service</module>

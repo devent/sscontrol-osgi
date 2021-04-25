@@ -34,7 +34,10 @@ class Fail2ban_Centos_7 extends Fail2ban_Centos {
     Fail2ban_Centos_7_Properties centosPropertiesProvider
 
     @Inject
-    Jail_Centos_7_Factory jail
+    IptablesMultiportJail_Centos_7_Factory iptablesMultiportJail
+
+    @Inject
+    FirewalldJail_Centos_7_Factory firewalldJail
 
     CentosUtils centos
 
@@ -58,7 +61,14 @@ class Fail2ban_Centos_7 extends Fail2ban_Centos {
      * Provides the jail script for {@code iptables-multiport}.
      */
     Jail_0_x getIptablesMultiportJailScript() {
-        jail.create scriptsRepository, service, target, threads, scriptEnv
+        iptablesMultiportJail.create scriptsRepository, service, target, threads, scriptEnv
+    }
+
+    /**
+     * Provides the jail script for {@code firewalld}.
+     */
+    Jail_0_x getFirewalldJailScript() {
+        firewalldJail.create scriptsRepository, service, target, threads, scriptEnv
     }
 
     @Override

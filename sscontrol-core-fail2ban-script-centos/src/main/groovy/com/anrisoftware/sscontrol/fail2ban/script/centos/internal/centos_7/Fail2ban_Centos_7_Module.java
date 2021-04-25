@@ -31,8 +31,10 @@ public class Fail2ban_Centos_7_Module extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(HostServiceScript.class, Fail2ban_Centos_7.class)
                 .build(Fail2ban_Centos_7_Factory.class));
-        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Jail_Centos_7.class)
-                .build(Jail_Centos_7_Factory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, IptablesMultiportJail_Centos_7.class)
+                .build(IptablesMultiportJail_Centos_7_Factory.class));
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, FirewalldJail_Centos_7.class)
+                .build(FirewalldJail_Centos_7_Factory.class));
     }
 
 }

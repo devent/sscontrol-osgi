@@ -18,7 +18,7 @@ package com.anrisoftware.sscontrol.collectd.script.centos.internal.centos_7.inte
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import com.anrisoftware.sscontrol.utils.centos.external.CentosTestUtils
+import com.anrisoftware.sscontrol.utils.centos.external.Centos_7_TestUtils
 
 /**
  *
@@ -30,8 +30,8 @@ abstract class AbstractCollectdScriptTest extends AbstractCollectdRunnerTest {
 
     @Override
     void createDummyCommands(File dir) {
-        createCommand CentosTestUtils.yumCommand, dir, 'yum'
-        createCommand CentosTestUtils.catCommand, dir, 'cat'
+        createCommand Centos_7_TestUtils.yumCommand, dir, 'yum'
+        createCommand Centos_7_TestUtils.catCommand, dir, 'cat'
         createEchoCommands dir, [
             'mkdir',
             'chown',
