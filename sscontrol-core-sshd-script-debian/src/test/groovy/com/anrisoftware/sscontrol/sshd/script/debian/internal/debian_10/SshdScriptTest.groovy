@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.sshd.script.debian.internal.debian_10
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUtils.*
@@ -59,6 +58,28 @@ service "sshd"
                 assertFileResource SshdScriptTest, dir, "scp.out", "${args.test.name}_scp_expected.txt"
                 assertFileResource SshdScriptTest, dir, "apt-get.out", "${args.test.name}_apt_get_expected.txt"
                 assertFileResource SshdScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
+                assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
+    void "script_allow_user"() {
+        def test = [
+            name: "script_allow_user",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "sshd" with {
+    allowUser << 'robobee'
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
                 assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
             },
         ]

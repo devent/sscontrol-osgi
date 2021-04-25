@@ -71,19 +71,19 @@ service "sshd"
     }
 
     @Test
-    void "user"() {
+    void "allow user"() {
         def test = [
             name: 'user',
             input: """
 service "sshd" with {
-    user << 'devent'
+    allowUser << 'robobee'
 }
 """,
             expected: { HostServices services ->
                 assert services.getServices('sshd').size() == 1
                 Sshd hosts = services.getServices('sshd')[0] as Sshd
-                assert hosts.users.size() == 1
-                assert hosts.users.containsAll(["devent"])
+                assert hosts.allowUsers.size() == 1
+                assert hosts.allowUsers.containsAll(["robobee"])
             },
         ]
         doTest test

@@ -28,9 +28,17 @@ import com.anrisoftware.sscontrol.types.misc.external.DebugLogging;
  */
 public interface Sshd extends HostService {
 
+    /**
+     * Returns the debug logging.
+     * 
+     * @return the {@link DebugLogging}
+     */
     DebugLogging getDebugLogging();
 
-    List<String> getUsers();
+    /**
+     * Return the list of allowed users.
+     */
+    List<String> getAllowUsers();
 
     /**
      * The binding of the sshd.
