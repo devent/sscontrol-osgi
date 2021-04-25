@@ -20,9 +20,9 @@
 
 	<appender name="TESTING_STYLE" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
+		<immediateFlush>true</immediateFlush>
 		<encoder>
 			<pattern>[%level] %date{HH:mm:ss} [%thread] %logger{0} - %msg%n%rEx{short}</pattern>
-			<immediateFlush>true</immediateFlush>
 		</encoder>
 	</appender>
 
