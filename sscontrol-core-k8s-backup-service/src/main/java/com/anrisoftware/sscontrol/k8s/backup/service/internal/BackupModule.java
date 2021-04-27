@@ -36,20 +36,13 @@ public class BackupModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, BackupImpl.class)
+        install(new FactoryModuleBuilder().implement(HostService.class, BackupImpl.class)
                 .build(BackupImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Service.class, ServiceImpl.class)
-                .build(ServiceImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Destination.class, DirDestinationImpl.class)
+        install(new FactoryModuleBuilder().implement(Service.class, ServiceImpl.class).build(ServiceImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Destination.class, DirDestinationImpl.class)
                 .build(DirDestinationImplFactory.class));
-        install(new FactoryModuleBuilder().implement(Client.class, ClientImpl.class)
-                .build(ClientImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Source.class, SourceImpl.class)
-                .build(SourceImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Client.class, ClientImpl.class).build(ClientImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Source.class, SourceImpl.class).build(SourceImplFactory.class));
     }
 
 }

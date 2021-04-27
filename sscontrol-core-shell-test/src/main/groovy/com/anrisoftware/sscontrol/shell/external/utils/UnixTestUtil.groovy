@@ -40,7 +40,7 @@ class UnixTestUtil {
     static void assumeSocketsExists(List sockets) {
         (0..<sockets.size()).each { int i ->
             def socket = new File(sockets[i])
-            assumeTrue "${socket} exists", socket.exists()
+            assumeTrue socket.exists(), "${socket} exists"
         }
     }
 

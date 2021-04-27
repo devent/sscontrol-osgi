@@ -23,7 +23,7 @@ import com.anrisoftware.sscontrol.collectd.script.collect_5_8.external.Collectd_
 import groovy.util.logging.Slf4j
 
 /**
- * Collectd 5.7. for Debian 8.
+ * Collectd 5.8 for Debian 10.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

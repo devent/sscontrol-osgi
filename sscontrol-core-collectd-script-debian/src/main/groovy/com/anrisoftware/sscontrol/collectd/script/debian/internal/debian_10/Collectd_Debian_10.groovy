@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Collectd for Debian 8.
+ * Collectd for Debian 10.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

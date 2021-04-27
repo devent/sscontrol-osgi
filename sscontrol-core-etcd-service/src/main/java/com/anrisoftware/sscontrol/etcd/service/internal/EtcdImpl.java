@@ -32,7 +32,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.etcd.service.external.Authentication;
 import com.anrisoftware.sscontrol.etcd.service.external.AuthenticationFactory;
 import com.anrisoftware.sscontrol.etcd.service.external.Binding;
@@ -140,7 +140,7 @@ public class EtcdImpl implements Etcd {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 

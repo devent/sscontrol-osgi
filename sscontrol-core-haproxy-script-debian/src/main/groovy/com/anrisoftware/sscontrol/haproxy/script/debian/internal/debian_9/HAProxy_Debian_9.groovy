@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtils
 import com.anrisoftware.sscontrol.utils.systemd.external.SystemdUtilsFactory
 
@@ -37,7 +37,7 @@ import groovy.util.logging.Slf4j
 abstract class HAProxy_Debian_9 extends ScriptBase {
 
     SystemdUtils systemd
-    
+
     DebianUtils debian
 
     @Inject
@@ -46,7 +46,7 @@ abstract class HAProxy_Debian_9 extends ScriptBase {
     }
 
     @Inject
-    void setDebianFactory(Debian_9_UtilsFactory factory) {
+    void setDebianFactory(Debian_10_UtilsFactory factory) {
         this.debian = factory.create(this)
     }
 
@@ -59,15 +59,15 @@ abstract class HAProxy_Debian_9 extends ScriptBase {
     def stopServices() {
         systemd.stopServices()
     }
-    
+
     def startServices() {
         systemd.startServices()
     }
-    
+
     def enableServices() {
         systemd.enableServices()
     }
-    
+
     @Override
     def getLog() {
         log

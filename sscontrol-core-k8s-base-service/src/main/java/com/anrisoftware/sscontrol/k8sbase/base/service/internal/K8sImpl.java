@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.Cluster;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s;
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8sService;
@@ -141,7 +141,7 @@ public class K8sImpl implements K8s {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 

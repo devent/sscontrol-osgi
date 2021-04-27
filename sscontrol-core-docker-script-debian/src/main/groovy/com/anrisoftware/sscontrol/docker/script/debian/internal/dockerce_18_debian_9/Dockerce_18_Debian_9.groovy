@@ -21,7 +21,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.docker.script.debian.internal.debian.Dockerce_Systemd_Debian
 import com.anrisoftware.sscontrol.docker.script.systemd.external.Dockerce_17_Systemd
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -50,7 +50,7 @@ class Dockerce_18_Debian_9 extends Dockerce_Systemd_Debian {
     }
 
     @Inject
-    void setDebianUtilsFactory(Debian_9_UtilsFactory factory) {
+    void setDebianUtilsFactory(Debian_10_UtilsFactory factory) {
         this.debian = factory.create(this)
     }
 

@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.external.DebugLoggingService;
 import com.anrisoftware.sscontrol.docker.service.external.Docker;
 import com.anrisoftware.sscontrol.docker.service.external.DockerService;
 import com.anrisoftware.sscontrol.docker.service.external.LoggingDriver;
@@ -96,7 +96,7 @@ public class DockerImpl implements Docker {
     }
 
     @Inject
-    public void setDebugService(DebugService debugService) {
+    public void setDebugService(DebugLoggingService debugService) {
         this.debug = debugService.create();
     }
 

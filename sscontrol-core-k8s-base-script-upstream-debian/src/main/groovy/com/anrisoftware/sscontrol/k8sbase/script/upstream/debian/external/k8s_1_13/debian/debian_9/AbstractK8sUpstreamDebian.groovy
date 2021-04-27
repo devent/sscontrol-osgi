@@ -20,7 +20,7 @@ import javax.inject.Inject
 import com.anrisoftware.sscontrol.k8sbase.base.service.external.K8s
 import com.anrisoftware.sscontrol.k8sbase.script.upstream.external.k8s_1_13.linux.AbstractK8sUpstreamLinux
 import com.anrisoftware.sscontrol.utils.debian.external.DebianUtils
-import com.anrisoftware.sscontrol.utils.debian.external.Debian_9_UtilsFactory
+import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 
 import groovy.util.logging.Slf4j
 
@@ -36,7 +36,7 @@ abstract class AbstractK8sUpstreamDebian extends AbstractK8sUpstreamLinux {
     DebianUtils debian
 
     @Inject
-    void setDebian(Debian_9_UtilsFactory factory) {
+    void setDebian(Debian_10_UtilsFactory factory) {
         this.debian = factory.create this
     }
 

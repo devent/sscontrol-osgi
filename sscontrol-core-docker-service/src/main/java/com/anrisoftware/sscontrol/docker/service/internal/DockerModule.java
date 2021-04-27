@@ -36,17 +36,12 @@ public class DockerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, DockerImpl.class)
+        install(new FactoryModuleBuilder().implement(HostService.class, DockerImpl.class)
                 .build(DockerImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Registry.class, RegistryImpl.class)
+        install(new FactoryModuleBuilder().implement(Registry.class, RegistryImpl.class)
                 .build(RegistryImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Mirror.class, MirrorImpl.class)
-                .build(MirrorImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(LoggingDriver.class, LoggingDriverImpl.class)
+        install(new FactoryModuleBuilder().implement(Mirror.class, MirrorImpl.class).build(MirrorImplFactory.class));
+        install(new FactoryModuleBuilder().implement(LoggingDriver.class, LoggingDriverImpl.class)
                 .build(LoggingDriverImplFactory.class));
     }
 }

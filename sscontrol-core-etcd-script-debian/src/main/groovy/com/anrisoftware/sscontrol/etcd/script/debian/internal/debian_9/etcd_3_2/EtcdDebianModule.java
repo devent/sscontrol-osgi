@@ -29,27 +29,19 @@ public class EtcdDebianModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdDebian.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdDebian.class)
                 .build(EtcdDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class,
-                        EtcdUpstreamSystemdDebian.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdUpstreamSystemdDebian.class)
                 .build(EtcdUpstreamSystemdDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdUpstreamDebian.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdUpstreamDebian.class)
                 .build(EtcdUpstreamDebianFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdDefaults.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdDefaults.class)
                 .build(EtcdDefaultsFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdUfw.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdUfw.class)
                 .build(EtcdUfwFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdVirtualInterface.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdVirtualInterface.class)
                 .build(EtcdVirtualInterfaceFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(HostServiceScript.class, EtcdCheck.class)
+        install(new FactoryModuleBuilder().implement(HostServiceScript.class, EtcdCheck.class)
                 .build(EtcdCheckFactory.class));
     }
 

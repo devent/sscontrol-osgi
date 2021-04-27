@@ -47,41 +47,24 @@ public class EtcdModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(HostService.class, EtcdImpl.class)
-                .build(EtcdImplFactory.class));
-        install(new FactoryModuleBuilder().implement(Peer.class, PeerImpl.class)
-                .build(PeerImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Cluster.class, ClusterImpl.class)
-                .build(ClusterImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authentication.class,
-                        ClientCertsAuthenticationImpl.class)
+        install(new FactoryModuleBuilder().implement(HostService.class, EtcdImpl.class).build(EtcdImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Peer.class, PeerImpl.class).build(PeerImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Cluster.class, ClusterImpl.class).build(ClusterImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Authentication.class, ClientCertsAuthenticationImpl.class)
                 .build(ClientCertsAuthenticationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Authentication.class,
-                        PeerClientCertsAuthenticationImpl.class)
+        install(new FactoryModuleBuilder().implement(Authentication.class, PeerClientCertsAuthenticationImpl.class)
                 .build(PeerClientCertsAuthenticationImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Client.class, ClientImpl.class)
-                .build(ClientImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Proxy.class, ProxyImpl.class)
-                .build(ProxyImplFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(Gateway.class, GatewayImpl.class)
-                .build(GatewayImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Client.class, ClientImpl.class).build(ClientImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Proxy.class, ProxyImpl.class).build(ProxyImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Gateway.class, GatewayImpl.class).build(GatewayImplFactory.class));
         bindAuthentication();
     }
 
     private void bindAuthentication() {
-        MapBinder<String, AuthenticationFactory> mapbinder = newMapBinder(
-                binder(), String.class, AuthenticationFactory.class);
-        mapbinder.addBinding("cert")
-                .to(ClientCertsAuthenticationImplFactory.class);
-        mapbinder.addBinding("peer-cert")
-                .to(PeerClientCertsAuthenticationImplFactory.class);
+        MapBinder<String, AuthenticationFactory> mapbinder = newMapBinder(binder(), String.class,
+                AuthenticationFactory.class);
+        mapbinder.addBinding("cert").to(ClientCertsAuthenticationImplFactory.class);
+        mapbinder.addBinding("peer-cert").to(PeerClientCertsAuthenticationImplFactory.class);
     }
 
 }
