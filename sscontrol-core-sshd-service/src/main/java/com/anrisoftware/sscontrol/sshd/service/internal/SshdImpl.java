@@ -66,7 +66,7 @@ public class SshdImpl implements Sshd {
 
     private final List<TargetHost> targets;
 
-    private final List<String> users;
+    private final List<String> allowUsers;
 
     private DebugLogging debug;
 
@@ -81,7 +81,7 @@ public class SshdImpl implements Sshd {
         this.log = log;
         this.serviceProperties = propertiesService.create();
         this.targets = new ArrayList<TargetHost>();
-        this.users = new ArrayList<String>();
+        this.allowUsers = new ArrayList<String>();
         this.binding = bindingFactory.create();
         this.bindingFactory = bindingFactory;
         parseArgs(args);
@@ -121,17 +121,6 @@ public class SshdImpl implements Sshd {
         });
     }
 
-    public List<String> getUser() {
-        return stringListStatement(new ListProperty() {
-
-            @Override
-            public void add(String property) {
-                log.addUser(SshdImpl.this, property);
-                users.add(property);
-            }
-        });
-    }
-
     /**
      * <pre>
      * bind port: 2222
@@ -141,6 +130,22 @@ public class SshdImpl implements Sshd {
         Map<String, Object> a = new HashMap<>(args);
         this.binding = bindingFactory.create(a);
         log.bindingSet(this, binding);
+    }
+
+    /**
+     * <pre>
+     * allowUser << 'robobee'
+     * </pre>
+     */
+    public List<String> getAllowUser() {
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                log.addAllowUser(SshdImpl.this, property);
+                allowUsers.add(property);
+            }
+        });
     }
 
     @Override
@@ -164,8 +169,8 @@ public class SshdImpl implements Sshd {
     }
 
     @Override
-    public List<String> getUsers() {
-        return users;
+    public List<String> getAllowUsers() {
+        return allowUsers;
     }
 
     @Override
@@ -176,8 +181,7 @@ public class SshdImpl implements Sshd {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("targets", targets).append("debug", debug)
-                .append("users", users).toString();
+                .append("targets", targets).append("debug", debug).toString();
     }
 
     @SuppressWarnings("unchecked")

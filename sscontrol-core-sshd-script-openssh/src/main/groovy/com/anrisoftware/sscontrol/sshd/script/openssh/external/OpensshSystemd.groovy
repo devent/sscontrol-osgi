@@ -41,6 +41,9 @@ abstract class OpensshSystemd extends ScriptBase {
         if (service.binding.port) {
             replace "s/(?m)^#?\\s*Port.*/Port ${service.binding.port}/", privileged: true, dest: configFile call()
         }
+        if (!service.allowUsers.empty) {
+            replace "s/(?m)^#?\\s*AllowUsers.*/AllowUsers ${service.allowUsers.join(' ')}/", privileged: true, dest: configFile call()
+        }
     }
 
     boolean isSelinuxActive() {

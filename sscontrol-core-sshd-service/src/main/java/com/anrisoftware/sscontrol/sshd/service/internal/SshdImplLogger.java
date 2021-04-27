@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.sshd.service.internal;
 
-import static com.anrisoftware.sscontrol.sshd.service.internal.SshdImplLogger.m.addUser;
+import static com.anrisoftware.sscontrol.sshd.service.internal.SshdImplLogger.m.addAllowUser;
 import static com.anrisoftware.sscontrol.sshd.service.internal.SshdImplLogger.m.bindingSet;
 
 import javax.inject.Singleton;
@@ -34,7 +34,7 @@ final class SshdImplLogger extends AbstractLogger {
 
     enum m {
 
-        addUser("User '{}' added to {}"),
+        addAllowUser("Allow user '{}' added to {}"),
 
         bindingSet("Binding {} set for {}");
 
@@ -57,8 +57,8 @@ final class SshdImplLogger extends AbstractLogger {
         super(SshdImpl.class);
     }
 
-    void addUser(SshdImpl sshd, String name) {
-        debug(addUser, name, sshd);
+    void addAllowUser(SshdImpl sshd, String name) {
+        debug(addAllowUser, name, sshd);
     }
 
     void bindingSet(SshdImpl sshd, Binding binding) {

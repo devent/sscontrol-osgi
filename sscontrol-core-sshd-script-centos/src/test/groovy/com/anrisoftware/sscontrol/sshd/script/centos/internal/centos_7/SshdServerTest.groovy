@@ -57,6 +57,25 @@ service "sshd"
     }
 
     @Test
+    void "server_allow_user"() {
+        def test = [
+            name: "server_allow_user",
+            script: '''
+service "ssh", host: "robobee@${testHost}", socket: testSocket
+service "sshd" with {
+    allowUser << 'robobee'
+}
+''',
+            scriptVars: [testHost: mailHost, testSocket: mailSocket],
+            expectedServicesSize: 2,
+            expected: { Map args ->
+                assertStringResource SshdServerTest, readPrivilegedRemoteFile('/etc/ssh/sshd_config', mailHost), "${args.test.name}_sshd_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
+
+    @Test
     void "server_binding_port"() {
         def test = [
             name: "server_binding_port",

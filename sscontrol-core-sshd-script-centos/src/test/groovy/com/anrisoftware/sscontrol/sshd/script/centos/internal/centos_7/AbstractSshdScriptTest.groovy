@@ -52,7 +52,8 @@ abstract class AbstractSshdScriptTest extends AbstractSshdRunnerTest {
             'curl',
             'sleep',
             'file',
-            'semanage'
+            'semanage',
+            'grep'
         ]
     }
 }

@@ -108,4 +108,26 @@ service "sshd" with {
         ]
         doTest test
     }
+
+    @Test
+    void "script_allow_user"() {
+        def test = [
+            name: "script_allow_user",
+            script: '''
+service "ssh", host: "localhost", socket: localhostSocket
+service "sshd" with {
+    allowUser << 'robobee'
+}
+''',
+            scriptVars: [localhostSocket: localhostSocket],
+            expectedServicesSize: 2,
+            generatedDir: folder.newFolder(),
+            expected: { Map args ->
+                File dir = args.dir
+                File gen = args.test.generatedDir
+                assertFileResource SshdScriptTest, dir, "etc/ssh/sshd_config", "${args.test.name}_sshd_config_expected.txt"
+            },
+        ]
+        doTest test
+    }
 }
