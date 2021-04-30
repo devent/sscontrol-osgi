@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2;
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4;
 
-import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
+ * <i>Etcd 3.4 Debian 10</i> properties provider from
+ * {@code "/etcd_3_4_debian_10.properties"}.
  *
- *
- * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
- * @version 1.0
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
  */
-public interface EtcdDefaultsFactory extends HostServiceScriptService {
+class Etcd_3_4_Debian_10_Properties extends AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = Etcd_3_4_Debian_10_Properties.class.getResource("/etcd_3_4_debian_10.properties");
+
+    Etcd_3_4_Debian_10_Properties() {
+        super(Etcd_3_4_Debian_10_Properties.class, RESOURCE);
+    }
 }

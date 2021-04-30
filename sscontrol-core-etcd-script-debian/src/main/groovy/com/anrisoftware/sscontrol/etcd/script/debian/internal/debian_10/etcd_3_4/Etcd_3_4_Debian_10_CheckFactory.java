@@ -13,34 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4;
 
-import javax.inject.Inject
-
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Check
-
-import groovy.util.logging.Slf4j
+import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
 /**
- * Checks the etcd cluster.
+ * Factory to create the Etcd 3.4 Debian 10 check script.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
+ * @version 1.0
  */
-@Slf4j
-class EtcdCheck extends Etcd_3_x_Check {
-
-    @Inject
-    EtcdDebianProperties debianPropertiesProvider
-
-    @Override
-    ContextProperties getDefaultProperties() {
-        debianPropertiesProvider.get()
-    }
-
-    @Override
-    def getLog() {
-        log
-    }
+public interface Etcd_3_4_Debian_10_CheckFactory extends HostServiceScriptService {
 }

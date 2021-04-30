@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Etcd</i> 3.1 service from the upstream sources.
+ * Configures the <i>Etcd</i> 3.x service from the upstream sources.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
 import javax.inject.Inject
 
@@ -32,10 +32,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class EtcdUfw extends ScriptBase {
+class UfwEtcd_3_4_Debian_10 extends ScriptBase {
 
     @Inject
-    EtcdDebianProperties debianPropertiesProvider
+    Etcd_3_4_Debian_10_Properties debianPropertiesProvider
 
     UfwUtils ufw
 
@@ -47,7 +47,7 @@ class EtcdUfw extends ScriptBase {
     @Override
     Object run() {
         Etcd service = this.service
-        if (!ufw.ufwActive) {
+        if (!ufw.active) {
             log.debug 'No Ufw available.'
             return
         }

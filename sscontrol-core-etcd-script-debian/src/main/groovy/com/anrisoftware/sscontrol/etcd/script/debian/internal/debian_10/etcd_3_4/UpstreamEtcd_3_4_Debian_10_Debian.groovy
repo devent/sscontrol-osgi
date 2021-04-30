@@ -13,55 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
 import javax.inject.Inject
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Upstream_Systemd
-import com.anrisoftware.sscontrol.etcd.service.external.Etcd
+import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Upstream
 
 import groovy.util.logging.Slf4j
 
 /**
  * Configures the Etcd 3.2 service from the upstream sources
- * for Systemd and Debian 9.
+ * for Debian 9.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class EtcdUpstreamSystemdDebian extends Etcd_3_x_Upstream_Systemd {
+class UpstreamEtcd_3_4_Debian_10_Debian extends Etcd_3_x_Upstream {
 
     @Inject
-    EtcdDebianProperties debianPropertiesProvider
+    Etcd_3_4_Debian_10_Properties debianPropertiesProvider
 
     @Override
     Object run() {
-        Etcd service = this.service
-        createDirectories()
-        def services = { createServices() }
-        def config = { createConfig() }
-        if (service.proxy) {
-            services = { createProxyServices() }
-            config = { createProxyConfig() }
-        }
-        if (service.gateway) {
-            services = { createGatewayServices() }
-            config = { createGatewayConfig() }
-        }
-        services()
-        config()
-        uploadServerTls()
-        uploadClientTls()
-        uploadClientCertAuth()
-        uploadPeerTls()
-        uploadPeerCertAuth()
-        secureSslDir()
-        createEctdctlVariablesFile()
-        reloadDaemon()
-        enableServices()
-        startServices()
+        installEtcd()
     }
 
     @Override

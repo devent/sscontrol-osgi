@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2;
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4;
 
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
 
@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.host.external.HostServiceScriptService;
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-public interface EtcdCheckFactory extends HostServiceScriptService {
+public interface UfwEtcd_3_4_Debian_10_Factory extends HostServiceScriptService {
 }

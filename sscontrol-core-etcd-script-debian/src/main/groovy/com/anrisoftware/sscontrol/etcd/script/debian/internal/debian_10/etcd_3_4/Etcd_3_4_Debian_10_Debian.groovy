@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
 import javax.inject.Inject
 
@@ -25,30 +25,30 @@ import com.anrisoftware.sscontrol.utils.debian.external.Debian_10_UtilsFactory
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Etcd</i> 3.1 service for Debian 9.
+ * Configures the Etcd 3.4 Debian 10.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-class EtcdDebian extends ScriptBase {
+class Etcd_3_4_Debian_10_Debian extends ScriptBase {
 
     @Inject
-    EtcdDebianProperties debianPropertiesProvider
+    Etcd_3_4_Debian_10_Properties debianPropertiesProvider
 
     @Inject
-    EtcdUpstreamDebianFactory upstreamFactory
+    UpstreamEtcd_3_4_Debian_10_Factory upstreamFactory
 
     @Inject
-    EtcdDefaultsFactory etcdDefaultsFactory
+    Etcd_3_4_Debian_10_DefaultsFactory etcdDefaultsFactory
 
     @Inject
-    EtcdVirtualInterfaceFactory virtualInterfaceFactory
+    VirtualInterfaceEtcd_3_4_Debian_10_Factory virtualInterfaceFactory
 
     @Inject
-    EtcdCheckFactory checkFactory
+    Etcd_3_4_Debian_10_CheckFactory checkFactory
 
-    EtcdUpstreamSystemdDebian etcdUpstreamSystemd
+    SystemdUpstreamEtcd_3_4_Debian_10_Debian etcdUpstreamSystemd
 
     DebianUtils debian
 
@@ -60,12 +60,12 @@ class EtcdDebian extends ScriptBase {
     }
 
     @Inject
-    void setUpstreamSystemdFactory(EtcdUpstreamSystemdDebianFactory factory) {
+    void setUpstreamSystemdFactory(SystemdUpstreamEtcd_3_4_Debian_10_DebianFactory factory) {
         this.etcdUpstreamSystemd = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 
     @Inject
-    void setEtcdUfwFactory(EtcdUfwFactory factory) {
+    void setEtcdUfwFactory(UfwEtcd_3_4_Debian_10_Factory factory) {
         this.etcdUfw = factory.create(scriptsRepository, service, target, threads, scriptEnv)
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 
@@ -82,7 +82,7 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
     EtcdImplFactory etcdFactory
 
     @Inject
-    EtcdDebianFactory etcdDebianFactory
+    Etcd_3_4_Debian_10_Factory etcdDebianFactory
 
     def getRunScriptFactory() {
         runnerFactory
@@ -92,7 +92,7 @@ abstract class AbstractEtcdRunnerTest extends AbstractRunnerTestBase {
         services.putAvailableService 'ssh', sshFactory
         services.putAvailableScriptService 'ssh/linux/0', ssh_Linux_Factory
         services.putAvailableService 'etcd', etcdFactory
-        services.putAvailableScriptService 'etcd/debian/9', etcdDebianFactory
+        services.putAvailableScriptService 'etcd/debian/10', etcdDebianFactory
         return services
     }
 

@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2;
-
-import static com.google.inject.Guice.createInjector;
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
-
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
 
 import com.anrisoftware.sscontrol.types.host.external.HostService;
 import com.anrisoftware.sscontrol.types.host.external.HostServiceScript;
@@ -32,20 +27,19 @@ import com.anrisoftware.sscontrol.types.host.external.HostServices;
 import com.anrisoftware.sscontrol.types.host.external.TargetHost;
 
 /**
- *
+ * Etcd 3.4 Debian 10 service.
  *
  * @author Erwin Müller {@literal <erwin.mueller@deventm.de>}
  * @version 1.0
  */
-@Component(service = HostServiceScriptService.class)
-public class EtcdDebianService implements HostServiceScriptService {
+public class Etcd_3_4_Debian_10_Service implements HostServiceScriptService {
 
-    static final String SYSTEM_VERSION = "9";
+    static final String SYSTEM_VERSION = "10";
 
     static final String SYSTEM_NAME = "debian";
 
     @Inject
-    private EtcdDebianFactory scriptFactory;
+    private Etcd_3_4_Debian_10_Factory scriptFactory;
 
     public String getSystemName() {
         return SYSTEM_NAME;
@@ -59,11 +53,6 @@ public class EtcdDebianService implements HostServiceScriptService {
     public HostServiceScript create(HostServices repository, HostService service, TargetHost target,
             ExecutorService threads, Map<String, Object> env) {
         return scriptFactory.create(repository, service, target, threads, env);
-    }
-
-    @Activate
-    protected void start() {
-        createInjector(new EtcdDebianModule()).injectMembers(this);
     }
 
 }

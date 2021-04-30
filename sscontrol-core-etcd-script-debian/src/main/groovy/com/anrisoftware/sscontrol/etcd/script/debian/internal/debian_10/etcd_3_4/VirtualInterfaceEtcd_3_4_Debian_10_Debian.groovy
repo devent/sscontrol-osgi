@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2
-
-import static com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_9.etcd_3_2.EtcdDebianService.*
+package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
 import javax.inject.Inject
 
@@ -37,10 +35,10 @@ import groovy.util.logging.Slf4j
  * @since 1.0
  */
 @Slf4j
-class EtcdVirtualInterface extends ScriptBase {
+class VirtualInterfaceEtcd_3_4_Debian_10_Debian extends ScriptBase {
 
     @Inject
-    EtcdDebianProperties debianPropertiesProvider
+    Etcd_3_4_Debian_10_Properties debianPropertiesProvider
 
     TemplateResource networkConfigTemplate
 
@@ -53,7 +51,7 @@ class EtcdVirtualInterface extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory, NumberTrueRenderer numberTrueRenderer) {
-        def templates = templatesFactory.create('Etcd_3_2_Debian_9_VirtualInterfaceTemplates')
+        def templates = templatesFactory.create('Etcd_3_4_Debian_10_VirtualInterfaceTemplates')
         this.networkConfigTemplate = templates.getResource('network_config')
     }
 
