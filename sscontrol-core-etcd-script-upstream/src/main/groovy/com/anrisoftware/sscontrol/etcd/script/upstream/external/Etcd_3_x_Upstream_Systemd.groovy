@@ -120,6 +120,8 @@ chmod o-rx '$certsdir'
     }
 
     def uploadServerTls() {
+        println "uploadServerTls"
+        println service.tls
         uploadTls 'service.tls', service.tls
     }
 

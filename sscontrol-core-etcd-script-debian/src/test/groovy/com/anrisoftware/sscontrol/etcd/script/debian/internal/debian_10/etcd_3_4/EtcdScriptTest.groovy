@@ -15,11 +15,9 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.shell.external.utils.LocalhostSocketCondition.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.ExtendWith
@@ -73,9 +71,9 @@ service "etcd", member: "default"
     }
 
     @Test
-    void "script_tls"() {
+    void "script_tls_basic"() {
         def test = [
-            name: "script_tls",
+            name: "script_tls_basic",
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default" with {

@@ -27,9 +27,9 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUti
 abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
 
     static final Map testCerts = [
-        ca: AbstractEtcdScriptTest.class.getResource('cert_ca.txt'),
-        cert: AbstractEtcdScriptTest.class.getResource('cert_cert.txt'),
-        key: AbstractEtcdScriptTest.class.getResource('cert_key.txt'),
+        ca: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_ca.txt'),
+        cert: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_cert.txt'),
+        key: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_key.txt'),
     ]
 
     static final URL grepActiveCommand = AbstractEtcdScriptTest.class.getResource('grep_active_command.txt')
@@ -39,6 +39,7 @@ abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
         createCommand catCommand, dir, "cat"
         createCommand grepCommand, dir, 'grep'
         createCommand whichufwnotfoundCommand, dir, 'which'
+        new File(dir, '/var/lib/robobee/tmp').mkdirs()
         def d = new File(dir, '/usr/local/share')
         d.mkdirs()
         createFile EtcdScriptTest.class.getResource("etcdctl_vars.txt"), d, 'etcdctl-vars'

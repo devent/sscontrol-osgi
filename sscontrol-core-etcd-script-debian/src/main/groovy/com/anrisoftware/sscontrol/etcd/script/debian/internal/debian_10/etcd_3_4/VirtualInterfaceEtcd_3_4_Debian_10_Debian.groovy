@@ -51,7 +51,7 @@ class VirtualInterfaceEtcd_3_4_Debian_10_Debian extends ScriptBase {
 
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory, NumberTrueRenderer numberTrueRenderer) {
-        def templates = templatesFactory.create('Etcd_3_4_Debian_10_VirtualInterfaceTemplates')
+        def templates = templatesFactory.create('VirtualInterfaceEtcd_3_4_Debian_10_Debian')
         this.networkConfigTemplate = templates.getResource('network_config')
     }
 

@@ -23,8 +23,7 @@ import com.anrisoftware.sscontrol.etcd.script.upstream.external.Etcd_3_x_Upstrea
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the Etcd 3.2 service from the upstream sources
- * for Debian 9.
+ * Installs Etcd 3.4 Debian 10 from the upstream source.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
