@@ -34,8 +34,7 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 @Singleton
 public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    private static final URL res = LinuxPropertiesProvider.class
-            .getResource("/copy_commands_linux.properties");
+    private static final URL res = LinuxPropertiesProvider.class.getResource("/copy_commands_linux.properties");
 
     LinuxPropertiesProvider() {
         super(LinuxPropertiesProvider.class, res);
