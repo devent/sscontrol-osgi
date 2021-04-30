@@ -6,3 +6,9 @@
 -p /tmp/junit/junit/etc/etcd
 -p /var/lib/robobee/tmp
 -p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp

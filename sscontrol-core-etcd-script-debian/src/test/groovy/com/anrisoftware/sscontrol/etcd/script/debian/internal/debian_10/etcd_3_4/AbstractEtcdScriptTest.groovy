@@ -26,10 +26,16 @@ import static com.anrisoftware.sscontrol.utils.debian.external.Debian_10_TestUti
  */
 abstract class AbstractEtcdScriptTest extends AbstractEtcdRunnerTest {
 
-    static final Map testCerts = [
-        ca: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_ca.txt'),
-        cert: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_cert.txt'),
-        key: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_key.txt'),
+    static final Map testTlsCerts = [
+        ca: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_ca.pem'),
+        cert: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_cert.pem'),
+        key: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_etcd_0_server_key.pem'),
+    ]
+
+    static final Map testClientCerts = [
+        ca: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_ca.pem'),
+        cert: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_kube_0_cert.pem'),
+        key: AbstractEtcdScriptTest.class.getResource('robobee_test_etcd_kube_0_key.pem'),
     ]
 
     static final URL grepActiveCommand = AbstractEtcdScriptTest.class.getResource('grep_active_command.txt')

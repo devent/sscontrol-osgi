@@ -47,7 +47,7 @@ class EtcdScriptTest extends AbstractEtcdScriptTest {
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default"
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -80,11 +80,11 @@ service "etcd", member: "default" with {
     bind "http://localhost:2379"
     bind "https://etcd-0.muellerpublic.de:2379"
     advertise "https://etcd-0.muellerpublic.de:2379"
-    tls testCerts
-    client testCerts
+    tls testTlsCerts
+    client testClientCerts
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket, testTlsCerts: testTlsCerts, testClientCerts: testClientCerts],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
