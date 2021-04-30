@@ -107,10 +107,10 @@ service "etcd", member: "default" with {
             script: '''
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd", member: "default" with {
-    authentication "cert", ca: testCerts.ca
+    authentication "cert", ca: testTlsCerts.ca
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket, testTlsCerts: testTlsCerts],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -136,12 +136,12 @@ service "etcd", member: "infra0" with {
         cluster << "infra0=https://10.0.1.10:2380"
         cluster name: "infra1", address: "https://10.0.1.11:2380"
         cluster "infra2", address: "https://10.0.1.12:2380"
-        tls testCerts
-        authentication "cert", ca: testCerts.ca
+        tls testTlsCerts
+        authentication "cert", ca: testTlsCerts.ca
     }
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket, testTlsCerts: testTlsCerts],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -172,7 +172,7 @@ service "etcd", member: "infra0" with {
     }
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             before: { Map test ->
@@ -198,7 +198,7 @@ service "etcd" with {
     proxy endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -228,10 +228,10 @@ service "etcd" with {
 service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
     proxy endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
-    client testCerts
+    client testClientCerts
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket, testClientCerts: testClientCerts],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -259,7 +259,7 @@ service "etcd" with {
     gateway endpoints: "http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
@@ -290,10 +290,10 @@ service "ssh", host: "localhost", socket: localhostSocket
 service "etcd" with {
     bind "https://127.0.0.1:22379"
     gateway endpoints: "https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
-    client testCerts
+    client testClientCerts
 }
 ''',
-            scriptVars: [localhostSocket: localhostSocket, testCerts: testCerts],
+            scriptVars: [localhostSocket: localhostSocket, testClientCerts: testClientCerts],
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
