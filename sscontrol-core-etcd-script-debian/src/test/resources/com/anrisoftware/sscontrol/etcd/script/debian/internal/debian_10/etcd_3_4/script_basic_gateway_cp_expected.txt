@@ -1,0 +1,3 @@
+/var/lib/robobee/tmp/etcd-gateway.service /tmp/junit/junit/etc/systemd/system/etcd-gateway.service
+/var/lib/robobee/tmp/etcd-gateway.conf /tmp/junit/junit/etc/etcd/etcd-gateway.conf
+/var/lib/robobee/tmp/etcdctl-vars /tmp/junit/junit/usr/local/share/etcdctl-vars

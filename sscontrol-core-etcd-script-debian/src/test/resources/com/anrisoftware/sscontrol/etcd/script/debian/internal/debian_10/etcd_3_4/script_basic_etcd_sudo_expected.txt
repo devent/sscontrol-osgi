@@ -1,0 +1,22 @@
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+mkdir -p /tmp/junit/junit/var/lib/robobee/tmp
+chown /tmp/junit/junit/id -u /tmp/junit/junit/var/lib/robobee/tmp
+chmod o-rwx /tmp/junit/junit/var/lib/robobee/tmp
+find . -executable -type f -exec cp {} /tmp/junit/junit/usr/local/bin ;
+chmod o+rx /tmp/junit/junit/usr/local/bin/*
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s
+/bin/bash -s

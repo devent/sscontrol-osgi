@@ -1,0 +1,3 @@
+/var/lib/robobee/tmp/etcd-proxy.service /tmp/junit/junit/etc/systemd/system/etcd-proxy.service
+/var/lib/robobee/tmp/etcd-proxy.conf /tmp/junit/junit/etc/etcd/etcd-proxy.conf
+/var/lib/robobee/tmp/etcdctl-vars /tmp/junit/junit/usr/local/share/etcdctl-vars

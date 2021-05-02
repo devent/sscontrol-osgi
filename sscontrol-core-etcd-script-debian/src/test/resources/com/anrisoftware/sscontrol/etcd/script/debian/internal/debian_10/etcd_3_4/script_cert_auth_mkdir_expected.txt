@@ -1,0 +1,9 @@
+-p /tmp/junit/junit/var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/systemd/system
+-p /tmp/junit/junit/var/lib/etcd
+-p /tmp/junit/junit/etc/etcd/ssl
+-p /var/lib/robobee/tmp
+-p /tmp/junit/junit/etc/etcd
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp
+-p /var/lib/robobee/tmp

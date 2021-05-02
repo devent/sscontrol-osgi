@@ -62,9 +62,8 @@ public class DownloadCopyWorker implements Copy {
      */
     public interface DownloadCopyWorkerFactory {
 
-        DownloadCopyWorker create(@Assisted Map<String, Object> args,
-                @Assisted SshHost host, @Assisted("parent") Object parent,
-                @Assisted Threads threads, @Assisted("log") Object log);
+        DownloadCopyWorker create(@Assisted Map<String, Object> args, @Assisted SshHost host,
+                @Assisted("parent") Object parent, @Assisted Threads threads, @Assisted("log") Object log);
 
     }
 
@@ -87,17 +86,14 @@ public class DownloadCopyWorker implements Copy {
     private LinuxPropertiesProvider linuxPropertiesProvider;
 
     @Inject
-    DownloadCopyWorker(TemplatesFactory templates,
-            @Assisted Map<String, Object> args, @Assisted SshHost host,
-            @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log) {
+    DownloadCopyWorker(TemplatesFactory templates, @Assisted Map<String, Object> args, @Assisted SshHost host,
+            @Assisted("parent") Object parent, @Assisted Threads threads, @Assisted("log") Object log) {
         this.args = new HashMap<>(args);
         this.host = host;
         this.parent = parent;
         this.threads = threads;
         this.log = log;
-        this.cmdTemplate = templates.create("CopyTemplates")
-                .getResource("download_cmd");
+        this.cmdTemplate = templates.create("CopyTemplates").getResource("download_cmd");
         setupArgs();
         checkArgs();
     }
@@ -124,10 +120,8 @@ public class DownloadCopyWorker implements Copy {
         notNull(args.get(DEST_ARG), "%s=null", DEST_ARG);
         Object v = args.get(SIG_ARG);
         if (v != null) {
-            assertThat(format("%s=null", SERVER_ARG), args.get(SERVER_ARG),
-                    is(notNullValue()));
-            assertThat(format("%s=null", KEY_ARG), args.get(KEY_ARG),
-                    is(notNullValue()));
+            assertThat(format("%s=null", SERVER_ARG), args.get(SERVER_ARG), is(notNullValue()));
+            assertThat(format("%s=null", KEY_ARG), args.get(KEY_ARG), is(notNullValue()));
         }
     }
 

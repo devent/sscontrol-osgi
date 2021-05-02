@@ -1,0 +1,8 @@
+###
+# etcd-gateway system config
+#
+
+#[gateway]
+ETCD_GATEWAY_ENDPOINTS="https://etcd-0:2379,https://etcd-1:2379,https://etcd-2:2379"
+ETCD_GATEWAY_LISTEN_ADDR="127.0.0.1:22379"
+ETCD_GATEWAY_CA="/tmp/junit/junit/etc/etcd/ssl/client_ca.pem"

@@ -1,0 +1,2 @@
+-rwxr-xr-x 1 root root 23901760 date /usr/local/bin/etcd
+-rwxr-xr-x 1 root root 17612384 date /usr/local/bin/etcdctl

@@ -1203,6 +1203,9 @@ echo \$file
             args.cmdName = name
             a.tmpFile = createTmpFileCallback(args)
         }
+        if (base) {
+            a.remoteTmp = "${base}/var/lib/robobee/tmp"
+        }
         def v = args.timeout
         if (v) {
             if (!(v instanceof Duration)) {

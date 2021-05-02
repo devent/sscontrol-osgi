@@ -1,0 +1,7 @@
+###
+# etcd-gateway system config
+#
+
+#[gateway]
+ETCD_GATEWAY_ENDPOINTS="http://localhost:2379"
+ETCD_GATEWAY_LISTEN_ADDR="localhost:22379"

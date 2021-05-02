@@ -1,0 +1,10 @@
+total 48
+-rw-r----- 1 etcd root 6773 date client_ca.pem
+-rw-r----- 1 etcd root 2321 date client_cert.pem
+-rw-r----- 1 etcd root 3243 date client_key.pem
+-rw-r----- 1 etcd root 6773 date etcd_ca.pem
+-rw-r----- 1 etcd root 2845 date etcd_cert.pem
+-rw-r----- 1 etcd root 3243 date etcd_key.pem
+-rw-r----- 1 etcd root 6773 date peer_ca.pem
+-rw-r----- 1 etcd root 2845 date peer_cert.pem
+-rw-r----- 1 etcd root 3243 date peer_key.pem

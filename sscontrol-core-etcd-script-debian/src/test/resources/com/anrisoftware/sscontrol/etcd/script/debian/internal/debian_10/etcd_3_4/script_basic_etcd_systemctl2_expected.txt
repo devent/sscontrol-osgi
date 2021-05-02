@@ -1,0 +1,5 @@
+stop etcd
+daemon-reload
+enable etcd
+start etcd --no-block
+status etcd

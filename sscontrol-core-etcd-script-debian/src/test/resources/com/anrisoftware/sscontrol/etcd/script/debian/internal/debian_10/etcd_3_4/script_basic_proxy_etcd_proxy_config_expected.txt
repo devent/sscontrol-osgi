@@ -1,0 +1,7 @@
+###
+# etcd-proxy system config
+#
+
+#[grpc-proxy]
+ETCD_PROXY_ENDPOINTS="http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379"
+ETCD_PROXY_LISTEN_ADDR="localhost:2379"

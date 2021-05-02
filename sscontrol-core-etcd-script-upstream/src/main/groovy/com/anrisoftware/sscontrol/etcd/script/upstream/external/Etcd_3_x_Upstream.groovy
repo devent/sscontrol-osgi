@@ -24,7 +24,7 @@ import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
 import groovy.util.logging.Slf4j
 
 /**
- * Configures the <i>Etcd</i> 3.1 service from the upstream sources.
+ * Configures the <i>Etcd</i> 3.x service from the upstream sources.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -34,7 +34,7 @@ abstract class Etcd_3_x_Upstream extends ScriptBase {
 
     def installEtcd() {
         log.info 'Installs etcd.'
-        copy src: archive, sig: archiveSig, server: archiveServer, key: archiveKey, dest: "/tmp", direct: true, timeout: timeoutLong call()
+        copy src: archive, hash: archiveHash, dest: "/tmp", direct: true, timeout: timeoutLong call()
         def archiveFile = FilenameUtils.getName(archive.toString())
         def archiveName = getBaseName(getBaseName(archive.toString()))
         shell timeout: timeoutMiddle, """\
