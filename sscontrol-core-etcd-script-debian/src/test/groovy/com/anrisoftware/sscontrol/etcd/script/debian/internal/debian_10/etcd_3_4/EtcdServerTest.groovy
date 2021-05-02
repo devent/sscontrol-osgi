@@ -15,12 +15,9 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import static com.anrisoftware.sscontrol.shell.external.utils.RobobeeSocketCondition.*
-import static org.junit.jupiter.api.Assumptions.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -76,7 +73,7 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-proxy.service'), "${args.test.name}_etcd_proxy_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 12379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 12379').replaceAll('\\d+\\/etcd', 'id/etcd').replaceAll('\\s*$', ''), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test
@@ -100,16 +97,16 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-gateway.service'), "${args.test.name}_etcd_gateway_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 22379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 22379').replaceAll('\\d+\\/etcd', 'id/etcd').replaceAll('\\s*$', ''), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test
     }
 
     @Test
-    void "etcd_tls_peers_server"() {
+    void "server_tls_peers"() {
         def test = [
-            name: "etcd_tls_peers_server",
+            name: "server_tls_peers",
             script: '''
 service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 def host = targets['all'][0]
@@ -150,7 +147,7 @@ service "ssh", host: "robobee@robobee-test", socket: robobeeSocket
 service "etcd" with {
     bind "http://localhost:12379"
     proxy endpoints: "https://etcd-0.robobee-test.test:2379"
-    client certs.client
+    client certs.proxy
 }
 ''',
             scriptVars: [robobeeSocket: robobeeSocket, certs: robobeetestEtcdCerts],
@@ -160,7 +157,7 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-proxy.service'), "${args.test.name}_etcd_proxy_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 127.0.0.1:12379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep 127.0.0.1:12379').replaceAll('\\d+\\/etcd', 'id/etcd').replaceAll('\\s*$', ''), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test
@@ -186,7 +183,7 @@ service "etcd" with {
                 assertStringResource EtcdServerTest, readRemoteFile('/etc/systemd/system/etcd-gateway.service'), "${args.test.name}_etcd_gateway_service_expected.txt"
                 assertStringResource EtcdServerTest, readRemoteFile('/usr/local/share/etcdctl-vars'), "${args.test.name}_etcdctl_vars_expected.txt"
                 assertStringResource EtcdServerTest, checkRemoteFiles('/usr/local/bin/etcd*'), "${args.test.name}_bins_expected.txt"
-                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep :22379').replaceAll('\\d+\\/etcd', 'id/etcd'), "${args.test.name}_netstat_expected.txt"
+                assertStringResource EtcdServerTest, remoteCommand('netstat -lnp|grep :22379').replaceAll('\\d+\\/etcd', 'id/etcd').replaceAll('\\s*$', ''), "${args.test.name}_netstat_expected.txt"
             },
         ]
         doTest test

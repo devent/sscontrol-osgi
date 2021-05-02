@@ -15,10 +15,7 @@
  */
 package com.anrisoftware.sscontrol.etcd.script.debian.internal.debian_10.etcd_3_4
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import static org.junit.jupiter.api.Assumptions.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -64,7 +61,6 @@ targets.etcd.eachWithIndex { host, i ->
             tls cert: certs.etcd[i].cert, key: certs.etcd[i].key
             authentication "cert", ca: certs.ca
         }
-        property << "archive_ignore_key=true"
     }
 }
 ''',
