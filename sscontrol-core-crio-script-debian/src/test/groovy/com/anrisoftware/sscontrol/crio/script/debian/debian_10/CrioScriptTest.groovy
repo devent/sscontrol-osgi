@@ -64,6 +64,7 @@ service "crio", version: "1.20"
                 assertFileResource CrioScriptTest, dir, "mkdir.out", "${args.test.name}_mkdir_expected.txt"
                 assertFileResource CrioScriptTest, dir, "chown.out", "${args.test.name}_chown_expected.txt"
                 assertFileResource CrioScriptTest, dir, "chmod.out", "${args.test.name}_chmod_expected.txt"
+                assertFileResource CrioScriptTest, dir, "systemctl.out", "${args.test.name}_systemctl_expected.txt"
                 assertFileResource CrioScriptTest, dir, "sudo.out", "${args.test.name}_sudo_expected.txt"
             },
         ]
