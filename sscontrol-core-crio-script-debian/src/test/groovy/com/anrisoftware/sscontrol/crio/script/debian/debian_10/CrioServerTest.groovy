@@ -50,6 +50,7 @@ service "crio", version: "1.20"
                 assertStringResource CrioServerTest, readRemoteFile('/etc/modules-load.d/crio.conf'), "${args.test.name}_crio_conf_expected.txt"
                 assertStringResource CrioServerTest, readRemoteFile('/etc/sysctl.d/99-kubernetes-cri.conf'), "${args.test.name}_99_kubernetes_cri_conf_expected.txt"
                 assertStringResource CrioServerTest, readRemoteFile('/etc/apt/sources.list.d/crio.list'), "${args.test.name}_crio_list_expected.txt"
+                assertStringResource CrioServerTest, readRemoteFile('/etc/apt/sources.list.d/libcontainers.list'), "${args.test.name}_libcontainers_list_expected.txt"
             },
         ]
         doTest test

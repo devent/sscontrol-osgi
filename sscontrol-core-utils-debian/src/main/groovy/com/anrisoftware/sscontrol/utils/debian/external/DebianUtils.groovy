@@ -18,6 +18,7 @@ package com.anrisoftware.sscontrol.utils.debian.external
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import org.apache.commons.lang3.StringUtils
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -95,6 +96,11 @@ abstract class DebianUtils {
     boolean checkPackage(Map args) {
         log.info "Check installed packages {}.", args
         assertThat "args.name=null", args, hasKey('name')
+        if (args.name.contains("=")) {
+            def nameVersion = getSplitPackageNameVersion(args.name)
+            args.name = nameVersion.name
+            args.version = nameVersion.version
+        }
         def a = new HashMap(args)
         a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
@@ -106,6 +112,14 @@ abstract class DebianUtils {
         a.name = 'checkPackage'
         def ret = script.shell a call()
         return ret.exitValue == 0
+    }
+
+    /**
+     * Return the package name and package version.
+     */
+    Map getSplitPackageNameVersion(String packageName) {
+        def nameSplit = StringUtils.split(packageName, '=')
+        [name: nameSplit[0], version: nameSplit[1]]
     }
 
     /**
