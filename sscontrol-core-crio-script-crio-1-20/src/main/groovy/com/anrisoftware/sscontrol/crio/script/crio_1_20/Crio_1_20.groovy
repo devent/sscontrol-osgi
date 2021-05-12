@@ -37,11 +37,14 @@ abstract class Crio_1_20 extends ScriptBase {
 
     TemplateResource kubernetesCriTemplate
 
+    TemplateResource cgroupManagerTemplate
+
     @Inject
     void loadTemplates(TemplatesFactory templatesFactory) {
         def templates = templatesFactory.create("Crio_1_20_K8s_Templates")
         this.crioConfTemplate = templates.getResource("crio_conf")
         this.kubernetesCriTemplate = templates.getResource("kubernetes_cri_conf")
+        this.cgroupManagerTemplate = templates.getResource("cgroup_manager_conf")
     }
 
     /**
@@ -53,6 +56,14 @@ abstract class Crio_1_20 extends ScriptBase {
         template resource: kubernetesCriTemplate, name: "kubernetesCriConf", privileged: true, dest: k8sSysctlFile, vars: [:] call()
         k8sModules.each { shell privileged: true, "modprobe $it" call() }
         shell privileged: true, "sysctl --system" call()
+    }
+
+    /**
+     * Configures the cgroup driver.
+     */
+    def configureCgroupDriver() {
+        Crio service = this.service
+        template resource: cgroupManagerTemplate, name: "cgroupManagerConf", privileged: true, dest: cgroupManagerFile, vars: [:] call()
     }
 
     /**
@@ -90,13 +101,41 @@ abstract class Crio_1_20 extends ScriptBase {
 
     /**
      * Returns the kernel parameters to enable for Kubernetes configuration.
-     * For example <code>net.bridge.bridge-nf-call-iptables = 1,net.ipv4.ip_forward = 1,net.bridge.bridge-nf-call-ip6tables = 1</code>
+     * For example <code>net.bridge.bridge-nf-call-iptables=1,net.ipv4.ip_forward=1,net.bridge.bridge-nf-call-ip6tables=1</code>
      * <ul>
      * <li><code>k8s_sysctl_cri</code>
      * </ul>
      */
     List getK8sSysctlCri() {
         getScriptListProperty 'k8s_sysctl_cri'
+    }
+
+    /**
+     * Returns the cgroup driver configuration file.
+     * <ul>
+     * <li><code>cgroup_manager_file</code>
+     * </ul>
+     */
+    File getCgroupManagerFile() {
+        getScriptFileProperty 'cgroup_manager_file', configDir
+    }
+
+    /**
+     * <ul>
+     * <li><code>conmon_cgroup</code>
+     * </ul>
+     */
+    String getConmonCgroup() {
+        getScriptProperty 'conmon_cgroup'
+    }
+
+    /**
+     * <ul>
+     * <li><code>cgroup_manager</code>
+     * </ul>
+     */
+    String getCgroupManager() {
+        getScriptProperty 'cgroup_manager'
     }
 
     @Override

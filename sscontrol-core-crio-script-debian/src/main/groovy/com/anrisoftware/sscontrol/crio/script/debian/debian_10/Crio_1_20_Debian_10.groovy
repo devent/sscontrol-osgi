@@ -42,6 +42,7 @@ class Crio_1_20_Debian_10 extends ScriptBase {
     def run() {
         debianCrio.configureK8s()
         upstreamCrio.installCrio()
+        debianCrio.configureCgroupDriver()
         debianCrio.enableService()
     }
 

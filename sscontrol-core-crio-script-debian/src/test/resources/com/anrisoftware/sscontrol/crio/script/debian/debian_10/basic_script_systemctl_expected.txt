@@ -1,3 +1,3 @@
 enable crio
-start crio
+restart crio
 status crio

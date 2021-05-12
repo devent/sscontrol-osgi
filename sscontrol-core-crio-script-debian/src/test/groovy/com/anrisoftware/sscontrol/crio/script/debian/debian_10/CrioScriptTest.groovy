@@ -54,7 +54,8 @@ service "crio", version: "1.20"
                 File dir = args.dir
                 File gen = args.test.generatedDir
                 assertFileResource CrioScriptTest, gen, "/etc/modules-load.d/crio.conf", "${args.test.name}_crio_conf_expected.txt"
-                assertFileResource CrioScriptTest, gen, "/etc/sysctl.d/99-kubernetes-cri.conf", "${args.test.name}_99_kubernetes_cri_conf_expected.txt"
+                assertFileResource CrioScriptTest, gen, "/etc/sysctl.d/99-kubernetes-cri.conf", "${args.test.name}_kubernetes_cri_conf_expected.txt"
+                assertFileResource CrioScriptTest, gen, "/etc/crio/crio.conf.d/02-cgroup-manager.conf", "${args.test.name}_cgroup_manager_conf_expected.txt"
                 assertFileResource CrioScriptTest, dir, "modprobe.out", "${args.test.name}_modprobe_expected.txt"
                 assertFileResource CrioScriptTest, dir, "sysctl.out", "${args.test.name}_sysctl_expected.txt"
                 assertFileResource CrioScriptTest, dir, "wget.out", "${args.test.name}_wget_expected.txt"

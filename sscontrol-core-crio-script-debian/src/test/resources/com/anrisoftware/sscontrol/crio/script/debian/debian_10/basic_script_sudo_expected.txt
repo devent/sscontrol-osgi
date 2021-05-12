@@ -17,3 +17,5 @@ bash -c echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcon
 /bin/bash -s
 /bin/bash -s
 /bin/bash -s
+/bin/bash -s
+/bin/bash -s

@@ -48,7 +48,7 @@ class Crio_Crio_1_20_Debian_10 extends Crio_1_20 {
 
     def enableService() {
         systemd.enableServices()
-        systemd.startServices()
+        systemd.restartServices()
     }
 
     @Inject
