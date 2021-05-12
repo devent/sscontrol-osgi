@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.utils.debian.external
 
-import static org.apache.commons.io.FilenameUtils.*
-import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -69,7 +67,7 @@ abstract class DebianUtils {
      * Checks if the apt packages are installed. Per default checks the
      * packages from the profile property {@code packages}.
      */
-    boolean checkPackages(List packages=packages) {
+    boolean checkPackages(List packages=script.packages) {
         checkPackages(packages: packages)
     }
 
@@ -261,7 +259,8 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 <vars.modules:{m|modprobe <m>};separator="\\n">
 """ call()
         script.replace target: target, privileged: true, dest: modulesFile with {
-            modules.each { module -> //
+            modules.each { module ->
+                //
                 line "s/(?m)^#?${module}/${module}/" }
             it
         }()

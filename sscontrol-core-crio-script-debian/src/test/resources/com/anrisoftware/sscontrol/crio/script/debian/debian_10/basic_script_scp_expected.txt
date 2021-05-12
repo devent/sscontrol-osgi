@@ -1,0 +1,2 @@
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/modules-load.d/crio.conf user@localhost:/var/lib/robobee/tmp/crio.conf
+-C -o ControlPath=/tmp/user@localhost:22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no /tmp/junit/junit/etc/sysctl.d/99-kubernetes-cri.conf user@localhost:/var/lib/robobee/tmp/99-kubernetes-cri.conf

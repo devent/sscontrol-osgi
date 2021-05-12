@@ -1,0 +1,4 @@
+crioConf(parent, vars) ::= <<
+<parent.k8sModules:{m|<m>};separator="\n">
+
+>>

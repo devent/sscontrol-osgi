@@ -1,0 +1,3 @@
+update
+-y install cri-o
+-y install cri-o-runc

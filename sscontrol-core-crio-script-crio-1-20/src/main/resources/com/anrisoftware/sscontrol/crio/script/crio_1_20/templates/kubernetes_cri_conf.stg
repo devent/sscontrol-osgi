@@ -1,0 +1,4 @@
+kubernetesCriConf(parent, vars) ::= <<
+<parent.k8sSysctlCri:{m|<m>};separator="\n">
+
+>>

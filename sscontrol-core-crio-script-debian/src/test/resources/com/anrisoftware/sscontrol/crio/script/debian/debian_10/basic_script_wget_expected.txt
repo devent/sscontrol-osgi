@@ -1,0 +1,2 @@
+-O https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_Testing/Release.key
+-O https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:1.20/Debian_Testing/Release.key

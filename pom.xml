@@ -76,6 +76,9 @@
         <module>sscontrol-core-command-shell-linux-openssh</module>
         <module>sscontrol-core-command-shell-openssh</module>
         <module>sscontrol-core-command-template</module>
+        <module>sscontrol-core-crio-script-debian</module>
+        <module>sscontrol-core-crio-script-crio-1-20</module>
+        <module>sscontrol-core-crio-service</module>
         <module>sscontrol-core-debug</module>
         <module>sscontrol-core-docker-script-debian</module>
         <module>sscontrol-core-docker-script-systemd</module>
