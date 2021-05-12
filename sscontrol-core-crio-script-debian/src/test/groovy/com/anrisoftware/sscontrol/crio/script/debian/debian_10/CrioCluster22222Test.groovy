@@ -15,13 +15,12 @@
  */
 package com.anrisoftware.sscontrol.crio.script.debian.debian_10
 
-import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition.*
-import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition.*
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-import com.anrisoftware.sscontrol.shell.external.utils.Nodes3AvailableCondition
+import com.anrisoftware.sscontrol.shell.external.utils.Nodes3Port22222AvailableCondition
 
 import groovy.util.logging.Slf4j
 
@@ -32,8 +31,8 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-@ExtendWith(Nodes3AvailableCondition.class)
-class CrioClusterTest extends AbstractCrioRunnerTest {
+@ExtendWith(Nodes3Port22222AvailableCondition.class)
+class CrioCluster22222Test extends AbstractCrioRunnerTest {
 
     @Test
     void "cluster_basic"() {
@@ -51,9 +50,6 @@ service "crio", version: "1.20"
             expectedServicesSize: 2,
             generatedDir: folder.newFolder(),
             expected: { Map args ->
-                assertStringResource CrioClusterTest, remoteCommand('sudo systemctl status crio', 'node-0.robobee-test.test'), "${args.test.name}_systemctl_status_crio_node_0_expected.txt"
-                assertStringResource CrioClusterTest, remoteCommand('sudo systemctl status crio', 'node-1.robobee-test.test'), "${args.test.name}_systemctl_status_crio_node_1_expected.txt"
-                assertStringResource CrioClusterTest, remoteCommand('sudo systemctl status crio', 'node-2.robobee-test.test'), "${args.test.name}_systemctl_status_crio_node_2_expected.txt"
             },
         ]
         doTest test
