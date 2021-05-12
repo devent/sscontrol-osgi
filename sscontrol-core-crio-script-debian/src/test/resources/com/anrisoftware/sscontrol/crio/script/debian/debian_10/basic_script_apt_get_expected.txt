@@ -1,3 +1,7 @@
 update
+-y install gnupg
+update
+-y install gnupg
+update
 -y install cri-o
 -y install cri-o-runc

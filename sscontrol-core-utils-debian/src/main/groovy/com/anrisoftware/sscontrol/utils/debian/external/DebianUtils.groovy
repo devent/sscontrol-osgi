@@ -210,12 +210,53 @@ abstract class DebianUtils {
         assertThat "url=null", args.url, notNullValue()
         assertThat "comp=null", args.comp, notNullValue()
         assertThat "file=null", args.file, notNullValue()
+        checkPackages(packages: aptkeyaddPackages) ? { }() : {
+            installPackages(packages: aptkeyaddPackages)
+        }()
         script.shell target: args.target, """
 key_file=`mktemp`
 trap "rm -f \$key_file" EXIT
 wget -O \$key_file ${args.key}
 sudo bash -c "cat \$key_file | apt-key add -"
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
+    }
+
+    /**
+     * Adds the apt packages repository without the distribution name or repository component.
+     *
+     * @param args
+     * <ul>
+     * <li>key: repository key;
+     * <li>url: repository URL;
+     * <li>file: repository list file;
+     * <li>target: the target, defaults to {@code script#target};
+     * </ul>
+     *
+     * @see #getPackagesRepositoryKey()
+     * @see #getPackagesRepository()
+     * @see #getPackagesRepositoryComponent()
+     * @see #getPackagesRepositoryListFile()
+     */
+    def addPackagesRepositoryAlternative(Map args=[:]) {
+        args.key = args.key ? args.key : script.packagesRepositoryKey
+        args.key = args.key ? args.key : packagesRepositoryKey
+        args.url = args.url ? args.url : script.packagesRepositoryUrl
+        args.url = args.url ? args.url : packagesRepositoryUrl
+        args.file = args.file ? args.file : script.packagesRepositoryListFile
+        args.file = args.file ? args.file : packagesRepositoryListFile
+        args.target = args.target ? args.target : script.target
+        assertThat "url=null", args.url, notNullValue()
+        assertThat "file=null", args.file, notNullValue()
+        checkPackages(packages: aptkeyaddPackages) ? { }() : {
+            installPackages(packages: aptkeyaddPackages)
+        }()
+        script.shell target: args.target, """
+key_file=`mktemp`
+trap "rm -f \$key_file" EXIT
+wget -O \$key_file ${args.key}
+sudo bash -c "cat \$key_file | apt-key add -"
+sudo bash -c 'echo "deb ${args.url} /" > ${args.file}'
 """ call()
     }
 
@@ -445,5 +486,18 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      */
     List getAptLockFiles() {
         script.getScriptListProperty "apt_lock_files", defaultProperties
+    }
+
+    /**
+     * Returns the packages that are needed to add keys to authenticate other packages.
+     *
+     * <ul>
+     * <li>profile property {@code aptkeyadd_packages}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getAptkeyaddPackages() {
+        script.getScriptListProperty "aptkeyadd_packages", defaultProperties
     }
 }

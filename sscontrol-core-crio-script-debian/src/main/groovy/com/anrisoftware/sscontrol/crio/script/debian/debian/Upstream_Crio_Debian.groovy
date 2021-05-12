@@ -31,8 +31,9 @@ abstract class Upstream_Crio_Debian extends ScriptBase {
 
     def installCrio() {
         debian.checkPackages() ? { }() : {
-            debian.addPackagesRepository(key: libcontainersRepositoryKey, url: libcontainersPepositoryUrl, file: libcontainersRepositoryListFile)
-            debian.addPackagesRepository(key: crioRepositoryKey, url: crioPepositoryUrl, file: crioRepositoryListFile)
+            debian.addBackportsRepository()
+            debian.addPackagesRepositoryAlternative(key: libcontainersRepositoryKey, url: libcontainersPepositoryUrl, file: libcontainersRepositoryListFile)
+            debian.addPackagesRepositoryAlternative(key: crioRepositoryKey, url: crioPepositoryUrl, file: crioRepositoryListFile)
             debian.installPackages()
         }()
     }
