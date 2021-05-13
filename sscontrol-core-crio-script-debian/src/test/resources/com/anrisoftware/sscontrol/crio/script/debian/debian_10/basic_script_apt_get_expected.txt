@@ -1,0 +1,8 @@
+update
+-y install gnupg
+update
+-y install gnupg
+update
+-y install libseccomp2=2.4.4-1~bpo10+1
+-y install cri-o
+-y install cri-o-runc

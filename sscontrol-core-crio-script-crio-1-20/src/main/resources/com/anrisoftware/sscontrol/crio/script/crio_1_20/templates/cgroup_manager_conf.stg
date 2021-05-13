@@ -1,0 +1,6 @@
+cgroupManagerConf(parent, vars) ::= <<
+[crio.runtime]
+conmon_cgroup = "<parent.conmonCgroup>"
+cgroup_manager = "<parent.cgroupManager>"
+
+>>

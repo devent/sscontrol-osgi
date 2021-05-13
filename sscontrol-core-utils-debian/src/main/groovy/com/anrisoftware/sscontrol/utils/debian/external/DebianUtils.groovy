@@ -15,11 +15,10 @@
  */
 package com.anrisoftware.sscontrol.utils.debian.external
 
-import static org.apache.commons.io.FilenameUtils.*
-import static org.apache.commons.lang3.Validate.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
+import org.apache.commons.lang3.StringUtils
 import org.stringtemplate.v4.ST
 
 import com.anrisoftware.resources.templates.external.TemplateResource
@@ -69,7 +68,7 @@ abstract class DebianUtils {
      * Checks if the apt packages are installed. Per default checks the
      * packages from the profile property {@code packages}.
      */
-    boolean checkPackages(List packages=packages) {
+    boolean checkPackages(List packages=script.packages) {
         checkPackages(packages: packages)
     }
 
@@ -97,6 +96,11 @@ abstract class DebianUtils {
     boolean checkPackage(Map args) {
         log.info "Check installed packages {}.", args
         assertThat "args.name=null", args, hasKey('name')
+        if (args.name.contains("=")) {
+            def nameVersion = getSplitPackageNameVersion(args.name)
+            args.name = nameVersion.name
+            args.version = nameVersion.version
+        }
         def a = new HashMap(args)
         a.timeout = args.timeout ? args.timeout : script.timeoutShort
         a.exitCodes = [0, 1] as int[]
@@ -108,6 +112,14 @@ abstract class DebianUtils {
         a.name = 'checkPackage'
         def ret = script.shell a call()
         return ret.exitValue == 0
+    }
+
+    /**
+     * Return the package name and package version.
+     */
+    Map getSplitPackageNameVersion(String packageName) {
+        def nameSplit = StringUtils.split(packageName, '=')
+        [name: nameSplit[0], version: nameSplit[1]]
     }
 
     /**
@@ -212,12 +224,53 @@ abstract class DebianUtils {
         assertThat "url=null", args.url, notNullValue()
         assertThat "comp=null", args.comp, notNullValue()
         assertThat "file=null", args.file, notNullValue()
+        checkPackages(packages: aptkeyaddPackages) ? { }() : {
+            installPackages(packages: aptkeyaddPackages)
+        }()
         script.shell target: args.target, """
 key_file=`mktemp`
 trap "rm -f \$key_file" EXIT
 wget -O \$key_file ${args.key}
 sudo bash -c "cat \$key_file | apt-key add -"
 sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
+""" call()
+    }
+
+    /**
+     * Adds the apt packages repository without the distribution name or repository component.
+     *
+     * @param args
+     * <ul>
+     * <li>key: repository key;
+     * <li>url: repository URL;
+     * <li>file: repository list file;
+     * <li>target: the target, defaults to {@code script#target};
+     * </ul>
+     *
+     * @see #getPackagesRepositoryKey()
+     * @see #getPackagesRepository()
+     * @see #getPackagesRepositoryComponent()
+     * @see #getPackagesRepositoryListFile()
+     */
+    def addPackagesRepositoryAlternative(Map args=[:]) {
+        args.key = args.key ? args.key : script.packagesRepositoryKey
+        args.key = args.key ? args.key : packagesRepositoryKey
+        args.url = args.url ? args.url : script.packagesRepositoryUrl
+        args.url = args.url ? args.url : packagesRepositoryUrl
+        args.file = args.file ? args.file : script.packagesRepositoryListFile
+        args.file = args.file ? args.file : packagesRepositoryListFile
+        args.target = args.target ? args.target : script.target
+        assertThat "url=null", args.url, notNullValue()
+        assertThat "file=null", args.file, notNullValue()
+        checkPackages(packages: aptkeyaddPackages) ? { }() : {
+            installPackages(packages: aptkeyaddPackages)
+        }()
+        script.shell target: args.target, """
+key_file=`mktemp`
+trap "rm -f \$key_file" EXIT
+wget -O \$key_file ${args.key}
+sudo bash -c "cat \$key_file | apt-key add -"
+sudo bash -c 'echo "deb ${args.url} /" > ${args.file}'
 """ call()
     }
 
@@ -261,7 +314,8 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
 <vars.modules:{m|modprobe <m>};separator="\\n">
 """ call()
         script.replace target: target, privileged: true, dest: modulesFile with {
-            modules.each { module -> //
+            modules.each { module ->
+                //
                 line "s/(?m)^#?${module}/${module}/" }
             it
         }()
@@ -446,5 +500,18 @@ sudo bash -c 'echo "deb ${args.url} ${args.name} ${args.comp}" > ${args.file}'
      */
     List getAptLockFiles() {
         script.getScriptListProperty "apt_lock_files", defaultProperties
+    }
+
+    /**
+     * Returns the packages that are needed to add keys to authenticate other packages.
+     *
+     * <ul>
+     * <li>profile property {@code aptkeyadd_packages}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getAptkeyaddPackages() {
+        script.getScriptListProperty "aptkeyadd_packages", defaultProperties
     }
 }

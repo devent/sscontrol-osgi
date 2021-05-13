@@ -1,0 +1,3 @@
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp
+o-rwx /var/lib/robobee/tmp

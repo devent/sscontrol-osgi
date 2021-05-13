@@ -1,0 +1,3 @@
+/var/lib/robobee/tmp/crio.conf /tmp/junit/junit/etc/modules-load.d/crio.conf
+/var/lib/robobee/tmp/99-kubernetes-cri.conf /tmp/junit/junit/etc/sysctl.d/99-kubernetes-cri.conf
+/var/lib/robobee/tmp/02-cgroup-manager.conf /tmp/junit/junit/etc/crio/crio.conf.d/02-cgroup-manager.conf

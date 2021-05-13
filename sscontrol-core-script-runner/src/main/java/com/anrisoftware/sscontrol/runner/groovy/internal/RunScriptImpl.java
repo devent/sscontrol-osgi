@@ -56,8 +56,7 @@ public class RunScriptImpl implements RunScript {
      */
     public interface RunScriptImplFactory {
 
-        RunScriptImpl create(@Assisted ExecutorService threads,
-                @Assisted HostServices services);
+        RunScriptImpl create(@Assisted ExecutorService threads, @Assisted HostServices services);
 
     }
 
@@ -74,8 +73,7 @@ public class RunScriptImpl implements RunScript {
     private EmptyServiceScript emptyServiceScript;
 
     @AssistedInject
-    RunScriptImpl(@Assisted ExecutorService threads,
-            @Assisted HostServices services) {
+    RunScriptImpl(@Assisted ExecutorService threads, @Assisted HostServices services) {
         this.threads = threads;
         this.services = services;
         if (services.getTargets().getGroups().contains("default")) {
@@ -107,11 +105,10 @@ public class RunScriptImpl implements RunScript {
         }
     }
 
-    private HostServiceScript createScript(String name, HostService s,
-            TargetHost host, Map<String, Object> vars) throws AppException {
+    private HostServiceScript createScript(String name, HostService s, TargetHost host, Map<String, Object> vars)
+            throws AppException {
         ScriptInfo info = getSystemScriptName(host, s.getName());
-        HostServiceScriptService service = services
-                .getAvailableScriptService(info);
+        HostServiceScriptService service = services.getAvailableScriptService(info);
         if (service == null) {
             ScriptInfo i = getLinuxScriptName(name);
             service = services.getAvailableScriptService(i);
@@ -122,8 +119,7 @@ public class RunScriptImpl implements RunScript {
         return createScript(name, s, host, vars, service);
     }
 
-    private HostServiceScript createScript(String name, HostService s,
-            TargetHost host, Map<String, Object> vars,
+    private HostServiceScript createScript(String name, HostService s, TargetHost host, Map<String, Object> vars,
             HostServiceScriptService service) {
         HostServiceScript script = emptyServiceScript;
         if (service == null) {
@@ -139,9 +135,8 @@ public class RunScriptImpl implements RunScript {
     }
 
     private ScriptInfo getLinuxScriptName(String name) {
-        return new AbstractScriptInfo(name,
-                new AbstractSystemInfo("linux", "linux", "0") {
-                }) {
+        return new AbstractScriptInfo(name, new AbstractSystemInfo("linux", "linux", "0") {
+        }) {
         };
     }
 
@@ -151,8 +146,7 @@ public class RunScriptImpl implements RunScript {
         };
     }
 
-    HostServiceScript setupScript(Map<String, Object> args,
-            HostServiceScript script) {
+    HostServiceScript setupScript(Map<String, Object> args, HostServiceScript script) {
         Object v = args.get("chdir");
         if (v != null) {
             invokeMethod(script, "setChdir", v);
